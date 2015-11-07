@@ -52,6 +52,16 @@ totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 }*/
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 categoryType=parameters.categoryType;
+context.categoryType=categoryType;
+Description="";
+if(categoryType=="CON_CHG"){
+	Description="CONVERSION CHARGES FOR THE PERIOD";
+}else if(categoryType=="COPAC_CHG"){
+Description="COPACKING  CHARGES FOR THE PERIOD";
+}else if(categoryType=="STOR_CHG"){
+Description="STORAGE CHARGES FOR THE PERIOD";
+}
+context.Description=Description;
 partyId=parameters.partyId;
 exprList=[];
 //exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "CONVERSION_CHARGES"));

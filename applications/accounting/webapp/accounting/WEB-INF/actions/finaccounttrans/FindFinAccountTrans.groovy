@@ -226,7 +226,7 @@ if(UtilValidate.isEmpty(parameters.reconsilationCsvReport)){
 							tempFinAccountTransMap["paymentPartyId"] = contraFinAccount.ownerPartyId;
 						}
 					}
-		        tempFinAccountTransMap["instrumentNo"]=finAccountTrans.contraRefNum;
+		        tempFinAccountTransMap["instrumentNo"]=finAccountTrans.finAccountTransId;
 	    }
 		   //adding required fields to partyLedgerInnerMap
 		   innerMap["instrumentNo"]=tempFinAccountTransMap["instrumentNo"];
