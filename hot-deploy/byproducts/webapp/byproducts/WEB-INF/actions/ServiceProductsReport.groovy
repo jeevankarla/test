@@ -50,7 +50,9 @@ totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }*/
+maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 categoryType=parameters.categoryType;
+partyId=parameters.partyId;
 exprList=[];
 //exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "CONVERSION_CHARGES"));
 exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, categoryType));
@@ -66,11 +68,16 @@ dayWiseInvoice=FastMap.newInstance();
 prodTempMap=[:];
 // Invoice Sales Abstract
 	finalInvoiceDateMap = [:];
+	temppartyWiseMap=[:];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
 		dayBegin=UtilDateTime.getDayStart(currentDay);
 		dayEnd=UtilDateTime.getDayEnd(currentDay);
+		if(partyId){
+		invoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[partyId],isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
+		}else{
 		invoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
+		}
 		invoiceMap = [:];
 		if(UtilValidate.isNotEmpty(invoiceTotals)){
 				if(UtilValidate.isNotEmpty(invoiceTotals)){
@@ -158,6 +165,30 @@ prodTempMap=[:];
 															}
 															  temp=FastMap.newInstance();
 															  temp.putAll(tempProdMap);
+															  if(UtilValidate.isNotEmpty(parameters.reportTypeFlag) && parameters.reportTypeFlag=="Abstract"){
+																	  if(UtilValidate.isEmpty(temppartyWiseMap.get(invoicePartyId))){
+																		  if(maxIntervalDays>0){
+																			  tempProdMap["average"]=quantity/maxIntervalDays;
+																			}else{
+																			 tempProdMap["average"]=quantity;
+																			}
+																		  temppartyWiseMap.put(invoicePartyId, tempProdMap);
+																	  }else{
+																	      extendPrdMap=temppartyWiseMap.get(invoicePartyId);
+																		  extendPrdMap.quantity=extendPrdMap.quantity+quantity;
+																		  extendPrdMap.basicRevenue=extendPrdMap.basicRevenue+basicRevenue;
+																		  extendPrdMap.bedRevenue=extendPrdMap.bedRevenue+bedRevenue;
+																		  extendPrdMap.vatRevenue=extendPrdMap.vatRevenue+vatRevenue;
+																		  extendPrdMap.cstRevenue=extendPrdMap.cstRevenue+cstRevenue;
+																		  extendPrdMap.totalRevenue=extendPrdMap.totalRevenue+totalRevenue;
+																		  if(maxIntervalDays>0){
+																			  extendPrdMap["average"]=quantity/maxIntervalDays;
+																			}else{
+																			 extendPrdMap["average"]=quantity;
+																			}
+																		  temppartyWiseMap.put(invoicePartyId,extendPrdMap);
+																	  }
+															  }
 															  tempVariantMap[productId] = temp;
 															  if(UtilValidate.isEmpty(prodTempMap[productId])){
 															     productTemp =[:]
@@ -191,6 +222,30 @@ prodTempMap=[:];
 															productMap["totalRevenue"] += productValue.getValue().get("totalRevenue");
 															temp=FastMap.newInstance();
 															temp.putAll(productMap);
+															if(UtilValidate.isNotEmpty(parameters.reportTypeFlag) && parameters.reportTypeFlag=="Abstract"){
+																if(UtilValidate.isEmpty(temppartyWiseMap.get(invoicePartyId))){
+																	if(maxIntervalDays>0){
+																		productMap["average"]=quantity/maxIntervalDays;
+																	  }else{
+																	   productMap["average"]=quantity;
+																	  }
+																	temppartyWiseMap.put(invoicePartyId, productMap);
+																}else{
+																	extendPrdMap=temppartyWiseMap.get(invoicePartyId);
+																	extendPrdMap.quantity=extendPrdMap.quantity+quantity;
+																	extendPrdMap.basicRevenue=extendPrdMap.basicRevenue+basicRevenue;
+																	extendPrdMap.bedRevenue=extendPrdMap.bedRevenue+bedRevenue;
+																	extendPrdMap.vatRevenue=extendPrdMap.vatRevenue+vatRevenue;
+																	extendPrdMap.cstRevenue=extendPrdMap.cstRevenue+cstRevenue;
+																	extendPrdMap.totalRevenue=extendPrdMap.totalRevenue+totalRevenue;
+																	if(maxIntervalDays>0){
+																		extendPrdMap["average"]=quantity/maxIntervalDays;
+																	  }else{
+																	   extendPrdMap["average"]=quantity;
+																	  }
+																	temppartyWiseMap.put(invoicePartyId,extendPrdMap);
+																}
+															}
 															tempVariantMap[productId] = temp;
 														}
 														finalMap.put("productTotals",tempVariantMap);
@@ -247,6 +302,6 @@ prodTempMap=[:];
  //Debug.log("prodTempMap====="+prodTempMap);
 context.dayWiseInvoice=dayWiseInvoice;
 context.prodTempMap=prodTempMap;
-
-
-
+if(UtilValidate.isNotEmpty(parameters.reportTypeFlag) && parameters.reportTypeFlag=="Abstract"){
+context.partWiseSaleMap=temppartyWiseMap;
+}
