@@ -29,7 +29,7 @@ else
 fi
 
 # shutdown settings
-ADMIN_PORT=50524
+ADMIN_PORT=45524
 ADMIN_KEY=so3du5kasd5dn
 
 $JAVA -Dofbiz.admin.port=$ADMIN_PORT -Dofbiz.admin.key=$ADMIN_KEY -jar ofbiz.jar -shutdown
