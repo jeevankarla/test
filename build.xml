@@ -978,7 +978,7 @@ under the License.
         </echo>
     </target>
 	
-    <target name="kmf-tar"
+    <target name="nhdc-tar"
             description="Creates a tar package of the whole application for deployment.">
     	<exec executable="tar">
         	<arg value="--exclude=.svn"/>    
@@ -991,7 +991,7 @@ under the License.
         	<arg value="--exclude=vasistautils/tallybackup"/>    
         	<arg value="--exclude=docs"/>    				    		    		
         	<arg value="-cvz"/>
-        	<arg value="--file=../kmf.tar.gz"/>
+        	<arg value="--file=../nhdc.tar.gz"/>
         	<arg value="."/>
     	</exec>
 	</target>
