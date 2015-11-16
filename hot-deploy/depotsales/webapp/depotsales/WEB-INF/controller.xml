@@ -40,7 +40,7 @@
     
      <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
-      <request-map uri="processDepotSalesOrder">
+    <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processDepotSaleEvent" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="DepotSalesOrder">
@@ -458,9 +458,25 @@
         <response name="error" type="view" value="FindSalesReturns"/>
     </request-map>
     
+    <!-- BRANCH SALES -->
     
+    <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
+    <request-map uri="processBranchSalesOrder">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="BranchSalesOrder">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="BranchSalesOrder"/>
+    </request-map>
     
     <!-- View Mappings -->
+    
+    <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
+    
+    
+    
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
     
