@@ -42,7 +42,6 @@ if(UtilValidate.isNotEmpty(parameters.parentRoleTypeId)){
 	parentRoleTypeId=parameters.parentRoleTypeId;
 }
 
-Debug.log("==parameters.roleTypeId===INNNN=="+parameters.roleTypeId+"===parentRoleTypeId=="+parentRoleTypeId);
 if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.roleTypeId) ){//to handle parentRoleTypeIds only when roleTypeId is empty
 	roleTypeList = delegator.findByAnd("RoleType",["parentTypeId" :parentRoleTypeId]);
 	roleTypeList.each{roleType->
@@ -74,7 +73,6 @@ partyDetailsList.each{eachParty ->
 context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
 context.partyIdsListkkkk=partyIdsList;
-Debug.log("====partyIdsList==="+partyIdsList);
 //supplier json for supplier lookup.
 JSONArray supplierJSON = new JSONArray();
 

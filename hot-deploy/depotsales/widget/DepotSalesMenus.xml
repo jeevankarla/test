@@ -121,6 +121,16 @@
             <link target="DepotSalesOrder">
             </link>
         </menu-item>
+        <menu-item name="BranchSalesOrder" title="Branch Sales">
+	      <condition>
+	     	    <or>
+	        		<if-has-permission permission="DEPOTSALES"  action="_SALE_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	</or> 
+	        </condition>  
+            <link target="BranchSalesOrder">
+            </link>
+        </menu-item>
         <menu-item name="SalesReturns" title="Sales Returns">
          <condition>
 	     	    <or>
