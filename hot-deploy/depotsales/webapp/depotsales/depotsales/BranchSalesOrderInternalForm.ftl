@@ -335,14 +335,14 @@
 	function setupGrid1() {
 		
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:260, minWidth:260, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"baleQuantity", name:"Qty Bales", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty Kgs", field:"quantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitCost", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},
-				
+			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter}	
 			
 			
 			<#--
@@ -379,6 +379,7 @@
 			</#if>
 			-->
 		];
+		<#--
 		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "EditDepotSales">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
@@ -386,6 +387,7 @@
  				}
  			});
  		</#if>
+ 		-->
 		
 			var options = {
 			editable: true,		

@@ -33,6 +33,17 @@
 					$( "#orderDate" ).datepicker("option", selectedDate);
 				}
 			});
+			$( "#indentReceivedDate" ).datepicker({
+				dateFormat:'d MM, yy',
+				changeMonth: true,
+				numberOfMonths: 1,
+				//minDate: new Date(),
+				//maxDate: 14,
+				onSelect: function( selectedDate ) {
+					$( "#indentReceivedDate" ).datepicker("option", selectedDate);
+				}
+			});
+			
 			$( "#chequeDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -201,11 +212,31 @@
 						</#if>
 					</tr>
 					<tr><td><br/></td></tr>
+					<tr><td><br/></td></tr>
+					<tr>
+			      		<td>&nbsp;</td>
+			      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Billing Type:</div></td>
+			      		<td>&nbsp;</td>
+			   			<#if billingType?exists && billingType?has_content>  
+			  	  			<input type="hidden" name="billingType" id="billingType" value="${billingType?if_exists}"/>  
+			      			<td valign='middle'>
+			        			<div class='tabletext h3'>${billingType?if_exists}</div>
+			      			</td>       	
+			   			<#else>      	         
+			      			<td valign='middle'>
+			      				<select name="billingType" id="billingType" class='h3'>
+			      					<option value="Direct"> Direct </option>
+			      					<option value="onBehalfOf"> On Behalf Of </option>
+			      				</select>
+			      			</td>
+			   			</#if>
+			        </tr>
+			        <tr><td><br/></td></tr>
 			        <tr><td><br/></td></tr>
 			        <#if changeFlag?exists && changeFlag != "EditDepotSales">
 				      	<tr>
 				      		<td>&nbsp;</td>
-				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO Number:</div></td>
+				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Customer Order Number:</div></td>
 				      		<td>&nbsp;</td>
 				   			<#if PONumber?exists && PONumber?has_content>  
 				  	  			<input type="hidden" name="PONumber" id="PONumber" value="${PONumber?if_exists}"/>  
@@ -218,6 +249,22 @@
 				      			</td>
 				   			</#if>
 				    	</tr>
+				    	<tr>
+							<td>&nbsp;</td>
+							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Received Date:</div></td>
+							<td>&nbsp;</td>
+							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
+				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
+				   				<td valign='middle'>
+									<div class='h3'>${indentReceivedDate}         
+									</div>
+				   				</td>  
+							<#else> 
+				 				<td valign='middle'>          
+									<input class='h3' type="text" name="indentReceivedDate" id="indentReceivedDate" value="${defaultEffectiveDate}"/>    
+				 				</td>
+							</#if>
+						</tr>
 				    	<#if changeFlag?exists && changeFlag == "IcpSales">
 					    	<tr><td><br/></td></tr>
 					    	<tr>
@@ -274,6 +321,8 @@
 							</tr>
 							-->
 			    	</#if>
+			    	<tr><td><br/></td></tr>
+			    	<tr><td><br/></td></tr>
 		        	<#if changeFlag?exists && changeFlag !='EditDepotSales' && changeFlag !='ICPTransferSale'>
 		        		<tr>
 			          		<td>&nbsp;</td>
@@ -294,8 +343,6 @@
 			       			</#if>
 		        		</tr>
 		        	</#if>
-					<tr><td><br/></td></tr>
-					<tr><td><br/></td></tr>
 					<tr>
 			        	<td>&nbsp;</td>
 			          	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
@@ -306,6 +353,30 @@
 			      		</td>
 			        	
 			        </tr>
+			        <tr><td><br/></td></tr>
+			        <tr><td><br/></td></tr>
+			        
+	        		<tr>
+		          		<td>&nbsp;</td>
+		          		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
+		          		<td>&nbsp;</td>
+		       			<#if orderTaxType?exists && orderTaxType?has_content>  
+			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${schemeCategory?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div class='tabletext h3'>${schemeCategory?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="schemeCategory" id="schemeCategory" class='h3'>
+		          					<option value="MGPS">MGPS</option>
+		          					<option value="10PercentDiscount">10% Discount</option>
+		          					<option value="MGPS">General</option>
+		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
+		          				</select>
+		          			</td>
+		       			</#if>
+	        		</tr>
+			        
 			        <tr><td><br/></td></tr>
 			        <tr><td><br/></td></tr>
 					<tr>
