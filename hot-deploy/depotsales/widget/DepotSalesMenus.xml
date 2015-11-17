@@ -255,7 +255,15 @@
         <menu-item name="FindPO" title="Find Purchase Order">
         	<link target="FindPO"/>
         </menu-item>
-        
+          <menu-item name="ProcessOrdersSuppliersDepotSales" title="Proces Supplier Purchase Order">
+            	<link target="ProcessOrdersSuppliersDepotSales">
+            	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+    	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	</link>
+            </menu-item>
+             <menu-item name="FindDepotSupplierPurchseShipment" title="Find Supplier Purchase Shipment">
+            	<link target="FindDepotSupplierPurchseShipment"/>
+        </menu-item>
         <menu-item name="POoverView" title="Purchase Order OverView">
         	<condition>
         		<not>
