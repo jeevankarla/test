@@ -13,7 +13,127 @@
         <field name="vehicleId" title="Vehicle Number"><text-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+     <form name="FindByprodShipmentDepot" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        <field title="shipment Date" name="estimatedShipDate"><date-find/></field>
+        <field name="shipmentId"><text-find/></field>
+        <field name="primaryOrderId" title="Order Id"><text-find/></field>
+        <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+        <field name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="shipmentTypeId"><hidden value="${shipmentTypeId}"/></field>
+        <field name="shipStatusId"><hidden value="GENERATED"/></field>
+        <field name="vehicleId" title="Vehicle Number"><text-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+     <form name="listByprodShipmentDepot" type="list" list-name="listIt" paginate-target="FindDepotSupplierPurchseShipment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Shipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+        	<entity-condition entity-name="InvoiceAndItem" list="invoices">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+        			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="invSize" value="${groovy: invoices.size();}"/>
+        	<set field="invoiceId" value="${invoices[0].invoiceId}"/>
+        	<set field="invoiceStatusId" value="${invoices[0].statusId}"/>
+        	<entity-one value-field="invoiceAttr" entity-name="InvoiceAttribute">
+        	<field-map field-name="invoiceId" value="${invoices[0].invoiceId}"/>
+        	<field-map field-name="attrName" value="SALES_TAX_NUMBER"/>
+        	</entity-one>
+        	<set field="attrValue" from-field="invoiceAttr.attrValue"/>
+        </row-actions>
+        <field name="shipmentId" ><display/></field>
+        <field name="primaryOrderId" title="SO No"><display/></field>
+        <field name="statusId" ><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="vehicleId" title="Vehicle Number"><display/></field>
+              <field name="partyId"><display  description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, invoices[0].partyId, false);}[${invoices[0].partyId}]"/></field>
+              <field name="invoiceId"><display></display></field>
+              <field name="EditInvoice" use-when="(invoiceId !=null) &amp;&amp;(invoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))"  widget-style="buttontext" >
+            <hyperlink target="EditInvoiceInit" description="EditInvoice" target-window="_blank">
+               	  <parameter param-name="invoiceId"/>
+               	   <parameter param-name="shipmentId" />
+               	   <parameter param-name="vehicleId" />
+               	   <parameter param-name="orderId"  value="${primaryOrderId}"/>
+               	   <parameter param-name="partyId" value="${invoices[0].partyId}"/>
+               	   <parameter param-name="attrValue" /> 
+               	  <parameter param-name="screenFlag" /> 
+            </hyperlink>
+        </field> 
+        <field name="EditSalesTax" title="EditSalesTax" widget-style="buttontext"
+			use-when="(invoiceId !=null) &amp;&amp;(invoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))">
+			<hyperlink target-type="plain" description="EditSalesTax"
+				target="javascript:getSalesTax('${invoiceId}','${attrValue}');">
+			</hyperlink>
+		</field>
+        <field name="GatePass" widget-style="buttontext" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <hyperlink target="ByprodGatePass.pdf" description="GatePass" target-window="_blank">
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
+            </hyperlink>
+        </field> 
+        <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <hyperlink target="ByprodInvoiceDepot.pdf" description="Invoice Slips" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+      	<field name="taxInvoice" widget-style="buttontext" id-name = "taxInvoice" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <hyperlink target="ByprodTaxInvoiceDepot.pdf" description="Tax Invoice" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+        <field use-when="(&quot;${invSize}&quot; == &quot;0&quot;) &amp;&amp; (${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))})&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))" name="cancelShipment" widget-style="buttontext">
+            <hyperlink target="cancelShipmentDepot" description="Cancel Shipment">
+	            <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+        <field name="raiseInvoice"  use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}" widget-style="buttontext">
+            <hyperlink target="raiseInvoiceForByProdSalesShipment" description="Raise Invoice">
+	            <parameter param-name="shipmentId"/>
+	            <parameter param-name="eventDate" from-field="estimatedShipDate"/>
+            </hyperlink>
+        </field>
+        <field name="invoiceId" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}" title="Invoice Id"><display/></field>
+        
+    </form> 
     
+    <form name="FindTankerSalesOrder" title="" type="single" target="ProcessOrdersSuppliersDepotSales" header-row-style="header-row" default-table-style="basic-table">
+        <field name="salesChannelEnumId" ><hidden value="DEPOT_CHANNEL"/></field>  
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="SALES_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%SALES%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field name="orderId"><text/></field>
+        <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
+        
+        <!-- <field name="sequenceId"><text-find/></field> -->
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="statusId">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        	</drop-down>
+        </field>
+         <field name="findPoFlag"><hidden value="Y"/></field>  
+    	<field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="listShipmentsDepot" type="list" list-name="listIt" paginate-target="FindDepotShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>

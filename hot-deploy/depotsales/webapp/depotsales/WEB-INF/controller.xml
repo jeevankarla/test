@@ -55,6 +55,11 @@
         <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
        <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
+    <request-map uri="processOrdersBranchSales">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+    </request-map>
     
     <request-map uri="getStoreCatalogCatagory">
        <security https="true" auth="true"/>
@@ -108,6 +113,11 @@
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepotSalesShipment"/>   
        	<response name="failed" type="view" value="FindDepotSalesShipment"/>  
+    </request-map>
+    <request-map uri="FindDepotBranchSalesShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindDepotBranchSalesShipment"/>   
+       	<response name="failed" type="view" value="FindDepotBranchSalesShipment"/>  
     </request-map>
     
     <request-map uri="buyerInvoiceDepot.pdf">
@@ -344,6 +354,13 @@
          <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
         <response name="error" type="view" value="CreatePO"/>
     </request-map>
+      <request-map uri="createPOByOrder">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="processOrdersBranchSales"></response>
+        <response name="error" type="view" value="processOrdersBranchSales"/>
+    </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDF"/>
@@ -484,8 +501,8 @@
     <!-- View Mappings -->
     
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
-    
-    
+    <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
+    <view-map name="FindDepotBranchSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotBrachShipment"/>
     
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
@@ -495,6 +512,7 @@
     
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
     <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
+    
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
     <view-map name="NonRouteGatePassPDFDepot" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDFDepot" content-type="application/pdf"/>
     <view-map name="FindDepotSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
@@ -523,8 +541,8 @@
     <view-map name="IndentVsDispatchPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSalesReturns"/>
     <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>
-    <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrdersSuppliersDepotSales"/>
-	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotSupplierPurchseShipment"/>
+    <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>
+	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
   
     
     
