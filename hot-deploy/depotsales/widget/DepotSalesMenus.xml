@@ -263,13 +263,13 @@
         <menu-item name="FindPO" title="Find Purchase Order">
         	<link target="FindPO"/>
         </menu-item>
-          <menu-item name="ProcessOrdersSuppliersDepotSales" title="Proces Supplier Purchase Order">
+          <menu-item name="ProcessOrdersSuppliersDepotSales" title="Proces Purchase Order">
             	<link target="ProcessOrdersSuppliersDepotSales">
             	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
     	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
             	</link>
             </menu-item>
-             <menu-item name="FindDepotSupplierPurchseShipment" title="Find Supplier Purchase Shipment">
+             <menu-item name="FindDepotSupplierPurchseShipment" title="Find Purchase Shipment">
             	<link target="FindDepotSupplierPurchseShipment"/>
         </menu-item>
         <menu-item name="POoverView" title="Purchase Order OverView">
@@ -306,6 +306,25 @@
 	        </menu-item>
 	        <menu-item name="FindDepotSalesShipment" title="Find Shipments">
 	        	<link target="FindDepotSalesShipment" />
+	        </menu-item>
+       </menu>
+       <menu name="BranchSalesIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <menu-item name="BranchSalesOrder" title="Order Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item>
+        	  <menu-item name="processOrdersBranchSales" title="Process Orders">
+        	<link target="processOrdersBranchSales">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item>
+	        <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item>
        </menu>
        
