@@ -1168,6 +1168,7 @@ under the License.
       <field name="postalCodeExt" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
       <field name="stateProvinceGeoId" type="id"></field>
+      <field name="districtGeoId" type="id"></field>
       <field name="countyGeoId" type="id"></field>
       <field name="postalCodeGeoId" type="id"></field>
       <field name="geoPointId" type="id"></field>
@@ -1180,6 +1181,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="POST_ADDR_SPGEO" title="StateProvince" rel-entity-name="Geo">
         <key-map field-name="stateProvinceGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="POST_ADDR_DSTGEO" title="DistrictProvince" rel-entity-name="Geo">
+        <key-map field-name="districtGeoId" rel-field-name="geoId"/>
       </relation>
       <relation type="one" fk-name="POST_ADDR_CNTG" title="County" rel-entity-name="Geo">
         <key-map field-name="countyGeoId" rel-field-name="geoId"/>
