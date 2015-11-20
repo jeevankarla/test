@@ -1291,6 +1291,54 @@ under the License.
             <key-map field-name="contactMechId"/>
         </relation>
     </entity>
+     <entity entity-name="ProductStoreContactMech" package-name="org.ofbiz.product.facility" title="Facility Contact Mechanism Entity">
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="contactMechId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="extension" type="very-short"></field>
+        <field name="comments" type="comment"></field>
+        <prim-key field="productStoreId"/>
+        <prim-key field="contactMechId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="PDSTR_CMECH_PDSTR" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+        <relation type="one" fk-name="PDSTR_CMECH_CMECH" rel-entity-name="ContactMech">
+            <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="TelecomNumber">
+            <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="many" rel-entity-name="ProductStoreContactMechPurpose">
+            <key-map field-name="productStoreId"/>
+            <key-map field-name="contactMechId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ProductStoreContactMechPurpose" package-name="org.ofbiz.product.facility" title="Facility Contact Mechanism Purpose Entity">
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="contactMechId" type="id-ne"></field>
+        <field name="contactMechPurposeTypeId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <prim-key field="productStoreId"/>
+        <prim-key field="contactMechId"/>
+        <prim-key field="contactMechPurposeTypeId"/>
+        <prim-key field="fromDate"/>
+        <relation type="many" rel-entity-name="ProductStoreContactMech">
+            <key-map field-name="productStoreId"/>
+            <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one" fk-name="PDSTR_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
+            <key-map field-name="contactMechPurposeTypeId"/>
+        </relation>
+        <relation type="one" fk-name="PDSTR_CMPRP_PDSTR" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+        <relation type="one" fk-name="PDSTR_CMPRP_CMECH" rel-entity-name="ContactMech">
+            <key-map field-name="contactMechId"/>
+        </relation>
+    </entity>
     <entity entity-name="FacilityGroup" package-name="org.ofbiz.product.facility" title="Facility Group Entity">
         <field name="facilityGroupId" type="id-ne"></field>
         <field name="facilityGroupTypeId" type="id"></field>
