@@ -3060,6 +3060,201 @@
 			</widgets>
 		</section>
 	</screen>	
-
-
+	
+	  <screen name="FindProcProducer">
+          <section>
+              <actions>
+                  <set field="titleProperty" value="Find Producer"/>
+                  <set field="tabButtonItem" value="producerSearch"/>
+                  <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>  
+                  <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
+              </actions>           
+              <widgets>
+              	<decorator-screen name="DepotSalesCommonDecorator"
+  					location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                      	<screenlet title="Find Producers">
+                      		<include-form name="FindDepotSalesProducer"
+  								location="component://depotsales/widget/DepotSalesForms.xml" />
+                      	</screenlet>
+                      	<screenlet title="List Producers">
+                      		<include-form name="ListDepotSalesProducer"
+  								location="component://depotsales/widget/DepotSalesForms.xml" />
+                      	</screenlet>
+                      </decorator-section>
+                  </decorator-screen>
+              </widgets>
+          </section>
+      </screen>
+		     
+		        
+       <screen name="EditProcProducer">
+          <section>
+          	<actions>
+          		<set field="titleProperty" value="Find Producer"/>
+                  <set field="tabButtonItem" value="producerSearch" />
+                 <!-- <entity-one entity-name="PartyIdentificationAndPartyGroup" value-field="partyDetailsMap"  >
+       				<field-map field-name="partyId" from-field="parameters.partyId"/>
+       				<field-map field-name="partyIdentificationTypeId" value="PRODUCER_CODE"/>
+      			</entity-one> -->
+      			
+      			<set field="partyId" from-field="parameters.partyId" global="true"/>
+      			<set field="partyDetailsMap" type="Object" from-field="partyDetailsMap"/>
+          		<!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcCheckList.groovy"/> -->
+          		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                 	<set field="tenantIdStr" value="${tenantId}"/>
+          	</actions>
+              <widgets> 
+              	<section>
+              		<!-- <condition>
+              			<if-compare operator="equals" value="RMU" field="tenantIdStr"/>
+              		</condition> -->
+              		<widgets>
+              				<include-screen name="ProducerProfile" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+              		</widgets>
+              		<!-- <fail-widgets>
+              			<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+  		                    <decorator-section name="body">
+  		                	    <screenlet title="Producer Details">
+  		            				<include-form name="EditProcProducer" location="component://procurement/widget/ProcurementForms.xml"/>
+  		            			</screenlet>
+  		                    </decorator-section>
+  		                 </decorator-screen>
+              		</fail-widgets>	 -->
+              	</section>      
+             </widgets>
+          </section>
+      </screen> 
+		     
+         <screen name="ProducerProfile">
+            <section>
+            	<actions>
+            		<set field="titleProperty" value="Producer Details"/>
+                    <set field="tabButtonItem" value="producerSearch" />
+                      <entity-and entity-name="Party" list="partyDetailsMapsList"  >
+         				<field-map field-name="partyId" from-field="parameters.partyId"/>
+         			<!-- 	<field-map field-name="partyIdentificationTypeId" value="PRODUCER_CODE"/>  -->
+        			</entity-and>  
+        			<set field="partyDetailsMap" type="Object" from-field="partyDetailsMapsList[0]" global="true"/> 
+        			<!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ServeProfilePic.groovy"/> -->
+        			<!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/producerDetails.groovy"/> -->
+                   <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ServeProfilePic.groovy"/> -->
+                   	<set field="partyId" from-field="parameters.partyId" global="true"/>
+                    <set field="contentId" from-field="parameters.contentId" global="true"/>
+                    <entity-one entity-name="Content" value-field="content"/>
+            	</actions>
+                <widgets> 
+           			<decorator-screen name="DepotSalesCommonDecorator"
+    					location="${parameters.mainDecoratorLocation}">
+                     <decorator-section name="body">
+                     	<container style="lefthalf">
+    	             	    <screenlet title="Weaver Profile Details">
+    	         				<!--   Here we need to add hr profile -->
+    	         				<include-form name="EditProcProducer" location="component://depotsales/widget/DepotSalesForms.xml"/>
+    	         			</screenlet>
+    	         			 <include-screen name="EditProducerAccountDetails" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	      	         	  <screenlet title="Identification  Information">
+    	      	         				<include-screen name="ProducerIdentification" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	      	         				<!-- <include-form name="ProducerProfilePicture" location="component://procurement/widget/ProcurementForms.xml"/> -->
+    	      	         	  </screenlet>	
+    	      	         	<screenlet title="Loom Information">
+    	      	         				<include-screen name="CattleInfo" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	      	         				<!-- <include-form name="ProducerProfilePicture" location="component://procurement/widget/ProcurementForms.xml"/> -->
+    	      	         	</screenlet>			
+    	         			</container>
+    	         			<container style="righthalf">
+    	      	             	    <screenlet title="Profile Picture">
+    	      	         				<!--   Here we need to add hr profile -->
+    	      	         				<include-form name="ProducerProfilePicture" location="component://depotsales/widget/DepotSalesForms.xml"/>
+    	      	         			</screenlet>
+    	      	         			<include-screen name="Contact" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	         			</container>
+                     </decorator-section>
+                  </decorator-screen>
+               </widgets>
+            </section>
+        </screen> 
+        
+        <screen name="EditProducerAccountDetails">
+    		<section>
+    			<actions>
+    				<!-- <entity-and list="EditAccountDetails" entity-name="FinAccount">
+    					<field-map field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
+    					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
+    				</entity-and> -->
+    				<set field="partyId" from-field="parameters.partyId"/>
+    				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
+    					<condition-list combine="and">
+    						<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>
+    						<condition-expr field-name="ownerPartyId"  operator="equals" from-field="parameters.partyId" />
+    					</condition-list>
+    				</entity-condition>
+    				<set field="finAccountCode" value="${EditAccountDetailsList[0].finAccountCode}"/>
+    				<set field="finAccountName" value="${EditAccountDetailsList[0].finAccountName}"/>
+    				<set field="finAccountBranch" value="${EditAccountDetailsList[0].finAccountBranch}"/>
+    				<set field="ifscCode" value="${EditAccountDetailsList[0].ifscCode}"/>
+    			</actions>
+    			<widgets>
+    			 <section>
+    				<widgets>
+    					<screenlet id="AccountPanel" title="Edit Account Details" >
+                           	<include-form name="EditProducerAccountDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+    					</screenlet>
+    			  </widgets>
+    			</section>
+    			</widgets>
+    		</section>
+    	</screen>
+        
+       <screen name="ProducerIdentification">
+            <section>
+            	<actions>
+            		<entity-condition entity-name="PartyIdentification" list="existedPartyIdentifications">
+    				   <condition-list combine="and">
+    				       <condition-expr field-name="partyId" from-field="parameters.partyId" operator="equals"/>
+    				   </condition-list>
+    				   <select-field field-name="partyIdentificationTypeId"/>
+    	    		</entity-condition>
+    	    		<set field="existedPartyIdentifications" from-field="existedPartyIdentifications" global="true"/>
+    	    	<!-- 	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/partyIdentificationTypes.groovy"/>   -->
+            	</actions>
+                <widgets> 
+                	<include-form name="ProducerIdentification" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                	<include-form name="createProducerIdentification" location="component://depotsales/widget/DepotSalesForms.xml"/>
+               </widgets>
+            </section>
+        </screen> 
+       
+       <screen name="CattleInfo">
+           <section>
+           	<actions>
+                <!--    <entity-and entity-name="PartyLoom" list="CattleDetails" >
+        				
+        				<field-map field-name="partyId" from-field="parameters.partyId"/>
+       			</entity-and>  -->
+       			<set field="CattleDetails" type="Object" from-field="CattleDetails"/>
+           	</actions>
+               <widgets> 
+               	<include-form name="CattleInformation" location="component://depotsales/widget/DepotSalesForms.xml"/>
+               	<include-form name="CreateCattleInformation" location="component://depotsales/widget/DepotSalesForms.xml"/>
+               	
+              </widgets>
+           </section>
+       </screen> 
+       <screen name="Contact">
+           <section>
+               <actions>
+                   <set field="partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                   <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetContactMechs.groovy"/>
+                   <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
+               </actions>
+               <widgets>
+                   <platform-specific>
+                       <html>
+                           <html-template location="component://party/webapp/partymgr/party/profileblocks/Contact.ftl"/>
+                       </html>
+                   </platform-specific>
+               </widgets>
+           </section>
+       </screen>
 </screens>

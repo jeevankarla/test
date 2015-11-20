@@ -497,9 +497,19 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="BranchSalesOrder"/>
     </request-map>
+    <request-map uri="FindProcProducer">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProcProducer"/>
+    </request-map>
+    <request-map uri="EditProcProducer">
+            <security https="true" auth="true"/>
+            <response name="success" type="view" value="EditProcProducer"/>
+    </request-map>
     
     <!-- View Mappings -->
     
+    <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
+    <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
     <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
     <view-map name="FindDepotBranchSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotBrachShipment"/>
