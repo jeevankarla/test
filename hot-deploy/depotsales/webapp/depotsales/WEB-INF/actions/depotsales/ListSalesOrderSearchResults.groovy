@@ -1,5 +1,9 @@
 	import org.ofbiz.base.util.UtilDateTime;
 	
+	
+	import java.sql.Timestamp;
+	import java.text.SimpleDateFormat;
+	
 	import java.sql.Timestamp;
 	import java.text.ParseException;
 	import java.text.SimpleDateFormat;
@@ -19,16 +23,45 @@
 	dctx = dispatcher.getDispatchContext();
 	Map boothsPaymentsDetail = [:];
 	
+
+	
+	
 	salesChannel = parameters.salesChannelEnumId;
 	searchOrderId = parameters.orderId;
+	
+	facilityOrderId = parameters.orderId;
+	facilityDeliveryDate = parameters.estimatedDeliveryDate;
+	productId = parameters.productId;
+	facilityStatusId = parameters.statusId;
+	facilityPartyId = parameters.partyId;
+	facilityDateStart = null;
+	facilityDateEnd = null;
+	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
+		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			transDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryDate+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryDate, "");
+		}
+		facilityDateStart = UtilDateTime.getDayStart(transDate);
+		facilityDateEnd = UtilDateTime.getDayEnd(transDate);
+	}
+	
 	orderList=[];
 	condList = [];
 	if(UtilValidate.isNotEmpty(searchOrderId)){
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
 	}
 	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
+	
+	
+	
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null));
+	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
+	}
 	List<String> orderBy = UtilMisc.toList("-orderDate");
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -101,6 +134,42 @@
 	}
 	//Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
 	
-	context.orderList = orderList;
+	
+	finalFilteredList = []as LinkedHashSet;
+	
+	for (eachOrderList in orderList) {
+		 
+		if(UtilValidate.isNotEmpty(facilityPartyId)){
+		 
+			 if(facilityPartyId.equals(eachOrderList.get("partyId"))){
+				 
+				 finalFilteredList.add(eachOrderList);
+			 }
+			 
+		}
+		if(UtilValidate.isNotEmpty(facilityOrderId)){
+			
+			if(facilityOrderId.equals(eachOrderList.get("orderId"))){
+				
+				finalFilteredList.add(eachOrderList);
+			}
+			
+		}
+		if(UtilValidate.isNotEmpty(facilityStatusId)){
+			
+			if(facilityStatusId.equals(eachOrderList.get("statusId"))){
+				
+				finalFilteredList.add(eachOrderList);
+			}
+			
+		}
+		if(UtilValidate.isEmpty(facilityPartyId) && UtilValidate.isEmpty(facilityOrderId) && UtilValidate.isEmpty(facilityStatusId)){
+			
+			finalFilteredList.add(eachOrderList);
+		}
+	}
+	
+	
+	context.orderList = finalFilteredList;
 	context.partyOBMap = partyOBMap;
 	
