@@ -836,9 +836,217 @@
                </field> 
     </form> 
     
-    
-    
-    
-    
-    
+     <form name="FindDepotSalesProducer" odd-row-style="alternate-row" target="FindProcProducer"
+      		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
+              <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+              
+              <field name="partyId" title="party Id"><text  size="15"></text></field>
+              <field name="PartyName" title="Party Name"><text  size="15"></text></field>
+              <field name="roleTypeId" title="Role Type Id"><text  size="15"></text></field>
+              <field name="submit" title="Find"><submit/></field>
+              
+          </form>
+          
+          
+          
+              <form name="ListDepotSalesProducer" type="list" list-name="partyRoleAndPartyDetail" paginate-target="FindProcProducer"
+              odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+              
+              <!-- <actions>
+              	<service service-name="performFind" result-map="result" result-map-list="producersList">
+                      <field-map field-name="inputFields" from-field="parameters"/>
+                      <field-map field-name="entityName" value="FacilityPartyPartyGroupAndIdentification"/>
+                      <field-map field-name="viewIndex" from-field="viewIndex"/>
+                      <field-map field-name="viewSize" from-field="viewSize"/>
+                  </service>
+              </actions> -->
+              <row-actions>
+              	<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
+      			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
+      			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;shedFacility&quot;);}" type="Object"/>
+      			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
+              </row-actions>
+             <!--  <field name="idValue" title="Producer">
+                 <hyperlink target="EditProcProducer?partyId=${partyId}" description="${groupName}[${idValue}]">
+              </hyperlink></field>  -->
+              
+              <field name="partyId" title="party Id" widget-style="buttontext" id-name = "invoiceSlips">
+                         <hyperlink target="EditProcProducer" description="${partyId}" target-window="_blank"> 	
+                            	  <parameter param-name="partyId" /> 
+                         </hyperlink>
+                     </field>
+              
+              
+              <field name="partyName" title="party Name"><display></display></field>
+              <field name="roleTypeId" title="Role Type Id"><display></display></field>
+             <!--   <field name="unitName" title="Unit"><display></display></field>
+              <field name="facilityId" title="Society"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity> </field>-->
+          </form>
+          
+          
+          <form name="EditProcProducer" odd-row-style="alternate-row"  header-row-style="header-row-2" type="single" list-name ="partyDetailsMapsList" default-table-style="basic-table "   
+          	target="updateProcProducer">  
+          	<actions>
+          		<set field="facilityIdStr" value="${partyDetailsMap.facilityId}" />
+          		<set field="centerDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;centerFacility&quot;);}" type="Object"/>
+          		<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;unitFacility&quot;);}" type="Object"/>
+      			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
+      			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;shedFacility&quot;);}" type="Object"/>
+      			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
+      			<set field = "idValueStr" value="${partyDetailsMap.idValue}" />
+          	</actions>  
+           <field name="shedName" title="Party Id"> <display description="${partyDetailsMapsList[0].partyId}"></display></field>
+           <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
+           <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	
+           <field name="groupName" title="Producer Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
+           <field name="idValueStr" title="Producer Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
+           <field name="partyId"><hidden value="${partyDetailsMap.partyId}"/></field>
+           <field name="update"><submit/></field>
+           
+          </form>
+        <form name="EditProducerAccountDetails" type="single" separate-columns="true"  target="updateProducerFinAccount" >
+       		<field name="partyId"><hidden/></field>
+       		<field name="finAccountId"><hidden/></field>
+       		<field name="finAccountCode" title="Account No"  ><text size="20" maxlength="20"></text></field>
+               <field name="finAccountName" title="Account Name" ><text size="20"></text></field>
+               <field name="finAccountBranch" title="Account Branch" ><text size="20" maxlength="20"></text></field> 
+       		<field name="ifscCode" title="Ifsc Code"><text size="10"></text></field>
+       		<!-- <field name="disbursmentBank" title="Disbursment Bank">
+       		<drop-down allow-empty="false" no-current-selected-key="${disbursment}" >
+       			<entity-options description="${finAccountName}" key-field-name="finAccountId" entity-name="FinAccount">
+       				 <entity-constraint name="ownerPartyId" operator="equals" value="Company"/>
+       				<entity-order-by field-name="finAccountName"/> 
+       				
+       			</entity-options>
+       			<list-options key-name="finAccoutId" list-name="finAccountList" description="${finAccountName}"/>
+       		</drop-down>
+       		</field> -->
+       		<!-- <field name="date" title="Date"><date-time type="date" ></date-time></field> -->
+       		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+      	</form>
+      	
+      	  <form name="ProducerIdentification" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updatePartyIdentification"
+          	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="partyIdentificationList">
+          	  <actions>
+      			<entity-condition entity-name="PartyIdentification" list="partyIdentificationList">
+      			   <condition-list combine="and">
+      			       <condition-expr field-name="partyId" from-field="parameters.partyId" operator="equals"/>
+           			   <condition-expr field-name="partyIdentificationTypeId" value="PRODUCER_CODE" operator="not-equals"/>
+      			   </condition-list>
+          		</entity-condition>
+      		</actions>
+      		<field name="partyIdentificationTypeId" >
+      		<drop-down allow-empty="true">             
+      				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+      				          <entity-order-by field-name="partyIdentificationTypeId"/>
+      				</entity-options>
+      			</drop-down>  
+      		</field>
+      		<field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
+      		<field name="partyId"><hidden /></field>
+      		<field name="idValue" title="Number"><text size="22"></text></field>
+      		<!-- <field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
+      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
+      		<field name="submitButton" title="Update" separate-column="true">
+                  <submit button-type="button"/></field>
+              <field name="deleteLink" title="Delete" widget-style="buttontext">
+                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
+                      <parameter param-name="partyId"/>
+                      <parameter param-name="partyIdentificationTypeId"/>
+                 </hyperlink>
+              </field>
+      	</form>
+      	
+      	
+      	  <form name="createProducerIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
+          	  default-table-style="basic-table hover-bar" separate-columns="true" >
+          	  <actions>
+      		</actions>
+      		<field name="partyIdentificationTypeId" >
+      		<drop-down allow-empty="false">             
+      				<!-- <entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+      				          <entity-order-by field-name="partyIdentificationTypeId"/>
+      				</entity-options> -->
+      				<list-options key-name="partyIdentificationTypeId" list-name="partyIdentificationTypes" description="${description}"/>
+      			</drop-down>  
+      		</field>
+      		<field name="partyId"><hidden /></field>
+      		<field name="idValue" title="Number"><text size="22"></text></field>
+      		<!-- <field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
+      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
+      		<field name="submitButton" title="Create" separate-column="true">
+                  <submit button-type="button"/></field>
+      	</form>
+      	
+      	
+      <form name="CattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
+       		 list-name="CattleDetails" >
+       		<field name="partyId"><hidden/></field>     
+         	<field name="cattleTypeId" title="Cattle Type"><display-entity entity-name="CattleType" description="${description}" ></display-entity> </field>
+         	<field name="numberOfCattle" title="Number Of Cattle"><display></display></field>
+        </form>
+        
+     <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
+	     			 default-table-style="basic-table" target="updateCattleInformation" >    
+	       	<field name="partyId"><hidden/></field>
+	       	<field name="cattleTypeId" title="Loom Type">
+	       		<drop-down allow-empty="false">
+	       			<entity-options description="${description}" entity-name="CattleType"></entity-options>
+	       		</drop-down>
+	       	</field>
+	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
+	       	<field name="submit" title="update"><submit/></field>
+	      </form>
+	      <form name="ProducerProfilePicture"  
+	    	    type="single"	header-row-style="header-row">
+	  		<actions>
+	  		<!-- 	<script location="component://nhdc/applications/humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy" />  -->
+	  		</actions>
+	  		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" 	width = "150"/></field>
+	      </form> 
+	    
+       <form name="FindProcurementProducer" odd-row-style="alternate-row" target="FindProcProducer"
+   		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
+           <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+           <field name="shedId" title="Shed Code">
+           	<drop-down>
+           		<entity-options description="${facilityName}" entity-name="Facility" key-field-name="facilityId">
+           			<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+           		</entity-options>
+           	</drop-down>
+           </field>
+           <field name="partyIdentificationTypeId" ><hidden value="PRODUCER_CODE"/></field>
+           <field name="unitCode" title="Unit Code"><text  size="15"></text></field>
+           <field name="facilityCode" title="Society Code"><text  size="15"></text></field>
+           <field name="producerCode" title="Producer Code"><text  size="15"></text></field>
+           <field name="producerName" title="Producer Name"><text  size="15"></text></field>
+           <field name="submit" title="Find"><submit/></field>
+           
+       </form>
+   <form name="ListProcurementProducer" type="list" list-name="producerDetails" paginate-target="FindProcProducer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <!-- <actions>
+        	<service service-name="performFind" result-map="result" result-map-list="producersList">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityPartyPartyGroupAndIdentification"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions> -->
+        <row-actions>
+        	<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
+			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
+			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;shedFacility&quot;);}" type="Object"/>
+			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
+        </row-actions>
+        <field name="idValue" title="Producer">
+           <hyperlink target="EditProcProducer?partyId=${partyId}" description="${groupName}[${idValue}]">
+        </hyperlink></field>
+        <field name="shedName" title="Shed"><display></display></field>
+        <field name="unitName" title="Unit"><display></display></field>
+        <field name="facilityId" title="Society"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity> </field>
+    </form>
+       
+	      
 </forms>

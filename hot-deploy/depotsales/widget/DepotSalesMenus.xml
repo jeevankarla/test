@@ -24,6 +24,16 @@
             </condition>        
         	<link target="FindFacility"/>
         </menu-item>
+       <menu-item name="producerSearch" title="Find Weaver">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="FACILITY"  action="_UPDATE"/>
+            		<if-has-permission permission="FACILITY"  action="_FIND"/>
+            	</or>
+            </condition>        
+        	<link target="FindProcProducer"/>
+        </menu-item>
         <menu-item name="Product" title="Product">       
             <condition>
         		<and>
