@@ -249,7 +249,11 @@
        <response name="success" type="view" value="FindMaterialEnquiry"/>
        <response name="error" type="view" value="FindMaterialEnquiry"/>
      </request-map> -->
-     
+    <request-map uri="partyClassificationSubTree">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="partyClassificationTree.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
      <request-map uri="ApproveMaterialRequirement">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApproveMaterialRequirement"/>

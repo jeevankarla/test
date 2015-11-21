@@ -10,7 +10,7 @@
 	</style>
 	
 	<script type="text/javascript">
-	
+			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
 		$(document).ready(function(){
 	
 			$( "#effectiveDate" ).datepicker({
@@ -60,7 +60,11 @@
 		    		return false;   
 				}
 			});
-			
+			 $('#suplierPartyId').keypress(function (e) { 
+				$("#suplierPartyId").autocomplete({ source: supplierAutoJson , select: function( event, ui ) {
+					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
+				} });	
+		 });
 			var productStoreObjOnload=$('#productStoreIdFrom');
 			if (productStoreObjOnload != null && productStoreObjOnload.val() != undefined ){
 				showStoreCatalog(productStoreObjOnload);
@@ -149,7 +153,7 @@
 	<#include "EditUDPPriceDepot.ftl"/>
 	
 	<div class="full">
-	<div class="lefthalf">
+	<div>
 	<div class="screenlet" style="width:95%">
 		<div class="screenlet-title-bar">
 	        <div class="grid-header" style="width:100%">
@@ -193,7 +197,7 @@
 			            	</td>
 			       	  	</#if>
 			        </tr>
-			        <tr>
+			       <tr>
 						<td>&nbsp;</td>
 						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Estimated Delivery Date:</div></td>
 						<td>&nbsp;</td>
@@ -212,10 +216,9 @@
 						</#if>
 					</tr>
 					<tr><td><br/></td></tr>
-					<tr><td><br/></td></tr>
 					<tr>
 			      		<td>&nbsp;</td>
-			      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Billing Type:</div></td>
+			      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
 			      		<td>&nbsp;</td>
 			   			<#if billingType?exists && billingType?has_content>  
 			  	  			<input type="hidden" name="billingType" id="billingType" value="${billingType?if_exists}"/>  
@@ -231,7 +234,6 @@
 			      			</td>
 			   			</#if>
 			        </tr>
-			        <tr><td><br/></td></tr>
 			        <tr><td><br/></td></tr>
 			        <#if changeFlag?exists && changeFlag != "EditDepotSales">
 				      	<tr>
@@ -321,8 +323,6 @@
 							</tr>
 							-->
 			    	</#if>
-			    	<tr><td><br/></td></tr>
-			    	<tr><td><br/></td></tr>
 		        	<#if changeFlag?exists && changeFlag !='EditDepotSales' && changeFlag !='ICPTransferSale'>
 		        		<tr>
 			          		<td>&nbsp;</td>
@@ -353,9 +353,6 @@
 			      		</td>
 			        	
 			        </tr>
-			        <tr><td><br/></td></tr>
-			        <tr><td><br/></td></tr>
-			        
 	        		<tr>
 		          		<td>&nbsp;</td>
 		          		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
@@ -377,7 +374,7 @@
 		       			</#if>
 	        		</tr>
 			        
-			        <tr><td><br/></td></tr>
+			        <#--<tr><td><br/></td></tr>
 			        <tr><td><br/></td></tr>
 					<tr>
 			        	<td>&nbsp;</td>
@@ -388,7 +385,41 @@
 			      			<span class="tooltip" id="branchName"></span>
 			      		</td>
 			        	
-			        </tr>
+			        </tr>-->
+
+			         <tr>
+			         <td>&nbsp;</td>
+			          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier :</div></td>
+			        <td>
+			        
+			          <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if suplierPartyId?exists && suplierPartyId?has_content>  
+					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${suplierPartyId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+
+							<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>  
+					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${parameters.suplierPartyId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
+				          			<span class="tooltip" id="suplierPartyName"></span>
+				          		</td>
+				          		</#if>
+			        	</#if>
+			        
+			        
+			        </td> </tr>
 			        <tr>
 			          <td>&nbsp;</td>
 			          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
@@ -420,6 +451,7 @@
 				          	</#if>
 			        	</#if>
 			        </tr>
+			       
 					<tr><td><br/></td></tr>
 					
 					<#-- Order Message Field Starts -->
@@ -501,7 +533,7 @@
 	</#if>     
 	</div>
 	
-	<div class="righthalf">
+	<div>
 		<div class="screenlet" >
 		    <div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
