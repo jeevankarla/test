@@ -31,8 +31,10 @@
 				<set field="facilityId" value="ZO1"/>
 				<!-- <set field="isTreeRoot" value="Y"/> -->
 				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy" />
-			</actions>
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy" /> 
+	<!-- 				<script  -->
+	<!-- 				location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/partyClassificationTree.groovy" />-->
+		</actions>
 			<widgets>
 				<section>
 					<condition>
@@ -51,6 +53,7 @@
 													<html>
 														<html-template
 															location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template>
+							<!--								location="component://depotsales/webapp/depotsales/depotsales/partyClassificationTree.ftl"></html-template>-->
 													</html>
 												</platform-specific>
 											</screenlet>
