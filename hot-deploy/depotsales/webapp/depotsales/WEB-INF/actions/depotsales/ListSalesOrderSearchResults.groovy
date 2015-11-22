@@ -136,9 +136,27 @@
 	
 	
 	finalFilteredList = []as LinkedHashSet;
-	
+	orderDetailsMap=[:];
 	for (eachOrderList in orderList) {
-		 
+		orderId=eachOrderList.get("orderId");
+		exprList=[];
+		exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+		EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		supplierPartyId="";
+		productStoreId="";
+		supplierDetails = EntityUtil.getFirst(delegator.findList("OrderRole", discontinuationDateCondition, null,null,null, false));
+		orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
+		if(orderHeader){
+		if(supplierDetails){
+			supplierPartyId=supplierDetails.get("partyId");
+		}
+		productStoreId=orderHeader.productStoreId;
+		tempMap=[:];
+		tempMap.put("supplierPartyId", supplierPartyId);
+		tempMap.put("productStoreId", productStoreId);
+		orderDetailsMap.put(orderId,tempMap)
+		}
 		if(UtilValidate.isNotEmpty(facilityPartyId)){
 		 
 			 if(facilityPartyId.equals(eachOrderList.get("partyId"))){
@@ -172,4 +190,5 @@
 	
 	context.orderList = finalFilteredList;
 	context.partyOBMap = partyOBMap;
+	context.orderDetailsMap=orderDetailsMap;
 	

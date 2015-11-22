@@ -83,8 +83,8 @@
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
 				} });	
 		 });
-		  $('#branchId').keypress(function (e) { 
-				$("#branchId").autocomplete({ source: branchAutoJson , select: function( event, ui ) {
+		  $('#productStoreId').keypress(function (e) { 
+				$("#productStoreId").autocomplete({ source: branchAutoJson , select: function( event, ui ) {
 					$('span#branchName').html('<label>'+ui.item.label+'</label>');
 				} });	
 		 });
@@ -244,25 +244,25 @@
 			          	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
 			        
 			          <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if branchId?exists && branchId?has_content>  
-					  	  		<input type="hidden" name="branchId" id="branchId" value="${branchId?if_exists}"/>  
+							<#if productStoreId?exists && productStoreId?has_content>  
+					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div class='tabletext h3'>
-				               			${branchId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				               			${productStoreId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				          	</#if>
 				    	<#else>
-							<#if parameters.branchId?exists && parameters.branchId?has_content>  
-					  	  		<input type="hidden" name="branchId" id="branchId" value="${parameters.branchId?if_exists}"/>  
+							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
+					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div class='tabletext h3'>
-				               			${parameters.branchId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="branchId" id="branchId" onblur= 'javascript:getParties(this);' />
+				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
 				          			<span class="tooltip" id="branchName"></span>
 				          		</td>
 				          		</#if>
