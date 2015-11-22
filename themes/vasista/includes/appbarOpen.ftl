@@ -105,6 +105,6 @@ under the License.
         </li>
         </ul>
 <#else>
-        <h2>MDKMF</h2>
+        <h2>NHDC</h2>
 </#if>        
       </div>
