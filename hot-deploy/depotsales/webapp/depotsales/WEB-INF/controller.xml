@@ -510,6 +510,16 @@
             <response name="success" type="view" value="EditProcProducer"/>
     </request-map>
     
+    <!-- Sub Depot Operatios Requests-->
+    
+     <request-map uri="DepotTransMain">
+        <security https="true" auth="true"/>
+    	<response name="success" type="request" value="StockPositionSubDepot"/>
+    </request-map>
+     <request-map uri="StockPositionSubDepot">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="StockPositionSubDepot"/>
+    </request-map>
     <!-- View Mappings -->
     
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
@@ -581,4 +591,7 @@
     <view-map name="FindFacilityPhysicalInventoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindFacilityPhysicalInventoryDepot"/>
     <view-map name="FinddepotPayments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FinddepotPayments"/>
     
+    <!-- sub depot operations-->
+    
+    <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
 </site-conf>
