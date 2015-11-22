@@ -51,13 +51,13 @@ under the License.
     <test-suite loader="main" location="testdef/productionruntests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="manufacturing"
+<!--     <webapp name="manufacturing"
         title="Manufacturing"
         app-bar-display="true"        
         server="default-server"
         location="webapp/manufacturing"
         base-permission="OFBTOOLS,MANUFACTURING"
-        mount-point="/manufacturing"/>
+        mount-point="/manufacturing"/> -->
 
 </ofbiz-component>
 

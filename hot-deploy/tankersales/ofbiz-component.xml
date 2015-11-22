@@ -30,10 +30,10 @@
     <test-suite loader="main" location="testdef/TankerSalesTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="tankersales"
+<!--     <webapp name="tankersales"
         title="TankerSales"
         server="default-server"
         location="webapp/tankersales"
         base-permission="OFBTOOLS,TANKERSALES"
-        mount-point="/tankersales"/>
+        mount-point="/tankersales"/> -->
 </ofbiz-component>
