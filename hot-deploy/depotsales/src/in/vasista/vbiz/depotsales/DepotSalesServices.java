@@ -59,6 +59,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 public class DepotSalesServices{
 
    public static final String module = DepotSalesServices.class.getName();
+   
+   public static final String resource = "AccountingUiLabels";
 
    public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -2228,5 +2230,41 @@ public class DepotSalesServices{
 	    return result;
    
    	}
+   	
+   	
+   	public static String createOrderPayment(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+
+		HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String paymentDate = (String) request.getParameter("paymentDate");
+	    String orderId = (String) request.getParameter("orderId");
+	  	String partyId = (String) request.getParameter("partyId");
+	  	String paymentMethodTypeId = (String) request.getParameter("paymentTypeId");
+	  	String amount = (String) request.getParameter("amount");
+
+  	
+  	
+  	 Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId, "userLogin", userLogin);
+     String orderPaymentPreferenceId = null;
+     try {
+    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+     } catch (GenericServiceException e) {
+         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
+         Debug.logError(e, errMsg, module);
+     }
+
+	return partyId;
+	
+}
+   	
+   	
+   	
    	
 }

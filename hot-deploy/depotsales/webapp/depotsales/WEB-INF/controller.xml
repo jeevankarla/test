@@ -510,6 +510,24 @@
             <response name="success" type="view" value="EditProcProducer"/>
     </request-map>
     
+     <request-map uri="orderPayment">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="orderPayment"/>   
+	       <response name="failed" type="view" value="orderPayment"/>  
+	    </request-map>
+       <request-map uri="createOrderPayment">
+          <security https="true" auth="true"/>
+          <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
+          <response name="success" type="view" value="orderPayment"/>   
+         <response name="failed" type="view" value="orderPayment"/>  
+      </request-map>
+      <request-map uri="createCustomPaymentFromPreference">
+         <security https="true" auth="true"/>
+         <event type="service" path="" invoke="createCustPaymentFromPreference"/>
+         <response name="success" type="view" value="orderPayment"/>   
+        <response name="failed" type="view" value="orderPayment"/>  
+     </request-map>
+    
     <!-- Sub Depot Operatios Requests-->
     
      <request-map uri="DepotTransMain">
@@ -522,6 +540,8 @@
     </request-map>
     <!-- View Mappings -->
     
+    
+    <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
     <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
