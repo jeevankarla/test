@@ -295,7 +295,9 @@ under the License.
         <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
     </service>
 
-    <service name="createPaymentFromPreference" engine="java"
+   
+    
+      <service name="createPaymentFromPreference" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="createPaymentFromPreference">
         <description>Creates a payment using the order payment preference</description>
         <attribute name="orderPaymentPreferenceId" type="String" mode="IN" optional="false"/>
@@ -306,7 +308,20 @@ under the License.
         <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
     </service>
 
-    <service name="updateTrackingNumber" engine="java"
+     <service name="createCustomPaymentFromPreference" engine="java"
+            location="org.ofbiz.order.order.OrderServices" invoke="createCustomPaymentFromPreference">
+        <description>Creates a payment using the order payment preference</description>
+        <attribute name="orderPaymentPreferenceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentFromId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
+      <service name="updateTrackingNumber" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="updateTrackingNumber">
         <description>Sets the tracking number on a shipment preference</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
