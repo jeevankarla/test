@@ -7503,6 +7503,116 @@ public class OrderServices {
        return successResult;
    }
 
+   
+   public static Map<String, Object> createCustPaymentFromPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
+       Delegator delegator = dctx.getDelegator();
+       LocalDispatcher dispatcher = dctx.getDispatcher();
+       GenericValue userLogin = (GenericValue) context.get("userLogin");
+       String orderPaymentPreferenceId = (String) context.get("orderPaymentPreferenceId");
+       String paymentRefNum = (String) context.get("paymentRefNum");
+       String paymentFromId = (String) context.get("paymentFromId");
+       String comments = (String) context.get("comments");
+       String amountStr = (String) context.get("amount");
+       Timestamp eventDate = (Timestamp) context.get("eventDate");
+       Locale locale = (Locale) context.get("locale");
+       
+       
+       
+       BigDecimal amount =new BigDecimal(amountStr);
+       if (UtilValidate.isEmpty(eventDate)) {
+           eventDate = UtilDateTime.nowTimestamp();
+       }
+       try {
+           // get the order payment preference
+           GenericValue orderPaymentPreference = delegator.findByPrimaryKey("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId));
+           if (orderPaymentPreference == null) {
+               return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                       "OrderOrderPaymentCannotBeCreated",
+                       UtilMisc.toMap("orderPaymentPreferenceId", "orderPaymentPreferenceId"), locale));
+           }
+
+           // get the order header
+           GenericValue orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
+           if (orderHeader == null) {
+               return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                       "OrderOrderPaymentCannotBeCreatedWithRelatedOrderHeader", locale));
+           }
+
+           // get the store for the order.  It will be used to set the currency
+           GenericValue productStore = orderHeader.getRelatedOne("ProductStore");
+           if (productStore == null) {
+               return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                       "OrderOrderPaymentCannotBeCreatedWithRelatedProductStore", locale));
+           }
+
+           // get the partyId billed to
+           if (paymentFromId == null) {
+               OrderReadHelper orh = new OrderReadHelper(orderHeader);
+               GenericValue billToParty = orh.getBillToParty();
+               if (billToParty != null) {
+                   paymentFromId = billToParty.getString("partyId");
+               } else {
+                   paymentFromId = "_NA_";
+               }
+           }
+
+           // set the payToPartyId
+           String payToPartyId = productStore.getString("payToPartyId");
+           if (payToPartyId == null) {
+               return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                       "OrderOrderPaymentCannotBeCreatedPayToPartyIdNotSet", locale));
+           }
+
+           // create the payment
+           Map<String, Object> paymentParams = new HashMap<String, Object>();
+           BigDecimal maxAmount = orderPaymentPreference.getBigDecimal("maxAmount");
+           //if (maxAmount > 0.0) {
+               paymentParams.put("paymentTypeId", "SALES_PAYIN");
+               paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
+               paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+               paymentParams.put("amount", amount);
+               paymentParams.put("statusId", "PMNT_RECEIVED");
+               paymentParams.put("effectiveDate", eventDate);
+               paymentParams.put("partyIdFrom", paymentFromId);
+               paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
+               paymentParams.put("partyIdTo", payToPartyId);
+           /*}
+           else {
+               paymentParams.put("paymentTypeId", "CUSTOMER_REFUND"); // JLR 17/7/4 from a suggestion of Si cf. https://issues.apache.org/jira/browse/OFBIZ-828#action_12483045
+               paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId")); // JLR 20/7/4 Finally reverted for now, I prefer to see an amount in payment, even negative
+               paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+               paymentParams.put("amount", Double.valueOf(Math.abs(maxAmount)));
+               paymentParams.put("statusId", "PMNT_RECEIVED");
+               paymentParams.put("effectiveDate", UtilDateTime.nowTimestamp());
+               paymentParams.put("partyIdFrom", payToPartyId);
+               paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
+               paymentParams.put("partyIdTo", billToParty.getString("partyId"));
+           }*/
+           if (paymentRefNum != null) {
+               paymentParams.put("paymentRefNum", paymentRefNum);
+           }
+           if (comments != null) {
+               paymentParams.put("comments", comments);
+           }
+           paymentParams.put("userLogin", userLogin);
+
+           Map<String, Object> paymentDetailsMap = dispatcher.runSync("createPayment", paymentParams);
+           
+           Map<String, Object> result = ServiceUtil.returnSuccess("Payment of amount "+amount+" has been successfully received");
+
+           return result;
+           
+       } catch (GenericEntityException ex) {
+           Debug.logError(ex, "Unable to create payment using payment preference.", module);
+           return(ServiceUtil.returnError(ex.getMessage()));
+       } catch (GenericServiceException ex) {
+           Debug.logError(ex, "Unable to create payment using payment preference.", module);
+           return(ServiceUtil.returnError(ex.getMessage()));
+       }
+   }
+   
+   
+   
 }
 
 

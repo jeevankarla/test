@@ -1,5 +1,4 @@
 
-
 <#if (channelSize>0 || prodSize>0)>
 <style type="text/css">
 	.cell-title {
@@ -308,15 +307,15 @@ $(document).ready(function(){
 		tooltipOpts: {
 			content: "%s %p.2%   (Rs %y)", // show percentages, rounding to 2 decimal places
 			shifts: {
-				x: 20,
+				x: -50,
 				y: 0
 			},
 			defaultTheme: false
 		},			
 		legend: {
 			show: true,
-			noColumns: 3,
-			margin: [-240, -10]
+			noColumns: 1,
+			margin: [-350, 0]
 		}
 	});
 	
@@ -436,29 +435,30 @@ $(document).ready(function(){
 	</style>
 
 <div class="lefthalf">
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix">Channel-wise Sales (${froDate?date} - ${toDate?date}) <#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Parlour Despatch Totals (${froDate?date} - ${toDate?date}) <#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid1" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
+	<div class="screenlet">
+	    <div class="screenlet-title-bar">
+	      <h3><#if chartType="SalesMix">Product-wise Sales (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Product-wise Parlour Despatch (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
+	    </div>
+	    <div class="screenlet-body">
+	   		<div id="chart2" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<br><br>
+	  
+			<div id="myGrid2" style="width:400px;height:250px;margin-left:20px;"></div>   		
+	    </div>
+	</div>
+	<div class="screenlet">
+	    <div class="screenlet-title-bar">
+	      <h3><#if chartType="SalesMix">Channel-wise Sales (${froDate?date} - ${toDate?date}) <#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Parlour Despatch Totals (${froDate?date} - ${toDate?date}) <#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
+	    </div>
+	    <div class="screenlet-body">
+	   		<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<br><br>
+	  
+			<div id="myGrid1" style="width:400px;height:250px;margin-left:20px;"></div>   		
+	    </div>
+	</div>
 </div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix">Product-wise Sales (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Product-wise Parlour Despatch (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart2" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid2" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
-</div>
-</div>
+
 <div class="righthalf">
 <div class="screenlet">
     <div class="screenlet-title-bar">

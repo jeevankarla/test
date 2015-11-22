@@ -1,3 +1,4 @@
+
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -179,18 +180,21 @@ under the License.
           <td>Party Name</td>
           <td>Order Id</td>
           <td>Order Date</td>
-          <td>View Order</td>
-          <td>Print Indent</td>
-          <#--<td>Edit Batch</td>-->
+          <td>Grand Total</td>
+         <td>View Order</td>
+          <#-- <td>Print Indent</td>
+          <td>Edit Batch</td>
           <td>Approve</td>
-
-        <#-- <td>DC Report</td> -->
-          <#-- <td>Payment</td> -->
-          <td>Edit</td>
-          <td>Generate PO</td>
-          <#--<td>Party Balance</td>-->
+         <td>DC Report</td>-->
+           <td>Payment Preference</td>
+            <td>Payment</td>
+           <td>Payment Status</td>
+             <td>Received Amount</td>
+        <#--  <td>Edit</td>
+          <td>Generate PO</td> -->
+          <#--<td>Party Balance</td>
           <td>Cancel</td>
-		<#--  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
+		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
           
         </tr>
       </thead>
@@ -202,8 +206,9 @@ under the License.
               	<td>${eachOrder.partyName?if_exists}</td>
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
+                <td>${eachOrder.orderTotal?if_exists}</td>
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
-              	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
+              <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
               	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
@@ -218,22 +223,43 @@ under the License.
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
               	
-              	<#if (eachOrder.get('statusId') == "ORDER_CREATED") ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
-              		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              	<#--<#if (eachOrder.get('statusId') == "ORDER_CREATED") ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
+              	<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              		<td></td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
-              	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
+              		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
+              	</#if>-->
+              	<td><input type="button" name="Payment" id="Payment" value="Payment Preference" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>
+              	
+              	<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
+              	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
+              	<#else>
+              	<td></td>
               	</#if>
-              <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}','${eachOrder.orderDate?if_exists}');"/></td>
+              
+                 <#if paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId))?exists>
+                     <td>${"Payment Received"}</td>
+              	<#else>
+              	<td>Payment Not Received</td>
+              	</#if>
+                
+                <#if paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId))?exists>
+              	<td>${paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId)).get("amount")}</td>
+              	 <#else>
+              	 <td></td>
+              	 </#if>
+              
+              	
+              	<#--	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}','${eachOrder.orderDate?if_exists}');"/></td>-->
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
+        		<#--<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>-->
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
-              	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
+             <#-- 	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
-              	</#if>
+              	</#if>-->
               	
               	
               	

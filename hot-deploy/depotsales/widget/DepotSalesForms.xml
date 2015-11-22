@@ -1035,6 +1035,34 @@
         <field name="lastName" title="Last Name"><display/></field>
     	<field name="description" title="Role Type"><display/></field>
     </form>
+      <form name="FindOrderPaymentSeach" title="" type="single" target="orderPayment" header-row-style="header-row" default-table-style="basic-table">
+        <field name="salesChannelEnumId" ><hidden value="DEPOT_CHANNEL"/></field>  
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="SALES_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%SALES%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field name="orderId"><text/></field>
+        <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
+        
+        <!-- <field name="sequenceId"><text-find/></field> -->
+      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="statusId">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        	</drop-down>
+        </field>
+         <field name="findPoFlag"><hidden value="Y"/></field>  
+     	<field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
        
        
 	      

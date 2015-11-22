@@ -42,6 +42,9 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
+				
+				paymentFieldsOnchange();
+						
 				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 				},
@@ -50,6 +53,27 @@
 			}
 		});
 	}
+	
+	
+	
+	
+	
+	
+	function datepick()
+	{		
+		$( "#effectiveDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1});
+		$( "#paymentDate" ).datepicker({
+			dateFormat:'dd/mm/yy',
+			changeMonth: true,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
+	
+	
 	
 	function disableSubmitButton(){			
 		$("input[type=submit]").attr("disabled", "disabled");
@@ -162,4 +186,103 @@
                	}							
 		});
 	}
+	
+	
+	
+	
+	function showPaymentEntry(orderId, partyId,partyName) {
+		var message = "";
+		orderId = orderId;
+		partyId = partyId;
+		
+		partyName= partyName;
+		
+		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			//message += "<br/><br/>";
+			
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						"<option value='CASH_PAYIN' >CHS</option>"+
+						"<option value='CHALLAN_PAYIN' >CHL</option>"+
+						"<option value='CHEQUE_PAYIN' >CHQ</option>"+
+						"<option value='DIRECTDEPOSIT_PAYIN' >Direct Deposite Payment</option>"+
+						"<option value='FUND_TRANSFER' >Fund Transfer</option>"+
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Num :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
+		Alert(message, title);
+		
+		
+	}
+	
+	
+	function paymentFieldsOnchange(){
+  
+     
+      var paymentType =  $("#paymentTypeId").val()
+     
+     if(paymentType == 'CASH_PAYIN'){
+     
+     $("#inFavourOf").parent().parent().hide();
+     
+     $("#comments").parent().parent().hide();
+     
+     $("#issuingAuthority").parent().parent().hide();
+     
+     $("#paymentRefNum").parent().parent().hide();
+     
+     
+                       
+    }else{
+    
+      $("#inFavourOf").parent().parent().show();
+     
+     $("#comments").parent().parent().show();
+     
+     $("#issuingAuthority").parent().parent().show();
+     
+     $("#paymentRefNum").parent().parent().show();
+    
+    
+    }
+     
+     
+     
+  }
+	
+	
+	
+	function showPayment(orderPreferenceId) {
+		var message = "";
+		
+		var orderPreferenceId = orderPreferenceId;
+		message += "<html><head></head><body><form action='createCustomPaymentFromPreference' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			//message += "<br/><br/>";
+			
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='orderPaymentPreferenceId' value='"+orderPreferenceId+"' readOnly/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderPreferenceId+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Order Preference Number : [ "+orderPreferenceId+" ]";
+		Alert(message, title);
+		
+		
+	}
+	
+	
+	
 </script>

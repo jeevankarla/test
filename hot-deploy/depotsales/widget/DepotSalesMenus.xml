@@ -328,6 +328,12 @@
 			 <menu-item name="BranchSalesOrder" title="Order Entry">
         		<link target="BranchSalesOrder"/>
         	 </menu-item>
+        	   	 <menu-item name="OrderPayment" title="Indent Payment">
+			<link target="orderPayment">
+				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+			</link>
+		</menu-item>
         	  <menu-item name="processOrdersBranchSales" title="Process Orders">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
