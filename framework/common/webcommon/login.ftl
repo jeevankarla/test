@@ -1,5 +1,5 @@
 <html>	<head>		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<title>milkosoft- Login</title>	
+		<title>vbiz- Login</title>	
         <link rel="shortcut icon" href="/images/vbiz.ico" />
         <link rel="stylesheet" href="/vasista/login.css" type="text/css"/> 	</head><#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "multitenant")>
