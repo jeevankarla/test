@@ -99,6 +99,7 @@
     var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
+	var branchAutoJson = ${StringUtil.wrapString(branchJSON)!'[]'};	
 	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};

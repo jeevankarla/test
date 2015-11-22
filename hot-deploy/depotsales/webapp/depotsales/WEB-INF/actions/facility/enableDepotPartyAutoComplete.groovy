@@ -17,6 +17,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.party.party.PartyHelper;
 
+JSONArray branchJSON = new JSONArray();
+JSONObject branchPartyObj = new JSONObject();
 JSONArray partyJSON = new JSONArray();
 JSONObject partyNameObj = new JSONObject();
 dctx = dispatcher.getDispatchContext();
@@ -61,17 +63,56 @@ if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.
 		}
 	}
 }
+//branch Party Json
+productStoreIds=[];
+productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
+if(parameters.productStoreId){
+	productStoreIds.add(parameters.productStoreId);
+}else{
+productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
+}
+
+productStoreIds.each{ productStoreId ->
+	JSONArray brcpartyJSON = new JSONArray();
+	customersList=[];
+	JSONObject newbranchObj = new JSONObject();
+	productStoreValue = EntityUtil.getFirst(EntityUtil.filterByCondition(productStoreDetails, EntityCondition.makeCondition("productStoreId",EntityOperator.EQUALS, productStoreId)));
+	if(productStoreValue){
+		storeName="";
+		if(productStoreValue.get("storeName")){
+			storeName=productStoreValue.get("storeName");
+		}
+		newbranchObj.put("value",productStoreId);
+		newbranchObj.put("label",storeName+" ["+productStoreId+"]");
+		branchJSON.add(newbranchObj);
+	}
+	/*customersList = in.vasista.vbiz.depotsales.DepotSalesHelperServices.getBranchCustomers(dctx , UtilMisc.toMap("productStoreId",productStoreId,"userLogin", userLogin));
+	customersList.each{eachParty ->
+		JSONObject newPartyObj = new JSONObject();
+		partyName=PartyHelper.getPartyName(delegator, eachParty, false);
+		newPartyObj.put("value",eachParty);
+		newPartyObj.put("label",partyName+" ["+eachParty+"]");
+		partyNameObj.put(eachParty,partyName);
+		brcpartyJSON.add(newPartyObj);
+		partyJSON.add(newPartyObj);
+		}
+	branchPartyObj.put(productStoreId, brcpartyJSON);*/
+	
+	}
+//Debug.log("branchPartyObj====================="+branchPartyObj);
 
 partyDetailsList.each{eachParty ->
-	JSONObject newPartyObj = new JSONObject();
-	partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
-	newPartyObj.put("value",eachParty.partyId);
-	newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
-	partyNameObj.put(eachParty.partyId,partyName);
-	partyJSON.add(newPartyObj);
+JSONObject newPartyObj = new JSONObject();
+partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
+newPartyObj.put("value",eachParty.partyId);
+newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
+partyNameObj.put(eachParty.partyId,partyName);
+partyJSON.add(newPartyObj);
 }
 context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
+context.branchJSON=branchJSON;
+context.branchPartyObj=branchPartyObj;
 context.partyIdsListkkkk=partyIdsList;
 //supplier json for supplier lookup.
 JSONArray supplierJSON = new JSONArray();
@@ -88,3 +129,7 @@ if(supplierList){
 	}
 }
 context.supplierJSON=supplierJSON;
+/*if(parameters.productStoreId){
+	request.setAttribute("partyJSON", partyJSON);
+	return "success";
+}*/

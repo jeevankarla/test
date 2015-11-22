@@ -11,6 +11,24 @@
 	
 	<script type="text/javascript">
 			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
+		//	var branchPartyJson = ${StringUtil.wrapString(branchPartyObj)!'[]'};
+ 		//	function getParties(branch){
+	 //	var productStoreId=$(branch).val();
+	     //  	var dataString="productStoreId=" + productStoreId ;
+	     // alert(JSON.stringify(branchPartyJson[productStoreId]));
+	      
+	    //  branchCustomersJson=branchPartyJson[productStoreId];
+	      
+	    //  $("#partyId").autocomplete({ source: branchCustomersJson }).keydown(function(e){ 
+		//		if (e.keyCode === 13){
+		//	      	$('#boothId').autocomplete('close');
+		  //  		$('#indententryinit').submit();
+		  //  		return false;   
+		//		}
+		//	});
+	 
+		// }
+
 		$(document).ready(function(){
 	
 			$( "#effectiveDate" ).datepicker({
@@ -65,6 +83,12 @@
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
 				} });	
 		 });
+		  $('#branchId').keypress(function (e) { 
+				$("#branchId").autocomplete({ source: branchAutoJson , select: function( event, ui ) {
+					$('span#branchName').html('<label>'+ui.item.label+'</label>');
+				} });	
+		 });
+		 
 			var productStoreObjOnload=$('#productStoreIdFrom');
 			if (productStoreObjOnload != null && productStoreObjOnload.val() != undefined ){
 				showStoreCatalog(productStoreObjOnload);
@@ -216,12 +240,33 @@
 					<tr><td><br/></td></tr>
 
 			        <tr>
-			          	<td>&nbsp;</td>
+ 					<td>&nbsp;</td>
 			          	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
-			          	<td valign='middle'>
-			      			<input type="text" name="branchId" id="branchId"/>
-			      			<span class="tooltip" id="branchName"></span>
-			      		</td>
+			        
+			          <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if branchId?exists && branchId?has_content>  
+					  	  		<input type="hidden" name="branchId" id="branchId" value="${branchId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${branchId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.branchId?exists && parameters.branchId?has_content>  
+					  	  		<input type="hidden" name="branchId" id="branchId" value="${parameters.branchId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${parameters.branchId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="branchId" id="branchId" onblur= 'javascript:getParties(this);' />
+				          			<span class="tooltip" id="branchName"></span>
+				          		</td>
+				          		</#if>
+			        	</#if>
 			        	
 			    
 			        <#if changeFlag?exists && changeFlag !='EditDepotSales' && changeFlag !='ICPTransferSale'>

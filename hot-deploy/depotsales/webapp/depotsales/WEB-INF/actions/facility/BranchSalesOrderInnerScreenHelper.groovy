@@ -97,7 +97,7 @@
 			partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
 	    }
     }
-	if(!party || !partyRole){
+	if(!party){
 		context.errorMessage = partyId+" incorrect for the transaction !!";
 		displayGrid = false;
 		return result;
