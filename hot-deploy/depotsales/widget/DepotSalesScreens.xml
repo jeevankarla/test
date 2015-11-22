@@ -3069,18 +3069,19 @@
               <actions>
                   <set field="titleProperty" value="Find Producer"/>
                   <set field="tabButtonItem" value="producerSearch"/>
-                  <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>  
+                  <!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   -->
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
+              	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               </actions>           
               <widgets>
               	<decorator-screen name="DepotSalesCommonDecorator"
   					location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">
-                      	<screenlet title="Find Producers">
+                      	<screenlet title="Find Weaver">
                       		<include-form name="FindDepotSalesProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" />
                       	</screenlet>
-                      	<screenlet title="List Producers">
+                      	<screenlet title="List Weaver">
                       		<include-form name="ListDepotSalesProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" />
                       	</screenlet>

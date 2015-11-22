@@ -836,53 +836,6 @@
                </field> 
     </form> 
     
-     <form name="FindDepotSalesProducer" odd-row-style="alternate-row" target="FindProcProducer"
-      		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
-              <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-              
-              <field name="partyId" title="party Id"><text  size="15"></text></field>
-              <field name="PartyName" title="Party Name"><text  size="15"></text></field>
-              <field name="roleTypeId" title="Role Type Id"><text  size="15"></text></field>
-              <field name="submit" title="Find"><submit/></field>
-              
-          </form>
-          
-          
-          
-              <form name="ListDepotSalesProducer" type="list" list-name="partyRoleAndPartyDetail" paginate-target="FindProcProducer"
-              odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-              
-              <!-- <actions>
-              	<service service-name="performFind" result-map="result" result-map-list="producersList">
-                      <field-map field-name="inputFields" from-field="parameters"/>
-                      <field-map field-name="entityName" value="FacilityPartyPartyGroupAndIdentification"/>
-                      <field-map field-name="viewIndex" from-field="viewIndex"/>
-                      <field-map field-name="viewSize" from-field="viewSize"/>
-                  </service>
-              </actions> -->
-              <row-actions>
-              	<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
-      			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
-      			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;shedFacility&quot;);}" type="Object"/>
-      			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
-              </row-actions>
-             <!--  <field name="idValue" title="Producer">
-                 <hyperlink target="EditProcProducer?partyId=${partyId}" description="${groupName}[${idValue}]">
-              </hyperlink></field>  -->
-              
-              <field name="partyId" title="party Id" widget-style="buttontext" id-name = "invoiceSlips">
-                         <hyperlink target="EditProcProducer" description="${partyId}" target-window="_blank"> 	
-                            	  <parameter param-name="partyId" /> 
-                         </hyperlink>
-                     </field>
-              
-              
-              <field name="partyName" title="party Name"><display></display></field>
-              <field name="roleTypeId" title="Role Type Id"><display></display></field>
-             <!--   <field name="unitName" title="Unit"><display></display></field>
-              <field name="facilityId" title="Society"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity> </field>-->
-          </form>
-          
           
           <form name="EditProcProducer" odd-row-style="alternate-row"  header-row-style="header-row-2" type="single" list-name ="partyDetailsMapsList" default-table-style="basic-table "   
           	target="updateProcProducer">  
@@ -1023,17 +976,17 @@
            <field name="submit" title="Find"><submit/></field>
            
        </form>
-   <form name="ListProcurementProducer" type="list" list-name="producerDetails" paginate-target="FindProcProducer"
+  <!--  <form name="ListDepotSalesProducer" type="list" list-name="producerDetails" paginate-target="FindProcProducer"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
-        <!-- <actions>
+         <actions>
         	<service service-name="performFind" result-map="result" result-map-list="producersList">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="FacilityPartyPartyGroupAndIdentification"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-        </actions> -->
+        </actions> 
         <row-actions>
         	<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
 			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
@@ -1046,7 +999,43 @@
         <field name="shedName" title="Shed"><display></display></field>
         <field name="unitName" title="Unit"><display></display></field>
         <field name="facilityId" title="Society"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity> </field>
+    </form> -->
+       
+       <form name="FindDepotSalesProducer" odd-row-style="alternate-row" target="FindProcProducer"
+      		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
+              <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+              
+              <field name="partyId" title="Party Id"><text  size="15"></text></field>
+              <field name="groupName" title="Group Name"><text  size="15"></text></field>
+              <field name="firstName" title="First Name"><text  size="15"></text></field>
+              <field name="lastName" title="Last Name"><text  size="15"></text></field>
+              <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
+              <field name="submit" title="Find"><submit/></field>
+              
+          </form>
+       <form name="ListDepotSalesProducer" type="list" list-name="listIt" odd-row-style="alternate-row" 
+				default-entity-name="PartyRoleDetailAndPartyDetail" default-table-style="basic-table hover-bar" >
+			<actions> 
+			<service service-name="performFind" result-map="result" result-map-list="listIt">
+			<field-map field-name="inputFields" from-field="parameters"/>
+			<field-map field-name="entityName" value="PartyRoleDetailAndPartyDetail"/>
+			<field-map field-name="viewIndex" from-field="viewIndex"/>
+			<field-map field-name="viewSize" from-field="viewSize"/>
+			</service> 
+        </actions>
+    	
+    	 <field name="partyId" title="Weaver Id" widget-style="buttontext" id-name = "partyId">
+             <hyperlink target="EditProcProducer" description="${partyId}" target-window="_blank"> 	
+                	  <parameter param-name="partyId" /> 
+             </hyperlink>
+         </field>
+    	<field name="groupName" title="Group Name"><display/></field>  	
+        <field name="firstName" title="First Name" ><display description="${rateTypeId}"></display><!-- <display-entity entity-name="RateType" key-field-name="ratetypeId" description="${description} "/> --></field>
+       <!--  <field name="middleName" title="SupplyType"><display/></field> -->
+        <field name="lastName" title="Last Name"><display/></field>
+    	<field name="description" title="Role Type"><display/></field>
     </form>
+       
        
 	      
 </forms>
