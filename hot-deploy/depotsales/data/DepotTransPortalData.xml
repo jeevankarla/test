@@ -1,0 +1,23 @@
+<!--Treasurer portal work flow -->
+    	 <SecurityPermission description="Depot All Operations Portal View" permissionId="MYPORTAL_DEPOT_TRANS"/>
+        <SecurityGroup description="Depot All Operations Portal View" groupId="MYPORTAL_DEPOT_TRANS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="MYPORTAL_DEPOT_TRANS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="ACCOUNTING_VIEW"/>
+	 	
+	 
+    	    	
+    	    	
+    	 <PortalPage portalPageId="MYPORTAL_DEPOT_TRANS" sequenceNum="0" portalPageName="Main" description="The vbiz System Cashier page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOT_TRANS"/>
+	   
+	    <PortalPortlet portalPortletId="DEPOT_TRANS" portletName="Depot Portal Screen" screenName="MyPortalDepotOperationScreen"
+            screenLocation="component://depotsales/widget/CommonScreens.xml" description="Cashier Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_DEPOT_TRANS" sequenceNum="0" portalPageName="DEPOT Operations" description="The vbiz System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOT_TRANS"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_DEPOT_TRANS" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_DEPOT_TRANS" portalPortletId="DEPOT_TRANS" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
+    	
+    	
+    	
+    	
