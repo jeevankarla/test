@@ -129,10 +129,10 @@ under the License.
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
           <td>DC Report</td>
-          <td>Edit</td>
+          <#--<td>Edit</td>-->
           <#--<td>Party Balance</td>-->
           <td>Cancel</td>
-		  <td>Generate ShipmentOrder</td>
+		  <td>Generate Shipment</td>
 		  <td>Complete Order</td>
         </tr>
       </thead>
@@ -169,11 +169,13 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Download</td>
               	</#if>
+              	<#--
               	<#if eachOrder.get('statusId') != "ORDER_APPROVED">
               	  <td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
         		<#else>
         		    <td></td>
         		</#if>
+        		-->
         		<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->

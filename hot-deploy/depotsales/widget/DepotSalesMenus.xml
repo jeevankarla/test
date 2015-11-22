@@ -65,7 +65,7 @@
             <link target="BranchSalesOrder">
             </link>
         </menu-item> 
-        <menu-item name="DepotSalesOrder" title="Depot Sales Indent">
+        <!-- <menu-item name="DepotSalesOrder" title="Depot Sales Indent">
 	      <condition>
 	     	    <or>
 	        		<if-has-permission permission="DEPOTSALES"  action="_SALE_VIEW"/>
@@ -74,7 +74,7 @@
 	        </condition>  
             <link target="DepotSalesOrder">
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="FindPO" title="Purchase Order">
         	<condition>
        		  <or>
@@ -83,7 +83,7 @@
 	        	
 			 </or>
 	        </condition>
-	        	<link target="FindPO"/>
+	        	<link target="ProcessOrdersSuppliersDepotSales"/>
 	    </menu-item>
 	    <menu-item name="FindGRNReceipts" title="Receipt of Goods">
        		 <condition>
@@ -270,9 +270,9 @@
         </menu-item>     -->   
     </menu>
        <menu name="FindPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindPO" title="Find Purchase Order">
+        <!-- <menu-item name="FindPO" title="Find Purchase Order">
         	<link target="FindPO"/>
-        </menu-item>
+        </menu-item> -->
            <menu-item name="ProcessOrdersSuppliersDepotSales" title="Process Purchase Order">
             	<link target="ProcessOrdersSuppliersDepotSales">
             	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
