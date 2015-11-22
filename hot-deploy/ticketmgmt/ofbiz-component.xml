@@ -30,10 +30,10 @@
     <test-suite loader="main" location="testdef/TicketMgmtTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="ticketmgmt"
-        title="TicketMgmt"
-        server="default-server"
-        location="webapp/ticketmgmt"
-        base-permission="OFBTOOLS,TICKETMGMT"
-        mount-point="/ticketmgmt"/>
+<!--     <webapp name="ticketmgmt" -->
+<!--         title="TicketMgmt" -->
+<!--         server="default-server" -->
+<!--         location="webapp/ticketmgmt" -->
+<!--         base-permission="OFBTOOLS,TICKETMGMT" -->
+<!--         mount-point="/ticketmgmt"/> -->
 </ofbiz-component>

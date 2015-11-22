@@ -30,10 +30,10 @@
     <test-suite loader="main" location="testdef/AppValidatorTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="appvalidator"
+<!--     <webapp name="appvalidator"
         title="AppValidator"
         server="default-server"
         location="webapp/appvalidator"
         base-permission="OFBTOOLS,APPVALIDATOR"
-        mount-point="/appvalidator"/>
+        mount-point="/appvalidator"/> -->
 </ofbiz-component>
