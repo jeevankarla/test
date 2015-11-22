@@ -27,7 +27,7 @@ under the License.
       "${requirementId}" and Quantity "${quantity}"
       
       <br/>
-      <div>- Auto Email send from Milkosoft.</div>
+      <div>- Auto Email send from Vbiz.</div>
   </div>
 </body>
 </html>
