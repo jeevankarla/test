@@ -32,7 +32,7 @@
     <test-suite loader="main" location="testdef/ProcurementTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="procurement"
+<!--     <webapp name="procurement"
         title="Procurement"
         server="default-server"
         location="webapp/procurement"
@@ -43,5 +43,5 @@
         server="default-server"
         location="webapp/milkreceipts"
         base-permission="OFBTOOLS,MILKRECEIPT"
-        mount-point="/milkreceipts"/>
+        mount-point="/milkreceipts"/> -->
 </ofbiz-component>
