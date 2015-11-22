@@ -79,9 +79,14 @@
 	}
 	Debug.log("==productCatageoryId==="+productCatageoryId);
 	Debug.log("==changeFlag==="+changeFlag);
-	
+	suppPartyName="";
 	partyId = parameters.partyId;
+	supplierPartyId=parameters.suplierPartyId;
+	if(supplierPartyId){
+		suppPartyName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
+	}
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
+	context.suppPartyName=suppPartyName;
 	roleTypeId = parameters.roleTypeId;
 	partyRole = null;
 	if(party){
@@ -97,11 +102,11 @@
 		displayGrid = false;
 		return result;
 	}
-	if(UtilValidate.isEmpty(productCatageoryId)){
+	/*if(UtilValidate.isEmpty(productCatageoryId)){
 		context.errorMessage = "Please Select At Least One productCatageoryId !";
 		displayGrid = false;
 		return result;
-	}
+	}*/
 	context.productCategoryId = parameters.productCatageoryId;
 	context.party = party;
 	context.orderTaxType = parameters.orderTaxType;
@@ -122,7 +127,7 @@
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
-	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, UtilMisc.toList("COTTON_CONE", "SILK_HANK", "WOOL_HANK", "JUTE_CONE", "JUTE_HANK", "LENIN_FLAX")));
+	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
