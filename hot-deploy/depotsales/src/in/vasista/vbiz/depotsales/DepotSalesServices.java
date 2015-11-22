@@ -60,7 +60,7 @@ public class DepotSalesServices{
 
    public static final String module = DepotSalesServices.class.getName();
    
-   public static final String resource = "AccountingUiLabels";
+    public static final String resource = "AccountingUiLabels";
 
    public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();

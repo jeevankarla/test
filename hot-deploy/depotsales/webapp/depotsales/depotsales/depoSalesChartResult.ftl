@@ -1,5 +1,4 @@
 
-
 <#if (channelSize>0 || prodSize>0)>
 <style type="text/css">
 	.cell-title {

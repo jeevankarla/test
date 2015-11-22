@@ -3261,7 +3261,6 @@
                </widgets>
            </section>
        </screen>
-       
        <screen name="orderPayment">
     		<section>
     			<actions>

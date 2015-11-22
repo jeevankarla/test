@@ -309,7 +309,6 @@
 			 <menu-item name="DepotSalesOrder" title="Order Entry">
         		<link target="DepotSalesOrder"/>
         	 </menu-item>
-      
         	  <menu-item name="processOrdersDepotSales" title="Process Orders">
         	<link target="processOrdersDepotSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>

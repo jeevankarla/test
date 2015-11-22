@@ -183,6 +183,7 @@ under the License.
           <td>Print Indent</td>
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
+
         <#-- <td>DC Report</td> -->
           <#-- <td>Payment</td> -->
           <td>Edit</td>

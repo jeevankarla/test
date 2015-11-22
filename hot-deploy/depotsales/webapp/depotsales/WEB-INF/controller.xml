@@ -527,7 +527,6 @@
          <response name="success" type="view" value="orderPayment"/>   
         <response name="failed" type="view" value="orderPayment"/>  
      </request-map>
-    
     <!-- Sub Depot Operatios Requests-->
     
      <request-map uri="DepotTransMain">

@@ -44,9 +44,7 @@
 				render: function(event, api) {
 				
 				paymentFieldsOnchange();
-				
-				
-				
+						
 				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 				},
