@@ -136,14 +136,17 @@
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
+			var unitPrice = data[rowCount]["unitPrice"];
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(inputUnitPrice));
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
 					jQuery(formId).append(jQuery(batchNum));
@@ -343,7 +346,7 @@
 			{id:"baleQuantity", name:"Qty Bales", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty Kgs", field:"quantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"unitCost", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter}	
 			

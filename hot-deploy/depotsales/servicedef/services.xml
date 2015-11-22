@@ -24,7 +24,11 @@
         <attribute name="userLogin" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="returnId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="getPartySchemeEligibility" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartySchemeEligibility" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
+    </service>
     
 </services>
 
