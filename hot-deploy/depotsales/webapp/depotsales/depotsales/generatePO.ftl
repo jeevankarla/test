@@ -80,14 +80,21 @@ function submitForm(){
 		$('#ui-datepicker-div').css('clip', 'auto');
 	}
 
-function purchaseOrder(orderId, salesChannel,partyId,orderDate){
+function purchaseOrder(orderId, salesChannel,supplierPartyId,productStoreId,orderDate){
 	  var action;
      var message = "";
 
                 message += "<html><head></head><body><form id='purchaseOrderEntry' method='post' action='createPOByOrder' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
       			message += "<tr class='h2'><td align='left' class='h5' width='60%'>OrderId:</td><td align='left'  width='90%'><font size=45%>"+orderId+"</font><input class='h4' type='hidden' value="+orderId+" id='orderId' name='orderId' /></td></tr>";
-      			message += "<tr class='h2'><td align='left' class='h5' width='60%'>partyId:</td><td align='left'  width='90%'><input class='h4' type='text' class='required' id='supplierId' name='supplierId' required /></td></tr>";
+      			message += "<tr class='h2'><td align='left' class='h5' width='60%'>Branch Name:</td><td align='left'  width='90%'><font size=45%>"+productStoreId+"</font><input class='h4' type='hidden' value="+productStoreId+" id='productStoreId' name='productStoreId' /></td></tr>";
+      			message += "<tr class='h2'><td align='left' class='h5' width='60%'>supplierPartyId:</td><td align='left'  width='90%'><input class='h4' type='text'  id='supplierId' name='supplierId' value="+supplierPartyId+"   readOnly /></td></tr>";
 				message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Order Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly  value="+orderDate+" id='orderDate' name='orderDate' onmouseover='datepick1()' required /></td></tr>";
+     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
+				message +=	"<tr class='h3'><td align='left' width='60%'></td><td align='left' class='h3' width='40%'><font size=55%><b><u>Shipping Deatils</u></b></font></td></tr>";
+     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
+     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
+     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
+     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
      		    message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
 			    message +=	"</table></form></body></html>";
 	var title = "Generate Purchase Order";

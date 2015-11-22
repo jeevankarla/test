@@ -1199,8 +1199,8 @@ public class DepotSalesServices{
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
-		//String productStoreId = (String) request.getParameter("productStoreId");
-		String productStoreId = "STORE";
+		String productStoreId = (String) request.getParameter("productStoreId");
+		//String productStoreId = "STORE";
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String orderId = (String) request.getParameter("orderId");
 		String PONumber = (String) request.getParameter("PONumber");

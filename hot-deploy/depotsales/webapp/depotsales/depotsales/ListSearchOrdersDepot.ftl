@@ -225,9 +225,18 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
               	</#if>
+				<#assign supplierPartyId="">
+		              	<#assign productStoreId="">
+						<#if orderDetailsMap?has_content>
+								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
+								<#if orderDetails?has_content>
+								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
+								<#assign productStoreId=orderDetails.get("productStoreId")>
+								</#if>
+				</#if>
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
               	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}','${eachOrder.orderDate?if_exists}');"/></td>
+				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${productStoreId}','${eachOrder.orderDate?if_exists}');"/></td>
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->

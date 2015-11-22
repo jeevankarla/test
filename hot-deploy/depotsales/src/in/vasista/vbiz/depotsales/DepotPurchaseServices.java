@@ -584,6 +584,7 @@ public class DepotPurchaseServices{
 
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
+		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderId = (String) request.getParameter("orderId");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		String effectiveDateStr = (String) request.getParameter("orderDate");
@@ -657,7 +658,7 @@ public class DepotPurchaseServices{
 				Map processOrderContext = FastMap.newInstance();
 
 				//String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
-				String productStoreId ="STORE";
+				//String productStoreId ="STORE";
 				List termsList = FastList.newInstance();
 				List otherTermDetail = FastList.newInstance();
 				List adjustmentDetail = FastList.newInstance();
