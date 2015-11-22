@@ -2,6 +2,7 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" title="Commercial Module" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+        <menu-item name="DepotTransMain" title="Depot Transactions"><link target="DepotTransMain"/></menu-item>
     </menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -560,4 +561,45 @@
             </link>
         </menu-item>
      </menu>
+     
+     
+
+  <menu name="DepotOperationMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="StockPositionSubDepot" selected-menuitem-context-field-name="tabButtonItem">
+           
+           <menu-item name="StockPositionSubDepot" title="Stock Position">
+        	<condition>
+        		<or>
+	        		<if-has-permission permission="DEPOTSALES" action="_STCK_PSTN"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>
+        	</condition>
+            <link target="StockPositionSubDepot"/>
+         </menu-item> 
+         <menu-item name="FindGRNReceipts" title="Receipt of Goods">
+       		 <condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindGRNReceiptsDepot"/>
+	     </menu-item> 
+	      <menu-item name="PhysicalInventory" title="Sales Order">
+	      <condition>
+	     	    <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PUR_RTRNS"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	</or> 
+	        </condition>
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="FindFacilityPhysicalInventoryDepot">
+                <parameter param-name="facilityId" value="STORE"/>
+            </link>
+        </menu-item>
+         
+    </menu> 
+     
 </menus>

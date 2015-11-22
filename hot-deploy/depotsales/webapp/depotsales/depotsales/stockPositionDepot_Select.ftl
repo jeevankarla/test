@@ -110,7 +110,7 @@ $(document).ready(function(){
 
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Select Period</h3>	
+      	<h3>Select Product</h3>	
      </div>
     <div class="screenlet-body">
 	  <form name="StockAnalysis" action="stockPositionDepotSales">
