@@ -777,7 +777,7 @@ public class DepotSalesServices{
 				}
 			}
 		cart.setDefaultCheckoutOptions(dispatcher);
-       ProductPromoWorker.doPromotions(cart, dispatcher);
+       //ProductPromoWorker.doPromotions(cart, dispatcher);
        CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
 		try {
 			if(isSale || UtilValidate.isNotEmpty(productPriceTaxCalc)){
@@ -1325,8 +1325,8 @@ public class DepotSalesServices{
 							+ thisSuffix);
 				}
 
-				if (paramMap.containsKey("basicPrice" + thisSuffix)) {
-					basicPriceStr = (String) paramMap.get("basicPrice"
+				if (paramMap.containsKey("unitPrice" + thisSuffix)) {
+					basicPriceStr = (String) paramMap.get("unitPrice"
 							+ thisSuffix);
 				}
 				if (paramMap.containsKey("vatPrice" + thisSuffix)) {
@@ -1511,9 +1511,9 @@ public class DepotSalesServices{
 			return "error";
 		}
 		if(UtilValidate.isNotEmpty(supplierPartyId)){
-		try{
-			GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
-			delegator.createOrStore(supplierOrderRole);
+			try{
+				GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
+				delegator.createOrStore(supplierOrderRole);
 			}catch (Exception e) {
 				  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
 				  request.setAttribute("_ERROR_MESSAGE_", "Error While Creating OrderRole(SUPPLIER)  for Sale Indent  : "+orderId);
@@ -1570,7 +1570,7 @@ public class DepotSalesServices{
 		List conditionList = FastList.newInstance();
 		if(UtilValidate.isNotEmpty(orderId)){
 			
-			boolean indentNotChanged = true; 
+			boolean indentNotChanged = false; 
 			Map resultCtx = ByProductNetworkServices.getOrderDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
@@ -1645,6 +1645,38 @@ public class DepotSalesServices{
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
 		
+		Map schemesMap = FastMap.newInstance();
+		Map schemeCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+		schemeCtx.put("partyId", partyId);
+	  	try{
+	  		Map resultCtx = dispatcher.runSync("getPartySchemeEligibility",schemeCtx); 
+	  		schemesMap = (Map) resultCtx.get("schemesMap");
+	  		if (ServiceUtil.isError(resultCtx)) {
+	  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+	  	 		Debug.logError(errMsg , module);
+	  		}	
+	  	}catch (GenericServiceException e) {
+	  		Debug.logError(e , module);
+	  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+	  	}
+		
+	  	// Handling 10% scheme separately
+	  	
+	  	Map productCategoryQuotasMap = FastMap.newInstance();
+	  	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+	  		productCategoryQuotasMap = (Map) schemesMap.get("TEN_PERCENT_MGPS");
+	  	}
+	  	
+	  	// Get Scheme Categories
+	  	List schemeCategoryIds = FastList.newInstance();
+	  	try{
+	  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+	  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductCategory ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+		}
+	  	
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
@@ -1663,7 +1695,6 @@ public class DepotSalesServices{
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			cart.setOrderId(orderId);
-			Debug.log("====orderId==="+orderId);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);
 			cart.setFacilityId(inventoryFacilityId);//for store inventory we need this so that inventoryItem query by this orginFacilityId
@@ -1726,7 +1757,6 @@ public class DepotSalesServices{
 		String batchNo = "";
 		String daysToStore = "";
 		for (Map<String, Object> prodQtyMap : productQtyList) {
-			
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
@@ -1766,6 +1796,32 @@ public class DepotSalesServices{
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
 			}
 			
+			
+			List productCategoriesList = FastList.newInstance();
+			
+			condsList.clear();
+		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+		  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+			try {
+				List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+				productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+			}
+			
+			BigDecimal quota = BigDecimal.ZERO;
+			String schemeCategory = null;
+			if(UtilValidate.isNotEmpty(productCategoriesList)){
+				schemeCategory = (String)productCategoriesList.get(0);
+	            if(productCategoryQuotasMap.containsKey(schemeCategory)){
+	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("quotaPerMonth");
+	            }
+			}
+			
 			//add percentages
 			BigDecimal bedPercent=BigDecimal.ZERO;
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -1787,7 +1843,6 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPercent"))){
 				serviceTaxPercent = (BigDecimal)prodQtyMap.get("serviceTaxPercent");
 			}
-			
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
@@ -1824,16 +1879,80 @@ public class DepotSalesServices{
 			List<Map> taxList = (List)priceResult.get("taxList");
 				ShoppingCartItem item = null;
 				try{
-					int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
+					
+					if(quota.compareTo(BigDecimal.ZERO)>0){
+						
+						// Have to get these details from schemes. Temporarily hard coding it.
+						BigDecimal schemePercent = new BigDecimal("10");
+						BigDecimal percentModifier = schemePercent.movePointLeft(2);
+						if(quantity.compareTo(quota)>0){
+							
+							BigDecimal remainingQty = quantity.subtract(quota);
+							int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quota, (BigDecimal)priceResult.get("basicPrice"),
+						            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+						            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+							
+							item = cart.findCartItem(itemIndx);
+							item.setListPrice(totalPrice);
+							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quota.toString());
+							item.setOrderItemAttribute("productId",productId);
+							
+							BigDecimal discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
+				               
+							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+					                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+					                        "description", "10 Percent Subsidy on eligible product categories"));
+							
+							item.addAdjustment(orderAdjustment);
+							
+					        productCategoryQuotasMap.put("quotaPerMonth", BigDecimal.ZERO);
+					        
+							itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, remainingQty, (BigDecimal)priceResult.get("basicPrice"),
+						            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+						            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+							
+							item = cart.findCartItem(itemIndx);
+							item.setListPrice(totalPrice);
+							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",remainingQty.toString());
+							item.setOrderItemAttribute("productId",productId);
+							
+						}
+						else{
+							BigDecimal quotaRemainingQty = quota.subtract(quantity);
+							int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
+						            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+						            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+							
+							item = cart.findCartItem(itemIndx);
+							item.setListPrice(totalPrice);
+							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
+							item.setOrderItemAttribute("productId",productId);
+							
+							BigDecimal discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
+				               
+							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+					                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+					                        "description", "10 Percent Subsidy on eligible product categories"));
+							item.addAdjustment(orderAdjustment);
+					        
+					        productCategoryQuotasMap.put("quotaPerMonth", quotaRemainingQty);
+						}
+						
+					}
+					else{
+						int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
 					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 					
-					item = cart.findCartItem(itemIndx);
-					item.setListPrice(totalPrice);
-					item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
-					item.setOrderItemAttribute("productId",productId);
-					//item.setAttribute(productId,quantity);
-	        		item.setTaxDetails(taxList);
+						item = cart.findCartItem(itemIndx);
+						item.setListPrice(totalPrice);
+						item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
+						item.setOrderItemAttribute("productId",productId);
+						//item.setAttribute(productId,quantity);
+		        		item.setTaxDetails(taxList);
+					}
+					
+					
 				}
 				catch (Exception exc) {
 					Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
@@ -1865,8 +1984,8 @@ public class DepotSalesServices{
 				}
 			}
 		cart.setDefaultCheckoutOptions(dispatcher);
-      ProductPromoWorker.doPromotions(cart, dispatcher);
-      CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
+		//ProductPromoWorker.doPromotions(cart, dispatcher);
+		CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
 		try {
 			if(isSale || UtilValidate.isNotEmpty(productPriceTaxCalc)){
 				checkout.calcAndAddTax(productPriceTaxCalc);
@@ -1886,7 +2005,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
 			orderId = (String) orderCreateResult.get("orderId");
 		}
-		Debug.log("==orderId===After==Creation==="+orderId);
 		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			promoAdjCtx.put("orderId", orderId);
@@ -1970,7 +2088,145 @@ public class DepotSalesServices{
 		return result;
    }
    
+   	public static Map<String, Object> getPartySchemeEligibility(DispatchContext dctx, Map<String, ? extends Object> context) {
+		
+   		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    
+	    String partyId= (String)context.get("partyId");
+	    Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+	    if(UtilValidate.isEmpty(effectiveDate)){
+	    	effectiveDate = UtilDateTime.nowTimestamp();
+	    }
+	    
+	    List conditionList = FastList.newInstance();
+	    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+		
+		List<GenericValue> partyLooms = null;
+		try {
+			partyLooms = delegator.findList("PartyLoom", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive SchemeParty ", module);
+			return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
+		}
+		Debug.log("partyLooms =============="+partyLooms);
+	    // Scheme applicability for party can be based on partyId, PartyClassificationGroup or both.
+	    
+	    // Get All the schemes applicable for the party.
+		List<GenericValue> partyApplicableSchemes = null;
+		try {
+			partyApplicableSchemes = delegator.findList("SchemeParty", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive SchemeParty ", module);
+			return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
+		}
+	    List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
+		
+		// Get All the schemes applicable for the PartyClassificationGroup.
+		List<GenericValue> partyClassificationList = null;
+		try {
+			partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), UtilMisc.toSet("partyClassificationGroupId"), null, null,false);
+		} catch (GenericEntityException e) {
+			Debug.logError("Unable to get records from PartyClassificationGroup" + e,module);
+			return ServiceUtil.returnError("Unable to get records from PartyClassificationGroup");
+		}
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyClassificationGroupId", true)));
+		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+		
+		List<GenericValue> groupApplicableSchemes = null;
+		try {
+			groupApplicableSchemes = delegator.findList("SchemePartyClassificationGroup", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive SchemeParty ", module);
+			return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
+		}
+		List partyGrpSchemeIds = EntityUtil.getFieldListFromEntityList(groupApplicableSchemes, "schemeId", true);
+		partySchemeIds.addAll(partyGrpSchemeIds);
+		
+		Set partySchemeIdsSet = new HashSet(partySchemeIds);
+		partySchemeIds = new ArrayList(partySchemeIdsSet);
+		
+		Map schemesMap = FastMap.newInstance();
+		
+		
+		for(int i=0; i<partySchemeIds.size(); i++){
+			String schemeId = (String) partySchemeIds.get(i);
+			// Scheme applicability for products are based on product, productCategory or both.
+			
+			// Get Product Categories that are applicable for the scheme.
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
+			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+			List<GenericValue> productCategoryApplicableSchemes = null;
+			try {
+				productCategoryApplicableSchemes = delegator.findList("SchemeProductCategory", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive SchemeProduct ", module);
+				return ServiceUtil.returnError("Failed to retrive SchemeProduct " + e);
+			}
+		    // List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
+			
+			// Get products that are applicable for the scheme. 
+		
+		//TODO Handle Schemes based on SchemeProduct. Not required currently
+			/*List<GenericValue> productApplicableSchemes = null;
+			try {
+				productApplicableSchemes = delegator.findList("SchemeProduct", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive SchemeProduct ", module);
+				return ServiceUtil.returnError("Failed to retrive SchemeProduct " + e);
+			}*/
+		    //List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
+			
+			// Temporarily doing this only for 10% Scheme. Keep updating as the requirement comes in
+			
+			Map productCategoryQuatasMap = FastMap.newInstance();
+			List productCategoryQuatasList = FastList.newInstance();
+			if(schemeId.equals("TEN_PERCENT_MGPS")){
+				
+				for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
+					GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
+					String productCategoryId = schemeProductCategory.getString("productCategoryId");
+					
+					// Get relevant looms qty party possess and calculate quota
+					List catPartyLooms = EntityUtil.filterByCondition(partyLooms, EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
+					
+					if(UtilValidate.isNotEmpty(catPartyLooms)){
+						Map productCategoryQuotaMap = FastMap.newInstance();
+						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
+						productCategoryQuotaMap.put("quotaPerMonth",((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity"))) );
+						productCategoryQuotaMap.put("categoryQuota", (BigDecimal)schemeProductCategory.get("maxQty"));
+						productCategoryQuotaMap.put("looms",  (BigDecimal)((GenericValue)catPartyLooms.get(0)).get("quantity"));
+						// Add logic to calculate quota already used for the period
+						Map tempCatMap = FastMap.newInstance();
+						tempCatMap.putAll(productCategoryQuotaMap);
+						
+						productCategoryQuatasMap.put(productCategoryId, tempCatMap);
+					}
+				}
+			}
+			
+			Map tempSchemeMap = FastMap.newInstance();
+			tempSchemeMap.putAll(productCategoryQuatasMap);
+			
+			schemesMap.put(schemeId, tempSchemeMap);
+		    
+		}
+		result.put("schemesMap", schemesMap);
+	    return result;
    
-   
-   
+   	}
+   	
 }

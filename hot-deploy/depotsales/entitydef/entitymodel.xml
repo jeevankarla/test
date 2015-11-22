@@ -8,5 +8,176 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
-
+	
+	
+	<entity entity-name="SchemeType"
+            package-name="org.ofbiz.product.promo"
+            default-resource-name="ProductEntityLabels"
+            title="Scheme Type Entity">
+        <field name="schemeTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id"></field>
+        <field name="hasTable" type="indicator"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="schemeTypeId"/>
+        <relation type="one" fk-name="SCH_TYPE_PARENT" title="Parent" rel-entity-name="SchemeType">
+            <key-map field-name="parentTypeId" rel-field-name="schemeTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="Scheme" package-name="org.ofbiz.product.promo" title="Scheme Entity">
+        <field name="schemeId" type="id-ne"></field>
+        <field name="schemeName" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <field name="schemeTypeId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+       	<field name="thruDate" type="date-time"></field>
+       	<field name="discountPercent" type="fixed-point"></field>
+       	<field name="discountValue" type="fixed-point"></field>
+       	<field name="productPromoId" type="id-ne"></field>
+        <prim-key field="schemeId"/>
+        <relation type="one" fk-name="SCH_SCH_TYPE" rel-entity-name="SchemeType">
+             <key-map field-name="schemeTypeId"/>
+         </relation>
+         <relation type="one" fk-name="PROD_PR_SCH" rel-entity-name="ProductPromo">
+	        <key-map field-name="productPromoId"/>
+	      </relation>
+    </entity> 
+	<entity entity-name="SchemeProduct"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Product Entity">
+      	<field name="schemeId" type="id-ne"></field>
+      	<field name="productId" type="id-ne"></field>
+	  	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>
+      	<field name="maxQty" type="fixed-point"></field>
+      	<field name="qtyUomId" type="id"></field> 
+      	<field name="periodTime" type="fixed-point"></field>
+      	<field name="periodTimeUomId" type="id"></field>     
+      	<prim-key field="schemeId"/>
+      	<prim-key field="productId"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="SCH_PRO" rel-entity-name="Scheme">
+        	<key-map field-name="schemeId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PROD_PROD" rel-entity-name="Product">
+        	<key-map field-name="productId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_QTY_UOM" title="MaxQty" rel-entity-name="Uom">
+            <key-map field-name="qtyUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="SCH_TP_UOM" title="PeriodTimeUom" rel-entity-name="Uom">
+            <key-map field-name="periodTimeUomId" rel-field-name="uomId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SchemeProductCategory"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Product Category Entity">
+      	<field name="schemeId" type="id-ne"></field>
+      	<field name="productCategoryId" type="id-ne"></field>
+	  	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>
+      	<field name="maxQty" type="fixed-point"></field>
+      	<field name="qtyUomId" type="id"></field> 
+      	<field name="periodTime" type="fixed-point"></field>
+      	<field name="periodTimeUomId" type="id"></field>     
+      	<prim-key field="schemeId"/>
+      	<prim-key field="productCategoryId"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="SCH_PROD_SCH" rel-entity-name="Scheme">
+        	<key-map field-name="schemeId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PROD_CAT" rel-entity-name="ProductCategory">
+        	<key-map field-name="productCategoryId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_QTY_UOM" title="MaxQty" rel-entity-name="Uom">
+            <key-map field-name="qtyUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="SCH_TP_UOM" title="PeriodTimeUom" rel-entity-name="Uom">
+            <key-map field-name="periodTimeUomId" rel-field-name="uomId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SchemeParty"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Product Entity">
+      	<field name="schemeId" type="id-ne"></field>
+      	<field name="partyId" type="id-ne"></field>
+	  	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>      
+      	<prim-key field="schemeId"/>
+      	<prim-key field="partyId"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="SCH_PTY" rel-entity-name="Scheme">
+        	<key-map field-name="schemeId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PTY_PTY" rel-entity-name="Party">
+        	<key-map field-name="partyId"/>
+      	</relation>
+    </entity>
+    <entity entity-name="SchemePartyClassificationGroup"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Product Classification Group Entity">
+      	<field name="schemeId" type="id-ne"></field>
+      	<field name="partyClassificationGroupId" type="id-ne"></field>
+	  	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>      
+      	<prim-key field="schemeId"/>
+      	<prim-key field="partyClassificationGroupId"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="SCH_PTYG_SCH" rel-entity-name="Scheme">
+        	<key-map field-name="schemeId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PTYC_GRP" rel-entity-name="PartyClassificationGroup">
+        	<key-map field-name="partyClassificationGroupId"/>
+      	</relation>
+    </entity>
+    <entity entity-name="OrderItemScheme"
+            package-name="org.ofbiz.order.order"
+            title="Order Item Scheme Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="schemeId" type="id-long-ne"></field>
+      <field name="qtyUtilized" type="fixed-point"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="schemeId"/>
+      <relation type="one" fk-name="ORDER_ITEM_SCH" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="Scheme">
+        <key-map field-name="schemeId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="LoomType"
+            package-name="org.ofbiz.product.promo"
+            title="Loom Type Entity">
+        <field name="loomTypeId" type="id-ne"></field>
+        <field name="productCategoryId" type="id-ne"></field>
+        <field name="parentTypeId" type="id"></field>
+        <field name="hasTable" type="indicator"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="loomTypeId"/>
+        <relation type="one" fk-name="LOOM_TYPE_PARENT" title="Parent" rel-entity-name="LoomType">
+            <key-map field-name="parentTypeId" rel-field-name="loomTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="PartyLoom"
+            package-name="org.ofbiz.product.promo"
+            title="Party Loom Entity">
+        <field name="partyId" type="id-ne"></field>    
+      	<field name="loomTypeId" type="id-ne"></field>
+	  	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field> 
+      	<field name="quantity" type="fixed-point"></field>
+      	<field name="quotaPerLoom" type="fixed-point"></field>     
+      	<prim-key field="partyId"/>
+      	<prim-key field="loomTypeId"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="SCH_PTY_PTY" rel-entity-name="Party">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	<relation type="one" fk-name="PTY_LOOM" rel-entity-name="LoomType">
+        	<key-map field-name="loomTypeId"/>
+      	</relation>
+    </entity>
 </entitymodel>
