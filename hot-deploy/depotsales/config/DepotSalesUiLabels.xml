@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="DepotSalesApplication">
-        <value xml:lang="en">DepotSales Application</value>
+        <value xml:lang="en">Yarn Operations Management</value>
         <value xml:lang="zh">DepotSales应用程序</value>
     </property>
     <property key="DepotSalesCompanyName">
-        <value xml:lang="en">VBiz: DepotSales</value>
+        <value xml:lang="en">VBiz: Yarn Operations Management</value>
     </property>
     <property key="DepotSalesCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
