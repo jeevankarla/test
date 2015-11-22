@@ -1191,6 +1191,8 @@ public class DepotSalesServices{
 		DispatchContext dctx =  dispatcher.getDispatchContext();
 		Locale locale = UtilHttp.getLocale(request);
 		String partyId = (String) request.getParameter("partyId");
+		String supplierPartyId ="";
+		supplierPartyId=(String) request.getParameter("suplierPartyId");
 		String billToCustomer = (String)request.getParameter("billToCustomer");//using For Amul Sales
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
@@ -1479,6 +1481,7 @@ public class DepotSalesServices{
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("supplierPartyId", supplierPartyId);
 		processOrderContext.put("billToCustomer", billToCustomer);
 		processOrderContext.put("productIds", productIds);
 		processOrderContext.put("supplyDate", effectiveDate);
@@ -1507,7 +1510,16 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
-		
+		if(UtilValidate.isNotEmpty(supplierPartyId)){
+		try{
+			GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
+			delegator.createOrStore(supplierOrderRole);
+			}catch (Exception e) {
+				  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
+				  request.setAttribute("_ERROR_MESSAGE_", "Error While Creating OrderRole(SUPPLIER)  for Sale Indent  : "+orderId);
+					return "error";
+	  	 	}
+		}
 		Map resultCtx = FastMap.newInstance();
 		
 				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
