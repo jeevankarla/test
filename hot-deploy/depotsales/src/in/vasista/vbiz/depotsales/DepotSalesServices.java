@@ -2264,6 +2264,134 @@ public class DepotSalesServices{
 	
 }
    	
+public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
+   		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		String partyId = (String) request.getParameter("partyId");
+		String productId = (String) request.getParameter("productId");
+		String quantityStr =(String) request.getParameter("quantity");
+		String unitCostStr = (String) request.getParameter("unitCost");
+		String effectiveDateStr = (String) request.getParameter("effectiveDate");
+		String productStoreId = (String) request.getParameter("productStoreId");
+		String disableAcctgFlag = (String) request.getParameter("disableAcctgFlag");
+		String salesChannel = (String) request.getParameter("salesChannel");
+		String orderId = (String) request.getParameter("orderId");
+		
+		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal unitCost = BigDecimal.ZERO;
+		Timestamp effectiveDate=null;
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		List productIds = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(productId)){
+			productIds.add(productId);
+		}
+		
+		
+		try{
+			if(UtilValidate.isNotEmpty(unitCostStr)){
+				unitCost = new BigDecimal(unitCostStr);
+			}
+			if(UtilValidate.isNotEmpty(quantityStr)){
+				quantity = new BigDecimal(quantityStr);
+			}
+			if (UtilValidate.isNotEmpty(effectiveDateStr)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+				try {
+					effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+				}
+			}
+			else{
+				effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			}
+		}
+		catch (Exception e) {
+			Debug.logError(e, "Problems parsing quantity/unitCost/effectiveDate string.");
+			request.setAttribute("_ERROR_MESSAGE_",	"Problems parsing quantity string.");
+			return "error";
+		}
+		
+		List indentProductList = FastList.newInstance();
+		Map<String  ,Object> productQtyMap = FastMap.newInstance();
+		Map processOrderContext = FastMap.newInstance();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+		productQtyMap.put("productId", productId);
+		productQtyMap.put("quantity", quantity);
+		productQtyMap.put("basicPrice", unitCost);
+		/*productQtyMap.put("batchNo", batchNo);
+		productQtyMap.put("daysToStore", daysToStore);
+		productQtyMap.put("bedPrice", bedPrice);
+		productQtyMap.put("cstPrice", cstPrice);
+		productQtyMap.put("tcsPrice", tcsPrice);
+		productQtyMap.put("vatPrice", vatPrice);
+		productQtyMap.put("serviceTaxPrice", serviceTaxPrice);
+		productQtyMap.put("bedPercent", bedPercent);
+		productQtyMap.put("vatPercent", vatPercent);
+		productQtyMap.put("cstPercent", cstPercent);
+		productQtyMap.put("tcsPercent", tcsPercent);
+		productQtyMap.put("serviceTaxPercent", serviceTaxPercent);*/
+
+		indentProductList.add(productQtyMap);
+		
+		processOrderContext.put("userLogin", userLogin);
+		processOrderContext.put("productQtyList", indentProductList);
+		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("billToCustomer", partyId);
+		processOrderContext.put("productIds", productIds);
+		processOrderContext.put("supplyDate", effectiveDate);
+		processOrderContext.put("salesChannel", salesChannel);
+		//processOrderContext.put("orderTaxType", orderTaxType);
+		//processOrderContext.put("orderId", orderId);
+		//processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
+		processOrderContext.put("productStoreId", "1003");
+		/*//processOrderContext.put("PONumber", PONumber);
+		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
+		processOrderContext.put("orderMessage", orderMessage);
+		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);*/
+		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+		
+		try{
+		result = processDepotSaleOrder(dctx, processOrderContext);
+		if(ServiceUtil.isError(result)){
+			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+			return "error";
+		}
+		
+		orderId = (String)result.get("orderId");
+		if(UtilValidate.isEmpty(orderId)){
+			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+			return "error";
+		}
+		
+		Map resultCtx = FastMap.newInstance();
+		
+				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+					return "error";
+				}
+			}catch(Exception e){
+				Debug.logError(e, module);
+				return "error";
+			}
+		
+		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successful for party : "+partyId+" OrderId: "+orderId);
+		return "success";
+		
+   		
+   	}
+   	
    	
    	
    	

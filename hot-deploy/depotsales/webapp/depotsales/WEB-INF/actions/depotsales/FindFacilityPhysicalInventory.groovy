@@ -17,10 +17,15 @@
  * under the License.
  */
 
-import org.ofbiz.service.ServiceUtil
+import org.ofbiz.service.ServiceUtil 
 import org.ofbiz.entity.condition.*
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.EntityUtil;
+import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import org.ofbiz.party.party.PartyHelper;
 
 facilityId = parameters.facilityId;
 
@@ -92,7 +97,6 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		//get receiptId and shipmentId for each inventoryItem
 		tempMap=[:];
 		tempMap.putAll(iter);
-		
         productIds.add(iter.productId);
     }
 
@@ -104,13 +108,13 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
             qohMap.put(productId, result.quantityOnHandTotal);
         }
     }
-
+	
     // associate the quantities to each row and store the combined data as our list
     physicalInventoryCombined = [];
     physicalInventory.each { iter ->
         row = iter.getAllFields();
-        row.productATP = atpMap.get(row.productId);
-        row.productQOH = qohMap.get(row.productId);
+		row.productATP = atpMap.get(row.productId);
+		row.productQOH = qohMap.get(row.productId);
 		inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.inventoryItemId));
 		shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
 		if(shipmentReceiptEach) {
@@ -125,4 +129,24 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
         physicalInventoryCombined.add(row);
     }
     context.physicalInventory = physicalInventoryCombined;
+}
+if(UtilValidate.isNotEmpty(isInventorySales)){
+	dctx = dispatcher.getDispatchContext();
+	JSONObject partyNameObj = new JSONObject();
+	inputMap = [:];
+	inputMap.put("userLogin", userLogin);
+	//get Parties to make SalesOrder
+	JSONArray billToPartyIdsJSON = new JSONArray();
+	inputMap.put("roleTypeId", "SUPPLIER");
+	Map partyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
+	billToPartyDetailsList = partyDetailsMap.get("partyDetails");
+	billToPartyDetailsList.each{eachParty ->
+		JSONObject newPartyObj = new JSONObject();
+		partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
+		newPartyObj.put("value",eachParty.partyId);
+		newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
+		partyNameObj.put(eachParty.partyId,partyName);
+		billToPartyIdsJSON.add(newPartyObj);
+	}
+	context.billToPartyIdsJSON = billToPartyIdsJSON;
 }

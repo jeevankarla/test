@@ -386,7 +386,8 @@
         	</condition>
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
-        <menu name="DepotTransReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+      </menu>
+      <menu name="DepotTransReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DepotTransReceipts" title="Find GRN Items">
         	<link target="DepotTransReceipts"/>
@@ -419,8 +420,6 @@
         	</condition>
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
-      </menu>
-        
       </menu>
      <!--  <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
           <menu-item name="Manufacturing" title="Manufacturing">
@@ -642,10 +641,19 @@
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
             </condition>          
-            <link target="FindFacilityPhysicalInventoryDepot">
+            <link target="DepotSalesInventorySales">
                 <parameter param-name="facilityId" value="STORE"/>
             </link>
         </menu-item>
+        
+        <!-- <menu-item name="DepotSalesInventorySales" title="Inventory Sales">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="DepotSalesInventorySales">
+                <parameter param-name="facilityId" value="STORE"/>
+            </link>
+        </menu-item> -->
          
     </menu> 
      

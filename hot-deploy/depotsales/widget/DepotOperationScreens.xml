@@ -129,4 +129,35 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="DepotSalesInventorySales">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Inventory Sales" />
+				<!-- <set field="headerItem" value="facility" /> -->
+				<set field="tabButtonItem" value="PhysicalInventory" />
+				<!-- <set field="parameters.facilityId" from-field="parameters.facilityId"></set> -->
+				<set field="isInventorySales" value="Y"/>
+				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/FindFacilityPhysicalInventory.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Find Shipmet Inventory Items">
+							<include-form name="FindPhysicalInventoryDepotForSale"	location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<screenlet title="List Of Inventory Items">
+							<include-form name="ListPhysicalInventoryDepotForSale" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<platform-specific>
+							<html>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/MakeSaleOrder.ftl" />
+							</html>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
