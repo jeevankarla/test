@@ -32,10 +32,10 @@
     <test-suite loader="main" location="testdef/materialmgmtTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-<!--     <webapp name="materialmgmt"
+   <webapp name="materialmgmt"
         title="MaterialManagement"
         server="default-server"
         location="webapp/materialmgmt"
         base-permission="OFBTOOLS,materialmgmt"
-        mount-point="/materialmgmt"/> -->
+        mount-point="/materialmgmt"/> 
 </ofbiz-component>
