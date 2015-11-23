@@ -190,7 +190,6 @@ for (eachOrderList in orderList) {
 	  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 	   
 	   orderPreferenceMap.put(eachList.orderId, getFirstOrderPayment.get("orderPaymentPreferenceId"))
-
 	   conditonList = [];
 	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
 	   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);

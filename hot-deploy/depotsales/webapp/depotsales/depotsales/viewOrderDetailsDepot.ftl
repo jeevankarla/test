@@ -221,8 +221,6 @@
 					message +=	"</table></form></body></html>";
 		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
-		
-		
 	}
 	
 	
