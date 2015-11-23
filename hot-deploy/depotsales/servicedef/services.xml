@@ -40,5 +40,15 @@
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
     </service>
     
+    <service name="createIssuanceForDepotOrder" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createIssuanceForDepotOrder">
+        <description>Issue Products to Order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="issuedDateTime" mode="IN" type="Timestamp"  optional="true"/>
+    </service>
+    
 </services>
 
