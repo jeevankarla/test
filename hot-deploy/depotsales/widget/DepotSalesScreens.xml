@@ -3597,5 +3597,35 @@
 			</widgets>
 		</section>
 	</screen>
-       
+	<screen name="PayUBizInit">
+		<section>
+			<actions>
+				<set field="tabButtonItem" value="NonRouteCustomPayments"/>
+				<set field="subTabItem" value="PayUBizInit" />
+				<set field="subTabButtonItem" value="PayUBizInit" />
+				<set field="titleProperty" value="PayUBizPayment" />
+				<!-- <set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> -->
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/thirdPartyKit/payUbiz.groovy" />	
+			</actions>
+			<widgets>	
+				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"  name="NonRoutePaymentSubTabBar" />
+					<!-- <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="PaymentSubTabBar"/> -->
+						<section>
+							<widgets>	
+								<container style="full"> 
+                                	<screenlet title="PayUbiz Payments ">    
+   										<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/thridPartyKit/payUbiz.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>					
+							</widgets>
+						</section>	
+					</decorator-section>	
+				</decorator-screen>		
+			</widgets>
+		</section>
+	</screen>   
 </screens>
