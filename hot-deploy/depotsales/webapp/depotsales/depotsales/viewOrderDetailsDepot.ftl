@@ -223,7 +223,6 @@
 		Alert(message, title);
 	}
 	
-	
 	function paymentFieldsOnchange(){
   
      

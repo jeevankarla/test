@@ -173,6 +173,8 @@ under the License.
     		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     </div>
 	<br/>
+
+
      <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">

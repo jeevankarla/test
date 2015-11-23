@@ -195,7 +195,6 @@ for (eachOrderList in orderList) {
 	   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 	   
-	   
 	   totAmount = 0;
 	   
 	   if(UtilValidate.isNotEmpty(PaymentList)){
