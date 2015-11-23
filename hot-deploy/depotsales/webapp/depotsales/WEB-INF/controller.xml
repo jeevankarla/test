@@ -518,7 +518,7 @@
        <request-map uri="createOrderPayment">
           <security https="true" auth="true"/>
           <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
-          <response name="success" type="view" value="orderPayment"/>   
+          <response name="success" type="view" value="processOrdersBranchSales"/>   
          <response name="failed" type="view" value="orderPayment"/>  
       </request-map>
       <request-map uri="createCustomPaymentFromPreference">
