@@ -2468,5 +2468,176 @@ public class DepotSalesServices{
    		
    	}
    	
+   	//
+  //Issuance for Depot SalesOrder
+   	public static Map<String, Object> createIssuanceForDepotOrder(DispatchContext ctx,Map<String, ? extends Object> context) {
+   		
+   		Delegator delegator = ctx.getDelegator();
+   		LocalDispatcher dispatcher = ctx.getDispatcher();
+   		String orderId = (String) context.get("orderId");
+   		String inventoryItemId = (String) context.get("inventoryItemId");
+   		String shipmentId = (String) context.get("shipmentId");
+   	    String facilityId = (String)context.get("facilityId");
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String shipmentTypeId = (String) context.get("shipmentTypeId");
+   	    Map<String, Object> result = ServiceUtil.returnSuccess();
+   	    Timestamp issuedDateTime = (Timestamp) context.get("issuedDateTime");
+   		try{
+   			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+   			
+   			/*if(UtilValidate.isNotEmpty(issuedDateTime) && UtilValidate.isNotEmpty(orderHeader.getTimestamp("estimatedDeliveryDate"))){
+   				issuedDateTime=	orderHeader.getTimestamp("estimatedDeliveryDate");
+   			}*/
+   			if(UtilValidate.isEmpty(issuedDateTime)){
+   				 issuedDateTime=UtilDateTime.nowTimestamp();
+   			}
+   			//create shipment if it not exists
+   			if(UtilValidate.isEmpty(shipmentId)){
+   		        try{
+   					GenericValue newEntity = delegator.makeValue("Shipment");
+   					if(UtilValidate.isEmpty(shipmentTypeId)){
+   						shipmentTypeId="ISSUANCE_SHIPMENT";
+   					}
+   			        newEntity.set("shipmentTypeId", shipmentTypeId);	
+   			        newEntity.set("statusId", "GENERATED");
+   			        newEntity.set("estimatedShipDate", UtilDateTime.nowTimestamp());
+   			        newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
+   			        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+   			        newEntity.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+   			        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+   		            delegator.createSetNextSeqId(newEntity);
+   		            shipmentId = newEntity.getString("shipmentId");
+   		        } catch (GenericEntityException e) {
+   		            Debug.logError(e, module);
+   		            return ServiceUtil.returnError("Failed to create a new shipment " + e);            
+   		        }
+   			 }
+   			//setting shipment to order
+   			orderHeader.set("shipmentId",shipmentId);
+   			orderHeader.store();
+   			
+   		    List conditionList = FastList.newInstance();
+   	        conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+   	        /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));*/
+   	        conditionList.add(EntityCondition.makeCondition("quantity", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+   	       
+   	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+   	        List<GenericValue> issuedOrderItems = delegator.findList("OrderItem", condition, null, UtilMisc.toList("orderItemSeqId"), null, false);
+   	        
+   	        for(GenericValue orderItem : issuedOrderItems){
+   				Map prevQtyMap = FastMap.newInstance();
+   				String orderItemSeqId=orderItem.getString("orderItemSeqId");
+   				BigDecimal requestedQuantity = orderItem.getBigDecimal("quantity");
+   				String productId=orderItem.getString("productId");
+   				
+   				GenericValue orderItemInventoryItem = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId", orderId,"orderItemSeqId",orderItemSeqId,"attrName","ORDRITEM_INVENTORY_ID"), false);
+   				if(UtilValidate.isEmpty(orderItemInventoryItem)){
+   						return ServiceUtil.returnError("Not issuing InventoryItem for OrderId....! "+orderId);
+   				}
+   				if(UtilValidate.isEmpty(inventoryItemId)){
+   					inventoryItemId=orderItemInventoryItem.getString("attrValue");
+   				}
+   				GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+   				BigDecimal inventoryQOH = inventoryItem.getBigDecimal("quantityOnHandTotal");
+   				if(requestedQuantity.compareTo(inventoryQOH)>0){
+   					return ServiceUtil.returnError("Not issuing InventoryItem to orderId "+orderId+" : "+orderItemSeqId+", because the quantity to issue "+requestedQuantity+" is greater than the quantity left to issue (i.e "+inventoryQOH+") for inventoryItemId : "+inventoryItemId);
+   				}
+   				
+   				if(UtilValidate.isEmpty(requestedQuantity) || (UtilValidate.isNotEmpty(requestedQuantity) && requestedQuantity.compareTo(BigDecimal.ZERO)<= 0)){
+   					return ServiceUtil.returnError("Not issuing InventoryItem to orderId "+orderId+" : "+orderItemSeqId+", because the quantity to issue "+requestedQuantity+" is less than or equal to 0");
+   				}
+   		
+
+   				/*//caliculating issuence Qty
+   				BigDecimal issuedQty=BigDecimal.ZERO;
+   				List filterIssuenceReq = FastList.newInstance();
+   				filterIssuenceReq.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+   				filterIssuenceReq.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+   				EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
+   				List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, null, UtilMisc.toList("-issuedDateTime"), null, false);
+   				Iterator<GenericValue> itrIssList = itemIssuanceList.iterator();
+   		        while (itrIssList.hasNext()) {
+   		            GenericValue itrIssItem = itrIssList.next();
+   		            issuedQty =issuedQty.add(itrIssItem.getBigDecimal("quantity"));
+   		            //subtract cancelQuantity if any for the same issuance
+   		            if(UtilValidate.isNotEmpty(itrIssItem.getBigDecimal("cancelQuantity"))){
+   		            	issuedQty=issuedQty.subtract(itrIssItem.getBigDecimal("cancelQuantity"));
+   		            }
+   		        }
+   		        issuedQty=issuedQty.add(quantity);*/
+   		        
+   				/*Create Item Issuance*/
+   				Map itemIssueCtx = FastMap.newInstance();
+   				itemIssueCtx.put("orderId", orderId);
+   				itemIssueCtx.put("orderItemSeqId", orderItemSeqId);
+   				itemIssueCtx.put("userLogin", userLogin);
+   				itemIssueCtx.put("inventoryItemId", inventoryItemId);
+   				itemIssueCtx.put("productId", productId);
+   				itemIssueCtx.put("quantity", requestedQuantity);
+   				itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+   				itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+   				itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+   				if(UtilValidate.isNotEmpty(issuedDateTime)){
+   					 itemIssueCtx.put("issuedDateTime", issuedDateTime);
+   				}
+   				Map resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
+   				if (ServiceUtil.isError(resultCtx)) {
+   					Debug.logError("Problem creating item issuance for requested item", module);
+   					return resultCtx;
+   				}
+   				
+   				String itemIssuanceId = (String)resultCtx.get("itemIssuanceId");
+   				
+   				GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
+   				itemIssuance.set("shipmentId", shipmentId);
+   				itemIssuance.store();
+   				//send out parameters
+   				result.put("itemIssuanceId", itemIssuanceId);
+   				result.put("shipmentId", shipmentId);
+   				/*Decrement inventory*/
+   				Map createInvDetail = FastMap.newInstance();
+   				createInvDetail.put("orderId", orderId);
+   				createInvDetail.put("orderItemSeqId", orderItemSeqId);
+   				createInvDetail.put("userLogin", userLogin);
+   				createInvDetail.put("inventoryItemId", inventoryItemId);
+   				createInvDetail.put("itemIssuanceId", itemIssuanceId);
+   				createInvDetail.put("quantityOnHandDiff", requestedQuantity.negate());
+   				createInvDetail.put("availableToPromiseDiff", requestedQuantity.negate());
+   				if(UtilValidate.isNotEmpty(issuedDateTime)){
+   					 itemIssueCtx.put("effectiveDate", issuedDateTime);
+   				}
+   				resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+   				if (ServiceUtil.isError(resultCtx)) {
+   					Debug.logError("Problem decrementing inventory for requested item ", module);
+   					return resultCtx;
+   				}
+   				//comparing issuedQty and requestedQty
+   				/*if(issuedQty.compareTo(requestedQuantity)==0){
+   					Map itemStatusCtx = FastMap.newInstance();
+   					itemStatusCtx.put("custRequestId", custRequestId);
+   					itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+   					itemStatusCtx.put("userLogin", userLogin);
+   					itemStatusCtx.put("description", "");
+   					itemStatusCtx.put("statusId", "CRQ_ISSUED");
+   					resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
+   					if (ServiceUtil.isError(resultCtx)) {
+   						Debug.logError("Problem changing status for requested item ", module);
+   						return resultCtx;
+   					}
+   				}*/
+   		    }
+   	        result = ServiceUtil.returnSuccess("Successfully Issued Selected Order :"+orderId);	
+   		} catch (GenericEntityException e) {
+   			// TODO: handle exception
+   			Debug.logError(e, module);
+   			return ServiceUtil.returnError(e.getMessage());
+   		}
+   		catch (GenericServiceException e) {
+   			// TODO: handle exception
+   			Debug.logError(e, module);
+   			return ServiceUtil.returnError(e.getMessage());
+   		}
+   		return result;
+   	}
    	
 }
