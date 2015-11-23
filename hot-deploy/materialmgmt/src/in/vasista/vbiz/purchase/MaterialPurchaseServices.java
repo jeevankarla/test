@@ -88,6 +88,8 @@ public class MaterialPurchaseServices {
 	    String receiptDateStr = (String) request.getParameter("receiptDate");
 	    String orderId = (String) request.getParameter("orderId");
 	    String vehicleId = (String) request.getParameter("vehicleId");
+	    String lrNumber = (String) request.getParameter("lrNumber");
+	    String carrierName = (String) request.getParameter("carrierName");
 	    String supplierInvoiceId = (String) request.getParameter("suppInvoiceId");
 	    String supplierInvoiceDateStr = (String) request.getParameter("suppInvoiceDate");
 	    String withoutPO = (String) request.getParameter("withoutPO");
@@ -263,6 +265,8 @@ public class MaterialPurchaseServices {
 	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
 	        newEntity.set("statusId", "GENERATED");
 	        newEntity.put("vehicleId",vehicleId);
+	        newEntity.put("lrNumber",lrNumber);
+	        newEntity.put("carrierName",carrierName);
 	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
