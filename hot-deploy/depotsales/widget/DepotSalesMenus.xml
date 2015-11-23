@@ -645,7 +645,7 @@
 	        </condition>
 	        	<link target="DepotTransReceipts"/>
 	     </menu-item> 
-	      <menu-item name="PhysicalInventory" title="Sales Order">
+	      <menu-item name="PhysicalInventory" title="Sales Indent">
 	      <condition>
 	     	    <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PUR_RTRNS"/>
@@ -668,6 +668,13 @@
 	        </condition>
 	        	<link target="FindDepotTransPO"/>
 	    </menu-item>
+	    
+	    <menu-item name="indentIssuance" title="Indent Issuance">
+	    	<link target="DepotSalesIndentIssuance">
+	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
+	    	</link>
+    	</menu-item>
+    	
         <!-- <menu-item name="DepotSalesInventorySales" title="Inventory Sales">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
@@ -700,4 +707,16 @@
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
       </menu> 
+      <menu name="InventorySalesSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+    	<menu-item name="makeInventorySales" title="Inventory Sales">
+	    	<link target="DepotSalesInventorySales">
+	    		<parameter param-name="facilityId" value="STORE"/>
+	    	</link>
+    	</menu-item>
+    	<menu-item name="paymentForSales" title="Payment for Sales">
+	    	<link target="DepotSalesPaymentForSales">
+	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
+	    	</link>
+    	</menu-item>
+    </menu>
 </menus>
