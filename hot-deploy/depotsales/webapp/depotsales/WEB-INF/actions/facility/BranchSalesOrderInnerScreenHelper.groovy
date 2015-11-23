@@ -234,10 +234,10 @@
 	prodList.each{eachItem ->
 		JSONObject newObj = new JSONObject();
 		newObj.put("value",eachItem.productId);
-		newObj.put("label","[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
+		newObj.put("label",eachItem.description+"-"+eachItem.internalName);
 		productItemsJSON.add(newObj);
 		productIdLabelJSON.put(eachItem.productId, eachItem.description);
-		productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
+		productLabelIdJSON.put(eachItem.description+"-"+eachItem.internalName, eachItem.productId);
 		if(UtilValidate.isNotEmpty(eachItem.piecesIncluded)){
 			productPiecesJSON.putAt(eachItem.productId, eachItem.piecesIncluded);
 		}

@@ -333,7 +333,7 @@
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
 	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
-			 <menu-item name="BranchSalesOrder" title="Order Entry">
+			 <menu-item name="BranchSalesOrder" title="Indent Entry">
         		<link target="BranchSalesOrder"/>
         	 </menu-item>
         	   	 <menu-item name="OrderPayment" title="Indent Payment">
@@ -342,7 +342,7 @@
 				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
 			</link>
 		</menu-item>
-        	  <menu-item name="processOrdersBranchSales" title="Process Orders">
+        	  <menu-item name="processOrdersBranchSales" title="Process Indents">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>

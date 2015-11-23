@@ -367,7 +367,7 @@
                                         <include-form name="FindTankerSalesOrder" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-								<screenlet title="Depot Orders">
+								<screenlet title="Depot Indent">
 								<platform-specific>
 										<html>
 											<html-template
@@ -3296,7 +3296,7 @@
                                             <include-form name="FindOrderPaymentSeach" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                         </decorator-section>
                                         <decorator-section name="search-results">
-    								<screenlet title="Depot Orders">
+    								<screenlet title="Depot Indents">
     								<platform-specific>
     										<html>
     											<html-template
