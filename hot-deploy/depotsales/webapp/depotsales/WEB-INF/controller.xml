@@ -362,7 +362,7 @@
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
-         <response name="success"  type="request-redirect-noparam" value="processOrdersBranchSales"></response>
+         <response name="success"  type="request-redirect-noparam" value="ProcessOrdersSuppliersDepotSales"></response>
         <response name="error" type="view" value="processOrdersBranchSales"/>
     </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
@@ -495,7 +495,7 @@
     <request-map uri="processBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="BranchSalesOrder">
+        <response name="success"  type="request-redirect-noparam" value="orderPayment">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
