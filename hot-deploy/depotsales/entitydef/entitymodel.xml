@@ -180,4 +180,29 @@
         	<key-map field-name="loomTypeId"/>
       	</relation>
     </entity>
+    <view-entity entity-name="OrderItemAndAdjustment"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item and Header and Order Adjustment view Entity">
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="OA" entity-name="OrderAdjustment"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias-all entity-alias="OI"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="purposeTypeId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <alias entity-alias="OA" name="orderAdjustmentId"/>
+      <alias entity-alias="OA" name="createdDate"/>
+      <alias entity-alias="OA" name="orderAdjustmentTypeId"/>
+      <alias entity-alias="OA" name="amount"/>
+      <view-link entity-alias="OI" rel-entity-alias="OA">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
 </entitymodel>

@@ -1822,7 +1822,7 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(productCategoriesList)){
 				schemeCategory = (String)productCategoriesList.get(0);
 	            if(productCategoryQuotasMap.containsKey(schemeCategory)){
-	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("quotaPerMonth");
+	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("quotaAvailableThisMonth");
 	            }
 			}
 			
@@ -1909,7 +1909,7 @@ public class DepotSalesServices{
 							
 							item.addAdjustment(orderAdjustment);
 							
-					        productCategoryQuotasMap.put("quotaPerMonth", BigDecimal.ZERO);
+					        productCategoryQuotasMap.put("quotaAvailableThisMonth", BigDecimal.ZERO);
 					        
 							itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, remainingQty, (BigDecimal)priceResult.get("basicPrice"),
 						            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
@@ -1939,7 +1939,7 @@ public class DepotSalesServices{
 					                        "description", "10 Percent Subsidy on eligible product categories"));
 							item.addAdjustment(orderAdjustment);
 					        
-					        productCategoryQuotasMap.put("quotaPerMonth", quotaRemainingQty);
+					        productCategoryQuotasMap.put("quotaAvailableThisMonth", quotaRemainingQty);
 						}
 						
 					}
@@ -2098,12 +2098,19 @@ public class DepotSalesServices{
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
-	    
+	    Locale locale = null;
+		TimeZone timeZone = null;
+		locale = Locale.getDefault();
+		timeZone = TimeZone.getDefault();
+		
 	    String partyId= (String)context.get("partyId");
 	    Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
 	    if(UtilValidate.isEmpty(effectiveDate)){
 	    	effectiveDate = UtilDateTime.nowTimestamp();
 	    }
+	    
+	    Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
+	    Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale);
 	    
 	    List conditionList = FastList.newInstance();
 	    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
@@ -2130,7 +2137,6 @@ public class DepotSalesServices{
 			return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
 		}
 	    List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
-		
 		// Get All the schemes applicable for the PartyClassificationGroup.
 		List<GenericValue> partyClassificationList = null;
 		try {
@@ -2155,6 +2161,7 @@ public class DepotSalesServices{
 		}
 		List partyGrpSchemeIds = EntityUtil.getFieldListFromEntityList(groupApplicableSchemes, "schemeId", true);
 		partySchemeIds.addAll(partyGrpSchemeIds);
+		Debug.log("partySchemeIds =============="+partySchemeIds);
 		
 		Set partySchemeIdsSet = new HashSet(partySchemeIds);
 		partySchemeIds = new ArrayList(partySchemeIdsSet);
@@ -2180,7 +2187,7 @@ public class DepotSalesServices{
 				Debug.logError(e, "Failed to retrive SchemeProduct ", module);
 				return ServiceUtil.returnError("Failed to retrive SchemeProduct " + e);
 			}
-		    // List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
+			// List partySchemeIds = EntityUtil.getFieldListFromEntityList(partyApplicableSchemes, "schemeId", true);
 			
 			// Get products that are applicable for the scheme. 
 		
@@ -2204,6 +2211,66 @@ public class DepotSalesServices{
 					GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
 					String productCategoryId = schemeProductCategory.getString("productCategoryId");
 					
+					// calculate the quota already used for the month and reduce it from the actual quota.
+					
+					// Get productCategoryMembers
+					List productIdsList = FastList.newInstance();
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+					try {
+						List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+						productIdsList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productId", true);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+					}
+					
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+					conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthStart));
+					conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthEnd));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+					
+					List<GenericValue> orderHeaderAndRoles = null;
+					try {
+						orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive OrderHeader ", module);
+						return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+					}
+					
+					List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
+					
+					conditionList.clear();
+					if(UtilValidate.isNotEmpty(orderIds)){
+						conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+					}
+					if(UtilValidate.isNotEmpty(productIdsList)){
+						conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+					}
+					
+					conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+					List<GenericValue> orderItemAndAdjustment = null;
+					try {
+						orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive OrderHeader ", module);
+						return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+					}
+					
+					BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
+					for(int k=0; k<orderItemAndAdjustment.size(); k++){
+						totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
+					}
+					
+					
 					// Get relevant looms qty party possess and calculate quota
 					List catPartyLooms = EntityUtil.filterByCondition(partyLooms, EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
 					
@@ -2211,6 +2278,7 @@ public class DepotSalesServices{
 						Map productCategoryQuotaMap = FastMap.newInstance();
 						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
 						productCategoryQuotaMap.put("quotaPerMonth",((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity"))) );
+						productCategoryQuotaMap.put("quotaAvailableThisMonth", (((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")))).subtract(totalQuotaUsedUp) );
 						productCategoryQuotaMap.put("categoryQuota", (BigDecimal)schemeProductCategory.get("maxQty"));
 						productCategoryQuotaMap.put("looms",  (BigDecimal)((GenericValue)catPartyLooms.get(0)).get("quantity"));
 						// Add logic to calculate quota already used for the period
@@ -2228,6 +2296,7 @@ public class DepotSalesServices{
 			schemesMap.put(schemeId, tempSchemeMap);
 		    
 		}
+		Debug.log("schemesMap =============="+schemesMap);
 		result.put("schemesMap", schemesMap);
 	    return result;
    
@@ -2248,31 +2317,30 @@ public class DepotSalesServices{
 	  	String paymentMethodTypeId = (String) request.getParameter("paymentTypeId");
 	  	String amount = (String) request.getParameter("amount");
 	  	
-	 Map<String,Object> result= ServiceUtil.returnSuccess();
-  	
-  	 Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId, "userLogin", userLogin);
-     String orderPaymentPreferenceId = null;
-     Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
+	  	Map<String,Object> result= ServiceUtil.returnSuccess();
+	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId, "userLogin", userLogin);
+	  	String orderPaymentPreferenceId = null;
+	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
      
-     try {
-    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
-         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"userLogin", userLogin);
-         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
-         
-     } catch (GenericServiceException e) {
-         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
-         Debug.logError(e, errMsg, module);
-         request.setAttribute("_ERROR_MESSAGE_",errMsg);
-			return "error";
-     }
-     
-     request.setAttribute("_EVENT_MESSAGE_", (String)createCustPaymentFromPreferenceMap.get("successMessage")+" For "+orderId);
-    return "success";
-    
-}
+	     
+	  	try {
+	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"userLogin", userLogin);
+	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+	  	} catch (GenericServiceException e) {
+	         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
+	         Debug.logError(e, errMsg, module);
+	         request.setAttribute("_ERROR_MESSAGE_",errMsg);
+				return "error";
+	  	}
+	     
+	  	request.setAttribute("_EVENT_MESSAGE_", (String)createCustPaymentFromPreferenceMap.get("successMessage")+" For "+orderId);
+	    return "success";
+	    
+	}
    	
-public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
+   	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
    		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2399,8 +2467,6 @@ public static String processInventorySalesOrder(HttpServletRequest request, Http
 		
    		
    	}
-   	
-   	
    	
    	
 }
