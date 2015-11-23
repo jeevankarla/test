@@ -163,7 +163,15 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-       
+        <menu-item name="DepotTransReceipts" title="Receipts">
+       		<condition>
+       		 <or>
+        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
+				<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        <link target="DepotTransReceipts"/>
+	   </menu-item>
         
         
         
@@ -378,7 +386,40 @@
         	</condition>
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
-        
+        <menu name="DepotTransReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="DepotTransReceipts" title="Find GRN Items">
+        	<link target="DepotTransReceipts"/>
+        </menu-item>
+        <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
+        	<link target="DepotTransMaterialReceipts"/>
+        </menu-item>
+        <menu-item name="DepotTransGRNShipments" title="Find GRN">
+        	<link target="FindDepotTransGRNShipments"/>
+        </menu-item>
+        <menu-item name="DepotTransMaterialShipmentOverview" title="Material Shipment Overview">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="DepotTransMaterialShipmentOverview">
+            </link>
+        </menu-item>
+        <menu-item name="DepotTransMaterialInvoiceInit" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInit">
+            </link>
+        </menu-item>
+        <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
         
       </menu>
      <!--  <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
@@ -582,14 +623,14 @@
         	</condition>
             <link target="StockPositionSubDepot"/>
          </menu-item> 
-         <menu-item name="FindGRNReceipts" title="Receipt of Goods">
+         <menu-item name="DepotTransReceipts" title="Receipt of Goods">
        		 <condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 			 </or>
 	        </condition>
-	        	<link target="FindGRNReceiptsDepot"/>
+	        	<link target="DepotTransReceipts"/>
 	     </menu-item> 
 	      <menu-item name="PhysicalInventory" title="Sales Order">
 	      <condition>
