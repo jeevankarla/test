@@ -546,8 +546,8 @@
     <request-map uri="processInventorySalesOrder">
     	<security https="true" auth="true"/>  
     	<event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processInventorySalesOrder"/>  	   	 	
-        <response name="success" type="request-redirect-noparam" value="DepotSalesInventorySales"/>  
-        <response name="error" type="view" value="DepotSalesInventorySales"/>         
+        <response name="success" type="request-redirect-noparam" value="FindSalesIndentPayment"/>  
+        <response name="error" type="view" value="FindSalesIndentPayment"/>         
     </request-map>
     <request-map uri="DepotTransMaterialReceipts">
        <security https="true" auth="true"/>
@@ -628,6 +628,21 @@
     	<security https="true" auth="true"/>  
     	   <response name="success" type="view" value="PayUBizInit"/>      
     </request-map>
+    <request-map uri="DepotSalesPaymentForSales">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessInventorySalesOrder"/>
+        <response name="error" type="view" value="ProcessInventorySalesOrder"/>
+    </request-map>
+    <request-map uri="FindSalesIndentPayment">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="FindSalesIndentPayment"/>   
+      <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+	</request-map>
+	<request-map uri="DepotSalesIndentIssuance">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
+      <response name="failed" type="view" value="DepotSalesIndentIssuance"/>  
+	</request-map>
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     
@@ -714,4 +729,7 @@
     <view-map name="ProcessOrdersSuppliersDepotTrans" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessOrderAndShipmentGeneration"/>
     <view-map name="EditMaterialDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#EditMaterialDepotTransPO"/>
     <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>
+    <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
+    <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
+    <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
 </site-conf>

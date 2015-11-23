@@ -1277,7 +1277,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     public void setShipToCustomerPartyId(String shipToCustomerPartyId) {
         this.shipToCustomerPartyId = shipToCustomerPartyId;
-        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = shipToCustomerPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) 
+        	this.orderPartyId = shipToCustomerPartyId;
     }
 
     public String getEndUserCustomerPartyId() {
@@ -4191,6 +4192,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      // if (this.isPurchaseOrder()) {
         result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
         result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
+        result.put("shipToCustomerPartyId", this.getShipToCustomerPartyId());//for Depot enabled
      // }
 
         return result;
@@ -4256,6 +4258,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
        // if (this.isPurchaseOrder()) {
             result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
             result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
+            result.put("shipToCustomerPartyId", this.getShipToCustomerPartyId());//for Depot enabled
        // }
 
         return result;
