@@ -537,6 +537,50 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="StockPositionSubDepot"/>
     </request-map>
+    
+    <request-map uri="DepotSalesInventorySales">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesInventorySales"/>
+        <response name="error" type="view" value="DepotSalesInventorySales"/>
+    </request-map>
+    <request-map uri="processInventorySalesOrder">
+    	<security https="true" auth="true"/>  
+    	<event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processInventorySalesOrder"/>  	   	 	
+        <response name="success" type="request-redirect-noparam" value="DepotSalesInventorySales"/>  
+        <response name="error" type="view" value="DepotSalesInventorySales"/>         
+    </request-map>
+    <request-map uri="DepotTransMaterialReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransMaterialReceipts"/>
+       <response name="error" type="view" value="DepotTransMaterialReceipts"/>
+     </request-map>
+     <request-map uri="DepotTransReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransReceipts"/>
+       <response name="error" type="view" value="DepotTransReceipts"/>
+     </request-map>
+     <request-map uri="processDepotTransReceiptItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="DepotTransMaterialReceipts"/>
+       <response name="error" type="view" value="DepotTransMaterialReceipts"/>
+     </request-map>
+     <request-map uri="FindDepotTransGRNShipments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransGRNShipments"/>
+       <response name="error" type="view" value="DepotTransGRNShipments"/>
+     </request-map>
+     <request-map uri="CancelDepotTransGrnShipment">
+       <security https="true" auth="true"/>
+        <event type="service" path="" invoke="processCancelGrnShipment"></event>
+       <response name="success" type="request-redirect-noparam" value="FindDepotTransGRNShipments"/>
+       <response name="error" type="view" value="FindDepotTransGRNShipments"/>
+     </request-map>
+     <request-map uri="DepotTransMaterialInvoiceInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransMaterialInvoiceInit"/>
+       <response name="error" type="view" value="DepotTransMaterialInvoiceInit"/>
+     </request-map>
     <!-- View Mappings -->
     
     
@@ -613,4 +657,9 @@
     <!-- sub depot operations-->
     
     <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
+    <view-map name="DepotSalesInventorySales" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventorySales"/>
+    <view-map name="DepotTransReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransReceipts"/>
+    <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>
+    <view-map name="DepotTransGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransGRNShipments"/>
+    <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
 </site-conf>

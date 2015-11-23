@@ -1207,6 +1207,38 @@
             </hyperlink>
         </field> 
     </form>   
+    
+    <form name="FindPhysicalInventoryDepotForSale" title="" type="single" target="DepotSalesInventorySales" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
+        <field name="primaryOrderId" title="PO no"><text-find/></field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
+        <field name="facilityId" > <hidden value="${parameters.facilityId}"/></field>
+    <!--     <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
+           <field name="statusId"><hidden value="GENERATED"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPhysicalInventoryDepotForSale" type="list" list-name="physicalInventory" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+       
+        <field name="shipmentId" title="Shipment Id"><display/></field>
+        <field name="fromPartyId" title="From Party"><display/></field>
+        <field name="estimatedShipDate" title="Recvd.Date"><display/></field>
+        
+        <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field>
+        <field name="productId" widget-style="buttontext" title="Product Name">
+        	<display-entity entity-name="Product" description="${description}[${${productId}}]"></display-entity>
+        </field>
+        <field name="quantityOnHandTotal" title="Stock Avl"><display/></field>
+        <field name="unitCost"><hidden/></field>
+        <field name="Sale" title="Make Order" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Make Order"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}');"></hyperlink>
+        </field>
+    </form>
        
 	      
 </forms>
