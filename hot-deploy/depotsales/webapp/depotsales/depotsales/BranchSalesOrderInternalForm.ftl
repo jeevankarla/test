@@ -345,12 +345,13 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:260, minWidth:260, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"baleQuantity", name:"Qty Bales", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty Kgs", field:"quantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
-			{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter}	
-			
+			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
+			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter},	
+			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass"}
 			
 			<#--
 			{id:"productFeature", name:"Count", field:"productFeature", width:70, minWidth:70, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "INR,PERCENT,asdf"},
@@ -679,6 +680,78 @@
 				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
+			if (args.cell == 3) {
+				var prod = data[args.row]["cProductId"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var uom = data[args.row]["cottonUom"];
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
+				
+				
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				if(isNaN(unitPrice)){
+					unitPrice = 0;
+				}
+				
+				quantity = 0;
+				if(uom == "Bale"){
+					quantity = Math.round(baleQty*bundleWeight*40);
+				}
+				if(uom == "Half-Bale"){
+					quantity = Math.round(baleQty*bundleWeight*20);
+				}
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["amount"] = Math.round(quantity*unitPrice);
+				
+				grid.updateRow(args.row);
+				
+				//jQuery("#totalAmount").html(dispText);
+			}
+			if (args.cell == 5) {
+				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['unitPrice'];
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+					roundedAmount = Math.round(qty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["amount"] = roundedAmount;
+				grid.updateRow(args.row);
+				
+				var totalAmount = 0;
+				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+				}
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+				var dispText = "";
+				if(amt > 0 ){
+					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				
+				jQuery("#totalAmount").html(dispText);
+			}
+			
+			
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
