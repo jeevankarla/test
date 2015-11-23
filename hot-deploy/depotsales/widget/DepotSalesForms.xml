@@ -524,11 +524,11 @@
         </field>
          -->
         
-       <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_EDIT_PO&quot;, session)))}" >
+       <!-- <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_EDIT_PO&quot;, session)))}" >
             <hyperlink target="editMaterialPO" description="Edit Order">
                  <parameter param-name="orderId"/>
             </hyperlink>
-        </field>  
+        </field> -->  
       	<field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
             <hyperlink target="ApproveOrder" description="Approve">
                 <parameter param-name="orderId"/>
@@ -540,7 +540,7 @@
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
-        <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field>
+        <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
         <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
                  <parameter param-name="orderId"/>
