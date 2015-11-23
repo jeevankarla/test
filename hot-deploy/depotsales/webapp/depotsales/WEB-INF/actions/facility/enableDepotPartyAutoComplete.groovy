@@ -101,11 +101,23 @@ productStoreIds.each{ productStoreId ->
 	}
 //Debug.log("branchPartyObj====================="+branchPartyObj);
 
+conditionListForPsbNum = [];
+conditionListForPsbNum.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMBER"));
+conditionListForPsbNum.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyDetailsList.partyId));
+conditionDeductor=EntityCondition.makeCondition(conditionListForPsbNum,EntityOperator.AND);
+partyPsbNumList = delegator.findList("PartyIdentification", conditionDeductor, null, null, null, false);
 partyDetailsList.each{eachParty ->
+	psbnum="";
+	if(partyDetailsList){
+	partyPsbNumDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(partyPsbNumList, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, eachParty.partyId)));
+		if(partyPsbNumDetails && partyPsbNumDetails.get("idValue")){
+		psbnum=partyPsbNumDetails.get("idValue");
+		}
+	}
 JSONObject newPartyObj = new JSONObject();
 partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
 newPartyObj.put("value",eachParty.partyId);
-newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
+newPartyObj.put("label",partyName+" ["+psbnum+"]");
 partyNameObj.put(eachParty.partyId,partyName);
 partyJSON.add(newPartyObj);
 }

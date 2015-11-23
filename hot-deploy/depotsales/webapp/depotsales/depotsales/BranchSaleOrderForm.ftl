@@ -472,7 +472,9 @@
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
 				          		<td valign='middle' colspan="2">
 				            		<div class='tabletext h3'>
-				               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)>
+         								<#assign passBookDetails=partyIdentification?if_exists>
+				               			${party.groupName?if_exists} [ ${passBookDetails.idValue?if_exists}] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				       		<#else>               

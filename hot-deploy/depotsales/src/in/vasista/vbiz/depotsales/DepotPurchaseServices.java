@@ -602,7 +602,7 @@ public class DepotPurchaseServices{
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				if (UtilValidate.isNotEmpty(orderHeader)) { 
 				String statusId = orderHeader.getString("statusId");
-				orderTypeId=orderHeader.getString("orderTypeId");
+				//orderTypeId=orderHeader.getString("orderTypeId");
 				orderName=orderHeader.getString("orderName");
 				estimatedDeliveryDate=orderHeader.getTimestamp("estimatedDeliveryDate");
 				grandTotal=orderHeader.getBigDecimal("grandTotal");
@@ -675,7 +675,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("billFromPartyId", partyId);
 				processOrderContext.put("issueToDeptId", "");
 				processOrderContext.put("supplyDate", effectiveDate);
-				processOrderContext.put("salesChannel", "DEPOT_CHANNEL");
+				processOrderContext.put("salesChannel", "MATERIAL_PUR_CHANNEL");
 				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 				processOrderContext.put("productStoreId", productStoreId);
 				processOrderContext.put("PONumber", orderId);
