@@ -84,7 +84,7 @@
 	        	
 			 </or>
 	        </condition>
-	        	<link target="ProcessOrdersSuppliersDepotSales"/>
+	        	<link target="FindPO"/>
 	    </menu-item>
 	    <menu-item name="FindGRNReceipts" title="Receipt of Goods">
        		 <condition>
