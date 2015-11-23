@@ -160,6 +160,14 @@
 	    }
 	     
 	  	function validateParty(){
+	  		if(indententryinit.productStoreId.value.length < 1){
+	  			alert("Branch is Mandatory");
+	  			indententryinit.isFormSubmitted.value="";
+	  		}
+	  		if(indententryinit.suplierPartyId.value.length < 1){
+	  			alert("Supplier Party ID is Mandatory");
+	  			indententryinit.isFormSubmitted.value="";
+	  		}
 	  		if(indententryinit.partyId.value.length < 1){
 	  			alert("Party ID is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
@@ -181,7 +189,7 @@
 	<div class="screenlet" style="width:95%">
 		<div class="screenlet-title-bar">
 	        <div class="grid-header" style="width:100%">
-				<label>Depot Sales Entry </label>
+				<label>Branch Sales Entry </label>
 			</div>
 	    </div>
 
@@ -272,7 +280,7 @@
 			        <#if changeFlag?exists && changeFlag !='EditDepotSales' && changeFlag !='ICPTransferSale'>
 		        	
 			          		<td>&nbsp;</td>
-			          		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Order Tax Type:</div></td>
+			          		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tax Type:</div></td>
 			       			<#if orderTaxType?exists && orderTaxType?has_content>  
 				  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
 			          			<td valign='middle'>
@@ -289,7 +297,7 @@
 
 		        	
 				      		<td>&nbsp;</td>
-				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Customer Order Number:</div></td>
+				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Customer Indent Number:</div></td>
 				   			<#if PONumber?exists && PONumber?has_content>  
 				  	  			<input type="hidden" name="PONumber" id="PONumber" value="${PONumber?if_exists}"/>  
 				      			<td valign='middle'>
@@ -414,7 +422,7 @@
 
 			        
 			         <td>&nbsp;</td>
-			          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier :</div></td>
+			          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier :<font color="red">*</font></div></td>
 			        
 			          <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if suplierPartyId?exists && suplierPartyId?has_content>  

@@ -178,10 +178,10 @@ under the License.
         <tr class="header-row-2">
           <td>Party Code</td>
           <td>Party Name</td>
-          <td>Order Id</td>
-          <td>Order Date</td>
+          <td>Indent Id</td>
+          <td>Indent Date</td>
           <td>Grand Total</td>
-         <td>View Order</td>
+         <td>View Indent</td>
           <#-- <td>Print Indent</td>
           <td>Edit Batch</td>
           <td>Approve</td>
@@ -207,7 +207,7 @@ under the License.
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
                 <td>${eachOrder.orderTotal?if_exists}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Indent" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
               <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>

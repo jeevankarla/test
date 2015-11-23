@@ -115,7 +115,7 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId"><text/></field>
+        <field name="orderId" title="Indent Id"><text/></field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
@@ -1044,7 +1044,7 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId"><text/></field>
+        <field name="orderId" title="IndentId"><text/></field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
