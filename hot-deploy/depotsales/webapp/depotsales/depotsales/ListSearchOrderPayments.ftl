@@ -192,6 +192,7 @@ under the License.
            <#-- <td>Payment</td> -->
            <td>Payment Status</td>
              <td>Received Amount</td>
+            <#-- <td>Indent Status</td>-->
         <#--  <td>Edit</td>
           <td>Generate PO</td> -->
           <#--<td>Party Balance</td>
@@ -233,8 +234,12 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
-              	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>
               	
+              	<#if paymentSatusMap.get(eachOrder.orderId).get("amount")<= eachOrder.orderTotal>
+              	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
+              	<#else>
+              	 <td></td>
+              	</#if>
             <#--  	<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
               	<#else>
@@ -242,6 +247,9 @@ under the License.
               	</#if> -->
               
                  <#if paymentSatusMap.get(eachOrder.orderId)?exists>
+                     
+                     
+                     
                      <td>${"Payment Received"}</td>
               	<#else>
               	<td>Payment Not Received</td>
@@ -252,7 +260,12 @@ under the License.
               	 <#else>
               	 <td></td>
               	 </#if>
-              
+              	 
+              <#--	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
+              	 <td><a class="buttontext" href="<@ofbizUrl>realizeStatus?paymentPreferenceId=${orderPreferenceMap.get(eachOrder.orderId)}</@ofbizUrl>">vamsi</a></td>
+              	<#else>
+              	<td></td>
+              	  </#if>-->
               	
               	<#--	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
 				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}','${eachOrder.orderDate?if_exists}');"/></td>-->
