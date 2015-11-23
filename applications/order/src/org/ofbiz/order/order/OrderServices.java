@@ -126,6 +126,7 @@ public class OrderServices {
         purchaseAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
         purchaseAttributeRoleMap.put("shipFromVendorPartyId", "SHIP_FROM_VENDOR");
         purchaseAttributeRoleMap.put("supplierAgentPartyId", "SUPPLIER_AGENT");
+        purchaseAttributeRoleMap.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
     }
     public static final int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");

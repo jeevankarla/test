@@ -1150,6 +1150,7 @@ public class MaterialPurchaseServices {
 		String partyId = (String) request.getParameter("supplierId");
 		String orderId = (String) request.getParameter("orderId");
 		String billFromPartyId = (String) request.getParameter("billToPartyId");
+		String shipToPartyId = (String) request.getParameter("shipToPartyId");
 		String issueToDeptId = (String) request.getParameter("issueToDeptId");
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
@@ -1384,6 +1385,7 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("otherTerms", otherTermDetail);
 		processOrderContext.put("adjustmentDetail", adjustmentDetail);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
+		processOrderContext.put("shipToPartyId", shipToPartyId);
 		processOrderContext.put("issueToDeptId", issueToDeptId);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
@@ -1467,6 +1469,7 @@ public class MaterialPurchaseServices {
 	  	Map taxTermsMap = (Map) context.get("taxTermsMap");
 	  	String partyId = (String) context.get("partyId");
 	  	String billFromPartyId = (String) context.get("billFromPartyId");
+	  	String shipToPartyId = (String) context.get("shipToPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
 	  	List<Map> termsList = (List)context.get("termsList");
 	  	List<Map> otherChargesAdjustment = (List)context.get("adjustmentDetail");
@@ -1511,7 +1514,7 @@ public class MaterialPurchaseServices {
 			cart.setChannelType(salesChannel);
 			cart.setBillToCustomerPartyId(billToPartyId);
 			cart.setPlacingCustomerPartyId(billToPartyId);
-			cart.setShipToCustomerPartyId(billToPartyId);
+			cart.setShipToCustomerPartyId(shipToPartyId);
 			cart.setEndUserCustomerPartyId(billToPartyId);
 			//cart.setShipmentId(shipmentId);
 			//for PurchaseOrder we have to use for SupplierId

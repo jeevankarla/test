@@ -581,7 +581,49 @@
        <response name="success" type="view" value="DepotTransMaterialInvoiceInit"/>
        <response name="error" type="view" value="DepotTransMaterialInvoiceInit"/>
      </request-map>
-     
+     <request-map uri="FindDepotTransPO">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindDepotTransPO"/>
+       <response name="error" type="view" value="FindDepotTransPO"/>
+   </request-map>
+   <request-map uri="CreateDepotTransPO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateDepotTransPO"/>
+    </request-map>
+    <request-map uri="CreateMaterialDepotTransPO">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="FindDepotTransPO"></response>
+        <response name="error" type="view" value="CreateDepotTransPO"/>
+    </request-map>
+    <request-map uri="ApproveDepotTransPOOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ChangeOrderStatus"/>
+        <response name="success" type="view" value="FindDepotTransPO"/>
+        <response name="error" type="view" value="FindDepotTransPO"/>
+    </request-map>
+    <request-map uri="CancelDepotTransPOOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPOStatus"/>
+        <response name="success" type="view" value="FindDepotTransPO"/>
+        <response name="error" type="view" value="FindDepotTransPO"/>
+    </request-map>
+    
+    <request-map uri="raiseDepotTransGRN">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransPOMaterialReceipts"/>
+       <response name="error" type="view" value="DepotTransPOMaterialReceipts"/>
+     </request-map>
+     <request-map uri="ProcessOrdersSuppliersDepotTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessOrdersSuppliersDepotTrans"/>   
+       <response name="failed" type="view" value="FindDepotTransPO"/>  
+    </request-map>
+    <request-map uri="editMaterialDepotTransPO">
+  		<security https="true" auth="true"/>
+   	<response name="success" type="view" value="EditMaterialDepotTransPO"/>
+    </request-map>
      <request-map uri="PayUBizInit">
     	<security https="true" auth="true"/>  
     	   <response name="success" type="view" value="PayUBizInit"/>      
@@ -667,4 +709,9 @@
     <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>
     <view-map name="DepotTransGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransGRNShipments"/>
     <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
+    <view-map name="FindDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindDepotTransPO"/>
+    <view-map name="CreateDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateDepotTransPO"/>
+    <view-map name="ProcessOrdersSuppliersDepotTrans" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessOrderAndShipmentGeneration"/>
+    <view-map name="EditMaterialDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#EditMaterialDepotTransPO"/>
+    <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>
 </site-conf>

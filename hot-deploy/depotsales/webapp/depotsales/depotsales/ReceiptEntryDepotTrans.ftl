@@ -109,7 +109,7 @@
 										<#assign flag = true>                
 				          			</#if>
 				          			</td>
-				          			<#if flag == true>
+				          		<#--	<#if flag == true>
 				          			<td class='tabletext h3'>
 				          			 Without PO:<input type="checkbox" name="withoutPO" id="withoutPO" value="Y" onclick="toggleSupplier(this)"/>
 				          			</td>
@@ -117,7 +117,7 @@
 				          			<td>	NO PO
 				          			   <input type="hidden" name="withoutPO" id="withoutPO" value="${withoutPO}"/>
 				          			</td>
-				          			</#if>
+				          			</#if>-->
 				          	</#if>
 				        </tr>
 				      	<tr><td><br/></td></tr>
