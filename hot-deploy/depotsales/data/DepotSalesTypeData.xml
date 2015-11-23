@@ -135,4 +135,8 @@
     
     <PaymentMethod  description="Fund Transfer" finAccountId="" fromDate="2011-07-12 00:00:00.0" glAccountId=""  partyId="Company" paymentMethodId="FUND_TRANSFER" paymentMethodTypeId="MONEY"/>
    <InvoiceType  description="Purchase_Invoice" hasTable="N" invoiceTypeId="PURCHASE_INVOICE"  parentTypeId="PURCHASE_INVOICE" /> 
+   
+   
+   
+   <PaymentMethodType  description="PAYUBIZ_PAYMENT"  parentTypeId="MONEY" paymentMethodTypeId="PAYUBIZ_PAYMENT"/>
 </entity-engine-xml>
