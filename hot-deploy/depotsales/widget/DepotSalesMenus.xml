@@ -549,6 +549,20 @@
             	<parameter param-name="defaultMethodTypeId" value="FUND_TRANSFER"/>
             </link>            
           </menu-item>
+          <menu-item name="PayUBizPayment" title="PayUBiz Payments">
+            <condition>
+				<or>
+            		<if-has-permission permission="DEPOTSALES"  action="_CHEQUE"/>
+            	</or>            
+            </condition>
+            <link target="FindPaymentDepotSales">
+            	<parameter param-name="subTabItem" value="PayUBizPayment"/>
+            	<parameter param-name="defaultMethodTypeId" value="PAYUBIZ_PAYMENT"/>
+            </link>            
+          </menu-item>  
+          <menu-item name="PayUBizInit" title="PayUBiz Payments Test">
+            <link target="PayUBizInit"/>
+          </menu-item>   
            <!-- 
           <menu-item name="ChallanPayment" title="Challan">
             <condition>
