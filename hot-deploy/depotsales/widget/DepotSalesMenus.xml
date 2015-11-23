@@ -333,7 +333,7 @@
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
 	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
-			 <menu-item name="BranchSalesOrder" title="Order Entry">
+			 <menu-item name="BranchSalesOrder" title="Indent Entry">
         		<link target="BranchSalesOrder"/>
         	 </menu-item>
         	   	 <menu-item name="OrderPayment" title="Indent Payment">
@@ -342,7 +342,7 @@
 				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
 			</link>
 		</menu-item>
-        	  <menu-item name="processOrdersBranchSales" title="Process Orders">
+        	  <menu-item name="processOrdersBranchSales" title="Process Indents">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
@@ -568,23 +568,8 @@
             	</or>            
             </condition>
             <link target="FindDepotSalesChequeReturns"/>
-          </menu-item> -->  
-          <menu-item name="PayUBizPayment" title="PayUBiz Payments">
-            <condition>
-				<or>
-            		<if-has-permission permission="DEPOTSALES"  action="_CHEQUE"/>
-            	</or>            
-            </condition>
-            <link target="FindPaymentDepotSales">
-            	<parameter param-name="subTabItem" value="PayUBizPayment"/>
-            	<parameter param-name="defaultMethodTypeId" value="PAYUBIZ_PAYMENT"/>
-            </link>            
-          </menu-item> 
-           
-          <menu-item name="PayUBizInit" title="PayUBiz Payments Test">
-            <link target="PayUBizInit"/>
-          </menu-item>   
-       </menu>  
+          </menu-item> -->      
+    </menu>  
        <menu name="InventoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <!-- <menu-item name="SearchInventory" title="Find Inventory Totals">
             <link target="Receipts">

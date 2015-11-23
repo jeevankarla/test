@@ -362,7 +362,7 @@
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
-         <response name="success"  type="request-redirect-noparam" value="processOrdersBranchSales"></response>
+         <response name="success"  type="request-redirect-noparam" value="ProcessOrdersSuppliersDepotSales"></response>
         <response name="error" type="view" value="processOrdersBranchSales"/>
     </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
@@ -495,7 +495,7 @@
     <request-map uri="processBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="BranchSalesOrder">
+        <response name="success"  type="request-redirect-noparam" value="orderPayment">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
@@ -581,13 +581,8 @@
        <response name="success" type="view" value="DepotTransMaterialInvoiceInit"/>
        <response name="error" type="view" value="DepotTransMaterialInvoiceInit"/>
      </request-map>
-     
-     <request-map uri="PayUBizInit">
-    	<security https="true" auth="true"/>  
-    	   <response name="success" type="view" value="PayUBizInit"/>      
-    </request-map>
     <!-- View Mappings -->
-    <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
+    
     
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
