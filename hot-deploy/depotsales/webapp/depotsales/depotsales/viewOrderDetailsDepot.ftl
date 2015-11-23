@@ -188,13 +188,39 @@
 	}
 	
 	
+	function amountCheck()
+	{
+	
+	   var amount =  $("#amount").val();
+	    var grandTot =  $("#grandTotal").val();
+	   
+	   if(amount ==''){
+	   alert("Please Enter Amount");
+	   }
+	   else if(parseInt(amount) > parseInt(grandTot)){
+	   
+	      alert("Please Enter Amount Less Than The Grand Total.");
+	     
+	        $("#submitval").parent().parent().hide();
+	        
+	        $("#cancel").parent().parent().hide();
+	        
+	   }else{
+	   
+	       $("#submitval").parent().parent().show();
+	       
+	       $("#cancel").parent().parent().show();
+	   }
+	   
+	}
 	
 	
-	function showPaymentEntry(orderId, partyId,partyName) {
+	function showPaymentEntry(orderId, partyId,partyName,grandTotal) {
 		var message = "";
 		orderId = orderId;
 		partyId = partyId;
 		
+		grandTotal = grandTotal;
 		partyName= partyName;
 		
 		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
@@ -202,20 +228,19 @@
 			
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
-						"<option value='CASH_PAYIN' >CHS</option>"+
-						"<option value='CHALLAN_PAYIN' >CHL</option>"+
-						"<option value='CHEQUE_PAYIN' >CHQ</option>"+
-						"<option value='DIRECTDEPOSIT_PAYIN' >Direct Deposite Payment</option>"+
-						"<option value='FUND_TRANSFER' >Fund Transfer</option>"+
-						"</select></td></tr>"+
+						<#list PaymentMethodType as payment>
+						"<option value='${payment.paymentMethodTypeId}' >${payment.description}</option>"+
+						</#list>
+					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount'  name='amount'  onblur='javascript: amountCheck();'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
-				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='grandTotal' name='grandTotal' value='"+grandTotal+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 				 		
                 		
 					message +=	"</table></form></body></html>";
@@ -228,7 +253,8 @@
      
       var paymentType =  $("#paymentTypeId").val()
      
-     if(paymentType == 'CASH_PAYIN'){
+     
+     if(paymentType == 'CASH_PAYOUT'){
      
      $("#inFavourOf").parent().parent().hide();
      
@@ -240,7 +266,15 @@
      
      
                        
-    }else{
+    }
+   else if(paymentType == 'FT_PAYIN'){
+   
+       $("#inFavourOf").parent().parent().hide();
+     
+     $("#paymentRefNum").parent().parent().hide();
+   
+    }
+    else{
     
       $("#inFavourOf").parent().parent().show();
      
