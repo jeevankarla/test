@@ -235,7 +235,7 @@ under the License.
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
               	
-              	<#if paymentSatusMap.get(eachOrder.orderId).get("amount")<= eachOrder.orderTotal>
+              	<#if eachOrder.orderId?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
               	<#else>
               	 <td></td>
@@ -255,8 +255,8 @@ under the License.
               	<td>Payment Not Received</td>
               	</#if>
                 
-                <#if paymentSatusMap.get(eachOrder.orderId)?exists>
-              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")}</td>
+                <#if paymentSatusMap.get(eachOrder.orderId)?has_content>
+              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")?if_exists}</td>
               	 <#else>
               	 <td></td>
               	 </#if>
