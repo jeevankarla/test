@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+
+import java.util.HashMap;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
@@ -2231,8 +2233,7 @@ public class DepotSalesServices{
    
    	}
    	
-   	
-   	public static String createOrderPayment(HttpServletRequest request, HttpServletResponse response) {
+   	public static String  createOrderPayment(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -2241,27 +2242,34 @@ public class DepotSalesServices{
 		HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		
-	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String paymentDate = (String) request.getParameter("paymentDate");
 	    String orderId = (String) request.getParameter("orderId");
 	  	String partyId = (String) request.getParameter("partyId");
 	  	String paymentMethodTypeId = (String) request.getParameter("paymentTypeId");
 	  	String amount = (String) request.getParameter("amount");
-
-  	
+	  	
+	 Map<String,Object> result= ServiceUtil.returnSuccess();
   	
   	 Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId, "userLogin", userLogin);
      String orderPaymentPreferenceId = null;
+     Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
+     
      try {
     	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
          orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"userLogin", userLogin);
+         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+         
      } catch (GenericServiceException e) {
          String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
          Debug.logError(e, errMsg, module);
+         request.setAttribute("_ERROR_MESSAGE_",errMsg);
+			return "error";
      }
-
-	return partyId;
-	
+     
+     request.setAttribute("_EVENT_MESSAGE_", (String)createCustPaymentFromPreferenceMap.get("successMessage")+" For "+orderId);
+    return "success";
+    
 }
    	
 public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {

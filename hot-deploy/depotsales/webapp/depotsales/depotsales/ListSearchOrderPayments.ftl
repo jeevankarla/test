@@ -173,21 +173,23 @@ under the License.
     		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     </div>
 	<br/>
-    <table class="basic-table hover-bar" cellspacing="0">
+
+
+     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
           <td>Party Code</td>
           <td>Party Name</td>
-          <td>Indent Id</td>
-          <td>Indent Date</td>
+          <td>Order Id</td>
+          <td>Order Date</td>
           <td>Grand Total</td>
-         <td>View Indent</td>
+         <td>View Order</td>
           <#-- <td>Print Indent</td>
           <td>Edit Batch</td>
           <td>Approve</td>
          <td>DC Report</td>-->
-           <td>Payment Preference</td>
-            <td>Payment</td>
+           <td>Indent Payment</td>
+           <#-- <td>Payment</td> -->
            <td>Payment Status</td>
              <td>Received Amount</td>
         <#--  <td>Edit</td>
@@ -207,7 +209,7 @@ under the License.
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
                 <td>${eachOrder.orderTotal?if_exists}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Indent" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
               <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
@@ -231,22 +233,22 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
-              	<td><input type="button" name="Payment" id="Payment" value="Payment Preference" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>
+              	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>
               	
-              	<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
+            <#--  	<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
               	<#else>
               	<td></td>
-              	</#if>
+              	</#if> -->
               
-                 <#if paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId))?exists>
+                 <#if paymentSatusMap.get(eachOrder.orderId)?exists>
                      <td>${"Payment Received"}</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>
                 
-                <#if paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId))?exists>
-              	<td>${paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId)).get("amount")}</td>
+                <#if paymentSatusMap.get(eachOrder.orderId)?exists>
+              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")}</td>
               	 <#else>
               	 <td></td>
               	 </#if>

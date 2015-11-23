@@ -183,18 +183,17 @@ for (eachOrderList in orderList) {
 	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
 	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 	   OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
-	   
 	   getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
 	   
-	  if(UtilValidate.isNotEmpty(getFirstOrderPayment)){
+	   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+	   
+	  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 	   
 	   orderPreferenceMap.put(eachList.orderId, getFirstOrderPayment.get("orderPaymentPreferenceId"))
-
-	   condtList.clear();
-	   condtList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.EQUALS, getFirstOrderPayment.get("orderPaymentPreferenceId")));
-	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+	   conditonList = [];
+	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
+	   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
-	   
 	   
 	   totAmount = 0;
 	   
@@ -211,23 +210,15 @@ for (eachOrderList in orderList) {
 			tempMap.put("amount", totAmount);
 			
 	   
-	   paymentSatusMap.put(getFirstOrderPayment.get("orderPaymentPreferenceId"), tempMap);
+	   paymentSatusMap.put(eachList.orderId, tempMap);
 	   
 	   }
 	   
 	  }
 }
    
-   
-   
-   Debug.log("paymentSatusMap=========="+paymentSatusMap);
    context.orderPreferenceMap = orderPreferenceMap;
-   
    context.paymentSatusMap = paymentSatusMap;
-   
-   
-   
-
 
 context.orderList = finalFilteredList;
 context.partyOBMap = partyOBMap;
