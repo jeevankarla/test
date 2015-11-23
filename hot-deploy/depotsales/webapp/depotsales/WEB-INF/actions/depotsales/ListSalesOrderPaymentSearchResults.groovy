@@ -196,6 +196,7 @@ for (eachOrderList in orderList) {
 	   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 	   
 	   totAmount = 0;
+	   tempMap = [:];
 	   
 	   if(UtilValidate.isNotEmpty(PaymentList)){
 	   
@@ -203,16 +204,16 @@ for (eachOrderList in orderList) {
 		   totAmount = totAmount+eachpayment.get("amount");
 		  }
 	   
-			tempMap = [:];
+			
 			
 			tempMap.put("statusId", PaymentList[0].statusId);
 			
 			tempMap.put("amount", totAmount);
-			
+	   
+	   }
 	   
 	   paymentSatusMap.put(eachList.orderId, tempMap);
 	   
-	   }
 	   
 	  }
 }
