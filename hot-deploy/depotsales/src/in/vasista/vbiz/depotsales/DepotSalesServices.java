@@ -2354,6 +2354,7 @@ public class DepotSalesServices{
 		String disableAcctgFlag = (String) request.getParameter("disableAcctgFlag");
 		String salesChannel = (String) request.getParameter("salesChannel");
 		String orderId = (String) request.getParameter("orderId");
+		String inventoryItemId = (String) request.getParameter("inventoryItemId");
 		
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal unitCost = BigDecimal.ZERO;
@@ -2456,6 +2457,30 @@ public class DepotSalesServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
 					return "error";
 				}
+			//Creating Order Item Attribute
+			if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(inventoryItemId)){
+				List<GenericValue> orderItems = null;
+				orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(orderItems)){
+					for(GenericValue orderItemEntry : orderItems){
+		   				String orderItemSeqId=orderItemEntry.getString("orderItemSeqId");
+					try{
+	   					GenericValue newEntity = delegator.makeValue("OrderItemAttribute");
+	   			        newEntity.set("orderId", orderId);	
+	   			        newEntity.set("orderItemSeqId", orderItemSeqId);
+	   			        newEntity.set("attrName", "ORDRITEM_INVENTORY_ID");
+	   			        newEntity.set("attrValue", inventoryItemId);
+	   		            delegator.create(newEntity);
+	   		        } catch (GenericEntityException e) {
+	   		            Debug.logError(e, module);
+	   		            request.setAttribute("_ERROR_MESSAGE_", "Failed to create OrderItemAttribute for orderId: : "+orderId);
+						return "error";
+	   		        	}
+					}
+				}
+				
+			}
+			
 			}catch(Exception e){
 				Debug.logError(e, module);
 				return "error";

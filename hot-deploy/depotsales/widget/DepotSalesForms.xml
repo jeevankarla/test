@@ -1226,15 +1226,15 @@
         <field name="shipmentId" title="Shipment Id"><display/></field>
         <field name="fromPartyId" title="From Party"><display/></field>
         <field name="estimatedShipDate" title="Recvd.Date"><display/></field>
-        
-        <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field>
+        <field name="inventoryItemId" > <hidden/></field>
+       <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}[${${productId}}]"></display-entity>
         </field>
         <field name="quantityOnHandTotal" title="Stock Avl"><display/></field>
         <field name="unitCost"><hidden/></field>
-        <field name="Sale" title="Make Order" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Make Order"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}');"></hyperlink>
+        <field name="Sale" title="Sale Indent" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
         </field>
     </form>
           <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
