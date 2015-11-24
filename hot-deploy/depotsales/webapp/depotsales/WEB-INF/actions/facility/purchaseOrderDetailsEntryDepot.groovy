@@ -115,11 +115,23 @@ if(orderId){
 
 prodList = [];
 		try{
-		 productCategoryList = delegator.findByAnd("ProductCategory", UtilMisc.toMap("productCategoryTypeId","BYPROD"));
-		 productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-			productList = ProductWorker.getProductsByCategoryList(delegator, productCategoryIdsList, null);
-			 prodIdsList = [];
-			for(GenericValue product : productList){
+			/*productCategoryList = delegator.findByAnd("ProductCategory", UtilMisc.toMap("productCategoryTypeId","BYPROD"));
+			productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
+			 productList = ProductWorker.getProductsByCategoryList(delegator, productCategoryIdsList, null);*/
+			exprList= [];
+			exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+			exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+			exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
+			/*exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+			EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));*/
+			EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+					
+			productList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+			
+			//Debug.log("productList======"+productList);
+			
+			prodIdsList = [];
+			 for(GenericValue product : productList){
 				String productId = product.getString("productId");
 				if(!prodIdsList.contains(productId)){
 					prodIdsList.add(productId);
@@ -154,13 +166,15 @@ prodList = [];
 		productIdLabelJSON.put(eachItem.productId, "[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
 		productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
 		
-		if(productUomMap){
+		productUOMJSON.put(eachItem.productId, "KG");
+		uomLabelJSON.put("KG", "KG");
+		/*if(productUomMap){
 			uomId = productUomMap.get(eachItem.productId);
 			if(uomId){
 				productUOMJSON.put(eachItem.productId, uomId);
 				uomLabelJSON.put(uomId, uomLabelMap.get(uomId));
 			}
-		}
+		}*/
 	}
 	
 	//Debug.log("====productUOMJSON=="+productUOMJSON+"====uomLabelJSON==="+uomLabelJSON);
