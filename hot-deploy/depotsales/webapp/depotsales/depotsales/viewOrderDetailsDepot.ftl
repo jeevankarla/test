@@ -315,4 +315,20 @@
 	
 	
 	
+  function realizeStatusChange(paymentPreferenceId) {
+	        	
+	  var paymentPreferenceId = paymentPreferenceId;
+		var message = "";
+		message += "<html><head></head><body><form action='realizeStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			message +=  "<tr class='h3'><td align='left' class='h3' width='100%'>Are You Sure You Want to Change Payment Status to Payment Realized. </td></tr></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='paymentPreferenceId' name='paymentPreferenceId' value='"+paymentPreferenceId+"' /></td></tr>"+
+					    "<tr class='h3'><td align='center'><span align='center'><pre><input type='submit' value='Submit' class='smallSubmit'/>      <button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></pre></span></td></tr>";
+					
+					message +=	"</table></form></body></html>";
+		var title = "Indent Status";
+		Alert(message, title);
+  
+    }	
+	
+	
 </script>
