@@ -412,14 +412,6 @@
             <link target="MaterialInvoiceInit">
             </link>
         </menu-item>
-        <menu-item name="POoverView" title="Purchase Order OverView">
-        	<condition>
-        		<not>
-					<if-empty  field="parameters.orderId"/>
-				</not>
-        	</condition>
-        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
-        </menu-item>
       </menu>
      <!--  <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
           <menu-item name="Manufacturing" title="Manufacturing">
@@ -635,7 +627,16 @@
             	</or>
         	</condition>
             <link target="StockPositionSubDepot"/>
-         </menu-item> 
+         </menu-item>
+         <menu-item name="FindDepotTransPO" title="Purchase Order">
+        	<condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindDepotTransPO"/>
+	    </menu-item> 
          <menu-item name="DepotTransReceipts" title="Receipt of Goods">
        		 <condition>
        		  <or>
@@ -659,16 +660,7 @@
                 <parameter param-name="facilityId" value="STORE"/>
             </link>
         </menu-item>
-        <menu-item name="FindDepotTransPO" title="Purchase Order">
-        	<condition>
-       		  <or>
-	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
-					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-			 </or>
-	        </condition>
-	        	<link target="FindDepotTransPO"/>
-	    </menu-item>
-	    
+        
 	    <menu-item name="indentIssuance" title="Indent Issuance">
 	    	<link target="DepotSalesIndentIssuance">
 	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
@@ -689,15 +681,15 @@
         <menu-item name="FindDepotTransPO" title="Find Purchase Order">
         	<link target="FindDepotTransPO"/>
         </menu-item>
-           <menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
+           <!--<menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
             	<link target="ProcessOrdersSuppliersDepotTrans">
             	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
     	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
             	</link>
             </menu-item>
-             <menu-item name="FindDepotSupplierPurchseShipment" title="Find Purchase Shipment">
-            	<link target="FindDepotSupplierPurchseShipment"/>
-        </menu-item>
+             <menu-item name="FindDepotTransPurchaseShipment" title="Find Purchase Shipment">
+            	<link target="FindDepotTransPurchaseShipment"/>
+        </menu-item>-->
         <menu-item name="POoverView" title="Purchase Order OverView">
         	<condition>
         		<not>
