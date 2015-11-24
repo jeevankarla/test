@@ -171,6 +171,12 @@ for (eachOrderList in orderList) {
 	}
 }
 
+
+
+Debug.log("finalFilteredList========="+finalFilteredList);
+
+
+
    orderIdsList = [];
    
    orderPreferenceMap = [:];
@@ -179,6 +185,11 @@ for (eachOrderList in orderList) {
    
    for (eachList in finalFilteredList) {
 
+	   
+	   
+	   Debug.log("finalFilteredList========="+eachList.orderId);
+	   
+	   
 	   condtList = [];
 	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
 	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
@@ -187,37 +198,61 @@ for (eachOrderList in orderList) {
 	   
 	   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
 	   
-	  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 	   
-	   orderPreferenceMap.put(eachList.orderId, getFirstOrderPayment.get("orderPaymentPreferenceId"))
+	   Debug.log("orderPreferenceIds========="+orderPreferenceIds);
+	   
+	   
+	  if(UtilValidate.isNotEmpty(orderPreferenceIds[0])){
+	   
+	   orderPreferenceMap.put(eachList.orderId, orderPreferenceIds[0]);
 	   conditonList = [];
-	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
+	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.EQUALS, orderPreferenceIds[0]));
 	   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 	   
 	   totAmount = 0;
 	   tempMap = [:];
 	   
+	   Debug.log("amount========="+PaymentList[0].get("amount"));
+	   
+	   Debug.log("amount========="+PaymentList[0].get("statusId"));
+	   
 	   if(UtilValidate.isNotEmpty(PaymentList)){
 	   
-	   for (eachpayment in PaymentList) {
+	   /*for (eachpayment in PaymentList) {
 		   totAmount = totAmount+eachpayment.get("amount");
-		  }
+		  }*/
 	   
 			
 			
-			tempMap.put("statusId", PaymentList[0].statusId);
+			tempMap.put("statusId", PaymentList[0].get("statusId"));
 			
-			tempMap.put("amount", totAmount);
+			tempMap.put("amount", PaymentList[0].get("amount"));
 	   
 	   }
 	   
+	   Debug.log("eachList.orderId========="+eachList.orderId);
+		   
+		   
 	   paymentSatusMap.put(eachList.orderId, tempMap);
 	   
 	   
 	  }
+	  else{
+		  
+		  tempMap = [:];
+		  
+		  tempMap.put("statusId", "NotReceived");
+		  
+		  tempMap.put("amount", 0);
+		  
+		  paymentSatusMap.put(eachList.orderId, tempMap);
+		  
+	  }
 }
    
+   
+   Debug.log("paymentSatusMap========="+paymentSatusMap);
    
    
    condtList = [];

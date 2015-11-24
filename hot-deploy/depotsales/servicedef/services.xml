@@ -49,6 +49,10 @@
         <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
         <attribute name="issuedDateTime" mode="IN" type="Timestamp"  optional="true"/>
     </service>
-    
+    <service name="realizeStatus" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="realizeStatus">
+        <description>Issue Products to Order</description>
+        <attribute name="paymentPreferenceId" type="String" mode="IN" optional="false"/>
+    </service>
+
 </services>
 

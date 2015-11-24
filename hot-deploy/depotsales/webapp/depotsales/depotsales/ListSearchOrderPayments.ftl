@@ -38,7 +38,12 @@ under the License.
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
-    
+    function realizestatus(orderId){
+		var formId = "#" + "realizeStatus";
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "paymentPreferenceId").val(orderId);
+		jQuery(formId).append(jQuery(param1));
+        jQuery(formId).submit();
+    }
     function processOrders(current){
     	jQuery(current).attr( "disabled", "disabled");
     	var orders = jQuery("#listOrders :checkbox[name='orderId']");
@@ -122,6 +127,26 @@ under the License.
 		jQuery(formId).append(jQuery(param2));
         jQuery(formId).submit();
     }
+       
+       <#--
+     function realizestatus(orderId, salesChannel){
+		var formId = "#" + "listOrders";
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
+		
+		
+		alert(param1);
+		alert(param2);
+		
+		jQuery(formId).append(jQuery(param1));
+		jQuery(formId).append(jQuery(param2));
+        jQuery(formId).submit();
+    }
+          
+       -->
+       
+       
+       
         
 //]]>
 </script>
@@ -143,6 +168,8 @@ under the License.
 		action="cancelIUSTransferOrder"
 	</#if>>
 </form>
+<form name="realizeStatus" id="realizeStatus" method="post" action="realizeStatus"> 
+</form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
 	
 	<#if screenFlag?exists && screenFlag=="depotSales">
@@ -157,12 +184,12 @@ under the License.
 		action="createShipmentAndInvoiceForDepotSalesOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="createShipAndInvForIUSTransferOrders"
-	</#if>>
+	</#if>
 </form>
 
 <#if orderList?has_content>
   
-  <form name="listOrders" id="listOrders"  method="post" >
+  <form name="listOrders" id="listOrders"   method="post" >
     <div align="right" width="100%">
     	
     	<#if screenFlag?exists && screenFlag=="depotSales">
@@ -203,8 +230,11 @@ under the License.
       </thead>
       <tbody>
       <#assign alt_row = false>
+      
       <#list orderList as eachOrder>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+      			<input type="hidden" name="paymentPreferenceId" value="${eachOrder.partyId}">
+      			<input type="hidden" name="partyId" value="${eachOrder.partyId}">
             	<td>${eachOrder.partyId?if_exists}</td>
               	<td>${eachOrder.partyName?if_exists}</td>
               	<td>${eachOrder.orderId?if_exists}</td>
@@ -235,34 +265,33 @@ under the License.
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
               	
-              	<#if eachOrder.orderId?exists>
-              	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
-              	<#else>
+                 <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED">
+              	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
+              	 <#else>
               	 <td></td>
-              	</#if>
-            <#--  	<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
+              	 </#if>
+              	
+            <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
               	<#else>
               	<td></td>
               	</#if> -->
-              
-                 <#if paymentSatusMap.get(eachOrder.orderId)?exists>
-                     
-                     
-                     
-                     <td>${"Payment Received"}</td>
+                 <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived")&&((paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED")>
+                 <td><input type="button" name="realize" id="realize" value="Paymen Received" onclick="javascript: realizestatus('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
+              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>
-                
-                <#if paymentSatusMap.get(eachOrder.orderId)?has_content>
+                <#if paymentSatusMap.get(eachOrder.orderId).get("amount")!=0>
               	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")?if_exists}</td>
               	 <#else>
               	 <td></td>
               	 </#if>
+              		<td>
+              	  <#--<td><a class="buttontext" href="<@ofbizUrl>realizeStatus?userLogin=${userLogin}&&paymentPreferenceId=10000</@ofbizUrl>">Payment Received</a></td>
+              	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	 
-              <#--	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
-              	 <td><a class="buttontext" href="<@ofbizUrl>realizeStatus?paymentPreferenceId=${orderPreferenceMap.get(eachOrder.orderId)}</@ofbizUrl>">vamsi</a></td>
               	<#else>
               	<td></td>
               	  </#if>-->
@@ -275,9 +304,6 @@ under the License.
              <#-- 	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
               	</#if>-->
-              	
-              	
-              	
               	
             </tr>
             <#-- toggle the row color -->
