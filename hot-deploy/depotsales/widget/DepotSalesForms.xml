@@ -944,24 +944,11 @@
      	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
      	       	<field name="submit" title="update"><submit/></field>
      	      </form>
-     	      <form name="ProducerProfilePicture" target="createEmployeeContent" type="upload" 	header-row-style="header-row">
+     	      <form name="ProducerProfilePicture"  type="upload" 	header-row-style="header-row">
 				<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="150"/></field>
-		        <field name="partyId" map-name="parameters"><hidden/></field>  
-		        <field name="partyContentTypeId"><hidden value="INTERNAL"/></field>
-		        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>
-		        
-		        <field name="contentTypeId"><hidden value="PROFILE_PIC"/></field>
-		        <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field>
-		        <field name="mimeTypeId"><hidden value="image/jpeg"/></field>
-		        
-		        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
-		        <field name="dataCategoryId"><hidden value="PROFILE_PIC"/></field>
-		        <field name="isPublic"><hidden value="N"/></field>
-		             
-		        <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
 	      </form> 
 	    
-       <form name="FindProcurementProducer" odd-row-style="alternate-row" target="FindProcProducer"
+       <form name="FindProcurementProducer" odd-row-style="alternate-row" target="single"
    		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
            <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
            <field name="shedId" title="Shed Code">
