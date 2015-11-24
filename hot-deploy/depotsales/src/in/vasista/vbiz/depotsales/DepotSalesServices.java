@@ -2486,7 +2486,7 @@ public class DepotSalesServices{
 				return "error";
 			}
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successful for party : "+partyId+" OrderId: "+orderId);
+		request.setAttribute("_EVENT_MESSAGE_", "Sale Indent successful for party : "+partyId+" OrderId: "+orderId);
 		return "success";
 		
    		

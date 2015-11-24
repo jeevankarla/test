@@ -17,7 +17,8 @@ inputMap = [:];
 inputMap.put("orderId", orderId);
 inputMap.put("userLogin", userLogin);
 try{
-	Map issuanceResultCtx = DepotSalesServices.createIssuanceForDepotOrder(dctx, inputMap);
+	//Map issuanceResultCtx = DepotSalesServices.createIssuanceForDepotOrder(dctx, inputMap);
+	issuanceResultCtx = dispatcher.runSync("createIssuanceForDepotOrder", [orderId : orderId, userLogin : userLogin]);
 	if (!ServiceUtil.isError(issuanceResultCtx)) {
 		request.setAttribute("_EVENT_MESSAGE_", "Indent Issuance successful for party : "+partyId+" OrderId: "+orderId);
 		return "success";
