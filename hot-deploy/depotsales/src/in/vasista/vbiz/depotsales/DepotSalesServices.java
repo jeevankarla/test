@@ -12,9 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-
-
 import java.util.HashMap;
+
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
@@ -2639,5 +2638,22 @@ public class DepotSalesServices{
    		}
    		return result;
    	}
+   	
+   	
+    public static Map<String, Object> realizeStatus(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String paymentPreferenceId = (String) context.get("paymentPreferenceId");
+        Locale locale = (Locale) context.get("locale");     
+        Map result = ServiceUtil.returnSuccess();
+        BigDecimal roundingAmount = BigDecimal.ZERO;
+		
+        Debug.log("vamsi============"+paymentPreferenceId);
+        
+        return result;
+    }
+   	
+   	
    	
 }

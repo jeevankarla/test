@@ -171,6 +171,12 @@ for (eachOrderList in orderList) {
 	}
 }
 
+
+
+Debug.log("finalFilteredList========="+finalFilteredList);
+
+
+
    orderIdsList = [];
    
    orderPreferenceMap = [:];
@@ -179,6 +185,11 @@ for (eachOrderList in orderList) {
    
    for (eachList in finalFilteredList) {
 
+	   
+	   
+	   Debug.log("finalFilteredList========="+eachList.orderId);
+	   
+	   
 	   condtList = [];
 	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
 	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
@@ -212,12 +223,35 @@ for (eachOrderList in orderList) {
 	   
 	   }
 	   
+	   Debug.log("eachList.orderId========="+eachList.orderId);
+	   
+	   
+	   if(UtilValidate.isEmpty(tempMap)){
+	   
+		   
+		   
+		   
 	   paymentSatusMap.put(eachList.orderId, tempMap);
 	   
 	   
+	   }
+	   
+	  }
+	  else{
+		  
+		  tempMap = [:];
+		  
+		  tempMap.put("statusId", "NotReceived");
+		  
+		  tempMap.put("amount", 0);
+		  
+		  paymentSatusMap.put(eachList.orderId, tempMap);
+		  
 	  }
 }
    
+   
+   Debug.log("paymentSatusMap========="+paymentSatusMap);
    
    
    condtList = [];

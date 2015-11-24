@@ -603,6 +603,12 @@
         <response name="success" type="view" value="FindDepotTransPO"/>
         <response name="error" type="view" value="FindDepotTransPO"/>
     </request-map>
+     <request-map uri="realizeStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="realizeStatus"/>
+        <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
+    </request-map>
     <request-map uri="CancelDepotTransPOOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelPOStatus"/>
