@@ -83,7 +83,7 @@ productStoreIds.each{ productStoreId ->
 			storeName=productStoreValue.get("storeName");
 		}
 		newbranchObj.put("value",productStoreId);
-		newbranchObj.put("label",storeName+" ["+productStoreId+"]");
+		newbranchObj.put("label",storeName);
 		branchJSON.add(newbranchObj);
 	}
 	/*customersList = in.vasista.vbiz.depotsales.DepotSalesHelperServices.getBranchCustomers(dctx , UtilMisc.toMap("productStoreId",productStoreId,"userLogin", userLogin));
