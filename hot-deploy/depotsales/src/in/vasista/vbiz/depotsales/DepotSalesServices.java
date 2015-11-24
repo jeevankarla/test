@@ -1535,7 +1535,7 @@ public class DepotSalesServices{
 				Debug.logError(e, module);
 				return "error";
 			}
-		
+		request.setAttribute("orderId",orderId);
 		
 		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
