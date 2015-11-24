@@ -23,7 +23,7 @@ def populateBoothPoints(facility, points) {
 					geoPoint = [:];
 					geoPoint.lat = pt.latitude;
 					geoPoint.lon = pt.longitude;
-					geoPoint.facilityId = childFacility.facilityId
+					geoPoint.facilityId = childFacility.facilityId;
 					geoPoint.title = childFacility.facilityName;// + " [" + childFacility.sequenceNum + "]";
 					geoPoint.shortName = "" + childFacility.facilityId;//childFacility.sequenceNum;
 					points.add(geoPoint);
@@ -90,8 +90,8 @@ facilityIds=facilities.facilityId;
 							geoPoint.lat = point.latitude;
 							geoPoint.lon = point.longitude;
 							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
-							geoPoint.shortName = "" + facility.facilityId;//facility.sequenceNum;
-							geoPoint.facilityId = facility.facilityId;
+							geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
+							geoPoint.facilityId = facility.facilityName;
 							geoPoints.add(geoPoint);
 						}
 					}
