@@ -38,7 +38,7 @@
 					global="true" />
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
 					global="true" />
-				<set field="titleProperty" value="Stock Position SubDepot" />
+				<set field="titleProperty" value="Stock Position" />
 				<set field="tabButtonItem" value="StockPositionSubDepot" />
 				<!-- <set field="tabButtonItem2" value="stockPosition"/> -->
 				<set field="headerItem" value="StockPosition" />
