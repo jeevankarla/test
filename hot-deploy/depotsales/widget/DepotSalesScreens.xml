@@ -1088,7 +1088,7 @@
 			<actions>
 				<set field="titleProperty"
 					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
-				<set field="tabButtonItem" value="FindGRNReceipts" />
+				<set field="tabButtonItem" value="FindDepotTransPO" />
 				<set field="tabButtonItem2" value="POoverView" />
 				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
 					global="true" />
@@ -1102,10 +1102,9 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="ReceiptTabBar"
+						<include-menu name="FindDepotTransPOSubTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>
