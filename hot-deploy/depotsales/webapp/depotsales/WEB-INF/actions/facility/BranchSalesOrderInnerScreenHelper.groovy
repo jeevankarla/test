@@ -120,10 +120,6 @@
 	}
 	
 	prodList=[];
-	Debug.log("==prodCatString==="+prodCatString);
-	
-	Debug.log("productCatageoryId ======="+productCatageoryId);
-	
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
@@ -139,7 +135,7 @@
 		
 	      
 	}
-	Debug.log("==prodList==="+prodList);
+	//Debug.log("==prodList==="+prodList);
 	
 	/*
 	exprList.clear();

@@ -180,7 +180,58 @@
 	    	<form method="post" name="indententryinit" action="<@ofbizUrl>BranchSalesOrder</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 		
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	               	
 	               	<tr>
+			           	<td>&nbsp;</td>
+			           	<td>&nbsp;</td>
+			          	<td>&nbsp;</td>
+		       	  		<td>&nbsp;</td>
+						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if productStoreId?exists && productStoreId?has_content>  
+					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${productStoreId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
+					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
+				          		</td>
+				          	</#if>
+			        	</#if>
+		       	  		<td><span class="tooltip" id="branchName"></span></td>
+	               	</tr>
+	               	
+	               	
+	               	<tr>
+	               		<td>&nbsp;</td>
+	               		
+	               		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
+		       			<#if orderTaxType?exists && orderTaxType?has_content>  
+			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${schemeCategory?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div class='tabletext h3'>${schemeCategory?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
+		          					<option value="MGPS">MGPS</option>
+		          					<option value="MGPS">General</option>
+		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
+		          				</select>
+		          			</td>
+		       			</#if>
 	               					           	
 			           	<td>&nbsp;</td>
 			           	
@@ -213,124 +264,6 @@
 			       	  		</#if>
 		       	  		
 		       	  		<td>&nbsp;</td>
-		       	  		
-		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
-							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Received Date:</div></td>
-							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
-				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
-				   				<td valign='middle'>
-									<div class='h3'>${indentReceivedDate}         
-									</div>
-				   				</td>  
-							<#else> 
-				 				<td valign='left'>          
-									<input class='h3' type="text" name="indentReceivedDate" id="indentReceivedDate" value="${defaultEffectiveDate}"/>    
-				 				</td>
-							</#if>
-						</#if>
-						
-						<td>&nbsp;</td>
-						
-						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Customer Indent Number:</div></td>
-			   			<#if PONumber?exists && PONumber?has_content>  
-			  	  			<input type="hidden" name="PONumber" id="PONumber" value="${PONumber?if_exists}"/>  
-			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${PONumber?if_exists}</div>
-			      			</td>       	
-			   			<#else>      	         
-			      			<td valign='left'>
-			      				<input type="text" name="PONumber" id="PONumber" />    
-			      			</td>
-			   			</#if>
-	               	</tr> 
-	               	
-	               	<tr>
-			           	<td>&nbsp;</td>
-			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
-			   			<#if billingType?exists && billingType?has_content>  
-			  	  			<input type="hidden" name="billingType" id="billingType" value="${billingType?if_exists}"/>  
-			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${billingType?if_exists}</div>
-			      			</td>       	
-			   			<#else>      	         
-			      			<td valign='middle'>
-			      				<select name="billingType" id="billingType" class='h3' style="width:162px">
-			      					<option value="Direct"> Direct </option>
-			      					<option value="onBehalfOf"> On Behalf Of </option>
-			      				</select>
-			      			</td>
-			   			</#if>
-		       	  		
-		       	  		<td>&nbsp;</td>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Tax Type:</div></td>
-		       			<#if orderTaxType?exists && orderTaxType?has_content>  
-			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
-		          			<td valign='middle'>
-		            			<div class='tabletext h3'>${orderTaxType?if_exists}</div>
-		          			</td>       	
-		       			<#else>      	         
-		          			<td valign='middle'>
-		          				<select name="orderTaxType" id="orderTaxType" class='h3' style="width:162px">
-		          					<option value="INTRA">With in State</option>
-		          					<option value="INTER">Out of State</option>
-		          				</select>
-		          			</td>
-		       			</#if>
-						
-						
-	               	</tr> 
-	               	
-	               	<tr>
-			           	<td>&nbsp;</td>
-			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
-			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if productStoreId?exists && productStoreId?has_content>  
-					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${productStoreId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
-					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	<#else>
-				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
-				          		</td>
-				          	</#if>
-			        	</#if>
-		       	  		<td><span class="tooltip" id="branchName"></span></td>
-		       			
-						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
-		       			<#if orderTaxType?exists && orderTaxType?has_content>  
-			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${schemeCategory?if_exists}"/>  
-		          			<td valign='middle'>
-		            			<div class='tabletext h3'>${schemeCategory?if_exists}</div>
-		          			</td>       	
-		       			<#else>      	         
-		          			<td valign='middle'>
-		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="MGPS">General</option>
-		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
-		          				</select>
-		          			</td>
-		       			</#if>
-						
-	               	</tr>
-	               	
-	               	<tr>
-			           	<td>&nbsp;</td>
 			           	
 			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier :<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -357,8 +290,76 @@
 				          	</#if>
 			        	</#if>
 		       	  		<td><span class="tooltip" id="suplierPartyName"></span></td>
+		       	  		
+		       	  		
+	               	</tr> 
+	               	
+	               	<tr><td><br/></td></tr>
+	               	
+	               	<tr>
+		       	  		
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Tax Type:</div></td>
+		       			<#if orderTaxType?exists && orderTaxType?has_content>  
+			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div class='tabletext h3'>${orderTaxType?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="orderTaxType" id="orderTaxType" class='h3' style="width:162px">
+		          					<option value="INTRA">With in State</option>
+		          					<option value="INTER">Out of State</option>
+		          				</select>
+		          			</td>
+		       			</#if>
 		       			
-						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
+		       			<td>&nbsp;</td>
+		       	  		
+		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
+							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Received Date:</div></td>
+							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
+				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
+				   				<td valign='middle'>
+									<div class='h3'>${indentReceivedDate}         
+									</div>
+				   				</td>  
+							<#else> 
+				 				<td valign='left'>          
+									<input class='h3' type="text" name="indentReceivedDate" id="indentReceivedDate" value="${defaultEffectiveDate}"/>    
+				 				</td>
+							</#if>
+						</#if>
+						<td>&nbsp;</td>
+						
+							
+						
+	               	</tr>
+	               	
+	               	
+	               	
+	               	<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
+			   			<#if billingType?exists && billingType?has_content>  
+			  	  			<input type="hidden" name="billingType" id="billingType" value="${billingType?if_exists}"/>  
+			      			<td valign='middle'>
+			        			<div class='tabletext h3'>${billingType?if_exists}</div>
+			      			</td>       	
+			   			<#else>      	         
+			      			<td valign='middle'>
+			      				<select name="billingType" id="billingType" class='h3' style="width:162px">
+			      					<option value="Direct"> Direct </option>
+			      					<option value="onBehalfOf"> On Behalf Of </option>
+			      				</select>
+			      			</td>
+			   			</#if>
+		       			
+		       			<td>&nbsp;</td>
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
@@ -386,10 +387,21 @@
 			        			<td><span class="tooltip">Input party code and press Enter</span></td>
 				          	</#if>
 			        	</#if>
-			        	
-						
 						
 	               	</tr>
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
+	               	
 	               <#--	
 	               	<tr>
 	               		<td>&nbsp;</td>

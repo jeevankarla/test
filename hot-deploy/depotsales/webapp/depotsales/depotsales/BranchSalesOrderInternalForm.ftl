@@ -342,7 +342,7 @@
 	function setupGrid1() {
 		
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:260, minWidth:260, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"baleQuantity", name:"Qty Bales", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"Uom", field:"cottonUom", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
@@ -490,6 +490,7 @@
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
+      		item['productNameStr'] = productLabel;
       		item['cProductId'] = productLabelIdMap[productLabel];  
       		grid.invalidateRow(data.length);
       		data.push(item);
@@ -497,11 +498,15 @@
       		grid.render();
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
-	      	if (args.cell == 1) {
-	      		//data[args.row]["cProductName"].options= "Yes,No";
-      			//alert(data[args.row]["productFeature"].options);
-      			//grid.updateRow(args.row);
-      			//data[args.row]["cProductName"].options= "Y,N";
+	      	if ( (args.cell == 1) || (args.cell == 2) || ((args.cell == 3)) ) {
+	      		
+	      		var productName = data[args.row]["productNameStr"];
+      			
+      			if (productName.toLowerCase().indexOf("cotton") <= 0){
+      				grid.updateRow(args.row);
+      				return false;
+      			}
+      			
       			
 	      	}
 	      	
