@@ -416,28 +416,40 @@
         	</entity-condition>
         	<set  field="price" value="${priceList[0].price}"/>
         </row-actions>
-     <field name="internalName" title="Internal Name"><display/></field>
-	<field name="productId" title="Product">
+    <!--  <field name="internalName" title="Internal Name"><display/></field> -->
+	<!-- <field name="productId" title="Product">
      	<display-entity entity-name="Product" description="${description} [${productId}]" ></display-entity>
-    </field>     
+    </field>  -->    
+    <field name="productId" title="Product" use-when="productId!=null" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${description} [${productId}]" target="/catalog/control/EditProduct" target-window="_blank" target-type="inter-app">
+                <parameter param-name="productId"/>
+            </hyperlink>
+     </field>
     
      <field name="longDescription" title="Specification"><display size="50"/></field>
      <field name="quantityUomId" title="UOM" ><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field> 
      <field name="primaryProductCategoryId" title="Material Category">
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
-     <field name="updateMaterial" widget-style="buttontext" title="Update" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
-            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
+      <field name="Barcode" title="Barcode" use-when="productId!=null" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Barcode" target="/catalog/control/ProductBarCode.pdf" target-window="_blank" target-type="inter-app">
+                <parameter param-name="productId"/>
             </hyperlink>
-      </field> 
-     <field name="partyId" title="Supplier" >
+     </field>
+     <!-- <field name="partyId" title="Supplier" >
      	<hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}  [${partyId}]">
                 <parameter param-name="partyId" from-field="partyId"/>
             </hyperlink>
+     </field> -->
+     <field name="price" title="View Price" widget-style="buttontext">
+     	<hyperlink  target="EditProductPricesDepot" target-type="inter-app" target-window="_blank" description="View"> 
+     	   <parameter param-name="productId"/>
+     	</hyperlink>
      </field>
-     <field name="price" title="Price">
-     	<hyperlink  target="EditProductPricesDepot" target-type="inter-app" target-window="_blank" description="[${productId}]"> <parameter param-name="productId"/></hyperlink>
-     </field>
+      <field name="updateMaterial" widget-style="buttontext" title="Update Details" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
+            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
+            </hyperlink>
+      </field> 
     </form>
     <form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>  
@@ -567,7 +579,7 @@
 			</drop-down>
 		</field> -->
         <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
