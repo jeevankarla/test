@@ -1606,7 +1606,7 @@
 	<screen name="FindPaymentNonRoute">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Depot Receipts Search" />
+				<set field="titleProperty" value="Receipts Search" />
 				<set field="tabButtonItem" value="NonRouteCustomPayments" />
 				<set field="subTabButtonItem" value="${parameters.subTabItem}"
 					default-value="${context.subTabItem}" />
@@ -2582,7 +2582,7 @@
 	<screen name="FinddepotPayments">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Find Depot Payments" />
+				<set field="titleProperty" value="Find Payments" />
 				<set field="tabButtonItem" value="depotpayments" />
 				<set field="tabButtonItem2" value="find" />
 				<service service-name="acctgInvoicePermissionCheck"
@@ -2822,7 +2822,7 @@
     <screen name="BranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Depot Sales Entry" />
+				<set field="titleProperty" value="Branch Sales Entry" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="changeFlag" value="DepotSales" />
@@ -3263,7 +3263,7 @@
        <screen name="orderPayment">
     		<section>
     			<actions>
-    				<set field="titleProperty" value="Process Depot Orders" />
+    				<set field="titleProperty" value="Indent Payment" />
     				<set field="tabButtonItem" value="BranchSalesOrder" />
     				<set field="tabButtonItem2" value="OrderPayment" />
     				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -3648,7 +3648,7 @@
                             <label style="h1">Location Map</label>
                         </container>
                         <screenlet title="Location Search">
-                        	<include-form name="ViewFacilityGeoPointSearch" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        	<include-form name="ViewFacilityGeoPointSearch" location="component://depotsales/widget/DepotSalesForms.xml"/>
                         </screenlet>
                         <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
                     </decorator-section>
