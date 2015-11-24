@@ -3219,7 +3219,7 @@
     				   <select-field field-name="partyIdentificationTypeId"/>
     	    		</entity-condition>
     	    		<set field="existedPartyIdentifications" from-field="existedPartyIdentifications" global="true"/>
-    	    	<!-- 	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/partyIdentificationTypes.groovy"/>   -->
+    	    	<!--  	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/partyIdentificationTypes.groovy"/> -->  
             	</actions>
                 <widgets> 
                 	<include-form name="ProducerIdentification" location="component://depotsales/widget/DepotSalesForms.xml"/>
