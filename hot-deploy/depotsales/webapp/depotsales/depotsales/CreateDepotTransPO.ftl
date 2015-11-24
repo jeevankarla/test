@@ -324,10 +324,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly onblur= 'javascript:dispSuppName(this);'/>
-					    		<span class="tooltip"> ${orderInfo.get("supplierName")?if_exists}</span>
+					    		<span> ${orderInfo.get("supplierName")?if_exists}</span>
 					    	<#else>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
-					    		<span class="tooltip" id="supplierName"></span>
+					    		<span id="supplierName"></span>
 					    	</#if>
 					      	
 					    </td>
@@ -424,7 +424,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					      <input type="text" name="refDate" id="refDate" size="18" maxlength="60" autocomplete="off"/>
         				 </td>
 					</tr>-->
-					<tr>
+					<!--<tr>
 					    <td class="label"><b>ARC No / CPC No / Ext. PO :</b></td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("PONumber")?exists>
@@ -433,8 +433,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    		<input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off"/>
 					    	</#if>
         				 </td>
-					</tr>
-					<tr>
+					</tr>-->
+					<!--<tr>
 					    <td class="label"><b>File No : </b></td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("fileNo")?exists>
@@ -444,7 +444,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	</#if>
 					      
         				 </td>
-					</tr>
+					</tr>-->
 			        <tr>
 			            <td class="label"><b> Description :</b></td>
 			            <td>
@@ -546,10 +546,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 				               	<table border="0" cellspacing="10" cellpadding="10" id="paymentTermsTable" style="width:200px;" align="center">
 					                <tr>
 								       <td>
-								       		<table class='h3'>
+								       		<table class='h3' cellspacing="15">
 								       			<tr>
-								           			<td><input type="button" id="addPaymentTerm" value="Add" style="padding: 6px;"/></td>
-								        			<td> <input type="button" id="delPaymentTerm" value="Delete" style="padding: 6px;"/></td>
+								           			<td><input type="button" id="addPaymentTerm" value="Add" style="padding: 2.5px;"/></td>
+								        			<td> <input type="button" id="delPaymentTerm" value="Delete" style="padding: 2.5px;"/></td>
 								        		</tr> 
 								        	</table>
 								        </td>
@@ -640,14 +640,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    		<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off" value="${shipToPartyId?if_exists}"/>
 								    	<#else>
 									      	<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off"/>
-									      	<span class="tooltip" id="depotName"></span>
+									      	<span id="depotName"></span>
 								      	</#if>
 								    </td>
 								 </tr>
 				                <tr>
-							       <td><table><tr>
-							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 6px;"/>  </td>
-							        	<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 6px;"/></td>
+							       <td><table cellspacing="15"><tr>
+							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 2.5px;"/>  </td>
+							        	<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 2.5px;"/></td>
 							        </tr> </table>
 							          </td>
 							         <td> </td>

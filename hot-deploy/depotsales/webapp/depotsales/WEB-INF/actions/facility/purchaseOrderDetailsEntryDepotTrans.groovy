@@ -34,11 +34,11 @@ supplierId = "";
 
 // usage of po balance if needed
 poBalanceProductMap=[:];
-resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
+/*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
 if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
 	poBalanceProductMap=resultMap.get("productTotals");
 }
-
+*/
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
@@ -83,7 +83,9 @@ if(orderId){
 		newObj.put("cProductId",eachItem.productId);
 		receivedQty=0;
 		maxReceivedQty=0;
-		poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
+		if(UtilValidate.isNotEmpty(poBalDetailsMap)){
+			poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
+		}
 		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("receivedQty"))){
 			receivedQty=poBalDetailsMap.get("receivedQty");
 		}
