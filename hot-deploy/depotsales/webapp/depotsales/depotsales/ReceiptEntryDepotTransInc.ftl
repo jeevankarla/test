@@ -484,13 +484,14 @@
 // to show special related fields in form			
 	
 	$(document).ready(function(){
-	 
+	 /*
 		$('#suppInvoiceId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
 	    			return false;   
 	  			}
 		});
+		*/
 		     $(function() {
 				$( "#indententryinit" ).validate();
 			});	

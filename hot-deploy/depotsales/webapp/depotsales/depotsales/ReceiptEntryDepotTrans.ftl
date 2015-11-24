@@ -43,6 +43,8 @@
 			changeMonth: true,
 			
 		});
+		
+		/*
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 			$("#suppInvoiceId").keydown(function(e){ 
@@ -51,6 +53,7 @@
     			return false;   
 			}
 		});
+		*/
 	});
 		
 </script>
