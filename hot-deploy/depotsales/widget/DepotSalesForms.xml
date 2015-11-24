@@ -1007,10 +1007,8 @@
       		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
               <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
               
-              <field name="partyId" title="Party Id"><text  size="15"></text></field>
-              <field name="groupName" title="Group Name"><text  size="15"></text></field>
-              <field name="firstName" title="First Name"><text  size="15"></text></field>
-              <field name="lastName" title="Last Name"><text  size="15"></text></field>
+              <field name="partyId" title="Weaver Id"><text  size="15"></text></field>
+              <field name="groupName" title="Weaver Name"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               <field name="submit" title="Find"><submit/></field>
               
@@ -1031,10 +1029,7 @@
                 	  <parameter param-name="partyId" /> 
              </hyperlink>
          </field>
-    	<field name="groupName" title="Group Name"><display/></field>  	
-        <field name="firstName" title="First Name" ><display description="${rateTypeId}"></display><!-- <display-entity entity-name="RateType" key-field-name="ratetypeId" description="${description} "/> --></field>
-       <!--  <field name="middleName" title="SupplyType"><display/></field> -->
-        <field name="lastName" title="Last Name"><display/></field>
+        <field name="partyName" title="Weaver Name"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>  
     	<field name="description" title="Role Type"><display/></field>
     </form>
       <form name="FindOrderPaymentSeach" title="" type="single" target="orderPayment" header-row-style="header-row" default-table-style="basic-table">
