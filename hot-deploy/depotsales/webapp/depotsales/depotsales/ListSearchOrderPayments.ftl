@@ -207,8 +207,8 @@ under the License.
         <tr class="header-row-2">
           <td>Party Code</td>
           <td>Party Name</td>
-          <td>Order Id</td>
-          <td>Order Date</td>
+          <td>Indent Id</td>
+          <td>Indent Date</td>
           <td>Grand Total</td>
          <td>View Indent</td>
           <#-- <td>Print Indent</td>

@@ -181,6 +181,7 @@ under the License.
           <td>Indent Date</td>
           <td>View</td>
           <td>Print Indent</td>
+          <td>Minutes</td>
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
 
@@ -204,6 +205,7 @@ under the License.
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
               	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
+              	<td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
               	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
