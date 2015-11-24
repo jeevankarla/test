@@ -182,8 +182,8 @@
     <request-map uri="shipmentSendForQC">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="shipmentSendForQC"></event>
-       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
-       <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="success" type="request-redirect-noparam" value="FindDepotTransGRNShipments"/>
+       <response name="error" type="request-redirect-noparam" value="FindDepotTransGRNShipments"/>
      </request-map>
      
      <request-map uri="CancelGrnShipment">
@@ -578,8 +578,8 @@
      <request-map uri="processDepotTransReceiptItems">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
-       <response name="success" type="request-redirect" value="DepotTransMaterialReceipts"/>
-       <response name="error" type="view" value="DepotTransMaterialReceipts"/>
+       <response name="success" type="request-redirect" value="FindSupplierShipments"/>
+       <response name="error" type="request-redirect" value="FindSupplierShipments"/>
      </request-map>
      <request-map uri="FindDepotTransGRNShipments">
        <security https="true" auth="true"/>
