@@ -941,23 +941,23 @@
          	<field name="quotaPerLoom" title="quota Per Loom"><display></display></field>
         </form>
         
-     <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
-	     			 default-table-style="basic-table" target="updateCattleInformation" >    
-	       	<field name="partyId"><hidden/></field>
-	       	<field name="cattleTypeId" title="Loom Type">
-	       		<drop-down allow-empty="false">
-	       			<entity-options description="${description}" entity-name="CattleType"></entity-options>
-	       		</drop-down>
-	       	</field>
-	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
-	       	<field name="submit" title="update"><submit/></field>
-	      </form>
-	      <form name="ProducerProfilePicture"  
-	    	    type="single"	header-row-style="header-row">
-	  		<actions>
-	  		<!-- 	<script location="component://nhdc/applications/humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy" />  -->
-	  		</actions>
-	  		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" 	width = "150"/></field>
+       <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
+     	     			list-name="LoomDetails" default-table-style="basic-table" target="updateCattleInformation" >    
+     	       	<field name="partyId"><hidden/></field>
+     	       	<field name="loomTypeId" title="Loom Type">
+     	       		<drop-down allow-empty="false">
+     	       			<entity-options description="${description}" entity-name="LoomType"></entity-options>
+     	       		</drop-down>
+     	       	</field>
+     	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
+     	       	<field name="submit" title="update"><submit/></field>
+     	      </form>
+     	      <form name="ProducerProfilePicture"  
+     	    	    type="single"	header-row-style="header-row">
+     	  		<actions>
+     	  		<!-- 	<script location="component://nhdc/applications/humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy" />  -->
+     	  		</actions>
+     	  		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" 	width = "150"/></field>
 	      </form> 
 	    
        <form name="FindProcurementProducer" odd-row-style="alternate-row" target="FindProcProducer"
