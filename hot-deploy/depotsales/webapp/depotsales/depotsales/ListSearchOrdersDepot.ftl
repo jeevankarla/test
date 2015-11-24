@@ -179,7 +179,7 @@ under the License.
           <td>Party Name</td>
           <td>Indent Id</td>
           <td>Indent Date</td>
-          <td>View Indent</td>
+          <td>View</td>
           <td>Print Indent</td>
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
@@ -202,7 +202,7 @@ under the License.
               	<td>${eachOrder.partyName?if_exists}</td>
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
               	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
@@ -219,7 +219,7 @@ under the License.
               	</#if>
               	
               	<#if (eachOrder.get('statusId') == "ORDER_CREATED") ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
-              		<td><input type="button" name="approveOrder" id="approveOrder" value="Indent Approve" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
@@ -235,10 +235,10 @@ under the License.
 								</#if>
 				</#if>
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit Indent" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
 				<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${productStoreId}','${eachOrder.orderDate?if_exists}');"/></td>
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Indent" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
+        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
