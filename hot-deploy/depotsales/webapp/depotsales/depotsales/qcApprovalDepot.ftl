@@ -6,7 +6,7 @@
 <script type="application/javascript">
 					 
 	 
-	/*c
+	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
 	 * as they share very similar styles, but with varying content and titles.
