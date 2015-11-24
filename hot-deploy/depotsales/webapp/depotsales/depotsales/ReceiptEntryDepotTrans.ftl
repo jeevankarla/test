@@ -69,7 +69,7 @@
       
     		<div class="screenlet-body">
      
-      			<form method="post" name="indententryinit" action="<@ofbizUrl>DepotTransMaterialReceipts</@ofbizUrl>" id="indententryinit">  
+      			<form method="post" name="indententryinit" action="<@ofbizUrl>SupplierDispatchEntry</@ofbizUrl>" id="indententryinit">  
 			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				        <tr>
 				        	<td>
@@ -293,7 +293,7 @@
 				        </tr>
 				        <tr>
 				         	 <td>
-		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="Y"/>  
+		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="N"/>  
 				                <input type="hidden" name="allowedGraterthanTheOrdered" id="allowedGraterthanTheOrdered" value="N"/>  
 		          			</td>
 				        </tr>

@@ -145,25 +145,28 @@ public class MaterialPurchaseServices {
 		  	}
         }
         
-	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
+	  	/*if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
-	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
+	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
+	  			supplierInvoiceDate = new java.sql.Timestamp(dateSdf.parse(supplierInvoiceDateStr).getTime());
+	  			
 		  	} catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	}
-	  	}
+	  	}*/
 	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
-	  	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
+	  /*	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
 	  		try {
-	  			deliveryChallanDate = new java.sql.Timestamp(sdf.parse(deliveryChallanDateStr).getTime());
+	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
+	  			deliveryChallanDate = new java.sql.Timestamp(dateSdf.parse(deliveryChallanDateStr).getTime());
 		  	} catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}
-	  	}
+	  	}*/
 	  	BigDecimal poValue = BigDecimal.ZERO;
 	  	boolean beganTransaction = false;
 		try{
@@ -464,12 +467,12 @@ public class MaterialPurchaseServices {
 				List<GenericValue> facilities = delegator.findList("Facility", facilityCondition, null, null, null, false);
 				GenericValue facilityProd = EntityUtil.getFirst(facilities);
 				//Product should mapped to any one of facility
-				 if (UtilValidate.isEmpty(facilityProd)) {
+				/* if (UtilValidate.isEmpty(facilityProd)) {
 			        	Debug.logError("Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility !", module);
 						request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility!");	
 						TransactionUtil.rollback();
 				  		return "error";
-			        }
+			        }*/
 				 
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
@@ -484,7 +487,7 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
-				inventoryReceiptCtx.put("facilityId", facilityProd.getString("facilityId"));
+				inventoryReceiptCtx.put("facilityId", "BRANCH1");//facilityProd.getString("facilityId"));
 				inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
 				if(UtilValidate.isNotEmpty(ordItm)){
 					inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitListPrice"));

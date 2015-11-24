@@ -80,7 +80,7 @@
 					"</select></td></tr>";
 		
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		title = "<center>Send To QC<center><br />";
+		title = "<center>Accept Shipment<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};
@@ -95,7 +95,7 @@
 					"</select></td></tr>";
 		
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		title = "<center>Send To QC<center><br />";
+		title = "<center>Accept Shipment<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};
