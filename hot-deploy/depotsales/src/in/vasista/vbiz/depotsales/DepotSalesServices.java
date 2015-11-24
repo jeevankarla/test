@@ -2640,19 +2640,46 @@ public class DepotSalesServices{
    	}
    	
    	
-    public static Map<String, Object> realizeStatus(DispatchContext dctx, Map<String, ? extends Object> context){
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String paymentPreferenceId = (String) context.get("paymentPreferenceId");
-        Locale locale = (Locale) context.get("locale");     
-        Map result = ServiceUtil.returnSuccess();
-        BigDecimal roundingAmount = BigDecimal.ZERO;
-		
-        Debug.log("vamsi============"+paymentPreferenceId);
-        
-        return result;
-    }
+   	public static Map<String, Object> realizeStatus(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String paymentPreferenceId = (String) context.get("paymentPreferenceId");
+   	    Locale locale = (Locale) context.get("locale");     
+   	    Map result = ServiceUtil.returnSuccess();
+   		try {
+   	 
+   			
+   			List conditionList = FastList.newInstance();
+   			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,paymentPreferenceId));
+   			List<GenericValue> PaymentList = null;
+   			try {
+   				
+   				PaymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+   				GenericValue PaymentFirstList = EntityUtil.getFirst(PaymentList);
+   				 String paymentId = (String)PaymentFirstList.get("paymentId");
+   				 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+   				 setPaymentStatusMap.put("paymentId", paymentId);
+   				 setPaymentStatusMap.put("statusId", "PMNT_CONFIRMED");
+   				 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+   				 if (ServiceUtil.isError(pmntResults)) {
+   					 Debug.logError(pmntResults.toString(), module);
+   					 return ServiceUtil.returnError(null, null, null, pmntResults);
+   				 }
+   				 
+   			} catch (GenericEntityException e) {
+   				Debug.logError(e, "Failed to retrive SchemeParty ", module);
+   				return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
+   			}
+   		
+   		} catch (Exception e) {
+   			Debug.logError(e, module);
+   			return ServiceUtil.returnError(e.toString());
+   		}
+   	    result = ServiceUtil.returnSuccess("Successfully Changed Payment Status!!");
+   	    return result;
+   	}
+
    	
    	
    	

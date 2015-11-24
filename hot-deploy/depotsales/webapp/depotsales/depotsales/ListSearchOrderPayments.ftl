@@ -265,21 +265,24 @@ under the License.
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
               	
-
-              	<td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
-              	 
+                 <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED">
+              	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
+              	 <#else>
+              	 <td></td>
+              	 </#if>
               	
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
               	<#else>
               	<td></td>
               	</#if> -->
-                 <#if paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived">
-                 <td><input type="button" name="realize" id="realize" value="Payment Not Received" onclick="javascript: realizestatus('${eachOrder.orderId}');"/></td>
+                 <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived")&&((paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED")>
+                 <td><input type="button" name="realize" id="realize" value="Paymen Received" onclick="javascript: realizestatus('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
+              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>
-                
                 <#if paymentSatusMap.get(eachOrder.orderId).get("amount")!=0>
               	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")?if_exists}</td>
               	 <#else>
