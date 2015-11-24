@@ -701,6 +701,14 @@
 	       <response name="success" type="request" value="FindSupplierDispatchs"/>
 	       <response name="error" type="request" value="FindSupplierDispatchs"/>
 	    </request-map>
+	    
+	     <request-map uri="SupplierDispatchEntry">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="SupplierDispatchEntry"/>
+	       <response name="error" type="view" value="SupplierDispatchEntry"/>
+	    </request-map>
+	   
+	    
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
      <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>

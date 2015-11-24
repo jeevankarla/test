@@ -63,7 +63,7 @@
 		<div class="screenlet">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
-					<label>Receipt Header </label>
+					<label>Dispatch Header </label>
 				</div>
 		     </div>
       
@@ -75,7 +75,7 @@
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Receipt Date:</div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Dispatch Date:</div></td>
 					        <td>&nbsp;</td>
 					        <#if effectiveDate?exists && effectiveDate?has_content>  
 						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
@@ -312,7 +312,7 @@
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Receipt Items Entry</label>
+		 			<label>Dispatch Items Entry</label>
 				</div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  
