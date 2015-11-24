@@ -197,7 +197,7 @@ under the License.
       </thead>
       <tbody>
       <#assign alt_row = false>
-      <#list orderList as eachOrder>
+       <#list orderList as eachOrder>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             	<td>${eachOrder.partyId?if_exists}</td>
               	<td>${eachOrder.partyName?if_exists}</td>

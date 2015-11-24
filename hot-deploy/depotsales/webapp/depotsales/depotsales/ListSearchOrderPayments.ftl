@@ -224,13 +224,12 @@ under the License.
           <td>Generate PO</td> -->
           <#--<td>Party Balance</td>
           <td>Cancel</td>
-		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
+		   <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
           
         </tr>
       </thead>
       <tbody>
       <#assign alt_row = false>
-      
       <#list orderList as eachOrder>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
       			<input type="hidden" name="paymentPreferenceId" value="${eachOrder.partyId}">
