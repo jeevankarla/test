@@ -756,8 +756,16 @@
         <security auth="true" https="true"/>
         <event type="service" invoke="uploadPartyContentFile"/>
         <response name="success" type="view" value="EditProcProducer"/>
-    </request-map>	    
+    </request-map>	
+    <request-map uri="minutesPdfReport.pdf">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="minutesPDFreport"/>
+	     <response name="error" type="view" value="minutesPDFreport"/>
+    </request-map>
+    
+        
     <!-- View Mappings -->
+     <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
      <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
