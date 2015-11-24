@@ -145,3 +145,17 @@ context.supplierJSON=supplierJSON;
 	request.setAttribute("partyJSON", partyJSON);
 	return "success";
 }*/
+
+JSONArray depotsJSON = new JSONArray();
+Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("facilityTypeId", "DEPOT")],EntityOperator.AND);
+depotList=delegator.findList("Facility",Condition,null,null,null,false);
+if(depotList){
+	depotList.each{ depot ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",depot.ownerPartyId);
+		depotName=depot.facilityName;
+		newObj.put("label",depotName+"["+depot.ownerPartyId+"]");
+		depotsJSON.add(newObj);
+	}
+}
+context.depotsJSON=depotsJSON;

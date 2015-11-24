@@ -64,14 +64,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	var shipToPartyId = $("#shipToPartyId").val();  
-                	    if( (shipToPartyId).length < 1 ) {
-					    	$('#shipToPartyId').css('background', 'yellow'); 
-					       	setTimeout(function () {
-					           	$('#shipToPartyId').css('background', 'white').focus(); 
-					       	}, 800);
-					    	return false;
-				    	}
                         supplierName = partyNameObj[supplierId];
                         if( (supplierName).length < 1 ) {
  					    	$('#supplierName').css('background', 'yellow'); 
@@ -118,7 +110,6 @@ function makeDatePicker(fromDateId ,thruDateId){
                 	if(currentIndex == 2 && newIndex == 3){
                 		return true;
                 	}
-                	
                 	if(currentIndex == 3 && newIndex == 4){
                 		return true;
                 	}
@@ -126,6 +117,14 @@ function makeDatePicker(fromDateId ,thruDateId){
                 },
                 onFinishing: function (event, currentIndex)
                 {	
+                    var shipToPartyId = $("#shipToPartyId").val();  
+            	    if( (shipToPartyId).length < 1 ) {
+				    	$('#shipToPartyId').css('background', 'yellow'); 
+				       	setTimeout(function () {
+				           	$('#shipToPartyId').css('background', 'white').focus(); 
+				       	}, 800);
+				    	return false;
+			    	}
                     return true;
                 },
                 onFinished: function (event, currentIndex)
@@ -160,6 +159,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 		hideExtPO();	
 		getPayTermDes();
 		getDelTermDes();
+		
+		var depotsAutoJson = ${StringUtil.wrapString(depotsJSON)!'[]'};
+		$('#shipToPartyId').keypress(function (e) { 
+		$("#shipToPartyId").autocomplete({ source: depotsAutoJson , select: function( event, ui ) {
+			$('span#depotName').html('<h4>'+ui.item.label+'</h4>');
+			} });
+		});
+		
 	});
 	function hideExtPO(){
 		var orderTypeId = $("#orderTypeId").val();
@@ -388,17 +395,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 					      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
       		                </#if>
       		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
-					    </td>
-					 </tr>
-					 <tr>
-					    <td class="label">Ship To Party(<font color="red">*</font>):</td>
-					    <td>
-					        <#if orderId?exists && orderInfo.get("shipToPartyId")?exists>
-					        <#assign shipToPartyId=orderInfo.get("shipToPartyId")>
-					    		<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off" value="${shipToPartyId?if_exists}"/>
-					    	<#else>
-						      	<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off"/>
-					      	</#if>
 					    </td>
 					 </tr>
 					 <tr>
@@ -636,6 +632,18 @@ function makeDatePicker(fromDateId ,thruDateId){
 			          				<td align='left' valign='middle' nowrap="nowrap"></td>
 				                 <td>
 				               <table border="2" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
+				                <tr>
+								    <td>Ship To Party(<font color="red">*</font>):</td>
+								    <td>
+								        <#if orderId?exists && orderInfo.get("shipToPartyId")?exists>
+								        <#assign shipToPartyId=orderInfo.get("shipToPartyId")>
+								    		<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off" value="${shipToPartyId?if_exists}"/>
+								    	<#else>
+									      	<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off"/>
+									      	<span class="tooltip" id="depotName"></span>
+								      	</#if>
+								    </td>
+								 </tr>
 				                <tr>
 							       <td><table><tr>
 							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 6px;"/>  </td>
