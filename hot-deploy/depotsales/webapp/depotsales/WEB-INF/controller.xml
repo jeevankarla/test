@@ -527,6 +527,22 @@
          <response name="success" type="view" value="orderPayment"/>   
         <response name="failed" type="view" value="orderPayment"/>  
      </request-map>
+      <request-map uri="raiseInvoiceForByProdSalesShipment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="raiseInvoiceForByProdSalesShipment"/>
+        <response name="success" type="view" value="FindByProdDepotSalesShipment"/>
+        <response name="error" type="view" value="FindByProdDepotSalesShipment"/>
+    </request-map>
+     <request-map uri="CreateShipmentForByprodSalesOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentForByprodSalesOrder"/>
+        <response name="success" type="view" value="ProcessOrdersSuppliersDepotSales"/>   
+       <response name="failed" type="view" value="ProcessOrdersSuppliersDepotSales"/> 
+    </request-map>
+      <request-map uri="ViewFacilityGeoPoint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFacilityGeoPoint"/>
+    </request-map>  
     <!-- Sub Depot Operatios Requests-->
     
      <request-map uri="DepotTransMain">
@@ -649,9 +665,14 @@
       <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
       <response name="failed" type="view" value="DepotSalesIndentIssuance"/>  
 	</request-map>
+	<request-map uri="facilitySubTree">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="facilityTreeDepoNetwork.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
-    
+     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
     <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>

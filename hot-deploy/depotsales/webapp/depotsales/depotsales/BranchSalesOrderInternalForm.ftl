@@ -351,7 +351,7 @@
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter},	
-			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass"}
+			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 			
 			<#--
 			{id:"productFeature", name:"Count", field:"productFeature", width:70, minWidth:70, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "INR,PERCENT,asdf"},

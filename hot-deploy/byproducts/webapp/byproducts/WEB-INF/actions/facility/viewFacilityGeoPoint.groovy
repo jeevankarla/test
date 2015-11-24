@@ -72,7 +72,7 @@ Debug.log("geoLines="+geoLines,"");
 		  geoPoints = points;
 		  geoLines = lines;
 	}
-	else if (facility.facilityTypeId == 'BOOTH') {
+	else if (facility.facilityTypeId == 'BRANCH_OFF') {
 		point = facility.getRelatedOne("GeoPoint");
 		if (point) {
 			geoPoint = [:];
