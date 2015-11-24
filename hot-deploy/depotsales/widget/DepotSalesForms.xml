@@ -851,8 +851,8 @@
            <field name="shedName" title="Party Id"> <display description="${partyDetailsMapsList[0].partyId}"></display></field>
            <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
            <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	
-           <field name="groupName" title="Producer Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
-           <field name="idValueStr" title="Producer Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
+           <field name="groupName" title="Weaver Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
+           <field name="idValueStr" title="Weaver Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
            <field name="partyId"><hidden value="${partyDetailsMap.partyId}"/></field>
            <field name="update"><submit/></field>
            
@@ -933,10 +933,12 @@
       	
       	
       <form name="CattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
-       		 list-name="CattleDetails" >
+       		 list-name="LoomDetails" >
        		<field name="partyId"><hidden/></field>     
-         	<field name="cattleTypeId" title="Cattle Type"><display-entity entity-name="CattleType" description="${description}" ></display-entity> </field>
-         	<field name="numberOfCattle" title="Number Of Cattle"><display></display></field>
+         	<field name="loomTypeId" title="Weaver Type"><display></display></field>
+         	<field name="loomTypeId" title="Weaver Type"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}"/></field>
+         	<field name="quantity" title="Number Of Weavers"><display></display></field>
+         	<field name="quotaPerLoom" title="quota Per Loom"><display></display></field>
         </form>
         
      <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 

@@ -3067,7 +3067,7 @@
 	  <screen name="FindProcProducer">
           <section>
               <actions>
-                  <set field="titleProperty" value="Find Producer"/>
+                  <set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch"/>
                   <!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   -->
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
@@ -3095,7 +3095,7 @@
        <screen name="EditProcProducer">
           <section>
           	<actions>
-          		<set field="titleProperty" value="Find Producer"/>
+          		<set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch" />
                  <!-- <entity-one entity-name="PartyIdentificationAndPartyGroup" value-field="partyDetailsMap"  >
        				<field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -3133,7 +3133,7 @@
          <screen name="ProducerProfile">
             <section>
             	<actions>
-            		<set field="titleProperty" value="Producer Details"/>
+            		<set field="titleProperty" value="Weaver Details"/>
                     <set field="tabButtonItem" value="producerSearch" />
                       <entity-and entity-name="Party" list="partyDetailsMapsList"  >
          				<field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -3232,11 +3232,11 @@
        <screen name="CattleInfo">
            <section>
            	<actions>
-                <!--    <entity-and entity-name="PartyLoom" list="CattleDetails" >
+                    <entity-and entity-name="PartyLoom" list="LoomDetails" >
         				
         				<field-map field-name="partyId" from-field="parameters.partyId"/>
-       			</entity-and>  -->
-       			<set field="CattleDetails" type="Object" from-field="CattleDetails"/>
+       			</entity-and>  
+       			<set field="LoomDetails" type="Object" from-field="LoomDetails"/>
            	</actions>
                <widgets> 
                	<include-form name="CattleInformation" location="component://depotsales/widget/DepotSalesForms.xml"/>
