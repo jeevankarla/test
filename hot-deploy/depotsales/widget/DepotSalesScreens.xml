@@ -335,7 +335,7 @@
 	<screen name="ProcessBranchOrders">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Process Depot Orders" />
+				<set field="titleProperty" value="Process Indent" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="processOrdersBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -1088,7 +1088,7 @@
 			<actions>
 				<set field="titleProperty"
 					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
-				<set field="tabButtonItem" value="FindGRNReceipts" />
+				<set field="tabButtonItem" value="FindDepotTransPO" />
 				<set field="tabButtonItem2" value="POoverView" />
 				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
 					global="true" />
@@ -1102,10 +1102,9 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="ReceiptTabBar"
+						<include-menu name="FindDepotTransPOSubTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>
@@ -1607,7 +1606,7 @@
 	<screen name="FindPaymentNonRoute">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Depot Receipts Search" />
+				<set field="titleProperty" value="Receipts Search" />
 				<set field="tabButtonItem" value="NonRouteCustomPayments" />
 				<set field="subTabButtonItem" value="${parameters.subTabItem}"
 					default-value="${context.subTabItem}" />
@@ -2583,7 +2582,7 @@
 	<screen name="FinddepotPayments">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Find Depot Payments" />
+				<set field="titleProperty" value="Find Payments" />
 				<set field="tabButtonItem" value="depotpayments" />
 				<set field="tabButtonItem2" value="find" />
 				<service service-name="acctgInvoicePermissionCheck"
@@ -2823,7 +2822,7 @@
     <screen name="BranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Depot Sales Entry" />
+				<set field="titleProperty" value="Branch Sales Entry" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="changeFlag" value="DepotSales" />
@@ -2915,7 +2914,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderForm.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
@@ -2964,7 +2963,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderForm.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
@@ -2972,7 +2971,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderForm.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</fail-widgets>
@@ -3067,9 +3066,9 @@
 	  <screen name="FindProcProducer">
           <section>
               <actions>
-                  <set field="titleProperty" value="Find Producer"/>
+                  <set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch"/>
-                  <!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   -->
+                 <!--   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>-->  
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               </actions>           
@@ -3095,7 +3094,7 @@
        <screen name="EditProcProducer">
           <section>
           	<actions>
-          		<set field="titleProperty" value="Find Producer"/>
+          		<set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch" />
                  <!-- <entity-one entity-name="PartyIdentificationAndPartyGroup" value-field="partyDetailsMap"  >
        				<field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -3133,7 +3132,7 @@
          <screen name="ProducerProfile">
             <section>
             	<actions>
-            		<set field="titleProperty" value="Producer Details"/>
+            		<set field="titleProperty" value="Weaver Details"/>
                     <set field="tabButtonItem" value="producerSearch" />
                       <entity-and entity-name="Party" list="partyDetailsMapsList"  >
          				<field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -3232,11 +3231,11 @@
        <screen name="CattleInfo">
            <section>
            	<actions>
-                <!--    <entity-and entity-name="PartyLoom" list="CattleDetails" >
+                    <entity-and entity-name="PartyLoom" list="LoomDetails" >
         				
         				<field-map field-name="partyId" from-field="parameters.partyId"/>
-       			</entity-and>  -->
-       			<set field="CattleDetails" type="Object" from-field="CattleDetails"/>
+       			</entity-and>  
+       			<set field="LoomDetails" type="Object" from-field="LoomDetails"/>
            	</actions>
                <widgets> 
                	<include-form name="CattleInformation" location="component://depotsales/widget/DepotSalesForms.xml"/>
@@ -3264,7 +3263,7 @@
        <screen name="orderPayment">
     		<section>
     			<actions>
-    				<set field="titleProperty" value="Process Depot Orders" />
+    				<set field="titleProperty" value="Indent Payment" />
     				<set field="tabButtonItem" value="BranchSalesOrder" />
     				<set field="tabButtonItem2" value="OrderPayment" />
     				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -3376,118 +3375,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="DepotTransMaterialReceipts">
-		<section>
-			<actions>
-				<set field="titleProperty" value="PO Receipts" />
-				<set field="tabButtonItem" value="DepotTransReceipts" />
-				<set field="tabButtonItem2" value="DepotTransMaterialReceipts" />
-				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
-				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
-				<set field="supplyDate" from-field="parameters.supplyDate" />
-				<set field="parameters.roleTypeId" value="SUPPLIER" />
-				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
-				<set field="defaultEffectiveDateTime" value="${supplyDate}"
-					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
-				<set field="defaultEffectiveDate"
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-				<set field="defaulteffectiveDate"
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd:MM:yyyy hh:mm&quot;);}" />
-				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
-
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseOrderDetailsEntryDepotTrans.groovy" />
-			</actions>
-			<widgets>
-				<decorator-screen name="DepotTransCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-						<include-menu name="DepotTransReceiptTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
-						<section>
-							<widgets>
-								<section>
-									<condition>
-										<if-compare operator="equals" field="isFormSubmitted"
-											value="" />
-									</condition>
-									<widgets>
-										<include-screen name="DepotTransReceiptInitEntry" />
-									</widgets>
-								</section>
-								<section>
-									<condition>
-										<if-compare operator="equals" field="isFormSubmitted"
-											value="YES" />
-									</condition>
-									<widgets>
-										<include-screen name="DepotTransReceiptInnerScreen" />
-									</widgets>
-								</section>
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="DepotTransReceiptInitEntry">
-		<section>
-			<actions>
-				<entity-one value-field="showBoothAutoSuggestConf"
-					entity-name="TenantConfiguration">
-					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
-					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
-					<select-field field-name="propertyValue" />
-				</entity-one>
-				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
-				<set field="supplyDate" from-field="parameters.supplyDate" />
-				<set field="effectiveDate" value="${parameters.effectiveDate}" />
-				<!-- <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/> -->
-				<entity-condition entity-name="Product" list="productList"
-					use-cache="true">
-				</entity-condition>
-			</actions>
-			<widgets>
-				<section>
-					<widgets>
-						<platform-specific>
-							<html>
-								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/ReceiptEntryDepotTrans.ftl" />
-							</html>
-						</platform-specific>
-					</widgets>
-					<fail-widgets>
-						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
-						</label>
-					</fail-widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="DepotTransReceiptInnerScreen">
-		<section>
-			<actions>
-				<set field="effectiveDate" value="${parameters.effectiveDate}" />
-			</actions>
-			<widgets>
-				<section>
-					<widgets>
-						<platform-specific>
-							<html>
-								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/ReceiptEntryDepotTrans.ftl" />
-							</html>
-						</platform-specific>
-					</widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="DepotTransGRNShipments">
+		<screen name="DepotTransGRNShipments">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find GRN Shipments" />
@@ -3630,5 +3518,31 @@
 			</widgets>
 		</section>
 	</screen>  
-       
+           <screen name="ViewFacilityGeoPoint">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="ViewFacilityGeoPoint"/>
+                <set field="titleProperty" value="Location Map"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/viewFacilityGeoPoint.groovy"/>                         
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.PageTitleFacilityGeoLocation}"/> 
+                <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            	<set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>                 
+            </actions>
+            <widgets>
+             <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1">Location Map</label>
+                        </container>
+                        <screenlet title="Location Search">
+                        	<include-form name="ViewFacilityGeoPointSearch" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                        </screenlet>
+                        <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>        
+        </section>
+    </screen> 
 </screens>

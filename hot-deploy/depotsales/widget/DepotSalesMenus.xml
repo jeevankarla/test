@@ -3,6 +3,7 @@
     <menu name="MainAppBar" title="Commercial Module" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="DepotTransMain"/></menu-item>
+        <menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
     </menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -358,9 +359,9 @@
         <menu-item name="FindGRNReceipts" title="Find GRN Items">
         	<link target="FindGRNReceiptsDepot"/>
         </menu-item>
-        <menu-item name="POMaterialReceipts" title="GRN Entry">
+       <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceiptsDepot"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="FindGRNShipments" title="Find GRN">
         	<link target="FindGRNShipmentsDepot"/>
         </menu-item>
@@ -392,9 +393,9 @@
         <menu-item name="DepotTransReceipts" title="Find GRN Items">
         	<link target="DepotTransReceipts"/>
         </menu-item>
-        <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
+       <!--  <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
         	<link target="DepotTransMaterialReceipts"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="DepotTransGRNShipments" title="Process Supplier Invoice">
         	<link target="FindDepotTransGRNShipments"/>
         </menu-item>
@@ -411,14 +412,6 @@
         	</condition>
             <link target="MaterialInvoiceInit">
             </link>
-        </menu-item>
-        <menu-item name="POoverView" title="Purchase Order OverView">
-        	<condition>
-        		<not>
-					<if-empty  field="parameters.orderId"/>
-				</not>
-        	</condition>
-        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
       </menu>
      <!--  <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
@@ -635,7 +628,16 @@
             	</or>
         	</condition>
             <link target="StockPositionSubDepot"/>
-         </menu-item> 
+         </menu-item>
+         <menu-item name="FindDepotTransPO" title="Purchase Order">
+        	<condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindDepotTransPO"/>
+	    </menu-item> 
          <menu-item name="DepotTransReceipts" title="Receipt of Goods">
        		 <condition>
        		  <or>
@@ -659,16 +661,7 @@
                 <parameter param-name="facilityId" value="STORE"/>
             </link>
         </menu-item>
-        <menu-item name="FindDepotTransPO" title="Purchase Order">
-        	<condition>
-       		  <or>
-	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
-					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-			 </or>
-	        </condition>
-	        	<link target="FindDepotTransPO"/>
-	    </menu-item>
-	    
+        
 	    <menu-item name="indentIssuance" title="Indent Issuance">
 	    	<link target="DepotSalesIndentIssuance">
 	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
@@ -689,15 +682,15 @@
         <menu-item name="FindDepotTransPO" title="Find Purchase Order">
         	<link target="FindDepotTransPO"/>
         </menu-item>
-           <menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
+           <!--<menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
             	<link target="ProcessOrdersSuppliersDepotTrans">
             	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
     	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
             	</link>
             </menu-item>
-             <menu-item name="FindDepotSupplierPurchseShipment" title="Find Purchase Shipment">
-            	<link target="FindDepotSupplierPurchseShipment"/>
-        </menu-item>
+             <menu-item name="FindDepotTransPurchaseShipment" title="Find Purchase Shipment">
+            	<link target="FindDepotTransPurchaseShipment"/>
+        </menu-item>-->
         <menu-item name="POoverView" title="Purchase Order OverView">
         	<condition>
         		<not>
@@ -719,4 +712,68 @@
 	    	</link>
     	</menu-item>
     </menu>
+    
+    <menu name="SupplierPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
+           
+         <menu-item name="FindSupplierPO" title="Supplier Purchase Orders">
+        	<condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindSupplierPO"/>
+	    </menu-item>
+	     
+         <menu-item name="FindSupplierDispatchs" title="Supplier Good Dispatch">
+       		 <condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindSupplierDispatchs"/>
+	     </menu-item> 
+    </menu> 
+    <menu name="FindSupplierPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindSupplierPO" title="Find Purchase Order">
+        	<link target="FindSupplierPO"/>
+        </menu-item>
+        <menu-item name="SupplierPoOverView" title="Supplier PO OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="SupplierPoOverView"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
+    <menu name="SupplierReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindSupplierDispatchs" title="Find Dispatched Items">
+        	<link target="FindSupplierDispatchs"/>
+        </menu-item>
+        <menu-item name="SupplierDispatchEntry" title="Supplier Delivery">
+        	<link target="SupplierDispatchEntry"/>
+        </menu-item>
+        <menu-item name="FindSupplierShipments" title="Find Dispatched Shipments">
+        	<link target="FindSupplierShipments"/>
+        </menu-item>
+        <menu-item name="SupplierShipmentOverview" title="Supplier Shipment Overview">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="SupplierShipmentOverview">
+            </link>
+        </menu-item> 
+        <!-- <menu-item name="DepotTransMaterialInvoiceInit" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInit">
+            </link>
+        </menu-item> -->
+      </menu>
+    
 </menus>

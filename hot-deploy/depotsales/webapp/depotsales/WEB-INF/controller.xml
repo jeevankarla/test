@@ -549,10 +549,10 @@
         <response name="success" type="request-redirect-noparam" value="FindSalesIndentPayment"/>  
         <response name="error" type="view" value="FindSalesIndentPayment"/>         
     </request-map>
-    <request-map uri="DepotTransMaterialReceipts">
+    <request-map uri="SupplierDispatchEntry">
        <security https="true" auth="true"/>
-       <response name="success" type="view" value="DepotTransMaterialReceipts"/>
-       <response name="error" type="view" value="DepotTransMaterialReceipts"/>
+       <response name="success" type="view" value="SupplierDispatchEntry"/>
+       <response name="error" type="view" value="SupplierDispatchEntry"/>
      </request-map>
      <request-map uri="DepotTransReceipts">
        <security https="true" auth="true"/>
@@ -562,8 +562,8 @@
      <request-map uri="processDepotTransReceiptItems">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
-       <response name="success" type="request-redirect" value="DepotTransMaterialReceipts"/>
-       <response name="error" type="view" value="DepotTransMaterialReceipts"/>
+       <response name="success" type="request-redirect" value="FindSupplierShipments"/>
+       <response name="error" type="view" value="FindSupplierShipments"/>
      </request-map>
      <request-map uri="FindDepotTransGRNShipments">
        <security https="true" auth="true"/>
@@ -641,8 +641,40 @@
 	<request-map uri="DepotSalesIndentIssuance">
       <security https="true" auth="true"/>
       <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
-      <response name="failed" type="view" value="DepotSalesIndentIssuance"/>  
+      <response name="" type="view" value="DepotSalesIndentIssuance"/>  
 	</request-map>
+	<request-map uri="FindSupplierPO">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="FindSupplierPO"/>   
+      <response name="error" type="view" value="FindSupplierPO"/>  
+	</request-map>
+	 <request-map uri="FindSupplierDispatchs">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindSupplierDispatchs"/>
+       <response name="error" type="view" value="FindSupplierDispatchs"/>
+     </request-map>
+     <request-map uri="SupplierPoOverView">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="SupplierPoOverView"/>
+       <response name="error" type="view" value="SupplierPoOverView"/>
+     </request-map>
+     <request-map uri="FindSupplierShipments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindSupplierShipments"/>
+       <response name="error" type="view" value="FindSupplierShipments"/>
+     </request-map>
+     <request-map uri="SupplierShipmentOverview">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="SupplierShipmentOverview"/>
+       <response name="error" type="view" value="SupplierShipmentOverview"/>
+    </request-map>
+    <request-map uri="SupplierPortal">
+       <security https="true" auth="true"/>
+       <response name="success" type="request" value="FindSupplierDispatchs"/>
+       <response name="error" type="request" value="FindSupplierDispatchs"/>
+    </request-map>
+    
+	
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     
@@ -721,7 +753,7 @@
     <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
     <view-map name="DepotSalesInventorySales" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventorySales"/>
     <view-map name="DepotTransReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransReceipts"/>
-    <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>
+   
     <view-map name="DepotTransGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransGRNShipments"/>
     <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
     <view-map name="FindDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindDepotTransPO"/>
@@ -732,4 +764,14 @@
     <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
+    
+     <view-map name="FindSupplierPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierPO"/>
+     <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
+     <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
+     <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
+     <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
+     <view-map name="SupplierShipmentOverview" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierShipmentOverview"/>
+     
+      
+      
 </site-conf>

@@ -306,9 +306,9 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
-        <!-- <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Send to QC" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
-        </field> -->
+        <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
+        </field> 
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
             <hyperlink target="MaterialInvoiceInit" description="Invoice">
                 <parameter param-name="shipmentId"/>
@@ -550,11 +550,11 @@
             </hyperlink>
         </field> 
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
-        <field use-when="(&quot;${newSize}&quot;!=&quot;${size}&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
+       <!--  <field use-when="(&quot;${newSize}&quot;!=&quot;${size}&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
-        	 	<!-- <parameter param-name="vehicleId"/> -->
+        	 	<parameter param-name="vehicleId"/>
             </hyperlink>
-         </field>
+         </field> -->
     </form>
      <form name="FindInvoices" type="single" target="DepotPurchaseInvoice" title="Find and list invoices"
         header-row-style="header-row" default-table-style="basic-table">
@@ -851,8 +851,8 @@
            <field name="shedName" title="Party Id"> <display description="${partyDetailsMapsList[0].partyId}"></display></field>
            <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
            <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	
-           <field name="groupName" title="Producer Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
-           <field name="idValueStr" title="Producer Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
+           <field name="groupName" title="Weaver Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
+           <field name="idValueStr" title="Weaver Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
            <field name="partyId"><hidden value="${partyDetailsMap.partyId}"/></field>
            <field name="update"><submit/></field>
            
@@ -933,10 +933,12 @@
       	
       	
       <form name="CattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
-       		 list-name="CattleDetails" >
+       		 list-name="LoomDetails" >
        		<field name="partyId"><hidden/></field>     
-         	<field name="cattleTypeId" title="Cattle Type"><display-entity entity-name="CattleType" description="${description}" ></display-entity> </field>
-         	<field name="numberOfCattle" title="Number Of Cattle"><display></display></field>
+         	<field name="loomTypeId" title="Weaver Type"><display></display></field>
+         	<field name="loomTypeId" title="Weaver Type"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}"/></field>
+         	<field name="quantity" title="Number Of Weavers"><display></display></field>
+         	<field name="quotaPerLoom" title="quota Per Loom"><display></display></field>
         </form>
         
      <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
@@ -1005,10 +1007,8 @@
       		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
               <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
               
-              <field name="partyId" title="Party Id"><text  size="15"></text></field>
-              <field name="groupName" title="Group Name"><text  size="15"></text></field>
-              <field name="firstName" title="First Name"><text  size="15"></text></field>
-              <field name="lastName" title="Last Name"><text  size="15"></text></field>
+              <field name="partyId" title="Weaver Id"><text  size="15"></text></field>
+              <field name="groupName" title="Weaver Name"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               <field name="submit" title="Find"><submit/></field>
               
@@ -1029,10 +1029,7 @@
                 	  <parameter param-name="partyId" /> 
              </hyperlink>
          </field>
-    	<field name="groupName" title="Group Name"><display/></field>  	
-        <field name="firstName" title="First Name" ><display description="${rateTypeId}"></display><!-- <display-entity entity-name="RateType" key-field-name="ratetypeId" description="${description} "/> --></field>
-       <!--  <field name="middleName" title="SupplyType"><display/></field> -->
-        <field name="lastName" title="Last Name"><display/></field>
+        <field name="partyName" title="Weaver Name"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>  
     	<field name="description" title="Role Type"><display/></field>
     </form>
       <form name="FindOrderPaymentSeach" title="" type="single" target="orderPayment" header-row-style="header-row" default-table-style="basic-table">
@@ -1182,10 +1179,10 @@
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
         </field>
-        <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
+      <!--   <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
             <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
             </hyperlink>
-        </field> 
+        </field> --> 
         <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
             <hyperlink target="CancelDepotTransGrnShipment" description="Cancel GRN">
                 <parameter param-name="shipmentId"/>
@@ -1198,9 +1195,9 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
-        <!-- <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Send to QC" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
-        </field> -->
+         <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
+        </field>
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
             <hyperlink target="DepotTransMaterialInvoiceInit" description="Invoice">
                 <parameter param-name="shipmentId"/>
@@ -1239,6 +1236,21 @@
              <hyperlink  target-type="plain" description="Make Order"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}');"></hyperlink>
         </field>
     </form>
-       
+          <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="ViewFacilityGeoPoint">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="facilityId" title="BO/RO-ID's" position="1"><lookup target-form-name="LookupFacility"/></field>
+<!--         <field name="routeId2" title="Addtl. Route Id (Optional)" position="2"><lookup target-form-name="LookupFacility"/></field> -->
+      <!--   <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> --> 
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form> 
 	      
 </forms>

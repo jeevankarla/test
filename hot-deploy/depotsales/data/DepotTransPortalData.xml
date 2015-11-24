@@ -4,9 +4,6 @@
 	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="MYPORTAL_DEPOT_TRANS"/>
 	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="MYPORTALBASE_ADMIN"/> 
 	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOT_TRANS" permissionId="ACCOUNTING_VIEW"/>
-	 	
-	 
-    	    	
     	    	
     	 <PortalPage portalPageId="MYPORTAL_DEPOT_TRANS" sequenceNum="0" portalPageName="Main" description="The vbiz System Cashier page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOT_TRANS"/>
 	   
@@ -17,6 +14,21 @@
     	<PortalPageColumn portalPageId="MYPORTAL_DEPOT_TRANS" columnSeqId="00001"/>
     	<PortalPagePortlet portalPageId="MYPORTAL_DEPOT_TRANS" portalPortletId="DEPOT_TRANS" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
+    	
+    	<!-- Supplier Dashboard -->
+    	
+    	 <SecurityPermission description="Supplier Dashboard Portal View" permissionId="MYPORTAL_SUPPL_TRANS"/>
+          <SecurityGroup description="Supplier Dashboard Portal View" groupId="MYPORTAL_SUPPL_TRANS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_SUPPL_TRANS" permissionId="MYPORTAL_SUPPL_TRANS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_SUPPL_TRANS" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_SUPPL_TRANS" permissionId="ACCOUNTING_VIEW"/>
+	   
+	    <PortalPortlet portalPortletId="SUPPL_TRANS_PAGE" portletName="Supplier Portal Screen" screenName="SupplierMyPortalPOScreen"
+            screenLocation="component://depotsales/widget/CommonScreens.xml" description="Supplier Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_SUPPL_TRANS" sequenceNum="0" portalPageName="Supplier Operations" description="The vbiz System Supplier page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_SUPPL_TRANS"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_SUPPL_TRANS" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_SUPPL_TRANS" portalPortletId="SUPPL_TRANS_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
     	
     	
