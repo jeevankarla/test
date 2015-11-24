@@ -89,6 +89,14 @@ facilityIds=facilities.facilityId;
 							geoPoint = [:];
 							geoPoint.lat = point.latitude;
 							geoPoint.lon = point.longitude;
+							if(facility.facilityId.contains("RO")){
+								facility.facilityName = facility.facilityName+"[RO]";// + " [" + facility.sequenceNum + "]";
+							}else if(facility.facilityId.contains("HO")){
+							facility.facilityName = facility.facilityName+"[HO]";// + " [" + facility.sequenceNum + "]";
+							
+							}else{
+							facility.facilityName=facility.facilityName+"[BO]";
+							}
 							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
 							geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
 							geoPoint.facilityId = facility.facilityName;
