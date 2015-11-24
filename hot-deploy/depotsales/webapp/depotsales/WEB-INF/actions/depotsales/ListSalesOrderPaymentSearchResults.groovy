@@ -173,23 +173,12 @@ for (eachOrderList in orderList) {
 
 
 
-Debug.log("finalFilteredList========="+finalFilteredList);
-
-
-
    orderIdsList = [];
-   
    orderPreferenceMap = [:];
-   
    paymentSatusMap = [:];
    
    for (eachList in finalFilteredList) {
 
-	   
-	   
-	   Debug.log("finalFilteredList========="+eachList.orderId);
-	   
-	   
 	   condtList = [];
 	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
 	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
@@ -197,10 +186,6 @@ Debug.log("finalFilteredList========="+finalFilteredList);
 	   getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
 	   
 	   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
-	   
-	   
-	   Debug.log("orderPreferenceIds========="+orderPreferenceIds);
-	   
 	   
 	  if(UtilValidate.isNotEmpty(orderPreferenceIds[0])){
 	   
@@ -213,9 +198,6 @@ Debug.log("finalFilteredList========="+finalFilteredList);
 	   totAmount = 0;
 	   tempMap = [:];
 	   
-	   Debug.log("amount========="+PaymentList[0].get("amount"));
-	   
-	   Debug.log("amount========="+PaymentList[0].get("statusId"));
 	   
 	   if(UtilValidate.isNotEmpty(PaymentList)){
 	   
@@ -223,46 +205,33 @@ Debug.log("finalFilteredList========="+finalFilteredList);
 		   totAmount = totAmount+eachpayment.get("amount");
 		  }*/
 	   
-			
-			
 			tempMap.put("statusId", PaymentList[0].get("statusId"));
-			
 			tempMap.put("amount", PaymentList[0].get("amount"));
 	   
+	   }else{
+			   tempMap = [:];
+			   tempMap.put("statusId", "NotReceived");
+			   tempMap.put("amount", 0);
+			   paymentSatusMap.put(eachList.orderId, tempMap);
 	   }
-	   
-	   Debug.log("eachList.orderId========="+eachList.orderId);
-		   
-		   
 	   paymentSatusMap.put(eachList.orderId, tempMap);
-	   
-	   
 	  }
 	  else{
 		  
 		  tempMap = [:];
-		  
 		  tempMap.put("statusId", "NotReceived");
-		  
 		  tempMap.put("amount", 0);
-		  
 		  paymentSatusMap.put(eachList.orderId, tempMap);
 		  
 	  }
 }
    
-   
-   Debug.log("paymentSatusMap========="+paymentSatusMap);
-   
-   
    condtList = [];
    condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
    cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
    PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
-
    
    context.PaymentMethodType = PaymentMethodType;
-   
    context.orderPreferenceMap = orderPreferenceMap;
    context.paymentSatusMap = paymentSatusMap;
 

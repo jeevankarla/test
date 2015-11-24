@@ -273,11 +273,13 @@ under the License.
               	
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
+              
+              
               	<#else>
               	<td></td>
               	</#if> -->
                  <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived")&&((paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED")>
-                 <td><input type="button" name="realize" id="realize" value="Paymen Received" onclick="javascript: realizestatus('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
+                 <td><input type="button" name="realize" id="realize" value="Paymen Received" onclick="javascript: realizeStatusChange('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
               	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
               	<td>Payment Realized</td>
               	<#else>
