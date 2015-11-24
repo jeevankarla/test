@@ -361,7 +361,10 @@
 							<widgets>
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                    	 
+                                    	 <container style="button-bar">
+											<link target="BranchSalesOrder" text="Create New Indent" style="buttontext create h2">
+											</link>
+										</container>
                                     </decorator-section>
 							 		<decorator-section name="search-options">
                                         <include-form name="FindTankerSalesOrder" location="component://depotsales/widget/DepotSalesForms.xml"/>
@@ -1896,7 +1899,7 @@
 	<screen name="searchProduct">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Search Product" />
+				<set field="titleProperty" value="Product Master" />
 				<set field="tabButtonItem" value="searchProduct" />
 				<set field="entityName" value="Product" />
 				<set field="parameters.mainDecoratorLocation" value="${parameters.mainDecoratorLocation}" />
@@ -2842,7 +2845,7 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesIndentTabBar"
+						<include-menu name="BranchSalesEntryIndentTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<condition>
@@ -3068,7 +3071,7 @@
               <actions>
                   <set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch"/>
-                 <!--   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>-->  
+                  <!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   -->
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               </actions>           
@@ -3145,6 +3148,7 @@
                    	<set field="partyId" from-field="parameters.partyId" global="true"/>
                     <set field="contentId" from-field="parameters.contentId" global="true"/>
                     <entity-one entity-name="Content" value-field="content"/>
+                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ServeProfilePic.groovy" />
             	</actions>
                 <widgets> 
            			<decorator-screen name="DepotSalesCommonDecorator"
@@ -3375,7 +3379,7 @@
 			</widgets>
 		</section>
 	</screen>
-		<screen name="DepotTransGRNShipments">
+	<screen name="DepotTransGRNShipments">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find GRN Shipments" />

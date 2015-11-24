@@ -416,28 +416,40 @@
         	</entity-condition>
         	<set  field="price" value="${priceList[0].price}"/>
         </row-actions>
-     <field name="internalName" title="Internal Name"><display/></field>
-	<field name="productId" title="Product">
+    <!--  <field name="internalName" title="Internal Name"><display/></field> -->
+	<!-- <field name="productId" title="Product">
      	<display-entity entity-name="Product" description="${description} [${productId}]" ></display-entity>
-    </field>     
+    </field>  -->    
+    <field name="productId" title="Product" use-when="productId!=null" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${description} [${productId}]" target="/catalog/control/EditProduct" target-window="_blank" target-type="inter-app">
+                <parameter param-name="productId"/>
+            </hyperlink>
+     </field>
     
      <field name="longDescription" title="Specification"><display size="50"/></field>
      <field name="quantityUomId" title="UOM" ><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field> 
      <field name="primaryProductCategoryId" title="Material Category">
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
-     <field name="updateMaterial" widget-style="buttontext" title="Update" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
-            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
+      <field name="Barcode" title="Barcode" use-when="productId!=null" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Barcode" target="/catalog/control/ProductBarCode.pdf" target-window="_blank" target-type="inter-app">
+                <parameter param-name="productId"/>
             </hyperlink>
-      </field> 
-     <field name="partyId" title="Supplier" >
+     </field>
+     <!-- <field name="partyId" title="Supplier" >
      	<hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}  [${partyId}]">
                 <parameter param-name="partyId" from-field="partyId"/>
             </hyperlink>
+     </field> -->
+     <field name="price" title="View Price" widget-style="buttontext">
+     	<hyperlink  target="EditProductPricesDepot" target-type="inter-app" target-window="_blank" description="View"> 
+     	   <parameter param-name="productId"/>
+     	</hyperlink>
      </field>
-     <field name="price" title="Price">
-     	<hyperlink  target="EditProductPricesDepot" target-type="inter-app" target-window="_blank" description="[${productId}]"> <parameter param-name="productId"/></hyperlink>
-     </field>
+      <field name="updateMaterial" widget-style="buttontext" title="Update Details" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
+            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
+            </hyperlink>
+      </field> 
     </form>
     <form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>  
@@ -567,7 +579,7 @@
 			</drop-down>
 		</field> -->
         <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
@@ -839,21 +851,13 @@
           
           <form name="EditProcProducer" odd-row-style="alternate-row"  header-row-style="header-row-2" type="single" list-name ="partyDetailsMapsList" default-table-style="basic-table "   
           	target="updateProcProducer">  
-          	<actions>
-          		<set field="facilityIdStr" value="${partyDetailsMap.facilityId}" />
-          		<set field="centerDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;centerFacility&quot;);}" type="Object"/>
-          		<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;unitFacility&quot;);}" type="Object"/>
-      			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
-      			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;shedFacility&quot;);}" type="Object"/>
-      			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
-      			<set field = "idValueStr" value="${partyDetailsMap.idValue}" />
-          	</actions>  
+          
            <field name="shedName" title="Party Id"> <display description="${partyDetailsMapsList[0].partyId}"></display></field>
-           <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
-           <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	
+         <!--   <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
+           <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	-->
            <field name="groupName" title="Weaver Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
            <field name="idValueStr" title="Weaver Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
-           <field name="partyId"><hidden value="${partyDetailsMap.partyId}"/></field>
+           <field name="partyId"><hidden value="${partyDetailsMapsList[0].partyId}"/></field>
            <field name="update"><submit/></field>
            
           </form>
@@ -917,9 +921,9 @@
       		</actions>
       		<field name="partyIdentificationTypeId" >
       		<drop-down allow-empty="false">             
-      				<!-- <entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+      				 <entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
       				          <entity-order-by field-name="partyIdentificationTypeId"/>
-      				</entity-options> -->
+      				</entity-options> 
       				<list-options key-name="partyIdentificationTypeId" list-name="partyIdentificationTypes" description="${description}"/>
       			</drop-down>  
       		</field>
@@ -941,26 +945,37 @@
          	<field name="quotaPerLoom" title="quota Per Loom"><display></display></field>
         </form>
         
-     <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
-	     			 default-table-style="basic-table" target="updateCattleInformation" >    
-	       	<field name="partyId"><hidden/></field>
-	       	<field name="cattleTypeId" title="Loom Type">
-	       		<drop-down allow-empty="false">
-	       			<entity-options description="${description}" entity-name="CattleType"></entity-options>
-	       		</drop-down>
-	       	</field>
-	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
-	       	<field name="submit" title="update"><submit/></field>
-	      </form>
-	      <form name="ProducerProfilePicture"  
-	    	    type="single"	header-row-style="header-row">
-	  		<actions>
-	  		<!-- 	<script location="component://nhdc/applications/humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy" />  -->
-	  		</actions>
-	  		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" 	width = "150"/></field>
+       <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
+     	     			list-name="LoomDetails" default-table-style="basic-table" target="updateCattleInformation" >    
+     	       	<field name="partyId"><hidden/></field>
+     	       	<field name="loomTypeId" title="Loom Type">
+     	       		<drop-down allow-empty="false">
+     	       			<entity-options description="${description}" entity-name="LoomType"></entity-options>
+     	       		</drop-down>
+     	       	</field>
+     	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
+     	       	<field name="submit" title="update"><submit/></field>
+     	      </form>
+     	      <form name="ProducerProfilePicture"  type="upload" target="createWeaverContent" 	header-row-style="header-row">
+				<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="150"/></field>
+	      
+	            <field name="partyId" map-name="parameters"><hidden/></field>  
+		        <field name="partyContentTypeId"><hidden value="INTERNAL"/></field>
+		        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>
+		        
+		        <field name="contentTypeId"><hidden value="PROFILE_PIC"/></field>
+		        <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field>
+		        <field name="mimeTypeId"><hidden value="image/jpeg"/></field>
+		        
+		        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
+		        <field name="dataCategoryId"><hidden value="PROFILE_PIC"/></field>
+		        <field name="isPublic"><hidden value="N"/></field>
+		             
+		        <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
+	      
 	      </form> 
 	    
-       <form name="FindProcurementProducer" odd-row-style="alternate-row" target="FindProcProducer"
+       <form name="FindProcurementProducer" odd-row-style="alternate-row" target="single"
    		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
            <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
            <field name="shedId" title="Shed Code">
@@ -1213,7 +1228,7 @@
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
-        <field name="facilityId" > <hidden value="${parameters.facilityId}"/></field>
+        <field name="facilityId" > <hidden value="BRANCH1"/></field>
     <!--     <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
            <field name="statusId"><hidden value="GENERATED"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1225,15 +1240,15 @@
         <field name="shipmentId" title="Shipment Id"><display/></field>
         <field name="fromPartyId" title="From Party"><display/></field>
         <field name="estimatedShipDate" title="Recvd.Date"><display/></field>
-        
-        <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field>
+        <field name="inventoryItemId" > <hidden/></field>
+       <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}[${${productId}}]"></display-entity>
         </field>
         <field name="quantityOnHandTotal" title="Stock Avl"><display/></field>
         <field name="unitCost"><hidden/></field>
-        <field name="Sale" title="Make Order" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Make Order"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}');"></hyperlink>
+        <field name="Sale" title="Sale Indent" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
         </field>
     </form>
           <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
