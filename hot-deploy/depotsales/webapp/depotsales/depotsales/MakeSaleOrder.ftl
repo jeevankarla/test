@@ -95,7 +95,7 @@
 		var quantity = quantityStr.value;
 		var unitCost = unitCostStr.value;
 		var qtyOnHand = quantityOnHandTotal.value;
-		if(quantity > qtyOnHand){
+		if(qtyOnHand-quantity < 0 ){
 			alert("Indenting Quantity Cannot Exceed Inventory.!");
 			createSaleIndent.quantity.value='';
 			createSaleIndent.indentAmount.value='';
