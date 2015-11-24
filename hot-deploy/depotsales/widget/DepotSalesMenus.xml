@@ -416,7 +416,7 @@
        <!--  <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
         	<link target="DepotTransMaterialReceipts"/>
         </menu-item> -->
-        <menu-item name="DepotTransGRNShipments" title="Process Supplier Invoice">
+        <menu-item name="DepotTransGRNShipments" title="Find GRN">
         	<link target="FindDepotTransGRNShipments"/>
         </menu-item>
         <menu-item name="DepotTransMaterialShipmentOverview" title="Material Shipment Overview">	
