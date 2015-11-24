@@ -670,6 +670,37 @@
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="facilityTreeDepoNetwork.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
+    
+	    <request-map uri="FindSupplierPO">
+	      <security https="true" auth="true"/>
+	      <response name="success" type="view" value="FindSupplierPO"/>   
+	      <response name="error" type="view" value="FindSupplierPO"/>  
+		</request-map>
+		 <request-map uri="FindSupplierDispatchs">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="FindSupplierDispatchs"/>
+	       <response name="error" type="view" value="FindSupplierDispatchs"/>
+	     </request-map>
+	     <request-map uri="SupplierPoOverView">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="SupplierPoOverView"/>
+	       <response name="error" type="view" value="SupplierPoOverView"/>
+	     </request-map>
+	     <request-map uri="FindSupplierShipments">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="FindSupplierShipments"/>
+	       <response name="error" type="view" value="FindSupplierShipments"/>
+	     </request-map>
+	     <request-map uri="SupplierShipmentOverview">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="SupplierShipmentOverview"/>
+	       <response name="error" type="view" value="SupplierShipmentOverview"/>
+	    </request-map>
+	    <request-map uri="SupplierPortal">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="request" value="FindSupplierDispatchs"/>
+	       <response name="error" type="request" value="FindSupplierDispatchs"/>
+	    </request-map>
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
      <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
@@ -759,4 +790,14 @@
     <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
+    
+    
+    
+     <view-map name="FindSupplierPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierPO"/>
+     <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
+     <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
+     <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
+     <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
+     <view-map name="SupplierShipmentOverview" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierShipmentOverview"/>
+     
 </site-conf>
