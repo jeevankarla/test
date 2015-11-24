@@ -3349,6 +3349,22 @@ public class MaterialPurchaseServices {
 		        		Debug.logError("Error While Sending Receipt to QC", module);
 		  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
 		        	}
+		        	//send QC in same time
+		        	inputMap.clear();
+		        	resultReceipt.clear();
+					
+					inputMap.put("statusIdTo","SR_ACCEPTED");
+					inputMap.put("receiptId",receipt.get("receiptId"));
+					inputMap.put("shipmentId",shipmentId);
+					inputMap.put("shipmentItemSeqId",receipt.get("shipmentItemSeqId") );
+					inputMap.put("quantityAccepted",receipt.get("quantityAccepted"));
+					inputMap.put("userLogin",userLogin);
+					resultReceipt = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
+					
+					if (ServiceUtil.isError(resultReceipt)) {
+						Debug.logError("Error While Accepting ", module);
+		  	  			return ServiceUtil.returnError("Error While  While Accepting"+receipt.get("receiptId"));
+		            }
 				}
 			}
 		} catch (Exception e) {
