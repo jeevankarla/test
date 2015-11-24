@@ -82,15 +82,15 @@
     <request-map uri="approveDepotSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveDepotOrder"/>
-        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
-       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
-        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
-       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
      <request-map uri="editDepotOrder">
    		<security https="true" auth="true"/>
@@ -362,7 +362,7 @@
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
-         <response name="success"  type="request-redirect-noparam" value="ProcessOrdersSuppliersDepotSales"></response>
+         <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
         <response name="error" type="view" value="processOrdersBranchSales"/>
     </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
