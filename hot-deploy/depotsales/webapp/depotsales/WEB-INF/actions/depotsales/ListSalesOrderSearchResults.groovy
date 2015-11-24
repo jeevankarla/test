@@ -154,6 +154,11 @@
 		productStoreId=orderHeader.productStoreId;
 		tempMap=[:];
 		tempMap.put("supplierPartyId", supplierPartyId);
+		supplierPartyName="";
+		if(supplierPartyId){
+			supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
+		}
+		tempMap.put("supplierPartyName", supplierPartyName);
 		tempMap.put("productStoreId", productStoreId);
 		orderDetailsMap.put(orderId,tempMap)
 		}
