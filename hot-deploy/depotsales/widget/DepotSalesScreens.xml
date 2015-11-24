@@ -335,7 +335,7 @@
 	<screen name="ProcessBranchOrders">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Process Depot Orders" />
+				<set field="titleProperty" value="Process Indent" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="processOrdersBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
