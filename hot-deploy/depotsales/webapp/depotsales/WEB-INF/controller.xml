@@ -665,6 +665,28 @@
       <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
       <response name="failed" type="view" value="DepotSalesIndentIssuance"/>  
 	</request-map>
+	
+	<request-map uri="createProducerPartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyIdentification"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+	
+	 <request-map uri="updateProducerFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProducerFinAccount"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
+    <request-map uri="updateProcProducer">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProcProducerDetails"></event>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+	
 	<request-map uri="facilitySubTree">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="facilityTreeDepoNetwork.groovy"/>

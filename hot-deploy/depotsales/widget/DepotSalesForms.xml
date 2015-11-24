@@ -839,21 +839,13 @@
           
           <form name="EditProcProducer" odd-row-style="alternate-row"  header-row-style="header-row-2" type="single" list-name ="partyDetailsMapsList" default-table-style="basic-table "   
           	target="updateProcProducer">  
-          	<actions>
-          		<set field="facilityIdStr" value="${partyDetailsMap.facilityId}" />
-          		<set field="centerDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;centerFacility&quot;);}" type="Object"/>
-          		<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;unitFacility&quot;);}" type="Object"/>
-      			<set  field="unitName" value="${groovy: unitDetails.get(&quot;facilityName&quot;)}[${groovy: unitDetails.get(&quot;facilityCode&quot;)}]"/>
-      			<set field="shedDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,facilityIdStr))).get(&quot;shedFacility&quot;);}" type="Object"/>
-      			<set  field="shedName" value="${groovy: shedDetails.get(&quot;facilityName&quot;)}"/>
-      			<set field = "idValueStr" value="${partyDetailsMap.idValue}" />
-          	</actions>  
+          
            <field name="shedName" title="Party Id"> <display description="${partyDetailsMapsList[0].partyId}"></display></field>
-           <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
-           <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	
+         <!--   <field name="unitName" title="Unit"> <display description="${unitDetails.facilityName}[${unitDetails.facilityCode}]"></display ></field>
+           <field name="facilityIdStr" title="SocietyName"><display-entity entity-name="Facility" description="${facilityName}[${facilityCode}]" key-field-name="facilityId"></display-entity></field>	-->
            <field name="groupName" title="Weaver Name"><text size="35" default-value="${partyDetailsMap.groupName}"></text></field>
            <field name="idValueStr" title="Weaver Code" parameter-name="idValue"><text size="25" maxlength="4" default-value="${partyDetailsMap.idValue}"></text></field>
-           <field name="partyId"><hidden value="${partyDetailsMap.partyId}"/></field>
+           <field name="partyId"><hidden value="${partyDetailsMapsList[0].partyId}"/></field>
            <field name="update"><submit/></field>
            
           </form>
@@ -917,9 +909,9 @@
       		</actions>
       		<field name="partyIdentificationTypeId" >
       		<drop-down allow-empty="false">             
-      				<!-- <entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+      				 <entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
       				          <entity-order-by field-name="partyIdentificationTypeId"/>
-      				</entity-options> -->
+      				</entity-options> 
       				<list-options key-name="partyIdentificationTypeId" list-name="partyIdentificationTypes" description="${description}"/>
       			</drop-down>  
       		</field>
