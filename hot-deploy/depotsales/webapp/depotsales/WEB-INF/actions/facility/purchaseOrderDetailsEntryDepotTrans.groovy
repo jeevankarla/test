@@ -83,6 +83,7 @@ if(orderId){
 		newObj.put("cProductId",eachItem.productId);
 		receivedQty=0;
 		maxReceivedQty=0;
+		poBalDetailsMap=[:];
 		if(UtilValidate.isNotEmpty(poBalDetailsMap)){
 			poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
 		}
