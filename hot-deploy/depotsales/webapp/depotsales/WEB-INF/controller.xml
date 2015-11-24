@@ -749,8 +749,11 @@
         <response name="success" type="view" value="FindSalesIndentPayment"/>
         <response name="error" type="view" value="FindSalesIndentPayment"/>
     </request-map>
-	   
-	    
+    <request-map uri="createWeaverContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+    </request-map>	    
     <!-- View Mappings -->
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
      <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
