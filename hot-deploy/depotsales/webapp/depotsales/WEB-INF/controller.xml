@@ -693,6 +693,13 @@
         <response name="success" type="request" value="json"/>
     </request-map>
     
+    <!-- supplier Portal -->
+       <request-map uri="SupplierPortal">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="request" value="FindSupplierPO"/>
+	       <response name="error" type="request" value="FindSupplierPO"/>
+	    </request-map>
+	    
 	    <request-map uri="FindSupplierPO">
 	      <security https="true" auth="true"/>
 	      <response name="success" type="view" value="FindSupplierPO"/>   
@@ -718,11 +725,7 @@
 	       <response name="success" type="view" value="SupplierShipmentOverview"/>
 	       <response name="error" type="view" value="SupplierShipmentOverview"/>
 	    </request-map>
-	    <request-map uri="SupplierPortal">
-	       <security https="true" auth="true"/>
-	       <response name="success" type="request" value="FindSupplierDispatchs"/>
-	       <response name="error" type="request" value="FindSupplierDispatchs"/>
-	    </request-map>
+	   
 	    
 	     <request-map uri="SupplierDispatchEntry">
 	       <security https="true" auth="true"/>
