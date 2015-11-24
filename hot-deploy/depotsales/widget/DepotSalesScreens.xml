@@ -3141,10 +3141,11 @@
         			<set field="partyDetailsMap" type="Object" from-field="partyDetailsMapsList[0]" global="true"/> 
         			<!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ServeProfilePic.groovy"/> -->
         			<!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/producerDetails.groovy"/> -->
-                   <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ServeProfilePic.groovy"/> -->
+                   <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ServeProfilePic.groovy"/> -->            
                    	<set field="partyId" from-field="parameters.partyId" global="true"/>
                     <set field="contentId" from-field="parameters.contentId" global="true"/>
                     <entity-one entity-name="Content" value-field="content"/>
+                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ServeProfilePic.groovy" />
             	</actions>
                 <widgets> 
            			<decorator-screen name="DepotSalesCommonDecorator"
