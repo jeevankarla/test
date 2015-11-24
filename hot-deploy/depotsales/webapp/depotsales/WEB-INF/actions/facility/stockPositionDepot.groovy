@@ -167,6 +167,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 } else {
 			 facilityList = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
 		 }
+		 facilityList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "BRANCH1"), null, null, null, false);
 		 facilityIterator = facilityList.iterator();
 		 dispatcher = request.getAttribute("dispatcher");
 		 Map contextInput = null;
