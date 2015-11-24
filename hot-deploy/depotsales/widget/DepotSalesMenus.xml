@@ -16,7 +16,18 @@
             <link target="main">
             </link>
         </menu-item>
-        <menu-item name="facility" title="${uiLabelMap.ProductFindFacilities}">
+         <menu-item name="ViewFacilityGeoPoint" title="Location Map">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+				</or>
+            	
+            </condition>         
+            <link target="ViewFacilityGeoPoint">
+            </link>
+        </menu-item>
+       <!--  <menu-item name="facility" title="${uiLabelMap.ProductFindFacilities}">
 			<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -25,7 +36,7 @@
             	</or>
             </condition>        
         	<link target="FindFacility"/>
-        </menu-item>
+        </menu-item> -->
        <menu-item name="producerSearch" title="Find Weaver">
 			<condition>
 				<or>
@@ -46,17 +57,7 @@
             <link target="FindByProduct">               
             </link>
         </menu-item> -->
-        <menu-item name="ViewFacilityGeoPoint" title="Location Map">
-			<condition>
-				<or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-				</or>
-            	
-            </condition>         
-            <link target="ViewFacilityGeoPoint">
-            </link>
-        </menu-item>
+       
         <menu-item name="BranchSalesOrder" title="Branch Sales Indent">
 	      <condition>
 	     	    <or>
@@ -67,6 +68,20 @@
             <link target="processOrdersBranchSales">
             </link>
         </menu-item> 
+        <menu-item name="NonRouteCustomPayments" title="Receipts"> 
+    		 <condition>
+				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+					<if-has-permission permission="DEPOTSALES" action="_CASH"/>
+					<if-has-permission permission="DEPOTSALES" action="_CHEQUE"/>
+					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
+				</or>
+            </condition> 
+            <link target="FindPaymentDepotSales">
+            	<parameter param-name="subTabItem" value="${subTabItem}"/>
+            	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
+            </link>	        
+       </menu-item>
         <!-- <menu-item name="DepotSalesOrder" title="Depot Sales Indent">
 	      <condition>
 	     	    <or>
@@ -96,16 +111,20 @@
 	        </condition>
 	        	<link target="FindGRNReceiptsDepot"/>
 	     </menu-item> 
-       <!--  <menu-item name="EditFacilityGroups" title="Facility Groups">
-        	<condition>
+      
+         <menu-item name="purchaseinvoice" title="Purchase Invoices">
+		    <condition>
 				<or>
-            		<if-has-permission permission="FACILITYGRP"  action="_ADMIN"/>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            	</or>
-            </condition>
-            <link target="FindFacilityGroup">
-            </link>
-        </menu-item>  -->
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="DepotPurchaseInvoice">
+				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
         <menu-item name="depotpayments" title="Payments">
 		    <condition>
 				<or>
@@ -119,29 +138,7 @@
 <!-- 				<parameter param-name="actionSubTabButtonValue" value="find" /> -->
 			</link>
 		</menu-item>
-        <menu-item name="NonRouteCustomPayments" title="Receipts"> 
-    		 <condition>
-				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
-					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-					<if-has-permission permission="DEPOTSALES" action="_CASH"/>
-					<if-has-permission permission="DEPOTSALES" action="_CHEQUE"/>
-					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
-				</or>
-            </condition> 
-            <link target="FindPaymentDepotSales">
-            	<parameter param-name="subTabItem" value="${subTabItem}"/>
-            	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
-            </link>	        
-       </menu-item>
-       <menu-item name="DepotSalesReports" title="Reports">
-	   		 <condition>
-				<or>
-	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
-				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-            	</or>            
-	        </condition>
-	      	<link target="DepotSalesReports"/>
-	    </menu-item>
+       
 	    <menu-item name="stockPositionDepotSales" title="Stock Position">
         	<condition>
         		<or>
@@ -151,7 +148,7 @@
         	</condition>
             <link target="stockPositionDepotSales"/>
         </menu-item>
-        <menu-item name="searchProduct" title="Product Price Master">
+        <menu-item name="searchProduct" title="Product Master">
             <link target="searchProduct">
             </link>
         </menu-item>
@@ -164,7 +161,16 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        <menu-item name="DepotTransReceipts" title="Receipts">
+        <menu-item name="DepotSalesReports" title="Reports">
+	   		 <condition>
+				<or>
+	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+	        </condition>
+	      	<link target="DepotSalesReports"/>
+	    </menu-item>
+       <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>
         		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
@@ -172,7 +178,7 @@
 			 </or>
 	        </condition>
 	        <link target="DepotTransReceipts"/>
-	   </menu-item>
+	   </menu-item> -->
         
         
         
@@ -201,20 +207,6 @@
 	        </condition> 
             <link target="FindSalesReturns"/>
         </menu-item>  --> 
-         <!-- <menu-item name="purchaseinvoice" title="Purchase Invoices">
-		    <condition>
-				<or>
-				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
-				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-            	</or>            
-            </condition> 
-			<link target="DepotPurchaseInvoice">
-				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
-				<parameter param-name="subTabButtonValue" value="Manufacturing" />
-				<parameter param-name="actionSubTabButtonValue" value="find" />
-			</link>
-		</menu-item> -->
-		
        	  
 	     
        <!--  <menu-item name="StockVariance" title="Stock Variance">
