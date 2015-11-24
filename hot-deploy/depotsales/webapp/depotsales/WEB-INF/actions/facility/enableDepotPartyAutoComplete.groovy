@@ -102,7 +102,7 @@ productStoreIds.each{ productStoreId ->
 //Debug.log("branchPartyObj====================="+branchPartyObj);
 
 conditionListForPsbNum = [];
-conditionListForPsbNum.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMBER"));
+conditionListForPsbNum.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 conditionListForPsbNum.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyDetailsList.partyId));
 conditionDeductor=EntityCondition.makeCondition(conditionListForPsbNum,EntityOperator.AND);
 partyPsbNumList = delegator.findList("PartyIdentification", conditionDeductor, null, null, null, false);

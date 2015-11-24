@@ -5,7 +5,7 @@
 <screen name="DepotSalesReports">
         <section>
             <actions>
-               <set field="titleProperty" value="Depot Sales Reports"/>	            
+               <set field="titleProperty" value="Reports"/>	            
                <set field="tabButtonItem" value="DepotSalesReports"/>   
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>

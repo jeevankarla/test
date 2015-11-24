@@ -1241,6 +1241,21 @@
              <hyperlink  target-type="plain" description="Make Order"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}');"></hyperlink>
         </field>
     </form>
-       
+          <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="ViewFacilityGeoPoint">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="facilityId" title="BO/RO-ID's" position="1"><lookup target-form-name="LookupFacility"/></field>
+<!--         <field name="routeId2" title="Addtl. Route Id (Optional)" position="2"><lookup target-form-name="LookupFacility"/></field> -->
+      <!--   <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> --> 
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form> 
 	      
 </forms>
