@@ -72,7 +72,7 @@ function createTree() {
             	},             	
             	"otherType": {
 					"icon" : { 
-                        "image" : "/images/jquery/plugins/jsTree/themes/booth.png"
+                        "image" : "/images/jquery/plugins/jsTree/themes/direction.png"
                 	}
             	}, 
             	"zoneType": {
@@ -92,7 +92,7 @@ function createTree() {
                 },
             	"routeType": {
 					"icon" : { 
-                        "image" : "/images/jquery/plugins/jsTree/themes/direction.png"
+                        "image" : "/images/jquery/plugins/jsTree/themes/depot.png"
                 	}
             	},                 
             	"shiftType": {

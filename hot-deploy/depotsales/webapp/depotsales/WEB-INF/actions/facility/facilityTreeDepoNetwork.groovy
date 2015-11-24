@@ -87,7 +87,7 @@ def populateChildren(facility, treeNodesList, enableEdit) {
 		if (enableEdit)  {
 			JSONObject href = new JSONObject();
 			href.put("href", "#");
-			href.put("onClick","callDocument('FacilityProfile?facilityId=" + childFacility.facilityId + "')");
+			href.put("onClick","callDocument('ViewFacilityGeoPoint?facilityId=" + childFacility.facilityId + "')");
 			dataNode.put("attr", href);
 		}
 		groupNode.put("data", dataNode);
@@ -111,7 +111,7 @@ def populateRootNodes(region, treeNodesList, enableEdit) {
 	
 	JSONObject href = new JSONObject();
 	href.put("href", "#");
-	href.put("onClick","callDocument('EditFacilityGeoPoint?facilityGroupId=" + region.facilityGroupId + "')");
+	href.put("onClick","callDocument('ViewFacilityGeoPoint?facilityId=" + region.facilityGroupId + "')");
 	JSONObject dataNode= new JSONObject();
 	dataNode.put("title", region.facilityGroupName);
 	dataNode.put("nodetype", "shiftType");	
@@ -129,7 +129,7 @@ def populateRootNodes(region, treeNodesList, enableEdit) {
 		attr2Node.put("nodetype", "routeType");
 		JSONObject href2 = new JSONObject();
 		href2.put("href", "#");
-		href2.put("onClick","callDocument('FacilityProfile?facilityId=" + routeMember.facilityId + "')");
+		href2.put("onClick","callDocument('ViewFacilityGeoPoint?facilityId=" + routeMember.facilityId + "')");
 		routeNode.put("attr", attr2Node);
 		JSONObject data2Node= new JSONObject();
 		data2Node.put("title", routeFacility.facilityName);

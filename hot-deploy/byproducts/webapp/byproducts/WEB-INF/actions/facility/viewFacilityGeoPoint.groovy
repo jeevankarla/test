@@ -43,52 +43,66 @@ geoRouteLabels = [];
 facilityId = parameters.facilityId;
 facilityGroupId = parameters.facilityGroupId;
 routeId2 = parameters.routeId2;
+facilityIds=[];
 
-if (facilityId) {
-	facility = delegator.findByPrimaryKey("Facility", [facilityId : facilityId]);
-	if (facility.facilityTypeId == 'ROUTE') {
-		points = [];
-		populateBoothPoints(facility, points);
-		points.each { point ->
-			geoPoints.add(point);
-		}	
-		geoLines.add(points);
-		geoRouteLabels.add(facilityId);
-Debug.log("geoLines="+geoLines,"");
-		  
-	}
-	else if (facility.facilityTypeId == 'ZONE') {
-		points = [];
-		lines = [];
-		childFacilities = delegator.findByAnd("Facility", [parentFacilityId : facility.facilityId]);
-		childFacilities.each { childFacility ->
-			routePoints = [];
-			populateBoothPoints(childFacility, routePoints);
-			routePoints.each { point ->
-				points.add(point);
-			}
-			lines.add(routePoints);
+
+if(parameters.facilityId){
+facilityIds.add(parameters.facilityId)
+}else{
+facilities = delegator.findList("Facility", EntityCondition.makeCondition("facilityTypeId" ,EntityOperator.EQUALS , "BRANCH_OFF"), null , null, null, false);
+facilityIds=facilities.facilityId;
+}
+	if (facilityIds) {
+		facilityIds.each{ facilityId->
+				if(facilityId){
+					facility = delegator.findByPrimaryKey("Facility", [facilityId : facilityId]);
+					if(facility){
+					if (facility.facilityTypeId == 'ROUTE') {
+						points = [];
+						populateBoothPoints(facility, points);
+						points.each { point ->
+							geoPoints.add(point);
+						}	
+						geoLines.add(points);
+						geoRouteLabels.add(facilityId);
+						Debug.log("geoLines="+geoLines,"");
+						  
+					}
+					else if (facility.facilityTypeId == 'ZONE') {
+						points = [];
+						lines = [];
+						childFacilities = delegator.findByAnd("Facility", [parentFacilityId : facility.facilityId]);
+						childFacilities.each { childFacility ->
+							routePoints = [];
+							populateBoothPoints(childFacility, routePoints);
+							routePoints.each { point ->
+								points.add(point);
+							}
+							lines.add(routePoints);
+						}
+						  geoPoints = points;
+						  geoLines = lines;
+					}
+					else if (facility.facilityTypeId == 'BRANCH_OFF') {
+						point = facility.getRelatedOne("GeoPoint");
+						if (point) {
+							geoPoint = [:];
+							geoPoint.lat = point.latitude;
+							geoPoint.lon = point.longitude;
+							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
+							geoPoint.shortName = "" + facility.facilityId;//facility.sequenceNum;
+							geoPoint.facilityId = facility.facilityId;
+							geoPoints.add(geoPoint);
+						}
+					}
+					else {
+						points = [];
+						populateBoothPoints(facility, points);
+						geoPoints = points;
+					}
+					}
+				}
 		}
-		  geoPoints = points;
-		  geoLines = lines;
-	}
-	else if (facility.facilityTypeId == 'BRANCH_OFF') {
-		point = facility.getRelatedOne("GeoPoint");
-		if (point) {
-			geoPoint = [:];
-			geoPoint.lat = point.latitude;
-			geoPoint.lon = point.longitude;
-			geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
-			geoPoint.shortName = "" + facility.facilityId;//facility.sequenceNum;
-			geoPoint.facilityId = facility.facilityId;
-			geoPoints.add(geoPoint);
-		}
-	}
-	else {
-		points = [];
-		populateBoothPoints(facility, points);
-		geoPoints = points;
-	}
 }
 else if (facilityGroupId) {
 	childFacilities = delegator.findByAnd("FacilityGroupMember", [facilityGroupId : facilityGroupId]);
