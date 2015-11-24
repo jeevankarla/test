@@ -562,7 +562,7 @@
     <request-map uri="processInventorySalesOrder">
     	<security https="true" auth="true"/>  
     	<event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processInventorySalesOrder"/>  	   	 	
-        <response name="success" type="request-redirect-noparam" value="FindSalesIndentPayment"/>  
+        <response name="success" type="request-redirect" value="FindSalesIndentPayment"/>  
         <response name="error" type="view" value="FindSalesIndentPayment"/>         
     </request-map>
     <request-map uri="DepotTransMaterialReceipts">
@@ -658,12 +658,12 @@
     <request-map uri="FindSalesIndentPayment">
       <security https="true" auth="true"/>
       <response name="success" type="view" value="FindSalesIndentPayment"/>   
-      <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+      <response name="error" type="view" value="FindSalesIndentPayment"/>  
 	</request-map>
 	<request-map uri="DepotSalesIndentIssuance">
       <security https="true" auth="true"/>
       <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
-      <response name="failed" type="view" value="DepotSalesIndentIssuance"/>  
+      <response name="error" type="view" value="DepotSalesIndentIssuance"/>  
 	</request-map>
 	
 	<request-map uri="createProducerPartyIdentification">
@@ -729,6 +729,26 @@
 	       <response name="success" type="view" value="SupplierDispatchEntry"/>
 	       <response name="error" type="view" value="SupplierDispatchEntry"/>
 	    </request-map>
+	    
+	    <request-map uri="processIndentItemIssuance">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="ProcessSalesItemIssuance.groovy"/>
+       <response name="success" type="view" value="DepotSalesIndentIssuance"/>
+       <response name="error" type="view" value="DepotSalesIndentIssuance"/> 
+       <!-- <response name="error" type="request" value="json"/> -->   
+    </request-map>
+    <request-map uri="createSalesIndentPayment">
+          <security https="true" auth="true"/>
+          <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
+          <response name="success" type="view" value="FindSalesIndentPayment"/>   
+         <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+      </request-map>
+      <request-map uri="realizeStatusForSalesIndent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="realizeStatus"/>
+        <response name="success" type="view" value="FindSalesIndentPayment"/>
+        <response name="error" type="view" value="FindSalesIndentPayment"/>
+    </request-map>
 	   
 	    
     <!-- View Mappings -->
@@ -820,8 +840,6 @@
     <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
-    
-    
     
      <view-map name="FindSupplierPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierPO"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>

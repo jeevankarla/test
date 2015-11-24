@@ -317,15 +317,19 @@ under the License.
               	<#if eachOrder.isCreditInstution?exists>
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
-              	
-              	
-                 <#if paymentSatusMap.get(orderPreferenceMap.get(eachOrder.orderId))?exists>
-                     <td>${"Payment Received"}</td>
+                  <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived")&&((paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED")>
+                 <td>Payment Received</td>
+              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>
-                
-                <td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.orderId}','${eachOrder.partyId}');"/></td>
+              	
+              	<#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              		<td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.orderId}','${eachOrder.partyId}');"/></td>
+              	<#else>
+              	<td></td>
+              	</#if>
               	
             </tr>
             <#-- toggle the row color -->

@@ -215,15 +215,19 @@
 	}
 	
 	
-	function showPaymentEntry(orderId, partyId,partyName,grandTotal) {
+	function showPaymentEntry(orderId, partyId,partyName,grandTotal, formActionVar) {
 		var message = "";
 		orderId = orderId;
 		partyId = partyId;
 		
 		grandTotal = grandTotal;
 		partyName= partyName;
+		var formAction = 'createOrderPayment';
+		if(formActionVar){
+			formAction = formActionVar;
+		}
 		
-		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		message += "<html><head></head><body><form action='"+formAction+"' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
 			
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
