@@ -955,7 +955,7 @@
      	      <form name="ProducerProfilePicture"  
      	    	    type="single"	header-row-style="header-row">
      	  		<actions>
-     	  		<!-- 	<script location="component://nhdc/applications/humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy" />  -->
+     	  		<script location="component://nhdc/applications/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ServeProfilePic.groovy" />
      	  		</actions>
      	  		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" 	width = "150"/></field>
 	      </form> 
