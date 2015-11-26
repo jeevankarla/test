@@ -1653,6 +1653,7 @@
 					<field-map field-name="viewSize" from-field="viewSize" />
 				</service>
 				<set field="payments" from-field="result.listIt" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/thirdPartyKit/payUbizResponse.groovy" />	
 			</actions>
 			<widgets>
 				<section>
