@@ -301,7 +301,7 @@ public class PayrollService {
 					Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 					
-					if(billingTypeId.equals("PAYROLL_BILL")){
+					/*if(billingTypeId.equals("PAYROLL_BILL")){
 			  	    	if(UtilValidate.isNotEmpty(customTimePeriodId)){
 			  	    		List billingConList = FastList.newInstance();
 				            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
@@ -319,7 +319,7 @@ public class PayrollService {
 								return result;
 				        	} 
 			  	    	}
-					}
+					}*/
 					
 					String customPayrollCalcService = "generatePayrollBillingInternal";
 					GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", periodBilling.getString("billingTypeId")), false);
