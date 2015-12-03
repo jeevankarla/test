@@ -10,6 +10,6 @@ function dateFormatType(){
 		jQuery("[name='periodTypeId']").after("<div class='groupLabel'>Date Ex: Jan 1 to Jan 31</div>");	
 	}else{
 		$(".groupLabel").remove(); 
-		jQuery("[name='periodTypeId']").after("<div class='groupLabel'>Date Ex: Jan 15 to Feb 14</div>"); 
+		jQuery("[name='periodTypeId']").after("<div class='groupLabel'>Date Ex: Jan 1 to Jan 31</div>"); 
 	}
 }
