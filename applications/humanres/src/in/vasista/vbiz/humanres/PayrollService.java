@@ -9187,14 +9187,14 @@ public class PayrollService {
     	String startDate = UtilDateTime.toDateString(fromDateStart, "dd");
     	String endDate = UtilDateTime.toDateString(fromDateEnd, "dd");
     	try {
-	    	if(periodTypeId.equals("ATTENDANCE_MONTH")){
+	    	/*if(periodTypeId.equals("ATTENDANCE_MONTH")){
 		    	if(!startDate.equals("15")){
 		    		return ServiceUtil.returnError("Please select fromDate from 15th.");
 		    	}
 	    		if(!endDate.equals("14")){
 	        		return ServiceUtil.returnError("Please select thruDate to 14th.");
 	        	}
-	    	}
+	    	}*/
 	    	if(UtilValidate.isNotEmpty(periodTypeId)){
     			Map getTimePeriodMap = FastMap.newInstance();
     			getTimePeriodMap.put("userLogin",userLogin);
