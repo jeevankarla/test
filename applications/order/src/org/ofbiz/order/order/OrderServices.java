@@ -7514,13 +7514,16 @@ public class OrderServices {
        String paymentFromId = (String) context.get("paymentFromId");
        String comments = (String) context.get("comments");
        String amountStr = (String) context.get("amount");
+       String issuingAuthority = (String) context.get("issuingAuthority");
+       String inFavourOf = (String) context.get("inFavourOf");
+       
        Timestamp eventDate = (Timestamp) context.get("eventDate");
        Locale locale = (Locale) context.get("locale");
        
        
-       
        BigDecimal amount =new BigDecimal(amountStr);
        if (UtilValidate.isEmpty(eventDate)) {
+    	   
            eventDate = UtilDateTime.nowTimestamp();
        }
        try {
@@ -7573,7 +7576,7 @@ public class OrderServices {
                paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
                paymentParams.put("amount", amount);
                paymentParams.put("statusId", "PMNT_RECEIVED");
-               paymentParams.put("effectiveDate", eventDate);
+               paymentParams.put("paymentDate", eventDate);
                paymentParams.put("partyIdFrom", paymentFromId);
                paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
                paymentParams.put("partyIdTo", payToPartyId);
@@ -7592,12 +7595,23 @@ public class OrderServices {
            if (paymentRefNum != null) {
                paymentParams.put("paymentRefNum", paymentRefNum);
            }
+           if (issuingAuthority != null) {
+               paymentParams.put("issuingAuthority", issuingAuthority);
+           }
            if (comments != null) {
                paymentParams.put("comments", comments);
            }
            paymentParams.put("userLogin", userLogin);
 
            Map<String, Object> paymentDetailsMap = dispatcher.runSync("createPayment", paymentParams);
+           
+           if (UtilValidate.isNotEmpty(paymentDetailsMap)) {
+        	   String paymentId = (String) paymentDetailsMap.get("paymentId");
+        	    GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+	  	        paymentAttribute.put("attrValue",inFavourOf);
+	  	        paymentAttribute.create();
+        	   
+           }
            
            Map<String, Object> result = ServiceUtil.returnSuccess("Payment of amount "+amount+" has been successfully received");
 
@@ -7611,11 +7625,5 @@ public class OrderServices {
            return(ServiceUtil.returnError(ex.getMessage()));
        }
    }
-   
-   
-   
 }
-
-
-
     
