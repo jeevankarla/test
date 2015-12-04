@@ -51,7 +51,9 @@
     </service>
     <service name="realizeStatus" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="realizeStatus">
         <description>Issue Products to Order</description>
-        <attribute name="paymentPreferenceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentPreferenceId" type="List" mode="IN" optional="false"/>
+        <attribute name="allStatus" type="List" mode="IN" optional="true"/>
+        <attribute name="paymentStatus" type="List" mode="IN" optional="true"/>
     </service>
 
 </services>

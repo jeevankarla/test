@@ -3,16 +3,21 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import net.sf.json.JSONObject;
+
 import javolution.util.FastList;
+
 import org.ofbiz.base.util.*;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -21,9 +26,6 @@ import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
 Map boothsPaymentsDetail = [:];
-
-
-
 
 salesChannel = parameters.salesChannelEnumId;
 searchOrderId = parameters.orderId;
@@ -121,7 +123,6 @@ partyIdsSet.each{partyId->
 		if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
 			arPartyOB=arOpeningBalanceRes.get("openingBalance");
 		}
-		//Debug.log("===============arPartyOB="+arPartyOB);
 		if(arPartyOB<0){
 		partyOBMap.put(partyId, arPartyOB *(-1));
 		}else{
@@ -131,10 +132,6 @@ partyIdsSet.each{partyId->
 		
 		
 }
-//Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
-
-
-
 
 
 finalFilteredList = []as LinkedHashSet;
@@ -177,6 +174,12 @@ for (eachOrderList in orderList) {
    orderPreferenceMap = [:];
    paymentSatusMap = [:];
    
+   
+   JSONObject eachPaymentOrderMap = new JSONObject();
+   
+   
+ //  eachPaymentOrderMap = [:];
+   
    for (eachList in finalFilteredList) {
 
 	   condtList = [];
@@ -187,32 +190,78 @@ for (eachOrderList in orderList) {
 	   
 	   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
 	   
-	  if(UtilValidate.isNotEmpty(orderPreferenceIds[0])){
+	  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 	   
 	   orderPreferenceMap.put(eachList.orderId, orderPreferenceIds[0]);
 	   conditonList = [];
-	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.EQUALS, orderPreferenceIds[0]));
+	   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
+	   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
 	   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+	   
 	   
 	   totAmount = 0;
 	   tempMap = [:];
 	   
+	   JSONObject allOrderPayments = new JSONObject();
+	   
+	   
+	 //  allOrderPayments = [:];
 	   
 	   if(UtilValidate.isNotEmpty(PaymentList)){
 	   
-	   /*for (eachpayment in PaymentList) {
-		   totAmount = totAmount+eachpayment.get("amount");
-		  }*/
-	   
-			tempMap.put("statusId", PaymentList[0].get("statusId"));
-			tempMap.put("amount", PaymentList[0].get("amount"));
-	   
+		   JSONArray orderPaymentList = new JSONArray();
+		   
+		     for (eachpayment in PaymentList) {
+				 
+			      totAmount = totAmount+eachpayment.get("amount");
+				 
+				  
+				  
+				  allOrderPayments.put("paymentPreferenceId",eachpayment.get("paymentPreferenceId"));
+				  allOrderPayments.put("amount",eachpayment.get("amount"));
+				  
+				  
+				  orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", eachpayment.get("paymentPreferenceId")), false);
+				  
+				  statusId  = orderPaymentPreferenceList.get("statusId");
+				  
+				  allOrderPayments.put("statusId",statusId);
+				  
+				  orderPaymentList.add(allOrderPayments);
+				  
+				  }
+			 
+		      PaymentStatusList = EntityUtil.getFieldListFromEntityList(PaymentList,"statusId", true);
+			  
+			  
+			  
+			  if(PaymentStatusList.contains("PMNT_CONFIRMED")){
+				  tempMap.put("statusId", "PMNT_CONFIRMED");
+			  }
+			  else{
+				  tempMap.put("statusId", "PMNT_RECEIVED");
+			  }
+			     tempMap.put("amount", totAmount);
+				 
+				 eachPaymentOrderMap.put(eachList.orderId, orderPaymentList);
+		   
 	   }else{
 			   tempMap = [:];
 			   tempMap.put("statusId", "NotReceived");
 			   tempMap.put("amount", 0);
 			   paymentSatusMap.put(eachList.orderId, tempMap);
+			   //allOrderPayments = [:];
+			   
+			   JSONObject allOrderPayments1 = new JSONObject();
+			   
+			   allOrderPayments1.put("paymentPreferenceId","empty");
+			   allOrderPayments1.put("amount",-1);
+			   allOrderPayments1.put("statusId","empty");
+			   
+			   //allOrderPayments.put("NoPreferenceId", "NillAmout");
+			   eachPaymentOrderMap.put(eachList.orderId, allOrderPayments1);
+			   
 	   }
 	   paymentSatusMap.put(eachList.orderId, tempMap);
 	  }
@@ -223,6 +272,16 @@ for (eachOrderList in orderList) {
 		  tempMap.put("amount", 0);
 		  paymentSatusMap.put(eachList.orderId, tempMap);
 		  
+		 /* allOrderPayments = [:];
+		  allOrderPayments.put("NoPreferenceId", "NillAmout");*/
+		  
+		  JSONObject allOrderPayments2 = new JSONObject();
+		  
+		  allOrderPayments2.put("paymentPreferenceId","empty");
+		  allOrderPayments2.put("amount",-1);
+		  allOrderPayments2.put("statusId","empty");
+		  
+		  eachPaymentOrderMap.put(eachList.orderId, allOrderPayments2);
 	  }
 }
    
@@ -231,6 +290,8 @@ for (eachOrderList in orderList) {
    cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
    PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
    
+   
+   context.eachPaymentOrderMap = eachPaymentOrderMap;
    context.PaymentMethodType = PaymentMethodType;
    context.orderPreferenceMap = orderPreferenceMap;
    context.paymentSatusMap = paymentSatusMap;

@@ -2315,17 +2315,32 @@ public class DepotSalesServices{
 	  	String partyId = (String) request.getParameter("partyId");
 	  	String paymentMethodTypeId = (String) request.getParameter("paymentTypeId");
 	  	String amount = (String) request.getParameter("amount");
+	  	String comments = (String) request.getParameter("comments");
+	  	String paymentRefNum = (String) request.getParameter("paymentRefNum");
+	  	String issuingAuthority = (String) request.getParameter("issuingAuthority");
+	  	String inFavourOf = (String) request.getParameter("inFavourOf");
 	  	
 	  	Map<String,Object> result= ServiceUtil.returnSuccess();
-	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId, "userLogin", userLogin);
+	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_RECEIVED", "userLogin", userLogin);
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
      
+	  	Timestamp eventDate = null;
+	      if (UtilValidate.isNotEmpty(paymentDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+				try {
+					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
+			}
 	     
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"userLogin", userLogin);
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	  	} catch (GenericServiceException e) {
 	         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
@@ -2669,13 +2684,24 @@ public class DepotSalesServices{
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();
    	    GenericValue userLogin = (GenericValue) context.get("userLogin");
-   	    String paymentPreferenceId = (String) context.get("paymentPreferenceId");
+   	    List orderPaymentPreferenceId = (List) context.get("paymentPreferenceId");
+     	List allStatus = (List) context.get("allStatus");
+     	
+     	List paymentStatus = (List) context.get("paymentStatus");
    	    Locale locale = (Locale) context.get("locale");     
    	    Map result = ServiceUtil.returnSuccess();
+   	    
+   	    
+   	 
+   	    Debug.log("orderPaymentPreferenceId=========="+orderPaymentPreferenceId);
+   	    Debug.log("allStatus=========="+allStatus);
+   	    
+   	 Debug.log("paymentStatus=========="+paymentStatus);
+   	    
    		try {
    	 
    			
-   			List conditionList = FastList.newInstance();
+   			/*List conditionList = FastList.newInstance();
    			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,paymentPreferenceId));
    			List<GenericValue> PaymentList = null;
    			try {
@@ -2690,17 +2716,108 @@ public class DepotSalesServices{
    				 if (ServiceUtil.isError(pmntResults)) {
    					 Debug.logError(pmntResults.toString(), module);
    					 return ServiceUtil.returnError(null, null, null, pmntResults);
-   				 }
+   				 }*/
+   		
+   			   for(int i=0;i<orderPaymentPreferenceId.size();i++){
+   		  
+   				   
+   				   
+   				   String prference = (String)orderPaymentPreferenceId.get(i);
+   				    
+   				   // String status = (String)allStatus.get(i);
+   				    
+   				   
+				    	String payStatus = (String)paymentStatus.get(i);
+
+   				    
+   				    if((allStatus.contains(String.valueOf(i)) == true)){
+   				    
+   				    	
+   				   if(!(prference.isEmpty()) && (allStatus.contains(String.valueOf(i)))){
+   				   
+						 try {
+							 GenericValue orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId.get(i)), false);
+					       
+						    
+							 if (UtilValidate.isNotEmpty(orderPaymentPreferenceList)) {
+				 				 
+								 if((payStatus.equals("PMNT_VOID"))){
+									 orderPaymentPreferenceList.set("statusId","PMNT_VOID");
+								 }
+								 else{
+								   orderPaymentPreferenceList.set("statusId","PMNT_CONFIRMED");
+								 }
+								 
+								 try {
+				 		        	orderPaymentPreferenceList.store();
+				 		        } catch (GenericEntityException e) {
+				 		            Debug.logError(e, module);
+				 		            return ServiceUtil.returnError(e.getMessage());
+				 		        }
+				 		        
+				 		        
+				 			 }
+							 
+							 
+							 Debug.log("orderPaymentPreferenceList===="+i+"========="+orderPaymentPreferenceList);
+						 
+						    } catch (GenericEntityException e) {
+					            Debug.logError(e, module);
+					            return ServiceUtil.returnError(e.getMessage());
+					        }
+	 		  
+   				   }//if
+   				   
+   				   
+					 Debug.log("prference===="+i+"========="+prference);
+					 
+					 Debug.log("allStatus===="+i+"========="+allStatus.contains(String.valueOf(i)));
+					 
+					 Debug.log("payStatus===="+i+"========="+payStatus.equals("PMNT_VOID"));
+					 
+   				   
+   				if( !(prference.isEmpty()) && (allStatus.contains(String.valueOf(i))) && (payStatus.equals("PMNT_VOID"))){
+   					
+   		   			List conditionList = FastList.newInstance();
+   		   			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,prference));
+   		   			List<GenericValue> PaymentList = null;
+   		   			try {
+   		   				
+   		   				PaymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+   		   			
+						 Debug.log("PaymentList===="+i+"========="+PaymentList);
+
+   		   				
+   		   				GenericValue PaymentFirstList = EntityUtil.getFirst(PaymentList);
+   		   				 String paymentId = (String)PaymentFirstList.get("paymentId");
+   		   				 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+   		   				 setPaymentStatusMap.put("paymentId", paymentId);
+   		   				 setPaymentStatusMap.put("statusId", "PMNT_VOID");
+   		   				 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+   		   				 if (ServiceUtil.isError(pmntResults)) {
+   		   					 Debug.logError(pmntResults.toString(), module);
+   		   					 return ServiceUtil.returnError(null, null, null, pmntResults);
+   		   				 }
+   		   		         } catch (GenericEntityException e) {
+				            Debug.logError(e, module);
+				            return ServiceUtil.returnError(e.getMessage());
+            		     }
+   					
+   				}
+   				   
+   				    }
+   				    
    				 
-   			} catch (GenericEntityException e) {
-   				Debug.logError(e, "Failed to retrive SchemeParty ", module);
-   				return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
-   			}
+   				
+   			   }//for
+   			  
+   			
    		
    		} catch (Exception e) {
    			Debug.logError(e, module);
    			return ServiceUtil.returnError(e.toString());
    		}
+   		
    	    result = ServiceUtil.returnSuccess("Successfully Changed Payment Status!!");
    	    return result;
    	}

@@ -1288,6 +1288,8 @@ under the License.
         <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
         <attribute name="amount" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+        <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
