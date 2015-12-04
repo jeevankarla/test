@@ -720,12 +720,12 @@ public class DepotPurchaseServices{
 					Debug.logError(e1, "Error in supplier product",module);
 					request.setAttribute("_ERROR_MESSAGE_", "Unable do create supplier product...! ");
 					return "error";
-				}
+				}*/
 				
-				if(UtilValidate.isNotEmpty(PONumber)){
+				if(UtilValidate.isNotEmpty(orderId)){
 				Map<String, Object> orderAssocMap = FastMap.newInstance();
 				orderAssocMap.put("orderId", result.get("orderId"));
-				orderAssocMap.put("toOrderId", PONumber);
+				orderAssocMap.put("toOrderId", orderId);
 				orderAssocMap.put("userLogin", userLogin);
 				result = createOrderAssoc(dctx,orderAssocMap);
 					if(ServiceUtil.isError(result)){
@@ -733,7 +733,7 @@ public class DepotPurchaseServices{
 						request.setAttribute("_ERROR_MESSAGE_", "Unable do Order Assoc...! "+ServiceUtil.getErrorMessage(result));
 						return "error";
 					}
-				}*/
+				}
 		
 		
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
@@ -1123,6 +1123,49 @@ public class DepotPurchaseServices{
 
 		}
 	   	
-
+		public static Map<String, Object> createOrderAssoc(DispatchContext ctx,Map<String, ? extends Object> context) {
+			Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			String orderId = (String) context.get("orderId");
+			String toOrderId = (String) context.get("toOrderId");
+			String orderAssocTypeId = "BackToBackOrder";
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+			try{
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", toOrderId), false);
+				if(UtilValidate.isEmpty(orderHeader)){
+					Debug.logError("Please Enter Valid PO Number", module);
+					return ServiceUtil.returnError("Please Enter Valid PO Number");
+				}
+				//orderAssocTypeId = orderHeader.getString("orderTypeId");
+				GenericValue orderAssoc = delegator.findOne("OrderAssoc", UtilMisc.toMap("orderId", orderId, "toOrderId", toOrderId, "orderAssocTypeId", orderAssocTypeId), false);
+				if(UtilValidate.isEmpty(orderAssoc)){
+					GenericValue newEntity = delegator.makeValue("OrderAssoc");
+					newEntity.set("orderId", orderId);
+					newEntity.set("toOrderId", toOrderId);
+					newEntity.set("orderAssocTypeId", orderAssocTypeId);
+					newEntity.create();
+				}else{
+					String oldOrderId = orderAssoc.getString("orderId");
+					String oldtoOrderId = orderAssoc.getString("toOrderId");
+					String oldorderAssocTypeId = orderAssoc.getString("orderAssocTypeId");
+					if(!oldOrderId.equals(orderId)){
+						orderAssoc.set("orderId",orderId);
+					}
+					if(!oldtoOrderId.equals(toOrderId)){
+						orderAssoc.set("toOrderId",toOrderId);
+					}
+					if(!oldorderAssocTypeId.equals(orderAssocTypeId)){
+						orderAssoc.set("orderAssocTypeId",orderAssocTypeId);
+					}
+					orderAssoc.store();
+				}
+			} catch(Exception e){
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+			result.put("orderId", orderId);
+			return result;
+		}
 	    
 }
