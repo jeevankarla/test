@@ -333,32 +333,25 @@
 	    var paymentList = eachPaymentOrderMap[orderId];
 		var message = "";
 		
-		message += "<html><head></head><body><form action='realizeStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
-        message += "<tr class='h3'><td align='left' class='h3' width='50%'>payment preference</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Current Status</td></tr>";          
-                  
-                  for (i = 0; i < paymentList.length; i++) {
-                  
-                     if((paymentList[i].statusId)=="PMNT_CONFIRMED"){
-                  
-                     message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Realized</td>:<td align='left' width='50%'></td></tr></tr>";
-			         
-			         }else{
-			         
-			         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Received</td>:<td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
-			         
-			         }
-			         
-			         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='paymentPreferenceId' value='"+paymentList[i].paymentPreferenceId+"'/></td></tr>";
-			
-			         }
-			         
-			         
-		//message +=  "<tr class='h3'><td align='left' class='h3' width='20%'>Are You Sure </td><td align='left' class='h3' width='20%'>Want to Change </td><td align='left' class='h3' width='20%'> Payment Status to Payment Realized. </td></tr>";
-			message += "<tr class='h3'><td align='left'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
+		message += "<html><head></head><body><form action='realizeStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
+        message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Current Status</td><td align='left' class='h3' width='50%'>Change Status To</td><td align='left' class='h3' width='50%'>Select Status</td></tr>";          
+      for (i = 0; i < paymentList.length; i++) {
+         if((paymentList[i].statusId)=="PMNT_CONFIRMED"){
+         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Realized</td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td></tr></tr>";
+         }
+         else if((paymentList[i].statusId)=="PMNT_VOID"){
+         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Cancelled</td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td></tr></tr>";
+         }
+         else{
+         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left'  width='60%'><font size=100%>Payment Received</font></td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+         }
+         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='paymentPreferenceId' value='"+paymentList[i].paymentPreferenceId+"'/></td></tr>";
+         }
+		   //message +=  "<tr class='h3'><td align='left' class='h3' width='20%'>Are You Sure </td><td align='left' class='h3' width='20%'>Want to Change </td><td align='left' class='h3' width='20%'> Payment Status to Payment Realized. </td></tr>";
+			message += "<tr class='h3'><td></td><td></td><td align='center'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
 					message +=	"</table></form></body></html>";
 		var title = "Indent Status";
 		Alert(message, title); 
-  
     }	
 	
 	

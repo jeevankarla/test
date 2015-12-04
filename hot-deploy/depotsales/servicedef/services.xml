@@ -53,6 +53,7 @@
         <description>Issue Products to Order</description>
         <attribute name="paymentPreferenceId" type="List" mode="IN" optional="false"/>
         <attribute name="allStatus" type="List" mode="IN" optional="true"/>
+        <attribute name="paymentStatus" type="List" mode="IN" optional="true"/>
     </service>
 
 </services>

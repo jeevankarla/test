@@ -749,8 +749,8 @@
       <request-map uri="realizeStatusForSalesIndent">
         <security https="true" auth="true"/>
         <event type="service" invoke="realizeStatus"/>
-        <response name="success" type="view" value="FindSalesIndentPayment"/>
-        <response name="error" type="view" value="FindSalesIndentPayment"/>
+        <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
     </request-map>
     <request-map uri="createWeaverContent">
         <security auth="true" https="true"/>

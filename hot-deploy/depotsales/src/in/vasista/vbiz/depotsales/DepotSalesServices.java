@@ -2686,11 +2686,17 @@ public class DepotSalesServices{
    	    GenericValue userLogin = (GenericValue) context.get("userLogin");
    	    List orderPaymentPreferenceId = (List) context.get("paymentPreferenceId");
      	List allStatus = (List) context.get("allStatus");
+     	
+     	List paymentStatus = (List) context.get("paymentStatus");
    	    Locale locale = (Locale) context.get("locale");     
    	    Map result = ServiceUtil.returnSuccess();
    	    
+   	    
+   	 
    	    Debug.log("orderPaymentPreferenceId=========="+orderPaymentPreferenceId);
    	    Debug.log("allStatus=========="+allStatus);
+   	    
+   	 Debug.log("paymentStatus=========="+paymentStatus);
    	    
    		try {
    	 
@@ -2715,11 +2721,19 @@ public class DepotSalesServices{
    			   for(int i=0;i<orderPaymentPreferenceId.size();i++){
    		  
    				   
-   				    String prference = (String)orderPaymentPreferenceId.get(i);
+   				   
+   				   String prference = (String)orderPaymentPreferenceId.get(i);
    				    
    				   // String status = (String)allStatus.get(i);
    				    
-   				   if( !(prference.isEmpty()) && (allStatus.contains(String.valueOf(i)))){
+   				   
+				    	String payStatus = (String)paymentStatus.get(i);
+
+   				    
+   				    if((allStatus.contains(String.valueOf(i)) == true)){
+   				    
+   				    	
+   				   if(!(prference.isEmpty()) && (allStatus.contains(String.valueOf(i)))){
    				   
 						 try {
 							 GenericValue orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId.get(i)), false);
@@ -2727,8 +2741,14 @@ public class DepotSalesServices{
 						    
 							 if (UtilValidate.isNotEmpty(orderPaymentPreferenceList)) {
 				 				 
-								 orderPaymentPreferenceList.set("statusId","PMNT_CONFIRMED");
-				 		        try {
+								 if((payStatus.equals("PMNT_VOID"))){
+									 orderPaymentPreferenceList.set("statusId","PMNT_VOID");
+								 }
+								 else{
+								   orderPaymentPreferenceList.set("statusId","PMNT_CONFIRMED");
+								 }
+								 
+								 try {
 				 		        	orderPaymentPreferenceList.store();
 				 		        } catch (GenericEntityException e) {
 				 		            Debug.logError(e, module);
@@ -2748,6 +2768,47 @@ public class DepotSalesServices{
 	 		  
    				   }//if
    				   
+   				   
+					 Debug.log("prference===="+i+"========="+prference);
+					 
+					 Debug.log("allStatus===="+i+"========="+allStatus.contains(String.valueOf(i)));
+					 
+					 Debug.log("payStatus===="+i+"========="+payStatus.equals("PMNT_VOID"));
+					 
+   				   
+   				if( !(prference.isEmpty()) && (allStatus.contains(String.valueOf(i))) && (payStatus.equals("PMNT_VOID"))){
+   					
+   		   			List conditionList = FastList.newInstance();
+   		   			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,prference));
+   		   			List<GenericValue> PaymentList = null;
+   		   			try {
+   		   				
+   		   				PaymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+   		   			
+						 Debug.log("PaymentList===="+i+"========="+PaymentList);
+
+   		   				
+   		   				GenericValue PaymentFirstList = EntityUtil.getFirst(PaymentList);
+   		   				 String paymentId = (String)PaymentFirstList.get("paymentId");
+   		   				 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+   		   				 setPaymentStatusMap.put("paymentId", paymentId);
+   		   				 setPaymentStatusMap.put("statusId", "PMNT_VOID");
+   		   				 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+   		   				 if (ServiceUtil.isError(pmntResults)) {
+   		   					 Debug.logError(pmntResults.toString(), module);
+   		   					 return ServiceUtil.returnError(null, null, null, pmntResults);
+   		   				 }
+   		   		         } catch (GenericEntityException e) {
+				            Debug.logError(e, module);
+				            return ServiceUtil.returnError(e.getMessage());
+            		     }
+   					
+   				}
+   				   
+   				    }
+   				    
+   				 
+   				
    			   }//for
    			  
    			

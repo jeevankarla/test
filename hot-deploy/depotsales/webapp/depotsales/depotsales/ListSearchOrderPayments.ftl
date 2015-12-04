@@ -265,8 +265,6 @@ under the License.
               	</#if>-->
               	
               	
-              	 <#assign balance = (paymentSatusMap.get(eachOrder.orderId).get("amount"))>
-              	
                  <#if !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}');"/></td>
               	 <#else>
@@ -282,6 +280,7 @@ under the License.
               	</#if> -->
                 
                
+               
                 <#if ((paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED") && !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
                  <td><input type="button" name="realize" id="realize" value="Payment Received" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
               	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
@@ -290,8 +289,10 @@ under the License.
               	<td>Payment Not Received</td>
               	</#if>  
                 
+                
+                
                 <#if paymentSatusMap.get(eachOrder.orderId).get("amount")!=0>
-              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")?if_exists}</td>
+              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")}</td>
               	 <#else>
               	 <td></td>
               	 </#if>
