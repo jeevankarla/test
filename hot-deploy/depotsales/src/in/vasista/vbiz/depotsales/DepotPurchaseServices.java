@@ -51,6 +51,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+import org.ofbiz.party.contact.ContactHelper;
+import java.util.Collection;
 
 
 public class DepotPurchaseServices{
@@ -588,6 +590,19 @@ public class DepotPurchaseServices{
 		String orderId = (String) request.getParameter("orderId");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		String effectiveDateStr = (String) request.getParameter("orderDate");
+		// contact Details
+		String city = (String) request.getParameter("city");
+		String address1 = (String) request.getParameter("address1");
+		String address2 = (String) request.getParameter("address2");
+		String country = (String) request.getParameter("country");
+		String postalCode = (String) request.getParameter("postalCode");
+		String stateProvinceGeoId = (String) request.getParameter("stateProvinceGeoId");
+		String contactMechId = null;
+
+		Map<String, Object> resultContatMap = FastMap.newInstance();
+		Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+
 		String orderTypeId="";
 		String orderName ="";
 		Timestamp effectiveDate = UtilDateTime.nowTimestamp();
@@ -735,7 +750,58 @@ public class DepotPurchaseServices{
 					}
 				}
 		
-		
+
+			try{
+				
+				if (UtilValidate.isNotEmpty(address1)){
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechId", contactMechId);
+					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
+					if (ServiceUtil.isError(resultContatMap)) {
+						Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
+		            }
+					contactMechId = (String) resultContatMap.get("contactMechId");
+					 
+					Object tempInput = "SHIPPING_LOCATION";
+					input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyId, "contactMechPurposeTypeId", tempInput);
+					resultContatMap =  dispatcher.runSync("createPartyContactMechPurpose", input);
+					if (ServiceUtil.isError(resultContatMap)) {
+					    Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
+		            }
+					partyId = (String) resultContatMap.get("partyId"); 
+				 }else{
+					 
+					 try {
+		                    GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+		                    Debug.log("orderParty========================"+orderParty);
+		                    Collection<GenericValue> shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+		                    Debug.log("shippingContactMechList========================"+shippingContactMechList);
+		                    if (UtilValidate.isNotEmpty(shippingContactMechList)) {
+		                        GenericValue shippingContactMech = (shippingContactMechList.iterator()).next();
+		                        contactMechId= shippingContactMech.getString("contactMechId");
+		                    }
+		                } catch (GenericEntityException e) {
+		                    Debug.logError(e, "Error setting shippingContactMechId in setDefaultCheckoutOptions() method.", module);
+		                }
+					 
+				 }
+				
+				
+				}catch (GenericServiceException e) {
+					Debug.logError(e, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Error while populating ShippingAddress: "+partyId);	  	 
+
+				} 
+				if(UtilValidate.isNotEmpty(contactMechId)){
+					try{
+		        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", FastMap.newInstance());
+		        OrderContactMech.set("orderId", result.get("orderId"));
+		        OrderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+		        OrderContactMech.set("contactMechId", contactMechId);
+            	delegator.createOrStore(OrderContactMech);
+					}catch (Exception ex) {
+						request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
+			        }
+				}
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
 		request.setAttribute("orderId", result.get("orderId")); 
 		return "success";
@@ -1093,7 +1159,7 @@ public class DepotPurchaseServices{
 				//update PurposeType
 				try{
 				GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-				orderHeaderPurpose.set("purposeTypeId", salesChannel);
+				orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
 				orderHeaderPurpose.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);

@@ -225,7 +225,7 @@
     
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
-        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
@@ -1129,7 +1129,7 @@
     
     <form name="FindDepotTransMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
-        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="shipmentTypeId"><hidden value="DEPOT_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
