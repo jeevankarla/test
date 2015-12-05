@@ -590,6 +590,7 @@ public class DepotPurchaseServices{
 		String orderId = (String) request.getParameter("orderId");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		String effectiveDateStr = (String) request.getParameter("orderDate");
+		String partyIdTo = (String) request.getParameter("partyId");
 		// contact Details
 		String city = (String) request.getParameter("city");
 		String address1 = (String) request.getParameter("address1");
@@ -689,6 +690,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("adjustmentDetail", adjustmentDetail);
 				processOrderContext.put("billFromPartyId", partyId);
 				processOrderContext.put("issueToDeptId", "");
+				processOrderContext.put("shipToPartyId", partyIdTo);
 				processOrderContext.put("supplyDate", effectiveDate);
 				processOrderContext.put("salesChannel", "MATERIAL_PUR_CHANNEL");
 				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
@@ -754,7 +756,7 @@ public class DepotPurchaseServices{
 			try{
 				
 				if (UtilValidate.isNotEmpty(address1)){
-					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechId", contactMechId);
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechId", contactMechId);
 					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
 					if (ServiceUtil.isError(resultContatMap)) {
 						Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
@@ -762,16 +764,16 @@ public class DepotPurchaseServices{
 					contactMechId = (String) resultContatMap.get("contactMechId");
 					 
 					Object tempInput = "SHIPPING_LOCATION";
-					input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyId, "contactMechPurposeTypeId", tempInput);
+					input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyIdTo, "contactMechPurposeTypeId", tempInput);
 					resultContatMap =  dispatcher.runSync("createPartyContactMechPurpose", input);
 					if (ServiceUtil.isError(resultContatMap)) {
 					    Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
 		            }
-					partyId = (String) resultContatMap.get("partyId"); 
+					partyIdTo = (String) resultContatMap.get("partyId"); 
 				 }else{
 					 
 					 try {
-		                    GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+		                    GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyIdTo));
 		                    Debug.log("orderParty========================"+orderParty);
 		                    Collection<GenericValue> shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
 		                    Debug.log("shippingContactMechList========================"+shippingContactMechList);
@@ -788,7 +790,7 @@ public class DepotPurchaseServices{
 				
 				}catch (GenericServiceException e) {
 					Debug.logError(e, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Error while populating ShippingAddress: "+partyId);	  	 
+					request.setAttribute("_ERROR_MESSAGE_", "Error while populating ShippingAddress: "+partyIdTo);	  	 
 
 				} 
 				if(UtilValidate.isNotEmpty(contactMechId)){
@@ -824,6 +826,7 @@ public class DepotPurchaseServices{
 		  	Map taxTermsMap = (Map) context.get("taxTermsMap");
 		  	String partyId = (String) context.get("partyId");
 		  	String billFromPartyId = (String) context.get("billFromPartyId");
+		  	String shipToPartyId = (String) context.get("shipToPartyId");
 			String issueToDeptId = (String) context.get("issueToDeptId");
 		  	List<Map> termsList = (List)context.get("termsList");
 		  	List<Map> otherChargesAdjustment = (List)context.get("adjustmentDetail");
@@ -868,7 +871,7 @@ public class DepotPurchaseServices{
 				cart.setChannelType(salesChannel);
 				cart.setBillToCustomerPartyId(billToPartyId);
 				cart.setPlacingCustomerPartyId(billToPartyId);
-				cart.setShipToCustomerPartyId(billToPartyId);
+				cart.setShipToCustomerPartyId(shipToPartyId);
 				cart.setEndUserCustomerPartyId(billToPartyId);
 				//cart.setShipmentId(shipmentId);
 				//for PurchaseOrder we have to use for SupplierId

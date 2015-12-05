@@ -181,7 +181,10 @@
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
 			var suplierPartyId = $("#suplierPartyId").val();
-			var orderTaxType = $("#orderTaxType").val();
+			var societyPartyId="";
+			 	societyPartyId = $("#societyPartyId").val();
+			var billingType = $("#billingType").val();
+			var  orderTaxType= $("#orderTaxType").val();
 			var poNumber = $("#PONumber").val();
 			var acctgFlag = $("#disableAcctgFlag").val();
 			var promoAdj = $("#promotionAdj").val();
@@ -189,10 +192,12 @@
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
+			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
 			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
+			var bilngType = jQuery("<input>").attr("type", "hidden").attr("name", "billingType").val(billingType);
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			<#if orderId?exists>
@@ -203,6 +208,8 @@
 			
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(suplierParty));
+			jQuery(formId).append(jQuery(societyParty));
+			jQuery(formId).append(jQuery(bilngType));
 			jQuery(formId).append(jQuery(POField));
 			jQuery(formId).append(jQuery(promoField));
 			jQuery(formId).append(jQuery(tax));

@@ -10,9 +10,11 @@
 	</style>
 	
 	<script type="text/javascript">
-			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
+			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};	
+			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
+			 $("#societyfield").hide();
 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
@@ -71,7 +73,11 @@
 					$('span#branchName').html('<label>'+ui.item.label+'</label>');
 				} });	
 		 });
-		 
+		  $('#societyPartyId').keypress(function (e) { 
+				$("#societyPartyId").autocomplete({ source: societyAutoJson , select: function( event, ui ) {
+					$('span#societyPartyName').html('<label>'+ui.item.label+'</label>');
+				} });	
+		 });
 			var productStoreObjOnload=$('#productStoreIdFrom');
 			if (productStoreObjOnload != null && productStoreObjOnload.val() != undefined ){
 				showStoreCatalog(productStoreObjOnload);
@@ -85,7 +91,11 @@
 		   partyName = partyNameObj[value];
 		   $("span#partyName").html('<label>'+partyName+'<label>');
 		}   
-		
+		 function addSocietyField(selection){
+			 if(selection.value=="onBehalfOf"){
+			 $("#societyfield").show();
+			 }
+		 }
 		
 		var globalCatgoryOptionList=[];
 		var catagoryList=[];
@@ -218,16 +228,16 @@
 	               		<td>&nbsp;</td>
 	               		
 	               		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
-		       			<#if orderTaxType?exists && orderTaxType?has_content>  
-			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${schemeCategory?if_exists}"/>  
+		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
+			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
-		            			<div class='tabletext h3'>${schemeCategory?if_exists}</div>
+		            			<div class='tabletext h3'>${parameters.schemeCategory?if_exists}</div>
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
 		          					<option value="MGPS">MGPS</option>
-		          					<option value="MGPS">General</option>
+		          					<option value="General">General</option>
 		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
 		          				</select>
 		          			</td>
@@ -343,14 +353,14 @@
 		       	  		<td>&nbsp;</td>
 		       	  		
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
-			   			<#if billingType?exists && billingType?has_content>  
-			  	  			<input type="hidden" name="billingType" id="billingType" value="${billingType?if_exists}"/>  
+			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
+			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
 			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${billingType?if_exists}</div>
+			        			<div class='tabletext h3'>${parameters.billingType?if_exists}</div>
 			      			</td>       	
 			   			<#else>      	         
 			      			<td valign='middle'>
-			      				<select name="billingType" id="billingType" class='h3' style="width:162px">
+			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
 			      					<option value="Direct"> Direct </option>
 			      					<option value="onBehalfOf"> On Behalf Of </option>
 			      				</select>
@@ -389,8 +399,82 @@
 			        	</#if>
 						
 	               	</tr>
-	               	
-	               	
+	             <#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
+					<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
+			   		     	         
+			      			<td valign='middle'>
+			      				
+			      			</td>
+			   		
+		       			<td>&nbsp;</td>
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
+				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if societyPartyId?exists && societyPartyId?has_content>  
+					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${societyPartyId} [ ${societyPartyName?if_exists} ] ${societyPartyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${parameters.societyPartyId.toUpperCase()}"/>  
+				          		<td valign='middle' colspan="2">
+				            		<div class='tabletext h3'>
+		            				 <#assign societyPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, parameters.societyPartyId, false)>
+ 				               			${societyPartyName?if_exists} [ ${parameters.societyPartyId?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				       		
+			        	</#if>
+						
+	               	</tr>
+
+					<#else>
+
+	               	  	<tr id='societyfield'>
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
+			   		     	         
+			      			<td valign='middle'>
+			      				
+			      			</td>
+			   		
+		       			<td>&nbsp;</td>
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
+				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if societyPartyId?exists && societyPartyId?has_content>  
+					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div class='tabletext h3'>
+				               			${societyPartyId} [ ${societyPartyName?if_exists} ] ${societyPartyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+						 	<#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
+					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${parameters.societyPartyId.toUpperCase()}"/>  
+				          		<td valign='middle' colspan="2">
+				            		<div class='tabletext h3'>
+				               			${parameters.societyPartyName?if_exists} [ ${parameters.societyPartyId?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				       		<#else>               
+				          		<td valign='middle'>
+				          			<input type="text" name="societyPartyId" id="societyPartyId" onblur= 'javascript:dispSuppName(this);' />
+				          		</td>
+				          		<td colspan="2"><span class="tooltip" id="societyPartyName"><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/></td></span></td>
+				          	</#if>
+			        	</#if>
+						
+	               	</tr>
+	               	</#if>
 	               	
 	               	
 	               	

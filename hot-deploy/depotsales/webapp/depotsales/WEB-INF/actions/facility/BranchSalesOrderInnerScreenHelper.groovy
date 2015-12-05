@@ -118,12 +118,17 @@
 		partyAddress = partyPostalAddress.address1;
 		context.partyAddress = partyAddress;
 	}
-	
 	prodList=[];
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
-	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
+	if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
+		catIds=["COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
+		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,catIds));
+	}else if(parameters.schemeCategory && "MGPS".equals(parameters.schemeCategory)){
+		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
+	}
+	
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);

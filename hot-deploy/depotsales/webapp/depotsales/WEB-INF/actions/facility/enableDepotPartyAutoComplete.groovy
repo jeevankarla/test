@@ -141,6 +141,24 @@ if(supplierList){
 	}
 }
 context.supplierJSON=supplierJSON;
+
+//societyParty  json.
+JSONArray societyJSON = new JSONArray();
+cond = [];
+cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.LIKE, "%SOCIETY%"));
+conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
+societyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
+if(societyList){
+	societyList.each{ society ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",society.partyId);
+		partyName=PartyHelper.getPartyName(delegator, society.partyId, false);
+		newObj.put("label",partyName+"["+society.partyId+"]");
+		societyJSON.add(newObj);
+	}
+}
+context.societyJSON=societyJSON;
+
 /*if(parameters.productStoreId){
 	request.setAttribute("partyJSON", partyJSON);
 	return "success";
