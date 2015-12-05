@@ -1829,7 +1829,7 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(productCategoriesList)){
 				schemeCategory = (String)productCategoriesList.get(0);
 	            if(productCategoryQuotasMap.containsKey(schemeCategory)){
-	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("quotaAvailableThisMonth");
+	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("availableQuota");
 	            }
 			}
 			
@@ -2116,9 +2116,6 @@ public class DepotSalesServices{
 	    	effectiveDate = UtilDateTime.nowTimestamp();
 	    }
 	    
-	    Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
-	    Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale);
-	    
 	    List conditionList = FastList.newInstance();
 	    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 	    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -2132,7 +2129,6 @@ public class DepotSalesServices{
 			Debug.logError(e, "Failed to retrive SchemeParty ", module);
 			return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
 		}
-		Debug.log("partyLooms =============="+partyLooms);
 	    // Scheme applicability for party can be based on partyId, PartyClassificationGroup or both.
 	    
 	    // Get All the schemes applicable for the party.
@@ -2168,13 +2164,83 @@ public class DepotSalesServices{
 		}
 		List partyGrpSchemeIds = EntityUtil.getFieldListFromEntityList(groupApplicableSchemes, "schemeId", true);
 		partySchemeIds.addAll(partyGrpSchemeIds);
-		Debug.log("partySchemeIds =============="+partySchemeIds);
 		
 		Set partySchemeIdsSet = new HashSet(partySchemeIds);
 		partySchemeIds = new ArrayList(partySchemeIdsSet);
 		
 		Map schemesMap = FastMap.newInstance();
 		
+		Timestamp periodBegin = null;
+		Timestamp periodEnd = null;
+		
+		/*List condList = FastList.newInstance();
+		condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
+		//condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+		condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,effectiveDate));
+		condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO,effectiveDate));
+		//EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		try {
+			Debug.log("condList =============="+condList);
+			List<GenericValue> customTimePeriod = delegator.findList("CustomTimePeriod", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+			
+			Debug.log("customTimePeriod =============="+customTimePeriod);
+			
+			GenericValue fiscalPeriod = EntityUtil.getFirst(customTimePeriod);
+			Debug.log("fiscalPeriod =============="+fiscalPeriod);
+			periodBegin = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fiscalPeriod.getDate("fromDate")));
+			periodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(fiscalPeriod.getDate("thruDate")));
+			
+			Debug.log("periodBegin =============="+periodBegin);
+			Debug.log("periodEnd =============="+periodEnd);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			ServiceUtil.returnError(e.toString());
+		}*/
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			Date date = dateFormat.parse("01/04/2015");
+			long time = date.getTime();
+			periodBegin = new Timestamp(time);
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: ", module);
+		} catch (NullPointerException e) {
+			Debug.logError(e, "Cannot parse date string: ", module);
+		}
+		
+		try {
+			Date endDate = dateFormat.parse("31/03/2016");
+			long endTime = endDate.getTime();
+			periodEnd = new Timestamp(endTime);
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: ", module);
+		} catch (NullPointerException e) {
+			Debug.logError(e, "Cannot parse date string: ", module);
+		}
+		
+		/*List condPeriodList = FastList.newInstance();
+		condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"FISCAL_YEAR"));
+		condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+		condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate));
+		condPeriodList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS ,"Company"));
+		EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
+		Debug.log("periodCond =============="+periodCond);
+		try {
+			
+			List<GenericValue> fiscalYearList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
+			Debug.log("fiscalYearList =============="+fiscalYearList);
+			
+			GenericValue fiscalPeriod = EntityUtil.getFirst(fiscalYearList);
+			Debug.log("fiscalPeriod =============="+fiscalPeriod);
+			periodBegin = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fiscalPeriod.getDate("fromDate")));
+			periodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(fiscalPeriod.getDate("thruDate")));
+			
+			Debug.log("periodBegin =============="+periodBegin);
+			Debug.log("periodEnd =============="+periodEnd);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive Fiscal Year for scheme calculation", module);
+			return ServiceUtil.returnError("Failed to retrive Fiscal Year for scheme calculation" + e);
+		}*/
 		
 		for(int i=0; i<partySchemeIds.size(); i++){
 			String schemeId = (String) partySchemeIds.get(i);
@@ -2217,77 +2283,107 @@ public class DepotSalesServices{
 				for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
 					GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
 					String productCategoryId = schemeProductCategory.getString("productCategoryId");
-					
-					// calculate the quota already used for the month and reduce it from the actual quota.
-					
-					// Get productCategoryMembers
-					List productIdsList = FastList.newInstance();
-					
-					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-					try {
-						List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
-						productIdsList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productId", true);
-					} catch (GenericEntityException e) {
-						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-					}
-					
-					
-					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-					conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
-					conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthStart));
-					conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthEnd));
-					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-					
-					List<GenericValue> orderHeaderAndRoles = null;
-					try {
-						orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-					} catch (GenericEntityException e) {
-						Debug.logError(e, "Failed to retrive OrderHeader ", module);
-						return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
-					}
-					
-					List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
-					
-					conditionList.clear();
-					if(UtilValidate.isNotEmpty(orderIds)){
-						conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-					}
-					if(UtilValidate.isNotEmpty(productIdsList)){
-						conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
-					}
-					
-					conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
-					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-					List<GenericValue> orderItemAndAdjustment = null;
-					try {
-						orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-					} catch (GenericEntityException e) {
-						Debug.logError(e, "Failed to retrive OrderHeader ", module);
-						return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
-					}
-					
-					BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
-					for(int k=0; k<orderItemAndAdjustment.size(); k++){
-						totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
-					}
-					
-					
+					Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
+				    Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale);
+				    
 					// Get relevant looms qty party possess and calculate quota
 					List catPartyLooms = EntityUtil.filterByCondition(partyLooms, EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
 					
 					if(UtilValidate.isNotEmpty(catPartyLooms)){
+						
+						BigDecimal periodTime = BigDecimal.ONE;
+						if( UtilValidate.isNotEmpty(schemeProductCategory.get("periodTime")) ){
+							periodTime = (BigDecimal)schemeProductCategory.get("periodTime");
+						}
+						if(periodTime.compareTo(BigDecimal.ONE)>0){
+							// get current period
+							
+							Timestamp periodMonthStart = periodBegin;
+							Timestamp periodMonthEnd = null;
+							int periodCount = 12/(periodTime.intValue());
+							for(int k=0; k<periodCount; k++){
+								Timestamp tempMonthStart = UtilDateTime.getMonthStart(periodMonthStart, 0, (periodTime.intValue() - 1));
+								periodMonthEnd = UtilDateTime.getMonthEnd(tempMonthStart, timeZone, locale);
+								if(periodMonthEnd.compareTo(effectiveDate) < 0){
+									periodMonthStart = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(periodMonthEnd, 1));
+								}
+								else{
+									if( (periodMonthStart.compareTo(effectiveDate) ) <= 0  ){
+										break;
+									}
+								}
+							}
+							monthStart = periodMonthStart;
+							if(UtilValidate.isNotEmpty(periodMonthEnd)){
+								monthEnd = periodMonthEnd;
+							}
+							
+						}
+						
+						// calculate the quota already used for the month and reduce it from the actual quota.
+						
+						// Get productCategoryMembers
+						List productIdsList = FastList.newInstance();
+						
+						conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+						try {
+							List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+							productIdsList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productId", true);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+						}
+						
+						conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+						conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+						conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthStart));
+						conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthEnd));
+						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+						
+						List<GenericValue> orderHeaderAndRoles = null;
+						try {
+							orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive OrderHeader ", module);
+							return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+						}
+						
+						List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
+						conditionList.clear();
+						if(UtilValidate.isNotEmpty(orderIds)){
+							conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+						}
+						if(UtilValidate.isNotEmpty(productIdsList)){
+							conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+						}
+						
+						conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+						List<GenericValue> orderItemAndAdjustment = null;
+						try {
+							orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive OrderHeader ", module);
+							return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+						}
+						BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
+						for(int k=0; k<orderItemAndAdjustment.size(); k++){
+							totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
+						}
+						Debug.log("totalQuotaUsedUp =============="+totalQuotaUsedUp);
 						Map productCategoryQuotaMap = FastMap.newInstance();
 						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
 						productCategoryQuotaMap.put("quotaPerMonth",((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity"))) );
 						productCategoryQuotaMap.put("quotaAvailableThisMonth", (((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")))).subtract(totalQuotaUsedUp) );
+						productCategoryQuotaMap.put("availableQuota", (   (((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")))).multiply(periodTime)    ).subtract(totalQuotaUsedUp) );
 						productCategoryQuotaMap.put("categoryQuota", (BigDecimal)schemeProductCategory.get("maxQty"));
 						productCategoryQuotaMap.put("looms",  (BigDecimal)((GenericValue)catPartyLooms.get(0)).get("quantity"));
+						
 						// Add logic to calculate quota already used for the period
 						Map tempCatMap = FastMap.newInstance();
 						tempCatMap.putAll(productCategoryQuotaMap);

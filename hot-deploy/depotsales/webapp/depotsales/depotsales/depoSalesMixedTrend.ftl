@@ -115,24 +115,25 @@ $(document).ready(function(){
 	  <form name="byproductsAnalysis">
 		<table class="basic-table" cellspacing="0">
 			<tr>
+				<#--
 			   <td align="right" width="10%"><span class='h3'>Party Id: </span></td>
 				<td  align="left" width="10%"><@htmlTemplate.lookupField value='${partyId?if_exists}' formName="byproductsAnalysis" name="partyId" id="partyId" fieldFormName="LookupPerson"/></td>
-				<#--
+				
         		<td align="right" width="10%"><span class='h3'>Retailer/Route: </span></td>
             	<td align="left" width="10%"><@htmlTemplate.lookupField value="${facilityId?if_exists}" formName="byproductsAnalysis" name="facilityId" id="facilityId" fieldFormName="LookupFacility"/></td>
 				-->
-				<td width="10%"><span class='h3'>Product: </span></td>
+				<td align="right" width="10%"><span class='h3'>Product: </span></td>
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 				<td width="10%"><span class='h3'>Product Category: </span></td>
 				<td align="left" width="10%">
 					<select name="productCategoryId" class='h4'><option value='allProducts'>All Categories</option>
-  	    				<option value='Butter'>Butter</option>
-  	    				<option value='ButterMilk'>Butter Milk</option>
-  	    				<option value='Curd'>Curd</option>
-  	    				<option value='Ghee'>Ghee</option>
-  	    				<option value='Milk'>Milk</option>
-  	    				<option value='Paneer'>Paneer</option>
-  	    				<option value='Other Products'>Other</option>
+  	    				<option value='CONE_REGULAR'>Cotton Cone</option>
+  	    				<option value='HANK_CROSS_REEL'>Cotton Hank Cross Reel</option>
+  	    				<option value='HANK_PLAIN_REEL'>Cotton Hank Plain Reel</option>
+  	    				<option value='HANK_ORGANIC'>Cotton Organic</option>
+  	    				<option value='HANK_SILK'>Silk Hank</option>
+  	    				<option value='HANK_WOOL'>Wook Hank</option>
+  	    				<option value='HANK_JUTE'>Jute Hank</option>
 					</select>
 				</td>
 				<td align="right" width="10%"><span class='h3'></span></td>
@@ -156,7 +157,7 @@ $(document).ready(function(){
   	    				<option value='ADHOC'>COUNTER SALE</option>
 					</select>
 				</td>
-				-->
+				
 				<td align="right" width="10%"><span class='h3'>Category: </span></td>
 				<td width="15%">
 					<select name="roleTypeId" id="roleTypeId" class='h3'>
@@ -166,6 +167,7 @@ $(document).ready(function(){
 		                </#list>            
 					</select>
 			    </td>
+			    -->
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
     	</table> 
