@@ -242,7 +242,7 @@ under the License.
 				</#if>
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
               	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-				<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.orderDate?if_exists}');"/></td>
+				<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}');"/></td>
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>

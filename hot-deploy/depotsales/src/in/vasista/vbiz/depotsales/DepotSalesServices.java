@@ -1203,6 +1203,12 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		//String productStoreId = "STORE";
 		String orderTaxType = (String) request.getParameter("orderTaxType");
+		String billingType = (String) request.getParameter("billingType");
+		String schemePartyId=partyId;
+		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+			 partyId = (String) request.getParameter("societyPartyId");
+			 
+		}
 		String orderId = (String) request.getParameter("orderId");
 		String PONumber = (String) request.getParameter("PONumber");
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
@@ -1484,6 +1490,7 @@ public class DepotSalesServices{
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("schemePartyId", schemePartyId);
 		processOrderContext.put("supplierPartyId", supplierPartyId);
 		processOrderContext.put("billToCustomer", billToCustomer);
 		processOrderContext.put("productIds", productIds);
@@ -1553,6 +1560,7 @@ public class DepotSalesServices{
 	  	List productIds = (List) context.get("productIds");
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyId = (String) context.get("partyId");
+	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
 	  	String orderId = (String) context.get("orderId");
 	  	String PONumber = (String) context.get("PONumber");
@@ -1650,7 +1658,7 @@ public class DepotSalesServices{
 		
 		Map schemesMap = FastMap.newInstance();
 		Map schemeCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		schemeCtx.put("partyId", partyId);
+		schemeCtx.put("partyId", schemePartyId);
 	  	try{
 	  		Map resultCtx = dispatcher.runSync("getPartySchemeEligibility",schemeCtx); 
 	  		schemesMap = (Map) resultCtx.get("schemesMap");

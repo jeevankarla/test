@@ -895,7 +895,7 @@
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
-					<field-map field-name="inputFields.shipmentTypeId" value="MATERIAL_SHIPMENT" />
+ 					<field-map field-name="inputFields.shipmentTypeId" value="BRANCH_SHIPMENT" />
 					<field-map field-name="entityName" value="Shipment" />
 					<field-map field-name="orderBy" value="-estimatedShipDate" />
 					<field-map field-name="viewIndex" from-field="viewIndex" />
@@ -3477,7 +3477,7 @@
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
-					<field-map field-name="inputFields.shipmentTypeId" value="MATERIAL_SHIPMENT" />
+ 					<field-map field-name="inputFields.shipmentTypeId" value="DEPOT_SHIPMENT" />
 					<field-map field-name="entityName" value="Shipment" />
 					<field-map field-name="orderBy" value="-estimatedShipDate" />
 					<field-map field-name="viewIndex" from-field="viewIndex" />
