@@ -20,6 +20,7 @@
 	import in.vasista.vbiz.purchase.MaterialHelperServices;
 	
 	
+	
 	if(parameters.boothId){
 		parameters.boothId = parameters.boothId.toUpperCase();
 	}
@@ -118,6 +119,7 @@
 		partyAddress = partyPostalAddress.address1;
 		context.partyAddress = partyAddress;
 	}
+	
 	prodList=[];
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
@@ -287,3 +289,42 @@
 	context.orderAdjItemsJSON = orderAdjItemsJSON;
 	context.orderAdjLabelJSON = orderAdjLabelJSON;
 	context.orderAdjLabelIdJSON = orderAdjLabelIdJSON;
+	
+	
+	
+	//Quotas handling
+	
+	resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+	schemesMap = resultCtx.get("schemesMap");
+	
+	productCategoryQuotasMap = [:];
+	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+	}
+	
+	// Get Scheme Categories
+	schemeCategoryIds = [];
+	productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+	schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+
+	condsList = [];
+	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+		  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+	  
+	  prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);
+	  //productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+	  JSONObject productQuotaJSON=new JSONObject();
+	  for(int i=0; i<prodCategoryMembers.size(); i++){
+		  schemeProdId = (prodCategoryMembers.get(i)).get("productId");
+		  schemeCatId = (prodCategoryMembers.get(i)).get("productCategoryId");
+		  if(productCategoryQuotasMap.containsKey(schemeCatId)){
+			  quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			  productQuotaJSON.put(schemeProdId, quota);
+		  }
+	  }
+	  context.productQuotaJSON = productQuotaJSON;
+	
+	

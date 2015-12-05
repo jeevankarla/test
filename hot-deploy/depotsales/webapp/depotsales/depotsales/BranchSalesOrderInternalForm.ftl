@@ -87,6 +87,7 @@
 	var grid2;
 	var withAdjColumns;
 	
+	var productQuotaJSON = ${StringUtil.wrapString(productQuotaJSON)!'{}'};
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
@@ -573,9 +574,16 @@
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
+				
+				quota = parseFloat(productQuotaJSON[prod]);
+				if(isNaN(quota)){
+					quota = 0;
+				}
+				
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
 				data[args.row]["amount"] = roundedAmount;
+				data[args.row]["quota"] = quota;
 				grid.updateRow(args.row);
 				var totalAmount = 0;
 				var totalCrates = 0;

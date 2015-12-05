@@ -156,7 +156,8 @@ under the License.
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="WOOLYARN_BELOW10NM" productCategoryId="WOOLYARN_BELOW10NM" description="Wool Yarn Below 10NM Scheme"/> 
      
      	
-    	
+    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="10.000000" productCategoryId="COTTON_40ABOVE" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="3" periodTimeUomId="TF_mon"/> 	
+    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="30.000000" productCategoryId="COTTON_UPTO40" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="2" periodTimeUomId="TF_mon"/> 	
     
     
     
