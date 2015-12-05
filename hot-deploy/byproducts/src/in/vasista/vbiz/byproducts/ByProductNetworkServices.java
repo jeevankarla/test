@@ -16,6 +16,8 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.Enumeration;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,6 +73,7 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.accounting.invoice.InvoiceServices;
 
+import com.ibm.icu.text.Transliterator;
 
 
 
@@ -11778,6 +11781,157 @@ public class ByProductNetworkServices {
 		return result;
 		
 	}
+	
+	
+	public static Map<String, Object> icu4JTrans(DispatchContext dctx, Map<String, Object> context) {
+		Map<String, Object> result =ServiceUtil.returnSuccess();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Enumeration<String> availableIDs = Transliterator.getAvailableIDs();
+		List transStr = FastList.newInstance();
+		Map translateMap = (Map) context.get("translateMap");
+		List translateList = (List) context.get("translateList");
+		
+		
+		Debug.log("translateList========"+translateList);
+		
+		Map finalMap = FastMap.newInstance();
+		Map finalList = FastMap.newInstance();
+
+		if (!(UtilValidate.isEmpty(translateMap))) {
+			finalMap = mapConvertion(dctx,translateMap);
+		}
+
+		if (!(UtilValidate.isEmpty(translateList))) {
+			finalList = listConvertion(dctx,translateList);
+		}
+		List finalResultList = (List)finalList.get("finalList");
+		
+		result.put("translateMap", finalMap);
+		result.put("translateList", finalResultList);
+
+		return result;
+	}
+	
+	public static Map<String, Object> convertToIndicScriptTest(DispatchContext dctx, Map<String, Object> context) {
+		Map<String, Object> result =ServiceUtil.returnSuccess();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Enumeration<String> availableIDs = Transliterator.getAvailableIDs();
+		List transStr = FastList.newInstance();
+		
+		String enString1 = "milkosofT";
+		/*Transliterator enToDevanagari = Transliterator.getInstance(id);
+		Transliterator enToGurmukhi = Transliterator.getInstance("Any-Gurmukhi");
+		Transliterator enToTelugu = Transliterator.getInstance("Any-Telugu");*/
+		try{
+		String devanagari =  (String)(dispatcher.runSync("convertToIndicScript", UtilMisc.toMap( "messageStr",enString1 ,"toScript","devanagari"))).get("result"); //enToDevanagari.transliterate(enString);
+		
+		//String hindi =  (String)(dispatcher.runSync("convertToIndicScript", UtilMisc.toMap( "messageStr",enString1 ,"toScript","hindi"))).get("result"); //enToDevanagari.transliterate(enString);
+				
+		Debug.log("devanagari============"+devanagari);
+		
+		transStr.add("English1 :" + enString1);
+		transStr.add("Devanagari ::" +devanagari);
+		//transStr.add("Devanagari1 ::" +devanagari1);
+		//transStr.add("Gurmukhi ::" +gurmukhi);
+		//transStr.add("hindi ::" +hindi);
+		result.put("transStr", transStr);
+	}catch(Exception e){
+		
+	}
+		return result;
+	}
+	
+	private static Map<String, Object> mapConvertion (DispatchContext dctx, Map translateMap) {
+        
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Enumeration<String> availableIDs = Transliterator.getAvailableIDs();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Transliterator enToDevanagari = Transliterator.getInstance("Any-Devanagari");
+		Map finalMap = FastMap.newInstance();
+		
+		if (!(UtilValidate.isEmpty(translateMap))) {
+			Iterator invIter = translateMap.entrySet().iterator();
+			
+			while (invIter.hasNext()) {
+
+				Map.Entry tempEntry = (Entry) invIter.next();
+				String key = (String) tempEntry.getKey();
+				
+				
+				String value = "";
+				if (!(UtilValidate.isEmpty(tempEntry.getValue()))) {
+					value = (String) (tempEntry.getValue().toString());
+				}
+				
+				String devanagariStr = "";
+				Map tmpMap = FastMap.newInstance();
+				
+				if(!(UtilValidate.isEmpty(value))){
+					if (((tempEntry.getValue()) instanceof Map)) {
+						FastMap ineerTempMap = FastMap.newInstance();
+						Map tempMap = (Map)tempEntry.getValue();
+						tmpMap.put(key, mapConvertion(dctx,tempMap));
+						
+					}else if (((tempEntry.getValue()) instanceof List)) {
+						List tempList = (List)tempEntry.getValue();
+						tmpMap.put(key, listConvertion(dctx,tempList));
+					}else{
+						if (!(UtilValidate.isEmpty(value))) {
+							value = "A_" + value;
+							try{
+								devanagariStr =  (String)(dispatcher.runSync("convertToIndicScript", UtilMisc.toMap( "messageStr",value ,"toScript","devanagari"))).get("result"); //enToDevanagari.transliterate(enString);
+							}catch(Exception e){
+								
+							}
+							//devanagariStr = enToDevanagari.transliterate(value);
+							devanagariStr = devanagariStr.substring(2,(devanagariStr.length()));
+							tmpMap.put(key, devanagariStr);
+						}
+					}
+				}else{
+					tmpMap.put(key, value);
+				}
+				finalMap.putAll(tmpMap);
+			}
+		}
+		
+		return finalMap;
+    }
+	
+	private static Map listConvertion (DispatchContext dctx, List translateList) {
+        
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Enumeration<String> availableIDs = Transliterator.getAvailableIDs();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Transliterator enToDevanagari = Transliterator.getInstance("Any-Devanagari");
+		List finalList = FastList.newInstance();
+		
+		if (!(UtilValidate.isEmpty(translateList))) {
+			
+			for(int i=0; i<translateList.size(); i++ ){
+				
+				if( ( translateList.get(i) )  instanceof Map ){
+					Map tempMap = (Map) translateList.get(i);
+					finalList.add(mapConvertion(dctx,tempMap));
+					
+				}else{
+					String value = (String) translateList.get(i);
+
+					value = "A_" + value;
+					String devanagariStr = "";
+					try{
+						devanagariStr =  (String)(dispatcher.runSync("convertToIndicScript", UtilMisc.toMap( "messageStr",value ,"toScript","devanagari"))).get("result"); //enToDevanagari.transliterate(enString);
+					}catch(Exception e){
+					}
+					//String devanagariStr = enToDevanagari.transliterate(value);
+					devanagariStr = devanagariStr.substring(2,(devanagariStr.length()));
+					finalList.add(devanagariStr);
+				}
+			}
+		}
+		result.put("finalList",finalList);
+		return result;
+    }
 	
 	
 }

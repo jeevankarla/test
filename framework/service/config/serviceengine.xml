@@ -48,7 +48,7 @@ under the License.
         <engine name="interface" class="org.ofbiz.service.engine.InterfaceEngine"/>
         <engine name="jacl" class="org.ofbiz.service.engine.BSFEngine"/>
         <engine name="java" class="org.ofbiz.service.engine.StandardJavaEngine"/>
-        <engine name="javascript" class="org.ofbiz.service.engine.BSFEngine"/>
+        <engine name="javascript" class="org.ofbiz.service.engine.ScriptEngine"/>
         <engine name="jms" class="org.ofbiz.service.jms.JmsServiceEngine"/>
         <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/>
         <engine name="route" class="org.ofbiz.service.engine.RouteEngine"/>
