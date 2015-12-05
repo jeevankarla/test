@@ -16,4 +16,13 @@
         <value xml:lang="en">You are not allowed to view this page.</value>
         <value xml:lang="zh">不允许你浏览这个页面。</value>
     </property>
+     <property key="nhdcTitle">
+        <value xml:lang="en">NHDC</value>
+        <value xml:lang="hi_IN">नेशनल हैण्डलूम डेवलपमेन्ट कारपोरेशन लिमिटेड </value>
+    </property>
+     <property key="nhdcAddress">
+        <value xml:lang="en">NHDC Address</value>
+        <value xml:lang="hi_IN">10 वीं और 11 वीं मंजिलों , विकास दीप, 22 स्टेशन रोड, लखनऊ -226 001</value>
+    </property>
+    
 </resource>

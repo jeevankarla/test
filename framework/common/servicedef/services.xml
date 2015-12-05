@@ -803,6 +803,13 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+     <service name="convertToIndicScript" engine="javascript" auth="false"
+        location="component://common/script/org/ofbiz/common/Sanscript.js" invoke="convertToIndicScript">
+        <description>Test JavaScript Service</description>
+        <attribute name="messageStr" type="String" mode="IN" optional="false"/>
+        <attribute name="toScript" type="String" mode="IN" optional="false"/>
+        <attribute name="result" type="String" mode="OUT" optional="true"/>
+    </service>
     <service name="fetchDowntimeMessageStatus" engine="simple" location="component://common/script/org/ofbiz/common/CommonServices.xml" auth="false" invoke="fetchDowntimeMessageStatus">
         <description>Update a PeriodBilling</description>
         <attribute name="statusFlag" mode="OUT" type="String"/>
