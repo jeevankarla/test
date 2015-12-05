@@ -52,7 +52,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	}
 	orderInfoDetail.putAt("estimatedDeliveryDate", estDeliveryDate);
 	orderInfoDetail.putAt("PONumber", orderHeader.externalId);
-	
+	orderInfoDetail.putAt("productStoreId", orderHeader.productStoreId);
 	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	
 	fileNo = "";
@@ -94,6 +94,12 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		vendOrderRole=EntityUtil.filterByCondition(orderRoles,vendorCond);
 		vendorRole=EntityUtil.getFirst(vendOrderRole);
 		orderInfoDetail.putAt("billToPartyId", vendorRole.partyId);
+		
+		shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SHIP_TO_CUSTOMER")],EntityOperator.AND);
+		shipToPartyRole=EntityUtil.filterByCondition(orderRoles,vendorCond);
+		shipToParty=EntityUtil.getFirst(shipToPartyRole);
+		orderInfoDetail.putAt("shipToPartyId", shipToParty.partyId);
+		
 	}
 	/*condList=[];
 	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));

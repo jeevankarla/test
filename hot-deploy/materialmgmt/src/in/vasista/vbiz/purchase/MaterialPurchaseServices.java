@@ -1376,8 +1376,9 @@ public class MaterialPurchaseServices {
 		}
 		
 		//getting productStoreId 
-		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
-	 
+		//String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
+		String productStoreId = (String) request.getParameter("productStoreId");
+	    
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", itemDetail);
 		processOrderContext.put("orderTypeId", orderTypeId);
