@@ -762,11 +762,7 @@
          <response name="success" type="view" value="minutesPDFreport"/>
 	     <response name="error" type="view" value="minutesPDFreport"/>
     </request-map>
-    <request-map uri="getCountryStateList">
-         <security https="true" auth="true"/>
-       <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
-       <response name="success" type="request" value="json"/>  
-    </request-map>
+    
         
     <!-- View Mappings -->
      <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
