@@ -105,6 +105,7 @@ public class MaterialPurchaseServices {
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		String shipmentId ="";
 		String receiptId="";
+		String purposeTypeId="";
 		GenericValue shipmentReceipt=null;
 		
 		if (UtilValidate.isEmpty(orderId) && UtilValidate.isEmpty(withoutPO)) {
@@ -193,6 +194,7 @@ public class MaterialPurchaseServices {
 				
 				String statusId = orderHeader.getString("statusId");
 				String orderTypeId = orderHeader.getString("orderTypeId");
+				purposeTypeId = orderHeader.getString("purposeTypeId");
 				if(statusId.equals("ORDER_CANCELLED")){
 					Debug.logError("Cannot create GRN for cancelled orders : "+orderId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Cannot create GRN for cancelled orders : "+orderId);	
@@ -265,7 +267,11 @@ public class MaterialPurchaseServices {
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
 	        newEntity.set("estimatedShipDate", receiptDate);
-	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
+	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
+		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+	        }else{
+	        newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        }
 	        newEntity.set("statusId", "GENERATED");
 	        newEntity.put("vehicleId",vehicleId);
 	        newEntity.put("lrNumber",lrNumber);
@@ -3338,33 +3344,79 @@ public class MaterialPurchaseServices {
 			List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 			if(UtilValidate.isNotEmpty(shipmentReceipts)){
 				for(GenericValue receipt:shipmentReceipts){
-					Map inputMap = FastMap.newInstance();
-		        	inputMap.put("userLogin", userLogin);
-		        	inputMap.put("partyId", partyId);
-		        	inputMap.put("statusIdTo", statusId);
-		        	inputMap.put("receiptId", receipt.get("receiptId"));
+		        	GenericValue shipmentValue = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+					String shipmentTypeId=shipmentValue.getString("shipmentTypeId");
+					if(UtilValidate.isNotEmpty(shipmentTypeId)){
+						if( !shipmentTypeId.equals("BRANCH_SHIPMENT")){
+							Map inputMap = FastMap.newInstance();
+				        	inputMap.put("userLogin", userLogin);
+				        	inputMap.put("partyId", partyId);
+				        	inputMap.put("statusIdTo", statusId);
+				        	inputMap.put("receiptId", receipt.get("receiptId"));
 
-		        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
-		        	if(ServiceUtil.isError(resultReceipt)){
-		        		Debug.logError("Error While Sending Receipt to QC", module);
-		  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
-		        	}
-		        	//send QC in same time
-		        	inputMap.clear();
-		        	resultReceipt.clear();
-					
-					inputMap.put("statusIdTo","SR_ACCEPTED");
-					inputMap.put("receiptId",receipt.get("receiptId"));
-					inputMap.put("shipmentId",shipmentId);
-					inputMap.put("shipmentItemSeqId",receipt.get("shipmentItemSeqId") );
-					inputMap.put("quantityAccepted",receipt.get("quantityAccepted"));
-					inputMap.put("userLogin",userLogin);
-					resultReceipt = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
-					
-					if (ServiceUtil.isError(resultReceipt)) {
-						Debug.logError("Error While Accepting ", module);
-		  	  			return ServiceUtil.returnError("Error While  While Accepting"+receipt.get("receiptId"));
-		            }
+				        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
+				        	if(ServiceUtil.isError(resultReceipt)){
+				        		Debug.logError("Error While Sending Receipt to QC", module);
+				  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
+				        	}
+			        	//send QC in same time
+			        	inputMap.clear();
+			        	resultReceipt.clear();
+						
+						inputMap.put("statusIdTo","SR_ACCEPTED");
+						inputMap.put("receiptId",receipt.get("receiptId"));
+						inputMap.put("shipmentId",shipmentId);
+						inputMap.put("shipmentItemSeqId",receipt.get("shipmentItemSeqId") );
+						inputMap.put("quantityAccepted",receipt.get("quantityAccepted"));
+						inputMap.put("userLogin",userLogin);
+						resultReceipt = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
+						
+						if (ServiceUtil.isError(resultReceipt)) {
+							Debug.logError("Error While Accepting ", module);
+			  	  			return ServiceUtil.returnError("Error While  While Accepting"+receipt.get("receiptId"));
+			            }
+					}else{
+						BigDecimal quantityAccepted = (BigDecimal) receipt.get("quantityAccepted");
+						String shipStatusId="SR_ACCEPTED";
+						if(UtilValidate.isEmpty(quantityAccepted)){
+							return ServiceUtil.returnError("Quantity accepted cannot be ZERO ");
+						}
+						if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
+							shipStatusId = "SR_REJECTED";
+						}
+						if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
+							return ServiceUtil.returnError("negative value not allowed");
+						}
+						GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receipt.get("receiptId")), false);
+						
+						GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", receipt.get("shipmentItemSeqId")), false);
+						BigDecimal origReceiptQty=BigDecimal.ZERO;
+						origReceiptQty = shipmentItem.getBigDecimal("quantity");
+						BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
+						
+						if(quantityAccepted.compareTo(origReceiptQty) >0){
+							return ServiceUtil.returnError("not accept more than the received quantity");
+						}
+						//shipment receipts accept quantity populating
+						shipmentReceipt.put("quantityAccepted", quantityAccepted);
+						shipmentReceipt.put("quantityRejected", rejectedQty);
+						shipmentReceipt.put("statusId", shipStatusId);
+						shipmentReceipt.store();
+						
+						
+						if(UtilValidate.isNotEmpty(receipt.get("receiptId"))){
+							GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+							shipmentReceiptStatus.set("receiptId", receipt.get("receiptId"));
+							shipmentReceiptStatus.set("statusId", shipStatusId);
+							shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+							shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+							delegator.createSetNextSeqId(shipmentReceiptStatus);
+						}
+						
+						
+						
+					}
+				}
 				}
 			}
 		} catch (Exception e) {
