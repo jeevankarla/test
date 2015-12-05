@@ -56,6 +56,14 @@ function makeDatePicker(fromDateId ,thruDateId){
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
+                	    var productStoreId = $("#productStoreId").val();  
+	            	    if( (productStoreId).length < 1 ) {
+					    	$('#productStoreId').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#productStoreId').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
                 		var supplierId = $("#supplierId").val();  
                 	    if( (supplierId).length < 1 ) {
 					    	$('#supplierId').css('background', 'yellow'); 
@@ -164,6 +172,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 		$('#shipToPartyId').keypress(function (e) { 
 		$("#shipToPartyId").autocomplete({ source: depotsAutoJson , select: function( event, ui ) {
 			$('span#depotName').html('<h4>'+ui.item.label+'</h4>');
+			} });
+		});
+		
+		var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
+		$('#productStoreId').keypress(function (e) { 
+		$("#productStoreId").autocomplete({ source: branchAutoJSON , select: function( event, ui ) {
+			$('span#branchName').html('<h4>'+ui.item.label+'</h4>');
 			} });
 		});
 		
@@ -313,9 +328,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    </td>
 					</tr>
 					<tr>
+					    <td class="label"><b>Branch(<font color="red">*</font>) :</b></td>
+					    <td>
+					    	<#if orderId?exists && orderInfo.get("productStoreId")?exists>
+					    		<input type="text" name="productStoreId" id="productStoreId" size="18" maxlength="60" value="${orderInfo.get("productStoreId")?if_exists}"/>
+					    	<#else>
+					    		<input type="text" name="productStoreId" id="productStoreId" size="18" maxlength="60" />
+						   	</#if> 
+        				 </td>
+					</tr>
+					<tr>
 					    <td class="label">Supplier(<font color="red">*</font>) : </td>
 					    <input type="hidden" name="orderId" id="orderId"  value="${orderId?if_exists}" />
-					     <input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />
+					     <#--<input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />-->
 					    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 					       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
 					    <#else>

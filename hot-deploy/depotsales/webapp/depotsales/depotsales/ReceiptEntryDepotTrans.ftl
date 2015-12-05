@@ -159,7 +159,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
+		          				<input class="h3" type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
 		          			</td>
 				          </#if>
 				        </tr>
@@ -176,7 +176,7 @@
 					          	</td>
 				         	 <#else> 
 				         	 <td valign='middle'>
-		          				<input type="text" name="suppInvoiceId" id="suppInvoiceId" />
+		          				<input class="h3" type="text" name="suppInvoiceId" id="suppInvoiceId" />
 		          			</td>
 				          </#if>
 				        </tr>
@@ -193,7 +193,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
+		          				<input class="h3" type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
 		          			</td>
 				          </#if>
 		          			
@@ -211,7 +211,7 @@
 					          	</td>
 				         	 <#else> 
 				         	 <td valign='middle'>
-		          				<input type="text" name="deliveryChallanNo" id="deliveryChallanNo" />
+		          				<input class="h3" type="text" name="deliveryChallanNo" id="deliveryChallanNo" />
 		          			</td>
 				          </#if>
 		          			
@@ -280,20 +280,20 @@
 					          	</td>
 				         	 <#else> 
 				         	 <td valign='middle'>
-		          				<input type="text" name="remarks" id="remarks" />
+		          				<input class="h3" type="text" name="remarks" id="remarks" />
 		          			</td>
 				          </#if>
 		          			
 				        </tr>
 				        <tr><td><br/></td></tr>
-				        <tr>
+				        <#--<tr>
 				         	  <td>&nbsp;</td>
 					          <td>&nbsp;</td>
 					          <td>&nbsp;</td>
 				         	 <td valign='middle'>
 		          				<input type="submit" name="Submit"/>
 		          			</td>
-				        </tr>
+				        </tr>-->
 				        <tr>
 				         	 <td>
 		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="N"/>  

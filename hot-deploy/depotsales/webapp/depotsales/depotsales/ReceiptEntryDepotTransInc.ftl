@@ -186,6 +186,11 @@
 		var hideQCflag = jQuery("<input>").attr("type", "hidden").attr("name", "hideQCflow").val(hideQCflow);
 		var allowedGraterthanTheOrdered = $("#allowedGraterthanTheOrdered").val();
 		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "allowedGraterthanTheOrdered").val(allowedGraterthanTheOrdered);
+		
+        var lrNUm = $("#lrNumber").val();
+        var lrNumber = jQuery("<input>").attr("type", "hidden").attr("name", "lrNumber").val(lrNUm);
+        var carrier = $("#carrierName").val();
+        var carrierName = jQuery("<input>").attr("type", "hidden").attr("name", "carrierName").val(carrier);
 			
 		jQuery(formId).append(jQuery(effDate));
 		jQuery(formId).append(jQuery(suppInvoice));
@@ -199,6 +204,8 @@
 		jQuery(formId).append(jQuery(remarksOption));
 		jQuery(formId).append(jQuery(hideQCflag));
 		jQuery(formId).append(jQuery(flag));
+		jQuery(formId).append(jQuery(lrNumber));
+		jQuery(formId).append(jQuery(carrierName));
 		
 		
 		jQuery(formId).attr("action", action);
