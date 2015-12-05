@@ -3254,7 +3254,7 @@
     				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
     					/> -->
     				<script 
-    				     location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ListSalesOrderPaymentSearchResults.groovy"/>
+    				     location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderPaymentSearchResults.groovy"/>
     			</actions>
     			<widgets>
     				<decorator-screen name="DepotSalesCommonDecorator"
