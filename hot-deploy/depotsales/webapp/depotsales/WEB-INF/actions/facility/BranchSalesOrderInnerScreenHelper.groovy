@@ -126,7 +126,14 @@
 	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 	if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
 		catIds=["COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
-		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,catIds));
+		cndList=[];
+		cndList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,catIds));
+		EntityCondition cnd1 = EntityCondition.makeCondition(cndList, EntityOperator.AND);
+		prodIdsList =delegator.findList("ProductCategoryMember", cnd1,null, null, null, false);
+		prodIdsList= EntityUtil.getFieldListFromEntityList(prodIdsList,"productId", true);
+		if(prodIdsList){
+		exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIdsList));
+		}
 	}else if(parameters.schemeCategory && "MGPS".equals(parameters.schemeCategory)){
 		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
 	}
