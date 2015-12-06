@@ -975,5 +975,67 @@
             </widgets>
         </section>
     </screen>
+    <screen name="DepotSalesInventoryTransfer">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Inventory Transfers" />
+    				<!-- <set field="headerItem" value="facility" /> -->
+    				<set field="tabButtonItem" value="findInventoryTransfer" />
+    				<set field="tabButtonItem2" value="depotStockXfers" />
+    				<!-- <set field="parameters.facilityId" from-field="parameters.facilityId"></set> -->
+    				<set field="isInventorySales" value="Y"/>
+    				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/FindFacilityPhysicalInventory.groovy" />
+    			</actions>
+    			<widgets>
+    				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    					<decorator-section name="body">
+    						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="InventoryTransferTabBar" />
+    						<screenlet title="Find Shipmet Inventory Items">
+    							<include-form name="FindPhysicalInventoryDepotTransfer"	location="component://depotsales/widget/DepotSalesForms.xml" />
+    						</screenlet>
+    						<screenlet title="List Of Inventory Items">
+    							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/stockXferForm.ftl"/></html></platform-specific>
+    							<include-form name="ListPhysicalInventoryDepotTransfer" location="component://depotsales/widget/DepotSalesForms.xml" />
+    						</screenlet>
+    						<platform-specific>
+    							<html>
+    								<html-template location="component://depotsales/webapp/depotsales/depotsales/MakeSaleOrder.ftl" />
+    							</html>
+    						</platform-specific>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+    	</screen>
+    	<screen name="InOutInventoryXfers">
+        	<section>
+    		     <actions>
+    		     	<set field="headerItem" value="Xfer"/>
+    		     	<set field="tabButtonItem" value="findInventoryTransfer" />
+    		     	<set field="tabButtonItem2" value="InOutTransfer"/>
+    		     	<set field="titleProperty" value="Inventory Transfers"/>
+    		     	<set field="facilityId" from-field="parameters.facilityId"/>
+    		     	<entity-one value-field="facility" entity-name="Facility">
+    		     		<field-map field-name="facilityId"/>
+    		     	</entity-one>
+    		     	<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListIncomingAndOutgoingXfer.groovy"/>
+    		     </actions>
+    		     <widgets>
+    	     		 <decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    	     		 	<decorator-section name="body">
+    	     		 		<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="InventoryTransferTabBar" />
+    	     		 		<!-- <label style="h1">${facility.facilityName}:[${facility.facilityId}]</label> -->
+    		     		 	<screenlet title="Find Product Inventory">
+    		     		 		<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="FindFacilityProducts"/>
+    		     		 	</screenlet>
+    		     		 	<screenlet title="Incomming Transfers">
+    		     		 	   	<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/ProductQualityAnalysis.ftl"/></html></platform-specific>
+    		     		 		<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/ListSearchIncomingXfer.ftl"/></html></platform-specific>
+    		     		 	</screenlet>
+    	     		 	</decorator-section>
+    	     		 </decorator-screen>
+    	     	</widgets>
+    		</section>
+    </screen>
 	
 </screens>

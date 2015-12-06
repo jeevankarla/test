@@ -103,11 +103,13 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 
     // for each product, call the inventory counting service
     productIds.each { productId ->
-        result = dispatcher.runSync("getInventoryAvailableByFacility", [facilityId : facilityId, productId : productId]);
-        if (!ServiceUtil.isError(result)) {
-            atpMap.put(productId, result.availableToPromiseTotal);
-            qohMap.put(productId, result.quantityOnHandTotal);
-        }
+		if(facilityId){
+			result = dispatcher.runSync("getInventoryAvailableByFacility", [facilityId : facilityId, productId : productId]);
+			if (!ServiceUtil.isError(result)) {
+				atpMap.put(productId, result.availableToPromiseTotal);
+				qohMap.put(productId, result.quantityOnHandTotal);
+			}
+		}
     }
 	
     // associate the quantities to each row and store the combined data as our list
