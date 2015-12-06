@@ -133,7 +133,7 @@
 	<screen name="DepotSalesInventorySales">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Inventory Sales" />
+				<set field="titleProperty" value="Inventory Transfers" />
 				<!-- <set field="headerItem" value="facility" /> -->
 				<set field="tabButtonItem" value="PhysicalInventory" />
 				<set field="tabButtonItem2" value="makeInventorySales" />
@@ -149,6 +149,7 @@
 							<include-form name="FindPhysicalInventoryDepotForSale"	location="component://depotsales/widget/DepotSalesForms.xml" />
 						</screenlet>
 						<screenlet title="List Of Inventory Items">
+							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/stockXferForm.ftl"/></html></platform-specific>
 							<include-form name="ListPhysicalInventoryDepotForSale" location="component://depotsales/widget/DepotSalesForms.xml" />
 						</screenlet>
 						<platform-specific>
