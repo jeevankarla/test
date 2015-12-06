@@ -29,7 +29,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "IndentReport.pdf")}
-        <#if dayWiseEntriesLidast?has_content>
+        <#if OrderItemList?has_content>
         <fo:page-sequence master-reference="main" font-size="12pt">	
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<fo:block text-align="left" font-size="13pt" keep-together="always"  white-space-collapse="false">
@@ -68,7 +68,7 @@ under the License.
         		        	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
         		        	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
         		        	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>	
-        		        					<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+        		        	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
         		        	        	
         		
         		<fo:block  text-align="left" font-size="14pt" font-style="bold">PRICE FIXATION CHART :</fo:block>
