@@ -2817,7 +2817,7 @@
 					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
 				<set field="defaultEffectiveDate"
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-				<set field="parameters.roleTypeId" value="CUSTOMER"/>
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"
