@@ -377,12 +377,12 @@
 												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
 										</html>
 									</platform-specific>
-									<platform-specific>
+									<!-- <platform-specific>
 										<html>
 											<html-template
 												location="component://byproducts/webapp/byproducts/byproducts/viewOrderDetails.ftl" />
 										</html>
-									</platform-specific>
+									</platform-specific> -->
 									<platform-specific>
 										<html>
 											<html-template
