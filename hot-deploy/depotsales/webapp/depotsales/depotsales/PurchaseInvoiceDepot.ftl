@@ -4,7 +4,7 @@
 	
 $(document).ready(function(){
 		$( "#effectiveDate" ).datepicker({
-			dateFormat:'d MM, yy',
+			dateFormat:'yy-mm-dd',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
