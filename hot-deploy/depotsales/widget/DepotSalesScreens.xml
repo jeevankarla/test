@@ -991,18 +991,17 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Shipment Overview" />
-				<set field="tabButtonItem" value="FindGRNReceipts" />
-				<set field="tabButtonItem2" value="MaterialShipmentOverview" />
+				<set field="tabButtonItem" value="DepotTransReceipts" />
+				<set field="tabButtonItem2" value="DepotTransMaterialShipmentOverview" />
 				<set field="shipmentId" from-field="parameters.shipmentId" />
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/getGRNDetailsForInvoice.groovy" />
 				<set field="supplierId" from-field="supplierId" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="ReceiptTabBar"
+						<include-menu name="DepotTransReceiptTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>

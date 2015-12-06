@@ -59,12 +59,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                                   <fo:table-row>
 				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${allDetailsMap.get("partySecondPhone")?if_exists}</fo:block></fo:table-cell>       			
 				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email:${allDetailsMap.get("companyMail")?if_exists}</fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >KST NO:${allDetailsMap.get("kstNumber")?if_exists}</fo:block></fo:table-cell>       		
+				                     <#--<fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >KST NO:${allDetailsMap.get("kstNumber")?if_exists}</fo:block></fo:table-cell>-->
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >CST NO:${allDetailsMap.get("cstNumber")?if_exists}</fo:block></fo:table-cell>       		
                                   </fo:table-row>
                                   <fo:table-row>
 									<fo:table-cell><fo:block text-align="left" font-size="12pt"></fo:block></fo:table-cell>
 				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;${allDetailsMap.get("compSecondMail")?if_exists}</fo:block> </fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >CST NO:${allDetailsMap.get("cstNumber")?if_exists}</fo:block></fo:table-cell>       		
                                   </fo:table-row>
 			                	</fo:table-body>
 			                		</fo:table>
@@ -82,7 +82,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 
 						           	<fo:table-body>
 				                     <fo:table-row>
-				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >PO NO   &#160;:</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >PO NO   &#160;: ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
 				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >PO DATED</fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  > :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block></fo:table-cell>       		

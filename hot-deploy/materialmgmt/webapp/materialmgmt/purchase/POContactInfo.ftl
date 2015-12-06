@@ -84,12 +84,12 @@ under the License.
                 ${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
               </#if>
               <#if partyId?exists>
-                &nbsp;(<a href="${customerDetailLink?if_exists}${partyId?if_exists}" target="partymgr" class="buttontext">${partyId}</a>)
+                &nbsp;<#--(<a href="${customerDetailLink?if_exists}${partyId?if_exists}" target="partymgr" class="buttontext">${partyId}</a>)-->(${partyId})
                 <br/>
                 <#if orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
                 <div>
-                   <a href="<@ofbizUrl>/orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderNewOrder}</a>
-                   <a href="javascript:document.searchOtherOrders.submit()" class="buttontext">${uiLabelMap.OrderOtherOrders}</a>
+                   <#--<a href="<@ofbizUrl>/orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderNewOrder}</a>
+                   <a href="javascript:document.searchOtherOrders.submit()" class="buttontext">${uiLabelMap.OrderOtherOrders}</a>-->
                 </div>
                   <form name="searchOtherOrders" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
                     <input type="hidden" name="lookupFlag" value="Y"/>
