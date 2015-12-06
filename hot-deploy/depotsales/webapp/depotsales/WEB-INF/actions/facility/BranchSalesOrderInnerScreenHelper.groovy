@@ -142,7 +142,7 @@
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 		
-	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+	prodList =delegator.findList("Product", null,null, null, null, false);
 	
 	if(UtilValidate.isNotEmpty(productCatageoryId)){
 		
