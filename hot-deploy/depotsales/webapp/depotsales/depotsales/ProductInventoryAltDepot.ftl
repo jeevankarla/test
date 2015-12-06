@@ -21,6 +21,7 @@ under the License.
     <div class="screenlet-body">
                    <#-->     <#assign rowClass = "2">   -->
                  <#assign sNo=1>     
+            <#if quantitySummaryByFacility?has_content>          
              <#list quantitySummaryByFacility.values() as quantitySummary>
                 <#if quantitySummary.facilityId?exists>
                     <#assign facilityId = quantitySummary.facilityId>
@@ -72,6 +73,7 @@ under the License.
                     <#assign rowClass = "2">
                  </#if>  -->
             </#list>
+          </#if>  
     </div>
      <div class="clear"></div>
   <#else>

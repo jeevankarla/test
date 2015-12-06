@@ -45,8 +45,8 @@
 			    								    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
 	        						   				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 	        						   				
-	        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">${reportHeader.description?if_exists}.</fo:block>
-	        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">${reportSubHeader.description?if_exists}.</fo:block>
+	        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;${reportHeader.description?if_exists}.</fo:block>
+	        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;${reportSubHeader.description?if_exists}.</fo:block>
 	        						   			</fo:table-cell>
 	        						   			<fo:table-cell ></fo:table-cell>
 	        						   	</fo:table-row>

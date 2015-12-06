@@ -46,7 +46,7 @@ under the License.
  			         <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight = "bold">Received with thanks the ${reportType} by way of <#if paymentDescription == "CHQ">CHEQUE<#else>${paymentDescription?if_exists}</#if>												</fo:block>
+              		<fo:block font-weight = "bold">Received with thanks the ${reportType} by way of <#if paymentDescription == "CHQ">CHEQUE<#else><#if paymentDescription?has_content>${paymentDescription?if_exists}</#if></#if>												</fo:block>
             		<#assign  partyName="">
             		<fo:block>
             		<fo:table>
