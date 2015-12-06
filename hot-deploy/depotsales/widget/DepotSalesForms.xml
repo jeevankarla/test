@@ -1287,10 +1287,11 @@
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}"></display-entity>
         </field>
+        <field name="productName"><hidden/></field>
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="unitCost"><hidden/></field>
         <field name="Transfer" title="Transfer" widget-style="buttontext">
-	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${facilityName}','${facilityId}');"></hyperlink>
+	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${facilityName}','${facilityId}','${productName}');"></hyperlink>
         </field>
     </form>
           <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
