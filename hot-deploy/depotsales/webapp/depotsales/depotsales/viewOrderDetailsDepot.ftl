@@ -193,7 +193,7 @@
 	}
 	
 	
-	function amountCheck()
+	function amountCheck(balance)
 	{
 	
 	   var amount =  $("#amount").val();
@@ -201,19 +201,23 @@
 	   
 	   if(amount ==''){
 	   alert("Please Enter Amount");
-	   }
-	   else if(parseInt(amount) > parseInt(grandTot)){
+	   }else if(parseInt(amount) > parseInt(grandTot)){
 	   
 	      alert("Please Enter Amount Less Than The Grand Total.");
 	     
 	        $("#submitval").parent().parent().hide();
-	        
 	        $("#cancel").parent().parent().hide();
 	        
-	   }else{
-	   
+	   }else if(parseInt(amount) > parseInt(balance)){
+
+          alert("Please Enter Amount Less Than The Balance.");
+
+            $("#submitval").parent().parent().hide();
+	        $("#cancel").parent().parent().hide();
+ 
+         }
+	   else{
 	       $("#submitval").parent().parent().show();
-	       
 	       $("#cancel").parent().parent().show();
 	   }
 	   
@@ -222,10 +226,11 @@
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
 	
 	
-	function showPaymentEntry(orderId, partyId,partyName,grandTotal, formActionVar) {
+	function showPaymentEntry(orderId, partyId,partyName,grandTotal,balance, formActionVar) {
 		var message = "";
 		orderId = orderId;
 		partyId = partyId;
+		
 		
 		
 		grandTotal = grandTotal;
@@ -259,6 +264,48 @@
 		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
 	}
+
+
+
+   function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
+		var message = "";
+		orderId = orderId;
+		partyId = partyId;
+		
+		finalBal = grandTotal-balance;
+		
+		grandTotal = grandTotal;
+		partyName= partyName;
+		
+		
+		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			//message += "<br/><br/>";
+			
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						<#list PaymentMethodType as payment>
+						"<option value='${payment.paymentMethodTypeId}' >${payment.description}</option>"+
+	                   </#list>
+					    "</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount'  name='amount' value='"+grandTotal+"'  onblur='javascript:amountCheck(finalBal);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+finalBal+"</td></tr>"+
+                        "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf'  /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='grandTotal' name='grandTotal' value='"+grandTotal+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
+		Alert(message, title);
+	}
+
+
+
 	
 	function paymentFieldsOnchange(){
   
@@ -327,6 +374,8 @@
    
 	
   function realizeStatusChange(orderId) {
+	        	
+	      
 	        	
 	  var orderId = orderId;
 	  
