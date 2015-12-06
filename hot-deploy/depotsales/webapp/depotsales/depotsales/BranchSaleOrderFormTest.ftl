@@ -94,7 +94,7 @@
 		 function addSocietyField(selection){
 			 if(selection.value=="onBehalfOf"){
 			 $("#societyfield").show();
- 				}else{
+			 }else{
 			 		 $("#societyPartyId").val("");
 			 		 $("#societyfield").hide();
 			 }
