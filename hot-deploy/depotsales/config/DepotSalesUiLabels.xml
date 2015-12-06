@@ -22,7 +22,173 @@
     </property>
      <property key="nhdcAddress">
         <value xml:lang="en">NHDC Address</value>
-        <value xml:lang="hi_IN">10 वीं और 11 वीं मंजिलों , विकास दीप, 22 स्टेशन रोड, लखनऊ -226 001</value>
+        <value xml:lang="hi_IN">१० वीं और ११ वीं मंजिलों  विकास दीप २२ स्टेशन रोड लखनऊ २२६ ००१</value>
+    </property>मात्रा
+    
+     <property key="NHDCSNO">
+        <value xml:lang="en">S.No</value>
+        <value xml:lang="hi_IN">अनु</value>
+    </property>
+    
+      <property key="NHDCQUANTITY">
+        <value xml:lang="en">Quantity</value>
+        <value xml:lang="hi_IN">मात्रा</value>
+    </property>
+    
+    <property key="NHDCPURCHASERATE">
+        <value xml:lang="en">Purchase Rate</value>
+        <value xml:lang="hi_IN">खरीद दर</value>
+    </property>
+     
+    <property key="NHDCANNUM">
+        <value xml:lang="en">Annum</value>
+        <value xml:lang="hi_IN">प्रति वर्ष ००.०  ० दिनों के लिए पूर्णांक</value>
+    </property>
+    
+    <property key="NHDCHANDLING">
+        <value xml:lang="en">Handling</value>
+        <value xml:lang="hi_IN">हैंडलिंग शुल्क  ००.० प्रतिशत</value>
+    </property>
+    
+     <property key="NHDCSALES">
+        <value xml:lang="en">Sales Price</value>
+        <value xml:lang="hi_IN">बिक्री मूल्य या यूनिट</value>
+    </property>
+    
+    <property key="NHDCUNIT">
+        <value xml:lang="en">Sales Price</value>
+        <value xml:lang="hi_IN">इकाई</value>
+    </property>
+
+    
+     <property key="NHDCTOTAL">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">कुल</value>
+    </property>
+    
+    <property key="minutes1">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">निम्नलिखित मद  की खरीद के लिए क्रय और विक्रय समिति की बैठक के मिनट ।</value>
+    </property>
+    
+     <property key="minutes2">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">दरों उल्लेख के अनुसार निम्नलिखित आइटम एस की वह समिति की सिफारिश या अनुमोदित क्रय</value>
+    </property>
+    
+     <property key="minutes3">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">प्रत्येक के खिलाफ एम या एस से प्राप्त किया जा करने के लिए </value>
+    </property>
+    
+     <property key="minutes4">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">उपयोगकर्ता एजेंसी एम या एस के आवश्यकता की ओर </value>
+    </property>
+    
+    <property key="minutes5">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">उनकी इंडेंट नहीं ख़बरदार  दिनांक </value>
+    </property>
+    
+     <property key="minutes8">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">३. सारांश</value>
+    </property>
+    
+    <property key="minutes9">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  क) वास्तविक खरीद मूल्य</value>
+    </property>
+    
+     <property key="minutes10">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  ख) कुल बिक्री मूल्य</value>
+    </property>
+    
+     <property key="minutes11">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  ग) बिक्री के  अंतर</value>
+    </property>
+    
+     <property key="minutes12">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  घ) मूल्य और मिल करने के लिए किए गए वास्तविक भुगतान</value>
+    </property>
+    
+    <property key="minutes13">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  ई) क्रेडिट पर ० दिनों ब्याज </value>
+    </property>
+    
+    <property key="minutes14">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">  च) ट्रेडिंग अंशदान की प्रतिशत ० प्रतिशत</value>
+    </property>
+    
+     <property key="minutes15">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">४. माल भाड़ा के लिए भुगतान के आधार पर भेजा जाएगा </value>
+    </property>
+    
+     <property key="minutes16">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">५.भुगतान तुरंत  क्रेडिट दिनों पर बैक टू बैक के भीतर उपयोगकर्ता एजेंसी द्वारा किया जाएगाप्रतिवर्ष ब्याज ११ दिनों के भुगतान की कुल संख्या के लिए शुल्क लिया जाएगा अन्यथादेरी की।</value>
+    </property>
+    
+     <property key="minutes26">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">नाकाम रहने या क्रेडिट दिनों पर या बैक टू बैक के भीतर उपयोगकर्ता एजेंसी द्वारा किया जाएगा । </value>
+    </property>
+    
+      <property key="asOn">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">एक पुत्र</value>
+    </property>
+    
+    <property key="minutes17">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">६. इस सौदे में एक कुल वित्तीय बहिर्वाह रुपये है।</value>
+    </property>
+    
+     <property key="minutes18">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">७. रुपये एजेंसी को यह लेन-देन होगा सहित कुल आपूर्ति</value>
+    </property>
+    
+    <property key="minutes19">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">८. पार्टी की ओर से ब्याज के साथ भुगतान देय राशि :</value>
+    </property>
+    
+    <property key="minutes20">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">९. भुगतान मिल रुपये के लिए चैक या डिमांड ड्राफ्ट भुगतान किया जाएगा।</value>
+    </property>
+    
+    <property key="minutes21">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">१०. दिनों क्रेडिट की संख्या प्रेषण की तारीख से एनएचडीसी को मिल्स द्वारा बढ़ाया</value>
+    </property>
+    
+     <property key="minutes22">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">११. प्रेषण की तारीख से एजेंसी को एनएचडीसी द्वारा बढ़ाया दिनों क्रेडिट की संख्या</value>
+    </property>
+    
+     <property key="minutes23">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">१२. किसी भी अन्य विशिष्ट जानकारी ...................</value>
+    </property>
+   
+    <property key="minutes24">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">१३. स्थानीय करों के रूप में लागू है।</value>
+    </property>
+    
+    <property key="minutes25">
+        <value xml:lang="en">Total Price</value>
+        <value xml:lang="hi_IN">१४. अग्रिम विवरण  चेक या डीडी नहीं खाते पर सीआर उपयोगकर्ता एजेंसी से प्राप्त राशि</value>
     </property>
     
 </resource>
