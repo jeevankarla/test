@@ -44,7 +44,8 @@ under the License.
 			       
  			         <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
  			         <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
-                    <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+                    <fo:block>&#160;</fo:block>
+                    <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;Date :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
               		<fo:block font-weight = "bold">Received with thanks the ${reportType} by way of <#if paymentDescription == "CHQ">CHEQUE<#else><#if paymentDescription?has_content>${paymentDescription?if_exists}</#if></#if>												</fo:block>
             		<#assign  partyName="">
@@ -64,7 +65,7 @@ under the License.
                        			</fo:table-cell>
                        			</#if>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Number:${paymentListReport.paymentId?if_exists}&#160;&#160;&#160;</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number :  ${paymentListReport.paymentId?if_exists}&#160;&#160;&#160;</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>	
                      <fo:table-row>
@@ -72,7 +73,7 @@ under the License.
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date &#160;&#160;:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy")}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
                     <#if paymentListReport.paymentMethodTypeId?exists && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN")>
@@ -120,11 +121,11 @@ under the License.
             			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
             			</#if>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">${partyName}</fo:block>  
+                            		<fo:block  text-align="left">${partyName?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${partyId}</fo:block>  
+                            		<fo:block  text-align="right"  white-space-collapse="false">${partyId?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<#assign totalAmount =(totalAmount+ paymentListReport.amount) >
                        			<fo:table-cell>
@@ -202,7 +203,7 @@ under the License.
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
-						  	<fo:table-row>
+						  	<#--<fo:table-row>
 			                   <fo:table-cell>
 			                   <#if reportHeader?has_content && reportSubHeader?has_content>
  			                       <fo:block keep-together="always" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For BANGALORE SALES DEPOT</fo:block>
@@ -210,7 +211,7 @@ under the License.
  			                       <fo:block keep-together="always" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For Mother Dairy</fo:block>
  			                   </#if>
 			                   </fo:table-cell>
-						  	</fo:table-row>
+						  	</fo:table-row>-->
 						  	<fo:table-row>
                					<fo:table-cell>
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -228,7 +229,7 @@ under the License.
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always" font-weight = "bold">&#160;&#160;SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if paymentMethodTypeId == "CASH_PAYIN" || paymentMethodTypeId == "CASH_PAYOUT">Cashier<#else>Authorised Signatory</#if></fo:block>
+			                        	<fo:block keep-together="always" font-weight = "bold"><#--&#160;&#160;SUPDT/DMF/AM-->                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if paymentMethodTypeId == "CASH_PAYIN" || paymentMethodTypeId == "CASH_PAYOUT">Cashier<#else>Authorised Signatory</#if></fo:block>
 			                   </fo:table-cell>
 						  	</fo:table-row>
 		              </fo:table-body>
