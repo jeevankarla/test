@@ -1831,6 +1831,7 @@
 					result-map="permResult">
 					<field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL" />
 				</service>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
 				<set field="hasPaymentCancelPermission" value="true" type="Boolean" /><!--from-field="permResult.hasPermission" -->
 			</actions>
 			<widgets>
