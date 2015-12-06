@@ -41,15 +41,15 @@ under the License.
     				<#assign supplierHindiPartyId = dispatcher.runSync("convertToIndicScript", Static["org.ofbiz.base.util.UtilMisc"].toMap("messageStr", supplierHindiPartyId, "toScript", "devanagari")).get("result")/>
     				
     				<#assign fromDate = dispatcher.runSync("convertToIndicScript", Static["org.ofbiz.base.util.UtilMisc"].toMap("messageStr", Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yyyy"), "toScript", "devanagari")).get("result")/>
-    				
+    				 
     				<fo:block>&#160;</fo:block>
     				<fo:block>&#160;</fo:block>
     				
-    				<fo:block text-align="left"  white-space-collapse="false" font-size="12pt" keep-together="always">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes1", locale)}</fo:block>
-    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" keep-together="always">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes2", locale)}</fo:block>
-    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" keep-together="always">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes3", locale)}${partyName?if_exists}</fo:block>
-    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" keep-together="always">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes4", locale)}${supplierHindiPartyId?if_exists}</fo:block>
-    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" keep-together="always">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes5", locale)}${fromDate?if_exists}</fo:block>
+    				<fo:block text-align="left"  white-space-collapse="false" font-size="12pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes1", locale)}</fo:block>
+    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes2", locale)}</fo:block>
+    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes3", locale)}<fo:inline font-weight="bold">:${partyName?if_exists} </fo:inline></fo:block>
+    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes4", locale)}<fo:inline font-weight="bold">:${supplierHindiPartyId?if_exists} </fo:inline></fo:block>
+    				<fo:block text-align="left" white-space-collapse="false" font-size="12pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes5", locale)}:${fromDate?if_exists}</fo:block>
     				
     				
             		
@@ -61,8 +61,6 @@ under the License.
             <fo:flow flow-name="xsl-region-body" font-family="Courier,Mangal">
               <fo:block>
               <fo:block>&#160;</fo:block>
-    				<fo:block>&#160;</fo:block>
-    				<fo:block>&#160;</fo:block>
     				<fo:block>&#160;</fo:block>
     				<fo:block>&#160;</fo:block>
     				<fo:block>&#160;</fo:block>
@@ -118,10 +116,10 @@ under the License.
 					            	<fo:block margin-top=".2in" keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("SrNo")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block margin-top=".2in"  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("productName")?if_exists} </fo:block>
+					            	<fo:block margin-top=".2in"   text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block margin-top=".2in" keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;</fo:block>
+					            	<fo:block margin-top=".2in"  text-align="left" font-size="12pt" white-space-collapse="false">&#160;</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block margin-top=".2in" keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
@@ -149,8 +147,6 @@ under the License.
 				</fo:block>
 				
 				
-				  <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
-				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 	          
@@ -207,7 +203,7 @@ under the License.
 					            	<fo:block margin-top=".2in" keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("SrNo")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block margin-top=".2in" keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("productName")?if_exists} </fo:block>
+					            	<fo:block margin-top=".2in"  text-align="left" font-size="12pt" white-space-collapse="false">${orderList.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block margin-top=".2in"  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;</fo:block>
@@ -310,7 +306,7 @@ under the License.
 				<fo:block>&#160;                      ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes14", locale)}</fo:block>
 				<fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes15", locale)} : ${partyName}</fo:block>
 				<fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes16", locale)}</fo:block>
-                <fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes26", locale)}</fo:block>
+                <fo:block>&#160;                      ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes26", locale)}</fo:block>
 				<fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes17", locale)}</fo:block>
 				<fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes18", locale)}</fo:block>
                 <fo:block>${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "minutes19", locale)}:${partyName} ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "asOn", locale)}:${fromDate}</fo:block>

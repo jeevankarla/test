@@ -66,17 +66,26 @@ conditionList=[];
 			for (eachOrderItem in OrderItemList) {
 				
 				 tempMap = [:];
-				 
 				 productName = ""
-				 
 				 prod=delegator.findOne("Product",[productId:eachOrderItem.productId],false);
+				 
+				 String srNoStr = SrNo;
+				 char firSrno = srNoStr.charAt(0);
+				 srNoStr = String.valueOf(firSrno)+srNoStr;
+				 tempMap.put("SrNo", srNoStr);
 				 
 				 if(UtilValidate.isNotEmpty(prod)){
 					 productName = prod.get("productName");
+					 String productNameStr = productName;
+					 char firstProChr = productNameStr.charAt(0);
+					 productNameStr = String.valueOf(firstProChr)+productNameStr;
+					 tempMap.put("productName", productNameStr);
+					 
+				 }else{
+					 tempMap.put("productName", productName);
 				 }
+				
 				 
-				 tempMap.put("SrNo", SrNo);
-				 tempMap.put("productName", productName);
 				 
 				 String qtyStr = Math.round(eachOrderItem.get("quantity"));
 				 char firstChr = qtyStr.charAt(0);
@@ -128,7 +137,7 @@ conditionList=[];
 			totalsList.add(totalsMap);
 			
 			
-	context.OrderItemList = OrderItemList;		
+	context.OrderItemList = OrderItemList;
 	
 	contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
@@ -139,5 +148,3 @@ conditionList=[];
 	
 	context.totalsHindiList = totalsHindiList[0];
 	context.dayWiseEntriesLidast = dayWiseEntriesLidast;
-	
-	
