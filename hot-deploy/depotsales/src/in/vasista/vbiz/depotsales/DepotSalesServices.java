@@ -2925,6 +2925,576 @@ public class DepotSalesServices{
    	    result = ServiceUtil.returnSuccess("Successfully Changed Payment Status!!");
    	    return result;
    	}
+   	public static Map<String, Object> createStockXferRequest(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String transferDate = (String)context.get("transferDate");
+        String fromFacilityId = (String)context.get("fromFacilityId");
+        String toFacilityId = (String)context.get("toFacilityId");
+        BigDecimal xferQty = (BigDecimal)context.get("xferQty");
+        String productId = (String)context.get("productId");
+        String statusId = "IXF_REQUESTED";
+        String inventoryItemId = (String)context.get("inventoryItemId");
+        String transferGroupTypeId = "INTERNAL_XFER";
+        String comments = (String)context.get("comments");
+        String workEffortId = (String)context.get("workEffortId");
+        String transferGroupId = (String) context.get("transferGroupId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if(UtilValidate.isEmpty(transferGroupTypeId)){
+       	 transferGroupTypeId = "_NA_";
+        }
+        
+        Timestamp xferDate = null;
+        try {
+       	 
+       	 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+       	 if(UtilValidate.isNotEmpty(transferDate)){
+       		 try {
+       			 xferDate = new java.sql.Timestamp(sdf.parse(transferDate).getTime());
+         		 } catch (ParseException e) {
+         			Debug.logError(e, "Cannot parse date string: "+ transferDate, module);			
+         			return ServiceUtil.returnError("Cannot parse date string: "+ transferDate);
+         		 }
+       	 }else{
+       		 xferDate = UtilDateTime.nowTimestamp();
+       	 }
+       	 if(xferQty.compareTo(BigDecimal.ZERO)<1){
+       		 Debug.logError("Transfer Qty cannot be less than 1", module);
+  	  			return ServiceUtil.returnError("Transfer Qty cannot be less than 1");
+       	 }
+       	 List conditionList = FastList.newInstance();
+       	 Map<String, Object> resultCtx = ServiceUtil.returnSuccess();
+       	 /*Map<String, ? extends Object> serviceCtx =  UtilMisc.toMap("productId", productId, "facilityIdTo", toFacilityId, "quantity", xferQty, "userLogin", userLogin);
+            Map<String, Object> resultCtx = dispatcher.runSync("validateProductionTransfers", serviceCtx);
+       	 if (ServiceUtil.isError(resultCtx)) {
+       		 Debug.logError("Error ::"+ServiceUtil.getErrorMessage(resultCtx), module);
+                return ServiceUtil.returnError("Error ::"+ServiceUtil.getErrorMessage(resultCtx));
+            }
+       	 if(UtilValidate.isEmpty(toFacilityId)){
+       		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, toFacilityId));
+       		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+       		 EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	 List<GenericValue> productFacility = delegator.findList("ProductFacility", cond, null, null, null, false);
+            	 if(UtilValidate.isEmpty(productFacility)){
+            		Debug.logError("ProductId[ "+productId+" ] is not associated to store :"+toFacilityId, module);	
+            		return ServiceUtil.returnError("ProductId[ "+productId+" ] is not associated to store :"+toFacilityId);
+            	 }
+         }*/
+       	 
+       	 boolean departmentTransfers = Boolean.FALSE;
+       	 if(UtilValidate.isNotEmpty(toFacilityId)){
+       		 
+       		 GenericValue sendFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", fromFacilityId), false);
+       		 GenericValue receiptFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", toFacilityId), false);
+       		 
+       		 if((sendFacility.getString("ownerPartyId")).equals(receiptFacility.getString("ownerPartyId"))){
+       			 departmentTransfers = Boolean.TRUE;
+       		 }
+       	 }
+       	 
+         Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", fromFacilityId);
+            
+            resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+        if (ServiceUtil.isError(resultCtx)) {
+        	Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
+            return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
+        }
+        Object qohObj = resultCtx.get("availableToPromiseTotal");
+        BigDecimal qoh = BigDecimal.ZERO;
+        if (qohObj != null) {
+        	qoh = new BigDecimal(qohObj.toString());
+        }
+        
+        if (xferQty.compareTo(qoh) > 0) {
+        	Debug.logError("Available Inventory level for productId : "+productId + " is "+qoh, module);
+            return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+qoh);
+        }
+       	 
+         conditionList.clear();
+       	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, fromFacilityId));
+       	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+       	 if(UtilValidate.isNotEmpty(inventoryItemId)){	
+       		 conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId));
+       	 }
+       	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+       	 conditionList.add(EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+       	 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+       	 List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+       	 BigDecimal requestedQty = xferQty;
+
+       	 if(UtilValidate.isEmpty(transferGroupId)){
+	        	 GenericValue newEntity = delegator.makeValue("InventoryTransferGroup");
+	        	 newEntity.set("transferGroupTypeId", transferGroupTypeId);
+	        	 newEntity.set("workEffortId", workEffortId);
+	        	 newEntity.set("comments", comments);
+	 	         newEntity.set("statusId", "IXF_REQUESTED");
+	 	         delegator.createSetNextSeqId(newEntity);
+	 	         transferGroupId = (String) newEntity.get("transferGroupId");
+       	 }
+       	 
+       	 List<GenericValue> inventoryItemDetail = null;
+       	 Iterator<GenericValue> itr = inventoryItems.iterator();
+       	 
+       	 while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
+                GenericValue inventoryItem = itr.next();
+                String invItemId = inventoryItem.getString("inventoryItemId");
+                BigDecimal itemQOH = inventoryItem.getBigDecimal("availableToPromiseTotal");
+                BigDecimal xferQuantity = null;
+                if (requestedQty.compareTo(itemQOH) >= 0) {	
+               	 xferQuantity = itemQOH;
+                } else {
+               	 xferQuantity = requestedQty;
+                }
+                
+                
+                Map inputCtx = FastMap.newInstance();
+                inputCtx.put("statusId", statusId);
+                inputCtx.put("comments", comments);
+                inputCtx.put("facilityId", fromFacilityId);
+                inputCtx.put("facilityIdTo", toFacilityId);
+                inputCtx.put("inventoryItemId", invItemId);
+                inputCtx.put("sendDate", xferDate);
+                inputCtx.put("xferQty", xferQuantity);
+                inputCtx.put("userLogin", userLogin);
+                Map resultMap = dispatcher.runSync("createInventoryTransfer", inputCtx);
+    	  		 if(ServiceUtil.isError(resultMap)){
+    	  			Debug.logError("Error in processing transfer entry ", module);
+    	  			return ServiceUtil.returnError("Error in processing transfer entry ");
+    	  		 }
+    	  		 
+    	  		 requestedQty = requestedQty.subtract(xferQuantity);
+    	  		 
+    	  		String inventoryTransferId = (String)resultMap.get("inventoryTransferId");
+    	  		
+    	  		Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+    	  		Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+
+    	  		conditionList.clear();
+    	  		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, invItemId));
+    	  		conditionList.add(EntityCondition.makeCondition("availableToPromiseDiff", EntityOperator.EQUALS, xferQuantity.negate()));
+    	  		conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+    	  		conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+    	  		EntityCondition invDetailCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    	  		inventoryItemDetail = delegator.findList("InventoryItemDetail", invDetailCond, null, UtilMisc.toList("-effectiveDate"), null, false);
+    	  		if(UtilValidate.isNotEmpty(inventoryItemDetail)){
+    	  			GenericValue invItemDet = EntityUtil.getFirst(inventoryItemDetail);
+    	  			invItemDet.set("inventoryTransferId", inventoryTransferId);
+    	  			invItemDet.set("effectiveDate", xferDate);
+	  				if(UtilValidate.isNotEmpty(workEffortId)){
+	  					invItemDet.set("workEffortId", workEffortId);
+	  				}
+	  				invItemDet.store();
+    	  		}
+    	  		
+    	  		GenericValue newEntityMember = delegator.makeValue("InventoryTransferGroupMember");
+    	  		newEntityMember.set("transferGroupId", transferGroupId);
+    	  		newEntityMember.set("inventoryTransferId", inventoryTransferId);
+    	  		newEntityMember.set("inventoryItemId", invItemId);
+    	  		newEntityMember.set("productId", productId);
+   	        newEntityMember.set("xferQty", xferQuantity);
+   	        newEntityMember.set("createdDate", xferDate);
+   	        newEntityMember.set("createdByUserLogin", userLogin.get("userLoginId"));
+   	        newEntityMember.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+   	        newEntityMember.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+   	        newEntityMember.create();
+         }
+       	 if(departmentTransfers){
+       		 
+       		 Map inputCtx = FastMap.newInstance();
+                inputCtx.put("statusId", "IXF_COMPLETE");
+                inputCtx.put("transferGroupId", transferGroupId);
+                inputCtx.put("xferDate", xferDate);
+                inputCtx.put("userLogin", userLogin);
+                Map resultMap = dispatcher.runSync("updateInternalDeptTransferStatus", inputCtx);
+    	  		 if(ServiceUtil.isError(resultMap)){
+    	  			Debug.logError("Error in processing transfer entry ", module);
+    	  			return ServiceUtil.returnError("Error in processing transfer entry ");
+    	  		 }
+	         }else{
+	        	 String statusIdTo = "IXF_EN_ROUTE";
+	        	 GenericValue transferGroup = delegator.findOne("InventoryTransferGroup", UtilMisc.toMap("transferGroupId", transferGroupId), false);
+		  		  
+		  		  String oldStatusId = transferGroup.getString("statusId");
+		  		  GenericValue statusItem = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusIdTo), false);
+		  		  if(UtilValidate.isEmpty(statusItem)){
+		  			  Debug.logError("Not a valid status change", module);
+		  			  return ServiceUtil.returnError("Not a valid status change");
+		  		  }
+		  		  transferGroup.set("statusId", statusIdTo);
+		  		  transferGroup.store();
+		  		  
+		  		  List<GenericValue> transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+		  		  
+		  		  List<String> inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
+		  		  
+		  		  List<GenericValue> inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
+		  		  
+		  		  for(GenericValue eachTransfer : inventoryTransfers){
+		  			  
+		  			  Map inputCtx = FastMap.newInstance();
+		              inputCtx.put("inventoryTransferId", eachTransfer.getString("inventoryTransferId"));
+		              inputCtx.put("inventoryItemId", eachTransfer.getString("inventoryItemId"));
+		              inputCtx.put("statusId", statusIdTo);
+		              inputCtx.put("userLogin", userLogin);
+		              Map resultInvTrCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
+		              if(ServiceUtil.isError(resultInvTrCtx)){
+		            	  Debug.logError("Error updating inventory transfer status : "+eachTransfer.getString("inventoryTransferId"), module);
+		            	  return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultInvTrCtx));
+		              }
+		  		  }     
+	         }
+        }
+        catch(Exception e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        
+        result = ServiceUtil.returnSuccess("Sucessfully initated transfer");
+        return result;
+    }
+   	public static String updateTransferGroupStatus(HttpServletRequest request, HttpServletResponse response) {
+	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  boolean beginTransaction = false;
+	  	  
+	  	  try{
+	  		  beginTransaction = TransactionUtil.begin();
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  
+		  		  String transferGroupId = "";
+		  		  String statusId = "";
+		  		  String toFacilityId="";
+		  		  String transferQtyStr = "";
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  if (paramMap.containsKey("transferGroupId" + thisSuffix)) {
+		  			  transferGroupId = (String) paramMap.get("transferGroupId" + thisSuffix);
+		  		  }else{
+		  			Debug.logError("Transfer Group Id cannot be empty", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "Transfer Id cannot be empty");
+              	TransactionUtil.rollback();
+          		return "error";
+		  		  }
+		  		  
+		  		  if (paramMap.containsKey("statusId" + thisSuffix)) {
+		  			  statusId = (String) paramMap.get("statusId"+thisSuffix);
+		  		  }
+		  		  else{
+		  			Debug.logError("status cannot be empty", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "status cannot be empty");
+              	TransactionUtil.rollback();
+          		return "error";
+		  		  }
+		  		  if (paramMap.containsKey("toFacilityId" + thisSuffix)) {
+		  			toFacilityId = (String) paramMap.get("toFacilityId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("transferQty" + thisSuffix)) {
+		  			transferQtyStr = (String) paramMap.get("transferQty"+thisSuffix);
+		  		  }
+		  		  BigDecimal transferQty = BigDecimal.ZERO;
+		  		  if(UtilValidate.isNotEmpty(transferQtyStr)){
+		  			transferQty =  new BigDecimal(transferQtyStr);
+		  		  }
+		  		  GenericValue transferGroup = delegator.findOne("InventoryTransferGroup", UtilMisc.toMap("transferGroupId", transferGroupId), false);
+		  		  
+		  		  String oldStatusId = transferGroup.getString("statusId");
+		  		  String workEffortId = transferGroup.getString("workEffortId");
+		  		  String transferTypeId = transferGroup.getString("transferGroupTypeId");
+		  		  GenericValue statusItem = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusId), false);
+		  		  
+		  		  if(UtilValidate.isEmpty(statusItem)){
+		  			  Debug.logError("Not a valid status change", module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Not a valid status change");
+		  			  TransactionUtil.rollback();
+		  			  return "error";
+		  		  }
+		  		  
+		  		  transferGroup.set("statusId", statusId);
+		  		  transferGroup.store();
+		  		  
+		  		  List<GenericValue> transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+		  		  
+		  		  List<String> inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
+		  		  
+		  		  List<GenericValue> inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
+		  		  BigDecimal totalIssuedQty = BigDecimal.ZERO;
+		  		  Timestamp sendDate =null;
+		  		  Timestamp receivedDate =null;
+		  		  for(GenericValue eachTransGroup : transferGroupMembers){
+		  			  if(UtilValidate.isNotEmpty(eachTransGroup.getBigDecimal("xferQty"))){
+		  				totalIssuedQty = totalIssuedQty.add(eachTransGroup.getBigDecimal("xferQty"));
+		  			  }
+		  		  }
+         		  sendDate = (EntityUtil.getFirst(inventoryTransfers)).getTimestamp("sendDate");
+         		  receivedDate = (EntityUtil.getFirst(inventoryTransfers)).getTimestamp("receiveDate");
+         		  String facilityIdTo = (EntityUtil.getFirst(inventoryTransfers)).getString("facilityIdTo");
+         		  
+         		  GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityIdTo), false);
+         		  
+         		    //shipment
+        	  	  
+         		  	GenericValue newEntity = delegator.makeValue("Shipment");
+         		  	if(UtilValidate.isNotEmpty(receivedDate)){
+         		  		newEntity.set("estimatedShipDate", receivedDate);
+         		  	}else{
+         		  		newEntity.set("estimatedShipDate", nowTimeStamp);
+         		  	}
+         	        
+         	        newEntity.set("shipmentTypeId", "TRANSFER_SHIPMENT");
+         	        newEntity.set("statusId", "GENERATED");
+         	        if(UtilValidate.isNotEmpty(facility)){
+         	        	newEntity.put("partyIdFrom",((String)facility.get("ownerPartyId")));
+         	        }
+         	        newEntity.put("deliveryChallanDate",sendDate);
+         	        newEntity.set("createdDate", nowTimeStamp);
+         	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+         	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+         	        delegator.createSetNextSeqId(newEntity);            
+         	        String shipmentId = (String) newEntity.get("shipmentId");
+         		  
+         		  String prod = "";
+		  		  if((transferQty.compareTo(BigDecimal.ZERO) >0) && (transferQty.compareTo(totalIssuedQty) >0) && !statusId.equals("IXF_CANCELLED")){
+		  			  BigDecimal diffTrnsQty = transferQty.subtract(totalIssuedQty);
+		  			  GenericValue invTransfer = EntityUtil.getFirst(inventoryTransfers);
+		  			  GenericValue tranferGrpMber = EntityUtil.getFirst(transferGroupMembers);
+		  			  transferGroup.set("statusId", "IXF_REQUESTED");
+			  		  transferGroup.store();
+			  		  
+			  		  prod = tranferGrpMber.getString("productId");
+			  		  
+		  			  Map inputXfer = FastMap.newInstance();
+		  			  inputXfer.put("xferQty",diffTrnsQty);
+		  			  inputXfer.put("fromFacilityId",invTransfer.getString("facilityId"));
+		  			  inputXfer.put("toFacilityId",invTransfer.getString("facilityIdTo"));
+		  			  inputXfer.put("productId",tranferGrpMber.getString("productId"));
+		  			  inputXfer.put("statusId", "IXF_REQUESTED");
+		  			  inputXfer.put("transferGroupId",transferGroupId);
+		  			  inputXfer.put("userLogin", userLogin);
+		  			  Map resultXfer = dispatcher.runSync("createStockXferRequest", inputXfer);
+			  		  if(ServiceUtil.isError(resultXfer)){
+			  			  Debug.logError("Error while changing quantity."+transferGroupId, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultXfer));
+			  			  TransactionUtil.rollback();
+			  			  return "error";
+			  		  }
+		  		  }
+		  		
+		  		  transferGroup.set("statusId", statusId);
+		  		  transferGroup.store();
+		  		  
+		  		  transferGroupMembers.clear();
+		  		  transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+		  		  inventoryTransferIds.clear();
+		  		  inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
+		  		  inventoryTransfers.clear();
+		  		  inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
+		  		  
+		  		  for(GenericValue eachTransfer : inventoryTransfers){
+		  			  
+		  		    //shipmentitem
+		  			  
+		  			Map<String,Object> itemInMap = FastMap.newInstance();
+			        itemInMap.put("shipmentId",shipmentId);
+			        itemInMap.put("userLogin",userLogin);
+			        itemInMap.put("productId",prod);
+			        itemInMap.put("quantity",transferQty);
+			        Map resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
+			        
+			        if (ServiceUtil.isError(resultMap)) {
+			        	Debug.logError("Problem creating shipment Item for orderId :", module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item :");	
+						TransactionUtil.rollback();
+				  		return "error";
+			        }
+			        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");  
+		  			  
+		  			// shipemtreceipt
+			        
+			        GenericValue shipmentReceipt = delegator.makeValue("ShipmentReceipt");
+			        shipmentReceipt.set("inventoryItemId", eachTransfer.getString("inventoryItemId"));
+			        shipmentReceipt.put("shipmentId",shipmentId);
+			        shipmentReceipt.put("shipmentItemSeqId",shipmentItemSeqId);
+			        shipmentReceipt.set("productId", prod);
+			        shipmentReceipt.set("statusId", "SR_ACCEPTED");
+			        shipmentReceipt.put("datetimeReceived",sendDate);
+         	        delegator.createSetNextSeqId(shipmentReceipt);            
+         	        String receiptId = (String) shipmentReceipt.get("receiptId");
+			        
+		  			if(UtilValidate.isNotEmpty(toFacilityId)){
+		  				if(!toFacilityId.equalsIgnoreCase(eachTransfer.getString("facilityIdTo"))){
+		  					eachTransfer.set("facilityIdTo", toFacilityId);
+		  					 if(UtilValidate.isNotEmpty(sendDate)){
+		  						eachTransfer.set("receiveDate", sendDate);
+					  		  }
+		  					eachTransfer.store();
+		  				}
+		  			}
+		  			 
+		  			Map inputCtx = FastMap.newInstance();
+		            inputCtx.put("inventoryTransferId", eachTransfer.getString("inventoryTransferId"));
+		            inputCtx.put("inventoryItemId", eachTransfer.getString("inventoryItemId"));
+		            inputCtx.put("statusId", statusId);
+		            if(UtilValidate.isNotEmpty(sendDate)){
+		            	inputCtx.put("receiveDate", sendDate);
+			  		}
+			  		inputCtx.put("userLogin", userLogin);
+		            Map resultCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
+		            if(ServiceUtil.isError(resultCtx)){
+		              Debug.logError("Error updating inventory transfer status : "+eachTransfer.getString("inventoryTransferId"), module);
+		              request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
+		              TransactionUtil.rollback();
+		              return "error";
+		            }
+		              
+		            if(UtilValidate.isNotEmpty(statusId) && statusId.equals("IXF_COMPLETE") && transferTypeId.equals("RETURN_XFER") && UtilValidate.isNotEmpty(transferGroup.get("workEffortId"))){
+		            		
+		            String facIdTo = eachTransfer.getString("facilityIdTo");
+		            	  GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", eachTransfer.getString("inventoryItemId")), false);
+		            	  inventoryItem.set("facilityId", facIdTo);
+		            	  inventoryItem.store();
+		            }
+		              
+		            if(UtilValidate.isNotEmpty(statusId) && statusId.equals("IXF_CANCELLED") && transferTypeId.equals("RETURN_XFER") && UtilValidate.isNotEmpty(transferGroup.get("workEffortId"))){
+		            	  List<GenericValue> tranferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+		            	  for(GenericValue eachXferGroup : tranferGroupMembers){
+		            		  inputCtx.clear();
+			            	  inputCtx.put("inventoryItemId", eachXferGroup.getString("inventoryItemId"));
+			            	  inputCtx.put("availableToPromiseDiff", (eachXferGroup.getBigDecimal("xferQty")).negate());
+			            	  inputCtx.put("quantityOnHandDiff", (eachXferGroup.getBigDecimal("xferQty")).negate());
+			            	  inputCtx.put("userLogin", userLogin);
+				              Map resultService = dispatcher.runSync("createInventoryItemDetail", inputCtx);
+				              if(ServiceUtil.isError(resultService)){
+				            	  Debug.logError("Error while rejecting return for production run : "+workEffortId, module);
+				            	  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultService));
+				            	  TransactionUtil.rollback();
+				            	  return "error";
+				              }
+		            	  }
+		              }
+		  		  }
+		  		if((transferQty.compareTo(BigDecimal.ZERO) >0) && (transferQty.compareTo(totalIssuedQty) <0) && !statusId.equals("IXF_CANCELLED")){
+		  			  BigDecimal diffTrnsQty =totalIssuedQty.subtract(transferQty);
+		  			  GenericValue invXfer = EntityUtil.getFirst(inventoryTransfers);
+		  			  GenericValue invXferGrpMber = EntityUtil.getFirst(transferGroupMembers);
+		  			  List<String> facilityList = FastList.newInstance();
+		  			  String fromFacilityId = invXfer.getString("facilityId");
+		  			  facilityList.add(fromFacilityId);
+		  			  String toFacltId = invXfer.getString("facilityIdTo");
+		  			  facilityList.add(toFacltId);
+		  			  String productId = invXferGrpMber.getString("productId");
+		  			  String comments = "Quantity reduced for "+transferGroupId;
+			  		  for(GenericValue eachTransfer : inventoryTransfers){
+				  			  eachTransfer.set("statusId","IXF_REQUESTED");
+				  			  eachTransfer.store();
+			  		  }	  
+		  			  transferGroup.set("statusId", "IXF_REQUESTED");
+			  		  transferGroup.store();
+			  		  Map inputXfer = FastMap.newInstance();
+		  			  inputXfer.put("xferQty",diffTrnsQty);
+		  			  inputXfer.put("fromFacilityId",toFacltId);
+		  			  inputXfer.put("toFacilityId",fromFacilityId);
+		  			  inputXfer.put("productId",productId);
+		  			  inputXfer.put("statusId", "IXF_REQUESTED");
+		  			  inputXfer.put("transferGroupId",transferGroupId);
+		  			  inputXfer.put("userLogin", userLogin);
+		  			  Map resultXfer = dispatcher.runSync("createStockXferRequest", inputXfer);
+			  		  if(ServiceUtil.isError(resultXfer)){
+			  			  Debug.logError("Error while reducing quantity."+transferGroupId, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultXfer));
+			  			  TransactionUtil.rollback();
+			  			  return "error";
+			  		  }
+			  		  transferGroup.set("statusId", statusId);
+			  		  transferGroup.store();
+			  		  transferGroupMembers.clear();
+			  		  transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+			  		  inventoryTransferIds.clear();
+			  		  inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
+			  		  inventoryTransfers.clear();
+			  		  inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
+			  		for(GenericValue eachTransfer : inventoryTransfers){
+			  			  Map inputCtx = FastMap.newInstance();
+			              inputCtx.put("inventoryTransferId", eachTransfer.getString("inventoryTransferId"));
+			              inputCtx.put("inventoryItemId", eachTransfer.getString("inventoryItemId"));
+			              inputCtx.put("statusId", statusId);
+			              inputCtx.put("userLogin", userLogin);
+			              Map resultCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
+			              if(ServiceUtil.isError(resultCtx)){
+			            	  Debug.logError("Error updating inventory transfer status : "+eachTransfer.getString("inventoryTransferId"), module);
+			            	  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
+			            	  TransactionUtil.rollback();
+			            	  return "error";
+			              }
+			  		}    
+		  			
+		  		  }
+		  	  }
+	  	  }
+	  	catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  			return "error";
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+	  	catch (GenericServiceException e) {
+	  		try {
+			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
+	  		} catch (GenericEntityException e2) {
+			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+			  request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+			  return "error";
+	  		}
+	  		Debug.logError("An entity engine error occurred while calling services", module);
+	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+	  			return "error";
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Entry Successfully");
+		return "success";  
+   }
+   	public static Map<String, Object> getFacilityDetails(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+   	    List<GenericValue> facility = null;
+   	    // add this condition after depot configuration is done, EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT")
+	   	 try{
+	   		facility = delegator.findList("Facility", null, null, null, null, false);
+	   	 } catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		 }	
+   	    
+   	  result.put("fromFacility",facility); 
+   	  result.put("toFacility",facility); 
+   	  return result;
+     	
+   	}
+   	
 
    	
    	

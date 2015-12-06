@@ -32,7 +32,7 @@ facilityId = parameters.facilityId;
 //find shipmentIds by filter criteria
 conditionList =[];
 if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
-	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MATERIAL_SHIPMENT"));
+	//conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MATERIAL_SHIPMENT"));
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,parameters.partyId));
 	}
@@ -116,12 +116,22 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		row.productATP = atpMap.get(row.productId);
 		row.productQOH = qohMap.get(row.productId);
 		inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.inventoryItemId));
+		
+		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", iter.inventoryItemId), false);
+		
 		shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
 		if(shipmentReceiptEach) {
 			row.putAt("shipmentId", shipmentReceiptEach.shipmentId);
 			//Debug.log("shipmentId=============================="+shipmentReceiptEach.shipmentId+"==iter.inventoryItemId="+iter.inventoryItemId);
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
+			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
+			
+			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
+			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
 			row.putAt("fromPartyId", shipment.partyIdFrom);
+			row.putAt("facilityId", inventoryItem.facilityId);
+			row.putAt("facilityName", facility.facilityName);
+			row.putAt("partyName", partyName);
 			row.putAt("estimatedShipDate", shipment.estimatedShipDate);
 		}else{
 			row.putAt("shipmentId", "");
@@ -150,3 +160,8 @@ if(UtilValidate.isNotEmpty(isInventorySales)){
 	}
 	context.billToPartyIdsJSON = billToPartyIdsJSON;
 }
+
+facilityList = delegator.findList("Facility", null, null, null, null, false);
+context.facilityList = facilityList;
+
+

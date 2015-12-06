@@ -168,5 +168,14 @@
    <SecurityGroup description="Permission to Cancel FGS Shipment" groupId="CANCELFGS_SHIPMENT"/> 
    <SecurityGroupPermission  groupId="FULLADMIN"permissionId="FGSSALE_SHIP_CANCEL"/> 
    <SecurityGroupPermission groupId="CANCELFGS_SHIPMENT"  permissionId="FGSSALE_SHIP_CANCEL"/>
+   
+   
+   
+    <SecurityPermission description="Accept IN/OUT Transfer..!" permissionId="DPT_ACCEPT_XFER"/>
+    <SecurityGroup description="Accept IN/OUT Transfer..!" groupId="DPT_ACCEPT_XFER"/>
+    <SecurityGroupPermission groupId="DPT_ACCEPT_XFER" permissionId="DPT_ACCEPT_XFER" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DPT_ACCEPT_XFER"/>
+   
+   
 	
 </entity-engine-xml>

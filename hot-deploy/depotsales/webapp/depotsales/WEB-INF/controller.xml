@@ -773,6 +773,40 @@
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
         <response name="success" type="request" value="json"/>  
     </request-map>
+    <request-map uri="findInventoryTransfer">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="DepotSalesInventoryTransfer"/>
+	     <response name="error" type="view" value="DepotSalesInventoryTransfer"/>
+    </request-map>
+    <request-map uri="DepotSalesInventoryTransefer">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="DepotSalesInventoryTransfer"/>
+	     <response name="error" type="view" value="DepotSalesInventoryTransfer"/>
+    </request-map>
+    <request-map uri="InOutInventoryXfers">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="InOutInventoryXfers"/>
+	     <response name="error" type="view" value="InOutInventoryXfers"/>
+    </request-map>
+    <request-map uri="ProductionLookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="ProductionLookupFacility"/></request-map>
+    <request-map uri="updateTransferGroupStatus">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="updateTransferGroupStatus" global-transaction="true"/>
+        <response name="success" type="request-redirect-noparam" value="InOutInventoryXfers"/>
+    </request-map>
+    <request-map uri="createInventoryXferRequest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createInventoryXferRequest"></event>                        
+        <response name="success" type="view" value="DepotSalesInventoryTransfer"/>
+        <response name="error" type="view" value="DepotSalesInventoryTransfer"/>         
+    </request-map>
+    <request-map uri="getFacilityDetails">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getFacilityDetails"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    
         
     <!-- View Mappings -->
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
@@ -872,5 +906,10 @@
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
      <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
      <view-map name="SupplierShipmentOverview" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierShipmentOverview"/>
+     
+     <view-map name="DepotSalesInventoryTransfer" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventoryTransfer"/>
+     <view-map name="InOutInventoryXfers" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#InOutInventoryXfers"/>
+     <view-map name="ProductionLookupFacility" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionLookupFacility"/>
+     
      
 </site-conf>

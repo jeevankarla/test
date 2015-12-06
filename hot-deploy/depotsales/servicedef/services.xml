@@ -55,6 +55,27 @@
         <attribute name="allStatus" type="List" mode="IN" optional="true"/>
         <attribute name="paymentStatus" type="List" mode="IN" optional="true"/>
     </service>
+    <service name="createInventoryXferRequest" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createStockXferRequest">
+    	<attribute name="transferDate" mode="IN" type="String" optional="true"/>
+    	<attribute name="transferGroupId" mode="IN" type="String" optional="true"/>
+    	<attribute name="xferQty" mode="IN" type="BigDecimal" optional="false"/>
+    	<attribute name="fromFacilityId" mode="IN" type="String" optional="false"/>
+    	<attribute name="toFacilityId" mode="IN" type="String" optional="false"/>
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    	<attribute name="inventoryItemId" mode="IN" type="String" optional="true"/>
+    	<attribute name="statusId" mode="IN" type="String" optional="true"/>
+    	<attribute name="transferGroupTypeId" mode="IN" type="String" optional="true"/>
+    	<attribute name="comments" mode="IN" type="String" optional="true"/>
+    	<attribute name="workEffortId" mode="IN" type="String" optional="true"/>
+    </service>
+    
+    
+    <service name="getFacilityDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getFacilityDetails">
+        <description>Get Child Categories</description>
+        <attribute name="fromFacility" type="List" mode="OUT" optional="true"/>
+        <attribute name="toFacility" type="List" mode="OUT" optional="true"/>
+    </service>
+    
 
 </services>
 
