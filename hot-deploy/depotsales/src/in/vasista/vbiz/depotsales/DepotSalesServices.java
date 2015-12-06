@@ -1520,6 +1520,18 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
+		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+			 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
+			 try {
+			 GenericValue value = delegator.makeValue("OrderRole", fields);
+			 delegator.create(value);
+			 } catch (GenericEntityException e) {
+				 request.setAttribute("_ERROR_MESSAGE_"," Could not add role to order for OnBeHalf ");
+					Debug.logError(e, "Could not add role to order for OnBeHalf  party " + schemePartyId, module);
+					return "error";
+			 }
+		}
+		
 		if(UtilValidate.isNotEmpty(supplierPartyId)){
 			try{
 				GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
