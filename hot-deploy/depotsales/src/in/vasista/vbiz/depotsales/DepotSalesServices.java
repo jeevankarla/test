@@ -2359,29 +2359,31 @@ public class DepotSalesServices{
 						List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
 						Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
 						
-						conditionList.clear();
+						BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
 						if(UtilValidate.isNotEmpty(orderIds)){
+							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-						}
-						if(UtilValidate.isNotEmpty(productIdsList)){
-							conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+							if(UtilValidate.isNotEmpty(productIdsList)){
+								conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+							}
+							
+							conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+							conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+							Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+							List<GenericValue> orderItemAndAdjustment = null;
+							try {
+								orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+							} catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive OrderHeader ", module);
+								return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+							}
+							Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
+							
+							for(int k=0; k<orderItemAndAdjustment.size(); k++){
+								totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
+							}
 						}
 						
-						conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
-						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-						Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
-						List<GenericValue> orderItemAndAdjustment = null;
-						try {
-							orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-						} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive OrderHeader ", module);
-							return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
-						}
-						Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
-						BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
-						for(int k=0; k<orderItemAndAdjustment.size(); k++){
-							totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
-						}
 						Debug.log("totalQuotaUsedUp =============="+totalQuotaUsedUp);
 						Map productCategoryQuotaMap = FastMap.newInstance();
 						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
