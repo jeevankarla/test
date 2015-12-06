@@ -3356,9 +3356,13 @@ public class MaterialPurchaseServices {
 				        	inputMap.put("receiptId", receipt.get("receiptId"));
 
 				        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
-				        	if(ServiceUtil.isError(resultReceipt)){
+				        	/*if(ServiceUtil.isError(resultReceipt)){
 				        		Debug.logError("Error While Sending Receipt to QC", module);
 				  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
+				        	}*/
+				        	if(ServiceUtil.isError(resultReceipt)){
+				        		Debug.logError("Error While  While Accepting Receipt", module);
+				  	  			return ServiceUtil.returnError("Error While Accepting Receipt "+receipt.get("receiptId"));
 				        	}
 			        	//send QC in same time
 			        	inputMap.clear();
@@ -3425,7 +3429,9 @@ public class MaterialPurchaseServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
-		result = ServiceUtil.returnSuccess("GRN no: "+shipmentId+" Send For Quality Check ");
+		//result = ServiceUtil.returnSuccess("GRN no: "+shipmentId+" Send For Quality Check ");
+		result = ServiceUtil.returnSuccess("GRN No:"+shipmentId+" Accepted Successfully  !!!! ");
+		
 		return result;
 	}
 	public static Map<String, Object>  createSupplier(DispatchContext dctx, Map<String, ? extends Object> context)  {
