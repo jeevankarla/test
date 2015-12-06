@@ -423,14 +423,14 @@
         	<condition>
         		<if-compare operator="not-equals" value="" field="shipmentId"/>
         	</condition>
-            <link target="DepotTransMaterialShipmentOverview">
+            <link target="MaterialShipmentOverview"><parameter param-name="shipmentId" from-field="shipmentId"/>
             </link>
         </menu-item>
         <menu-item name="DepotTransMaterialInvoiceInit" title="Invoice For Shipment">	
         	<condition>
         		<if-compare operator="not-equals" value="" field="shipmentId"/>
         	</condition>
-            <link target="MaterialInvoiceInit">
+            <link target="DepotTransMaterialInvoiceInit"><parameter param-name="shipmentId" from-field="shipmentId"/>
             </link>
         </menu-item>
       </menu>

@@ -3546,7 +3546,7 @@
 				<set field="defaultEffectiveDateTime" value="${supplyDate}"
 					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
 				<set field="defaultEffectiveDate"
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;yyyy-MM-dd&quot;);}" />
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseInvoiceEntryForm.groovy" />
 			</actions>

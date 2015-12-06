@@ -30,7 +30,7 @@
 	
 	$(document).ready(function(){
 	
-		//$('#ui-datetimepicker-div').css('clip','auto');
+		$('#ui-datetimepicker-div').css('clip','auto');
 			
 		
 		$( "#suppInvoiceDate" ).datepicker({
@@ -159,7 +159,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input class="h3" type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
+		          				<input class="h3" type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
 		          			</td>
 				          </#if>
 				        </tr>
