@@ -773,6 +773,22 @@
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
         <response name="success" type="request" value="json"/>  
     </request-map>
+    <request-map uri="createPOContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPOContentFile"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
+    <request-map uri="creatNewnote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="creatNewnote"/>
+    </request-map>
+    <request-map uri="createPONote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderNote"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
         
     <!-- View Mappings -->
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
@@ -872,5 +888,5 @@
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
      <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
      <view-map name="SupplierShipmentOverview" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierShipmentOverview"/>
-     
+     <view-map name="creatNewnote" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#OrderNewNote"/>
 </site-conf>

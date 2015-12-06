@@ -28,17 +28,17 @@ under the License.
             <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>arcOrder.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
      	  </#if>
             <#if "PURCHASE_ORDER" == orderHeader.orderTypeId>
-            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderView.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
           </#if>
          <#if "CPC_ORDER" == orderHeader.orderTypeId>
-            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderView.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderViewDepotSales?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
           </#if>
-         	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
+         	<#--<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend PO</a></li>
         	</#if>
         	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareSuspendPOForm('${orderId}')">Suspend PO</a></li>
-        	</#if>
+        	</#if>-->
          </ul>
         <br class="clear"/>
     </div>
@@ -110,7 +110,8 @@ under the License.
               <td width="5%">&nbsp;</td>
               <td valign="top" width="80%">
                   <#if orderHeader.productStoreId?has_content>
-                    <a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}${externalKeyParam}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>
+                    <#--<a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}${externalKeyParam}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>-->
+                    ${orderHeader.productStoreId}
                   <#else>
                     ${uiLabelMap.CommonNA}
                   </#if>
@@ -133,7 +134,8 @@ under the License.
               <td width="5%">&nbsp;</td>
               <td valign="top" width="80%">
                   <#if orderHeader.createdBy?has_content>
-                    <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${externalKeyParam}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
+                    <#--<a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${externalKeyParam}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>-->
+                    ${orderHeader.createdBy}
                   <#else>
                     ${uiLabelMap.CommonNotSet}
                   </#if>

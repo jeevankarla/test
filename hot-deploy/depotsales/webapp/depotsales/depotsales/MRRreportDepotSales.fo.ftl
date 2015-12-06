@@ -40,8 +40,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		       
 					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
 					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;                                    ${reportHeader.description?if_exists} </fo:block>
-				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;                          ${reportSubHeader.description?if_exists}                         ACCOUNTS / PURCHASE / STORES   </fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;&#160;&#160;&#160;                      &#160;${reportHeader.description?if_exists} </fo:block>
+				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;                    ${reportSubHeader.description?if_exists}                         ACCOUNTS / PURCHASE / STORES   </fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;              -------------------------------------------------------------------------------  </fo:block> 
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                                            MATERIAL RECEIPT REPORT 	    </fo:block> 
 				              	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block>
@@ -178,7 +178,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
             	<fo:block>
                  	<fo:table border-style="solid">
 	                    <fo:table-column column-width="30pt"/>
-	                    <fo:table-column column-width="60pt"/>
+	                    <fo:table-column column-width="75pt"/>
 	                    <fo:table-column column-width="140pt"/>  
 	               	    <fo:table-column column-width="70pt"/>
 	               	    <fo:table-column column-width="80pt"/>
