@@ -219,7 +219,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			boothTempPaymentsList = delegator.findList("Payment", condition, null, ["paymentId"], null, false);
 		routeCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"));
-		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NON_ROUTE_MKTG"));
+		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NHDC_RECEIPT"));
 			//for DepositAccounts--------------------
 		finAccountDepositTransIdsMap=[:];
 		condList=[];

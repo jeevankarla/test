@@ -90,7 +90,7 @@ function cancelForm(){
 		  	
 	}
 	function disableGenerateButtonAr(purposeTypeId1){	
-		  	var value="NON_ROUTE_MKTG";
+		  	var value="NHDC_RECEIPT";
 		  	if(voucherType=="CASH"){
 		  	if (purposeTypeId1 == null || purposeTypeId1 == undefined || !purposeTypeId1.length){
 		  	      var purposeTypeId ="<input type=hidden name=paymentPurposeType value="+value+" />";

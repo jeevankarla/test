@@ -71,7 +71,7 @@ paymentIdsList=[];
 		boothTempPaymentsList = delegator.findList("Payment", condition, null, ["paymentId"], null, false);
 		
 		routeCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"));
-		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NON_ROUTE_MKTG"));
+		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NHDC_RECEIPT"));
 		paymentIdList = EntityUtil.getFieldListFromEntityList(routeCheckListReportList, "paymentId", true);
 		paymentIdsList.addAll(paymentIdList);
 

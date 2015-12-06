@@ -222,7 +222,7 @@ under the License.
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field> 
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> 
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -235,7 +235,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+                <!-- 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
@@ -260,7 +260,7 @@ under the License.
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field> 
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> 
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -768,7 +768,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
       <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
          <field name="statusId"><hidden value="PMNT_RECEIVED"/></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
@@ -837,7 +837,7 @@ under the License.
         <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
         <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
       <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
         <field name="statusId"><hidden value="PMNT_SENT"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
@@ -879,7 +879,7 @@ under the License.
     </form>
      <form name="FindNonRoutePayments" type="single" target="findPayments"
         header-row-style="header-row" default-table-style="basic-table">
-         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+         <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
       <!--   <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
@@ -969,8 +969,8 @@ under the License.
       <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
          <field name="statusId"><hidden value="PMNT_RECEIVED"/></field>
           <field name="subTabItem"><hidden value="${subTabButtonItem}" ></hidden></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
@@ -1042,7 +1042,7 @@ under the License.
       <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
          <field name="statusId"><hidden value="PMNT_RECEIVED"/></field>
           <field name="subTabItem"><hidden value="${subTabButtonItem}" ></hidden></field>
-        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="isEnableAcctg"><hidden value="N"/></field>
         <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
@@ -1052,7 +1052,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+                	<!-- <entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
