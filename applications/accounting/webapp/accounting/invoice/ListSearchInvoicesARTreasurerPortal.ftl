@@ -87,7 +87,7 @@ function cancelForm(){
 	}
 	function disableGenerateButton(purposeTypeId1){	
 					  		 $("input[type=submit]").attr("disabled", "disabled");
-		  	var value="NON_ROUTE_MKTG";
+		  	var value="NHDC_RECEIPT";
 		  	//alert("val"+value);
 		  	//alert("purposeTypeId1"+purposeTypeId1);
 		  	if(voucherType=="CASH"){

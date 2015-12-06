@@ -74,7 +74,7 @@
 	</form>
 	<form name="FindPayments" type="single" target=""
         header-row-style="header-row" default-table-style="basic-table">
-         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+         <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="purposeTypeIdField" title="Receipts Type" >
 			<drop-down allow-empty="true">
