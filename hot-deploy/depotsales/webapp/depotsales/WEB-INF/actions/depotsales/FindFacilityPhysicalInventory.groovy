@@ -62,8 +62,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	if (productId) {
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.LIKE, productId + "%"));
 	}
-	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-	
+	if(facilityId){
+		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	}
 	if (shipmentIdsList) {
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
 	}
@@ -125,6 +126,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			//Debug.log("shipmentId=============================="+shipmentReceiptEach.shipmentId+"==iter.inventoryItemId="+iter.inventoryItemId);
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
+			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
 			
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
@@ -132,6 +134,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			row.putAt("facilityId", inventoryItem.facilityId);
 			row.putAt("facilityName", facility.facilityName);
 			row.putAt("partyName", partyName);
+			row.putAt("productName", product.productName);
 			row.putAt("estimatedShipDate", shipment.estimatedShipDate);
 		}else{
 			row.putAt("shipmentId", "");
