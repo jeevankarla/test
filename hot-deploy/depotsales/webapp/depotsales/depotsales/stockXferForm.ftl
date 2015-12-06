@@ -102,12 +102,13 @@
 		dialogue( message, title );
 	}
 	
-	function showInventoryTransferQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, facilityName, facilityId) {
+	function showInventoryTransferQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, facilityName, facilityId,productName) {
 	//showXferForm();
 			var message = "";
 			message += "<form action='createInventoryXferRequest' method='post' onsubmit='return disableSubmitButton();' name='transferInventory' id='transferInventory'><table cellspacing=10 cellpadding=10>";
 			
-			message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='productId' name='productId' value='"+productId+"'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='STORE'/></tr>";
+			message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'> <input type='text'  readonly  id='productId' value='"+productId+"' name='productId'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='STORE'/></tr>";
+			message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ProductName:</td><td> '"+productName+"'</td></tr>";
 			message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Transfer Date:</td><td align='left' width='50%'><input type='text' id='transferDate' name='transferDate' onmouseover='datepick()'/></td><input type='hidden'  id='effectiveDate' name='effectiveDate'/><input type='hidden'  id='quantityOnHandTotal' name='quantityOnHandTotal' value='"+quantityOnHandTotal+"'/></tr>";
 			
 			message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Unit Cost:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='unitCost' name='unitCost' value='"+unitCost+"'/></td><input type='hidden'  id='inventoryItemId' name='inventoryItemId' value='"+inventoryItemId+"'/></tr>";

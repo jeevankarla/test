@@ -1165,7 +1165,7 @@ public class DepotSalesServices{
             paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
             
             paymentCtx.put("statusId", "PMNT_RECEIVED");
-            paymentCtx.put("paymentPurposeType", "NON_ROUTE_MKTG");
+            paymentCtx.put("paymentPurposeType", "NHDC_RECEIPT");
             paymentCtx.put("amount", paymentAmount);
             paymentCtx.put("userLogin", userLogin);
             
