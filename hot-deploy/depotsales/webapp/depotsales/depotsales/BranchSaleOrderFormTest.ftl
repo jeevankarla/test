@@ -59,7 +59,7 @@
 			$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){ 
 				if (e.keyCode === 13){
 			      	$('#boothId').autocomplete('close');
-		    		$('#indententryinit').submit();
+		    		//$('#indententryinit').submit();
 		    		return false;   
 				}
 			});
@@ -173,6 +173,11 @@
 	  			indententryinit.isFormSubmitted.value="";
 	  		}
 	  	}
+	  	
+	function formSubmit(selection){
+		 $('#indententryinit').submit();
+			    return false; 
+	}
 	 
 	</script>
 	
@@ -478,17 +483,22 @@
 						
 	               	</tr>
 	               	</#if>
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
-	               	
+				<#if party?exists && party?has_content>
+					<tr>
+					</tr>
+					<#else>
+	               		<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		<td>&nbsp;</td>
+		       	  		<td>&nbsp;</td>
+			   			<td>&nbsp;</td>
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap">
+		       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
+		       			</td>
+	               		
+						</tr>
+	               	</#if>
 	               <#--	
 	               	<tr>
 	               		<td>&nbsp;</td>
