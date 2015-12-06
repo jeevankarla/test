@@ -135,7 +135,9 @@
 		exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIdsList));
 		}
 	}else if(parameters.schemeCategory && "MGPS".equals(parameters.schemeCategory)){
-		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%HANK%"));
+	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.NOT_LIKE,"%CONE%"));
+	}else{
+	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%CONE%"));
 	}
 	
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
