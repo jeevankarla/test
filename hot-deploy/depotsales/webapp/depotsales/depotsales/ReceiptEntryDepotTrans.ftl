@@ -24,26 +24,24 @@
     minDate: startDateFrom,
    // maxDate: startDateTo
  });	
-			
+
+$( "#suppInvoiceDate" ).datepicker({
+	dateFormat:'d MM, yy',
+	changeMonth: true,
+	
+});
+$( "#deliveryChallanDate" ).datepicker({
+	dateFormat:'d MM, yy',
+	changeMonth: true,
+	
+});			
 	$('#ui-datepicker-div').css('clip', 'auto');	
 	  }
 	
-	$(document).ready(function(){
+	//$(document).ready(function(){
 	
-		$('#ui-datetimepicker-div').css('clip','auto');
-			
-		
-		$( "#suppInvoiceDate" ).datepicker({
-			dateFormat:'d MM, yy',
-			changeMonth: true,
-			
-		});
-		$( "#deliveryChallanDate" ).datepicker({
-			dateFormat:'d MM, yy',
-			changeMonth: true,
-			
-		});
-		
+		//$('#ui-datetimepicker-div').css('clip','auto');
+							
 		/*
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
@@ -54,7 +52,7 @@
 			}
 		});
 		*/
-	});
+	//});
 		
 </script>
 
@@ -159,7 +157,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input class="h3" type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
+		          				<input class="h3" type="text" name="suppInvoiceDate" id="suppInvoiceDate" onmouseover="datetimepick()"/>
 		          			</td>
 				          </#if>
 				        </tr>
@@ -193,7 +191,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input class="h3" type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
+		          				<input class="h3" type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" onmouseover="datetimepick()" value="${defaultEffectiveDate}" />
 		          			</td>
 				          </#if>
 		          			
