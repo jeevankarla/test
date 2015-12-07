@@ -41,6 +41,13 @@ orderDetailsList=[];
 allDetailsMap=[:];
 orderTermList=[];
 
+
+partyName = parameters.partyName;
+context.partyName = partyName;
+partyId = parameters.partyId;
+context.partyId = partyId;
+
+
 condtList = [];
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
@@ -113,12 +120,62 @@ if(UtilValidate.isNotEmpty(orderHeader)){
 
 roleTypeList = ["SHIP_TO_CUSTOMER","SUPPLIER"];
 
+partyAddressMap = [:];
+
 if(UtilValidate.isNotEmpty(orderId)){
 	List conlist=[];
 	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN,roleTypeList));
+	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
 	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 	vendorDetailsList = delegator.findList("OrderRole", cond , null, null, null, false );
+	
+	vendorDetail=EntityUtil.getFirst(vendorDetailsList);
+	fromPartyId="";
+	if(UtilValidate.isNotEmpty(vendorDetail)){
+	   fromPartyId	 = vendorDetail.partyId;
+	   partyAddressMap.put("fromPartyId",fromPartyId);
+	   
+	   partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
+	   if(UtilValidate.isNotEmpty(partyPostalAddress)){
+		   if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
+			address1=partyPostalAddress.address1;
+			partyAddressMap.put("address1",address1);
+		   }
+		  if(UtilValidate.isNotEmpty(partyPostalAddress.address2)){
+			  address2=partyPostalAddress.address2;
+			  partyAddressMap.put("address2",address2);
+		  }
+		  if(UtilValidate.isNotEmpty(partyPostalAddress.city)){
+			  city=partyPostalAddress.city;
+			  partyAddressMap.put("city",city);
+		  }
+		  if(UtilValidate.isNotEmpty(partyPostalAddress.postalCode)){
+			  postalCode=partyPostalAddress.postalCode;
+			  partyAddressMap.put("postalCode",postalCode);
+		  }
+		  partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId:fromPartyId, userLogin: userLogin]);
+		  if(UtilValidate.isNotEmpty(partyContactDetails)){
+			  if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){
+				  contactNumber=partyContactDetails.contactNumber;
+				  partyAddressMap.put("contactNumber",contactNumber);
+			  }
+		  }
+		  faxId="FAX_BILLING";
+		  partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: fromPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+		  faxNumber = "";
+		  if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
+			  faxNumber = partyFaxNumber.contactNumber;
+			  partyAddressMap.put("faxNumber", faxNumber);
+			  
+		  }
+		  formPartyTinNumber=delegator.findOne("PartyIdentification",[partyId:fromPartyId,partyIdentificationTypeId:"TIN_NUMBER"],false);
+		  if(formPartyTinNumber){
+			  fromPartyTinNo=formPartyTinNumber.idValue;
+			  context.fromPartyTinNo=fromPartyTinNo;
+		  }
+	   }
+	}
+	context.partyAddressMap=partyAddressMap;
 	
 	
 	for (vendorDetail in vendorDetailsList) {
@@ -128,16 +185,8 @@ if(UtilValidate.isNotEmpty(orderId)){
 			
 				partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 				
-				if((vendorDetail.roleTypeId).equals("SHIP_TO_CUSTOMER"))
-				{
-			    allDetailsMap.put("partyId",partyId);
-				allDetailsMap.put("partyName",partyName);
-				}else{
 				allDetailsMap.put("SupplierpartyId",partyId);
 				allDetailsMap.put("supplierName",partyName);
-				}
-				 
-				
 				
 				 }
 			}
