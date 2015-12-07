@@ -678,7 +678,7 @@
                 <if-compare field="enableInventory" operator="equals" value="true"/>
             </condition>          
             <link target="DepotSalesInventorySales">
-                <parameter param-name="facilityId" value="STORE"/>
+<!--                 <parameter param-name="facilityId" value="STORE"/> -->
             </link>
         </menu-item>
         
@@ -727,7 +727,7 @@
       <menu name="InventorySalesSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
     	<menu-item name="makeInventorySales" title="Inventory Sales">
 	    	<link target="DepotSalesInventorySales">
-	    		<parameter param-name="facilityId" value="STORE"/>
+<!-- 	    		<parameter param-name="facilityId" value="STORE"/> -->
 	    	</link>
     	</menu-item>
     	<menu-item name="paymentForSales" title="Payment for Sales">
