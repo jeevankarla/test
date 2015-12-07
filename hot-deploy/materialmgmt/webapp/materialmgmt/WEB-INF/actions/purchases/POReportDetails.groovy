@@ -41,6 +41,44 @@ orderDetailsList=[];
 allDetailsMap=[:];
 orderTermList=[];
 
+condtList = [];
+condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+OrderHeaderList = delegator.findList("OrderHeader", cond, null, null, null ,false);
+
+orderDate = OrderHeaderList[0].get("orderDate");
+
+context.orderDate = orderDate;
+
+condtList = [];
+condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+
+orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+
+total = 0
+
+if(UtilValidate.isNotEmpty(orderPreferenceIds)){
+
+conditonList = [];
+conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
+conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
+cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+
+if(UtilValidate.isNotEmpty(PaymentList)){
+for (eachpayment in PaymentList) {
+	total = total+eachpayment.amount;
+}
+}
+
+}
+
+
+context.payment = total;
+
+
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
 allDetailsMap["grandTotal"]=BigDecimal.ZERO;
@@ -72,20 +110,41 @@ if(UtilValidate.isNotEmpty(orderHeader)){
  }
 
 // partyId,partyName
+
+roleTypeList = ["SHIP_TO_CUSTOMER","SUPPLIER"];
+
 if(UtilValidate.isNotEmpty(orderId)){
 	List conlist=[];
 	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
+	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN,roleTypeList));
 	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
-	vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
-	vendorDetail=EntityUtil.getFirst(vendorDetails);
-	if(UtilValidate.isNotEmpty(vendorDetail)){
-	partyId=vendorDetail.partyId;
-	allDetailsMap.put("partyId",partyId);
-		partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-		allDetailsMap.put("partyName",partyName);
-	  }
+	vendorDetailsList = delegator.findList("OrderRole", cond , null, null, null, false );
+	
+	
+	for (vendorDetail in vendorDetailsList) {
+		
+		if(UtilValidate.isNotEmpty(vendorDetail)){
+			partyId=vendorDetail.partyId;
+			
+				partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+				
+				if((vendorDetail.roleTypeId).equals("SHIP_TO_CUSTOMER"))
+				{
+			    allDetailsMap.put("partyId",partyId);
+				allDetailsMap.put("partyName",partyName);
+				}else{
+				allDetailsMap.put("SupplierpartyId",partyId);
+				allDetailsMap.put("supplierName",partyName);
+				}
+				 
+				
+				
+				 }
+			}
+		
 	}
+	
+	
 
           //to get company details
 
