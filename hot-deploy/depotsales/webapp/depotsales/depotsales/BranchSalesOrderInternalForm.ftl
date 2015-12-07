@@ -732,6 +732,15 @@
 				
 				//jQuery("#totalAmount").html(dispText);
 			}
+			if (args.cell == 4) {
+				var prod = data[args.row]["cProductId"];
+				quota = parseFloat(productQuotaJSON[prod]);
+				if(isNaN(quota)){
+					quota = 0;
+				}
+				data[args.row]["quota"] = quota;
+				grid.updateRow(args.row);
+			}
 			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
@@ -753,6 +762,13 @@
 					roundedAmount = 0;
 				}
 				data[args.row]["amount"] = roundedAmount;
+				
+				quota = parseFloat(productQuotaJSON[prod]);
+				if(isNaN(quota)){
+					quota = 0;
+				}
+				data[args.row]["quota"] = quota;
+				
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
