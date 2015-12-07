@@ -402,7 +402,7 @@
 				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />
 				          		</td>
 				          		<td colspan="2"><span class="tooltip" id="partyName"><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/></td></span></td>
-			        			<td><span class="tooltip">Input party code and press Enter</span></td>
+			        			<#--><td><span class="tooltip">Input party code and press Enter</span></td>-->
 				          	</#if>
 			        	</#if>
 						
