@@ -549,7 +549,7 @@
 		 		<div class="grid-header" style="width:100%">
 					<span id="totalAmount"></span>
 				</div>
-				<div id="myGrid1" style="width:100%;height:350px;"></div>
+				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
 					<#assign formAction='processBranchSalesOrder'>			
 					
