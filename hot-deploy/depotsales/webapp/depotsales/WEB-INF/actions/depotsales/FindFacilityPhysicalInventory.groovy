@@ -152,7 +152,7 @@ if(UtilValidate.isNotEmpty(isInventorySales)){
 	inputMap.put("userLogin", userLogin);
 	//get Parties to make SalesOrder
 	JSONArray billToPartyIdsJSON = new JSONArray();
-	inputMap.put("roleTypeId", "SUPPLIER");
+	inputMap.put("roleTypeId", "CUSTOMER");
 	Map partyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
 	billToPartyDetailsList = partyDetailsMap.get("partyDetails");
 	billToPartyDetailsList.each{eachParty ->
