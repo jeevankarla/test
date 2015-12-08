@@ -106,9 +106,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 //finding UOM---------------
 	 productQuantityUomId="";
 	 productUOMdescription="";
-	 if(UtilValidate.isNotEmpty(product)){
 		 productQuantityUomId= product.quantityUomId;
-	  }
 	 GenericValue productUOM = delegator.findOne("Uom", UtilMisc.toMap("uomId",productQuantityUomId),false);
 	 if(UtilValidate.isNotEmpty(productUOM)){
 		 if(UtilValidate.isNotEmpty(productUOM.description)){
@@ -117,13 +115,9 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 }
 	 context.uom = productUOMdescription;
 	 //----------------
-	 isMarketingPackage = "";
-	 if(UtilValidate.isNotEmpty(product)){
 	   boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG");
-	 }
 	 context.isMarketingPackage = (isMarketingPackage? "true": "false");
 	 //If product is virtual gather summary data from variants
-	 if(UtilValidate.isNotEmpty(product)){
 	 if (product.isVirtual && "Y".equals(product.isVirtual)) {
 		 //Get the virtual product feature types
 		 result = dispatcher.runSync("getProductFeaturesByType", [productId : productId, productFeatureApplTypeId : 'SELECTABLE_FEATURE']);
@@ -159,7 +153,6 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 }
 		 context.featureTypeIds = featureTypeIds;
 		 context.variantInventorySummaries = variantInventorySummaries;
-	   } 
 	 } else { //Gather information for a non virtual product
 		 quantitySummaryByFacility = [:];
 		 manufacturingInQuantitySummaryByFacility = [:];
