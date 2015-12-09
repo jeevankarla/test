@@ -56,13 +56,6 @@
 				}
 			});
 			$('#ui-datepicker-div').css('clip', 'auto');
-			$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){ 
-				if (e.keyCode === 13){
-			      	$('#boothId').autocomplete('close');
-		    		//$('#indententryinit').submit();
-		    		return false;   
-				}
-			});
 			 $('#suplierPartyId').keypress(function (e) { 
 				$("#suplierPartyId").autocomplete({ source: supplierAutoJson , select: function( event, ui ) {
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
@@ -399,7 +392,8 @@
 				          		</td>       
 				       		<#else>               
 				          		<td valign='middle'>
-				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />
+                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
 				          		</td>
 				          		<td colspan="2"><span class="tooltip" id="partyName"><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/></td></span></td>
 			        			<#--><td><span class="tooltip">Input party code and press Enter</span></td>-->

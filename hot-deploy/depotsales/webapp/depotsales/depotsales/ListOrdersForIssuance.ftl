@@ -317,15 +317,15 @@ under the License.
               	<#if eachOrder.isCreditInstution?exists>
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
-                  <#if (paymentSatusMap.get(eachOrder.orderId).get("statusId")!="NotReceived")&&((paymentSatusMap.get(eachOrder.orderId).get("statusId"))!="PMNT_CONFIRMED")>
+                  <#if ((paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED") && !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
                  <td>Payment Received</td>
-              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>
               	
-              	<#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_CONFIRMED">
+              	<#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED">
               		<td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.orderId}','${eachOrder.partyId}');"/></td>
               	<#else>
               	<td></td>
