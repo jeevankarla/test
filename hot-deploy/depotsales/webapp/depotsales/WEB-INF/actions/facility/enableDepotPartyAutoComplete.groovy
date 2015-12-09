@@ -26,7 +26,7 @@ dctx = dispatcher.getDispatchContext();
 partyDetailsList=[];
 partyIdsList=[];
 
-if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
+/*if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	roleTypeId =parameters.roleTypeId;
 	inputMap = [:];
 	inputMap.put("userLogin", userLogin);
@@ -38,7 +38,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	if(UtilValidate.isNotEmpty(partyDetailsMap)){
 		partyDetailsList = partyDetailsMap.get("partyDetails");
 	}	
-}
+}*/
 parentRoleTypeId="CUSTOMER_TRADE_TYPE";
 if(UtilValidate.isNotEmpty(parameters.parentRoleTypeId)){
 	parentRoleTypeId=parameters.parentRoleTypeId;
@@ -100,7 +100,7 @@ productStoreIds.each{ productStoreId ->
 	
 	}
 //Debug.log("branchPartyObj====================="+branchPartyObj);
-
+/*
 conditionListForPsbNum = [];
 conditionListForPsbNum.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 conditionListForPsbNum.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyDetailsList.partyId));
@@ -122,7 +122,7 @@ partyNameObj.put(eachParty.partyId,partyName);
 partyJSON.add(newPartyObj);
 }
 context.partyNameObj = partyNameObj;
-context.partyJSON = partyJSON;
+context.partyJSON = partyJSON;*/
 context.branchJSON=branchJSON;
 context.branchPartyObj=branchPartyObj;
 context.partyIdsListkkkk=partyIdsList;
