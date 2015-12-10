@@ -1341,13 +1341,42 @@
         </field> --> 
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form> 
+	<form name="FindByProduct" type="single" target="FindYarnProducts" title="" default-map-name="product"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="productName" title="Product Name"><text-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListByProducts" list-name="listIt" target="" title="" type="list" paginate-target="FindYarnProducts"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+        <actions>
+            <set field="entityName" value="Product"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="productId" sort-field="true">
+            <hyperlink also-hidden="false" description="${productId}" target="EditByProduct">
+                <parameter param-name="productId"/>
+                <parameter param-name="subMenuItem" value="EditProduct"/>
+            </hyperlink>
+        </field>
+        <field name="productName" sort-field="true"><display/></field>
+        <field name="primaryProductCategoryId" sort-field="true"><display/></field>
+        <field name="description" sort-field="true"><display/></field>
+    </form> 
     <form name="FindFacilityProducts" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
     	<field name="hideSearch"><hidden value="N"/></field>
         <field name="facilityId" title="Depot"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
-    </form>
-    
-	      
+    </form>      
 </forms>
