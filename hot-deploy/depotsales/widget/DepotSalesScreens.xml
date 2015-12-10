@@ -3667,9 +3667,9 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	<screen name="minutesHindiPdfReport">
+    
+    
+    <screen name="minutesHindiPdfReport">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
@@ -3725,7 +3725,87 @@
     			</widgets>
     		</section>
 	</screen>
-    
-    
+    <screen name="FindYarnProducts">
+        <section>
+        	<actions>
+                <set field="titleProperty" value="Products"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<set field="productTabButtonItem" value="FindProduct" />                                           
+                <set field="headerItem" value="Products"/>
+                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ByProductsList.groovy"/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="DepotSaleMenuTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+                    	<!-- <include-menu name="ProductSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> -->
+                        <section>
+                            <condition>
+                            	<or>
+                            		<if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW"/>
+                            		<if-has-permission permission="CATALOG" action="_VIEW"/>
+                            	</or>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                	<decorator-section name="menu-bar">
+                                    	<section>
+                                    		<widgets>
+                                               <container style="button-bar">
+                                                  <link target="CreateNewYarnProductScreen" text="Create New Product" style="buttontext create h2"></link>		
+                                               </container>
+                                            </widgets>
+                                    	</section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindByProduct" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListByProducts" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="CreateNewYarnProductScreen">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Product"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<set field="productTabButtonItem" value="FindProduct" />                                           
+                <set field="headerItem" value="Products"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <section>
+                        	
+                            <widgets>
+                                <screenlet title="New Product">
+                                    <platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/CreateNewYarnProduct.ftl" />
+										</html>
+									</platform-specific>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
 </screens>

@@ -4,7 +4,7 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="DepotTransMain"/></menu-item>
    		<menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
-   		<menu-item name="IndentPortal" title="Indent Portal"><link target="IndentPortal"/></menu-item>
+		<menu-item name="IndentPortal" title="Indent Portal"><link target="IndentPortal"/></menu-item>
 	</menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -48,16 +48,10 @@
             </condition>        
         	<link target="FindProcProducer"/>
         </menu-item>
-        <!-- <menu-item name="Product" title="Product">       
-            <condition>
-        		<and>
-        			<not><if-empty field="ctxFacilityId"/></not>
-        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		</and>        		
-        	</condition>          
-            <link target="FindByProduct">               
+        <menu-item name="Product" title="Product">       
+            <link target="FindYarnProducts">               
             </link>
-        </menu-item> -->
+        </menu-item>
        
         <menu-item name="BranchSalesOrder" title="Branch Sales Indent">
 	      <condition>
@@ -347,8 +341,7 @@
 	        </menu-item> -->
        </menu>
        
-       
-        <menu name="IndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+       <menu name="IndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
@@ -373,7 +366,6 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
-       
        
         <menu name="BranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
@@ -402,7 +394,7 @@
        </menu>
        
        
-        <menu name="IndentorBranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+       <menu name="IndentorBranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
@@ -427,7 +419,6 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
-       
        
        
        <menu name="ReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
@@ -817,7 +808,7 @@
 	     </menu-item> 
     </menu> 
     <menu name="FindSupplierPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindSupplierPO" title="Find Indent Order">
+        <menu-item name="FindSupplierPO" title="Find Purchase Order">
         	<link target="FindSupplierPO"/>
         </menu-item>
         <menu-item name="SupplierPoOverView" title="Supplier PO OverView">
