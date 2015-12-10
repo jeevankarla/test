@@ -59,7 +59,19 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="processOrdersBranchSales"/>   
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
+    </request-map>   
+    <request-map uri="processIndentPortalBranchSales">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="processIndentPortalBranchSales"/>   
+       <response name="failed" type="view" value="processIndentPortalBranchSales"/>  
     </request-map>
+    <request-map uri="ProcessIndentBranchOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessIndentBranchOrders"/>   
+       <response name="failed" type="view" value="ProcessIndentBranchOrders"/>  
+    </request-map>
+    
+    
     
     <request-map uri="getStoreCatalogCatagory">
        <security https="true" auth="true"/>
@@ -492,6 +504,11 @@
     <!-- BRANCH SALES -->
     
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
+    
+    <request-map uri="IndentorBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="IndentorBranchSalesOrder"/></request-map>
+   
+   
+   
     <request-map uri="processBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
@@ -515,6 +532,18 @@
 	        <response name="success" type="view" value="orderPayment"/>   
 	       <response name="failed" type="view" value="orderPayment"/>  
 	    </request-map>
+	    
+	    <request-map uri="IndentPortalOrderPayment">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="IndentPortalOrderPayment"/>   
+	       <response name="failed" type="view" value="IndentPortalOrderPayment"/>  
+	    </request-map>
+	    
+	    
+	    
+	    
+	    
+	    
        <request-map uri="createOrderPayment">
           <security https="true" auth="true"/>
           <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
@@ -700,6 +729,18 @@
 	       <response name="error" type="request" value="FindSupplierPO"/>
 	    </request-map>
 	    
+	     <request-map uri="IndentPortal">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="IndentorPortalScreen"/>
+	       <response name="error" type="view" value="IndentorPortalScreen"/>
+	    </request-map>
+	    
+	   <!--  <request-map uri="FindIndentorSupplierPO">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="request" value="FindIndentorSupplierPO"/>
+	       <response name="error" type="request" value="FindIndentorSupplierPO"/>
+	    </request-map> -->
+	    
 	    <request-map uri="FindSupplierPO">
 	      <security https="true" auth="true"/>
 	      <response name="success" type="view" value="FindSupplierPO"/>   
@@ -825,15 +866,33 @@
     </request-map>
         
     <!-- View Mappings -->
+    
+    
+    
+    <view-map name="IndentorPortalScreen" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalScreen"/>
+    <view-map name="processIndentPortalBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentPortalBranchSales"/>
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
      <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
      <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
      <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
+    <view-map name="IndentPortalOrderPayment" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentPortalOrderPayment"/>
+    
+    
+    
+    
+    
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
     <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
+    <view-map name="IndentorBranchSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorBranchSalesOrder"/>
+    
+    
+    
     <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
+    <view-map name="ProcessIndentBranchOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessIndentBranchOrders"/>
+   
+   
     <view-map name="FindDepotBranchSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotBrachShipment"/>
     
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -921,6 +980,12 @@
     <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
     
      <view-map name="FindSupplierPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierPO"/>
+     
+     <view-map name="FindIndentorSupplierPO" type="screen" page="component://depotsales/widget/IndentorScreens.xml#FindSupplierPO"/>
+     
+     <view-map name="processIndentBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentBranchSales"/>
+     
+     
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
      <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
