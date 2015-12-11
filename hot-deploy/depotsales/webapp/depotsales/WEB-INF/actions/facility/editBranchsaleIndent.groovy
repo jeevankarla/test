@@ -86,7 +86,6 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 partyOrders = delegator.findList("OrderRole", expr, null, null, null, false);
 
-Debug.log("partyOrders======================"+partyOrders);
 
 suplierPartyId="";
 suppAttr = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
@@ -107,7 +106,6 @@ JSONArray orderItemsJSON = new JSONArray();
 JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
 
 partyOrderIds = EntityUtil.getFieldListFromEntityList(partyOrders, "orderId", true);
-Debug.log("partyOrderIds====================="+partyOrderIds.get(0))
 if(partyOrderIds){
 	
 	updateOrderId = partyOrderIds.get(0);
@@ -124,7 +122,6 @@ if(partyOrderIds){
 	/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
 	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
-	Debug.log("orderItemAttr======================="+orderItemAttr);
 	batchNumberAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
 	daysToStoreAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "daysToStore"));
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, UtilMisc.toList("-orderItemSeqId"), null, false);
@@ -156,7 +153,6 @@ if(partyOrderIds){
 	productCategoryQuotasMap = [:];
 	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
-		Debug.log("productCategoryQuotasMap========================="+productCategoryQuotasMap);
 	}
 	condsList = [];
 	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -168,7 +164,6 @@ if(partyOrderIds){
 	  prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);
 
 	
-	Debug.log("prodCategoryMembers========================"+prodCategoryMembers);
 	
 	
 	JSONObject OrderItemUIJSON = new JSONObject();
@@ -198,7 +193,6 @@ if(partyOrderIds){
 		/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
 		condExpBale = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		baleQtyAttr = EntityUtil.filterByCondition(orderItemAttr, condExpBale);
-		Debug.log("***baleQtyAttr*********************"+baleQtyAttr);
 		
 		
 		cond.clear();
@@ -208,7 +202,6 @@ if(partyOrderIds){
 		condExpYarn = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		
 		yarnUOMAttr = EntityUtil.filterByCondition(orderItemAttr,condExpYarn);
-		Debug.log("***yarnUOMAttr*********************"+yarnUOMAttr);
 		
 		
 		
@@ -219,18 +212,14 @@ if(partyOrderIds){
 		condExpBundle = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		
 		bundleAttr = EntityUtil.filterByCondition(orderItemAttr,condExpBundle);
-		Debug.log("***bundleAttr*********************"+bundleAttr);
 		
 		productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		quota=0;
 		if(productQuotaDetails){
-		Debug.log("productQuotaDetails========================="+productQuotaDetails);
 		schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
-		Debug.log("schemeCatId========================="+schemeCatId);
 		if(productCategoryQuotasMap.containsKey(schemeCatId)){
 			quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
 		}
-		Debug.log("quota====================="+quota);
 		}
 		baleQty=0;
 		yarnUOM="";
@@ -245,9 +234,6 @@ if(partyOrderIds){
 		bundleWeight=(bundleAttr.get(0)).get("attrValue");
 		}
 		
-		Debug.log("baleQtyAttr======="+eachItem.productId+"==================="+baleQtyAttr);
-		Debug.log("yarnUOMAttr========"+eachItem.productId+"=================="+yarnUOMAttr);
-		Debug.log("bundleAttr========="+eachItem.productId+"================="+bundleAttr);
 		
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
@@ -305,7 +291,6 @@ if(partyOrderIds){
 		
 			newObj.put("quantity",eachItem.quantity);
 		}
-		Debug.log("baleQty============================="+baleQty);
 		if(OrderItemUIJSON.get(eachItem.productId)){
 			JSONObject existsObj = new JSONObject();
 			existsObj=OrderItemUIJSON.get(eachItem.productId);
@@ -322,13 +307,11 @@ if(partyOrderIds){
 
 		
 	}
-	Debug.log("OrderItemUIJSON------------------------------"+OrderItemUIJSON);
 	
 	
 	
 	productIdList= [] as HashSet;
 	productIdList=productIds;
-	Debug.log("productIdList====================="+productIdList);
 	productIdList.each{ eachprd ->
 	  JSONObject oneObject = OrderItemUIJSON.getJSONObject(eachprd);
 	  // Pulling items from the array
