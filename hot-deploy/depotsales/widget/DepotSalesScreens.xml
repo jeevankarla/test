@@ -173,6 +173,53 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="EditBranchIndent">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="changeFlag" value="EditDepotSales" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<!-- <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/editBranchsaleIndent.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<platform-specific>
+									<html>
+									<html-template
+										location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="DepotSalesOrder">
 		<section>
 			<actions>
@@ -344,7 +391,7 @@
 				<set field="defaultEffectiveDate"
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
-				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+				<set field="salesChannelEnumId" value="BRANCH_CHANNEL"/>
 				<set field="screenFlag" value="depotSales" />
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
 					/> -->
