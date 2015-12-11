@@ -829,33 +829,26 @@
       </menu>
       
       
-   <menu name="IndentPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
-           
-          			<menu-item name="IndentPortalBranchSales" title="Indent Listing">
-		        	<link target="processIndentPortalBranchSales">
-		        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
-		        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
-		        	</link>
-	        </menu-item>	
-	        
-	         <menu-item name="IndentorBranchSalesOrder" title="Indent Entry">
-        		<link target="IndentorBranchSalesOrder"/>
-        	 </menu-item>
-        	 
-        	  <menu-item name="IndentPortalBranchSales" title="Indent Listing">
-        	<link target="processIndentPortalBranchSales">
-        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
-        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
-        	</link>
-	        </menu-item> s
-	        
-	        
+     <menu name="IndentPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+              default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
+               
+              <menu-item name="IndentPortalBranchSales" title="Indent Listing">
+            	 <link target="processIndentPortalBranchSales">
+            		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+            		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	 </link>
+             </menu-item>	
+    	         <menu-item name="IndentorBranchSalesOrder" title="Indent Entry">
+            		<link target="IndentorBranchSalesOrder"/>
+            	 </menu-item>
+    			 <menu-item name="IndentPortalOrderPayment" title="Indent Payment">
+    			    <link target="IndentPortalOrderPayment">
+    				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+    				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+    			   </link>
+    		</menu-item>
     </menu> 
-      
-      
-      
-      
+ 
     <menu name="SupplierReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindSupplierDispatchs" title="Find Dispatched Items">

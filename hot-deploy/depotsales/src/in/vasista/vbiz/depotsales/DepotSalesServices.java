@@ -95,10 +95,10 @@ public class DepotSalesServices{
 							 arPartyOB=arPartyOB.negate();
 						 }
 					 }
-					 if (arPartyOB.compareTo(orderTotal) < 0) {
+					 /*if (arPartyOB.compareTo(orderTotal) < 0) {
 						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
 						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
-					 }
+					 }*/
 			 }
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
 	   }catch(Exception e){
