@@ -159,6 +159,15 @@ under the License.
     <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="10.000000" productCategoryId="COTTON_40ABOVE" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="3" periodTimeUomId="TF_mon"/> 	
     <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="30.000000" productCategoryId="COTTON_UPTO40" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="2" periodTimeUomId="TF_mon"/> 	
     
+<!-- purchase order and shipmetTypes -->
+
+  <ShipmentType createdStamp="2015-12-04 17:48:08.0" createdTxStamp="2015-12-04 17:48:08.0" description="Branch Purchase Shipment" hasTable="N" lastUpdatedStamp="2015-12-04 17:48:08.0" lastUpdatedTxStamp="2015-12-04 17:48:08.0" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="BRANCH_SHIPMENT"/> 
+  <ShipmentType description="Transfer Shipment" hasTable="N" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="TRANSFER_SHIPMENT"/>
+  
+  <Enumeration createdStamp="2015-12-04 20:55:15.0" createdTxStamp="2015-12-04 20:55:15.0" description="Branch Purchase Order" enumCode="Brnach purchase " enumId="BRANCH_PURCHASE" lastUpdatedStamp="2015-12-04 20:55:15.0" lastUpdatedTxStamp="2015-12-04 20:55:15.0"/> 
+<OrderAssocType createdStamp="2015-12-03 12:36:23.0" createdTxStamp="2015-12-03 12:36:23.0" description="Back to Back order " lastUpdatedStamp="2015-12-03 12:36:23.0" lastUpdatedTxStamp="2015-12-03 12:36:23.0" orderAssocTypeId="BackToBackOrder"/> 
+    
+   <RoleType createdStamp="2015-12-06 22:45:33.0" createdTxStamp="2015-12-06 22:45:33.0" description="on behalf type" lastUpdatedStamp="2015-12-06 22:45:33.0" lastUpdatedTxStamp="2015-12-06 22:45:33.0" roleTypeId="ON_BEHALF_OF"/>    
     
     
     

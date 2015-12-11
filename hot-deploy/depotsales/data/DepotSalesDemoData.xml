@@ -83,5 +83,4 @@
     
     <Facility defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="DAMAGED STORE" facilityId="DAMAGED_STORE" facilityName="DAMAGED STORE" ownerPartyId="Company"/>
          
-      <RoleType createdStamp="2015-12-06 22:45:33.0" createdTxStamp="2015-12-06 22:45:33.0" description="on behalf type" lastUpdatedStamp="2015-12-06 22:45:33.0" lastUpdatedTxStamp="2015-12-06 22:45:33.0" roleTypeId="ON_BEHALF_OF"/>    
 </entity-engine-xml>
