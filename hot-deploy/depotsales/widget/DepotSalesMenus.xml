@@ -331,14 +331,14 @@
         	 </menu-item> -->
         	   	 <menu-item name="OrderPayment" title="Indent Payment">
 			<link target="orderPayment">
-				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
-				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
         	  <menu-item name="processOrdersBranchSales" title="Indent Listing">
         	<link target="processOrdersBranchSales">
-        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
-        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
         	</link>
 	        </menu-item>
 	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
@@ -357,14 +357,14 @@
         	 </menu-item>
         	   	 <menu-item name="OrderPayment" title="Indent Payment">
 			<link target="orderPayment">
-				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
-				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
         	  <menu-item name="processOrdersBranchSales" title="Indent Listing">
         	<link target="processOrdersBranchSales">
-        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
-        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
         	</link>
 	        </menu-item>
 	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">

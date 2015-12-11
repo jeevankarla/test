@@ -136,17 +136,26 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
+			var yarnUOM = data[rowCount]["yarnUOM"];
+			var bundleWeight = data[rowCount]["bundleWeight"];
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(qty)) {	 		
+	 		if (!isNaN(balqty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
+				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
+				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
 				jQuery(formId).append(jQuery(inputProd));				
+				jQuery(formId).append(jQuery(inputBaleQty));
+				jQuery(formId).append(jQuery(inputYarnUOM));
+				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
@@ -509,12 +518,12 @@
 	      	if ( (args.cell == 1) || (args.cell == 2) || ((args.cell == 3)) ) {
 	      		
 	      		var productName = data[args.row]["productNameStr"];
-      			
+      			<#if changeFlag?exists && changeFlag != "EditDepotSales">
       			if (productName.toLowerCase().indexOf("cotton") <= 0){
       				grid.updateRow(args.row);
       				return false;
       			}
-      			
+      			</#if>
       			
 	      	}
 	      	
@@ -726,6 +735,9 @@
 					quantity = Math.round(baleQty*bundleWeight*20);
 				}
 				data[args.row]["quantity"] = quantity;
+				data[args.row]["baleQuantity"] = baleQty;
+				data[args.row]["yarnUOM"] = uom;
+				data[args.row]["bundleWeight"] = bundleWeight;
 				data[args.row]["amount"] = Math.round(quantity*unitPrice);
 				
 				grid.updateRow(args.row);

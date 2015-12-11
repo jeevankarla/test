@@ -129,7 +129,7 @@ under the License.
 <form name="orderEditForm" id="orderEditForm" method="post" 
 	
 	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="editDepotOrder"
+		action="editBranchIndent"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="editIUSTransferOrder"
 	</#if>>

@@ -1229,6 +1229,9 @@ public class DepotSalesServices{
 		String batchNo = null;
 		String daysToStore = null;
 		String quantityStr = null;
+		String baleQuantityStr = null;
+		String yarnUOMStr = null;
+		String bundleWeightStr = null;
 		String basicPriceStr = null;
 		String vatPriceStr = null;
 		String bedPriceStr = null;
@@ -1237,6 +1240,9 @@ public class DepotSalesServices{
 		String serTaxPriceStr = null;
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal baleQuantity = BigDecimal.ZERO;
+		BigDecimal bundleWeight = BigDecimal.ZERO;
+		String yarnUOM="";
 		BigDecimal basicPrice = BigDecimal.ZERO;
 		BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal tcsPrice = BigDecimal.ZERO;
@@ -1317,6 +1323,14 @@ public class DepotSalesServices{
 							"Missing product id");
 					return "error";
 				}
+				if (paramMap.containsKey("baleQuantity" + thisSuffix)) {
+					baleQuantityStr = (String) paramMap
+							.get("baleQuantity" + thisSuffix);
+				} else {
+					request.setAttribute("_ERROR_MESSAGE_",
+							"Missing product quantity");
+					return "error";
+				}
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap
 							.get("quantity" + thisSuffix);
@@ -1324,6 +1338,14 @@ public class DepotSalesServices{
 					request.setAttribute("_ERROR_MESSAGE_",
 							"Missing product quantity");
 					return "error";
+				}
+				if (paramMap.containsKey("bundleWeight" + thisSuffix)) {
+					bundleWeightStr = (String) paramMap
+							.get("bundleWeight" + thisSuffix);
+				}
+				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
+					yarnUOMStr = (String) paramMap
+							.get("yarnUOM" + thisSuffix);
 				}
 				
 				if (paramMap.containsKey("batchNo" + thisSuffix)) {
@@ -1382,6 +1404,12 @@ public class DepotSalesServices{
 
 				try {
 					quantity = new BigDecimal(quantityStr);
+					baleQuantity = new BigDecimal(baleQuantityStr);
+					bundleWeight = new BigDecimal(bundleWeightStr);
+
+					if (UtilValidate.isNotEmpty(yarnUOMStr)) {
+						yarnUOM = yarnUOMStr;
+					}
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
 						basicPrice = new BigDecimal(basicPriceStr);
 					}
@@ -1425,6 +1453,9 @@ public class DepotSalesServices{
 				}
 				productQtyMap.put("productId", productId);
 				productQtyMap.put("quantity", quantity);
+				productQtyMap.put("baleQuantity", baleQuantity);
+				productQtyMap.put("bundleWeight", bundleWeight);
+				productQtyMap.put("yarnUOM", yarnUOM);
 				productQtyMap.put("batchNo", batchNo);
 				productQtyMap.put("daysToStore", daysToStore);
 				productQtyMap.put("basicPrice", basicPrice);
@@ -1651,6 +1682,7 @@ public class DepotSalesServices{
 				  Debug.logError(e1, e1.toString(), module);
 				  return ServiceUtil.returnError("Failed fetching existing order details");
 			}
+			orderId=null;
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
@@ -1717,7 +1749,7 @@ public class DepotSalesServices{
 	        cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
-			cart.setOrderId(orderId);
+			//cart.setOrderId(orderId);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);
 			cart.setFacilityId(inventoryFacilityId);//for store inventory we need this so that inventoryItem query by this orginFacilityId
@@ -1777,6 +1809,9 @@ public class DepotSalesServices{
 
 		String productId = "";
 		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal baleQuantity = BigDecimal.ZERO;
+		BigDecimal bundleWeight = BigDecimal.ZERO;
+		String yarnUOM="";
 		String batchNo = "";
 		String daysToStore = "";
 		for (Map<String, Object> prodQtyMap : productQtyList) {
@@ -1789,8 +1824,17 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
+				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
+			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
-				quantity = (BigDecimal)prodQtyMap.get("quantity");
+				 quantity = (BigDecimal)prodQtyMap.get("quantity");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
+				yarnUOM = (String)prodQtyMap.get("yarnUOM");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
 				batchNo = (String)prodQtyMap.get("batchNo");
@@ -1917,9 +1961,14 @@ public class DepotSalesServices{
 							
 							item = cart.findCartItem(itemIndx);
 							item.setListPrice(totalPrice);
-							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quota.toString());
+							item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 							item.setOrderItemAttribute("productId",productId);
-							
+							if(UtilValidate.isNotEmpty(yarnUOM)){
+								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
+								}
+								if(UtilValidate.isNotEmpty(bundleWeight)){
+								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+								}
 							BigDecimal discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
 				               
 							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -1936,9 +1985,14 @@ public class DepotSalesServices{
 							
 							item = cart.findCartItem(itemIndx);
 							item.setListPrice(totalPrice);
-							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",remainingQty.toString());
+							item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 							item.setOrderItemAttribute("productId",productId);
-							
+							if(UtilValidate.isNotEmpty(yarnUOM)){
+								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
+								}
+								if(UtilValidate.isNotEmpty(bundleWeight)){
+								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+								}
 						}
 						else{
 							BigDecimal quotaRemainingQty = quota.subtract(quantity);
@@ -1948,9 +2002,14 @@ public class DepotSalesServices{
 							
 							item = cart.findCartItem(itemIndx);
 							item.setListPrice(totalPrice);
-							item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
+							item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 							item.setOrderItemAttribute("productId",productId);
-							
+							if(UtilValidate.isNotEmpty(yarnUOM)){
+								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
+								}
+								if(UtilValidate.isNotEmpty(bundleWeight)){
+								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+								}
 							BigDecimal discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
 				               
 							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -1969,8 +2028,14 @@ public class DepotSalesServices{
 					
 						item = cart.findCartItem(itemIndx);
 						item.setListPrice(totalPrice);
-						item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
+						item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 						item.setOrderItemAttribute("productId",productId);
+						if(UtilValidate.isNotEmpty(yarnUOM)){
+						item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
+						}
+						if(UtilValidate.isNotEmpty(bundleWeight)){
+						item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+						}
 						//item.setAttribute(productId,quantity);
 		        		item.setTaxDetails(taxList);
 					}

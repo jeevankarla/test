@@ -96,6 +96,10 @@
    		<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditDepotOrder"/>
     </request-map>
+    <request-map uri="editBranchIndent">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditBranchIndent"/>
+    </request-map>
     
      <request-map uri="nonRouteGatePassDepot.pdf">
 	        <security https="true" auth="true"/>
@@ -889,6 +893,10 @@
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
+    <view-map name="EditBranchIndent" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditBranchIndent"/>
+   
+   
+   
    <!-- 	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/> -->
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
