@@ -193,6 +193,8 @@
 				<!-- <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/editBranchsaleIndent.groovy" />
+				 <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"

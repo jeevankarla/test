@@ -57,7 +57,7 @@ facilityIds=facilities.facilityId;
 				if(facilityId){
 					facility = delegator.findByPrimaryKey("Facility", [facilityId : facilityId]);
 					if(facility){
-					if (facility.facilityTypeId == 'ROUTE') {
+						if (facility.facilityTypeId == 'ROUTE') {
 						points = [];
 						populateBoothPoints(facility, points);
 						points.each { point ->
@@ -97,6 +97,21 @@ facilityIds=facilities.facilityId;
 							}else{
 							facility.facilityName=facility.facilityName+"[BO]";
 							}
+							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
+							geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
+							geoPoint.facilityId = facility.facilityName;
+							geoPoints.add(geoPoint);
+						}
+					}
+					else if (facility.facilityTypeId == 'DEPOT') {
+						point = facility.getRelatedOne("GeoPoint");
+						if (point) {
+							geoPoint = [:];
+							geoPoint.lat = point.latitude;
+							geoPoint.lon = point.longitude;
+							
+							facility.facilityName=facility.facilityName+"[DO]";
+							
 							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
 							geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
 							geoPoint.facilityId = facility.facilityName;
