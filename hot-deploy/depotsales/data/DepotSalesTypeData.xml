@@ -140,12 +140,4 @@
    
    <PaymentMethodType  description="PAYUBIZ_PAYMENT"  parentTypeId="MONEY" paymentMethodTypeId="PAYUBIZ_PAYMENT"/>
 
-
-<!-- purchase order and shipmetTypes -->
-
-  <ShipmentType createdStamp="2015-12-04 17:48:08.0" createdTxStamp="2015-12-04 17:48:08.0" description="Branch Purchase Shipment" hasTable="N" lastUpdatedStamp="2015-12-04 17:48:08.0" lastUpdatedTxStamp="2015-12-04 17:48:08.0" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="BRANCH_SHIPMENT"/> 
-  <ShipmentType description="Transfer Shipment" hasTable="N" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="TRANSFER_SHIPMENT"/>
-  
-  <Enumeration createdStamp="2015-12-04 20:55:15.0" createdTxStamp="2015-12-04 20:55:15.0" description="Branch Purchase Order" enumCode="Brnach purchase " enumId="BRANCH_PURCHASE" lastUpdatedStamp="2015-12-04 20:55:15.0" lastUpdatedTxStamp="2015-12-04 20:55:15.0"/> 
-<OrderAssocType createdStamp="2015-12-03 12:36:23.0" createdTxStamp="2015-12-03 12:36:23.0" description="Back to Back order " lastUpdatedStamp="2015-12-03 12:36:23.0" lastUpdatedTxStamp="2015-12-03 12:36:23.0" orderAssocTypeId="BackToBackOrder"/> 
 </entity-engine-xml>
