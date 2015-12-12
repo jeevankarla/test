@@ -643,7 +643,36 @@ public class MaterialPurchaseServices {
 				return "error";
 	  		}
 	  	}
-		
+		try {
+        	List condExpr = FastList.newInstance();
+			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			condExpr.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+			EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+			List<GenericValue> orderRoleList = delegator.findList("OrderRole", cond, null, null, null, false);
+		 
+			GenericValue orderRoleFirstList = EntityUtil.getFirst(orderRoleList);
+			String partyIdTo = (String) orderRoleFirstList.getString("partyId");
+			GenericValue ShipmentList = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);  
+			
+			
+			 if (UtilValidate.isNotEmpty(ShipmentList)) {
+	 			  
+				 ShipmentList.set("shipmentId",shipmentId);
+				 ShipmentList.set("partyIdTo",partyIdTo);
+				 
+ 		        try {
+ 		        	ShipmentList.store();
+ 		        } catch (GenericEntityException e) {
+		  			Debug.logError(e, "Could not Update partyIdTo in Shipment entity", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderAttribute" );
+					return "error";
+ 		        }
+			 }
+        } catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not get date from OrderAttribute", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderAttribute" );
+				return "error";
+    }
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}

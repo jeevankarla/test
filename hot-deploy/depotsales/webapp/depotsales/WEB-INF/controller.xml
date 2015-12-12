@@ -733,10 +733,10 @@
 	       <response name="error" type="request" value="FindSupplierPO"/>
 	    </request-map>
 	    
-	     <request-map uri="IndentPortal">
+	      <request-map uri="IndentPortal">
 	       <security https="true" auth="true"/>
-	       <response name="success" type="view" value="IndentorPortalScreen"/>
-	       <response name="error" type="view" value="IndentorPortalScreen"/>
+	       <response name="success" type="view" value="processIndentPortalBranchSales"/>
+	       <response name="error" type="view" value="processIndentPortalBranchSales"/>
 	    </request-map>
 	    
 	   <!--  <request-map uri="FindIndentorSupplierPO">
