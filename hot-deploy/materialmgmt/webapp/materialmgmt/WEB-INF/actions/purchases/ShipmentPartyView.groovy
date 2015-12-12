@@ -9,6 +9,8 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
+import org.ofbiz.party.party.PartyHelper;
+
 List finalList=[];
 List conditionList=[];
 
@@ -30,11 +32,20 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);*/
 	shipmentList=result.listIt;
+	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
 		tempMap.put("shipmentId",shipment.shipmentId);
 		tempMap.put("estimatedShipDate",shipment.estimatedShipDate);
 		tempMap.put("vehicleId",shipment.vehicleId);
+		tempMap.put("partyIdTo",shipment.partyIdTo);
+		if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
+		 partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
+		    tempMap.put("partyName",partyName);
+		}
+		else{
+			tempMap.put("partyName","");
+		}
 		tempMap.put("statusId",shipment.statusId);
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){
@@ -68,6 +79,14 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				tempMap.put("statusId",list.statusId);
 				tempMap.put("primaryOrderId",list.primaryOrderId);
 				tempMap.put("partyId", partyId);
+				tempMap.put("partyIdTo",shipment.partyIdTo);
+				if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
+					partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
+					   tempMap.put("partyName",partyName);
+				   }
+				   else{
+					   tempMap.put("partyName","");
+				   }
 				newFinalList.add(tempMap);
 			}
 		}

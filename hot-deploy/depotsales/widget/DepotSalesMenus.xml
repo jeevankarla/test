@@ -834,7 +834,7 @@
                
               <menu-item name="IndentPortalBranchSales" title="Indent Listing">
             	 <link target="processIndentPortalBranchSales">
-            		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+            		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
             		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
             	 </link>
              </menu-item>	
@@ -843,7 +843,7 @@
             	 </menu-item>
     			 <menu-item name="IndentPortalOrderPayment" title="Indent Payment">
     			    <link target="IndentPortalOrderPayment">
-    				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+    				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
     				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
     			   </link>
     		</menu-item>
