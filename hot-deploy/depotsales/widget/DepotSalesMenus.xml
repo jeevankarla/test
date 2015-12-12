@@ -4,7 +4,7 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="DepotTransMain"/></menu-item>
    		<menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
-		<menu-item name="IndentPortal" title="Indent Portal"><link target="IndentPortal"/></menu-item>
+		<menu-item name="IndentPortal" title="Indent Portal"><link target="processIndentPortalBranchSales"/></menu-item>
 	</menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -455,6 +455,47 @@
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
       </menu>
+      
+      
+         <menu name="IndentorReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindGRNReceipts" title="Find GRN Items">
+        	<link target="IndentorFindGRNReceiptsDepot"/>
+        </menu-item>
+        <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
+        	<link target="POMaterialReceiptsDepot"/>
+        </menu-item> -->
+        <menu-item name="FindGRNShipments" title="Find GRN">
+        	<link target="IndentorFindGRNShipments"/>
+        </menu-item>
+        <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialShipmentOverview">
+            </link>
+        </menu-item>
+        <menu-item name="MaterialInvoiceInit" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInit">
+            </link>
+        </menu-item>
+        <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
+      
+      
+      
+      
+      
       <menu name="DepotTransReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DepotTransReceipts" title="Find GRN Items">
@@ -823,9 +864,14 @@
       
        <menu name="FindIndentPortalTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
-         <menu-item name="IndentPortalPayment" title="Indent Portal Payment">
+         <menu-item name="IndentPortalPayment" title="Indent">
 			<link target="IndentPortal"></link>
 		</menu-item>
+		
+		<menu-item name="IndentReceitGoodsMain" title="Receipt Good">
+			<link target="IndentorFindGRNReceiptsDepot"></link>
+		</menu-item>
+		
       </menu>
       
       

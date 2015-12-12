@@ -159,6 +159,19 @@
        <response name="error" type="view" value="FindGRNReceipts"/>
      </request-map>
      
+     <request-map uri="IndentorFindGRNReceiptsDepot">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="IndentorFindGRNReceiptsDepot"/>
+       <response name="error" type="view" value="IndentorFindGRNReceiptsDepot"/>
+     </request-map>
+     
+      <request-map uri="IndentorFindGRNShipments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="IndentorFindGRNShipments"/>
+       <response name="error" type="view" value="IndentorFindGRNShipments"/>
+     </request-map>
+     
+     
       <request-map uri="POMaterialReceiptsDepot">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="POMaterialReceipts"/>
@@ -209,6 +222,14 @@
        <response name="error" type="view" value="FindGRNShipmentsDepot"/>
      </request-map>
      
+     
+       <request-map uri="IndentorCancelGrnShipment">
+       <security https="true" auth="true"/>
+        <event type="service" path="" invoke="processCancelGrnShipment"></event>
+       <response name="success" type="request-redirect-noparam" value="IndentorFindGRNShipments"/>
+       <response name="error" type="view" value="IndentorFindGRNShipments"/>
+     </request-map>
+     
      <request-map uri="MaterialInvoiceInit">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="MaterialInvoiceInit"/>
@@ -243,6 +264,12 @@
        <event type="service" path="" invoke="shipmentSendForQC"></event>
        <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
        <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+     </request-map>
+     <request-map uri="IndentorShipmentSendForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="shipmentSendForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="IndentorFindGRNShipments"/>
+       <response name="error" type="request-redirect-noparam" value="IndentorFindGRNShipments"/>
      </request-map>
       <request-map uri="MaterialForQCApproval">
        <security https="true" auth="true"/>
@@ -543,17 +570,21 @@
 	       <response name="failed" type="view" value="IndentPortalOrderPayment"/>  
 	    </request-map>
 	    
-	    
-	    
-	    
-	    
-	    
        <request-map uri="createOrderPayment">
           <security https="true" auth="true"/>
           <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
           <response name="success" type="view" value="processOrdersBranchSales"/>   
          <response name="failed" type="view" value="orderPayment"/>  
       </request-map>
+      
+       <request-map uri="createIndentorOrderPayment">
+          <security https="true" auth="true"/>
+          <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
+          <response name="success" type="view" value="processIndentPortalBranchSales"/>   
+         <response name="failed" type="view" value="processIndentPortalBranchSales"/>  
+      </request-map>
+      
+      
       <request-map uri="createCustomPaymentFromPreference">
          <security https="true" auth="true"/>
          <event type="service" path="" invoke="createCustPaymentFromPreference"/>
@@ -658,6 +689,15 @@
         <response name="success" type="view" value="orderPayment"/>
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
+    
+     <request-map uri="indentorRealizeStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="realizeStatus"/>
+        <response name="success" type="view" value="IndentPortalOrderPayment"/>
+        <response name="error" type="view" value="IndentPortalOrderPayment"/>
+    </request-map>
+    
+    
     <request-map uri="CancelDepotTransPOOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelPOStatus"/>
@@ -923,6 +963,14 @@
     <view-map name="BuyerInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoiceDepotPDF" content-type="application/pdf"/>
     <view-map name="TaxInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoiceDepotPDF" content-type="application/pdf"/>
     <view-map name="FindGRNReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNReceipts"/>
+    
+    <view-map name="IndentorFindGRNReceiptsDepot" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorFindGRNReceiptsDepot"/>
+    
+    <view-map name="IndentorFindGRNShipments" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorFindGRNShipments"/>
+    
+    
+    
+    
     <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>
     <view-map name="FindGRNShipmentsDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
     <view-map name="MaterialShipmentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialShipmentOverview"/>
