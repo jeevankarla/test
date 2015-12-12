@@ -137,7 +137,7 @@
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
-			var yarnUOM = data[rowCount]["yarnUOM"];
+			var yarnUOM = data[rowCount]["cottonUom"];
 			var bundleWeight = data[rowCount]["bundleWeight"];
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
@@ -736,7 +736,7 @@
 				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["yarnUOM"] = uom;
+				data[args.row]["cottonUom"] = uom;
 				data[args.row]["bundleWeight"] = bundleWeight;
 				data[args.row]["amount"] = Math.round(quantity*unitPrice);
 				
