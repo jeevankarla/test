@@ -222,11 +222,13 @@ under the License.
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
               	
-              	<#if (eachOrder.get('statusId') == "ORDER_CREATED") ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
-              		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              	<#if (eachOrder.get('statusId') == "ORDER_APPROVED")>
+              	  <td>Approved</td>
+              	<#elseif ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
+              		<td><input type="button" name="approveOrder" id="approveOrder" value="     Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                	<td>${statusItem.description?default(eachOrder.statusId)}</td>
+                	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
               	</#if>
 				<#assign supplierPartyId="">
@@ -241,6 +243,7 @@ under the License.
 								</#if>
 				</#if>
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
+              	
               	<#if (eachOrder.get('statusId') == "ORDER_CREATED")>
               	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
 				<#else>
