@@ -1497,12 +1497,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" sort-field="true">
-            <hyperlink also-hidden="false" description="${productId}" target="EditByProduct">
-                <parameter param-name="productId"/>
-                <parameter param-name="subMenuItem" value="EditProduct"/>
-            </hyperlink>
-        </field>
+        <field name="productId" sort-field="true"><display/></field>
         <field name="productName" sort-field="true"><display/></field>
         <field name="primaryProductCategoryId" sort-field="true"><display/></field>
         <field name="description" sort-field="true"><display/></field>
