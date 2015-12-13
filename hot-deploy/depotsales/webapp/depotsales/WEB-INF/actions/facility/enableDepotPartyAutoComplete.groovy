@@ -136,11 +136,13 @@ if(supplierList){
 		JSONObject newObj = new JSONObject();
 		newObj.put("value",supplier.partyId);
 		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
+		partyNameObj.put(supplier.partyId,partyName);
 		newObj.put("label",partyName+"["+supplier.partyId+"]");
 		supplierJSON.add(newObj);
 	}
 }
 context.supplierJSON=supplierJSON;
+context.partyNameObj = partyNameObj;
 
 //societyParty  json.
 JSONArray societyJSON = new JSONArray();

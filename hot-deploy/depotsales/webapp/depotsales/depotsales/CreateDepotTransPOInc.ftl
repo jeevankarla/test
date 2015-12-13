@@ -75,6 +75,7 @@
 	var otherTermsLabelIdJSON = ${StringUtil.wrapString(otherTermsLabelIdJSON)!'{}'};
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
+	var supplierJSON = ${StringUtil.wrapString(supplierJSON)!'[]'};
 	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	

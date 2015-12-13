@@ -158,7 +158,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 		//$(this.target).find('input').autocomplete();
 		
-		$("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){
+		$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
 			
 		});	
 		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
