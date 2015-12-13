@@ -254,6 +254,41 @@ function makeDatePicker(fromDateId ,thruDateId){
 				hideDropdownOnEmptyInput: false
 		  });	
 		}  
+		 
+		 
+		function populateBranchDepots() {
+			var productStoreId = $("#productStoreId").val();
+			$.ajax({
+				 type: "POST",
+	             url: 'populateBranchDepotsAjax',
+	             data: {productStoreId : productStoreId},
+	             dataType: 'json',
+		            
+				 success:function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+	                    alert('Error Fetching available courses');
+					}else{
+						depotsList = result["depotsList"];
+						var paramName = 'shipToPartyId';
+						var optionList = '';   		
+						var list= depotsList;
+						if (list) {		       				        	
+				        	for(var i=0 ; i<list.length ; i++){
+								var innerList=list[i];	              			             
+				                optionList += "<option value = " + innerList.ownerPartyId + " >" + innerList.facilityName + "</option>";          			
+				      		}
+				      	}		
+				      	if(paramName){
+				      		jQuery("[name='"+paramName+"']").html(optionList);
+				      	}
+					}								 
+				},
+				error: function(){
+					alert("record not found");
+				}							
+			});
+			
+		} 
 		  
 	    
 </script>
@@ -333,7 +368,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	<#if orderId?exists && orderInfo.get("productStoreId")?exists>
 					    		<input type="text" name="productStoreId" id="productStoreId" size="18" maxlength="60" value="${orderInfo.get("productStoreId")?if_exists}"/>
 					    	<#else>
-					    		<input type="text" name="productStoreId" id="productStoreId" size="18" maxlength="60" />
+					    		<input type="text" name="productStoreId" id="productStoreId" size="18" maxlength="60" onblur="populateBranchDepots()"/>
 						   	</#if> 
         				 </td>
 					</tr>
@@ -657,6 +692,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 			          				<td align='left' valign='middle' nowrap="nowrap"></td>
 				                 <td>
 				               <table border="2" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
+				                
+				                <tr>
+                                	<td class="label"><FONT COLOR="#045FB4"><b>Select Depot</b></FONT></td>
+	    							<td>
+	                                	<select name="shipToPartyId" id="shipToPartyId"></select>
+		      						</td>
+	      						</tr>
+				                <#--
 				                <tr>
 								    <td>Ship To Party(<font color="red">*</font>):</td>
 								    <td>
@@ -669,6 +712,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								      	</#if>
 								    </td>
 								 </tr>
+								 -->
 				                <tr>
 							       <td><table cellspacing="15"><tr>
 							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 2.5px;"/>  </td>
