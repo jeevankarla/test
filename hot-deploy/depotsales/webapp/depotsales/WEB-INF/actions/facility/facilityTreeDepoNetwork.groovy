@@ -158,7 +158,7 @@ if (userLogin.partyId) {
 
 //if (isTreeRoot=='Y') {
 if (!facilityId) {
-	regions = delegator.findList("FacilityGroup", EntityCondition.makeCondition("primaryParentGroupId", EntityOperator.EQUALS, "MDKMF_HO"), null, null, null, false);
+	regions = delegator.findList("FacilityGroup", EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQUALS, "COMPANY"), null, null, null, false);
 	regions.each { region ->
 		populateRootNodes(region, treeNodesList, enableEdit);
 	}
