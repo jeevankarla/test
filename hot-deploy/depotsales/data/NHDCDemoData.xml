@@ -86,7 +86,7 @@ under the License.
     <ProductAssoc productId="COTTON-CONE" productIdTo="CC-30S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/> -->
     
     
-    <ProductStore productStoreId="STORE" storeName="NHDC Store" companyName="NHDC" title="NHDC"
+   <!--  <ProductStore productStoreId="STORE" storeName="NHDC Store" companyName="NHDC" title="NHDC"
         subtitle="NHDC" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="" oneInventoryFacility="Y" checkInventory="Y" isFactoryStore="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
@@ -96,13 +96,13 @@ under the License.
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
         storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/> -->
     
     <VisualThemeResource createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/vasista/complogos/logo_nhdc.png" sequenceId="01" visualThemeId="VASISTA"/>
     
     
     <!-- SCHEMES SAMPLE -->
-    <Enumeration enumId="PROMO_ALL_ITEM_DISC" enumTypeId="PROD_PROMO_ACTION" enumCode="PROD_ITEM_DISC" sequenceId="12" description="X% Discount on cart item quantity"/>
+    <!-- <Enumeration enumId="PROMO_ALL_ITEM_DISC" enumTypeId="PROD_PROMO_ACTION" enumCode="PROD_ITEM_DISC" sequenceId="12" description="X% Discount on cart item quantity"/> -->
    	
     
     <!-- <ProductPromo productPromoId="TEN_PERCENT_SUBSIDY" promoName="Ten Percent Subsidy" promoText="10 Percent Subsidy on eligible product categories" requireCode="N" showToCustomer="N" userEntered="N" useLimitPerOrder="1"/>
@@ -112,16 +112,16 @@ under the License.
     <ProductPromoAction orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productPromoActionEnumId="PROMO_SERVICE" productPromoActionSeqId="01" productPromoId="100" productPromoRuleId="01" serviceName="calculateSchemeQuantity" useCartQuantity="N"/> 
     <ProductPromoCategory productPromoId="TEN_PERCENT_SUBSIDY" productCategoryId="COTTON_UPTO40" productPromoRuleId="01" includeSubCategories="Y" productPromoActionSeqId="01" productPromoApplEnumId="PPPA_INCLUDE" productPromoCondSeqId="_NA_" andGroupId="_NA_"/>
      -->
-    <LoomType loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"/> 
-    <PartyLoom partyId="11435" loomTypeId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" quantity="20"/> 
+    <!-- <LoomType loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"/> 
+    <PartyLoom partyId="11435" loomTypeId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" quantity="20"/>  -->
     
-    <ProductStorePromoAppl fromDate="2015-01-01 18:44:04.0"  productPromoId="TEN_PERCENT_SUBSIDY" productStoreId="STORE"/>
+    <!-- <ProductStorePromoAppl fromDate="2015-01-01 18:44:04.0"  productPromoId="TEN_PERCENT_SUBSIDY" productStoreId="STORE"/> -->
 	
-    <SchemeType schemeTypeId="MGPS"/>
+   <!--  <SchemeType schemeTypeId="MGPS"/>
     <Scheme schemeId="TEN_PERCENT_MGPS" schemeName="Ten Percent Scheme" schemeTypeId="MGPS" description="Ten Percent Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0" productPromoId="TEN_PERCENT_SUBSIDY"/>
-    
-    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" maxQty="30" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
-    <SchemeParty schemeId="TEN_PERCENT_MGPS" partyId="11435" fromDate="2015-04-01 00:00:00.0"/>
+     -->
+    <!-- <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" maxQty="30" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
+    <SchemeParty schemeId="TEN_PERCENT_MGPS" partyId="11435" fromDate="2015-04-01 00:00:00.0"/> -->
    
    	
    
@@ -143,33 +143,51 @@ under the License.
     	
     
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="COTTON_40ABOVE" productCategoryId="COTTON_40ABOVE"  description="Cotton 40 Above Scheme"/> 
- 
- 
-   <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"  description="Cotton Upto 40 Scheme"/> 
-   
-   <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="SILK_YARN" productCategoryId="SILK_YARN" description="Silk Yarn Scheme"/> 
-   
+   	 <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"  description="Cotton Upto 40 Scheme"/> 
+     <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="SILK_YARN" productCategoryId="SILK_YARN" description="Silk Yarn Scheme"/> 
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="WOOLYARN_10STO39NM" productCategoryId="WOOLYARN_10STO39NM" description="Wool Yarn 10s To 39.99s NM Scheme"/> 
-     
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="WOOLYARN_40SNMABOVE" productCategoryId="WOOLYARN_40SNMABOVE" description="Wool Yarn 40NM Above Scheme"/> 
-     
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="WOOLYARN_BELOW10NM" productCategoryId="WOOLYARN_BELOW10NM" description="Wool Yarn Below 10NM Scheme"/> 
      
-     	
-    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="10.000000" productCategoryId="COTTON_40ABOVE" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="3" periodTimeUomId="TF_mon"/> 	
-    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="30.000000" productCategoryId="COTTON_UPTO40" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="2" periodTimeUomId="TF_mon"/> 	
+    <SchemeType schemeTypeId="MGPS"/>
+    <Scheme schemeId="TEN_PERCENT_MGPS" schemeName="Ten Percent Scheme" schemeTypeId="MGPS" description="Ten Percent Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0"/>
+    
+    <!-- <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="10.000000" productCategoryId="COTTON_40ABOVE" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="3" periodTimeUomId="TF_mon"/> 	
+    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="30.000000" productCategoryId="COTTON_UPTO40" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="2" periodTimeUomId="TF_mon"/> --> 	
+    
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="GOVT_BODY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="APEX_BODY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="REG_BODY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="UN_REG_BODY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="HEPC_EXPORTERS" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="COOP_SOCIETY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="REG_COOP_SOCIETY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="CLUSTER_COOP_SOCIETY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="SHG_SOCIETY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="JLG_SOCIETY" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="WEAVER_ENTERPRENEURE" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="INDIVIDUAL_WEAVERS" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="OTHERS" fromDate="2015-04-01 00:00:00.00"/>
+    <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="NGO" fromDate="2015-04-01 00:00:00.00"/>
+    
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_40ABOVE" fromDate="2015-04-01 00:00:00.00" maxQty="10" qtyUomId="KG" periodTime="3" periodTimeUomId="TF_mon"/>
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.00" maxQty="30" qtyUomId="KG" periodTime="2" periodTimeUomId="TF_mon"/>
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="SILK_YARN" fromDate="2015-04-01 00:00:00.00" maxQty="4" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="WOOLYARN_BELOW10NM" fromDate="2015-04-01 00:00:00.00" maxQty="50" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="WOOLYARN_10STO39NM" fromDate="2015-04-01 00:00:00.00" maxQty="10" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="WOOLYARN_40SNMABOVE" fromDate="2015-04-01 00:00:00.00" maxQty="4" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
     
 <!-- purchase order and shipmetTypes -->
 
-  <ShipmentType createdStamp="2015-12-04 17:48:08.0" createdTxStamp="2015-12-04 17:48:08.0" description="Branch Purchase Shipment" hasTable="N" lastUpdatedStamp="2015-12-04 17:48:08.0" lastUpdatedTxStamp="2015-12-04 17:48:08.0" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="BRANCH_SHIPMENT"/> 
-  <ShipmentType description="Transfer Shipment" hasTable="N" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="TRANSFER_SHIPMENT"/>
+  	<ShipmentType createdStamp="2015-12-04 17:48:08.0" createdTxStamp="2015-12-04 17:48:08.0" description="Branch Purchase Shipment" hasTable="N" lastUpdatedStamp="2015-12-04 17:48:08.0" lastUpdatedTxStamp="2015-12-04 17:48:08.0" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="BRANCH_SHIPMENT"/> 
+  	<ShipmentType description="Transfer Shipment" hasTable="N" parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="TRANSFER_SHIPMENT"/>
   
-  <Enumeration createdStamp="2015-12-04 20:55:15.0" createdTxStamp="2015-12-04 20:55:15.0" description="Branch Purchase Order" enumCode="Brnach purchase " enumId="BRANCH_PURCHASE" lastUpdatedStamp="2015-12-04 20:55:15.0" lastUpdatedTxStamp="2015-12-04 20:55:15.0"/> 
-<OrderAssocType createdStamp="2015-12-03 12:36:23.0" createdTxStamp="2015-12-03 12:36:23.0" description="Back to Back order " lastUpdatedStamp="2015-12-03 12:36:23.0" lastUpdatedTxStamp="2015-12-03 12:36:23.0" orderAssocTypeId="BackToBackOrder"/> 
+  	<Enumeration createdStamp="2015-12-04 20:55:15.0" createdTxStamp="2015-12-04 20:55:15.0" description="Branch Purchase Order" enumCode="Brnach purchase " enumId="BRANCH_PURCHASE" lastUpdatedStamp="2015-12-04 20:55:15.0" lastUpdatedTxStamp="2015-12-04 20:55:15.0"/> 
+	<OrderAssocType createdStamp="2015-12-03 12:36:23.0" createdTxStamp="2015-12-03 12:36:23.0" description="Back to Back order " lastUpdatedStamp="2015-12-03 12:36:23.0" lastUpdatedTxStamp="2015-12-03 12:36:23.0" orderAssocTypeId="BackToBackOrder"/> 
     
-   <RoleType createdStamp="2015-12-06 22:45:33.0" createdTxStamp="2015-12-06 22:45:33.0" description="on behalf type" lastUpdatedStamp="2015-12-06 22:45:33.0" lastUpdatedTxStamp="2015-12-06 22:45:33.0" roleTypeId="ON_BEHALF_OF"/>    
+   	<RoleType createdStamp="2015-12-06 22:45:33.0" createdTxStamp="2015-12-06 22:45:33.0" description="on behalf type" lastUpdatedStamp="2015-12-06 22:45:33.0" lastUpdatedTxStamp="2015-12-06 22:45:33.0" roleTypeId="ON_BEHALF_OF"/>    
     
- <Enumeration createdStamp="2014-09-21 20:54:48.0" createdTxStamp="2014-09-21 20:54:48.0" description="Depot Channel" enumCode="BRANCH CHANNEL" enumId="BRANCH_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" lastUpdatedStamp="2014-09-21 20:54:48.0" lastUpdatedTxStamp="2014-09-21 20:54:48.0"/> 
+ 	<Enumeration createdStamp="2014-09-21 20:54:48.0" createdTxStamp="2014-09-21 20:54:48.0" description="Depot Channel" enumCode="BRANCH CHANNEL" enumId="BRANCH_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" lastUpdatedStamp="2014-09-21 20:54:48.0" lastUpdatedTxStamp="2014-09-21 20:54:48.0"/> 
     
     
 </entity-engine-xml>

@@ -192,8 +192,8 @@ if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPur
 	context.orderTypes =orderTypes;
 }
 
-productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
-context.productStoreId = productStoreId;
+//productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
+//context.productStoreId = productStoreId;
 
 
 JSONArray cstJSON = new JSONArray();
