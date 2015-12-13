@@ -189,5 +189,11 @@ under the License.
     
  	<Enumeration createdStamp="2014-09-21 20:54:48.0" createdTxStamp="2014-09-21 20:54:48.0" description="Depot Channel" enumCode="BRANCH CHANNEL" enumId="BRANCH_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" lastUpdatedStamp="2014-09-21 20:54:48.0" lastUpdatedTxStamp="2014-09-21 20:54:48.0"/> 
     
+    <TenantConfiguration description="Telephone:-02111-217002/03,Fax:-02111-217002,E-Mail-Admin@gmial.com,website:-www.NHDC.com" propertyName="reportSubHeaderLable_01" propertyTypeEnumId="COMPANY_HEADER" propertyValue="Y"/>
+
+   <TenantConfiguration  description="National Handloom Development Corporation" propertyName="reportHeaderLable" propertyTypeEnumId="COMPANY_HEADER" propertyValue="Y"/>
+   <TenantConfiguration description="22 Station road Vikas Deep Bldg, Udaiganj,Husainganj,Lucknow, UP 226001 India" propertyName="reportSubHeaderLable" propertyTypeEnumId="COMPANY_HEADER" propertyValue="Y"/>
+
+   <TenantConfiguration description="Telephone:-02111-217002/03,Fax:-02111-217002,E-Mail-Admin@gmail.com,website:-www.NHDC.com" propertyName="reportSubHeaderLable_01" propertyTypeEnumId="COMPANY_HEADER" propertyValue="Y"/>
     
 </entity-engine-xml>
