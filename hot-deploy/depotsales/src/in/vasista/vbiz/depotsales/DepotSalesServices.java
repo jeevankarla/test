@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.HashMap;
 
+import java.util.Calendar;
+
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
@@ -1965,10 +1967,10 @@ public class DepotSalesServices{
 							item.setOrderItemAttribute("productId",productId);
 							if(UtilValidate.isNotEmpty(yarnUOM)){
 								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
-								}
-								if(UtilValidate.isNotEmpty(bundleWeight)){
+							}
+							if(UtilValidate.isNotEmpty(bundleWeight)){
 								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
-								}
+							}
 							BigDecimal discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
 				               
 							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -1989,10 +1991,10 @@ public class DepotSalesServices{
 							item.setOrderItemAttribute("productId",productId);
 							if(UtilValidate.isNotEmpty(yarnUOM)){
 								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
-								}
-								if(UtilValidate.isNotEmpty(bundleWeight)){
+							}
+							if(UtilValidate.isNotEmpty(bundleWeight)){
 								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
-								}
+							}
 						}
 						else{
 							BigDecimal quotaRemainingQty = quota.subtract(quantity);
@@ -2006,10 +2008,10 @@ public class DepotSalesServices{
 							item.setOrderItemAttribute("productId",productId);
 							if(UtilValidate.isNotEmpty(yarnUOM)){
 								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
-								}
-								if(UtilValidate.isNotEmpty(bundleWeight)){
+							}
+							if(UtilValidate.isNotEmpty(bundleWeight)){
 								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
-								}
+							}
 							BigDecimal discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
 				               
 							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -2031,10 +2033,10 @@ public class DepotSalesServices{
 						item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 						item.setOrderItemAttribute("productId",productId);
 						if(UtilValidate.isNotEmpty(yarnUOM)){
-						item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
+							item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
 						}
 						if(UtilValidate.isNotEmpty(bundleWeight)){
-						item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+							item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
 						}
 						//item.setAttribute(productId,quantity);
 		        		item.setTaxDetails(taxList);
@@ -2360,19 +2362,189 @@ public class DepotSalesServices{
 				for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
 					GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
 					String productCategoryId = schemeProductCategory.getString("productCategoryId");
-					Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
-				    Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale);
+					//Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
+				    //Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate);
 				    
 					// Get relevant looms qty party possess and calculate quota
 					List catPartyLooms = EntityUtil.filterByCondition(partyLooms, EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
 					Debug.log("catPartyLooms =============="+catPartyLooms);
 					if(UtilValidate.isNotEmpty(catPartyLooms)){
 						
+						// Get productCategoryMembers
+						List productIdsList = FastList.newInstance();
+						
+						conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+						try {
+							List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+							productIdsList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productId", true);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductCategoryMember ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductCategoryMember " + e);
+						}
+						
 						BigDecimal periodTime = BigDecimal.ONE;
 						if( UtilValidate.isNotEmpty(schemeProductCategory.get("periodTime")) ){
 							periodTime = (BigDecimal)schemeProductCategory.get("periodTime");
 						}
+						
+						// calculate the quota already used for the month and reduce it from the actual quota.
+						
+						BigDecimal allocatedQuotaPerMonth = ((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")));
+						BigDecimal allocatedQuotaAdvances = periodTime.multiply(allocatedQuotaPerMonth);
+						BigDecimal availableQuota = BigDecimal.ZERO;
+						
+						// Two months advance can be taken at any time. I am trying to iterate through each month, and see if he has taken any advances. With this I will get the current month's quota.
+						
+						BigDecimal outstandingQuotaAvailable = BigDecimal.ZERO;
+						BigDecimal quotaAdvanceUsed = BigDecimal.ZERO;
+						
+						// If advances are allowed(periodTime > 1), check if the party has taken any advance.
 						if(periodTime.compareTo(BigDecimal.ONE)>0){
+							
+							Timestamp periodMonthStart = periodBegin;
+							Timestamp periodMonthEnd = null;
+							
+							Calendar startCalendar=Calendar.getInstance();
+							startCalendar.setTime(UtilDateTime.toSqlDate(periodBegin));
+				    		Calendar endCalendar=Calendar.getInstance();
+				    		endCalendar.setTime(UtilDateTime.toSqlDate(effectiveDate));
+							
+				    		int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+				    		Debug.log("diffYear =============="+diffYear);
+				    		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+				    		Debug.log("diffMonth =============="+diffMonth);
+				    		
+							/*int currentMonth = UtilDateTime.getMonth(tempMonthStart, timeZone, locale);
+							int noOfPastMonths = currentMonth - periodStartMonth;*/
+							
+				    		//Check Quota Advances taken for current month
+				    		
+							
+							for(int k=0; k<diffMonth; k++){
+								Timestamp monthIterStartDate = UtilDateTime.getMonthStart(periodMonthStart);
+								Timestamp monthIterEndDate = UtilDateTime.getMonthEnd(periodMonthStart, timeZone, locale);
+								Debug.log("monthIterStartDate =============="+monthIterStartDate);
+								Debug.log("monthIterEndDate =============="+monthIterEndDate);
+								conditionList.clear();
+								conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+								conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER", "ON_BEHALF_OF")));
+								conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthIterStartDate));
+								conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthIterEndDate));
+								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+								
+								List<GenericValue> orderHeaderAndRoles = null;
+								try {
+									orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+								} catch (GenericEntityException e) {
+									Debug.logError(e, "Failed to retrive OrderHeader ", module);
+									return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+								}
+								Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
+								
+								List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
+								Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
+								
+								BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
+								if(UtilValidate.isNotEmpty(orderIds)){
+									conditionList.clear();
+									conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+									if(UtilValidate.isNotEmpty(productIdsList)){
+										conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+									}
+									
+									conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+									conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+									Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+									List<GenericValue> orderItemAndAdjustment = null;
+									try {
+										orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+									} catch (GenericEntityException e) {
+										Debug.logError(e, "Failed to retrive OrderHeader ", module);
+										return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+									}
+									Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
+									
+									for(int a=0; a<orderItemAndAdjustment.size(); a++){
+										totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(a)).get("quantity") );
+									}
+								}
+								
+								totalQuotaUsedUp = totalQuotaUsedUp.add(quotaAdvanceUsed);
+								
+								if(allocatedQuotaPerMonth.compareTo(totalQuotaUsedUp)>0){
+									quotaAdvanceUsed = BigDecimal.ZERO;
+								}
+								else{
+									quotaAdvanceUsed = totalQuotaUsedUp.subtract(allocatedQuotaPerMonth);
+								}
+								
+								periodMonthStart = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(monthIterEndDate, 1));
+								
+							}
+							
+						}
+						
+						// Current month quota operations
+						if(quotaAdvanceUsed.compareTo(allocatedQuotaPerMonth)>=0){
+							outstandingQuotaAvailable = BigDecimal.ZERO;
+						}
+						else{
+							conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+							conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER", "ON_BEHALF_OF")));
+							conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getMonthStart(effectiveDate)));
+							conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale)));
+							conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+							
+							Debug.log("condition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+							List<GenericValue> orderHeaderAndRoles = null;
+							try {
+								orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+							} catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive OrderHeader ", module);
+								return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+							}
+							Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
+							
+							List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
+							Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
+							
+							BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
+							if(UtilValidate.isNotEmpty(orderIds)){
+								conditionList.clear();
+								conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+								if(UtilValidate.isNotEmpty(productIdsList)){
+									conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+								}
+								
+								conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+								Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+								List<GenericValue> orderItemAndAdjustment = null;
+								try {
+									orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+								} catch (GenericEntityException e) {
+									Debug.logError(e, "Failed to retrive OrderHeader ", module);
+									return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
+								}
+								Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
+								
+								for(int a=0; a<orderItemAndAdjustment.size(); a++){
+									totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(a)).get("quantity") );
+								}
+							}
+							
+							outstandingQuotaAvailable = (allocatedQuotaAdvances.subtract(totalQuotaUsedUp)).subtract(quotaAdvanceUsed);
+							
+						}
+						
+						
+						// The below commented code is to implement period wise quota.
+						/*if(periodTime.compareTo(BigDecimal.ONE)>0){
 							// get current period
 							
 							Timestamp periodMonthStart = periodBegin;
@@ -2395,78 +2567,15 @@ public class DepotSalesServices{
 								monthEnd = periodMonthEnd;
 							}
 							
-						}
-						Debug.log("monthStart =============="+monthStart);
-						Debug.log("monthEnd =============="+monthEnd);
-						// calculate the quota already used for the month and reduce it from the actual quota.
+						}*/
 						
-						// Get productCategoryMembers
-						List productIdsList = FastList.newInstance();
 						
-						conditionList.clear();
-						conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-						try {
-							List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
-							productIdsList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productId", true);
-						} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-						}
 						
-						conditionList.clear();
-						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-						conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER", "ON_BEHALF_OF")));
-						conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthStart));
-						conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthEnd));
-						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-						
-						Debug.log("condition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
-						List<GenericValue> orderHeaderAndRoles = null;
-						try {
-							orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-						} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive OrderHeader ", module);
-							return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
-						}
-						Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-						
-						List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
-						Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-						
-						BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
-						if(UtilValidate.isNotEmpty(orderIds)){
-							conditionList.clear();
-							conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-							if(UtilValidate.isNotEmpty(productIdsList)){
-								conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
-							}
-							
-							conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
-							conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-							Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
-							List<GenericValue> orderItemAndAdjustment = null;
-							try {
-								orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-							} catch (GenericEntityException e) {
-								Debug.logError(e, "Failed to retrive OrderHeader ", module);
-								return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
-							}
-							Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
-							
-							for(int k=0; k<orderItemAndAdjustment.size(); k++){
-								totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(k)).get("quantity") );
-							}
-						}
-						
-						Debug.log("totalQuotaUsedUp =============="+totalQuotaUsedUp);
 						Map productCategoryQuotaMap = FastMap.newInstance();
 						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
-						productCategoryQuotaMap.put("quotaPerMonth",((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity"))) );
-						productCategoryQuotaMap.put("quotaAvailableThisMonth", (((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")))).subtract(totalQuotaUsedUp) );
-						productCategoryQuotaMap.put("availableQuota", (   (((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")))).multiply(periodTime)    ).subtract(totalQuotaUsedUp) );
+						productCategoryQuotaMap.put("quotaPerMonth", allocatedQuotaPerMonth);
+						productCategoryQuotaMap.put("quotaAvailableThisMonth", allocatedQuotaAdvances);
+						productCategoryQuotaMap.put("availableQuota", outstandingQuotaAvailable);
 						productCategoryQuotaMap.put("categoryQuota", (BigDecimal)schemeProductCategory.get("maxQty"));
 						productCategoryQuotaMap.put("looms",  (BigDecimal)((GenericValue)catPartyLooms.get(0)).get("quantity"));
 						
