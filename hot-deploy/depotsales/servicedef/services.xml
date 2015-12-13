@@ -12,6 +12,14 @@
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
+       <service name="CreditapproveDepotSalesOrder" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreditapproveDepotOrder">
+        <description>Approve Depot Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="createCustomPaymentFromPreference" engine="java"
            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createCustomPaymentFromPreference">
        <description>Creates a payment using the order payment preference</description>

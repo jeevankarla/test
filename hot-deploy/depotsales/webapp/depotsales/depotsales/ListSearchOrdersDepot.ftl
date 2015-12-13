@@ -102,6 +102,17 @@ under the License.
 		jQuery(formId).append(jQuery(param3));
         jQuery(formId).submit();
     }
+    
+     function creditApproveDepotOrder(orderId, salesChannel,partyId){
+		var formId = "#" + "creditOrderApproveForm";
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
+		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
+		jQuery(formId).append(jQuery(param1));
+		jQuery(formId).append(jQuery(param2));
+		jQuery(formId).append(jQuery(param3));
+        jQuery(formId).submit();
+    }
  function editDepotOrder(orderId, salesChannel,partyId){
 		var formId = "#" + "orderEditForm"
 		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
@@ -149,6 +160,13 @@ under the License.
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="approveIUSTransferOrder"
 	</#if>> 
+</form>
+<form name="creditOrderApproveForm" id="creditOrderApproveForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="CreditapproveDepotSalesOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="approveIUSTransferOrder"
+	</#if>
 </form>
 
 <form name="processOrdersForm" id="processOrdersForm" method="post" 
@@ -222,13 +240,15 @@ under the License.
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
               	
-              	<#if (eachOrder.get('statusId') == "ORDER_APPROVED")>
+              	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 >
+              	<td></td>
+              	<#elseif (eachOrder.get('statusId') == "ORDER_APPROVED")>
               	  <td>Approved</td>
               	<#elseif ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               		<td><input type="button" name="approveOrder" id="approveOrder" value="     Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
               	</#if>
 				<#assign supplierPartyId="">
