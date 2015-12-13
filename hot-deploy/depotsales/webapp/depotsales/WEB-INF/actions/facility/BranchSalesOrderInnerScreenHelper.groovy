@@ -86,7 +86,11 @@
 	if(supplierPartyId){
 		suppPartyName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
 	}
+	
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
+	if(UtilValidate.isEmpty(party)){
+		party = delegator.findOne("Person", UtilMisc.toMap("partyId", partyId), false);
+	}
 	context.suppPartyName=suppPartyName;
 	roleTypeId = parameters.roleTypeId;
 	partyRole = null;
@@ -132,18 +136,18 @@
 		prodIdsList =delegator.findList("ProductCategoryMember", cnd1,null, null, null, false);
 		prodIdsList= EntityUtil.getFieldListFromEntityList(prodIdsList,"productId", true);
 		if(prodIdsList){
-		exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIdsList));
+			exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIdsList));
 		}
 	}else if(parameters.schemeCategory && "MGPS".equals(parameters.schemeCategory)){
-	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.NOT_LIKE,"%CONE%"));
+		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.NOT_LIKE,"%CONE%"));
 	}else{
-	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%CONE%"));
+		exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%CONE%"));
 	}
 	
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-		
+		Debug.log("exprList =============="+exprList);
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
 	
 	if(UtilValidate.isNotEmpty(productCatageoryId)){
