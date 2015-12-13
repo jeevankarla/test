@@ -205,6 +205,7 @@
 	   
 	      alert("Please Enter Amount Less Than The Grand Total.");
 	     
+	        $("#amount").val(balance);
 	        $("#submitval").parent().parent().hide();
 	        $("#cancel").parent().parent().hide();
 	        
@@ -212,6 +213,7 @@
 
           alert("Please Enter Amount Less Than The Balance.");
 
+            $("#amount").val(balance);
             $("#submitval").parent().parent().hide();
 	        $("#cancel").parent().parent().hide();
  
@@ -288,7 +290,7 @@
 	                   </#list>
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount'  name='amount' value='"+grandTotal+"'  onblur='javascript:amountCheck(finalBal);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' value='"+finalBal+"'  onblur='javascript:amountCheck(finalBal);'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+finalBal+"</td></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf'  /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
