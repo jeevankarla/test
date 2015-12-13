@@ -65,7 +65,7 @@
 	var optList = [];
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
-	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
+	var availableTags = ${StringUtil.wrapString(productItemJSON)!'[]'};
 	var data = ${StringUtil.wrapString(orderItemsJSON)!'[]'};
 	var data2 = ${StringUtil.wrapString(orderAdjustmentJSON)!'[]'};
 	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};

@@ -95,10 +95,13 @@ if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||
 	prodList.addAll(tempProdList);
 }*/
 dctx = dispatcher.getDispatchContext();
+//exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+//exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 
-resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
-prodList.addAll(resultMap.get("productList"));
-JSONArray productItemsJSON = new JSONArray();
+prodList =delegator.findList("Product", null,null, null, null, false);
+/*resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
+prodList.addAll(resultMap.get("productList"));*/
+JSONArray productItemJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();
 context.productList = prodList;
@@ -114,7 +117,7 @@ prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
 	newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"](" +eachItem.internalName+")");
-	productItemsJSON.add(newObj);
+	productItemJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]("+eachItem.internalName+")");
 	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]("+eachItem.internalName+")", eachItem.productId);
 	
@@ -129,7 +132,7 @@ prodList.each{eachItem ->
 
 context.productUOMJSON = productUOMJSON;
 context.uomLabelJSON = uomLabelJSON;
-context.productItemsJSON = productItemsJSON;
+context.productItemJSON = productItemJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productLabelIdJSON = productLabelIdJSON;
 if(displayGrid){
