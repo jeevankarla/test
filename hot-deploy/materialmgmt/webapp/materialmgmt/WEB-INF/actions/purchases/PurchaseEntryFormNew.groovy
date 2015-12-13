@@ -102,8 +102,8 @@ prodList =delegator.findList("Product", null,null, null, null, false);
 /*resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
 prodList.addAll(resultMap.get("productList"));*/
 JSONArray productItemJSON = new JSONArray();
-JSONObject productIdLabelJSON = new JSONObject();
-JSONObject productLabelIdJSON=new JSONObject();
+JSONObject productIdItemLabelsJSON = new JSONObject();
+JSONObject productLabelIdsJSON=new JSONObject();
 context.productList = prodList;
 
 productIds = EntityUtil.getFieldListFromEntityList(prodList, "productId", true);
@@ -116,25 +116,20 @@ JSONObject uomLabelJSON=new JSONObject();
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"](" +eachItem.internalName+")");
+	newObj.put("label",eachItem.description);
 	productItemJSON.add(newObj);
-	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]("+eachItem.internalName+")");
-	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]("+eachItem.internalName+")", eachItem.productId);
+	productIdItemLabelsJSON.put(eachItem.productId, eachItem.description);
+	productLabelIdsJSON.put(eachItem.description, eachItem.productId);
 	
-	if(productUomMap){
-		uomId = productUomMap.get(eachItem.productId);
-		if(uomId){
-			productUOMJSON.put(eachItem.productId, uomId);
-			uomLabelJSON.put(uomId, uomLabelMap.get(uomId));
-		}
-	}
+	productUOMJSON.put(eachItem.productId, "WT_kg");
+	uomLabelJSON.put("WT_kg", "kg");
 }
 
 context.productUOMJSON = productUOMJSON;
 context.uomLabelJSON = uomLabelJSON;
 context.productItemJSON = productItemJSON;
-context.productIdLabelJSON = productIdLabelJSON;
-context.productLabelIdJSON = productLabelIdJSON;
+context.productIdItemLabelsJSON = productIdItemLabelsJSON;
+context.productLabelIdsJSON = productLabelIdsJSON;
 if(displayGrid){
 	context.partyCode = facility;
 }

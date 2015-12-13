@@ -63,8 +63,8 @@
 	var grid2;
 	var dropDownOption = "ALL";
 	var optList = [];
-	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
-	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
+	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdsJSON)!'{}'};
+	var productIdLabelMap = ${StringUtil.wrapString(productIdItemLabelsJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemJSON)!'[]'};
 	var data = ${StringUtil.wrapString(orderItemsJSON)!'[]'};
 	var data2 = ${StringUtil.wrapString(orderAdjustmentJSON)!'[]'};
@@ -628,7 +628,8 @@
                 
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
-      		var productLabel = item['cProductName']; 
+      		var productLabel = item['cProductName'];
+      		var productIdItemLabelMap = ${StringUtil.wrapString(productLabelIdsJSON)!'{}'};
       		item['cProductId'] = productLabelIdMap[productLabel];
       		grid.invalidateRow(data.length);
       		data.push(item);
