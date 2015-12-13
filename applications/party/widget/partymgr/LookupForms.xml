@@ -56,6 +56,43 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
+        <form name="LookupEmpanelledPartyName" target="LookupEmpanelledPartyName" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+       <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="find"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
+        <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PartyType"/>
+            </drop-down>
+        </field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}"><drop-down allow-empty="true">
+        <entity-options description="${description}" entity-name="PartyClassificationGroup"></entity-options>
+        </drop-down></field>
+        <field name="invoiceTypeId"><hidden/></field>
+        <field name="roleTypeId" use-when="!defaultRoleTypeList">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="roleTypeId" list-name="roleTypeList" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field position="1" name="roleTypeId" use-when="defaultRoleTypeList">   
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>     
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+    </form>
+    
+    
 <form name="lookupTaxAuthPartyName" target="LookupTaxAuthPartyName" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="find"/>-->
