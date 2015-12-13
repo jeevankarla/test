@@ -108,6 +108,59 @@ public class DepotSalesServices{
        result.put("salesChannelEnumId", salesChannelEnumId);
        return result;
 	}
+   
+   
+   public static Map<String, Object> CreditapproveDepotOrder(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		String partyId=(String) context.get("partyId");
+		String orderId = (String) context.get("orderId");
+		//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
+		try{
+			
+			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
+			
+			 GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
+			 
+			 if(UtilValidate.isEmpty(creditPartyRole)){
+					GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+					BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
+					Timestamp obDate=UtilDateTime.nowTimestamp();
+					if(UtilValidate.isNotEmpty(orderHeader.getTimestamp("estimatedDeliveryDate"))){
+						obDate=	orderHeader.getTimestamp("estimatedDeliveryDate");
+						obDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(obDate, 1));
+					}
+				
+					BigDecimal arPartyOB  =BigDecimal.ZERO;
+					Map arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , UtilMisc.toMap("userLogin", userLogin, "tillDate",obDate, "partyId",partyId)));
+					if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+						arPartyOB=(BigDecimal)arOpeningBalanceRes.get("openingBalance");
+						 if (arPartyOB.compareTo(BigDecimal.ZERO) < 0) {
+							 arPartyOB=arPartyOB.negate();
+						 }
+					 }
+					 /*if (arPartyOB.compareTo(orderTotal) < 0) {
+						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
+						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
+					 }*/
+					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+					orderAttribute.set("orderId", orderId);
+					orderAttribute.set("attrName", "CREDIT_APPROVE");
+					orderAttribute.set("attrValue", "Y");
+					delegator.createOrStore(orderAttribute);
+			 }
+           boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+	   }catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+      result.put("salesChannelEnumId", salesChannelEnumId);
+      return result;
+	}
+   
    public static String processDepotSaleEvent(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

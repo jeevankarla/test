@@ -98,6 +98,13 @@
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
     
+     <request-map uri="CreditapproveDepotSalesOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="CreditapproveDepotSalesOrder"/>
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+    </request-map>
+    
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
