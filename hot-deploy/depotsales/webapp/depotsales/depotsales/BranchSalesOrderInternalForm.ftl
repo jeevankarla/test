@@ -145,7 +145,7 @@
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(balqty)) {	 		
+	 		if (!isNaN(prodId)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);

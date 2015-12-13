@@ -1459,9 +1459,9 @@ public class DepotSalesServices{
 
 				try {
 					quantity = new BigDecimal(quantityStr);
+					if(UtilValidate.isNotEmpty(baleQuantityStr) && !(baleQuantityStr.equals("NaN"))){
 					baleQuantity = new BigDecimal(baleQuantityStr);
-					bundleWeight = new BigDecimal(bundleWeightStr);
-
+					}
 					if (UtilValidate.isNotEmpty(yarnUOMStr)) {
 						yarnUOM = yarnUOMStr;
 					}
