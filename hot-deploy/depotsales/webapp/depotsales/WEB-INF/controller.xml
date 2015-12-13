@@ -937,6 +937,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewYarnProductScreen"/>
     </request-map>
+    <request-map uri="populateBranchDepotsAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="populateBranchDepots"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>    
         
     <!-- View Mappings -->
     

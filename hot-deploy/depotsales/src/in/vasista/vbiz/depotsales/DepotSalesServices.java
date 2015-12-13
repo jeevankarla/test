@@ -3743,7 +3743,37 @@ public class DepotSalesServices{
      	
    	}
    	
-
+   	public static Map<String, Object> populateBranchDepots(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        String productStoreId = (String) context.get("productStoreId");
+        
+        // If productStoreId is not empty, fetch only courses related to the productStore
+        List depotsList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(productStoreId)){
+        	List condList =FastList.newInstance();
+   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
+   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+   	    	EntityCondition prodStrFacCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+   	    	try{
+   	    		depotsList = delegator.findList("FacilityAndProductStoreFacility", prodStrFacCondition, null, null, null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+   	    }
+        Debug.log("depotsList =========="+depotsList);
+		
+		result.put("depotsList", depotsList);
+        return result;
+    }
    	
    	
    	

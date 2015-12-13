@@ -83,7 +83,11 @@
         <attribute name="fromFacility" type="List" mode="OUT" optional="true"/>
         <attribute name="toFacility" type="List" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="populateBranchDepots" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateBranchDepots" auth="false">
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <attribute name="depotsList" mode="OUT" type="List" optional="true"/>
+    </service>
 
 </services>
 
