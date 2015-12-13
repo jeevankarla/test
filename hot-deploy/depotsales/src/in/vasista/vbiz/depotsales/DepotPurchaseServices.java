@@ -774,9 +774,7 @@ public class DepotPurchaseServices{
 					 
 					 try {
 		                    GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyIdTo));
-		                    Debug.log("orderParty========================"+orderParty);
 		                    Collection<GenericValue> shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
-		                    Debug.log("shippingContactMechList========================"+shippingContactMechList);
 		                    if (UtilValidate.isNotEmpty(shippingContactMechList)) {
 		                        GenericValue shippingContactMech = (shippingContactMechList.iterator()).next();
 		                        contactMechId= shippingContactMech.getString("contactMechId");
@@ -790,7 +788,6 @@ public class DepotPurchaseServices{
 				
 				}catch (GenericServiceException e) {
 					Debug.logError(e, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Error while populating ShippingAddress: "+partyIdTo);	  	 
 
 				} 
 				if(UtilValidate.isNotEmpty(contactMechId)){
