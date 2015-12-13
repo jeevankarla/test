@@ -30,6 +30,8 @@
 
 <script type="text/javascript">
 
+
+var branchAutoJson = ${StringUtil.wrapString(branchJSON)!'[]'};
 $(document).ready(function(){
 
 // enter event handle
@@ -39,7 +41,11 @@ $(document).ready(function(){
 		}
 	});
 	
-
+$('#productStoreId').keypress(function (e) { 
+				$("#productStoreId").autocomplete({ source: branchAutoJson , select: function( event, ui ) {
+					$('span#branchName').html('<label>'+ui.item.label+'</label>');
+				} });	
+		 });
 
 	$( "#fromDate" ).datepicker({
 			dateFormat:'MM d, yy',
@@ -106,6 +112,46 @@ $(document).ready(function(){
     });*/ 
 });
 
+
+
+
+  function populateBranchDepots() {
+			var productStoreId = $("#productStoreId").val();
+			$.ajax({
+				 type: "POST",
+	             url: 'populateBranchDepotsAjax',
+	             data: {productStoreId : productStoreId},
+	             dataType: 'json',
+		            
+				 success:function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+	                    alert('Error Fetching available courses');
+					}else{
+						depotsList = result["depotsList"];
+						var paramName = 'facilityId';
+						var optionList = '';   		
+						var list= depotsList;
+						if (list) {		       				        	
+				        	for(var i=0 ; i<list.length ; i++){
+								var innerList=list[i];	              			             
+				                optionList += "<option value = " + innerList.facilityId + " >" + innerList.facilityName + "</option>";          			
+				      		}
+				      	}		
+				      	if(paramName){
+				      		jQuery("[name='"+paramName+"']").html(optionList);
+				      	}
+					}								 
+				},
+				error: function(){
+					alert("record not found");
+				}							
+			});
+			
+		} 
+
+
+
+
 </script>
 
 <div class="screenlet">
@@ -123,9 +169,28 @@ $(document).ready(function(){
 				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate" value="${parameters.thruDate?if_exists}"/></td> -->
 				<td width="10%"><span class='h3'>Product: </span></td> 
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${parameters.productId?if_exists}" formName="StockAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
-				<td width="2%"><span class='h3'></span></td>
-				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
+			<tr>
+			<td>&#160;</td>
+			</tr>
+			<tr>
+			 <td width="10%"><span class='h3'>Branch: </span></td>
+			 <td align="left" width="10%"><input type="text" name="productStoreId" id="productStoreId" onblur="populateBranchDepots()" /></td>
+			 <td><span class="tooltip" id="branchName"></span></td>
+			</tr>
+			<tr>
+			<td>&#160;</td>
+			</tr>
+			<tr>
+             <td width="10%"><span class='h3'>Depot: </span></td>
+	    	 <td>
+	         <select name="facilityId" id="facilityId"></select>
+		     </td>
+	      	</tr>
+	      	<tr>
+	      	<td width="2%"><span class='h3'></span></td>
+	      	 <td width="10%"><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
+	      	</tr>
     	</table> 
     					 		
     	

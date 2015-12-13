@@ -43,6 +43,8 @@
 				<!-- <set field="tabButtonItem2" value="stockPosition"/> -->
 				<set field="headerItem" value="StockPosition" />
 				<set field="ajaxUrl" value="StockPositionSubDepot" type="String" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
 			</actions>
 			<widgets>
 				<!-- <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}"> -->
