@@ -207,7 +207,7 @@
 		}
 		tempMap.put("supplierPartyName", supplierPartyName);
 		tempMap.put("productStoreId", productStoreId);
-		orderDetailsMap.put(orderId,tempMap)
+		orderDetailsMap.put(orderId,tempMap);
 		}
 		if(UtilValidate.isNotEmpty(facilityPartyId)){
 		 
@@ -242,9 +242,9 @@
 	
 /*	context.orderList = finalFilteredList;
 	context.partyOBMap = partyOBMap;
+	*/
 	context.orderDetailsMap=orderDetailsMap;
 	
-	*/
 	
 	// preparing Country List Json
 	
