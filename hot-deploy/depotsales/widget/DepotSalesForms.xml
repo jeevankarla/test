@@ -1357,6 +1357,8 @@
             </display-entity>
         </field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="depoPartyName" title="Vehicle No"><hidden/></field>
+        <field name="partyIdTo" title="Vehicle No"><hidden/></field>
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
         </field>
@@ -1377,7 +1379,7 @@
             </hyperlink>
         </field>
          <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
+             <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalQTip('${shipmentId}','${partyIdTo}','${depoPartyName}');"></hyperlink>
         </field>
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
             <hyperlink target="DepotTransMaterialInvoiceInit" description="Invoice">

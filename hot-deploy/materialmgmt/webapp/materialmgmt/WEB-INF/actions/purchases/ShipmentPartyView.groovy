@@ -39,6 +39,20 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		tempMap.put("estimatedShipDate",shipment.estimatedShipDate);
 		tempMap.put("vehicleId",shipment.vehicleId);
 		tempMap.put("partyIdTo",shipment.partyIdTo);
+		
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,shipment.partyIdTo));
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		facilityList=delegator.findList("Facility",condition,null,null,null,false);
+		
+		depoPartyId = "";
+		if(UtilValidate.isNotEmpty(facilityList)){
+			depoPartyId = facilityList[0].get("facilityId");
+			depoPartyName=PartyHelper.getPartyName(delegator, depoPartyId, false);
+			tempMap.put("depoPartyName",depoPartyName);
+		}else{
+		tempMap.put("depoPartyName","");
+		}
 		if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
 		 partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
 		    tempMap.put("partyName",partyName);
@@ -80,6 +94,20 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				tempMap.put("primaryOrderId",list.primaryOrderId);
 				tempMap.put("partyId", partyId);
 				tempMap.put("partyIdTo",shipment.partyIdTo);
+				
+				conditionList = [];
+				conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,shipment.partyIdTo));
+				condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				facilityList=delegator.findList("Facility",condition,null,null,null,false);
+				
+				depoPartyId = "";
+				if(UtilValidate.isNotEmpty(facilityList)){
+					depoPartyId = facilityList[0].get("facilityId");
+					depoPartyName=PartyHelper.getPartyName(delegator, depoPartyId, false);
+					tempMap.put("depoPartyName",depoPartyName);
+				}else{
+				tempMap.put("depoPartyName","");
+				}
 				if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
 					partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
 					   tempMap.put("partyName",partyName);
