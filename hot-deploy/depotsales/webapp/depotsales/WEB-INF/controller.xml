@@ -120,6 +120,11 @@
     	<response name="success" type="view" value="EditBranchIndent"/>
     </request-map>
     
+      <request-map uri="IndentorEditBranchIndent">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="IndentorEditBranchIndent"/>
+    </request-map>
+    
      <request-map uri="nonRouteGatePassDepot.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="NonRouteGatePassPDFDepot"/>
@@ -546,7 +551,6 @@
     <request-map uri="IndentorBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="IndentorBranchSalesOrder"/></request-map>
    
    
-   
     <request-map uri="processBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
@@ -556,6 +560,16 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="BranchSalesOrder"/>
     </request-map>
+     <request-map uri="IndentorprocessBranchSalesOrder">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="processIndentPortalBranchSales">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="processIndentPortalBranchSales"/>
+    </request-map>
+    
     <request-map uri="FindProcProducer">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindProcProducer"/>
@@ -1017,6 +1031,8 @@
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
     <view-map name="EditBranchIndent" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditBranchIndent"/>
+    
+    <view-map name="IndentorEditBranchIndent" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorEditBranchIndent"/>
    
    
    
