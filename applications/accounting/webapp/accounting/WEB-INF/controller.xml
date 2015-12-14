@@ -2895,6 +2895,10 @@ under the License.
         <response name="success" type="view" value="paymentVoucher"/>
     </request-map>
     
+    <request-map uri="hindiPaymentVoucher">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="hindiPaymentVoucher"/>
+    </request-map>
 
     <!-- ================ Entity Lookup Requests ================= -->
     <request-map uri="LookupProduct" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
@@ -4456,6 +4460,7 @@ under the License.
     <view-map name="DebitNote" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#DebitNote" content-type="application/pdf"/>
     <view-map name="invoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#invoiceVoucher" content-type="application/pdf"/>
     <view-map name="paymentVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#paymentVoucher" content-type="application/pdf"/>
+    <view-map name="hindiPaymentVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#hindiPaymentVoucher" content-type="application/pdf"/>
     <view-map name="ViewPaymentReportHtml" type="birt" page="component://accounting/webapp/accounting/payment/report/PaymentReport.rptdesign" content-type="text/html"/>
     <view-map name="ViewPaymentReportPdf" type="birt" page="component://accounting/webapp/accounting/payment/report/PaymentReport.rptdesign" content-type="application/pdf"/>
 

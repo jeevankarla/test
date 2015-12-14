@@ -27,7 +27,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
  			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportSubHeader.description?if_exists}</fo:block>
                 		
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >--------------------------------------------------------------------------------------------------- </fo:block>
-	            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">INDENT FROM FOR PURCHASE OF YARN</fo:block>
+	            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">INDENT FORM FOR PURCHASE OF YARN</fo:block>
 	                          	
 	                          		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                      		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

@@ -69,6 +69,12 @@ conditionList=[];
 				 productName = ""
 				 prod=delegator.findOne("Product",[productId:eachOrderItem.productId],false);
 				 
+				 changeDatetime = eachOrderItem.changeDatetime;
+				 context.changeDatetime = changeDatetime;
+				 
+				 unitPrice = eachOrderItem.unitPrice;
+				 context.unitPrice = unitPrice;
+				 
 				 String srNoStr = SrNo;
 				 char firSrno = srNoStr.charAt(0);
 				 srNoStr = String.valueOf(firSrno)+srNoStr;
@@ -139,6 +145,13 @@ conditionList=[];
 			
 	context.OrderItemList = OrderItemList;
 	
+	//Debug.log("OrderItemList======444444============="+OrderItemList);
+	
+	context.orderedHindiItemList = orderedHindiItemList;
+	
+	//Debug.log("orderedHindiItemList==================="+orderedHindiItemList);
+	
+	
 	contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	
@@ -148,3 +161,4 @@ conditionList=[];
 	
 	context.totalsHindiList = totalsHindiList[0];
 	context.dayWiseEntriesLidast = dayWiseEntriesLidast;
+	

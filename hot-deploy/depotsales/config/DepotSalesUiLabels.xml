@@ -190,5 +190,871 @@
         <value xml:lang="en">Total Price</value>
         <value xml:lang="hi_IN">१४. अग्रिम विवरण  चेक या डीडी नहीं खाते पर सीआर उपयोगकर्ता एजेंसी से प्राप्त राशि</value>
     </property>
+    //for Hindi PO Report
+    
+    <property key="Indent1">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">टी आईएन. न॰ -:09152300064 </value>
+    </property>
+    
+    <property key="Indent2">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">सी एस टी. न॰ -:683925 प्रभावी तिथि 12.06.1985  </value>
+    </property>
+    
+    <property key="Indent3">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">क्रय आदेश  </value>
+    </property>
+    
+    <property key="Indent4">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">रा॰ ह॰ वि॰ नि॰ लि॰  </value>
+    </property>
+     
+     <property key="Indent5">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">एस-13/36, मोहल्ला तेलीयाबाग वाराणसी  </value>
+    </property>
+    
+    <property key="Indent6">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> ई-मेल :nhdcltdvns@yahoo.in </value>
+    </property>
+    
+    <property key="Indent7">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> क्रय आदेश संख्या : पी॰ओ॰ वाराणसी/.......... </value>
+    </property>
+    
+    <property key="Indent8">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> संदर्भ संख्या : </value>
+    </property>
+    
+    <property key="Indent9">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> दिनांक -: </value>
+    </property>
+    
+    <property key="Indent10">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> नियम एवं शर्तों के साथ एन टी सी / सहकारी / राज्य  क्षेत्र की संस्थाओं से सूत (यार्न) क्रय हेतु फार्म (प्रारूप) </value>
+    </property>
+    
+    <property key="Indent11">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> सेवा मे (प्रति) :  </value>
+    </property>
+    
+    <property key="Indent12">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> संदर्भ : आपका कोटेशन संख्या :   </value>
+    </property>
+    
+    <property key="Indent13">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> महोदय, </value>
+    </property>
+    
+    <property key="Indent14">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> कृपया आगे दी गयी शर्तों तथा निबंधनों के अनुसार निम्नलिखित सूत (आइटम) की आपूर्ति करें। सभी वस्तुएँ सेल्फ कंसाइंड होनी चाहिए   </value>
+    </property>
+    
+    <property key="Indent15">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> और मे॰ .............. को बुक करें। भाड़ा पार्टी द्वारा “TO PAY” पर आधारित हे, जब तक की अन्यथा विनिर्दिष्ट न हो।   </value>
+    </property>
+    
+    <property key="Indent16">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">कर एवं अन्य प्रभार का ब्योरा   : </value>
+    </property>
+    
+    <property key="Indent17">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">कुल मूल्य :  </value>
+    </property>
+    
+    <property key="Indent18">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">II.  माल भेजने संबंधी निर्देश : </value>
+    </property>
+    
+    <property key="Indent19">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">क्रम संख्या </value>
+    </property>
+    
+    <property key="Indent20">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">मद/ आइटम/ कोड संख्या </value>
+    </property>
+    
+    <property key="Indent21">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">मात्रा  ( गांठ ) </value>
+    </property>
+    
+    <property key="Indent22">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">मात्रा  ( कि. ग्रा.) </value>
+    </property>
+    
+    <property key="Indent23">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">दर  ( `)</value>
+    </property>
+    
+    <property key="Indent24">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">मूल्य  ( ` )</value>
+    </property>
+    
+    <property key="Indent25">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">कुल योग </value>
+    </property>
+    
+    <property key="Indent26">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">क्रम संख्या </value>
+    </property>
+    
+    <property key="Indent27">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">संस्था का पता  </value>
+    </property>
+    
+    <property key="Indent28">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">माल प्रेषण का स्थान - </value>
+    </property>
+    
+    <property key="Indent29">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">III. परिवहन का माध्यम: </value>
+    </property>
+    
+    <property key="Indent30">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">IV.  पैकिंग निर्देश:- </value>
+    </property>
+    
+    <property key="Indent31">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> V.  अन्य निर्देश:- </value>
+    </property>
+    
+    <property key="Indent32">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">VI  वैधता:- यह क्रय आदेश 15 दिन तक वैध हे। </value>
+    </property>
+    
+    <property key="Indent33">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">VII   तत्काल  </value>
+    </property>
+    
+    <property key="Indent34">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> नोट :-   आपूर्ति कर्ता उनके बीजक (इनवाइस) मे उपरोक्त क्रय आदेश संख्या का संदर्भ/उल्लेख अवश्य करे। </value>
+    </property>
+    
+    <property key="Indent35">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">अभिकरण संस्था से भुगतान प्राप्त होने की दशा मे ही  आपूर्तिकर्ता/ मिल को भुगतान अवमुक्त किया जाएगा  </value>
+    </property>
+    
+    <property key="Indent36">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> अवमानक माल की वापसी का जोखिम एवं खर्चा आपूर्ति कर्ता / मिल द्वारा वहन होगा। </value>
+    </property>
+    
+    <property key="Indent37">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">क॰अ॰ (वा॰)/ व अ (वा॰)/ स॰प्र॰(वा॰) </value>
+    </property>
+    
+    <property key="Indent38">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">जांच अधिकारी  </value>
+    </property>
+    
+    <property key="Indent39">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> प्राधिकृत हस्ताक्षर  </value>
+    </property>
+    
+    <property key="Indent40">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">रा ह वि नि लि॰. </value>
+    </property>
+    
+    <property key="Indent41">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">प्रतिलिपि :-  </value>
+    </property>
+    
+    <property key="Indent42">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> 1.	मांगकर्ता </value>
+    </property>
+    
+    <property key="Indent43">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> 2.	वित्त एवं लेखा विभाग </value>
+    </property>
+    
+    <property key="Indent44">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN"> 3.	क्रय सम्बन्धी विभाग </value>
+    </property>
+    
+    <property key="Indent45">
+        <value xml:lang="en">Indent Report</value>
+        <value xml:lang="hi_IN">4.	मूल क्रय पंजिका </value>
+    </property>
+    
+    // for Hindi Minutes Report
+    
+    
+    <property key="HindiMinutes1">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">क्रय एवं ववक्रय कायवय त्ृत </value>
+    </property>
+    
+    <property key="HindiMinutes2">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">रा॰ ह॰ वव॰ नि॰ लि॰ </value>
+    </property>
+    
+    <property key="HindiMinutes3">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">एस-13/36, मोहल्ला तेललयाबाग वाराणस </value>
+    </property>
+    
+    
+    <property key="HindiMinutes4">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ई-मेल :nhdcltdvns@yahoo.in </value>
+    </property>
+    
+    <property key="HindiMinutes5">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">प्रस्ताव संख्या : </value>
+    </property>
+    
+    <property key="HindiMinutes6">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">दिनांक - </value>
+    </property>
+    
+    <property key="HindiMinutes7">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">निमिांककत आइटम(यािय) की खरीद हेतुक्रय एवं ववक्रय सलमत की बैठक के कायवय त्ृत। </value>
+    </property>
+    
+    <property key="HindiMinutes8">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">दिनांक ............ को संपन्न हुई बैठक मे, मे॰ - (User agency) के मांग पत्र संख्या ........... दिनांक ..... यह सलमतत  </value>
+    </property>
+    
+    <property key="HindiMinutes9">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">तनम्नललखित प्रत्येक आइटम(यानन) को उनके समक्ष अंककत िरों के अनुसार मे॰ – (supplier agency) से िरीिने हेत </value>
+    </property>
+    
+    <property key="HindiMinutes10">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">संस्तुतत/ अनमु ोिन प्रिान करती है।  </value>
+    </property>
+    
+    <property key="HindiMinutes11">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">1. िर तनर्ानरण वववरण :  </value>
+    </property>
+    
+    <property key="HindiMinutes12">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">लंबबत क्रय आिेश: </value>
+    </property>
+    
+    <property key="HindiMinutes13">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">क्रम संख्या </value>
+    </property>
+    
+    <property key="HindiMinutes14">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">आइटम </value>
+    </property>
+    
+    <property key="HindiMinutes15">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">इकाई  </value>
+    </property>
+    
+    <property key="HindiMinutes16">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">मात </value>
+    </property>
+    
+    <property key="HindiMinutes17">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">(ककग्रा॰) </value>
+    </property>
+    
+    <property key="HindiMinutes18">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">क्रय  </value>
+    </property>
+    
+    
+    <property key="HindiMinutes19">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> िर/इकाई </value>
+    </property>
+    
+    <property key="HindiMinutes20">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> ब्याज -0 डेज़@ </value>
+    </property>
+    
+    <property key="HindiMinutes21">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">0.00% वावषनक </value>
+    </property>
+    
+    <property key="HindiMinutes22">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> हेंडलल ंग प्रभार </value>
+    </property>
+    
+    <property key="HindiMinutes23">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> ववक्रय </value>
+    </property>
+    
+    <property key="HindiMinutes24">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> िर/ इकाई </value>
+    </property>
+    
+    <property key="HindiMinutes25">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">2. क्रय एवं ववक्रय का वववरण </value>
+    </property>
+    
+    <property key="HindiMinutes26">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> क्रम संख्या </value>
+    </property>
+    
+    <property key="HindiMinutes27">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> आइटम </value>
+    </property>
+    
+    <property key="HindiMinutes28">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> इकाई </value>
+    </property>
+    
+    <property key="HindiMinutes29">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">मात्रा </value>
+    </property>
+    
+    <property key="HindiMinutes30">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">(ककग्रा॰) </value>
+    </property>
+    
+    <property key="HindiMinutes31">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">क्रय </value>
+    </property>
+    
+    <property key="HindiMinutes32">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">िर/इकाई </value>
+    </property>
+    
+    <property key="HindiMinutes33">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">क्रय मूल्य (`) </value>
+    </property>
+    
+    <property key="HindiMinutes34">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ववक्रय िर/  </value>
+    </property>
+    
+    <property key="HindiMinutes35">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">इकाई (`) </value>
+    </property>
+    
+    <property key="HindiMinutes36">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ववक्रय  </value>
+    </property>
+    
+    <property key="HindiMinutes37">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">मूल्य (` </value>
+    </property>
+    
+    <property key="HindiMinutes38">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">कुल योग </value>
+    </property>
+    
+    <property key="HindiMinutes39">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ववक्रय योजनान्तगनत - ................ (Scheme) </value>
+    </property>
+    
+    
+    <property key="HindiMinutes40">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">3. सारांश </value>
+    </property>
+    
+    <property key="HindiMinutes41">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">अ) वास्तववक क्रय मूल्य : </value>
+    </property>
+    
+    
+    <property key="HindiMinutes42">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">आ) कुल ववक्रय मूल्य : </value>
+    </property>
+    
+    
+    <property key="HindiMinutes43">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">इ) ववक्रय मूल्य तथा लमल को ककए जाने वाले वास्तववक भुगतान का अन्तर </value>
+    </property>
+    
+    <property key="HindiMinutes44">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ई) 0 डेज़ इंटरेस्ट ऑन ि क्रे डडट </value>
+    </property>
+    
+    <property key="HindiMinutes45">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">उ) सौिे मे लाभांश % : %
+         </value>
+    </property>
+    
+    <property key="HindiMinutes46">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">4. माल भाड़ा टु पे आर्ार पर संस्था ........................ को भेजा जाएगा </value>
+    </property>
+    
+    <property key="HindiMinutes47">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">5. भुगतान अलभकरण संस्था द्वारा Back to Back/ On Credit , दिनों/ तत्काल ककया जाएगा, ऐसा न होने पर कुल </value>
+    </property>
+    
+    <property key="HindiMinutes48">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">ववलम्म्बत दिनों पर 11% वावषनक िर से ब्याज प्रभार ललया जाएगा।
+         </value>
+    </property>
+    
+    <property key="HindiMinutes49">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">6. इस सौिे मे कुल ववत्तीय व्यय (` </value>
+    </property>
+    
+    <property key="HindiMinutes50">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">7. अलभकरण संस्था को इस सौिे सदहत होने वाली कुल आपूततन (`) -  </value>
+    </property>
+    
+    <property key="HindiMinutes51">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">8. अलभकरण संस्था ...............से ब्याज सदहत लंबबत भुगतान ............... दिनांक ........... तक </value>
+    </property>
+    
+    <property key="HindiMinutes52">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">9. लमल को ककया जाने वाला भुगतान (`)......... , चेक / डडमाण्ड ड्राफ्ट द्वारा  </value>
+    </property>
+    
+    <property key="HindiMinutes53">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">10. माल रवानगी ततथथ से लमल द्वारा रा ह वव तन लल को िी जाने वाली credit </value>
+    </property>
+    
+    <property key="HindiMinutes54">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">11. माल रवानगी ततथथ से रा ह वव तन लल द्वारा अलभकरण संस्था को िी जाने वाली credit  </value>
+    </property>
+    
+    <property key="HindiMinutes55">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">12. अन्य ववतनदिनष्ट सूचना .................... </value>
+    </property>
+    
+    <property key="HindiMinutes56">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">13. स्थानीय कर जैसा लागूहो।
+         </value>
+    </property>
+    
+    <property key="HindiMinutes57">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">अथग्रम वववरण : चेक/ डी डी न॰-        र्नरालश- `           अलभकरण संस्था से प्राप्त हुआ </value>
+    </property>
+    
+    <property key="HindiMinutes58">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">व॰अ॰(वा)/स॰प्र॰(वा)/उ॰प्र॰(वा)          अ॰(वव/िे)/स॰प्र॰(वव/िे)/उ॰प्र॰(वव/िे)/प्र॰(वव/िे)           प्र॰(वा)/वप्र(वा)/मुप्र(वा)/उमप्र(वा)  </value>
+    </property>
+    
+    <property key="HindiMinutes59">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">मुख्यािय: 10 वााँ 11 वााँति, ववकास दीप, 22 स्टेशि रोड, िखिऊ -226001  </value>
+    </property>
+    
+    <property key="HindiMinutes60">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN">6. इस सौिे मे कुल ववत्तीय व्यय (`) - </value>
+    </property>
+    
+    <property key="HindiMinutes61">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="HindiMinutes62">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="HindiMinutes63">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="HindiMinutes64">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    //for Invoice Slip
+    
+    <property key="Invoice1">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">TIN न॰ -:09152300064 </value>
+    </property>
+    
+    <property key="Invoice2">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">CST न॰ -:683925 प्रभावी तिथि 12.06.1985 </value>
+    </property>
+    
+    <property key="Invoice3">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">अन्तर्गत : ( Name of Scheme)
+         </value>
+    </property>
+    
+    <property key="Invoice4">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">रा॰ ह॰ वि॰ नि॰ लि॰
+         </value>
+    </property>
+    
+    <property key="Invoice5">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">एस-13/36, मोहल्ला िेललयाबाग वाराणसी </value>
+    </property>
+    
+    <property key="Invoice6">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">ई-मेल :nhdcltdvns@yahoo.in </value>
+    </property>
+    
+    <property key="Invoice7">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">बिि क्रमाांक : </value>
+    </property>
+    
+    <property key="Invoice8">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">दििाांक </value>
+    </property>
+    
+    <property key="Invoice9">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">राहविनिलि माांर </value>
+    </property>
+    
+    <property key="Invoice10">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">पत्र सांख्या </value>
+    </property>
+    
+    <property key="Invoice11">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">दििाांक </value>
+    </property>
+    
+    <property key="Invoice12">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">राहविनिलि क्रय </value>
+    </property>
+    
+    <property key="Invoice13">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">आिेशसांख्या </value>
+    </property>
+    
+    <property key="Invoice14">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">दििाांक </value>
+    </property>
+    
+    <property key="Invoice15">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">अलिकरण सांस्थ </value>
+    </property>
+    
+    <property key="Invoice16">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">माांर् पत्र सांख्या </value>
+    </property>
+    
+    <property key="Invoice17">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">दििाांक </value>
+    </property>
+    
+    <property key="Invoice18">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">आपके उपरोक्त पुष्टित माांर् पत्र के सापेक्ष माि.......................... द्िारा िेजा र्या है, </value>
+    </property>
+    
+    <property key="Invoice19">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">एिआर / आरआर सांख्या :  </value>
+    </property>
+    
+    <property key="Invoice20">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">दििाांक : </value>
+    </property>
+    
+    <property key="Invoice21">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">क्रम सांख्या </value>
+    </property>
+    
+    <property key="Invoice22">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">माि का वििरण काउां ि/ डेनियर </value>
+    </property>
+    
+    <property key="Invoice23">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">इत्यादि
+         </value>
+    </property>
+    
+    <property key="Invoice24">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">िेि/ िैर् सांख्य </value>
+    </property>
+    
+    <property key="Invoice25">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">िॉक्स/ माकेदिर </value>
+    </property>
+    
+    <property key="Invoice26">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">इकाई </value>
+    </property>
+    
+    <property key="Invoice27">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">मात्रा  </value>
+    </property>
+    
+    <property key="Invoice28">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">(कक ग्रा मे) </value>
+    </property>
+    
+    <property key="Invoice29">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">योजिा मात </value>
+    </property>
+    
+    <property key="Invoice30">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">(कक ग्रा मे) </value>
+    </property>
+    
+    <property key="Invoice31">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">िर/ कक  </value>
+    </property>
+    
+    <property key="Invoice32">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">ग्रा/ िण्डि </value>
+    </property>
+    
+    <property key="Invoice33">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">धिरालश ( ` </value>
+    </property>
+    
+    <property key="Invoice34">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">कुि योर </value>
+    </property>
+    
+    <property key="Invoice35">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">आपूनतकग ताग :  </value>
+    </property>
+    
+    <property key="Invoice36">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">कर एिां अन्य प्रिार का ब्योरा :  </value>
+    </property>
+    
+    <property key="Invoice37">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">10 % िाईएसएस(YSS) स्कीम : </value>
+    </property>
+    
+    <property key="Invoice38">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">कुि मूल्य : </value>
+    </property>
+    
+    <property key="Invoice39">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">लमि िीजक सांख्या/दििाांक :  </value>
+    </property>
+    
+    <property key="Invoice40">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">कृिे - रा॰ह॰वि॰नि॰लि॰  </value>
+    </property>
+    
+    <property key="Invoice41">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">स्िान : </value>
+    </property>
+    
+    <property key="Invoice42">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">भाड़ा (` </value>
+    </property>
+    
+    <property key="Invoice43">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">देय तिथि :
+         </value>
+    </property>
+    
+    <property key="Invoice44">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">िैयार ककया गया </value>
+    </property>
+    
+    <property key="Invoice45">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">व अ (वा॰) </value>
+    </property>
+    
+    <property key="Invoice46">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">सप्र(वा)/उ॰प्र॰(वा) </value>
+    </property>
+    
+    <property key="Invoice47">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">ववत्ि एवं लेखा ववभाग  </value>
+    </property>
+    
+    <property key="Invoice48">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">द्वारा जांच ककया गया </value>
+    </property>
+    
+    <property key="Invoice49">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">प्राधधकृत हस्ताक्षर
+         </value>
+    </property>
+    
+    <property key="Invoice50">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">नियम एिां शत:े -
+         </value>
+    </property>
+    
+    <property key="Invoice51">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> सभी भुगिान राष्ट्रीय हिकरघा ववकास तनगम लललमटेड, के पक्ष मे क्रोस्ड चेक/डडमांडड्राफ्ट द्वारा ककए जाने चाहहए </value>
+    </property>
+    
+    <property key="Invoice52">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> ववलम्बबि धनरालि पर 13% वावषकि दर से ब्याज वसूल ककया जाएगा।
+         </value>
+    </property>
+    
+    <property key="Invoice53">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> वववाद कक म्स्िति मे मामले को परस्पर सहमति से मध्यस्ि को तनहदिष्ट्ट ककया जाएगा म्जसका तनणिय अंतिम एवं बाध्यकारी होगा। </value>
+    </property>
+    
+    <property key="Invoice54">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">भूचुले द </value>
+    </property>
+    
+    <property key="Invoice55">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="Invoice56">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="Invoice57">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="Invoice58">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="Invoice59">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
+    
+    <property key="Invoice60">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN"> </value>
+    </property>
     
 </resource>

@@ -91,6 +91,11 @@
 	        <response name="success" type="view" value="IndentPrintReportPDF"/>
     </request-map>
     
+    <request-map uri="hindiPoPrintReport.pdf">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="HindiPoPrintReportPDF"/>
+    </request-map>
+    
     <request-map uri="approveDepotSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveDepotOrder"/>
@@ -985,6 +990,7 @@
     <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
+    <view-map name="HindiPoPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#HindiPoPrintReportPDF" content-type="application/pdf"/>
     <view-map name="NonRouteGatePassPDFDepot" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDFDepot" content-type="application/pdf"/>
     <view-map name="FindDepotSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
     <view-map name="BuyerInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoiceDepotPDF" content-type="application/pdf"/>
