@@ -39,9 +39,10 @@ function dialogue(content, title) {
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-				$("#PostalAddress").hide();
-				populateData();
-				//getAllIndentRejects();
+					alert("test");
+					$("#PostalAddress").hide();
+					populateData();
+					//getAllIndentRejects();
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
@@ -91,8 +92,17 @@ function submitForm(){
 
 
 function manualAddressEntry(){
-$("#ManualAddress").hide();
-$("#PostalAddress").show();
+	//$("#ManualAddress").hide();
+	$("#manualEntryDiv").show();
+	$("#autoAddress").show();
+	$("#manualAddEntry").hide();
+	populateData();
+}
+function hideManualEntry(){
+	//$("#ManualAddress").hide();
+	$("#manualEntryDiv").hide();
+	$("#autoAddress").hide();
+	$("#manualAddEntry").show();
 }
 
 function changeToUpperCase(){
@@ -177,12 +187,16 @@ function purchaseOrder(orderId, salesChannel,supplierPartyId,supplierPartyName,p
      var message = "";
 
                 message += "<html><head></head><body><form id='purchaseOrderEntry' method='post' action='createPOByOrder' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=700>";
-      			message += "<tr class='h2'><td align='left' class='h5' width='60%'>OrderId:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+orderId+"</font><input class='h4' type='hidden' value="+orderId+" id='orderId' name='orderId' /></td></tr>";
-      			message += "<tr class='h2'><td align='left' class='h5' width='60%'>Branch Name:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+productStoreId+"</font><input class='h4' type='hidden' value="+productStoreId+" id='productStoreId' name='productStoreId' /></td></tr>";
+      			message += "<tr class='h3'><td align='left' class='h3' width='60%'>OrderId:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+orderId+"</font><input class='h4' type='hidden' value="+orderId+" id='orderId' name='orderId' /></td></tr>";
+      			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Branch Name:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+productStoreId+"</font><input class='h4' type='hidden' value="+productStoreId+" id='productStoreId' name='productStoreId' /></td></tr>";
       			message += "<tr class='h3'><td align='left' class='h3' width='60%'>supplierPartyId:</td><td align='left' class='h5' width='60%'><font color=light-blue>"+supplierPartyName+"["+supplierPartyId+"]</font><input class='h4' type='hidden'  id='supplierId' name='supplierId' value="+supplierPartyId+"   readOnly /><input class='h4' type='hidden'  id='partyId' name='partyId' value="+partyId+"  /></td></tr>";
 				message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Order Date:</td><td align='left' width='60%'><input class='h4' type='text' color=light-blue class='required' readonly  value="+orderDate+" id='orderDate' name='orderDate' onmouseover='datepick1()' required /></td></tr>";
      		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
-				message +=	"<tr class='h3'><td align='left' width='60%'></td><td align='left' class='h3' width='40%'><font size=55%><b><u>Shipping Deatils</u></b></font></td></tr>";
+				
+				 message +=	"</table>";
+				message +=	"<hr>";
+				message +=	"<table>";
+				message +=	"<tr class='h3'><td align='left' width='60%'></td><td align='left' class='h3' width='40%'><font size=55%><b><u>Shipping Details</u></b></font></td></tr>";
 				
 				if(shipDetails != undefined && shipDetails != ""){
      		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>ADDRESS: </td><td align='left' width='60%'><font color=light-blue>"+shipDetails.address1+",</font></td></tr>";
@@ -196,22 +210,27 @@ function purchaseOrder(orderId, salesChannel,supplierPartyId,supplierPartyName,p
      		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
      		   	}
      		    message +=	"</table>";
-     		  
-     		   	message += "<table  id='PostalAddress' cellspacing=10 cellpadding=10 width=400>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>ADDRESS1:<font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>ADDRESS2: </td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>";
-     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: </td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>";
+     		    
+     		  	message += "<div id='manualEntryDiv' style='display:none'>";
+	     		   	message += "<table  id='PostalAddress' cellspacing=10 cellpadding=10 width=400>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address1:<font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address2: </td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>";
+	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: </td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>";
+	     		   	
+	     		   	message +=	"</table>";
+     		   	message += "</div>";
      		   	
-     		   	message +=	"</table>";
      		   	message += "<table  id='submitfrm' cellspacing=10 cellpadding=10 width=400>";
-     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>";
+     		   	message +=	"<tr id='manualAddEntry' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>";
+     		    message +=	"<tr id='autoAddress' style='display:none' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Auto Pick Address' id='autoAddress'  name='autoAddress' onclick='hideManualEntry()'/></td></tr>";
      		    message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
 			    message +=	"</table></form></body></html>";
 	var title = "Generate Purchase Order";
     Alert(message, title);
+    
      //action= makeMassReject;
      //jQuery('#ListIndentSubmit').attr("action", action);
      //jQuery('#ListIndentSubmit').submit();
