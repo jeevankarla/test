@@ -27,6 +27,81 @@ dctx = dispatcher.getDispatchContext();
 context.partyName = parameters.partyName;
 
 
+ orderHeaderList = delegator.findOne("OrderHeader", [orderId : parameters.orderId], false);
+ 
+ orderDate = orderHeaderList.get("orderDate");
+ 
+ context.orderDate = orderDate;
+ 
+grandTOt = orderHeaderList.get("grandTotal");
+
+
+context.orderId = parameters.orderId;
+
+condtList = [];
+condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
+
+orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+
+
+totAmt = 0;
+
+
+if(UtilValidate.isNotEmpty(orderPreferenceIds)){
+
+conditonList = [];
+conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
+conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
+cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+
+  if(UtilValidate.isNotEmpty(PaymentList)){
+   for (eachPayment in PaymentList) {
+	   totAmt = totAmt+eachPayment.amount;
+      }
+   }
+
+ }
+
+balanceAmt = 0;
+
+balanceAmt = grandTOt-totAmt;
+context.balanceAmt = balanceAmt;
+
+
+
+condtList.clear();
+condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
+condtList.add(EntityCondition.makeCondition("orderAdjustmentTypeId" ,EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));//
+//condtList.add(EntityCondition.makeCondition("amount" ,EntityOperator.LESS_THAN, 0));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+OrderAdjustmentList = delegator.findList("OrderAdjustment", cond, null, null, null ,false);
+
+Scheam = "";
+
+
+if(UtilValidate.isNotEmpty(OrderAdjustmentList)){
+	
+	
+	Scheam = "Sales Under SchemeMGP 10% Scheme";
+}
+else{
+	
+	Scheam = "MGPS Scheme";
+}
+
+context.Scheam =Scheam;
+
+
+
+
+ 
+
+
+
 
 
 conditionList=[];
