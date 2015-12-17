@@ -172,7 +172,6 @@ under the License.
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
-				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 	             <fo:block>
 	             <fo:block  text-align="left" font-size="14pt" font-style="bold">DETAILS OF PURCHASE &amp; SALES :</fo:block>
              		<fo:table border-style="solid">
@@ -331,11 +330,13 @@ under the License.
 	<fo:block>.</fo:block>
 	<fo:block>Advance Details: Cheque/DD No :Cr on Account amounting  received from user agency</fo:block>
 				
+			<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+			<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>	
 				
-				
-				
-				
-				
+	
+  <fo:block text-align="center"><fo:inline text-decoration="underline">Supdt(C)/AM(C)/DM(C)                  Supdt(F&amp;A)/A.M.(F&amp;A)Dy.M(F&amp;A)/Manager(F&amp;A)                             Mgr(C)/Sr.Mgr(C)/Ch.Mg r(C)</fo:inline></fo:block>  			
+		
+   <fo:block text-align="center">Head Office : 10th &amp; 11th Floor, Vikas Deep , 22 Station Road , Lucknow-226001</fo:block>				
 				
 			</fo:flow>
 		</fo:page-sequence>

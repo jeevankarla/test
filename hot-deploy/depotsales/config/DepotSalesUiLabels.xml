@@ -438,32 +438,32 @@
     
     <property key="HindiMinutes4">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">ई-मेल :nhdcltdvns@yahoo.in </value>
+        <value xml:lang="hi_IN">ई-मेल   </value>
     </property>
     
     <property key="HindiMinutes5">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">प्रस्ताव संख्या : </value>
+        <value xml:lang="hi_IN">प्रस्ताव संख्या  </value>
     </property>
     
     <property key="HindiMinutes6">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">दिनांक - </value>
+        <value xml:lang="hi_IN">दिनांक  </value>
     </property>
     
     <property key="HindiMinutes7">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">निमिांककत आइटम(यािय) की खरीद हेतुक्रय एवं ववक्रय सलमत की बैठक के कायवय त्ृत। </value>
+        <value xml:lang="hi_IN">निमिांककत आइटम यािय की खरीद हेतुक्रय एवं ववक्रय सलमत की बैठक के कायवय त्ृत। </value>
     </property>
     
     <property key="HindiMinutes8">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">दिनांक ............ को संपन्न हुई बैठक मे, मे॰ - (User agency) के मांग पत्र संख्या ........... दिनांक ..... यह सलमतत  </value>
+        <value xml:lang="hi_IN">दिनांक               को संपन्न हुई बैठक मे, मे॰  के मांग पत्र संख्या            दिनांक         यह सलमतत  </value>
     </property>
     
     <property key="HindiMinutes9">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">तनम्नललखित प्रत्येक आइटम(यानन) को उनके समक्ष अंककत िरों के अनुसार मे॰ – (supplier agency) से िरीिने हेत </value>
+        <value xml:lang="hi_IN">तनम्नललखित प्रत्येक आइटम यानन को उनके समक्ष अंककत िरों के अनुसार मे॰   से िरीिने हेत </value>
     </property>
     
     <property key="HindiMinutes10">
@@ -473,12 +473,12 @@
     
     <property key="HindiMinutes11">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">1. िर तनर्ानरण वववरण :  </value>
+        <value xml:lang="hi_IN">१. िर तनर्ानरण वववरण   </value>
     </property>
     
     <property key="HindiMinutes12">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">लंबबत क्रय आिेश: </value>
+        <value xml:lang="hi_IN">लंबबत क्रय आिेश </value>
     </property>
     
     <property key="HindiMinutes13">
@@ -519,7 +519,7 @@
     
     <property key="HindiMinutes20">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN"> ब्याज -0 डेज़@ </value>
+        <value xml:lang="hi_IN"> ब्याज -० डेज़@ </value>
     </property>
     
     <property key="HindiMinutes21">
@@ -544,7 +544,7 @@
     
     <property key="HindiMinutes25">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">2. क्रय एवं ववक्रय का वववरण </value>
+        <value xml:lang="hi_IN">२.क्रय एवं ववक्रय का वववरण </value>
     </property>
     
     <property key="HindiMinutes26">
@@ -569,7 +569,7 @@
     
     <property key="HindiMinutes30">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">(ककग्रा॰) </value>
+        <value xml:lang="hi_IN">ककग्रा॰ </value>
     </property>
     
     <property key="HindiMinutes31">
@@ -594,7 +594,7 @@
     
     <property key="HindiMinutes35">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">इकाई (`) </value>
+        <value xml:lang="hi_IN">इकाई  </value>
     </property>
     
     <property key="HindiMinutes36">
@@ -604,7 +604,7 @@
     
     <property key="HindiMinutes37">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">मूल्य (` </value>
+        <value xml:lang="hi_IN">मूल्य  </value>
     </property>
     
     <property key="HindiMinutes38">
@@ -614,24 +614,24 @@
     
     <property key="HindiMinutes39">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">ववक्रय योजनान्तगनत - ................ (Scheme) </value>
+        <value xml:lang="hi_IN">ववक्रय योजनान्तगनत - </value>
     </property>
     
     
     <property key="HindiMinutes40">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">3. सारांश </value>
+        <value xml:lang="hi_IN">३. सारांश </value>
     </property>
     
     <property key="HindiMinutes41">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">अ) वास्तववक क्रय मूल्य : </value>
+        <value xml:lang="hi_IN">अ) वास्तववक क्रय मूल्य  </value>
     </property>
     
     
     <property key="HindiMinutes42">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">आ) कुल ववक्रय मूल्य : </value>
+        <value xml:lang="hi_IN">आ) कुल ववक्रय मूल्य  </value>
     </property>
     
     
@@ -642,75 +642,80 @@
     
     <property key="HindiMinutes44">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">ई) 0 डेज़ इंटरेस्ट ऑन ि क्रे डडट </value>
+        <value xml:lang="hi_IN">ई) ० डेज़ इंटरेस्ट ऑन ि क्रे डडट </value>
     </property>
     
     <property key="HindiMinutes45">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">उ) सौिे मे लाभांश % : %
+        <value xml:lang="hi_IN">उ) सौिे मे लाभांश 
          </value>
     </property>
     
     <property key="HindiMinutes46">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">4. माल भाड़ा टु पे आर्ार पर संस्था ........................ को भेजा जाएगा </value>
+        <value xml:lang="hi_IN">४. माल भाड़ा टु पे आर्ार पर संस्था                   को भेजा जाएगा </value>
     </property>
     
     <property key="HindiMinutes47">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">5. भुगतान अलभकरण संस्था द्वारा Back to Back/ On Credit , दिनों/ तत्काल ककया जाएगा, ऐसा न होने पर कुल </value>
+        <value xml:lang="hi_IN">५. भुगतान अलभकरण संस्था द्वारा </value>
+    </property>
+    
+     <property key="HindiMinutes471">
+        <value xml:lang="en">Minutes Report</value>
+        <value xml:lang="hi_IN"> दिनों/ तत्काल ककया जाएगा, ऐसा न होने पर कुल </value>
     </property>
     
     <property key="HindiMinutes48">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">ववलम्म्बत दिनों पर 11% वावषनक िर से ब्याज प्रभार ललया जाएगा।
+        <value xml:lang="hi_IN">ववलम्म्बत दिनों पर ११% वावषनक िर से ब्याज प्रभार ललया जाएगा।
          </value>
     </property>
     
     <property key="HindiMinutes49">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">6. इस सौिे मे कुल ववत्तीय व्यय (` </value>
+        <value xml:lang="hi_IN">६. इस सौिे मे कुल ववत्तीय व्यय  </value>
     </property>
     
     <property key="HindiMinutes50">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">7. अलभकरण संस्था को इस सौिे सदहत होने वाली कुल आपूततन (`) -  </value>
+        <value xml:lang="hi_IN">७. अलभकरण संस्था को इस सौिे सदहत होने वाली कुल आपूततन  -  </value>
     </property>
     
     <property key="HindiMinutes51">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">8. अलभकरण संस्था ...............से ब्याज सदहत लंबबत भुगतान ............... दिनांक ........... तक </value>
+        <value xml:lang="hi_IN">८. अलभकरण संस्था             से ब्याज सदहत लंबबत भुगतान            दिनांक              तक </value>
     </property>
     
     <property key="HindiMinutes52">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">9. लमल को ककया जाने वाला भुगतान (`)......... , चेक / डडमाण्ड ड्राफ्ट द्वारा  </value>
+        <value xml:lang="hi_IN">९. लमल को ककया जाने वाला भुगतान                  चेक / डडमाण्ड ड्राफ्ट द्वारा  </value>
     </property>
     
     <property key="HindiMinutes53">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">10. माल रवानगी ततथथ से लमल द्वारा रा ह वव तन लल को िी जाने वाली credit </value>
+        <value xml:lang="hi_IN">१०. माल रवानगी ततथथ से लमल द्वारा रा ह वव तन लल को िी जाने वाली श्रेय </value>
     </property>
     
     <property key="HindiMinutes54">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">11. माल रवानगी ततथथ से रा ह वव तन लल द्वारा अलभकरण संस्था को िी जाने वाली credit  </value>
+        <value xml:lang="hi_IN">११. माल रवानगी ततथथ से रा ह वव तन लल द्वारा अलभकरण संस्था को िी जाने वाली श्रेय  </value>
     </property>
     
     <property key="HindiMinutes55">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">12. अन्य ववतनदिनष्ट सूचना .................... </value>
+        <value xml:lang="hi_IN">१२. अन्य ववतनदिनष्ट सूचना  </value>
     </property>
     
     <property key="HindiMinutes56">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">13. स्थानीय कर जैसा लागूहो।
+        <value xml:lang="hi_IN">१३. स्थानीय कर जैसा लागूहो।
          </value>
     </property>
     
     <property key="HindiMinutes57">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">अथग्रम वववरण : चेक/ डी डी न॰-        र्नरालश- `           अलभकरण संस्था से प्राप्त हुआ </value>
+        <value xml:lang="hi_IN">अथग्रम वववरण  चेक/ डी डी न॰-        र्नरालश- `           अलभकरण संस्था से प्राप्त हुआ </value>
     </property>
     
     <property key="HindiMinutes58">
@@ -720,12 +725,12 @@
     
     <property key="HindiMinutes59">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">मुख्यािय: 10 वााँ 11 वााँति, ववकास दीप, 22 स्टेशि रोड, िखिऊ -226001  </value>
+        <value xml:lang="hi_IN">मुख्यािय: १० वााँ ११ वााँति, ववकास दीप, २२ स्टेशि रोड, िखिऊ २२६००१ </value>
     </property>
     
     <property key="HindiMinutes60">
         <value xml:lang="en">Minutes Report</value>
-        <value xml:lang="hi_IN">6. इस सौिे मे कुल ववत्तीय व्यय (`) - </value>
+        <value xml:lang="hi_IN">६. इस सौिे मे कुल ववत्तीय व्यय - </value>
     </property>
     
     <property key="HindiMinutes61">
@@ -1057,4 +1062,10 @@
         <value xml:lang="hi_IN"> </value>
     </property>
     
+     <property key="minutesUnder1">
+        <value xml:lang="en">Invoice Report</value>
+        <value xml:lang="hi_IN">--------------------------------------</value>
+    </property>
+    
+   
 </resource>
