@@ -27,12 +27,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
  			    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
  			    <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="14pt" font-weight="bold">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes1", locale)}</fo:block>
- 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="8pt" font-weight="bold">--------------------------------------</fo:block>
- 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" font-weight="bold">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes2", locale)}</fo:block>
+ 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="17pt" font-weight="bold">---------------------</fo:block>
+ 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="12pt" font-weight="bold">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes2", locale)}   </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		
                 <#--><fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="12pt" >--------------------------------------------------------------------------------------------------- </fo:block>-->
 	            <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes3", locale)}</fo:block>
-	                   <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" font-weight="bold">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes4", locale)}</fo:block>
+	                   <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" font-weight="bold">  nhdcltdvns@yahoo.in</fo:block>
 	                   <fo:block>&#160;</fo:block>
 	                   <fo:block>
 	                     <fo:table>
@@ -44,7 +44,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                  <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes5", locale)}</fo:block>              
 	                               </fo:table-cell>
 	                               <fo:table-cell>
-	                                  <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes6", locale)} : ${fromDate?if_exists}</fo:block>              
+	                                  <fo:block  keep-together="always" text-align="center" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes6", locale)}  ${fromDate?if_exists}</fo:block>              
 	                               </fo:table-cell>
 	                             </fo:table-row>
 	                          </fo:table-body>
@@ -54,7 +54,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                   <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes7", locale)}</fo:block>
 	                   <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="8pt" font-weight="bold">-------------------------------------------------------------------------------------------</fo:block>
-	                   
+	                   <fo:block>&#160;</fo:block>
+
 	                   <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes8", locale)}</fo:block>
 	                   <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes9", locale)}</fo:block>
 	                   <fo:block  keep-together="always" text-align="left" font-family="Courier,Mangal" white-space-collapse="false" font-size="11pt" >${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes10", locale)}</fo:block>
@@ -87,34 +88,34 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
             	  <fo:table-column column-width="85pt"/>
             	  <fo:table-column column-width="65pt"/>
             	    <fo:table-body text-align="center">
-            	        <fo:table-row >
+            	        <fo:table-row margin-top="2in">
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes13", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes13", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes14", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes14", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes15", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes15", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes16", locale)}   </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes17", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes16", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes17", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes18", locale)} </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes19", locale)} </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes18", locale)} </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes19", locale)} </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes20", locale)}    </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes21", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes20", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes21", locale)}    </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes22", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes22", locale)}    </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes23", locale)}    </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes24", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes23", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes24", locale)}    </fo:block>
             	          </fo:table-cell >
             	        </fo:table-row >
             	    </fo:table-body>
@@ -141,27 +142,27 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		       <#--<#assign UomIdDetails = delegator.findOne("Uom", {"uomId" : ${productNameDetails.get("quantityUomId")?if_exists} }, true)> -->
 		           
                   	 <fo:table-row >
-                	   <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" >${sNO?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="left"    font-size="12pt" >${productName?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="left" font-size="12pt">&#160;</fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt">${eachItem.get("quantity")?if_exists}</fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt"></fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt"></fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>     
+                	   <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" >${eachItem.get("SrNo")?if_exists} </fo:block></fo:table-cell>     
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="left"    font-size="12pt" >${productName?if_exists} </fo:block></fo:table-cell>     
+  				       <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="left" font-size="12pt">&#160;</fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("quantity")?if_exists}</fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt"></fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt"></fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>     
   				     </fo:table-row>
   				    	</#if>
   				    	<#assign sNo=sNo+1>
   				     </#list>
   				     <fo:table-row>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
   				     </fo:table-row>
                     </fo:table-body>
                 </fo:table>
@@ -183,33 +184,33 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
             	    <fo:table-body text-align="center">
             	        <fo:table-row >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes26", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes26", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes27", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes27", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes28", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes28", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes29", locale)}   </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes30", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes29", locale)}   </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes30", locale)}   </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes31", locale)} </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes32", locale)} </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes31", locale)} </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes32", locale)} </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes33", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes33", locale)}    </fo:block>
             	            <#--><fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes21", locale)}    </fo:block>-->
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes34", locale)}    </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes35", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes34", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes35", locale)}    </fo:block>
             	          </fo:table-cell >
             	          <fo:table-cell border-right-style="solid" border-bottom-style="solid">
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes36", locale)}    </fo:block>
-            	            <fo:block font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes37", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes36", locale)}    </fo:block>
+            	            <fo:block margin-top=".2in" font-size="10pt" font-weight="bold" keep-together="always"  text-align="center" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes37", locale)}    </fo:block>
             	          </fo:table-cell >
             	        </fo:table-row >
             	    </fo:table-body>
@@ -238,13 +239,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		  <#--          		          <#assign UomIdDetails = delegator.findOne("Uom", {"uomId" : ${productNameDetails.get("quantityUomId")?if_exists} }, true)> -->
 		           
                   	 <fo:table-row >
-                	   <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>     
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="left"    font-size="12pt" >${productName?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="left" font-size="12pt">&#160;</fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt">${eachItem.get("quantity")?if_exists}</fo:block></fo:table-cell>
+                	   <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" >${eachItem.get("SrNo")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="left"    font-size="12pt" >${productName?if_exists} </fo:block></fo:table-cell>     
+  				       <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="left" font-size="12pt">&#160;</fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("quantity")?if_exists}</fo:block></fo:table-cell>
   				        <fo:table-cell  border-right-style="solid" border-bottom-style="solid">
   				          <#assign totquantityKgs = totquantityKgs+eachItem.get("quantity")>
-  				          <fo:block text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block>
+  				          <fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block>
   				       </fo:table-cell>
   				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid">
   				        <#assign purchValue = 0>
@@ -256,25 +257,29 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				          <fo:block text-align="right"  font-size="12pt"> <#if purchValue!=0>${purchValue?if_exists}<#else>&#160;</#if>  </fo:block>
   				       
   				       </fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>
-  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt"><#if purchValue!=0>${purchValue?if_exists}<#else>&#160;</#if></fo:block></fo:table-cell>     
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt">${eachItem.get("unitPrice")?if_exists}</fo:block></fo:table-cell>
+  				       <fo:table-cell  border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt"><#if purchValue!=0>${purchValue?if_exists}<#else>&#160;</#if></fo:block></fo:table-cell>     
   				     </fo:table-row>
   				    	<#assign sNo=sNo+1>
   				    	</#if>
   				     </#list>
   				     <fo:table-row>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt" > ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes38", locale)}</fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt" > ${totquantityKgs?if_exists} </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt" > ${toTunitPrice?if_exists}</fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
-  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block text-align="right"  font-size="12pt" > ${toTunitPrice?if_exists}</fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt" > ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes38", locale)}</fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt" > ${totquantityKgs?if_exists} </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt" > ${toTunitPrice?if_exists}</fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="center"  font-size="12pt" > </fo:block></fo:table-cell>
+  				        <fo:table-cell border-right-style="solid" border-bottom-style="solid"><fo:block margin-top=".2in" text-align="right"  font-size="12pt" > ${toTunitPrice?if_exists}</fo:block></fo:table-cell>
   				     </fo:table-row>
                     </fo:table-body>
                 </fo:table>
                </fo:block>
+			                   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+
+	                   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+
                <fo:block text-align="left"  font-size="11pt" > ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes39", locale)}</fo:block>
                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>    
                <fo:block text-align="left"  font-size="11pt" > ${Static["org.ofbiz.base.util.UtilProperties"].getMessage("DepotSalesUiLabels", "HindiMinutes40", locale)}</fo:block>
