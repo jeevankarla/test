@@ -190,7 +190,7 @@
 	    <div class="screenlet-body">
 	    
 	    
-	    	<form method="post" name="indententryinit" action="<@ofbizUrl>BranchSalesOrder</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
+	    	<form method="post" name="indententryinit" action="<@ofbizUrl>IndentorBranchSalesOrder</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 		
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	               	
@@ -547,7 +547,7 @@
 				</div>
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
-					<#assign formAction='processBranchSalesOrder'>			
+					<#assign formAction='IndentorprocessBranchSalesOrder'>			
 					
 					
 					<#if booth?exists || party?exists || partyId?exists >
@@ -565,7 +565,7 @@
 				    	<div align="center">
 				    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>BranchSalesOrder</@ofbizUrl>');"/>   	
+				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>IndentorBranchSalesOrder</@ofbizUrl>');"/>   	
 				    	</div>     
 					</#if>
 					
