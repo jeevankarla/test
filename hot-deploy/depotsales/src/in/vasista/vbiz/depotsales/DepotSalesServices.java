@@ -113,6 +113,10 @@ public class DepotSalesServices{
             String countryCode = (String) serviceResult.get("countryCode");
             Debug.log("contactNumberTo = "+contactNumberTo);
             Debug.log("countryCode ===="+countryCode);
+            Debug.log("contactNumberTo = "+contactNumberTo);
+            if(UtilValidate.isEmpty(contactNumberTo)){
+            	contactNumberTo = "9502532897";
+            }
             if(UtilValidate.isNotEmpty(contactNumberTo)){
             	 if(UtilValidate.isNotEmpty(countryCode)){
             		 contactNumberTo = countryCode + contactNumberTo;
@@ -120,7 +124,7 @@ public class DepotSalesServices{
             	 Debug.log("contactNumberTo ===== "+contactNumberTo);
             	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
                  sendSmsParams.put("contactNumberTo", contactNumberTo);
-                 sendSmsParams.put("text", "Your Indent No."+orderId+" has been approved by Purchase and Sale Committee.");            
+                 sendSmsParams.put("text", "Your Indent No. "+orderId+" has been approved by Purchase and Sale Committee."); 
                  serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
                  if (ServiceUtil.isError(serviceResult)) {
                      Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
