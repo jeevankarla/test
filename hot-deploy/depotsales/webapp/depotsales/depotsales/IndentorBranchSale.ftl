@@ -219,7 +219,7 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
+				          			<input type="text" name="productStoreId" id="productStoreId" value="VARANASI" onblur= 'javascript:getParties(this);' readonly />
 				          		</td>
 				          	</#if>
 			        	</#if>
@@ -240,8 +240,6 @@
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
 		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>
-		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
 		          				</select>
 		          			</td>
 		       			</#if>
