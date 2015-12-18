@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.HashMap;
-
 import java.util.Calendar;
 
 import org.ofbiz.order.order.OrderChangeHelper;
@@ -65,7 +64,8 @@ public class DepotSalesServices{
    
     public static final String resource = "AccountingUiLabels";
 
-   public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
+   
+    public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -75,34 +75,59 @@ public class DepotSalesServices{
 		String orderId = (String) context.get("orderId");
 		//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 		try{
-			
 			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
-			
-			 GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
+			GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
 			 
-			 if(UtilValidate.isEmpty(creditPartyRole)){
-					GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
-					BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
-					Timestamp obDate=UtilDateTime.nowTimestamp();
-					if(UtilValidate.isNotEmpty(orderHeader.getTimestamp("estimatedDeliveryDate"))){
-						obDate=	orderHeader.getTimestamp("estimatedDeliveryDate");
-						obDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(obDate, 1));
-					}
+			if(UtilValidate.isEmpty(creditPartyRole)){
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+				BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
+				Timestamp obDate=UtilDateTime.nowTimestamp();
+				if(UtilValidate.isNotEmpty(orderHeader.getTimestamp("estimatedDeliveryDate"))){
+					obDate=	orderHeader.getTimestamp("estimatedDeliveryDate");
+					obDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(obDate, 1));
+				}
+				BigDecimal arPartyOB  =BigDecimal.ZERO;
+				Map arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , UtilMisc.toMap("userLogin", userLogin, "tillDate",obDate, "partyId",partyId)));
 				
-					BigDecimal arPartyOB  =BigDecimal.ZERO;
-					Map arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , UtilMisc.toMap("userLogin", userLogin, "tillDate",obDate, "partyId",partyId)));
-					if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
-						arPartyOB=(BigDecimal)arOpeningBalanceRes.get("openingBalance");
-						 if (arPartyOB.compareTo(BigDecimal.ZERO) < 0) {
-							 arPartyOB=arPartyOB.negate();
-						 }
-					 }
+				if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+					arPartyOB=(BigDecimal)arOpeningBalanceRes.get("openingBalance");
+					if (arPartyOB.compareTo(BigDecimal.ZERO) < 0) {
+						arPartyOB=arPartyOB.negate();
+					}
+				}
 					 /*if (arPartyOB.compareTo(orderTotal) < 0) {
 						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
 						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
 					 }*/
-			 }
-            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+			}
+			boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+			
+			Map<String, Object> getTelParams = FastMap.newInstance();
+        	getTelParams.put("partyId", partyId);
+            getTelParams.put("userLogin", userLogin);                    	
+            Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+            if (ServiceUtil.isError(serviceResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            } 
+            String contactNumberTo = (String) serviceResult.get("contactNumber");
+            String countryCode = (String) serviceResult.get("countryCode");
+            Debug.log("contactNumberTo = "+contactNumberTo);
+            Debug.log("countryCode ===="+countryCode);
+            if(UtilValidate.isNotEmpty(contactNumberTo)){
+            	 if(UtilValidate.isNotEmpty(countryCode)){
+            		 contactNumberTo = countryCode + contactNumberTo;
+            	 }
+            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
+            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+                 sendSmsParams.put("contactNumberTo", contactNumberTo);
+                 sendSmsParams.put("text", "Your Indent No."+orderId+" has been approved by Purchase and Sale Committee.");            
+                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+                 if (ServiceUtil.isError(serviceResult)) {
+                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                     return serviceResult;
+                 }
+            }
+			
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
