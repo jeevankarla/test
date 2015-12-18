@@ -120,8 +120,13 @@ public class SmsServices {
 
 		
 		try {
-			postData += "User=" + URLEncoder.encode(user,"UTF-8") + "&passwd=" + passwd + "&mobilenumber=" + mobileNumber + "&message=" + URLEncoder.encode(message,"UTF-8") + "&sid=" + sid + "&mtype=" + mtype + "&DR=" + DR;
-			URL url = new URL(gateway);
+			postData += "usr=" + URLEncoder.encode(user,"UTF-8") + "&pwd=" + passwd + "&ph=" + mobileNumber + "&text=" + URLEncoder.encode(message,"UTF-8");
+			Debug.log("gateway ================="+gateway);
+			String newUrl = gateway+"?"+postData;
+			
+			//String newUrl = "http://bulk.sms-india.in/lsend.php?usr=27861&pwd=Nhdc@_3265&ph=9502532897&text=" + URLEncoder.encode(message,"UTF-8");
+			Debug.log("newUrl ================="+newUrl);
+			URL url = new URL(newUrl);
 			HttpURLConnection urlconnection = (HttpURLConnection) url.openConnection();
 
 			// If You Are Behind The Proxy Server Set IP And PORT else Comment Below 4 Lines
@@ -130,12 +135,13 @@ public class SmsServices {
 			//sysProps.put("proxyHost", "Proxy Ip");
 			//sysProps.put("proxyPort", "PORT");
 
-			urlconnection.setRequestMethod("POST");
-			urlconnection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+			urlconnection.setRequestMethod("GET");
+			//urlconnection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
 			urlconnection.setDoOutput(true);
-			OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
+			/*OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
 			out.write(postData);
-			out.close();
+			Debug.log("retval ================="+out);
+			out.close();*/
 			int status = ((HttpURLConnection) urlconnection).getResponseCode();
 			if (status >= 400) {
 	            String errMsg = "Received " + status + " error when sending message to [" + mobileNumber + "] ";
