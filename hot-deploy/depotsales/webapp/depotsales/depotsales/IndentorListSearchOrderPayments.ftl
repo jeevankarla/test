@@ -286,7 +286,7 @@ under the License.
                
                
                 <#if ((paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED") && !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
-                 <td><input type="button" name="realize" id="realize" value="Payment Received" onclick="javascript: IndentorRealizeStatusChange('${eachOrder.orderId}');"/></td>
+                 <td>Payment Received</td>
               	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	<td>Payment Realized</td>
               	<#else>
