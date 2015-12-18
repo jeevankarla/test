@@ -168,8 +168,6 @@ under the License.
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
-				
-				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 	             <fo:block>
