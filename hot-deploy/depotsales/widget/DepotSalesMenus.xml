@@ -829,23 +829,11 @@
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
            
          <menu-item name="FindSupplierPO" title="Supplier Purchase Orders">
-        	<condition>
-       		  <or>
-	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
-					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-			 </or>
-	        </condition>
-	        	<link target="FindSupplierPO"/>
+        	<link target="FindSupplierPO"/>
 	    </menu-item>
 	     
          <menu-item name="FindSupplierDispatchs" title="Supplier Good Dispatch">
-       		 <condition>
-       		  <or>
-	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
-					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
-			 </or>
-	        </condition>
-	        	<link target="FindSupplierDispatchs"/>
+       		 <link target="FindSupplierDispatchs"/>
 	     </menu-item> 
     </menu> 
     <menu name="FindSupplierPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
