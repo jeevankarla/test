@@ -52,6 +52,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactHelper;
+
+
 import java.util.Collection;
 
 
@@ -313,6 +315,178 @@ public class DepotPurchaseServices{
 		
 		return "success";
 	}
+	
+	
+	
+	public static String processDepotSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
+	Delegator delegator = (Delegator) request.getAttribute("delegator");
+	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	DispatchContext dctx =  dispatcher.getDispatchContext();
+	Locale locale = UtilHttp.getLocale(request);
+	Map<String, Object> result = ServiceUtil.returnSuccess();
+	//String partyId = (String) request.getParameter("partyId");
+	Map resultMap = FastMap.newInstance();
+	List invoices = FastList.newInstance(); 
+	String partyIdFrom = "";
+	//String shipmentId = (String) request.getParameter("shipmentId");
+  
+	String strInvoiceId = (String) request.getParameter("invoiceId");
+	
+	Debug.log("strInvoiceId========================"+strInvoiceId);
+	
+	GenericValue shipment =null;
+	
+	GenericValue invoiceList=null;
+	
+	try{
+	 invoiceList = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", strInvoiceId), false);
+	
+	 shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",invoiceList.get("shipmentId")), false);
+	}catch (Exception e) {
+		Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + strInvoiceId);
+		return "error";
+	}
+	
+	Debug.log("invoiceList========================"+invoiceList);
+	
+	Debug.log("shipment========================"+shipment);
+	
+	String partyId = (String)shipment.getString("partyIdTo");
+	
+	String shipmentId = (String)shipment.getString("shipmentId");
+	
+	Debug.log("partyId========================"+partyId);
+
+	
+	if(UtilValidate.isNotEmpty(shipment) && shipment.equals("SHIPMENT_CANCELLED")){
+		Debug.logError("Unable to generate Shipment: " + ServiceUtil.getErrorMessage(result), module);
+		request.setAttribute("_ERROR_MESSAGE_", "Unable to generate shipment  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+		return "error";	
+		}
+	
+	
+	HttpSession session = request.getSession();
+	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	
+	   if (UtilValidate.isNotEmpty(shipmentId)) {
+           Map<String, Object> createInvoiceContext = FastMap.newInstance();
+           createInvoiceContext.put("partyId", partyId);
+           createInvoiceContext.put("partyIdFrom", "COMPANY");
+           createInvoiceContext.put("shipmentId", shipmentId);
+           createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
+           createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+           createInvoiceContext.put("userLogin", userLogin);
+
+           // store the invoice first
+           Map<String, Object> createInvoiceResult = FastMap.newInstance();
+         try{
+            createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+           if(ServiceUtil.isError(createInvoiceResult)){
+			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+			return "error";
+		}
+         } catch (Exception e) {
+				Debug.logError(e, "Problems while calling createInvoice : " + partyId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling createInvoice : " + partyId);
+				return "error";
+			}
+           // call service, not direct entity op: delegator.create(invoice);
+          String invoiceId = (String) createInvoiceResult.get("invoiceId");
+           
+           Debug.log("invoiceId========================"+invoiceId);
+           
+           String nextStatusId = "INVOICE_READY";
+           try {
+                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
+                   if(ServiceUtil.isError(createInvoiceResult)){
+           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+           			return "error";
+           		}
+           } catch (Exception e) {
+				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
+				return "error";
+			}
+           
+           
+         /*   nextStatusId = "INVOICE_APPROVED";
+           try {
+                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
+                   if(ServiceUtil.isError(createInvoiceResult)){
+           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+           			return "error";
+           		}
+           } catch (Exception e) {
+				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
+				return "error";
+			}
+           */
+           
+           //invoiceitemmmmm
+           
+           List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> invoiceItemList =null;
+			
+			try{
+		      invoiceItemList = delegator.findList("InvoiceItem", condExpr, null, null, null, false);
+			} catch (Exception e) {
+				Debug.logError(e, "Problems while getting invoiceItems : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while getting invoiceItems : " + invoiceId);
+				return "error";
+			}
+			
+			Debug.log("invoiceItemList======================"+invoiceItemList);
+			
+			for (int i = 0; i < invoiceItemList.size(); i++) {
+				
+			
+				GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
+           
+           Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+           createInvoiceItemContext.put("invoiceId",invoiceId);
+           createInvoiceItemContext.put("invoiceItemTypeId", eachInvoiceList.get("invoiceItemTypeId"));
+           createInvoiceItemContext.put("description", eachInvoiceList.get("description"));
+           createInvoiceItemContext.put("quantity",eachInvoiceList.get("quantity"));
+           createInvoiceItemContext.put("amount",eachInvoiceList.get("amount"));
+           createInvoiceItemContext.put("productId", eachInvoiceList.get("productId"));
+           createInvoiceItemContext.put("unitPrice", eachInvoiceList.get("unitPrice"));
+           createInvoiceItemContext.put("unitListPrice", eachInvoiceList.get("unitListPrice"));
+           //createInvoiceItemContext.put("uomId", "");
+           createInvoiceItemContext.put("userLogin", userLogin);
+
+          try{
+           Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+           
+           
+           if(ServiceUtil.isError(createInvoiceItemResult)){
+      			Debug.logError("Unable to create invoiceItems for invoice: " + ServiceUtil.getErrorMessage(result), module);
+      			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+      			return "error";
+      		}
+          } catch (Exception e) {
+				Debug.logError(e, "Problems while calling createInvoiceItem : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling createInvoiceItem : " + invoiceId);
+				return "error";
+			}
+			}
+       }
+
+	   Debug.log("invoiceItemList======================Success");
+	
+	return "success";
+
+} 
+	
+	
+	
+	
 	
 	public static Map<String, Object> createDepotInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
 		

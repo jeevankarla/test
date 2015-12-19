@@ -120,6 +120,20 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
+		
+		 <menu-item name="salesInvoice" title="Sales Invoices">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="DepotSalesInvoice">
+				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
         <menu-item name="depotpayments" title="Payments">
 		    <condition>
 				<or>

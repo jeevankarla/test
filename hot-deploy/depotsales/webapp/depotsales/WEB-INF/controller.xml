@@ -276,6 +276,13 @@
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
      </request-map>
      
+     <request-map uri="processSalesInvoice">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
+       <response name="error" type="view" value="DepotSalesInvoice"/>
+     </request-map>
+     
      <request-map uri="FindMaterialInvoices">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindMaterialInvoices"/>
@@ -500,6 +507,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoice"/>
     </request-map>
+    <request-map uri="DepotSalesInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesInvoice"/>
+    </request-map>
+    
      <request-map uri="createApDepotApPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
@@ -1089,6 +1101,11 @@
    
    <!-- 	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/> -->
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
+   	
+   	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
+   	
+   	
+   	
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
