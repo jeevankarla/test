@@ -239,9 +239,9 @@
 		       			<#else>      	         
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>
 		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
+		          					<option value="MGPS">MGPS</option>
+		          					<option value="General">General</option>	          					
 		          				</select>
 		          			</td>
 		       			</#if>
