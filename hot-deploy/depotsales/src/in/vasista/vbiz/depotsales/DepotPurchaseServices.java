@@ -318,7 +318,7 @@ public class DepotPurchaseServices{
 	
 	
 	
-	public static String processDepotSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
+	/*public static String processDepotSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
 	Delegator delegator = (Delegator) request.getAttribute("delegator");
 	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 	DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -412,7 +412,7 @@ public class DepotPurchaseServices{
 			}
            
            
-         /*   nextStatusId = "INVOICE_APPROVED";
+            nextStatusId = "INVOICE_APPROVED";
            try {
                    Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
                    if(ServiceUtil.isError(createInvoiceResult)){
@@ -425,7 +425,7 @@ public class DepotPurchaseServices{
 				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
 				return "error";
 			}
-           */
+           
            
            //invoiceitemmmmm
            
@@ -483,7 +483,7 @@ public class DepotPurchaseServices{
 	return "success";
 
 } 
-	
+*/	
 	
 	
 	
