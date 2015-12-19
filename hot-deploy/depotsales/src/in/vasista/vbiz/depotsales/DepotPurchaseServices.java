@@ -356,6 +356,10 @@ public class DepotPurchaseServices{
 	
 	String shipmentId = (String)shipment.getString("shipmentId");
 	
+	String primaryOrderId = (String)shipment.getString("primaryOrderId");
+	
+	Debug.log("primaryOrderId========================"+primaryOrderId);
+	
 	Debug.log("partyId========================"+partyId);
 
 	
@@ -368,6 +372,8 @@ public class DepotPurchaseServices{
 	
 	HttpSession session = request.getSession();
 	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	
+	BigDecimal grandTotal = BigDecimal.ZERO;
 	
 	   if (UtilValidate.isNotEmpty(shipmentId)) {
            Map<String, Object> createInvoiceContext = FastMap.newInstance();
@@ -417,11 +423,16 @@ public class DepotPurchaseServices{
 			
 			Debug.log("invoiceItemList======================"+invoiceItemList);
 			
+			 
+			
 			for (int i = 0; i < invoiceItemList.size(); i++) {
 				
 			
 				GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
-           
+				
+				Debug.log("TotalAmount========="+eachInvoiceList.getBigDecimal("amount"));
+				
+		  grandTotal = grandTotal.add(eachInvoiceList.getBigDecimal("amount").multiply(eachInvoiceList.getBigDecimal("quantity")));
            Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
            createInvoiceItemContext.put("invoiceId",invoiceId);
            createInvoiceItemContext.put("invoiceItemTypeId", eachInvoiceList.get("invoiceItemTypeId"));
@@ -483,7 +494,97 @@ public class DepotPurchaseServices{
 			}
            
 	   }  
-           
+          
+	   try{
+		   
+		   List conditionList = FastList.newInstance();
+		   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
+		   EntityCondition condExpress = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+		
+	   
+		   String actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
+		   
+		    conditionList.clear();
+		   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+		   EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		   List<GenericValue> orderPreferenceList = delegator.findList("OrderPaymentPreference", condExpr, null, null, null, false);
+		   List orderPreferenceIdList = EntityUtil.getFieldListFromEntityList(orderPreferenceList, "orderPaymentPreferenceId", true);
+	   
+		   conditionList.clear();
+		   conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.IN, orderPreferenceIdList));
+		   EntityCondition condExpretion = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		   List<GenericValue> paymentList = delegator.findList("Payment", condExpretion, null, null, null, false);
+
+		  //enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
+		
+		   
+		 
+		
+		BigDecimal paidAmount = BigDecimal.ZERO;
+		
+		if (UtilValidate.isNotEmpty(paymentList)) {
+			for (GenericValue eachPayment : paymentList) {
+				
+				 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amount");
+				paidAmount = paidAmount.add(eachAmount);
+			}
+		}
+		
+		BigDecimal balance = grandTotal.subtract(paidAmount);
+	   
+		Debug.log("grantTotal========"+grandTotal);
+		Debug.log("paidAmount========"+paidAmount);
+		Debug.log("balance========"+balance);
+		
+		 //for Sent SMS 
+		
+		Map<String, Object> getTelParams = FastMap.newInstance();
+    	getTelParams.put("partyId", partyId);
+        getTelParams.put("userLogin", userLogin);                    	
+        Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+        if (ServiceUtil.isError(serviceResult)) {
+        	Debug.logError("Unable to get telephone number for party : " + ServiceUtil.getErrorMessage(result), module);
+			//request.setAttribute("_ERROR_MESSAGE_", "Problems while getting Telephone for: " + partyId);
+			//return "error";
+        } 
+        String contactNumberTo = (String) serviceResult.get("contactNumber");
+        String countryCode = (String) serviceResult.get("countryCode");
+        Debug.log("contactNumberTo = "+contactNumberTo);
+        Debug.log("countryCode ===="+countryCode);
+        Debug.log("contactNumberTo = "+contactNumberTo);
+        if(UtilValidate.isEmpty(contactNumberTo)){
+        	contactNumberTo = "9440625565";
+        }
+        if(UtilValidate.isNotEmpty(contactNumberTo)){
+        	 if(UtilValidate.isNotEmpty(countryCode)){
+        		 contactNumberTo = countryCode + contactNumberTo;
+        	 }
+        	 
+        	 String grandTotalStr=String.valueOf(grandTotal.intValue());
+        	 String paidAmountStr=String.valueOf(paidAmount.intValue());
+        	 String balanceStr=String.valueOf(balance.intValue());
+        	 
+        	 Debug.log("contactNumberTo ===== "+contactNumberTo);
+        	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+             sendSmsParams.put("contactNumberTo", contactNumberTo);
+             sendSmsParams.put("text","Invoice for Rs "+grandTotalStr+" generated against your Indent No  "+actualOrderId+" We have received Rs "+paidAmountStr+" against the indent. Balance payable is Rs "+balanceStr+" NHDCLTD."); 
+             Debug.log("sendSmsParams========================"+sendSmsParams);
+             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+             if (ServiceUtil.isError(serviceResult)) {
+            	 Debug.logError("Unable to Send SMS: " + ServiceUtil.getErrorMessage(result), module);
+        			//request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+        			//return "error";
+             }
+        }
+		
+	   }catch (Exception e) {
+			Debug.logError(e, "Problems while Calculating balance Amount for order: " + partyId, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems while Calculating balance Amount for order: " + partyId);
+			return "error";
+		}
+	   
+	   request.setAttribute("_EVENT_MESSAGE_", "Sales Invoice created sucessfully : "+partyId);   
 	
 	return "success";
 
