@@ -2165,7 +2165,7 @@
 		</section>
 	</screen>
 
-	<screen name="DepotPurchaseInvoice">
+	<screen name="DepotSalesInvoice">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Purchase Invoices" />
@@ -2176,7 +2176,7 @@
 					<field-map field-name="orderBy" value="invoiceDate DESC" />
 				</service>
 				<set field="invoices" from-field="result.listIt" />
-				<set field="tabButtonItem" value="purchaseinvoice" />
+				<set field="tabButtonItem" value="salesInvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
 				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
@@ -2218,7 +2218,7 @@
 										</container>
 									</decorator-section>
 									<decorator-section name="search-options">
-										<include-form name="FindApInvoices"
+										<include-form name="FindSalesApInvoices"
 											location="component://depotsales/widget/DepotSalesForms.xml" />
 									</decorator-section>
 									<decorator-section name="search-results">
@@ -2274,7 +2274,7 @@
 											<platform-specific>
 												<html>
 													<html-template
-														location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSale.ftl" />
+														location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSaleList.ftl" />
 												</html>
 											</platform-specific>
 										</screenlet>
@@ -2289,7 +2289,7 @@
 	</screen>
 	
 	
-	<screen name="DepotSalesInvoice">
+	<screen name="DepotPurchaseInvoice">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Purchase Invoices" />
@@ -2300,7 +2300,7 @@
 					<field-map field-name="orderBy" value="invoiceDate DESC" />
 				</service>
 				<set field="invoices" from-field="result.listIt" />
-				<set field="tabButtonItem" value="DepotSalesInvoice" />
+				<set field="tabButtonItem" value="purchaseinvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
 				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
@@ -2342,7 +2342,7 @@
 										</container>
 									</decorator-section>
 									<decorator-section name="search-options">
-										<include-form name="FindSalesApInvoices"
+										<include-form name="FindApInvoices"
 											location="component://depotsales/widget/DepotSalesForms.xml" />
 									</decorator-section>
 									<decorator-section name="search-results">
