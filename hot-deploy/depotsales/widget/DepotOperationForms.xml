@@ -93,7 +93,7 @@
             </hyperlink>
         </field>  
       	<field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
-            <hyperlink target="ApproveDepotTransPOOrder" description="Approve">
+            <hyperlink target="ApproveDepotPurchaseOrderWithEmail" description="Approve">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
                 <parameter param-name="setItemStatus" value="Y" />

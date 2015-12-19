@@ -1478,4 +1478,22 @@ under the License.
             </if-compare-field>
         </iterate>
     </simple-method>
+    
+    
+    <simple-method method-name="sendPurchaseOrderEmailToParty" short-description="Send an VehicleDispatch Details Invoice Email To party">
+	     <if-empty field="parameters.sendFrom">
+	           <set field="parameters.sendFrom" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;defaultFromEmailAddress&quot;);}"/>
+	     </if-empty>
+         <set-service-fields service-name="sendMailFromScreen" map="parameters" to-map="emailParams"/>
+         <set field="emailParams.xslfoAttachScreenLocation" value="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF"/>
+         <set field="emailParams.bodyParameters.orderId" from-field="parameters.orderId"/>
+         <set field="emailParams.bodyParameters.partyId" from-field="parameters.partyId"/>
+         <set field="emailParams.bodyParameters.userLogin" from-field="parameters.userLogin"/>
+         <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams"/>
+         <set field="successMessage" value="Purchase Order Email ToSend :${parameters.sendTo}"/>
+    </simple-method>
+    
+    
+    
+    
 </simple-methods>
