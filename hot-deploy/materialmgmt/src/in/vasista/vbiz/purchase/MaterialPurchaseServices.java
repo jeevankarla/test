@@ -107,7 +107,7 @@ public class MaterialPurchaseServices {
 		String receiptId="";
 		String purposeTypeId="";
 		GenericValue shipmentReceipt=null;
-		
+		String smsContent="";
 		if (UtilValidate.isEmpty(orderId) && UtilValidate.isEmpty(withoutPO)) {
 			Debug.logError("Cannot process receipts without orderId: "+ orderId, module);
 			return "error";
@@ -124,6 +124,8 @@ public class MaterialPurchaseServices {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 		receiptDate = UtilDateTime.nowTimestamp();
+		Timestamp estimatedDate = UtilDateTime.addDaysToTimestamp(receiptDate,6);
+		String estimatedDateStr=UtilDateTime.toDateString(estimatedDate,"dd-MM-yyyy");
 	  	/*if(UtilValidate.isNotEmpty(receiptDateStr)){
 	  		try {
 	  			receiptDate = new java.sql.Timestamp(SimpleDF.parse(receiptDateStr).getTime());
@@ -434,6 +436,11 @@ public class MaterialPurchaseServices {
 					shipmentAttribute.set("attrValue", amountStr);
 					delegator.createOrStore(shipmentAttribute);
 				}
+				//Debug.log("quantityStr======="+quantityStr);
+				GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+				String	desc=product.getString("description");
+				//Debug.log("desc============"+desc);
+				 smsContent = smsContent + " " + quantityStr + " KGs of " + desc + ",";
            if (paramMap.containsKey("productId" + thisSuffix)) {
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
@@ -673,6 +680,109 @@ public class MaterialPurchaseServices {
 	  			request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderAttribute" );
 				return "error";
     }
+
+		String rlatedId="";
+		String customerId="";
+		List condiList = FastList.newInstance();
+		try{
+			condiList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			condiList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+			List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condiList, EntityOperator.AND), null, null, null, false);
+	
+			if(UtilValidate.isNotEmpty(orderAssoc)){
+				rlatedId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+			
+			}
+		}catch (GenericEntityException e) {
+			Debug.logError(e, "Could not get date from OrderAssoc", module);
+			//request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderAssoc" );
+			//return "error";
+		}
+		//Debug.log("orderID=================="+orderId+"==rlatedId=================="+rlatedId);
+
+		if(UtilValidate.isNotEmpty(rlatedId)){
+			try{
+			condiList.clear();
+			condiList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, rlatedId));
+			condiList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+			EntityCondition condi = EntityCondition.makeCondition(condiList, EntityOperator.AND);
+			List<GenericValue> orderRoleForCustomer = delegator.findList("OrderRole", condi, null, null, null, false);
+			
+			if(UtilValidate.isEmpty(orderRoleForCustomer)){
+				Debug.logError("No Vendor for the order : "+rlatedId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+rlatedId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+				
+			customerId = (EntityUtil.getFirst(orderRoleForCustomer)).getString("partyId");
+			}catch (GenericEntityException e) {
+				Debug.logError(e, "Could not get date from OrderRole", module);
+				//request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderRole" );
+				//return "error";
+			}
+			Debug.log("customerId==========="+customerId);
+	
+		}
+
+		
+		//Debug.log("smsContent==========="+smsContent);
+		if(UtilValidate.isNotEmpty(customerId)){
+			String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,supplierId, false);
+			Map<String, Object> getTelParams = FastMap.newInstance();
+			//Debug.log("customerId========================="+customerId);
+			if(UtilValidate.isEmpty(customerName)){
+				customerName=supplierId;
+			}
+        	getTelParams.put("partyId", customerId);
+            getTelParams.put("userLogin", userLogin); 
+            try{
+            	Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+	            if (ServiceUtil.isError(serviceResult)) {
+	                return "error";
+	            }
+	            
+	            String contactNumberTo = (String) serviceResult.get("contactNumber");            
+	            String countryCode = (String) serviceResult.get("countryCode");
+	            if(UtilValidate.isEmpty(contactNumberTo)){
+	            	contactNumberTo = "8106416618";
+	            }
+	            if(UtilValidate.isEmpty(carrierName)){
+	            	carrierName = "_";
+	            }
+	            
+	            Debug.log("contactNumberTo = "+contactNumberTo);
+	            if(UtilValidate.isNotEmpty(contactNumberTo)){
+	            	 if(UtilValidate.isNotEmpty(countryCode)){
+	            		 contactNumberTo = countryCode + contactNumberTo;
+	            	 }
+	            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
+	            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+	                 sendSmsParams.put("contactNumberTo", contactNumberTo);
+	                 sendSmsParams.put("text", "Against your Indent No. "+rlatedId+" for "+smsContent+" delivered through M/s "+carrierName+" by M/s "+customerName+" Expected date of arrival is "+estimatedDateStr+" NHDCLTD."); 
+	                 //Debug.log("sendSmsParams====================="+sendSmsParams);
+	                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+	                 if (ServiceUtil.isError(serviceResult)) {
+	                     Debug.logError("unable to send Sms", module);
+	     				//request.setAttribute("_ERROR_MESSAGE_", "unable to send Sms : "+rlatedId);	
+	                     //return "error";
+	                 }
+	            	
+	            	/*Map<String, Object> sendSmsParams = FastMap.newInstance();      
+	                sendSmsParams.put("contactNumberTo", contactNumberTo);
+	                sendSmsParams.put("text", "Order placed on M/s. "+ suppPartyId +" against your Indent No. "+orderId);            
+	                serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+	                if (ServiceUtil.isError(serviceResult)) {
+	                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	                    return serviceResult;
+	                }*/
+	            }
+            }catch(GenericServiceException e1){
+	         	Debug.log("Problem in sending sms to user agency");
+			}
+			
+		}
+		
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}
