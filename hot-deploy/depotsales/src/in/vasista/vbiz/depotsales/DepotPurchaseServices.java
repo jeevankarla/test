@@ -1418,7 +1418,7 @@ public class DepotPurchaseServices{
 				String partyId=(String) context.get("partyId");
 				String orderId = (String) context.get("orderId");
 				String newStatus = (String) context.get("statusId");
-				String smsContent = "Purchase Order placed on for ";
+				String smsContent = "";
 				//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 			
 					 // get the order header
@@ -1433,7 +1433,8 @@ public class DepotPurchaseServices{
 						return ServiceUtil.returnError("OrderHeader came back as null"+orderId);
 			        }
 			        String orderHeaderStatusId = orderHeader.getString("statusId");
-			        
+			        Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+			        String orderDateStr=UtilDateTime.toDateString(orderDate,"dd-MM-yyyy");
 			        // now set the new order status
 		            if (newStatus != null && !newStatus.equals(orderHeaderStatusId)) {
 		                Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("orderId", orderId, "statusId", newStatus, "userLogin", userLogin);
@@ -1478,31 +1479,31 @@ public class DepotPurchaseServices{
 	                }
 				
 				 Map sendMailParams = FastMap.newInstance();
-			if(UtilValidate.isNotEmpty(senderEmail)){
 	                String productDetails="";
-	                
-
 				 try{
-                List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-                 for (GenericValue item : items) {
-                     String productId = item.getString("productId");
-                     BigDecimal qty=item.getBigDecimal("quantity");
-                     String qtystrng="0";
-                     String desc="";
-                     if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
-                      qtystrng=String.valueOf(qty);                     
-   					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
-   					desc=product.getString("description");
-                     }
-                     productDetails=productDetails+" "+desc+","+qtystrng;
-                     smsContent = smsContent + " " + qtystrng + " KGs of " + desc + ",";
-                     
-                 }
-                 smsContent = smsContent + "For future enquiries quote the P.O number.";
-				 }catch(GenericEntityException ex){
-		            	Debug.log("Problem in fetching orderItems");
-					}
-				 
+		                List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		                //Debug.log("items==============================="+items);
+		                for (GenericValue item : items) {
+		                     String productId = item.getString("productId");
+		                     BigDecimal qty=item.getBigDecimal("quantity");
+		                     String qtystrng="0";
+		                     String desc="";
+		                     if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
+		                      qtystrng=String.valueOf(qty);                     
+		   					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+		   					desc=product.getString("description");
+		                     }
+		                     productDetails=productDetails+" "+desc+","+qtystrng;
+		                     smsContent = smsContent + " " + qtystrng + " KGs of " + desc + ",";
+		                     
+		                 }
+		                 smsContent = smsContent +" For future enquiries quote the P.O number.";
+						//Debug.log("smsContent================================"+smsContent);
+						 }catch(GenericEntityException ex){
+				            	Debug.log("Problem in fetching orderItems");
+							}
+			if(UtilValidate.isNotEmpty(senderEmail)){
+
 			        /*sendMailParams.put("sendTo", "harish@vasista.in");
 			        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
 			        sendMailParams.put("subject", "Purchase Order"+orderId);
@@ -1549,7 +1550,7 @@ public class DepotPurchaseServices{
 				List<GenericValue> corl = null;
 				String customerId=null;
 		         try {
-		             corl = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER"));
+		             corl = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "SUPPLIER_AGENT"));
 		         } catch (GenericEntityException e) {
 		             Debug.logError(e, module);
 		         }
@@ -1558,8 +1559,12 @@ public class DepotPurchaseServices{
 		             GenericValue custOrderRole = EntityUtil.getFirst(corl);
 		             customerId = custOrderRole.getString("partyId");
 		         }
-				
+				String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,customerId, false);
 				Map<String, Object> getTelParams = FastMap.newInstance();
+				//Debug.log("customerId========================="+customerId);
+				if(UtilValidate.isEmpty(customerName)){
+					customerName=customerId;
+				}
 	        	getTelParams.put("partyId", customerId);
 	            getTelParams.put("userLogin", userLogin); 
 	            try{
@@ -1567,9 +1572,29 @@ public class DepotPurchaseServices{
 		            if (ServiceUtil.isError(serviceResult)) {
 		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
 		            }
-		            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+		            
+		            
+		            String contactNumberTo = (String) serviceResult.get("contactNumber");            
+		            String countryCode = (String) serviceResult.get("countryCode");
+		            if(UtilValidate.isEmpty(contactNumberTo)){
+		            	contactNumberTo = "8106416618";
+		            }
 		            Debug.log("contactNumberTo = "+contactNumberTo);
 		            if(UtilValidate.isNotEmpty(contactNumberTo)){
+		            	 if(UtilValidate.isNotEmpty(countryCode)){
+		            		 contactNumberTo = countryCode + contactNumberTo;
+		            	 }
+		            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
+		            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+		                 sendSmsParams.put("contactNumberTo", contactNumberTo);
+		                 sendSmsParams.put("text", "Order placed on M/s "+customerName+" against your Indent No "+orderId+" NHDCLTD"); 
+		                //Debug.log("sendSmsParams====================="+sendSmsParams);
+		                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+		                 if (ServiceUtil.isError(serviceResult)) {
+		                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		                     return serviceResult;
+		                 }
+		            	
 		            	/*Map<String, Object> sendSmsParams = FastMap.newInstance();      
 		                sendSmsParams.put("contactNumberTo", contactNumberTo);
 		                sendSmsParams.put("text", "Order placed on M/s. "+ suppPartyId +" against your Indent No. "+orderId);            
@@ -1586,7 +1611,7 @@ public class DepotPurchaseServices{
 	            
 				
 	            // send sms to supplier
-	            
+	            String suppName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,suppPartyId, false);
 	            Map<String, Object> getSupplierTelParams = FastMap.newInstance();
 	            getSupplierTelParams.put("partyId", suppPartyId);
 	            getSupplierTelParams.put("userLogin", userLogin);                    	
@@ -1595,9 +1620,29 @@ public class DepotPurchaseServices{
 		            if (ServiceUtil.isError(serviceResult)) {
 		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
 		            } 
-		            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+		            String contactNumberTo = (String) serviceResult.get("contactNumber");
+		            String countryCode = (String) serviceResult.get("countryCode");
+		            if(UtilValidate.isEmpty(contactNumberTo)){
+		            	contactNumberTo = "8106416618";
+		            }
 		            Debug.log("contactNumberTo = "+contactNumberTo);
 		            if(UtilValidate.isNotEmpty(contactNumberTo)){
+		            	 if(UtilValidate.isNotEmpty(countryCode)){
+		            		 contactNumberTo = countryCode + contactNumberTo;
+		            	 }
+		            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
+		            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+		                 sendSmsParams.put("contactNumberTo", contactNumberTo);
+		                 sendSmsParams.put("text", "Purchase Order "+orderId+" placed on "+orderDateStr+" for "+smsContent); 
+		                //Debug.log("sendSmsParams======================"+sendSmsParams);
+		                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+		                 if (ServiceUtil.isError(serviceResult)) {
+		                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		                     return serviceResult;
+		                 }
+		            	
+		            	
+		            	
 		            	/*Map<String, Object> sendSmsParams = FastMap.newInstance();      
 		                sendSmsParams.put("contactNumberTo", contactNumberTo);
 		                sendSmsParams.put("text", smsContent);            
