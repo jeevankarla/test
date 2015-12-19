@@ -49,7 +49,7 @@ facilityIds=[];
 if(parameters.facilityId){
 facilityIds.add(parameters.facilityId)
 }else{
-facilities = delegator.findList("Facility", EntityCondition.makeCondition("facilityTypeId" ,EntityOperator.EQUALS , "BRANCH_OFF"), null , null, null, false);
+facilities = delegator.findList("Facility", EntityCondition.makeCondition("facilityTypeId" ,EntityOperator.EQUALS , "BO"), null , null, null, false);
 facilityIds=facilities.facilityId;
 }
 	if (facilityIds) {
@@ -83,7 +83,7 @@ facilityIds=facilities.facilityId;
 						  geoPoints = points;
 						  geoLines = lines;
 					}
-					else if (facility.facilityTypeId == 'BRANCH_OFF') {
+					else if (facility.facilityTypeId == 'BO') {
 						point = facility.getRelatedOne("GeoPoint");
 						if (point) {
 							geoPoint = [:];
