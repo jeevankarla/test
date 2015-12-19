@@ -253,12 +253,14 @@ under the License.
               	</#if>
 				<#assign supplierPartyId="">
 				<#assign supplierPartyName="">
+				<#assign isgeneratedPO="N">
 		              	<#assign productStoreId="">
 						<#if orderDetailsMap?has_content>
 								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
 								<#if orderDetails?has_content>
 								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
 								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
+								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
 								<#assign productStoreId=orderDetails.get("productStoreId")>
 								</#if>
 				</#if>
@@ -269,7 +271,7 @@ under the License.
 				<#else>
 				<td></td>
 				</#if>
-              	<#if (eachOrder.get('statusId') == "ORDER_APPROVED")>
+              	<#if (eachOrder.get('statusId') == "ORDER_APPROVED") && (isgeneratedPO =="N")>
 					<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}');"/></td>
          		<#else>
 					<td></td>
