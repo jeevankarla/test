@@ -196,4 +196,23 @@ under the License.
 
    <TenantConfiguration description="Telephone:-02111-217002/03,Fax:-02111-217002,E-Mail-Admin@gmail.com,website:-www.NHDC.com" propertyName="reportSubHeaderLable_01" propertyTypeEnumId="COMPANY_HEADER" propertyValue="Y"/>
     
+    
+    <!-- Indentor Dashboard -->
+    	
+    	 <SecurityPermission description="Indentor Dashboard Portal View" permissionId="MYPORTAL_INDENTOR"/>
+          <SecurityGroup description="Indentor Dashboard Portal View" groupId="MYPORTAL_INDENTOR"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="MYPORTAL_INDENTOR"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="ACCOUNTING_VIEW"/>
+	   
+	    <PortalPortlet portalPortletId="INDENTOR_PAGE" portletName="Indentor Portal Screen" screenName="processIndentPortalBranchSales"
+            screenLocation="component://depotsales/widget/CommonScreens.xml" description="Indentor Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_INDENTOR" sequenceNum="0" portalPageName="Indentor Operations" description="The vbiz System Indentor page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_INDENTOR"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_INDENTOR" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_INDENTOR" portalPortletId="INDENTOR_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
+    
+    
+    
 </entity-engine-xml>

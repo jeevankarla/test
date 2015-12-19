@@ -56,7 +56,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="IndentMyPortalCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu name="BranchSalesIndentTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -123,7 +123,7 @@
           			</actions>
           			<widgets>
           				<decorator-screen name="IndentMyPortalCommonDecorator"
-          					location="${parameters.mainDecoratorLocation}">
+          					location="component://depotsales/widget/CommonScreens.xml">
           					<decorator-section name="body">
           						<include-menu name="IndentPortalMainTab"
           							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -182,7 +182,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="IndentMyPortalCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu name="IndentPortalMainTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -249,7 +249,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="IndentMyPortalCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<include-menu name="IndentPortalMainTab"
