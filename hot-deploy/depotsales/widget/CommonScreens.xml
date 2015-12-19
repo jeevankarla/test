@@ -192,6 +192,73 @@
             </widgets>
         </section>
      </screen>
+     <screen name="processIndentPortalBranchSales">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Process Indent" />
+				<set field="tabButtonItem" value="IndentPortalBranchSales" />
+				<set field="tabButtonItem2" value="processIndentPortalBranchSales" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+				<set field="defaultEffectiveDateTime"
+					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+				<set field="screenFlag" value="depotSales" />
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+					/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
+			</actions>
+			<widgets>
+				<!-- <decorator-screen name="IndentMyPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}"> -->
+					<!-- <decorator-section name="body"> -->
+						<include-menu name="IndentPortalMainTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	 <container style="button-bar">
+											<link target="IndentorBranchSalesOrder" text="Create New Indent" style="buttontext create h2">
+											</link>
+										</container>
+                                    </decorator-section>
+							 		<decorator-section name="search-options">
+                                        <include-form name="FindIndentorPayment" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+								<screenlet title="Depot Indent">
+								<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
+										</html>
+									</platform-specific>
+									<!-- <platform-specific>
+										<html>
+											<html-template
+												location="component://byproducts/webapp/byproducts/byproducts/viewOrderDetails.ftl" />
+										</html>
+									</platform-specific> -->
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/ListSearchIndentorPayments.ftl" />
+										</html>
+									</platform-specific>
+								</screenlet>
+								</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					<!-- </decorator-section>
+				</decorator-screen> -->
+			</widgets>
+		</section>
+	</screen>
      
      <screen name="SupplierMyPortalPOScreen">
         <section>
