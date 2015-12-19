@@ -318,7 +318,7 @@ public class DepotPurchaseServices{
 	
 	
 	
-	/*public static String processDepotSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
+	public static String processDepotSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
 	Delegator delegator = (Delegator) request.getAttribute("delegator");
 	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 	DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -343,7 +343,7 @@ public class DepotPurchaseServices{
 	
 	 shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",invoiceList.get("shipmentId")), false);
 	}catch (Exception e) {
-		Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+		Debug.logError(e, "Problems while changing Status: " + strInvoiceId, module);
 		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + strInvoiceId);
 		return "error";
 	}
@@ -380,57 +380,30 @@ public class DepotPurchaseServices{
 
            // store the invoice first
            Map<String, Object> createInvoiceResult = FastMap.newInstance();
-         try{
-            createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
-           if(ServiceUtil.isError(createInvoiceResult)){
-			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
-			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
-			return "error";
-		}
-         } catch (Exception e) {
+         
+           try{
+	            createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+		        if(ServiceUtil.isError(createInvoiceResult)){
+					Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+           } catch (Exception e) {
 				Debug.logError(e, "Problems while calling createInvoice : " + partyId, module);
 				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling createInvoice : " + partyId);
 				return "error";
 			}
+           
            // call service, not direct entity op: delegator.create(invoice);
-          String invoiceId = (String) createInvoiceResult.get("invoiceId");
+          
+           String invoiceId = (String) createInvoiceResult.get("invoiceId");
            
            Debug.log("invoiceId========================"+invoiceId);
            
-           String nextStatusId = "INVOICE_READY";
-           try {
-                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
-                   if(ServiceUtil.isError(createInvoiceResult)){
-           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
-           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
-           			return "error";
-           		}
-           } catch (Exception e) {
-				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
-				return "error";
-			}
-           
-           
-            nextStatusId = "INVOICE_APPROVED";
-           try {
-                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
-                   if(ServiceUtil.isError(createInvoiceResult)){
-           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
-           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
-           			return "error";
-           		}
-           } catch (Exception e) {
-				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
-				return "error";
-			}
-           
-           
-           //invoiceitemmmmm
+//invoiceitemmmmm
            
            List conditionList = FastList.newInstance();
-			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, strInvoiceId));
 			EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> invoiceItemList =null;
 			
@@ -476,14 +449,45 @@ public class DepotPurchaseServices{
 				return "error";
 			}
 			}
-       }
+       
 
 	   Debug.log("invoiceItemList======================Success");
+           
+           String nextStatusId = "INVOICE_READY";
+           try {
+                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
+                   if(ServiceUtil.isError(setInvoiceStatusResult)){
+           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+           			return "error";
+           		}
+           } catch (Exception e) {
+				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
+				return "error";
+			}
+           Debug.log("invoiceId=============2222==========="+invoiceId);
+           
+            nextStatusId = "INVOICE_APPROVED";
+           try {
+                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
+                   if(ServiceUtil.isError(createInvoiceResult)){
+           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+           			return "error";
+           		}
+           } catch (Exception e) {
+				Debug.logError(e, "Problems while changing Status: " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
+				return "error";
+			}
+           
+	   }  
+           
 	
 	return "success";
 
 } 
-*/	
 	
 	
 	
@@ -1418,7 +1422,7 @@ public class DepotPurchaseServices{
 				String partyId=(String) context.get("partyId");
 				String orderId = (String) context.get("orderId");
 				String newStatus = (String) context.get("statusId");
-				String smsContent = "";
+				String smsContent = "Purchase Order placed on for ";
 				//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 			
 					 // get the order header
@@ -1433,8 +1437,7 @@ public class DepotPurchaseServices{
 						return ServiceUtil.returnError("OrderHeader came back as null"+orderId);
 			        }
 			        String orderHeaderStatusId = orderHeader.getString("statusId");
-			        Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-			        String orderDateStr=UtilDateTime.toDateString(orderDate,"dd-MM-yyyy");
+			        
 			        // now set the new order status
 		            if (newStatus != null && !newStatus.equals(orderHeaderStatusId)) {
 		                Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("orderId", orderId, "statusId", newStatus, "userLogin", userLogin);
@@ -1479,31 +1482,31 @@ public class DepotPurchaseServices{
 	                }
 				
 				 Map sendMailParams = FastMap.newInstance();
-	                String productDetails="";
-				 try{
-		                List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-		                //Debug.log("items==============================="+items);
-		                for (GenericValue item : items) {
-		                     String productId = item.getString("productId");
-		                     BigDecimal qty=item.getBigDecimal("quantity");
-		                     String qtystrng="0";
-		                     String desc="";
-		                     if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
-		                      qtystrng=String.valueOf(qty);                     
-		   					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
-		   					desc=product.getString("description");
-		                     }
-		                     productDetails=productDetails+" "+desc+","+qtystrng;
-		                     smsContent = smsContent + " " + qtystrng + " KGs of " + desc + ",";
-		                     
-		                 }
-		                 smsContent = smsContent +" For future enquiries quote the P.O number.";
-						//Debug.log("smsContent================================"+smsContent);
-						 }catch(GenericEntityException ex){
-				            	Debug.log("Problem in fetching orderItems");
-							}
 			if(UtilValidate.isNotEmpty(senderEmail)){
+	                String productDetails="";
+	                
 
+				 try{
+                List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+                 for (GenericValue item : items) {
+                     String productId = item.getString("productId");
+                     BigDecimal qty=item.getBigDecimal("quantity");
+                     String qtystrng="0";
+                     String desc="";
+                     if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
+                      qtystrng=String.valueOf(qty);                     
+   					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+   					desc=product.getString("description");
+                     }
+                     productDetails=productDetails+" "+desc+","+qtystrng;
+                     smsContent = smsContent + " " + qtystrng + " KGs of " + desc + ",";
+                     
+                 }
+                 smsContent = smsContent + "For future enquiries quote the P.O number.";
+				 }catch(GenericEntityException ex){
+		            	Debug.log("Problem in fetching orderItems");
+					}
+				 
 			        /*sendMailParams.put("sendTo", "harish@vasista.in");
 			        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
 			        sendMailParams.put("subject", "Purchase Order"+orderId);
@@ -1550,7 +1553,7 @@ public class DepotPurchaseServices{
 				List<GenericValue> corl = null;
 				String customerId=null;
 		         try {
-		             corl = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "SUPPLIER_AGENT"));
+		             corl = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER"));
 		         } catch (GenericEntityException e) {
 		             Debug.logError(e, module);
 		         }
@@ -1559,12 +1562,8 @@ public class DepotPurchaseServices{
 		             GenericValue custOrderRole = EntityUtil.getFirst(corl);
 		             customerId = custOrderRole.getString("partyId");
 		         }
-				String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,customerId, false);
+				
 				Map<String, Object> getTelParams = FastMap.newInstance();
-				//Debug.log("customerId========================="+customerId);
-				if(UtilValidate.isEmpty(customerName)){
-					customerName=customerId;
-				}
 	        	getTelParams.put("partyId", customerId);
 	            getTelParams.put("userLogin", userLogin); 
 	            try{
@@ -1572,29 +1571,9 @@ public class DepotPurchaseServices{
 		            if (ServiceUtil.isError(serviceResult)) {
 		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
 		            }
-		            
-		            
-		            String contactNumberTo = (String) serviceResult.get("contactNumber");            
-		            String countryCode = (String) serviceResult.get("countryCode");
-		            if(UtilValidate.isEmpty(contactNumberTo)){
-		            	contactNumberTo = "8106416618";
-		            }
+		            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
 		            Debug.log("contactNumberTo = "+contactNumberTo);
 		            if(UtilValidate.isNotEmpty(contactNumberTo)){
-		            	 if(UtilValidate.isNotEmpty(countryCode)){
-		            		 contactNumberTo = countryCode + contactNumberTo;
-		            	 }
-		            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
-		            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
-		                 sendSmsParams.put("contactNumberTo", contactNumberTo);
-		                 sendSmsParams.put("text", "Order placed on M/s "+customerName+" against your Indent No "+orderId+" NHDCLTD"); 
-		                //Debug.log("sendSmsParams====================="+sendSmsParams);
-		                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
-		                 if (ServiceUtil.isError(serviceResult)) {
-		                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-		                     return serviceResult;
-		                 }
-		            	
 		            	/*Map<String, Object> sendSmsParams = FastMap.newInstance();      
 		                sendSmsParams.put("contactNumberTo", contactNumberTo);
 		                sendSmsParams.put("text", "Order placed on M/s. "+ suppPartyId +" against your Indent No. "+orderId);            
@@ -1611,7 +1590,7 @@ public class DepotPurchaseServices{
 	            
 				
 	            // send sms to supplier
-	            String suppName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,suppPartyId, false);
+	            
 	            Map<String, Object> getSupplierTelParams = FastMap.newInstance();
 	            getSupplierTelParams.put("partyId", suppPartyId);
 	            getSupplierTelParams.put("userLogin", userLogin);                    	
@@ -1620,29 +1599,9 @@ public class DepotPurchaseServices{
 		            if (ServiceUtil.isError(serviceResult)) {
 		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
 		            } 
-		            String contactNumberTo = (String) serviceResult.get("contactNumber");
-		            String countryCode = (String) serviceResult.get("countryCode");
-		            if(UtilValidate.isEmpty(contactNumberTo)){
-		            	contactNumberTo = "8106416618";
-		            }
+		            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
 		            Debug.log("contactNumberTo = "+contactNumberTo);
 		            if(UtilValidate.isNotEmpty(contactNumberTo)){
-		            	 if(UtilValidate.isNotEmpty(countryCode)){
-		            		 contactNumberTo = countryCode + contactNumberTo;
-		            	 }
-		            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
-		            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
-		                 sendSmsParams.put("contactNumberTo", contactNumberTo);
-		                 sendSmsParams.put("text", "Purchase Order "+orderId+" placed on "+orderDateStr+" for "+smsContent); 
-		                //Debug.log("sendSmsParams======================"+sendSmsParams);
-		                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
-		                 if (ServiceUtil.isError(serviceResult)) {
-		                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-		                     return serviceResult;
-		                 }
-		            	
-		            	
-		            	
 		            	/*Map<String, Object> sendSmsParams = FastMap.newInstance();      
 		                sendSmsParams.put("contactNumberTo", contactNumberTo);
 		                sendSmsParams.put("text", smsContent);            
