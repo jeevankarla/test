@@ -212,7 +212,20 @@ under the License.
     	<PortalPageColumn portalPageId="MYPORTAL_INDENTOR" columnSeqId="00001"/>
     	<PortalPagePortlet portalPageId="MYPORTAL_INDENTOR" portalPortletId="INDENTOR_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
-    
-    
+    <!-- Branch Sales Portal -->
+    	
+    	<SecurityPermission description="Branch Sales Dashboard Portal View" permissionId="MYPORTAL_BS_ADMIN"/>
+          <SecurityGroup description="Branch Sales Dashboard Portal View" groupId="MYPORTAL_BS_ADMIN"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="MYPORTAL_BS_ADMIN"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="ACCOUNTING_VIEW"/>
+	   
+	    <PortalPortlet portalPortletId="BRANCH_SALES_PAGE" portletName="Branch Sales Portal Screen" screenName="FacilityTree"
+            screenLocation="component://depotsales/widget/CommonScreens.xml" description="Branch Sales Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_BS_ADMIN" sequenceNum="0" portalPageName="Branch Sales Operations" description="The vbiz System Branch Sales page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_BS_ADMIN"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_BS_ADMIN" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_BS_ADMIN" portalPortletId="BRANCH_SALES_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
     
 </entity-engine-xml>
