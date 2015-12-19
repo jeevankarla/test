@@ -118,6 +118,36 @@ facilityIds=facilities.facilityId;
 							geoPoints.add(geoPoint);
 						}
 					}
+					else if (facility.facilityTypeId == 'CFC') {
+						point = facility.getRelatedOne("GeoPoint");
+						if (point) {
+							geoPoint = [:];
+							geoPoint.lat = point.latitude;
+							geoPoint.lon = point.longitude;
+							
+							facility.facilityName=facility.facilityName+"[CFC]";
+							
+							geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
+							geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
+							geoPoint.facilityId = facility.facilityName;
+							geoPoints.add(geoPoint);
+						}
+					}
+				else if (facility.facilityTypeId == 'WAREHOUSE') {
+					point = facility.getRelatedOne("GeoPoint");
+					if (point) {
+						geoPoint = [:];
+						geoPoint.lat = point.latitude;
+						geoPoint.lon = point.longitude;
+						
+						facility.facilityName=facility.facilityName+"[WAREHOUSE]";
+						
+						geoPoint.title = facility.facilityName;// + " [" + facility.sequenceNum + "]";
+						geoPoint.shortName = "" + facility.facilityName;//facility.sequenceNum;
+						geoPoint.facilityId = facility.facilityName;
+						geoPoints.add(geoPoint);
+					}
+				}
 					else {
 						points = [];
 						populateBoothPoints(facility, points);
