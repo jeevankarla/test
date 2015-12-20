@@ -10,22 +10,23 @@
 	
 	JSONArray mainNodesList = new JSONArray();
 	
-	JSONObject strNode= new JSONObject();
-	strNode.put("state","open");
+	JSONObject hoNode= new JSONObject();
+	hoNode.put("state","open");
 	company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 	JSONObject attrNode= new JSONObject();
 	attrNode.put("nodetype", "company");
-	strNode.put("attr", attrNode);
+	hoNode.put("attr", attrNode);
 	JSONObject dataNode= new JSONObject();
 	dataNode.put("title", company.groupName);
 	JSONObject hrefNode = new JSONObject();
 	hrefNode.put("href", "#");
 	//hrefNode.put("onClick","callDocument('/partymgr/control/viewprofile?partyId=" + company.partyId + "')");
 	dataNode.put("attr", hrefNode);
-	strNode.put("data", dataNode);
+	hoNode.put("data", dataNode);
 	
-	populateROTree(company, strNode);
-	mainNodesList.add(strNode);
+	populateHOTree(company, hoNode);
+	//populateROTree(company, strNode);
+	mainNodesList.add(hoNode);
 	Debug.log("===="+mainNodesList);
 	if (parameters.ajaxLookup == "Y") {
 		request.setAttribute("treeNodeJSON", mainNodesList[0].getJSONArray("children").toString());
@@ -33,6 +34,36 @@
 	else {
 		context.put("treeNodesListJSON", mainNodesList.toString());
 	}
+	
+	def populateHOTree(company, hoNode){
+		
+		facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", "HO"), false);
+		
+		JSONArray hoNodesList = new JSONArray();
+		
+			JSONObject attrNode= new JSONObject();
+			attrNode.put("nodetype", "HO");
+			
+			JSONObject hrefNode = new JSONObject();
+			hrefNode.put("href", "#");
+			hrefNode.put("onClick","callDocument('ViewFacilityGeoPoint?facilityId=" + facility.facilityId + "')");
+			
+			JSONObject dataNode= new JSONObject();
+			dataNode.put("title", facility.facilityName);
+			dataNode.put("attr", hrefNode);
+			
+			JSONObject strNode = new JSONObject();
+			strNode.put("state","open");
+			strNode.put("attr", attrNode);
+			strNode.put("data", dataNode);
+			
+			populateROTree(company, strNode);
+			
+			hoNodesList.add(strNode);
+			hoNode.put("children",hoNodesList);
+		
+	}
+	
 	
 	def populateROTree(company, strNode){
 		
