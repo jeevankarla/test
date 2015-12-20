@@ -31,7 +31,9 @@
 				<set field="facilityId" value="ZO1"/>
 				<!-- <set field="isTreeRoot" value="Y"/> -->
 				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy" /> 
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/NHDCNetworkTree.groovy" />
+				<!-- <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy" /> --> 
 	<!-- 				<script  -->
 	<!-- 				location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/partyClassificationTree.groovy" />-->
 		</actions>
@@ -52,7 +54,7 @@
 												<platform-specific>
 													<html>
 														<html-template
-															location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template>
+															location="component://byproducts/webapp/byproducts/byproducts/networkTree.ftl"></html-template>
 							<!--								location="component://depotsales/webapp/depotsales/depotsales/partyClassificationTree.ftl"></html-template>-->
 													</html>
 												</platform-specific>
@@ -67,7 +69,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://byproducts/webapp/byproducts/reports/facilityTree.ftl"></html-template>
+									location="component://byproducts/webapp/byproducts/byproducts/networkTree.ftl"></html-template>
 							</html>
 						</platform-specific>
 					</fail-widgets>
