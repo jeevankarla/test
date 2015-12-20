@@ -382,6 +382,7 @@
 							location="${parameters.mainDecoratorLocation}">
 							<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
 							<decorator-section name="body"> -->
+								<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="DepotSaleMenuTabBar"/>
 								<section>
 									<widgets>
 										<container style="lefthalf">
