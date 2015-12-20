@@ -40,10 +40,14 @@ function createTree() {
                         "image" : "/images/jquery/plugins/jsTree/themes/globe.png"
                 	}
             	},
-            	             	
+            	"HO": {
+					"icon" : { 
+                        "image" : "/images/jquery/plugins/jsTree/themes/userGroup.png"
+                	}
+            	},              	
             	"Depots": {
 					"icon" : { 
-                        "image" : "/images/jquery/plugins/jsTree/themes/direction.png"
+                        "image" : "/images/jquery/plugins/jsTree/themes/zone.png"
                 	}
             	}, 
             	"RO": {
@@ -53,7 +57,7 @@ function createTree() {
                 },
             	"BO": {
 					"icon" : { 
-                        "image" : "/images/jquery/plugins/jsTree/themes/zone.png"
+                        "image" : "/images/jquery/plugins/jsTree/themes/depot.png"
                 	}
             	},                 
         	}
