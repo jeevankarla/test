@@ -20,7 +20,7 @@
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
-				minDate: new Date(),
+				//minDate: new Date(),
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
