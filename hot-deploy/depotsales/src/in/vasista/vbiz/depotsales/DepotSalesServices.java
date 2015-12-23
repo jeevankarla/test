@@ -3804,6 +3804,65 @@ public class DepotSalesServices{
         return result;
     }
    	
+   	public static Map<String, Object> getCustomerBranch(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        String partyId = (String) userLogin.get("partyId");
+        
+        List productStoreList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(partyId)){
+        	
+        	List conditionList = FastList.newInstance();
+  			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+  			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+  	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+  	        
+  			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+			
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+			List orgsList = FastList.newInstance();
+			try{
+				orgsList = delegator.findList("PartyRelationship", condition, null, UtilMisc.toList("partyIdFrom"), null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+        	
+			if(UtilValidate.isNotEmpty(orgsList)){
+				List condList =FastList.newInstance();
+	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true)));
+	   	    	EntityCondition prodStrCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	   	    	try{
+	   	    		productStoreList = delegator.findList("ProductStore", prodStrCondition, null, null, null, false);
+	   	    	}catch (GenericEntityException e) {
+	   				// TODO: handle exception
+	   	    		Debug.logError(e, module);
+	   			}
+			}
+        	
+   	    }
+        else{
+        	try{
+   	    		productStoreList = delegator.findList("ProductStore", null, null, null, null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+        }
+        Debug.log("productStoreList =========="+productStoreList);
+		
+		result.put("productStoreList", productStoreList);
+        return result;
+    }
+   	
    	
    	
 }

@@ -109,6 +109,10 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/> 
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
-
+	<service name="getCustomerBranch" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCustomerBranch" auth="false">
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="productStoreList" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>
 
