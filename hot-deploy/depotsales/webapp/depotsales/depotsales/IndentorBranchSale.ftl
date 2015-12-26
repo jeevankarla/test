@@ -210,7 +210,7 @@
 				          		</td>       
 				          	</#if>
 				    	<#else>
-							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
+							<#if parameters.productStoreId?exists>  
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div class='tabletext h3'>
@@ -219,7 +219,7 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" value="VARANASI" onblur= 'javascript:getParties(this);' readonly />
+				          			<input type="text" name="productStoreId" id="productStoreId" onblur='javascript:getParties(this);' />
 				          		</td>
 				          	</#if>
 			        	</#if>

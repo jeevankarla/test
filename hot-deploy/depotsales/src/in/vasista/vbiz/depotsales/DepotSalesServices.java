@@ -3849,7 +3849,8 @@ public class DepotSalesServices{
 			}
         	
    	    }
-        else{
+        
+        if(UtilValidate.isEmpty(productStoreList)){
         	try{
    	    		productStoreList = delegator.findList("ProductStore", null, null, null, null, false);
    	    	}catch (GenericEntityException e) {
