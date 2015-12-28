@@ -17,7 +17,7 @@
             <link target="main">
             </link>
         </menu-item>
-         <menu-item name="ViewFacilityGeoPoint" title="Location Map">
+         <menu-item name="ViewFacilityGeoPoint" title="${uiLabelMap.LocationMap}">
 			<condition>
 				<or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -38,7 +38,7 @@
             </condition>        
         	<link target="FindFacility"/>
         </menu-item> -->
-       <menu-item name="producerSearch" title="Find Weaver">
+       <menu-item name="producerSearch" title="${uiLabelMap.FindWeaver}">
 			<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -53,7 +53,7 @@
             </link>
         </menu-item>
        
-        <menu-item name="BranchSalesOrder" title="Branch Sales Indent">
+        <menu-item name="BranchSalesOrder" title="${uiLabelMap.BranchSalesIndent}">
 	      <condition>
 	     	    <or>
 	        		<if-has-permission permission="DEPOTSALES"  action="_SALE_VIEW"/>
@@ -63,7 +63,7 @@
             <link target="processOrdersBranchSales">
             </link>
         </menu-item> 
-        <menu-item name="NonRouteCustomPayments" title="Receipts"> 
+        <menu-item name="NonRouteCustomPayments" title="${uiLabelMap.Receipts}"> 
     		 <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>

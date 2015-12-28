@@ -603,9 +603,13 @@ public class UtilHttp {
             if (userLogin == null) {
                 userLogin = (Map<?,?>) session.getAttribute("autoUserLogin");
             }
-
+            
             if (userLogin != null) {
                 localeObject = userLogin.get("lastLocale");
+                // Get User's Preferred Language if lastLocale is null.
+                if (localeObject == null) {
+                	localeObject = userLogin.get("preferredLocale");
+                }
             }
         }
 
@@ -618,7 +622,7 @@ public class UtilHttp {
         if (localeObject == null) {
             localeObject = request != null ? request.getLocale() : null;
         }
-
+        
         return UtilMisc.ensureLocale(localeObject);
     }
 
