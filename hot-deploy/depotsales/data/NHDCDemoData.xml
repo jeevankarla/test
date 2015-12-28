@@ -227,5 +227,17 @@ under the License.
     	<PortalPageColumn portalPageId="MYPORTAL_BS_ADMIN" columnSeqId="00001"/>
     	<PortalPagePortlet portalPageId="MYPORTAL_BS_ADMIN" portalPortletId="BRANCH_SALES_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
+    <!-- To auto pick branch based on Userlogin for employees -->
+    	
+    	<RoleType roleTypeId="BRANCH_EMPLOYEE" parentTypeId="" description="Branch Employee"/>
+    	<PartyRole partyId="13680" roleTypeId="BRANCH_EMPLOYEE"/>
+    	<PartyRelationship partyIdFrom="INT7" partyIdTo="13680" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
+    
+    
+    	<!-- <UserPreference userLoginId="vikram" userPrefTypeId="LANGUAGE_PREFERENCE" userPrefValue="zh_CN"/> --> 
+    	
+    <!-- To auto pick language preference -->
+    	
+    	<UserLogin partyId="13670" userLoginId="vikram" preferredLocale="hi_IN"/>
     
 </entity-engine-xml>

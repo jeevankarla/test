@@ -13337,6 +13337,7 @@
     </property>
     <property key="ProductFacilityLocationNetwork">
         <value xml:lang="en">Location Network</value>
+        <value xml:lang="hi_IN">स्थान नेटवर्क</value>
     </property>     
     <property key="ProductFacilityMain">
         <value xml:lang="en">LMS</value>
@@ -25311,4 +25312,21 @@
     <property key="CreateRecovery">
         <value xml:lang="en">Create Facility Recovery</value>
     </property>
+    <property key="LocationMap">
+        <value xml:lang="en">Location Map</value>
+        <value xml:lang="hi_IN">स्थान मानचित्र</value>
+    </property>
+    <property key="FindWeaver">
+        <value xml:lang="en">Find Weaver</value>
+        <value xml:lang="hi_IN">वीवर खोजें</value>
+    </property>
+    <property key="BranchSalesIndent">
+        <value xml:lang="en">Branch Sales Indent</value>
+        <value xml:lang="hi_IN">शाखा बिक्री इंडेंट</value>
+    </property>
+    <property key="Receipts">
+        <value xml:lang="en">Receipts</value>
+        <value xml:lang="hi_IN">प्राप्तियां</value>
+    </property>
+    
 </resource>
