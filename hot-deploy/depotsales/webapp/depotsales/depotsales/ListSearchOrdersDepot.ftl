@@ -272,7 +272,7 @@ under the License.
 				<td></td>
 				</#if>
               	<#if (eachOrder.get('statusId') == "ORDER_APPROVED") && (isgeneratedPO =="N")>
-					<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}');"/></td>
+					<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}', '${eachOrder.billFromVendorPartyId}');"/></td>
          		<#else>
 					<td></td>
 				</#if>    

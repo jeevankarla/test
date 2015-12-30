@@ -180,7 +180,7 @@ function populateData(){
 
 
 
-function purchaseOrder(orderId, salesChannel,supplierPartyId,supplierPartyName,productStoreId,partyId,orderDate){
+function purchaseOrder(orderId, salesChannel,supplierPartyId,supplierPartyName,productStoreId,partyId,orderDate,billFromVendorPartyId){
 	var shipDetails=AllSupplierAddrMap[partyId];
 	
 	  var action;
@@ -189,7 +189,7 @@ function purchaseOrder(orderId, salesChannel,supplierPartyId,supplierPartyName,p
                 message += "<html><head></head><body><form id='purchaseOrderEntry' method='post' action='createPOByOrder' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=700>";
       			message += "<tr class='h3'><td align='left' class='h3' width='60%'>OrderId:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+orderId+"</font><input class='h4' type='hidden' value="+orderId+" id='orderId' name='orderId' /></td></tr>";
       			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Branch Name:</td><td align='left'  width='90%'><font color=light-blue size=45%>"+productStoreId+"</font><input class='h4' type='hidden' value="+productStoreId+" id='productStoreId' name='productStoreId' /></td></tr>";
-      			message += "<tr class='h3'><td align='left' class='h3' width='60%'>supplierPartyId:</td><td align='left' class='h5' width='60%'><font color=light-blue>"+supplierPartyName+"["+supplierPartyId+"]</font><input class='h4' type='hidden'  id='supplierId' name='supplierId' value="+supplierPartyId+"   readOnly /><input class='h4' type='hidden'  id='partyId' name='partyId' value="+partyId+"  /></td></tr>";
+      			message += "<tr class='h3'><td align='left' class='h3' width='60%'>supplierPartyId:</td><td align='left' class='h5' width='60%'><font color=light-blue>"+supplierPartyName+"["+supplierPartyId+"]</font><input class='h4' type='hidden'  id='supplierId' name='supplierId' value="+supplierPartyId+"   readOnly /><input class='h4' type='hidden'  id='partyId' name='partyId' value="+partyId+"  /><input class='h4' type='hidden'  id='billFromVendorPartyId' name='billFromVendorPartyId' value="+billFromVendorPartyId+"  /></td></tr>";
 				message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Order Date:</td><td align='left' width='60%'><input class='h4' type='text' color=light-blue class='required' readonly  value="+orderDate+" id='orderDate' name='orderDate' onmouseover='datepick1()' required /></td></tr>";
      		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'></td></tr>";
 				
