@@ -865,6 +865,7 @@ public class DepotPurchaseServices{
 
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
+		String billFromVendorPartyId = (String) request.getParameter("billFromVendorPartyId");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderId = (String) request.getParameter("orderId");
 		String orderDateStr = (String) request.getParameter("orderDate");
@@ -896,16 +897,17 @@ public class DepotPurchaseServices{
 			if(UtilValidate.isNotEmpty(orderId)){
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				if (UtilValidate.isNotEmpty(orderHeader)) { 
-				String statusId = orderHeader.getString("statusId");
-				//orderTypeId=orderHeader.getString("orderTypeId");
-				orderName=orderHeader.getString("orderName");
-				estimatedDeliveryDate=orderHeader.getTimestamp("estimatedDeliveryDate");
-				grandTotal=orderHeader.getBigDecimal("grandTotal");
-				if(statusId.equals("ORDER_CANCELLED")){
-					Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+orderId);	
-			  		return "error";
-				}}
+					String statusId = orderHeader.getString("statusId");
+					//orderTypeId=orderHeader.getString("orderTypeId");
+					orderName=orderHeader.getString("orderName");
+					estimatedDeliveryDate=orderHeader.getTimestamp("estimatedDeliveryDate");
+					grandTotal=orderHeader.getBigDecimal("grandTotal");
+					if(statusId.equals("ORDER_CANCELLED")){
+						Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+orderId);	
+				  		return "error";
+					}
+				}
 				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
@@ -916,7 +918,7 @@ public class DepotPurchaseServices{
 					BigDecimal unitListPrice=BigDecimal.ZERO;
 					BigDecimal unitPrice=BigDecimal.ZERO;
 					if(UtilValidate.isNotEmpty(orderItemsValues.getBigDecimal("unitListPrice"))){
-					 unitListPrice=orderItemsValues.getBigDecimal("unitListPrice");
+						unitListPrice=orderItemsValues.getBigDecimal("unitListPrice");
 					}
 					if(UtilValidate.isNotEmpty(orderItemsValues.getBigDecimal("unitPrice"))){
 						unitPrice=orderItemsValues.getBigDecimal("unitPrice");
@@ -930,6 +932,7 @@ public class DepotPurchaseServices{
 					String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
 					orderItemSeq.put(productId, orderItemSeqId);
 				}
+			
 				if (UtilValidate.isNotEmpty(orderDateStr)) { 
 					try {
 						orderDate = new java.sql.Timestamp(sdf.parse(orderDateStr).getTime());
@@ -939,6 +942,7 @@ public class DepotPurchaseServices{
 						Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
 					}
 				}
+			
 				if (UtilValidate.isNotEmpty(effectiveDateStr)) { 
 					try {
 						effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
@@ -950,6 +954,7 @@ public class DepotPurchaseServices{
 				}else{
 					effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				}
+			
 				Map processOrderContext = FastMap.newInstance();
 
 				//String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
@@ -970,6 +975,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("billFromPartyId", partyId);
 				processOrderContext.put("issueToDeptId", "");
 				processOrderContext.put("shipToPartyId", partyIdTo);
+				processOrderContext.put("billFromVendorPartyId", billFromVendorPartyId);
 				processOrderContext.put("supplyDate", effectiveDate);
 				processOrderContext.put("salesChannel", "MATERIAL_PUR_CHANNEL");
 				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
@@ -989,9 +995,8 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
 					return "error";
 				}
-				
-				
-			  }
+			  
+			}
 		}catch(GenericEntityException e){
 			Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
 			request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+orderId);	
@@ -1086,105 +1091,112 @@ public class DepotPurchaseServices{
 	
 	}
 	
-	   public static Map<String, Object> CreateMaterialPO(DispatchContext ctx,Map<String, ? extends Object> context) {
+	   
+	public static Map<String, Object> CreateMaterialPO(DispatchContext ctx,Map<String, ? extends Object> context) {
 			
-			//Old PO flow starts
+			
+		//Old PO flow starts
 
-		    Delegator delegator = ctx.getDelegator();
-			LocalDispatcher dispatcher = ctx.getDispatcher();
-		    GenericValue userLogin = (GenericValue) context.get("userLogin");
-		    Map<String, Object> result = ServiceUtil.returnSuccess();
-		    List<Map> productQtyList = (List) context.get("productQtyList");
-		    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
-		    Locale locale = (Locale) context.get("locale");
-		    String productStoreId = (String) context.get("productStoreId");
-		  	String salesChannel = (String) context.get("salesChannel");
-		  	Map taxTermsMap = (Map) context.get("taxTermsMap");
-		  	String partyId = (String) context.get("partyId");
-		  	String billFromPartyId = (String) context.get("billFromPartyId");
-		  	String shipToPartyId = (String) context.get("shipToPartyId");
-			String issueToDeptId = (String) context.get("issueToDeptId");
-		  	List<Map> termsList = (List)context.get("termsList");
-		  	List<Map> otherChargesAdjustment = (List)context.get("adjustmentDetail");
-		  	List<Map> otherTermDetail = (List)context.get("otherTerms");
-		  	String incTax = (String)context.get("incTax");
-		  	boolean beganTransaction = false;
-		  	String PONumber=(String) context.get("PONumber");
-	        Timestamp orderDate = (Timestamp)context.get("orderDate");
-	        Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
-			String orderName = (String)context.get("orderName");
-			String fileNo = (String)context.get("fileNo");
-			String refNo = (String)context.get("refNo");
-			String orderId = "";		
-		  	String currencyUomId = "INR";
-			Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
-			Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
-			String fromDate = (String)context.get("fromDate");
-			String thruDate = (String)context.get("thruDate");
-			String billToPartyId="Company";
-			String orderTypeId = (String)context.get("orderTypeId");
-			if(UtilValidate.isEmpty(orderTypeId)){
-				orderTypeId = "PURCHASE_ORDER";
-			}
-			if (UtilValidate.isEmpty(partyId)) {
-				Debug.logError("Cannot create order without partyId: "+ partyId, module);
-				return ServiceUtil.returnError("partyId is empty");
-			}
-			GenericValue product =null;
-			String productPriceTypeId = null;
-			//these are input param to calcultae teramount based on order terms 
-			BigDecimal basicAmount = BigDecimal.ZERO;
-			//exciseDuty includes BED,CESS,SECESS
-			BigDecimal exciseDuty = BigDecimal.ZERO;
-			BigDecimal discountBeforeTax = BigDecimal.ZERO;
-			ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
+	    Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    List<Map> productQtyList = (List) context.get("productQtyList");
+	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+	    Locale locale = (Locale) context.get("locale");
+	    String productStoreId = (String) context.get("productStoreId");
+	  	String salesChannel = (String) context.get("salesChannel");
+	  	Map taxTermsMap = (Map) context.get("taxTermsMap");
+	  	String partyId = (String) context.get("partyId");
+	  	String billFromPartyId = (String) context.get("billFromPartyId");
+	  	String shipToPartyId = (String) context.get("shipToPartyId");
+		String issueToDeptId = (String) context.get("issueToDeptId");
+	  	List<Map> termsList = (List)context.get("termsList");
+	  	List<Map> otherChargesAdjustment = (List)context.get("adjustmentDetail");
+	  	List<Map> otherTermDetail = (List)context.get("otherTerms");
+	  	String incTax = (String)context.get("incTax");
+	  	boolean beganTransaction = false;
+	  	String PONumber=(String) context.get("PONumber");
+        Timestamp orderDate = (Timestamp)context.get("orderDate");
+        Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
+		String orderName = (String)context.get("orderName");
+		String fileNo = (String)context.get("fileNo");
+		String refNo = (String)context.get("refNo");
+		String orderId = "";		
+	  	String currencyUomId = "INR";
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
+		String fromDate = (String)context.get("fromDate");
+		String thruDate = (String)context.get("thruDate");
+		String billToPartyId = (String) context.get("billFromVendorPartyId");
+		if(UtilValidate.isEmpty(billToPartyId)){
+			billToPartyId="Company";
+		}
+		
+		String orderTypeId = (String)context.get("orderTypeId");
+		if(UtilValidate.isEmpty(orderTypeId)){
+			orderTypeId = "PURCHASE_ORDER";
+		}
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Cannot create order without partyId: "+ partyId, module);
+			return ServiceUtil.returnError("partyId is empty");
+		}
+		GenericValue product =null;
+		String productPriceTypeId = null;
+		//these are input param to calcultae teramount based on order terms 
+		BigDecimal basicAmount = BigDecimal.ZERO;
+		//exciseDuty includes BED,CESS,SECESS
+		BigDecimal exciseDuty = BigDecimal.ZERO;
+		BigDecimal discountBeforeTax = BigDecimal.ZERO;
+		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 			
-			try {
-				cart.setOrderType(orderTypeId);
-		       // cart.setIsEnableAcctg("N");
-				cart.setExternalId(PONumber);
-		        cart.setProductStoreId(productStoreId);
-				cart.setChannelType(salesChannel);
-				cart.setBillToCustomerPartyId(billToPartyId);
-				cart.setPlacingCustomerPartyId(billToPartyId);
-				cart.setShipToCustomerPartyId(shipToPartyId);
-				cart.setEndUserCustomerPartyId(billToPartyId);
-				//cart.setShipmentId(shipmentId);
-				//for PurchaseOrder we have to use for SupplierId
-				if(UtilValidate.isNotEmpty(billFromPartyId)){
-					 cart.setBillFromVendorPartyId(billFromPartyId);
-				}else{
-			    cart.setBillFromVendorPartyId(partyId);
-				}
-			    cart.setShipFromVendorPartyId(partyId);
-			    cart.setSupplierAgentPartyId(partyId);
-				
-				cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
-				cart.setOrderName(orderName);
-				//cart.setOrderDate(effectiveDate);
-				cart.setOrderDate(orderDate);
-				cart.setUserLogin(userLogin, dispatcher);
-				
-				//set attributes here
-				if(UtilValidate.isNotEmpty(PONumber))
-					cart.setOrderAttribute("PO_NUMBER",PONumber);
-				if(UtilValidate.isNotEmpty(fileNo))
-					cart.setOrderAttribute("FILE_NUMBER",fileNo);
-				if(UtilValidate.isNotEmpty(refNo))
-					cart.setOrderAttribute("REF_NUMBER",refNo);
-				
-				if(UtilValidate.isNotEmpty(fromDate)){
-					cart.setOrderAttribute("VALID_FROM",fromDate);
-				}
-				if(UtilValidate.isNotEmpty(thruDate)){
-					cart.setOrderAttribute("VALID_THRU",thruDate);
-				}
-				
-			} catch (Exception e) {
-				
-				Debug.logError(e, "Error in setting cart parameters", module);
-				return ServiceUtil.returnError("Error in setting cart parameters");
+		try {
+			cart.setOrderType(orderTypeId);
+	       
+			// cart.setIsEnableAcctg("N");
+			cart.setExternalId(PONumber);
+	        cart.setProductStoreId(productStoreId);
+			cart.setChannelType(salesChannel);
+			cart.setBillToCustomerPartyId(billToPartyId);
+			cart.setPlacingCustomerPartyId(billToPartyId);
+			cart.setShipToCustomerPartyId(shipToPartyId);
+			cart.setEndUserCustomerPartyId(billToPartyId);
+			//cart.setShipmentId(shipmentId);
+			//for PurchaseOrder we have to use for SupplierId
+			if(UtilValidate.isNotEmpty(billFromPartyId)){
+				cart.setBillFromVendorPartyId(billFromPartyId);
+			}else{
+				cart.setBillFromVendorPartyId(partyId);
 			}
+		    cart.setShipFromVendorPartyId(partyId);
+		    cart.setSupplierAgentPartyId(partyId);
+			
+			cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
+			cart.setOrderName(orderName);
+			//cart.setOrderDate(effectiveDate);
+			cart.setOrderDate(orderDate);
+			cart.setUserLogin(userLogin, dispatcher);
+			
+			//set attributes here
+			if(UtilValidate.isNotEmpty(PONumber))
+				cart.setOrderAttribute("PO_NUMBER",PONumber);
+			if(UtilValidate.isNotEmpty(fileNo))
+				cart.setOrderAttribute("FILE_NUMBER",fileNo);
+			if(UtilValidate.isNotEmpty(refNo))
+				cart.setOrderAttribute("REF_NUMBER",refNo);
+			
+			if(UtilValidate.isNotEmpty(fromDate)){
+				cart.setOrderAttribute("VALID_FROM",fromDate);
+			}
+			if(UtilValidate.isNotEmpty(thruDate)){
+				cart.setOrderAttribute("VALID_THRU",thruDate);
+			}
+			
+		} catch (Exception e) {
+			
+			Debug.logError(e, "Error in setting cart parameters", module);
+			return ServiceUtil.returnError("Error in setting cart parameters");
+		}
 
 			try{
 				beganTransaction = TransactionUtil.begin(7200);
