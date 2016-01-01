@@ -25,6 +25,29 @@
 	dctx = dispatcher.getDispatchContext();
 	Map boothsPaymentsDetail = [:];
 	
+	partyId = userLogin.get("partyId");
+	
+	
+	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+	
+	
+	Map formatMap = [:];
+	List formatList = [];
+	
+		for (eachList in resultCtx.get("productStoreList")) {
+			
+			formatMap = [:];
+			formatMap.put("productStoreName",eachList.get("storeName"));
+			formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+			formatList.addAll(formatMap);
+			
+		}
+	context.formatList = formatList;
+	
+	branchId = parameters.branchId;
+
+	
+	
 	salesChannel = parameters.salesChannelEnumId;
 	searchOrderId = parameters.orderId;
 	
@@ -96,19 +119,14 @@
 	custCondList.clear();
 	custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 	// query based on branch
+	if(UtilValidate.isNotEmpty(branchId)){
+		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId));
+	}
 	custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 	billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
 	
 	vendorBasedOrderIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
 	orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
-	
-	// orderId
-	// Delivery Date
-	// Status Id
-	// customer
-	// branch
-	
-	// branchOrdersList =
 	
 	orderDetailsMap=[:];
 	Set partyIdsSet=new HashSet();
@@ -252,14 +270,6 @@
 		}
 	}
 	context.supplierAddrJSON=supplierAddrJSON;
-	
-	
-	
-	
-	
-	
-	// preparing Country List Json
-	
 	
 	dctx = dispatcher.getDispatchContext();
 	
@@ -413,27 +423,16 @@
 	context.orderPreferenceMap = orderPreferenceMap;
 	context.paymentSatusMap = paymentSatusMap;
 	
+	sortedOrderMap =  [:]as TreeMap;
+	for (eachList in orderList) {
+		sortedOrderMap.put(eachList.orderId, eachList);
+	}
+	Collection allValues = sortedOrderMap.values();
+	List basedList = [];
+	basedList.addAll(allValues);
 	
-	context.orderList = orderList;
+	context.orderList = basedList.reverse();
+	
 	
 	//context.partyOBMap = partyOBMap;
-	Debug.log("orderList============"+orderList);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	   
-	   
-	   
-	  
