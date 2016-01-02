@@ -23625,6 +23625,7 @@
     <property key="ProductSupplier">
         <value xml:lang="de">Lieferant</value>
         <value xml:lang="en">Supplier</value>
+        <value xml:lang="hi_IN">प्रदायक</value>
         <value xml:lang="es">Proveedor</value>
         <value xml:lang="fr">Fournisseur</value>
         <value xml:lang="it">Fornitore</value>
@@ -25327,6 +25328,116 @@
     <property key="Receipts">
         <value xml:lang="en">Receipts</value>
         <value xml:lang="hi_IN">प्राप्तियां</value>
+    </property>
+    
+    <property key="IndentEntry">
+        <value xml:lang="en">Indent Entry</value>
+        <value xml:lang="hi_IN">मांगपत्र प्रविष्टि</value>
+    </property>
+    
+    <property key="IndentListing">
+        <value xml:lang="en">Indent Listing</value>
+        <value xml:lang="hi_IN">इंडेंट लिस्टिंग</value>
+    </property>
+    
+    <property key="IndentPayment">
+        <value xml:lang="en">Indent Payment</value>
+        <value xml:lang="hi_IN">इंडेंट भुगतान</value>
+    </property>
+    
+    <property key="IndentId">
+        <value xml:lang="en">Indent Id</value>
+        <value xml:lang="hi_IN">इंडेंट पहचान</value>
+    </property>
+    
+    <property key="IndentDate">
+        <value xml:lang="en">Indent Date</value>
+        <value xml:lang="hi_IN">इंडेंट दिनांक</value>
+    </property>
+    
+    <property key="Customer">
+        <value xml:lang="en">Customer</value>
+        <value xml:lang="hi_IN">ग्राहक</value>
+    </property>
+    
+    <property key="Product">
+        <value xml:lang="en">Product</value>
+        <value xml:lang="hi_IN">उत्पाद</value>
+    </property>
+    
+    <property key="PurchaseOrder">
+        <value xml:lang="en">Purchase Order</value>
+        <value xml:lang="hi_IN">खरीद आदेश</value>
+    </property>
+    
+    <property key="ReceiptOfGoods">
+        <value xml:lang="en">Receipt of Goods</value>
+        <value xml:lang="hi_IN">चीजों की रसीद</value>
+    </property>
+    
+    <property key="Branch">
+        <value xml:lang="en">Branch</value>
+        <value xml:lang="hi_IN">शाखा</value>
+    </property>
+    
+    <property key="SchemeCategory">
+        <value xml:lang="en">Scheme Category</value>
+        <value xml:lang="hi_IN">योजना श्रेणी</value>
+    </property>
+    
+    <property key="IndentTaxType">
+        <value xml:lang="en">Indent Tax Type</value>
+        <value xml:lang="hi_IN">इंडेंट टैक्स प्रकार</value>
+    </property>
+    
+    <property key="IndentType">
+        <value xml:lang="en">Indent Type</value>
+        <value xml:lang="hi_IN">इंडेंट प्रकार</value>
+    </property>
+    
+    <property key="ReceivedDate">
+        <value xml:lang="en">Received Date</value>
+        <value xml:lang="hi_IN">प्राप्त तारीख</value>
+    </property>
+    
+    <property key="BranchSalesEntry">
+        <value xml:lang="en">Branch Sales Entry</value>
+        <value xml:lang="hi_IN">शाखा बिक्री एंट्री</value>
+    </property>
+    
+    <property key="PurchaseInvoices">
+        <value xml:lang="en">Purchase Invoices</value>
+        <value xml:lang="hi_IN">खरीद चालान</value>
+    </property>
+    
+    <property key="SalesInvoices">
+        <value xml:lang="en">Sales Invoices</value>
+        <value xml:lang="hi_IN">बिक्री का चालान</value>
+    </property>
+    
+    <property key="Payments">
+        <value xml:lang="en">Payments</value>
+        <value xml:lang="hi_IN">भुगतान</value>
+    </property>
+    
+    <property key="StockPosition">
+        <value xml:lang="en">Stock Position</value>
+        <value xml:lang="hi_IN">स्टॉक की स्थिति</value>
+    </property>
+    
+    <property key="Analytics">
+        <value xml:lang="en">Analytics</value>
+        <value xml:lang="hi_IN">एनालिटिक्स</value>
+    </property>
+    
+    <property key="Reports">
+        <value xml:lang="en">Reports</value>
+        <value xml:lang="hi_IN">रिपोर्टें</value>
+    </property>
+    
+    <property key="ProductMaster">
+        <value xml:lang="en">Product Master</value>
+        <value xml:lang="hi_IN">उत्पाद मास्टर</value>
     </property>
     
 </resource>
