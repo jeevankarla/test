@@ -48,6 +48,7 @@ public class SmsServices {
         Delegator delegator = ctx.getDelegator();    	
 		String postData="";
 		String retval = "";
+		Map<String, Object> results = ServiceUtil.returnSuccess();
         String communicationEventId = (String) context.get("communicationEventId");
         if (communicationEventId != null) {
             Debug.logInfo("sendSms: communicationEventId=" + communicationEventId, module);
@@ -76,7 +77,8 @@ public class SmsServices {
 			if(!allowedTenantList.contains(delegatorTenantId)){
 				  String errMsg = "Not sending sms to " + "[" + mobileNumber + "]. Test sms not enabled for this TenantId: "+delegatorTenantId;
 					Debug.logError(errMsg, module);
-		            return ServiceUtil.returnError(errMsg);	 
+		            //return ServiceUtil.returnError(errMsg);
+					return ServiceUtil.returnSuccess();	
 			  }
 			
 		}
@@ -112,7 +114,8 @@ public class SmsServices {
             	// don't send sms, just return
 	            String errMsg = "Not sending sms to " + "[" + mobileNumber + "]. Test sms not enabled for this number. ";
 				Debug.logError(errMsg, module);
-	            return ServiceUtil.returnError(errMsg);	            	
+	            //return ServiceUtil.returnError(errMsg);	  
+		        return results;
             }
 		}
 
@@ -146,7 +149,7 @@ public class SmsServices {
 			if (status >= 400) {
 	            String errMsg = "Received " + status + " error when sending message to [" + mobileNumber + "] ";
 				Debug.logError(errMsg, module);
-	            return ServiceUtil.returnError(errMsg);		
+				return results;	
 			}
 			BufferedReader in = new BufferedReader(	new InputStreamReader(urlconnection.getInputStream()));
 			String decodedString;
@@ -158,17 +161,17 @@ public class SmsServices {
 		} catch (UnsupportedEncodingException e) {
             String errMsg = "UnsupportedEncodingException when sending message to [" + mobileNumber + "] ";
             Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);			
+            return results;			
 		} catch (MalformedURLException e) {
             String errMsg = "MalformedURLException when sending message to [" + mobileNumber + "] ";
             Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);            
+            return results;          
 		} catch (IOException e) {
             String errMsg = "IOException when sending message to [" + mobileNumber + "] ";
             Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);            
+            return results;           
 		}
-        Map<String, Object> results = ServiceUtil.returnSuccess();
+        //Map<String, Object> results = ServiceUtil.returnSuccess();
         results.put("communicationEventId", communicationEventId);        
         return results;
     }
