@@ -48,7 +48,7 @@
             </condition>        
         	<link target="FindProcProducer"/>
         </menu-item>
-        <menu-item name="Product" title="Product">       
+        <menu-item name="Product" title="${uiLabelMap.Product}">       
             <link target="FindYarnProducts">               
             </link>
         </menu-item>
@@ -87,7 +87,7 @@
             <link target="DepotSalesOrder">
             </link>
         </menu-item> -->
-        <menu-item name="FindPO" title="Purchase Order">
+        <menu-item name="FindPO" title="${uiLabelMap.PurchaseOrder}">
         	<condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
@@ -97,7 +97,7 @@
 	        </condition>
 	        	<link target="FindPO"/>
 	    </menu-item>
-	    <menu-item name="FindGRNReceipts" title="Receipt of Goods">
+	    <menu-item name="FindGRNReceipts" title="${uiLabelMap.ReceiptOfGoods}">
        		 <condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
@@ -107,7 +107,7 @@
 	        	<link target="FindGRNReceiptsDepot"/>
 	     </menu-item> 
       
-         <menu-item name="purchaseinvoice" title="Purchase Invoices">
+         <menu-item name="purchaseinvoice" title="${uiLabelMap.PurchaseInvoices}">
 		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -121,7 +121,7 @@
 			</link>
 		</menu-item>
 		
-		 <menu-item name="salesInvoice" title="Sales Invoices">
+		 <menu-item name="salesInvoice" title="${uiLabelMap.SalesInvoices}">
 		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -134,7 +134,7 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
-        <menu-item name="depotpayments" title="Payments">
+        <menu-item name="depotpayments" title="${uiLabelMap.Payments}">
 		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -148,7 +148,7 @@
 			</link>
 		</menu-item>
        
-	    <menu-item name="stockPositionDepotSales" title="Stock Position">
+	    <menu-item name="stockPositionDepotSales" title="${uiLabelMap.StockPosition}">
         	<condition>
         		<or>
 	        		<if-has-permission permission="DEPOTSALES" action="_STCK_PSTN"/>
@@ -157,11 +157,11 @@
         	</condition>
             <link target="stockPositionDepotSales"/>
         </menu-item>
-        <menu-item name="searchProduct" title="Product Master">
+        <menu-item name="searchProduct" title="${uiLabelMap.ProductMaster}">
             <link target="searchProduct">
             </link>
         </menu-item>
-        <menu-item name="analytics" title="Analytics">
+        <menu-item name="analytics" title="${uiLabelMap.Analytics}">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -170,7 +170,7 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        <menu-item name="DepotSalesReports" title="Reports">
+        <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
 	   		 <condition>
 				<or>
 	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
@@ -338,13 +338,13 @@
 			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
         		<link target="BranchSalesOrder"/>
         	 </menu-item> -->
-        	   	 <menu-item name="OrderPayment" title="Indent Payment">
+        	   	 <menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
 			<link target="orderPayment">
 				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
 				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
-        	  <menu-item name="processOrdersBranchSales" title="Indent Listing">
+        	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
@@ -364,13 +364,13 @@
 			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
         		<link target="BranchSalesOrder"/>
         	 </menu-item> -->
-        	   	 <menu-item name="IndentPortalOrderPayment" title="Indent Payment">
-			    <link target="orderPayment">
-				<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
-				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
-			   </link>
-		</menu-item>
-        	  <menu-item name="processOrdersBranchSales" title="Indent Listing">
+        	 <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
+			 	<link target="orderPayment">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+			   	</link>
+			 </menu-item>
+        	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
@@ -387,16 +387,16 @@
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
 	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
-			 <menu-item name="BranchSalesOrder" title="Indent Entry">
+			 <menu-item name="BranchSalesOrder" title="${uiLabelMap.IndentEntry}">
         		<link target="BranchSalesOrder"/>
         	 </menu-item>
-        	   	 <menu-item name="OrderPayment" title="Indent Payment">
+        	   	 <menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
 			<link target="orderPayment">
 				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
 				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
-        	  <menu-item name="processOrdersBranchSales" title="Indent Listing">
+        	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processOrdersBranchSales">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
@@ -414,7 +414,7 @@
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
 	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
-			 <menu-item name="IndentorBranchSalesOrder" title="Indent Entry">
+			 <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.IndentEntry}">
         		<link target="IndentorBranchSalesOrder"/>
         	 </menu-item>
         	 <!-- <menu-item name="OrderPayment" title="Indent Payment">
@@ -423,7 +423,7 @@
 				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
 			</link>
 		</menu-item>  -->
-        	  <menu-item name="IndentPortalBranchSales" title="Indent Listing">
+        	  <menu-item name="IndentPortalBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processIndentPortalBranchSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
@@ -751,7 +751,7 @@
         	</condition>
             <link target="StockPositionSubDepot"/>
          </menu-item>
-         <menu-item name="FindDepotTransPO" title="Purchase Order">
+         <menu-item name="FindDepotTransPO" title="${uiLabelMap.PurchaseOrder}">
         	<condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
@@ -760,7 +760,7 @@
 	        </condition>
 	        	<link target="FindDepotTransPO"/>
 	    </menu-item> 
-         <menu-item name="DepotTransReceipts" title="Receipt of Goods">
+         <menu-item name="DepotTransReceipts" title="${uiLabelMap.ReceiptOfGoods}">
        		 <condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
@@ -880,16 +880,16 @@
      <menu name="IndentPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
               default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
                
-              <menu-item name="IndentPortalBranchSales" title="Indent Listing">
+              <menu-item name="IndentPortalBranchSales" title="${uiLabelMap.IndentListing}">
             	 <link target="processIndentPortalBranchSales">
             		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
             		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
             	 </link>
              </menu-item>	
-    	         <menu-item name="IndentorBranchSalesOrder" title="Indent Entry">
+    	         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.IndentEntry}">
             		<link target="IndentorBranchSalesOrder"/>
             	 </menu-item>
-    			 <menu-item name="IndentPortalOrderPayment" title="Indent Payment">
+    			 <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
     			    <link target="IndentPortalOrderPayment">
     				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
     				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />

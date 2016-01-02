@@ -115,8 +115,8 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId" title="Indent Id"><text/></field>
-        <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
@@ -130,14 +130,13 @@
 	        	</drop-down>
         </field>
         <field name="findPoFlag"><hidden value="Y"/></field>  
-     <!-- 	<field name="partyId" title="Customer"><display></display></field>  -->
-     	<field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field> 
-     	<field name="branchId" title="Branch Name">
+     	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="branchId" title="Branch Name">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
         </field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
  
@@ -151,7 +150,7 @@
            </drop-down>
         </field> -->
         <field name="orderId" title="Indent Id"><text/></field>
-        <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
@@ -165,7 +164,7 @@
 	        	</drop-down>
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
-     	<field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field> 
+     	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -1235,8 +1234,8 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId" title="IndentId"><text/></field>
-        <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
@@ -1250,9 +1249,8 @@
 	        	</drop-down>
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
-        <field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field>  
-        <!-- <field name="partyId" title="Customer"><display></display></field>  -->
-     	<field name="branchId" title="Branch Name">
+     	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="branchId" title="Branch Name">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
@@ -1270,8 +1268,8 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId" title="IndentId"><text/></field>
-        <field title="Delivery Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
@@ -1285,7 +1283,7 @@
 	        	</drop-down>
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
-     	<field name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field> 
+     	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
