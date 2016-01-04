@@ -344,11 +344,8 @@
 					 
 				      totAmount = totAmount+eachpayment.get("amount");
 					 
-					  
-					  
 					  allOrderPayments.put("paymentPreferenceId",eachpayment.get("paymentPreferenceId"));
 					  allOrderPayments.put("amount",eachpayment.get("amount"));
-					  
 					  
 					  orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", eachpayment.get("paymentPreferenceId")), false);
 					  
@@ -361,8 +358,6 @@
 					  }
 				 
 			      PaymentStatusList = EntityUtil.getFieldListFromEntityList(PaymentList,"statusId", true);
-				  
-				  
 				  
 				  if(PaymentStatusList.contains("PMNT_CONFIRMED")){
 					  tempMap.put("statusId", "PMNT_CONFIRMED");
@@ -418,6 +413,31 @@
 	cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 	PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
 	
+	
+	allOrderIds = eachPaymentOrderMap.keySet();
+	
+	statusConfirmMap = [:];
+	
+	for (eachOrderId in allOrderIds) {
+		preferenceList = eachPaymentOrderMap.get(eachOrderId);
+		statusList = [];
+		if((preferenceList.amount)!=-1){
+			for (eachList in preferenceList) {
+				statusList.add(eachList.get("statusId"));
+			}
+		}
+		else{
+			statusList.add("PaymentNotDone");
+		}
+		if(statusList.contains("PMNT_RECEIVED")){
+			statusConfirmMap.put(eachOrderId, "visible");
+		}
+		else{
+			statusConfirmMap.put(eachOrderId, "NotVisible");
+		}
+	}
+	
+	context.statusConfirmMap = statusConfirmMap;
 	context.eachPaymentOrderMap = eachPaymentOrderMap;
 	context.PaymentMethodType = PaymentMethodType;
 	context.orderPreferenceMap = orderPreferenceMap;
@@ -435,4 +455,3 @@
 	
 	
 	//context.partyOBMap = partyOBMap;
-	

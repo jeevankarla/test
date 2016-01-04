@@ -332,10 +332,7 @@ public class DepotPurchaseServices{
 	  
 		String strInvoiceId = (String) request.getParameter("invoiceId");
 		
-		Debug.log("strInvoiceId========================"+strInvoiceId);
-		
 		GenericValue shipment =null;
-		
 		GenericValue invoiceList=null;
 		
 		try{
@@ -410,11 +407,11 @@ public class DepotPurchaseServices{
 	           
 	           List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, strInvoiceId));
-				EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				EntityCondition ficondExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				List<GenericValue> invoiceItemList =null;
 				
 				try{
-			      invoiceItemList = delegator.findList("InvoiceItem", condExpr, null, null, null, false);
+			      invoiceItemList = delegator.findList("InvoiceItem", ficondExpr, null, null, null, false);
 				} catch (Exception e) {
 					Debug.logError(e, "Problems while getting invoiceItems : " + invoiceId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Problems while getting invoiceItems : " + invoiceId);
@@ -422,8 +419,6 @@ public class DepotPurchaseServices{
 				}
 				
 				Debug.log("invoiceItemList======================"+invoiceItemList);
-				
-				 
 				
 				for (int i = 0; i < invoiceItemList.size(); i++) {
 					
@@ -493,11 +488,11 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 	           
-		   }  
+		    
 	          
 		   try{
 			   
-			   List conditionList = FastList.newInstance();
+			   conditionList.clear();
 			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 			   EntityCondition condExpress = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
@@ -518,16 +513,26 @@ public class DepotPurchaseServices{
 
 			  //enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
 			
-			   
-			 
-			
-			BigDecimal paidAmount = BigDecimal.ZERO;
+			  BigDecimal paidAmount = BigDecimal.ZERO;
 			
 			if (UtilValidate.isNotEmpty(paymentList)) {
 				for (GenericValue eachPayment : paymentList) {
 					
 					 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amount");
-					paidAmount = paidAmount.add(eachAmount);
+					 paidAmount = paidAmount.add(eachAmount);
+					 Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
+		            	newPayappl.put("invoiceId", invoiceId);
+		            	newPayappl.put("paymentId", eachPayment.get("paymentId"));
+		            	newPayappl.put("amountApplied", eachAmount);
+		            	
+		            Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+		            if(ServiceUtil.isError(paymentApplResult)){
+	           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(paymentApplResult), module);
+	           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Create Payment Application For :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(paymentApplResult));
+	           			return "error";
+	           		}
+		           	
+		           	
 				}
 			}
 			
@@ -577,13 +582,14 @@ public class DepotPurchaseServices{
 	        			//return "error";
 	             }
 	        }
-			
+		    
 		   }catch (Exception e) {
 				Debug.logError(e, "Problems while Calculating balance Amount for order: " + partyId, module);
 				request.setAttribute("_ERROR_MESSAGE_", "Problems while Calculating balance Amount for order: " + partyId);
 				return "error";
 			}
 		   
+		   }
 		   request.setAttribute("_EVENT_MESSAGE_", "Sales Invoice created sucessfully : "+partyId);   
 		
 		return "success";

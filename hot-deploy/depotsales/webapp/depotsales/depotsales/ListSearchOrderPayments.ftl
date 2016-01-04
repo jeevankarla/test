@@ -263,12 +263,9 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
-              	
 
-                     <#assign balance = 0>
-                     
-                    <#assign balance = paymentSatusMap.get(eachOrder.orderId).get("amount")>
-              	
+                 <#assign balance = 0>
+                 <#assign balance = paymentSatusMap.get(eachOrder.orderId).get("amount")>
                  <#if !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${balance}');"/></td>
               	 <#else>
@@ -282,18 +279,14 @@ under the License.
               	<#else>
               	<td></td>
               	</#if> -->
-                
                
-               
-                <#if ((paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED") && !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
+                <#if ((statusConfirmMap.get(eachOrder.orderId))=="visible") >
                  <td><input type="button" name="realize" id="realize" value="Payment Received" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
               	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
               	</#if>  
-                
-                
                 
                 <#if paymentSatusMap.get(eachOrder.orderId).get("amount")!=0>
               	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")}</td>
