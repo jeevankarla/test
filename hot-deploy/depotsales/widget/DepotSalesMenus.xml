@@ -380,6 +380,113 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
+       <menu name="VariantIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem3">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="SilkIndent" title="Slik Indent">
+				    <link target="SilkBranchSalesOrder">
+				    <parameter param-name="menuName" value="SilkIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="CottonIndent" title="Cotton Indent">
+				    <link target="CottonBranchSalesOrder">
+					<parameter param-name="menuName" value="CottonIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="OtherIndent" title="Other Indent">
+				    <link target="OtherBranchSalesOrder">
+						<parameter param-name="menuName" value="OtherIndent"/>
+				   </link>
+				</menu-item>
+        	   
+	      
+       </menu>
+<!--        silk indent entry  Tab Bar-->      
+       <menu name="SilkBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4" >
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="DirectIndent">
+				    <link target="SilkBranchSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="onBeHalf Indent">
+        	<link target="SilkMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+<!--        cotton indent entry tab bar -->
+       <menu name="CottonBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="DirectIndent">
+				    <link target="CottonBranchSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="onBeHalf Indent">
+        	<link target="CottonMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+<!--        other indent entry tab bar -->
+
+       <menu name="OtherBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="DirectIndent">
+				    <link target="OtherBranchSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="onBeHalf Indent">
+        	<link target="OtherMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+       
        
         <menu name="BranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
@@ -388,7 +495,7 @@
 	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
 			 <menu-item name="BranchSalesOrder" title="${uiLabelMap.IndentEntry}">
-        		<link target="BranchSalesOrder"/>
+        		<link target="SilkBranchSalesOrder"/>
         	 </menu-item>
         	   	 <menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
 			<link target="orderPayment">
