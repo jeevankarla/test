@@ -4144,7 +4144,7 @@
                                     </section>
                                     </decorator-section>
                                     <decorator-section name="search-options">
-                                        <include-form name="FindIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                       <include-form name="BranchFindIncomingAdvancesRefund" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     <container>
@@ -4205,7 +4205,7 @@
                         	</condition>
                             <widgets>
                                 <screenlet title="New Incoming Deposit">
-                                    <include-form name="NewIncomingAdvanceReceipt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    <include-form name="BranchNewIncomingAdvanceReceipt" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -4217,8 +4217,6 @@
             </widgets>
         </section>
     </screen>
-    
-    
     
      <screen name="BranchNewIncomingAdvancesRefund">
        <section>
@@ -4236,24 +4234,27 @@
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/GetPaymentsForParty.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <section>
+                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="NonRoutePaymentSubTabBar" />
+                    	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="BreanchIncomingAdvancesTabBar" />
+                            <section>
                         	<condition>
                         		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
                         	</condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-options">
-                                        <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                        <include-form name="BranchNewIncomingAdvancesRefund" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/PaymentRefunds.ftl"/></html>
                                        	</platform-specific>
                                     	<screenlet title="Possible Payments To Refund">
-                                            <include-form name="listPaymentsNotApplied" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                            <include-form name="BranchlistPaymentsNotApplied" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                         </screenlet>
                                     </decorator-section>
                                     
@@ -4272,16 +4273,4 @@
             </widgets>
         </section>
     </screen>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 </screens>
