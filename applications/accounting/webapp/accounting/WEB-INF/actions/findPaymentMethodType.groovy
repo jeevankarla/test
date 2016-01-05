@@ -33,6 +33,7 @@ if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	context.paymentMethodTypeList=paymentMethodTypeList;
 	}
+
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
 Map formatMap = [:];

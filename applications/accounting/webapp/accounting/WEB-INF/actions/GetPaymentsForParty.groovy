@@ -49,6 +49,7 @@
 		}
 	context.formatList = formatList;
 	
+	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, searchParentTypeId));
 	List paymentTypes = delegator.findList("PaymentType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);

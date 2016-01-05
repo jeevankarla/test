@@ -4144,7 +4144,7 @@
                                     </section>
                                     </decorator-section>
                                     <decorator-section name="search-options">
-                                        <include-form name="BranchFindIncomingAdvancesRefund" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                       <include-form name="BranchFindIncomingAdvancesRefund" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     <container>

@@ -959,6 +959,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BranchIncomingAdvancesRefund"/>
     </request-map>
+    
      <request-map uri="BranchcreateNewIncomingAdvanceReceipt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
