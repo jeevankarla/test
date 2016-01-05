@@ -18,6 +18,7 @@
 	import in.vasista.vbiz.facility.util.FacilityUtil;
 	import in.vasista.vbiz.byproducts.icp.ICPServices;
 	import in.vasista.vbiz.purchase.MaterialHelperServices;
+	import org.ofbiz.party.party.PartyHelper;
 	
 	
 	
@@ -130,6 +131,17 @@
 	//exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 	if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
 		catIds=["COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
+		
+		if(parameters.screenFlag){
+			if(parameters.screenFlag == "CottonIndent"){
+				catIds=["COTTON_40ABOVE","COTTON_UPTO40"];
+			}else if(parameters.screenFlag == "SilkIndent"){
+			catIds=["SILK_YARN"];
+			}else if(parameters.screenFlag == "OtherIndent"){
+			catIds=["WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
+			}
+		} 
+		
 		cndList=[];
 		cndList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,catIds));
 		EntityCondition cnd1 = EntityCondition.makeCondition(cndList, EntityOperator.AND);
@@ -341,4 +353,49 @@
 	  }
 	  context.productQuotaJSON = productQuotaJSON;
 	
+	  
+//individual customer json
+	  JSONArray indcustomerJson = new JSONArray();
+	  JSONObject indcustomerPsbNumJson = new JSONObject();
+	  
+	 // JSONArray indcustomerPsbNumJson = new JSONArray();
+	  JSONObject indcustomerLabelPsbNumJson = new JSONObject();
+	  
+	  
+	  condList=[];
+	 	  condList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS,"INDIVIDUAL_WEAVERS"));
+	  EntityCondition cond=EntityCondition.makeCondition(condList,EntityOperator.AND);
+	  List partyClassification=delegator.findList("PartyClassification",cond,null,null,null,false);
+	  if(partyClassification){
+	  partyIds=EntityUtil.getFieldListFromEntityList(partyClassification, "partyId", false)
+	 // Debug.log("partyIds======================"+partyIds);
+	  
+	 if(partyIds){
+			partyIds.each{ eachParty ->
+				JSONObject newObj = new JSONObject();
+				JSONObject newPsbObj = new JSONObject();
+				//JSONObject newPsbLabelObj = new JSONObject();
+				
+				newObj.put("value",eachParty);
+				partyName=PartyHelper.getPartyName(delegator, eachParty, false);
+				psbNo="";
+				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", eachParty, "partyIdentificationTypeId", "PSB_NUMER"), false);
+				if(partyIdentification){
+					psbNo = partyIdentification.get("idValue");
+				}
+				
+				newObj.put("label",partyName+"["+psbNo+"]");
+				indcustomerPsbNumJson.put(eachParty,psbNo);
+				indcustomerLabelPsbNumJson.put(partyName+"["+psbNo+"]",eachParty);
+				indcustomerJson.add(newObj);
+				//indcustomerPsbNumJson.add(newPsbObj);
+				//indcustomerLabelPsbNumJson.add(newPsbLabelObj);
+			}
+	 	}
+	  }
+	  //Debug.log("indcustomerJson====================="+indcustomerJson);
+	  //Debug.log("indcustomerLabelPsbNumJson====================="+indcustomerLabelPsbNumJson);
+	  context.indcustomerJson=indcustomerJson;
+	  context.indcustomerPsbNumJson=indcustomerPsbNumJson;
+	  context.indcustomerLabelPsbNumJson=indcustomerLabelPsbNumJson;
 	

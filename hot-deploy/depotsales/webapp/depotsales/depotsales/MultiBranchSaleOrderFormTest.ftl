@@ -175,7 +175,7 @@
 	</script>
 	
 	<#assign changeRowTitle = "Changes">                
-	<#include "BranchSalesOrderInternalForm.ftl"/>
+	<#include "MultiBranchSalesOrderInternalForm.ftl"/>
 	<#include "EditUDPPriceDepot.ftl"/>
 	
 	<div class="full">
@@ -188,11 +188,10 @@
 	    </div>
 
 	    <div class="screenlet-body">
-	    <#assign frmAction="BranchSalesOrder">
+	     <#assign frmAction="MultiBranchSalesOrder">
 	    <#if parameters.formAction?has_content>
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
-	    
 	    
 	    	<form method="post" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 		
@@ -203,7 +202,7 @@
 			           	<td>&nbsp;</td>
 			          	<td>&nbsp;</td>
 		       	  		<td>&nbsp;</td>
-						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
+						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if productStoreId?exists && productStoreId?has_content>  
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
@@ -234,7 +233,7 @@
 	               	<tr>
 	               		<td>&nbsp;</td>
 	               		
-	               		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
+	               		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Scheme Category</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
@@ -252,7 +251,7 @@
 	               					           	
 			           	<td>&nbsp;</td>
 			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
+			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Date:</div></td>
 			           		<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		          			<input type="hidden" name="isFormSubmitted"  value="YES" />
 					      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
@@ -282,7 +281,7 @@
 		       	  		
 		       	  		<td>&nbsp;</td>
 			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
+			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier :<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if suplierPartyId?exists && suplierPartyId?has_content>  
 					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
@@ -317,7 +316,7 @@
 		       	  		
 		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Indent Tax Type:</div></td>
 		       			<#if orderTaxType?exists && orderTaxType?has_content>  
 			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
 		          			<td valign='middle'>
@@ -335,7 +334,7 @@
 		       			<td>&nbsp;</td>
 		       	  		
 		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
-							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ReceivedDate}:</div></td>
+							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Received Date:</div></td>
 							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
 				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
 				   				<td valign='middle'>
@@ -359,7 +358,7 @@
 	               	<tr>
 		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> ${uiLabelMap.IndentType}:</div></td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
 			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
 			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
 			      			<td valign='middle'>
@@ -376,7 +375,7 @@
 		       			
 		       			<td>&nbsp;</td>
 		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
@@ -567,9 +566,9 @@
 						</div>	
 						-->
 				    	<div align="center">
-				    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
+				    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}}</@ofbizUrl>');"/>   	
+				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}</@ofbizUrl>');"/>   	
 				    	</div>     
 					</#if>
 					
