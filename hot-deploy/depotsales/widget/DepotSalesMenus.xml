@@ -677,6 +677,9 @@
           </menu-item>  
           <menu-item name="PayUBizInit" title="PayUBiz Payments Test">
             <link target="PayUBizInit"/>
+          </menu-item> 
+          <menu-item name="BranchAdvancePaymentsTab" title="Advance Payments">
+            <link target="BranchIncomingAdvancesReceived"/>
           </menu-item>   
            <!-- 
           <menu-item name="ChallanPayment" title="Challan">
@@ -699,6 +702,17 @@
             <link target="FindDepotSalesChequeReturns"/>
           </menu-item> -->      
     </menu>  
+      
+       <menu name="BreanchIncomingAdvancesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="BranchIncomingAdvancesReceived" title="Receipts">
+             <link target="BranchIncomingAdvancesReceived"></link>
+          </menu-item>
+          <menu-item name="BranchIncomingAdvancesRefund" title="Refunds">
+             <link target="BranchIncomingAdvancesRefund"></link>
+          </menu-item>
+    </menu>
+    
        <menu name="InventoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <!-- <menu-item name="SearchInventory" title="Find Inventory Totals">
             <link target="Receipts">
