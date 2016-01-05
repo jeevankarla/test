@@ -33,3 +33,19 @@ if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	context.paymentMethodTypeList=paymentMethodTypeList;
 	}
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+Map formatMap = [:];
+List formatList = [];
+
+	for (eachList in resultCtx.get("productStoreList")) {
+		
+		formatMap = [:];
+		formatMap.put("productStoreName",eachList.get("storeName"));
+		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+		formatList.addAll(formatMap);
+		
+	}
+	Debug.log("formatList============="+formatList);
+	
+context.formatList = formatList;

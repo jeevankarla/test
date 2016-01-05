@@ -37,6 +37,17 @@
 	//statusId = parameters.statusId;
 	statusId = "PMNT_VOID";
 	searchParentTypeId = context.searchParentType;
+	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+	Map formatMap = [:];
+	List formatList = [];
+	
+		for (eachList in resultCtx.get("productStoreList")) {
+			formatMap = [:];
+			formatMap.put("productStoreName",eachList.get("storeName"));
+			formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+			formatList.addAll(formatMap);
+		}
+	context.formatList = formatList;
 	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, searchParentTypeId));

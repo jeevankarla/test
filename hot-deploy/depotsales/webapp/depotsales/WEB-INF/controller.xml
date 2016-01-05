@@ -951,7 +951,6 @@
         <response name="success" type="view" value="PurchageOrderOverView"/>
         <response name="error" type="view" value="PurchageOrderOverView"/>
     </request-map>
-    
      <request-map uri="BranchIncomingAdvancesReceived">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BranchIncomingAdvancesReceived"/>
@@ -959,6 +958,15 @@
       <request-map uri="BranchIncomingAdvancesRefund">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BranchIncomingAdvancesRefund"/>
+    </request-map>
+     <request-map uri="BranchcreateNewIncomingAdvanceReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="BranchNewIncomingAdvanceReceived"/>
+    </request-map>
+    <request-map uri="BranchNewIncomingAdvancesRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingAdvancesRefund"/>
     </request-map>
     <request-map uri="BranchNewIncomingAdvanceReceived">
         <security https="true" auth="true"/>
