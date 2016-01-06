@@ -4302,8 +4302,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="SilkBranchIndentPortalTab"
@@ -4472,8 +4472,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="CottonBranchIndentPortalTab"
@@ -4642,8 +4642,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="OtherBranchIndentPortalTab"
@@ -4980,8 +4980,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="SilkBranchIndentPortalTab"
@@ -5153,8 +5153,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="CottonBranchIndentPortalTab"
@@ -5327,8 +5327,8 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
-						<include-menu name="BranchSalesEntryIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 							<include-menu name="VariantIndentPortalTab"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 							<include-menu name="OtherBranchIndentPortalTab"
