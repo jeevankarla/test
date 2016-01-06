@@ -38,6 +38,19 @@
        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
        <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="createOrderPayment" engine="java"
+           location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment">
+       <description>Creates a payment using the order payment preference</description>
+       <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
+       <attribute name="orderId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="amount" type="String" mode="IN" optional="false"/>
+       <attribute name="comments" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+       <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+       <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
+    </service>
     <service name="createDepotSalesReturnHeader" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createDepotSalesReturnHeader" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>

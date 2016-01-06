@@ -638,13 +638,13 @@
 	       <response name="failed" type="view" value="IndentPortalOrderPayment"/>  
 	    </request-map>
 	    
-       <request-map uri="createOrderPayment">
+	    <request-map uri="createOrderPayment">
           <security https="true" auth="true"/>
-          <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createOrderPayment"/>
           <response name="success" type="view" value="processOrdersBranchSales"/>   
          <response name="failed" type="view" value="orderPayment"/>  
       </request-map>
-      
        <request-map uri="createIndentorOrderPayment">
           <security https="true" auth="true"/>
           <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
