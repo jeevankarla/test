@@ -2682,30 +2682,38 @@ public class DepotSalesServices{
    
    	}
    	
-   	public static String  createOrderPayment(HttpServletRequest request, HttpServletResponse response) {
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-		DispatchContext dctx =  dispatcher.getDispatchContext();
-		Locale locale = UtilHttp.getLocale(request);
-
-		HttpSession session = request.getSession();
-	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	
+   		public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    Locale locale = (Locale) context.get("locale");
 		
-	    String paymentDate = (String) request.getParameter("paymentDate");
-	    String orderId = (String) request.getParameter("orderId");
-	  	String partyId = (String) request.getParameter("partyId");
-	  	String paymentMethodTypeId = (String) request.getParameter("paymentTypeId");
-	  	String amount = (String) request.getParameter("amount");
-	  	String comments = (String) request.getParameter("comments");
-	  	String paymentRefNum = (String) request.getParameter("paymentRefNum");
-	  	String issuingAuthority = (String) request.getParameter("issuingAuthority");
-	  	String inFavourOf = (String) request.getParameter("inFavourOf");
+	    String paymentDate = (String) context.get("paymentDate");
+	    String orderId = (String) context.get("orderId");
+	  	String partyId = (String) context.get("partyId");
+	  	String paymentMethodTypeId = (String) context.get("paymentTypeId");
+	  	String amount = (String) context.get("amount");
+	  	String comments = (String) context.get("comments");
+	  	String paymentRefNum = (String) context.get("paymentRefNum");
+	  	String issuingAuthority = (String) context.get("issuingAuthority");
+	  	String inFavourOf = (String) context.get("inFavourOf");
 	  	
-	  	Map<String,Object> result= ServiceUtil.returnSuccess();
+        Debug.log("paymentDate==============="+paymentDate);	  	
+
+        Debug.log("comments==============="+comments);	  	
+
+        
+        Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
+        Debug.log("amount==============="+amount);	  	
 	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_RECEIVED", "userLogin", userLogin);
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
      
+        Debug.log("serviceContext============"+serviceContext);
+
+	  	
 	  	Timestamp eventDate = null;
 	      if (UtilValidate.isNotEmpty(paymentDate)) {
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
@@ -2721,18 +2729,17 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+	         
+	         Debug.log("orderPaymentPreferenceId============"+orderPaymentPreferenceId);
+	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	  	} catch (GenericServiceException e) {
-	         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateOrderPaymentPreferenceService", locale);
-	         Debug.logError(e, errMsg, module);
-	         request.setAttribute("_ERROR_MESSAGE_",errMsg);
-				return "error";
+				 Debug.logError(e, e.toString(), module);
+				  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
 	  	}
-	     
-	  	request.setAttribute("_EVENT_MESSAGE_", (String)createCustPaymentFromPreferenceMap.get("successMessage")+" For "+orderId);
-	    return "success";
-	    
+	  	 result = ServiceUtil.returnSuccess("Successfully Payment Has Been Created For"+orderId);
+	  	return result;
 	}
    	
    	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
@@ -3858,7 +3865,7 @@ public class DepotSalesServices{
    	    		Debug.logError(e, module);
    			}
         }
-        Debug.log("productStoreList =========="+productStoreList);
+       // Debug.log("productStoreList =========="+productStoreList);
 		
 		result.put("productStoreList", productStoreList);
         return result;
