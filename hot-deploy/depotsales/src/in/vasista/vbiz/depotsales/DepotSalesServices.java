@@ -2702,7 +2702,7 @@ public class DepotSalesServices{
    	}
    	
 	
-   		public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+	public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2719,32 +2719,31 @@ public class DepotSalesServices{
 	  	String issuingAuthority = (String) context.get("issuingAuthority");
 	  	String inFavourOf = (String) context.get("inFavourOf");
 	  	
-        Debug.log("paymentDate==============="+paymentDate);	  	
-
-        Debug.log("comments==============="+comments);	  	
-
-        
-        Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
-        Debug.log("amount==============="+amount);	  	
+	    Debug.log("paymentDate==============="+paymentDate);	  	
+	
+	    Debug.log("comments==============="+comments);	  	
+	
+	    
+	    Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
+	    Debug.log("amount==============="+amount);	  	
 	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_RECEIVED", "userLogin", userLogin);
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
-     
-        Debug.log("serviceContext============"+serviceContext);
-
-	  	
+	 
+	    Debug.log("serviceContext============"+serviceContext);
+	
 	  	Timestamp eventDate = null;
-	      if (UtilValidate.isNotEmpty(paymentDate)) {
-		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
-				try {
-					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
-				} catch (ParseException e) {
-					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
-				} catch (NullPointerException e) {
-					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
-				}
+	  	if (UtilValidate.isNotEmpty(paymentDate)) {
+	  		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+			try {
+				eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
 			}
-	     
+		}
+     
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
@@ -2760,8 +2759,8 @@ public class DepotSalesServices{
 	  	 result = ServiceUtil.returnSuccess("Successfully Payment Has Been Created For"+orderId);
 	  	return result;
 	}
-   	
-   	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
+	
+	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
    		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -3884,12 +3883,259 @@ public class DepotSalesServices{
    	    		Debug.logError(e, module);
    			}
         }
-       // Debug.log("productStoreList =========="+productStoreList);
 		
 		result.put("productStoreList", productStoreList);
         return result;
     }
+   	public static Map<String, Object> getChildCategories(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String primaryParentCategoryId = (String) context.get("primaryParentCategoryId");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+   	    List<GenericValue> productCategory = null;
+   	 
+	   	 try{
+	   		productCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,primaryParentCategoryId), null, null, null, false);
+	   	 } catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		 }	
+	   	 result.put("childCategoriesList",productCategory);  
+	   	 return result;
+   	}
    	
+	public static Map<String, Object> getAttributeTypes(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productCategoryId = (String) context.get("productCategoryId");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+	   	List<GenericValue> productCategoryAttribute = null;
+	   	 
+	   	try{
+	   		productCategoryAttribute = delegator.findList("ProductCategoryAttribute", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId), null, null, null, false);
+	   	} catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		}	
+	   	
+	   	List<GenericValue> packingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PACKING"));
+	   	List<GenericValue> spinningTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "SPINNING"));
+	   	List<GenericValue> processingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PROCESSING"));
+	   	List<GenericValue> plyandcountTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PLYANDCOUNT"));
+	   	List<GenericValue> uomTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "UOM"));
+	   	
+	   	
+	   	    
+	   	result.put("packingTypes",packingTypes);
+	   	result.put("spinningTypes",spinningTypes);
+	   	result.put("processingTypes",processingTypes);
+	   	result.put("plyandcountTypes",plyandcountTypes);
+	   	result.put("uomTypes",uomTypes);
+	   	return result;
+	     	
+   	}
+	
+	public static Map<String, Object> CreateNewProduct(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productCategoryId = (String) context.get("productCategoryId");
+   	    String childProductCategoryId = (String) context.get("childProductCategoryId");
+   	    String subChildProductCategoryId = (String) context.get("subChildProductCategoryId");
+   	    String packingTypes = (String) context.get("packingTypes");
+   	    String spinningTypes = (String) context.get("spinningTypes");
+   	    String processingTypes = (String) context.get("processingTypes");
+   	    String ply = (String) context.get("ply");
+   	    String count = (String) context.get("count");
+   	    String uomTypes = (String) context.get("uomTypes");
+   	 
+   	    
+   	    Debug.log("packingTypes====="+packingTypes);
+	   	Debug.log("spinningTypes====="+spinningTypes);
+	   	Debug.log("processingTypes====="+processingTypes);
+	   	Debug.log("ply====="+ply);
+	   	Debug.log("count====="+count);
+   	    
+   	    
+   	    List<GenericValue> productCategoryAttribute = null;
+   	 
+	   	try{
+	   		productCategoryAttribute = delegator.findList("ProductCategoryAttribute", null, null, null, null, false);
+	   	} catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		}
+   	    
+	   	Debug.log("productCategoryAttribute====="+productCategoryAttribute);
+	   	
+	   	List<GenericValue> packingParentType = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, packingTypes));
+	   	List<GenericValue> spinningParentType = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, spinningTypes));
+	   	List<GenericValue> processingParentType = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, processingTypes));
+	   	List<GenericValue> plyandcountParentType = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrName", EntityOperator.IN, UtilMisc.toList(ply,count)));
+	   	List<GenericValue> uomParentType = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, uomTypes));
+	   	
+	   	Debug.log("packingParentType====="+packingParentType);
+	   	Debug.log("spinningParentType====="+spinningParentType);
+	   	Debug.log("processingParentType====="+processingParentType);
+	   	Debug.log("plyandcountParentType====="+plyandcountParentType);
+	   	Debug.log("uomParentType====="+uomParentType);
+	   	
+	   	String productName = "";
+	   	if(productCategoryId.equals("COTTON")){
+	   		productName = ply + "/" + count + uomTypes + processingTypes +  spinningTypes + packingTypes + subChildProductCategoryId + productCategoryId;
+	   	}
+	   	
+	   	Debug.log("productName====="+productName);
+	   	
+	   	
+	   	
+	   	
+	   	String productId = null;
+	   	GenericValue newEntity = delegator.makeValue("Product");
+		if(UtilValidate.isNotEmpty(productName)){
+        	newEntity.set("productName", productName);
+        }
+	   	
+	   	try {
+            delegator.createSetNextSeqId(newEntity);            
+            productId = (String) newEntity.get("productId");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+	   	
+	   	//Create product attributes
+	   	
+	   	Debug.log("productId======"+productId);
+	   	
+	   	GenericValue productAttribute = delegator.makeValue("ProductAttribute");
+	   	try{
+		   	if(UtilValidate.isNotEmpty(productId)){
+		   		productAttribute.set("productId", productId);
+	        }
+		   	if(UtilValidate.isNotEmpty(packingParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(packingParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", packingTypes);
+		   		delegator.createOrStore(productAttribute);
+	        }
+		   	Debug.log("1111111111111");
+		   	if(UtilValidate.isNotEmpty(spinningParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(spinningParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", spinningTypes);
+		   		delegator.createOrStore(productAttribute);
+	        }
+		   	Debug.log("2222222222222222");
+		   	if(UtilValidate.isNotEmpty(processingParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(processingParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", processingTypes);
+		   		delegator.createOrStore(productAttribute);
+	        }
+		   	Debug.log("3333333333333333333");
+		   	if(UtilValidate.isNotEmpty(plyandcountParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(plyandcountParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", ply);
+		   		delegator.createOrStore(productAttribute);
+	        }
+		   	Debug.log("4444444444444");
+		   	if(UtilValidate.isNotEmpty(plyandcountParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(plyandcountParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", count);
+		   		delegator.createOrStore(productAttribute);
+	        }
+		   	Debug.log("555555555555555");
+		   	if(UtilValidate.isNotEmpty(uomParentType)){
+		   		String attrName = (String)EntityUtil.getFirst(uomParentType).get("attrType");
+		   		productAttribute.set("attrName", attrName);
+		   		productAttribute.set("attrValue", uomTypes);
+		   		delegator.createOrStore(productAttribute);
+	        }
+   	    
+	   	} catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+   	    
+   	    return result;
+  	
+	}
+	public static Map<String, Object> getCategoryMembers(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productCategoryId = (String) context.get("productCategoryId");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    Timestamp now = UtilDateTime.nowTimestamp();
+   	    
+   	    List<GenericValue> productCategoryMember = null;
+   	    
+   	    List condsList = FastList.newInstance();
+	  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+	  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, now));
+	  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));
+		
+		EntityCondition priceCond = EntityCondition.makeCondition(condsList,EntityOperator.AND);
+		
+	   	try{
+	   		productCategoryMember = delegator.findList("ProductAndCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, UtilMisc.toList("productId", "productCategoryId", "productName"), null, false);
+	   	} catch (Exception e) {
+	   		Debug.logError(e, module);
+	   		return ServiceUtil.returnError(e.toString());
+	   	}	
+	   	result.put("productCategoryMembers",productCategoryMember);  
+	   	return result;
+   	}
+	public static Map<String, Object> getProductFeatures(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productCategoryId = (String) context.get("productCategoryId");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    Timestamp now = UtilDateTime.nowTimestamp();
+   	    
+   	    List<GenericValue> productFeatureCategoryList = null;
+   	    List productFeatureCategoryIdsList = FastList.newInstance();
+   	    Map featuresByCategoryMap = FastMap.newInstance();
+   	    
+   	    try {
+   	    	List<GenericValue> productFeatureCategoryAppls = delegator.findByAndCache("ProductFeatureCategoryAppl", UtilMisc.toMap("productCategoryId", productCategoryId));
+   	    	productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
+   	    	productFeatureCategoryIdsList = EntityUtil.getFieldListFromEntityList(productFeatureCategoryAppls, "productFeatureCategoryId", true);
+   	    	
+   	    	try {
+   	    		productFeatureCategoryList = delegator.findList("ProductFeatureCategory", EntityCondition.makeCondition("productFeatureCategoryId", EntityOperator.IN, productFeatureCategoryIdsList), null, null, null, false);
+   			} catch (GenericEntityException e) {
+   				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+   				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+   			}
+   	    	
+   	    	if (productFeatureCategoryAppls != null) {
+   	    		for (GenericValue productFeatureCategoryAppl: productFeatureCategoryAppls) {
+   	    			List<GenericValue> productFeatures = delegator.findByAndCache("ProductFeature", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryAppl.get("productFeatureCategoryId")));
+   	    			featuresByCategoryMap.put(((String)productFeatureCategoryAppl.get("productFeatureCategoryId")), productFeatures);
+   	    		}
+   	    	}
+   	    } catch (GenericEntityException e) {
+   	    	Debug.logError(e, "Error getting feature categories associated with the category with ID: " + productCategoryId, module);
+   	    }	
+   	    Debug.log("featuresByCategoryMap =========="+featuresByCategoryMap);
+   	    Debug.log("productFeatureCategoryList =========="+productFeatureCategoryList);
+	   	result.put("featuresByCategoryMap",featuresByCategoryMap); 
+	   	result.put("productFeatureCategoryIdsList",productFeatureCategoryIdsList);
+	   	result.put("productFeatureCategoryList",productFeatureCategoryList); 
+	   	return result;
+   	}
    	
    	
 }

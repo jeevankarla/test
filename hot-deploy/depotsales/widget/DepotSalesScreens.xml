@@ -3981,7 +3981,39 @@
             </widgets>
          </section>
     </screen>
+    
     <screen name="CreateNewYarnProductScreen">
+   		<section>
+   			<actions>
+   				<set field="titleProperty" value="Create New Product" />
+   				<set field="tabButtonItem" value="Product" />
+   				<entity-condition list="productCategoryList" entity-name="ProductCategory">
+   					<condition-list>
+   						<condition-expr field-name="primaryParentCategoryId" operator="in" value="NATURAL_FIBERS,SYNTH_ARTIFIBER"/>
+   					</condition-list>
+   				</entity-condition>
+   				<!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/CreateNewProduct.groovy" /> -->
+   			</actions>
+   			<widgets>
+ 					<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+ 						<decorator-section name="body"> 
+ 							<section>
+ 								<widgets>
+ 									<screenlet title="Create New Product">
+ 										<platform-specific>
+ 												<html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreateNewProduct.ftl" /></html>
+ 										</platform-specific>
+ 									</screenlet>
+ 								</widgets>
+ 							</section>
+ 						</decorator-section>
+   				</decorator-screen>
+   			</widgets>
+   		</section>
+	</screen>
+    
+    
+    <!-- <screen name="CreateNewYarnProductScreen">
        <section>
             <actions>
                 <set field="titleProperty" value="New Product"/>
@@ -3992,7 +4024,7 @@
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<!-- <include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <section>
                         	
                             <widgets>
@@ -4013,7 +4045,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     
     <screen name="BranchIncomingAdvancesReceived">
         <section>
@@ -5468,5 +5500,4 @@
 			</widgets>
 		</section>
 	</screen>
-    
 </screens>

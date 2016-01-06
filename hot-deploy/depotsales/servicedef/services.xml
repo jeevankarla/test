@@ -127,5 +127,44 @@
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
         <attribute name="productStoreList" mode="OUT" type="List" optional="true"/>
     </service>
+    
+    <service name="getChildCategories" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getChildCategories">
+        <description>Get Child Categories</description>
+        <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="childCategoriesList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="getAttributeTypes" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getAttributeTypes">
+        <description>Get Child Categories</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="packingTypes" type="List" mode="OUT" optional="true"/>
+        <attribute name="spinningTypes" type="List" mode="OUT" optional="true"/>
+        <attribute name="processingTypes" type="List" mode="OUT" optional="true"/>
+        <attribute name="plyandcountTypes" type="List" mode="OUT" optional="true"/>
+        <attribute name="uomTypes" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="newProductCreation" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreateNewProduct">
+        <description>Create New Product</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="childProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="subChildProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="packingTypes" type="String" mode="IN" optional="false"/>
+        <attribute name="spinningTypes" type="String" mode="IN" optional="false"/>
+        <attribute name="processingTypes" type="String" mode="IN" optional="false"/>
+        <attribute name="ply" type="String" mode="IN" optional="false"/>
+        <attribute name="count" type="String" mode="IN" optional="false"/>
+        <attribute name="uomTypes" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="getCategoryMembers" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCategoryMembers">
+        <description>Get Category Members</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryMembers" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="getProductFeatures" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getProductFeatures">
+        <description>Get Child Categories</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="featuresByCategoryMap" type="Map" mode="OUT" optional="true"/>
+        <attribute name="productFeatureCategoryList" type="List" mode="OUT" optional="true"/>
+        <attribute name="productFeatureCategoryIdsList" type="List" mode="OUT" optional="true"/>
+    </service>
 </services>
 
