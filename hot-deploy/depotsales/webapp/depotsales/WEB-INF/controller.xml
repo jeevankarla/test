@@ -984,6 +984,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BranchNewIncomingAdvancesRefund"/>
     </request-map>
+    
     <request-map uri="findInventoryTransfer">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="DepotSalesInventoryTransfer"/>
@@ -1030,25 +1031,65 @@
        <event type="service"  invoke="populateBranchDepots"/>        
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
-    </request-map>    
+    </request-map>   
+    
+    <!-- Product -->
+    <request-map uri="CreateNewProduct">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="CreateNewProduct"/>   
+      <response name="error" type="view" value="CreateNewProduct"/>  
+	</request-map>
+	<request-map uri="getCategoryMembersAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getCategoryMembers"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="getProductFeaturesAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getProductFeatures"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="getChildCategoriesAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getChildCategories"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="getSubChildCategoriesAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getSubChildCategories"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="getAttributeTypesAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getAttributeTypes"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="createNewProduct">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="newProductCreation"/>        
+       <response name="success" type="view" value="CreateNewProduct"/>
+       <response name="error" type="view" value="CreateNewProduct"/>    
+    </request-map> 
         
     <!-- View Mappings -->
     
+    <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateNewProduct"/>
     <view-map name="FindYarnProducts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindYarnProducts"/>
 	<view-map name="CreateNewYarnProductScreen" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewYarnProductScreen"/>
 	    
     <view-map name="IndentorPortalScreen" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalScreen"/>
     <view-map name="processIndentPortalBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentPortalBranchSales"/>
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
-     <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
-     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
-     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
+    <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
+    <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
+    <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
     <view-map name="IndentPortalOrderPayment" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentPortalOrderPayment"/>
-    
-    
-    
-    
     
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
     <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>
@@ -1068,10 +1109,11 @@
     <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
     <view-map name="ProcessIndentBranchOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessIndentBranchOrders"/>
    
-   <view-map name="BranchIncomingAdvancesReceived" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchIncomingAdvancesReceived"/>
-   <view-map name="BranchIncomingAdvancesRefund" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchIncomingAdvancesRefund"/>
-   <view-map name="BranchNewIncomingAdvanceReceived" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchNewIncomingAdvanceReceived"/>
-   <view-map name="BranchNewIncomingAdvancesRefund" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchNewIncomingAdvancesRefund"/>
+    <view-map name="BranchIncomingAdvancesReceived" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchIncomingAdvancesReceived"/>
+    <view-map name="BranchIncomingAdvancesRefund" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchIncomingAdvancesRefund"/>
+    <view-map name="BranchNewIncomingAdvanceReceived" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchNewIncomingAdvanceReceived"/>
+    <view-map name="BranchNewIncomingAdvancesRefund" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchNewIncomingAdvancesRefund"/>
+   
    
    
     <view-map name="FindDepotBranchSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotBrachShipment"/>
