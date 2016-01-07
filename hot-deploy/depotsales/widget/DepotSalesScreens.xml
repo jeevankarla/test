@@ -178,7 +178,7 @@
 	<screen name="EditBranchIndent">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="changeFlag" value="EditDepotSales" />
@@ -386,7 +386,7 @@
 	<screen name="ProcessBranchOrders">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Process Indent" />
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="processOrdersBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -413,7 +413,7 @@
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                     	 <container style="button-bar">
-											<link target="SilkBranchSalesOrder" text="Create New Indent" style="buttontext create h2">
+											<link target="SilkBranchSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
 											</link>
 										</container>
                                     </decorator-section>
@@ -2981,7 +2981,7 @@
     <screen name="BranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="changeFlag" value="DepotSales" />
@@ -4310,7 +4310,7 @@
     <screen name="SilkBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="SilkIndent" />
@@ -4480,7 +4480,7 @@
     <screen name="CottonBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Cotton Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="CottonIndent" />
@@ -4650,7 +4650,7 @@
     <screen name="OtherBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="OtherIndent" />
@@ -4821,7 +4821,7 @@
     <screen name="MultiBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="MultiBranchSalesOrder" />
 				<set field="changeFlag" value="DepotSales" />
@@ -4988,7 +4988,7 @@
     <screen name="SilkMultiBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Silk Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="SilkIndent" />
@@ -5161,7 +5161,7 @@
     <screen name="CottonMultiBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Cotton Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="CottonIndent" />
@@ -5335,7 +5335,7 @@
     <screen name="OtherMultiBranchSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Other Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="OtherIndent"/>

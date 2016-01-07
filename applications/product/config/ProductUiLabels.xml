@@ -25440,4 +25440,43 @@
         <value xml:lang="hi_IN">उत्पाद मास्टर</value>
     </property>
     
+    <property key="ProcessIndent">
+        <value xml:lang="en">Process Indent</value>
+        <value xml:lang="hi_IN">प्रक्रिया इंडेंट</value>
+    </property>
+    <property key="CommercialModule">
+        <value xml:lang="en">Commercial Module</value>
+        <value xml:lang="hi_IN">वाणिज्यिक मॉड्यूल</value>
+    </property>
+    <property key="CreateNewIndent">
+        <value xml:lang="en">Create New Indent</value>
+        <value xml:lang="hi_IN">नए इंडेंट बनाएं</value>
+    </property>
+    <property key="SilkIndent">
+        <value xml:lang="en">Silk Indent</value>
+        <value xml:lang="hi_IN">सिल्क इंडेंट</value>
+    </property>
+    <property key="CottonIndent">
+        <value xml:lang="en">Cotton Indent</value>
+        <value xml:lang="hi_IN">कपास इंडेंट</value>
+    </property>
+    <property key="OtherIndent">
+        <value xml:lang="en">Other Indent</value>
+        <value xml:lang="hi_IN">अन्य इंडेंट</value>
+    </property>
+    <property key="DirectIndent">
+        <value xml:lang="en">Direct Indent</value>
+        <value xml:lang="hi_IN">प्रत्यक्ष इंडेंट</value>
+    </property>
+    <property key="onBeHalfIndent">
+        <value xml:lang="en">On-BeHalf Indent</value>
+        <value xml:lang="hi_IN">की ओर से इंडेंट</value>
+    </property>
+    <property key="Quantity">
+        <value xml:lang="en">Quantity</value>
+        <value xml:lang="hi_IN">मात्रा</value>
+    </property>
+    
+    
+    
 </resource>
