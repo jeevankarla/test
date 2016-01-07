@@ -186,7 +186,6 @@ under the License.
         <li class="control-area">
           <ul id="preferences-menu">
             <#if userLogin?exists>
-              <li class="first"><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
               <#if orgName?has_content>              
                 <li class="org">${orgName}</li>
               </#if>            
@@ -200,6 +199,7 @@ under the License.
                 <li class="org">${defaultOrganizationPartyGroupName}</li>
               </#if>              
             </#if>
+            <li class="user"><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
             <#if userLogin?exists>
               <li class="user"><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
             <#else>
