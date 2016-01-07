@@ -191,7 +191,7 @@
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                     	 <container style="button-bar">
-											<link target="IndentorBranchSalesOrder" text="Create New Indent" style="buttontext create h2">
+											<link target="SilkIndentorSalesOrder" text="Create New Indent" style="buttontext create h2">
 											</link>
 										</container>
                                     </decorator-section>
@@ -574,5 +574,1200 @@
 	</screen>
 	
 	
-	
+    
+    <!-- Silk Branch Sales -->
+    <screen name="SilkIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Silk Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="SilkIndent" />
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="SilkIndent"/>
+				<set field="parameters.formAction" value="SilkIndentorSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <include-menu name="IndentPortalMainTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="SilkIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SilkIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SilkIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<!-- Cotton Branch Sales -->   
+    <screen name="CottonIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Cotton  Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="CottonIndent" />
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="CottonIndent"/>
+				<set field="parameters.formAction" value="CottonIndentorSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="CottonIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="CottonIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="CottonIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CottonIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CottonIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<!-- Other Branch Sales -->  
+    <screen name="OtherIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Other Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="OtherIndent" />
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="OtherIndent"/>
+				<set field="parameters.formAction" value="OtherIndentorSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="OtherIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="OtherIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="OtherIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="OtherIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="OtherIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+<!-- Branch Sales multiple wievers screens --> 
+    <screen name="MultiBranchSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="MultiBranchSalesOrder" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="MultiBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="MultiBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MultiBranchSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MultiBranchSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+
+
+
+<!-- Branch Silk multiple wievers screens -->
+    <screen name="SilkMultiIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Silk Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="SilkIndent" />
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="SilkIndent"/>
+				<set field="parameters.formAction" value="SilkMultiIndentorSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="SilkIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkMultiIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkMultiIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SilkMultiIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SilkMultiIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+
+<!-- Branch Cotton multiple wievers screens --> 
+    <screen name="CottonMultiIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Cotton  Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="CottonIndent" />
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.formAction" value="CottonMultiIndentorSalesOrder"/>
+				<set field="parameters.screenFlag" value="CottonIndent"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="CottonIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="CottonMultiIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="CottonMultiIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CottonMultiIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CottonMultiIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+
+
+<!-- Branch Other multiple wievers screens -->
+    <screen name="OtherMultiIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Other Branch Sales Entry" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="OtherIndent"/>
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.formAction" value="OtherMultiIndentorSalesOrder"/>
+				<set field="parameters.screenFlag" value="OtherIndent"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="OtherIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="OtherMultiIndentorSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="OtherMultiIndentorSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="OtherMultiIndentorSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="OtherMultiIndentorSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiIndentorBranchSale.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+    
 </screens>

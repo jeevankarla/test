@@ -596,6 +596,13 @@
        <request-map uri="OtherMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherMultiBranchSalesOrder"/></request-map>
     
     <request-map uri="IndentorBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="IndentorBranchSalesOrder"/></request-map>
+   <request-map uri="SilkIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkIndentorSalesOrder"/></request-map>
+    <request-map uri="CottonIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonIndentorSalesOrder"/></request-map>
+    <request-map uri="OtherIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherIndentorSalesOrder"/></request-map>
+       <request-map uri="MultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="MultiIndentorSalesOrder"/></request-map>
+       <request-map uri="SilkMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkMultiIndentorSalesOrder"/></request-map>
+       <request-map uri="CottonMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonMultiIndentorSalesOrder"/></request-map>
+       <request-map uri="OtherMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherMultiIndentorSalesOrder"/></request-map>
    
    
     <request-map uri="processBranchSalesOrder">
@@ -1101,9 +1108,16 @@
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
     <view-map name="CottonMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonMultiBranchSalesOrder"/>
     <view-map name="OtherMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherMultiBranchSalesOrder"/>
-    
+<!--     indentor portal screens -->
     <view-map name="IndentorBranchSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorBranchSalesOrder"/>
-    
+     <view-map name="SilkIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#SilkIndentorSalesOrder"/>
+    <view-map name="CottonIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#CottonIndentorSalesOrder"/>
+    <view-map name="OtherIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#OtherIndentorSalesOrder"/>
+    <view-map name="MultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#MultiIndentorSalesOrder"/>
+    <view-map name="SilkMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#SilkMultiIndentorSalesOrder"/>
+    <view-map name="CottonMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#CottonMultiIndentorSalesOrder"/>
+    <view-map name="OtherMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#OtherMultiIndentorSalesOrder"/>
+<!--     indentor portal screens end -->
     
     
     <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>

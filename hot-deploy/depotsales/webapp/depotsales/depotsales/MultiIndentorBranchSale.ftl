@@ -14,13 +14,12 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
-			 $("#societyfield").hide();
 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
-				minDate: new Date(),
+				//minDate: new Date(),
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
@@ -175,7 +174,7 @@
 	</script>
 	
 	<#assign changeRowTitle = "Changes">                
-	<#include "BranchSalesOrderInternalForm.ftl"/>
+	<#include "MultiIndentorSalesOrderInternalForm.ftl"/>
 	<#include "EditUDPPriceDepot.ftl"/>
 	
 	<div class="full">
@@ -188,7 +187,7 @@
 	    </div>
 
 	    <div class="screenlet-body">
-	    <#assign frmAction="IndentorBranchSalesOrder">
+	     <#assign frmAction="MultiIndentorBranchSalesOrder">
 	    <#if parameters.formAction?has_content>
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
@@ -213,7 +212,7 @@
 				          		</td>       
 				          	</#if>
 				    	<#else>
-							<#if parameters.productStoreId?exists>  
+							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div class='tabletext h3'>
@@ -222,7 +221,7 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" onblur='javascript:getParties(this);' />
+				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
 				          		</td>
 				          	</#if>
 			        	</#if>
@@ -242,9 +241,9 @@
 		       			<#else>      	         
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>
 		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
+		          					<option value="MGPS">MGPS</option>
+		          					<option value="General">General</option>	          					
 		          				</select>
 		          			</td>
 		       			</#if>
@@ -367,7 +366,7 @@
 			   			<#else>      	         
 			      			<td valign='middle'>
 			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
-			      					<option value="Direct"> Direct </option>
+			      					<#--><option value="Direct"> Direct </option>-->
 			      					<option value="onBehalfOf"> On Behalf Of </option>
 			      				</select>
 			      			</td>

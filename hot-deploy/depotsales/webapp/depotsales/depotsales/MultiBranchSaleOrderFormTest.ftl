@@ -14,7 +14,6 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
-			 $("#societyfield").hide();
 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
