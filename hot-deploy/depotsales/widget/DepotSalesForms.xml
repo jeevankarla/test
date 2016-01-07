@@ -131,7 +131,7 @@
         </field>
         <field name="findPoFlag"><hidden value="Y"/></field>  
      	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
-        <field name="branchId" title="Branch Name">
+        <field name="branchId" title="${uiLabelMap.Branch}">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
@@ -1250,7 +1250,7 @@
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
      	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
-        <field name="branchId" title="Branch Name">
+        <field name="branchId" title="${uiLabelMap.Branch}">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
