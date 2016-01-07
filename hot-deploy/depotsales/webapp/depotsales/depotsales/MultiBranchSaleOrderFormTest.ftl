@@ -367,7 +367,7 @@
 			   			<#else>      	         
 			      			<td valign='middle'>
 			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
-			      					<option value="Direct"> Direct </option>
+			      					<#--><option value="Direct"> Direct </option>-->
 			      					<option value="onBehalfOf"> On Behalf Of </option>
 			      				</select>
 			      			</td>
