@@ -38,7 +38,7 @@
 	<screen name="ProcessIndentBranchOrders">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Process Indent" />
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="processOrdersBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -65,7 +65,7 @@
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                     	 <container style="button-bar">
-											<link target="BranchSalesOrder" text="Create New Indent" style="buttontext create h2">
+											<link target="BranchSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
 											</link>
 										</container>
                                     </decorator-section>
@@ -164,7 +164,7 @@
     	<screen name="processIndentPortalBranchSales">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Process Indent" />
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
 				<set field="tabButtonItem" value="IndentPortalBranchSales" />
 				<set field="tabButtonItem2" value="processIndentPortalBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
@@ -191,7 +191,7 @@
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                     	 <container style="button-bar">
-											<link target="SilkIndentorSalesOrder" text="Create New Indent" style="buttontext create h2">
+											<link target="SilkIndentorSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
 											</link>
 										</container>
                                     </decorator-section>
