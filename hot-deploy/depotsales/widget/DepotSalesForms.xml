@@ -149,7 +149,7 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="orderId" title="Indent Id"><text/></field>
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
