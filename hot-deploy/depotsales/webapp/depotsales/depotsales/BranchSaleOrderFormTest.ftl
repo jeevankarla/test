@@ -174,8 +174,12 @@
 	 
 	</script>
 	
-	<#assign changeRowTitle = "Changes">                
-	<#include "BranchSalesOrderInternalForm.ftl"/>
+	<#assign changeRowTitle = "Changes">   
+	<#if parameters.formAction?has_content && (parameters.formAction=="SilkBranchSalesOrder" || parameters.formAction=="OtherBranchSalesOrder")>
+		<#include "SilkBranchSalesOrderInternalForm.ftl"/>
+	<#else>
+		<#include "BranchSalesOrderInternalForm.ftl"/>
+	</#if>
 	<#include "EditUDPPriceDepot.ftl"/>
 	
 	<div class="full">
