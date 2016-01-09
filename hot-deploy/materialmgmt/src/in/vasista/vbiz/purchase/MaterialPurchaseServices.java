@@ -3180,6 +3180,28 @@ public class MaterialPurchaseServices {
 				
 			}
 			
+			
+			List<GenericValue> orderAssocList = null;
+
+            try {
+            	orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);            	
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                orderAssocList = null;
+            }
+            if (orderAssocList != null) {
+	            try {
+	            	GenericValue orderAssoc = EntityUtil.getFirst(orderAssocList);
+	
+	            	orderAssoc.remove();
+	            	Debug.log("order Association Removed!");
+	            } catch (GenericEntityException e) {
+	 	        	Debug.logError("error while removing order Association" + orderId, module);
+	
+	            }
+            }
+
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
