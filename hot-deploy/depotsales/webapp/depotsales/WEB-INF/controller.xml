@@ -654,7 +654,7 @@
       </request-map>
        <request-map uri="createIndentorOrderPayment">
           <security https="true" auth="true"/>
-          <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/>
+           <event type="service" path="" invoke="createOrderPayment"/>
           <response name="success" type="view" value="processIndentPortalBranchSales"/>   
          <response name="failed" type="view" value="processIndentPortalBranchSales"/>  
       </request-map>

@@ -481,7 +481,7 @@
 						
 	               	</tr>
 	               	</#if>
-				<#if party?exists && party?has_content>
+				<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
 					<tr>
 					</tr>
 					<#else>
