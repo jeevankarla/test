@@ -240,8 +240,9 @@ under the License.
               	<#assign isCreditInstution=eachOrder.isCreditInstution>
               	</#if>
               	
-              	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 >
-              	<td></td>
+              	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 && (eachOrder.get('statusId') != "ORDER_APPROVED")>
+					<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
+                	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#elseif (eachOrder.get('statusId') == "ORDER_APPROVED")>
               	  <td>Approved</td>
               	<#elseif ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>

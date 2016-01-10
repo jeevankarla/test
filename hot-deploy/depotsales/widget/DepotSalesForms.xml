@@ -632,6 +632,13 @@
       		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
       		<set field="size" value="${groovy: return(orderItemList.size())}"/>
+      		<entity-condition entity-name="OrderRole" list="orderRoleList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="customerId" value="${orderRoleList[0].partyId}"/>
       		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
@@ -655,7 +662,8 @@
       			<parameter param-name="orderId"/>
       		</hyperlink>
       	</field>
-      	<field name="orderItemSeqId"><display></display></field>
+      	<field name="customerId"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, customerId, false);} - [${customerId}]"></display></field>
+<!--       	<field name="orderItemSeqId"><display></display></field> -->
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
