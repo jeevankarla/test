@@ -104,7 +104,7 @@
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 			 </or>
 	        </condition>
-	        	<link target="FindGRNReceiptsDepot"/>
+	        	<link target="FindGRNShipmentsDepot"/>
 	     </menu-item> 
       
          <menu-item name="purchaseinvoice" title="${uiLabelMap.PurchaseInvoices}">
@@ -659,9 +659,9 @@
        
        <menu name="ReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindGRNReceipts" title="Find GRN Items">
+        <!-- <menu-item name="FindGRNReceipts" title="Find GRN Items">
         	<link target="FindGRNReceiptsDepot"/>
-        </menu-item>
+        </menu-item> -->
         <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceiptsDepot"/>
         </menu-item> -->
@@ -695,9 +695,9 @@
       
          <menu name="IndentorReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindGRNReceipts" title="Find GRN Items">
+        <!-- <menu-item name="FindGRNReceipts" title="Find GRN Items">
         	<link target="IndentorFindGRNReceiptsDepot"/>
-        </menu-item>
+        </menu-item> -->
         <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceiptsDepot"/>
         </menu-item> -->
@@ -734,9 +734,9 @@
       
       <menu name="DepotTransReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="DepotTransReceipts" title="Find GRN Items">
+        <!-- <menu-item name="DepotTransReceipts" title="Find GRN Items">
         	<link target="DepotTransReceipts"/>
-        </menu-item>
+        </menu-item> -->
        <!--  <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
         	<link target="DepotTransMaterialReceipts"/>
         </menu-item> -->
@@ -1003,7 +1003,7 @@
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 			 </or>
 	        </condition>
-	        	<link target="DepotTransReceipts"/>
+	        	<link target="FindDepotTransGRNShipments"/>
 	     </menu-item> 
 	      <menu-item name="PhysicalInventory" title="Sales Indent">
 	      <condition>
@@ -1107,7 +1107,7 @@
 		</menu-item>
 		
 		<menu-item name="IndentReceitGoodsMain" title="${uiLabelMap.ReceiptOfGoods}">
-			<link target="IndentorFindGRNReceiptsDepot"></link>
+			<link target="IndentorFindGRNShipments"></link>
 		</menu-item>
 		
       </menu>
