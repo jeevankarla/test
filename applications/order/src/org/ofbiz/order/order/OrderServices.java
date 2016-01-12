@@ -7604,19 +7604,19 @@ public class OrderServices {
            paymentParams.put("userLogin", userLogin);
 
            Map<String, Object> paymentDetailsMap = dispatcher.runSync("createPayment", paymentParams);
+           String paymentId = "";
            
            if (UtilValidate.isNotEmpty(paymentDetailsMap)) {
-        	   String paymentId = (String) paymentDetailsMap.get("paymentId");
+        	    paymentId = (String) paymentDetailsMap.get("paymentId");
         	    GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
 	  	        paymentAttribute.put("attrValue",inFavourOf);
 	  	        paymentAttribute.create();
-        	   
            }
+           Map<String, Object> result = new HashMap<String, Object>();
+          
+           result.put("paymentId",paymentId);
            
-           Map<String, Object> result = ServiceUtil.returnSuccess("Payment of amount "+amount+" has been successfully received");
-
            return result;
-           
        } catch (GenericEntityException ex) {
            Debug.logError(ex, "Unable to create payment using payment preference.", module);
            return(ServiceUtil.returnError(ex.getMessage()));

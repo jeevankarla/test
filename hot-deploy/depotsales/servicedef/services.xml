@@ -45,11 +45,14 @@
        <attribute name="orderId" type="String" mode="IN" optional="true"/>
        <attribute name="partyId" type="String" mode="IN" optional="true"/>
        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
-       <attribute name="amount" type="String" mode="IN" optional="false"/>
+       <attribute name="amount" type="String" mode="IN" optional="true"/>
        <attribute name="comments" type="String" mode="IN" optional="true"/>
        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
        <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
+       <attribute name="advPayments" type="List" mode="IN" optional="true"/>
+       <attribute name="allStatus" type="List" mode="IN" optional="true"/>
+       <attribute name="advPaymentIds" type="List" mode="IN" optional="true"/>
     </service>
     <service name="createDepotSalesReturnHeader" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createDepotSalesReturnHeader" >
         <description>Create a new Depot Sales ReturnHeader</description>
