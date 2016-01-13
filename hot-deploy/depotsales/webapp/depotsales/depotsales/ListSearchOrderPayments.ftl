@@ -265,8 +265,11 @@ under the License.
               	</#if>-->
 
                  <#assign balance = 0>
-                 <#assign balance = paymentSatusMap.get(eachOrder.orderId).get("amount")>
-                 <#if !((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
+                 <#assign balance = (balanceAmountMap.get(eachOrder.orderId)).get("balance")>
+                
+                
+                
+                 <#if (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
               	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${balance}');"/></td>
               	 <#else>
               	 <td></td>
@@ -288,12 +291,12 @@ under the License.
               	<td>Payment Not Received</td>
               	</#if>  
                 
-                <#if paymentSatusMap.get(eachOrder.orderId).get("amount")!=0>
-              	<td>${paymentSatusMap.get(eachOrder.orderId).get("amount")}</td>
+                <#if (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")!=-1>
+              	<td>${(balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")}</td>
               	 <#else>
               	 <td></td>
               	 </#if>
-              		<td>
+              	  <td>
               	  <#--<td><a class="buttontext" href="<@ofbizUrl>realizeStatus?userLogin=${userLogin}&&paymentPreferenceId=10000</@ofbizUrl>">Payment Received</a></td>
               	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	 

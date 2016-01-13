@@ -267,6 +267,7 @@
 		Alert(message, title);
 	}
 
+var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrderMap)}	
 
 
    function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
@@ -274,15 +275,31 @@
 		orderId = orderId;
 		partyId = partyId;
 		
-		finalBal = grandTotal-balance;
+		//finalBal = grandTotal-balance;
+		
+		
+		var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
 		grandTotal = grandTotal;
 		partyName= partyName;
 		
 		
-		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
+		
+		
+		   if(paymentList[0].paymentId != "NoAdvance"){
 			
+			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Balance</td><td align='left' class='h3' width='50%'>Select Balance</td></tr>";          
+	        for (i = 0; i < paymentList.length; i++) {
+		         if(paymentList[i].balance!=0)
+		         {
+		         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left'  width='60%'>" + paymentList[i].balance + "</td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPaymentIds' value='"+paymentList[i].paymentId+"'/></td></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
+		         }
+		       }
+		  }
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
@@ -290,9 +307,9 @@
 	                   </#list>
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' value='"+finalBal+"'  onblur='javascript:amountCheck(finalBal);'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+finalBal+"</td></tr>"+
-                        "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf'  value='NHDC' readonly/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' onblur='javascript:amountCheck(balance);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+balance+"</td></tr>"+
+                        "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf'  /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
@@ -302,10 +319,9 @@
 				 		
                 		
 					message +=	"</table></form></body></html>";
-		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
+		var title = "Dues vamsi Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
 	}
-
 
     function showPaymentEntryForIndentorIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
 		var message = "";

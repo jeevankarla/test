@@ -2702,7 +2702,7 @@ public class DepotSalesServices{
    	}
    	
 	
-	public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+   	public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2718,32 +2718,35 @@ public class DepotSalesServices{
 	  	String paymentRefNum = (String) context.get("paymentRefNum");
 	  	String issuingAuthority = (String) context.get("issuingAuthority");
 	  	String inFavourOf = (String) context.get("inFavourOf");
+	  	List advancePayments = (List) context.get("advPayments");
+	  	List allStatus = (List) context.get("allStatus");
+	  	List advPaymentIds = (List) context.get("advPaymentIds");
 	  	
-	    Debug.log("paymentDate==============="+paymentDate);	  	
-	
-	    Debug.log("comments==============="+comments);	  	
-	
-	    
-	    Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
-	    Debug.log("amount==============="+amount);	  	
+	  	Debug.log("advancePayments==============="+advancePayments);
+        Debug.log("paymentDate==============="+paymentDate);	  	
+        Debug.log("comments==============="+comments);
+        Debug.log("allStatus==============="+allStatus);
+        Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
+        Debug.log("amount==============="+amount);
+        Debug.log("advPaymentIds==============="+advPaymentIds);
+        
+        if(UtilValidate.isNotEmpty(amount)){
 	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_RECEIVED", "userLogin", userLogin);
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
-	 
-	    Debug.log("serviceContext============"+serviceContext);
-	
+	  	
 	  	Timestamp eventDate = null;
-	  	if (UtilValidate.isNotEmpty(paymentDate)) {
-	  		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
-			try {
-				eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
-			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
-			} catch (NullPointerException e) {
-				Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+	      if (UtilValidate.isNotEmpty(paymentDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+				try {
+					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
 			}
-		}
-     
+	     
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
@@ -2752,13 +2755,107 @@ public class DepotSalesServices{
 	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
-	  	} catch (GenericServiceException e) {
+	         Debug.log("createCustPaymentFromPreferenceMap============"+createCustPaymentFromPreferenceMap.get("paymentId"));
+	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
+	         GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
+	        
+	         orderPreferencePaymentApplication.set("orderPaymentPreferenceId", orderPaymentPreferenceId);
+	         orderPreferencePaymentApplication.set("paymentId",paymentId);
+	         orderPreferencePaymentApplication.set("amountApplied", new BigDecimal(amount));
+				delegator.createSetNextSeqId(orderPreferencePaymentApplication);
+	  	
+	  	} catch (Exception e) {
 				 Debug.logError(e, e.toString(), module);
 				  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
 	  	}
+       }
+        if(UtilValidate.isNotEmpty(allStatus)){
+	         
+	         for (int i = 0; i < advancePayments.size(); i++) {
+	        	 
+		         if(allStatus.contains(String.valueOf(i))){
+		        	 
+//		        	 Debug.log("=====iiiiiiii======="+i);
+//			         Debug.log("=====iiiiiiii======="+advancePayments.get(i));
+			         
+			         BigDecimal balance = BigDecimal.ZERO;
+			         BigDecimal grandTotal = BigDecimal.ZERO;
+			         
+			         try {
+				         GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+				         
+				         grandTotal = orderHeader.getBigDecimal("grandTotal");
+				         
+				         List conditionList = FastList.newInstance();
+				         conditionList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+				         conditionList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+				         EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				    	 List<GenericValue> OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+				    	 List<String> orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+				         
+				        conditionList.clear();
+			   	        conditionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, orderPreferenceIds));
+			   	        EntityCondition conditionPay = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   	        List<GenericValue> OrderPreferencePaymentApplication = delegator.findList("OrderPreferencePaymentApplication", conditionPay, null, null, null, false);
+					   	    
+			   	        BigDecimal paidAmount = BigDecimal.ZERO;
+				         
+			   	        if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplication))
+			   	        {
+					        for (GenericValue eachValue : OrderPreferencePaymentApplication) {
+					        	paidAmount = paidAmount.add(eachValue.getBigDecimal("amountApplied"));
+							}  
+			   	        }
+			   	         balance = grandTotal.subtract(paidAmount);  
+			       }catch (Exception e) {
+						 Debug.logError(e, e.toString(), module);
+						  return ServiceUtil.returnError("Error While Calculating Applied Amount");	
+			  	      }
+			        if(balance.floatValue()!=0){  
+			         
+			            Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_CONFIRMED", "userLogin", userLogin);
+				 	  	String orderPaymentPreferenceId = null;
+				 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
+				 	  	try {
+				 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+				 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+			                }
+				 	  	   catch (Exception e) {
+							 Debug.logError(e, e.toString(), module);
+							  return ServiceUtil.returnError("Error While Creating OrderPayment Preference");	
+				  	      }
+				 	  	try{
+				 	  		
+				 	  	   GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
+				 	  	   String frompaymentId =(String)advPaymentIds.get(i);
+				 	  	   String advPay = (String)advancePayments.get(i);
+				 	  	   // BigDecimal amountApplied = new BigDecimal(balance);
+				 	  	   
+				 	  	   //Debug.log("amountApplied======"+i+"======="+amountApplied);
+				 	       Debug.log("orderPaymentPreferenceId===="+i+"========="+orderPaymentPreferenceId);
+				 	  	   Debug.log("frompaymentId======="+i+"======"+frompaymentId);
+				 	  	   
+				 	  	   orderPreferencePaymentApplication.set("orderPaymentPreferenceId", orderPaymentPreferenceId);
+				           orderPreferencePaymentApplication.set("paymentId",frompaymentId);
+				           
+				           if(balance.floatValue()>Integer.parseInt(advPay)){
+				           orderPreferencePaymentApplication.set("amountApplied", new BigDecimal(advPay));
+				           }else{
+				        	   orderPreferencePaymentApplication.set("amountApplied", balance);   
+				           }
+				           delegator.createSetNextSeqId(orderPreferencePaymentApplication);
+				 	  	}catch (Exception e) {
+							 Debug.logError(e, e.toString(), module);
+							  return ServiceUtil.returnError("Error While Creating Order Preference Payment Application");	
+				  	      }
+			        }
+			 	  	
+		         }
+			}
+        }
 	  	 result = ServiceUtil.returnSuccess("Successfully Payment Has Been Created For"+orderId);
 	  	return result;
-	}
+   }
 	
 	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
    		

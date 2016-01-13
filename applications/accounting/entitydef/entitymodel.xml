@@ -5393,6 +5393,24 @@
 			<key-map field-name="parentTypeId" rel-field-name="finAcntTrnsGrpTypeId" />
 		</relation>
 	</entity>
+	
+	<entity entity-name="OrderPreferencePaymentApplication" package-name="org.ofbiz.accounting.payment"
+		title="Order Preference Payment Application">
+		
+		  <field name="applicationId" type="id-ne"></field>
+		  <field name="orderPaymentPreferenceId" type="id-ne"></field>
+		  <field name="paymentId" type="id-ne"></field>
+		  <field name="amountApplied" type="currency-amount"></field>
+		  <prim-key field="applicationId" />
+	
+	     <relation type="one" fk-name="ORDPRE_PMT" rel-entity-name="Payment">
+			<key-map field-name="paymentId"  rel-field-name="paymentId"/>
+		 </relation>
+		 <relation type="one" fk-name="ORDPRE_PREF" rel-entity-name="OrderPaymentPreference">
+			<key-map field-name="orderPaymentPreferenceId" />
+		 </relation>
+	</entity>
+	
 	<entity entity-name="FinAccountTransGroupMember" package-name="org.ofbiz.accounting.finaccount"
 		title="Payment Group Member Entity">
 		<description>FinAccountTrans Group Member</description>
