@@ -23626,6 +23626,7 @@
         <value xml:lang="de">Lieferant</value>
         <value xml:lang="en">Supplier</value>
         <value xml:lang="hi_IN">प्रदायक</value>
+        <value xml:lang="ta">ஜவுளி ஆலை</value>
         <value xml:lang="es">Proveedor</value>
         <value xml:lang="fr">Fournisseur</value>
         <value xml:lang="it">Fornitore</value>
@@ -25324,6 +25325,7 @@
     <property key="BranchSalesIndent">
         <value xml:lang="en">Branch Sales Indent</value>
         <value xml:lang="hi_IN">शाखा बिक्री इंडेंट</value>
+        <value xml:lang="ta">மூலப்பொருள் தேவை</value>
     </property>
     <property key="Receipts">
         <value xml:lang="en">Receipts</value>
@@ -25333,36 +25335,43 @@
     <property key="IndentEntry">
         <value xml:lang="en">Indent Entry</value>
         <value xml:lang="hi_IN">मांगपत्र प्रविष्टि</value>
+        <value xml:lang="ta">மூலப்பொருள் கோரிக்கை</value>
     </property>
     
     <property key="IndentListing">
         <value xml:lang="en">Indent Listing</value>
         <value xml:lang="hi_IN">इंडेंट लिस्टिंग</value>
+        <value xml:lang="ta">மூலப்பொருள் தேவை பட்டியல்</value>
     </property>
     
     <property key="IndentPayment">
         <value xml:lang="en">Indent Payment</value>
         <value xml:lang="hi_IN">इंडेंट भुगतान</value>
+        <value xml:lang="ta">மூலப்பொருள்க்கான பணம் செலுத்த</value>
     </property>
     
     <property key="IndentId">
         <value xml:lang="en">Indent Id</value>
         <value xml:lang="hi_IN">इंडेंट पहचान</value>
+        <value xml:lang="ta">தேவை எண்</value>
     </property>
     
     <property key="IndentDate">
         <value xml:lang="en">Indent Date</value>
         <value xml:lang="hi_IN">इंडेंट दिनांक</value>
+        <value xml:lang="ta">தேவை தேதி</value>
     </property>
     
     <property key="Customer">
         <value xml:lang="en">Customer</value>
         <value xml:lang="hi_IN">ग्राहक</value>
+        <value xml:lang="ta">நுகர்வோர்</value>
     </property>
     
     <property key="Product">
         <value xml:lang="en">Product</value>
         <value xml:lang="hi_IN">उत्पाद</value>
+        <value xml:lang="ta">பொருள் விளக்கம்</value>
     </property>
     
     <property key="PurchaseOrder">
@@ -25373,31 +25382,37 @@
     <property key="ReceiptOfGoods">
         <value xml:lang="en">Receipt of Goods</value>
         <value xml:lang="hi_IN">चीजों की रसीद</value>
+        <value xml:lang="ta">மூலப்பொருள் ஒப்புகை</value>
     </property>
     
     <property key="Branch">
         <value xml:lang="en">Branch</value>
         <value xml:lang="hi_IN">शाखा</value>
+        <value xml:lang="ta">கிளை அலுவலகம்</value>
     </property>
     
     <property key="SchemeCategory">
         <value xml:lang="en">Scheme Category</value>
         <value xml:lang="hi_IN">योजना श्रेणी</value>
+        <value xml:lang="ta">திட்ட வகை</value>
     </property>
     
     <property key="IndentTaxType">
         <value xml:lang="en">Indent Tax Type</value>
         <value xml:lang="hi_IN">इंडेंट टैक्स प्रकार</value>
+        <value xml:lang="ta">வரி வகை</value>
     </property>
     
     <property key="IndentType">
         <value xml:lang="en">Indent Type</value>
         <value xml:lang="hi_IN">इंडेंट प्रकार</value>
+        <value xml:lang="ta">தேவை வகை</value>
     </property>
     
     <property key="ReceivedDate">
         <value xml:lang="en">Received Date</value>
         <value xml:lang="hi_IN">प्राप्त तारीख</value>
+        <value xml:lang="ta">பெறப்பட்ட தேதி</value>
     </property>
     
     <property key="BranchSalesEntry">
@@ -25447,36 +25462,48 @@
     <property key="CommercialModule">
         <value xml:lang="en">Commercial Module</value>
         <value xml:lang="hi_IN">वाणिज्यिक मॉड्यूल</value>
+        <value xml:lang="ta">வணிக பகுதி</value>
     </property>
     <property key="CreateNewIndent">
         <value xml:lang="en">Create New Indent</value>
         <value xml:lang="hi_IN">नए इंडेंट बनाएं</value>
+        <value xml:lang="ta">தேவை உருவாக்கம்</value>
     </property>
     <property key="SilkIndent">
         <value xml:lang="en">Silk Indent</value>
         <value xml:lang="hi_IN">सिल्क इंडेंट</value>
+        <value xml:lang="ta">பட்டு தேவை</value>
     </property>
     <property key="CottonIndent">
         <value xml:lang="en">Cotton Indent</value>
         <value xml:lang="hi_IN">कपास इंडेंट</value>
+        <value xml:lang="ta">பருத்தி தேவை</value>
     </property>
     <property key="OtherIndent">
         <value xml:lang="en">Other Indent</value>
         <value xml:lang="hi_IN">अन्य इंडेंट</value>
+        <value xml:lang="ta">மற்ற தேவை</value>
     </property>
     <property key="DirectIndent">
         <value xml:lang="en">Direct Indent</value>
         <value xml:lang="hi_IN">प्रत्यक्ष इंडेंट</value>
+        <value xml:lang="ta">நேரடி தேவை</value>
     </property>
     <property key="onBeHalfIndent">
         <value xml:lang="en">On-BeHalf Indent</value>
         <value xml:lang="hi_IN">की ओर से इंडेंट</value>
+        <value xml:lang="ta">சார்பில் தேவை</value>
     </property>
     <property key="Quantity">
         <value xml:lang="en">Quantity</value>
         <value xml:lang="hi_IN">मात्रा</value>
+        <value xml:lang="ta">அளவு</value>
     </property>
-    
+    <property key="Status">
+        <value xml:lang="en">Status</value>
+        <value xml:lang="hi_IN">स्थिति</value>
+        <value xml:lang="ta">நிலை</value>
+    </property>
     
     
 </resource>
