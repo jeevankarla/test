@@ -86,6 +86,12 @@
         <attribute name="allStatus" type="List" mode="IN" optional="true"/>
         <attribute name="paymentStatus" type="List" mode="IN" optional="true"/>
     </service>
+     <service name="preferenceCancel" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="preferenceCancel">
+        <description>Issue Products to Order</description>
+        <attribute name="preferenceIds" type="List" mode="IN" optional="false"/>
+        <attribute name="allStatus" type="List" mode="IN" optional="true"/>
+    </service>
+    
     <service name="createInventoryXferRequest" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createStockXferRequest">
     	<attribute name="transferDate" mode="IN" type="String" optional="true"/>
     	<attribute name="transferGroupId" mode="IN" type="String" optional="true"/>
