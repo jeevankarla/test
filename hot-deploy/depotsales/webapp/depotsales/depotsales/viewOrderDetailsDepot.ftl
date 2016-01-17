@@ -280,6 +280,8 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		
 		var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
+		
+		
 		grandTotal = grandTotal;
 		partyName= partyName;
 		
@@ -428,11 +430,13 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		
 	}
 	
+	
+	
 	var eachPaymentOrderMap = ${StringUtil.wrapString(eachPaymentOrderMap)}	
 
    
 	
-  function realizeStatusChange(orderId) {
+  function realizeStatusChange1(orderId) {
 	        	
 	      
 	        	
@@ -457,6 +461,42 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
          }
 		   //message +=  "<tr class='h3'><td align='left' class='h3' width='20%'>Are You Sure </td><td align='left' class='h3' width='20%'>Want to Change </td><td align='left' class='h3' width='20%'> Payment Status to Payment Realized. </td></tr>";
 			message += "<tr class='h3'><td></td><td></td><td align='center'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
+					message +=	"</table></form></body></html>";
+		var title = "Indent Status";
+		Alert(message, title); 
+    }	
+	
+	
+	
+	var paymentPreferenceCancellMap = ${StringUtil.wrapString(paymentPreferenceCancellMap)}	
+
+   
+	
+  function realizeStatusChange(orderId) {
+	        	
+	      
+	        	
+	  var orderId = orderId;
+	  
+	   var paymentList = paymentPreferenceCancellMap[orderId];
+		var message = "";
+		
+		message += "<html><head></head><body><form action='preferenceCancel' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
+			
+			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Actual Amount</td><td align='left' class='h3' width='50%'>Applied Balance</td><td align='left' class='h3' width='50%'>Cancel Applied Balance</td></tr>";          
+	        for (i = 0; i < paymentList.length; i++) {
+		         if(paymentList[i].paymentId!="notApplied")
+		         {
+		         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentId + "</pre></td><td align='left' width='50%'>" + paymentList[i].actualAmount + "</td><td align='left'  width='60%'>" + paymentList[i].amountApplied + "</td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='preferenceIds' value='"+paymentList[i].preferenceId+"'/></td></tr>";
+		        // message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
+		         }
+		       }
+
+		   //message +=  "<tr class='h3'><td align='left' class='h3' width='20%'>Are You Sure </td><td align='left' class='h3' width='20%'>Want to Change </td><td align='left' class='h3' width='20%'> Payment Status to Payment Realized. </td></tr>";
+			//message += "<tr class='h3'><td></td><td></td><td align='center'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
+			message +="<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			
 					message +=	"</table></form></body></html>";
 		var title = "Indent Status";
 		Alert(message, title); 

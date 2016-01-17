@@ -3183,6 +3183,37 @@ public class DepotSalesServices{
    	}
    	
    	
+   	public static Map<String, Object> preferenceCancel(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    Locale locale = (Locale) context.get("locale");     
+	    Map result = ServiceUtil.returnSuccess();
+   	    
+   	    List preferenceIds = (List) context.get("preferenceIds");
+     	List allStatus = (List) context.get("allStatus");
+     	
+   	    for (int i = 0; i < preferenceIds.size(); i++) {
+			
+   	    	if((allStatus.contains(String.valueOf(i)) == true)){
+			     try {	
+			        GenericValue OrderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", preferenceIds.get(i)), false);
+			    	
+			        Debug.log("OrderPaymentPreferenceList================"+OrderPaymentPreferenceList);
+			        
+					   	     OrderPaymentPreferenceList.set("statusId","PMNT_VOID");
+					   	      OrderPaymentPreferenceList.store();
+			        
+			     }catch (Exception e) {
+					Debug.logError(e, "Error While change OrderPaymentPreference Status", module);
+					return ServiceUtil.returnError("Error While change OrderPaymentPreference Status");
+				}
+   	    	}
+		}
+   	    result = ServiceUtil.returnSuccess("Successfully Changed Payment Status!!");
+   	    return result;
+   	}
+   	
    	public static Map<String, Object> realizeStatus(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();

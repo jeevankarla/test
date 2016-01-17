@@ -781,6 +781,12 @@
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
     
+     <request-map uri="preferenceCancel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="preferenceCancel"/>
+        <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
+    </request-map>
      <request-map uri="indentorRealizeStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="realizeStatus"/>

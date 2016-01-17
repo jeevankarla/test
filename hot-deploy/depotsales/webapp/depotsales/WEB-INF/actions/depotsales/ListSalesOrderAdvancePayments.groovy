@@ -22,7 +22,7 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.entity.GenericValue;
 
 
-Debug.log("orderList=====Other====="+orderList);
+//Debug.log("orderList==4546554646===Other====="+orderList);
 
 
 partyIdsList = []as HashSet;
@@ -33,7 +33,7 @@ for (eachList in orderList) {
 	
 }
 
-//List partyIdsList = ["36456"];
+//List partyIdsList = ["35564"];
 
 
 JSONObject eachAdvancePaymentOrderMap = new JSONObject();
@@ -56,7 +56,7 @@ for (String eachPartyList : partyIdsList) {
 		   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 		   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 		   
-		   //Debug.log("PaymentList============"+PaymentList.size());
+		   Debug.log("PaymentList=====4444======="+PaymentList);
 		   
 		   JSONArray advanceList = new JSONArray();
 		   
@@ -73,8 +73,23 @@ for (String eachPartyList : partyIdsList) {
 				   conditonList = [];
 				   conditonList.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.EQUALS,eachPaymentList.paymentId));
 				   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-				   OrderPreferencePaymentApplicationList = delegator.findList("OrderPreferencePaymentApplication", cond, null, null, null ,false);
+				   OrderPrefePaymentApplicationList = delegator.findList("OrderPreferencePaymentApplication", cond, null, null, null ,false);
 				
+				   
+				   orderPreferenceAppliedIds = EntityUtil.getFieldListFromEntityList(OrderPrefePaymentApplicationList,"orderPaymentPreferenceId", true);
+				  
+				   conditonList.clear();
+				   conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceAppliedIds));
+				   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
+				   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+				   OrderPaymentPreferenceList = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+				
+				   actualOrderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreferenceList,"orderPaymentPreferenceId", true);
+				   
+				   
+				   OrderPreferencePaymentApplicationList = EntityUtil.filterByCondition(OrderPrefePaymentApplicationList, EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, actualOrderPreferenceIds));
+				   
+				   
 				  // Debug.log("OrderPreferencePaymentApplicationList============="+OrderPreferencePaymentApplicationList);
 				   
 				   appliedAmount = 0;
@@ -89,6 +104,9 @@ for (String eachPartyList : partyIdsList) {
 				   
 				   }
 				   balance = mainBalance-appliedAmount;
+				   
+				   Debug.log("balance==========="+balance);
+				   
 				   if(balance>0){
 				   tempMap.put("paymentId",eachPaymentList.paymentId);
 				   tempMap.put("amount",mainBalance);
@@ -116,7 +134,7 @@ for (String eachPartyList : partyIdsList) {
 			    }
 }
 
-Debug.log("eachAdvancePaymentOrderMap============"+eachAdvancePaymentOrderMap);
+//Debug.log("eachAdvancePaymentOrderMap============"+eachAdvancePaymentOrderMap);
 
 context.eachAdvancePaymentOrderMap = eachAdvancePaymentOrderMap;
 
@@ -124,6 +142,9 @@ context.eachAdvancePaymentOrderMap = eachAdvancePaymentOrderMap;
 balanceAmountMap = [:];
 
 
+JSONObject paymentPreferenceCancellMap = new JSONObject();
+
+advancePaymentVisible = [:];
 
 for (eachOrder in orderList) {
 	
@@ -139,16 +160,63 @@ for (eachOrder in orderList) {
 	 condtList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 	 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 	 OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
-	 getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
 	 orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+
+	 	 
+	 //for advance cancel
+	 OrderPaymentPreferenceApplied = EntityUtil.filterByCondition(OrderPaymentPreference, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+	 orderPreferenceAppliedIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreferenceApplied,"orderPaymentPreferenceId", true);
 	
+	 
+	  OrderPreferencePaymentApplication = delegator.findList("OrderPreferencePaymentApplication", null, null, null, null ,false);
+	
+	   
 	conditonList.clear();
 	conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
 	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-	OrderPreferencePaymentApplicationList = delegator.findList("OrderPreferencePaymentApplication", cond, null, null, null ,false);
+	OrderPreferencePaymentApplicationList = EntityUtil.filterByCondition(OrderPreferencePaymentApplication, cond);
 	
-	//Debug.log("OrderPreferencePaymentApplicationList=============="+OrderPreferencePaymentApplicationList);
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceAppliedIds));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderPreferencePaymentApplicationaAppliedList = EntityUtil.filterByCondition(OrderPreferencePaymentApplication, cond);
+
 	
+	JSONArray advanceAppliedList = new JSONArray();
+	
+	if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationaAppliedList))
+	{	
+
+		advancePaymentVisible.put(eachOrder.orderId, "visible");
+		
+	for (eachList in OrderPreferencePaymentApplicationaAppliedList) {
+
+		  tempMap = [:];
+		
+		  paymentList=delegator.findOne("Payment",[paymentId : eachList.paymentId], false);
+		  
+		  tempMap.put("preferenceId", eachList.orderPaymentPreferenceId);
+		  tempMap.put("paymentId", eachList.paymentId);
+		  tempMap.put("actualAmount", paymentList.amount);
+		  tempMap.put("amountApplied", eachList.amountApplied);
+		  advanceAppliedList.add(tempMap);
+	}
+	paymentPreferenceCancellMap.put(eachOrder.orderId, advanceAppliedList);
+	}
+	else{
+		
+		advancePaymentVisible.put(eachOrder.orderId, "notVisible");
+		tempMap = [:];
+		
+		  tempMap.put("preferenceId", "notApplied");
+		  tempMap.put("paymentId", "notApplied");
+		  tempMap.put("amountApplied", "notApplied");
+		  advanceAppliedList.add(tempMap);
+		  
+		  paymentPreferenceCancellMap.put(eachOrder.orderId, advanceAppliedList);
+	}
+	
+		
 	appliedAmount = 0;
 	
 	if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationList)){
@@ -187,8 +255,9 @@ for (eachOrder in orderList) {
 	
 }
 
-Debug.log("balanceAmountMap=========="+balanceAmountMap);
+//Debug.log("balanceAmountMap=========="+balanceAmountMap);
+//Debug.log("paymentPreferenceCancellMap=========="+paymentPreferenceCancellMap);
 
-
+context.paymentPreferenceCancellMap = paymentPreferenceCancellMap;
 context.balanceAmountMap = balanceAmountMap;
-
+context.advancePaymentVisible = advancePaymentVisible;

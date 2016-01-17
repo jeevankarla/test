@@ -214,10 +214,11 @@ under the License.
           <#-- <td>Print Indent</td>
           <td>Edit Batch</td>
           <td>Approve</td>
-         <td>DC Report</td>-->
+          <td>DC Report</td>-->
            <td>Indent Payment</td>
-           <#-- <td>Payment</td> -->
+          <#-- <td>Payment</td> -->
            <td>Payment Status</td>
+           <td>Advance Payments</td>
              <td>Received Amount</td>
             <#-- <td>Indent Status</td>-->
         <#--  <td>Edit</td>
@@ -283,13 +284,28 @@ under the License.
               	<td></td>
               	</#if> -->
                
-                <#if ((statusConfirmMap.get(eachOrder.orderId))=="visible") >
+              <#--  <#if ((statusConfirmMap.get(eachOrder.orderId))=="visible") >
                  <td><input type="button" name="realize" id="realize" value="Payment Received" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
               	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
               	<td>Payment Realized</td>
               	<#else>
               	<td>Payment Not Received</td>
-              	</#if>  
+              	</#if>  -->
+                
+                <#if (eachOrder.orderTotal) == (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
+                <td>Payment Realized</td>
+                <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")==-1>
+                <td>Payment Not Received</td>
+                <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
+                <td>Payment Received</td>
+                </#if>
+                
+                <#if (advancePaymentVisible.get(eachOrder.orderId)) != "notVisible">
+                <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
+                <#else>
+                <td></td>
+                </#if>
+                
                 
                 <#if (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")!=-1>
               	<td>${(balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")}</td>
