@@ -165,6 +165,11 @@
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
      	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
+       <field name="branchId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -1292,6 +1297,11 @@
         </field>
          <field name="findPoFlag"><hidden value="Y"/></field>  
      	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="branchId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

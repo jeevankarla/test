@@ -10,6 +10,8 @@ import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
  
 if(UtilValidate.isEmpty(parameters.productId)){
+	
+	
 	if(UtilValidate.isNotEmpty(result.listIt)){
 		list=result.listIt;
 		resultList = [];
@@ -32,8 +34,15 @@ if(UtilValidate.isEmpty(parameters.productId)){
 				}
 			}
 		}
-		context.listIt=resultList;
-		
+		sortedOrderMap =  [:]as TreeMap;
+		for (eachList in resultList) {
+			sortedOrderMap.put(eachList.orderId, eachList);
+		}
+		Collection allValues = sortedOrderMap.values();
+		List basedList = [];
+		basedList.addAll(allValues);
+		context.listIt = basedList.reverse();
+		//context.listIt=resultList;
 	}
 }
 else{
@@ -55,7 +64,6 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		}
 	list.close();
 	}
-
 context.listIt=poListNew;
 
 }

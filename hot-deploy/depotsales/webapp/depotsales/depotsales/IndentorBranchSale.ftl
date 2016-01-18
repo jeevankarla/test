@@ -362,7 +362,7 @@
 	               	<tr>
 		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> ${uiLabelMap.IndentType}:</div></td>
+		       	  	<#--	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> ${uiLabelMap.IndentType}:</div></td>
 			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
 			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
 			      			<td valign='middle'>
@@ -375,8 +375,12 @@
 			      					<option value="onBehalfOf"> On Behalf Of </option>
 			      				</select>
 			      			</td>
-			   			</#if>
+			   			</#if>-->
+			   			
+			   			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
 		       			
+		       			<td>&nbsp;</td>
+		       			<td>&nbsp;</td>
 		       			<td>&nbsp;</td>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>

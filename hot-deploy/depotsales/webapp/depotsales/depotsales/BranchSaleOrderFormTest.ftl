@@ -363,21 +363,11 @@
 	               	<tr>
 		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> ${uiLabelMap.IndentType}:</div></td>
-			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
-			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
-			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${parameters.billingType?if_exists}</div>
-			      			</td>       	
-			   			<#else>      	         
-			      			<td valign='middle'>
-			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
-			      					<option value="Direct"> Direct </option>
-			      					<#--<option value="onBehalfOf"> On Behalf Of </option>-->
-			      				</select>
-			      			</td>
-			   			</#if>
 		       			
+		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			
+		       			<td>&nbsp;</td>
+		       			<td>&nbsp;</td>
 		       			<td>&nbsp;</td>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>

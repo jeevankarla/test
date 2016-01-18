@@ -330,15 +330,33 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		orderId = orderId;
 		partyId = partyId;
 		
-		finalBal = grandTotal-balance;
+		//finalBal = grandTotal-balance;
+		
+		
+		var paymentList = eachAdvancePaymentOrderMap[partyId];
+		
+		
 		
 		grandTotal = grandTotal;
 		partyName= partyName;
 		
 		
-		message += "<html><head></head><body><form action='createIndentorOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		message += "<html><head></head><body><form action='createIndentorOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
+		
+		
+		   if(paymentList[0].paymentId != "NoAdvance"){
 			
+			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Balance</td><td align='left' class='h3' width='50%'>Select Balance</td></tr>";          
+	        for (i = 0; i < paymentList.length; i++) {
+		         if(paymentList[i].balance!=0)
+		         {
+		         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left'  width='60%'>" + paymentList[i].balance + "</td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPaymentIds' value='"+paymentList[i].paymentId+"'/></td></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
+		         }
+		       }
+		  }
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
@@ -346,11 +364,11 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	                   </#list>
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount'  name='amount' value='"+grandTotal+"'  onblur='javascript:amountCheck(finalBal);'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+finalBal+"</td></tr>"+
-                        "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' onblur='javascript:amountCheck(balance);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+balance+"</td></tr>"+
+                        "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf'  /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
-						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+-->
+						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='grandTotal' name='grandTotal' value='"+grandTotal+"'/></td></tr>"+
@@ -358,7 +376,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 				 		
                 		
 					message +=	"</table></form></body></html>";
-		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
+		var title = "Dues vamsi Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
 	}
 
@@ -505,32 +523,32 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	
 	function IndentorRealizeStatusChange(orderId) {
 	        	
-	      
-	        	
+	            	
 	  var orderId = orderId;
 	  
-	    var paymentList = eachPaymentOrderMap[orderId];
+	   var paymentList = paymentPreferenceCancellMap[orderId];
 		var message = "";
 		
-		message += "<html><head></head><body><form action='indentorRealizeStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
-        message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Current Status</td><td align='left' class='h3' width='50%'>Change Status To</td><td align='left' class='h3' width='50%'>Select Status</td></tr>";          
-      for (i = 0; i < paymentList.length; i++) {
-         if((paymentList[i].statusId)=="PMNT_CONFIRMED"){
-         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Realized</td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td></tr></tr>";
-         }
-         else if((paymentList[i].statusId)=="PMNT_VOID"){
-         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left' width='60%'>Payment Cancelled</td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td></tr></tr>";
-         }
-         else{
-         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentPreferenceId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left'  width='60%'><font size=100%>Payment Received</font></td><td align='left' width='60%'><select name='paymentStatus' id='paymentStatus' class='h4'>"+"<option value='PMNT_CONFIRMED' >Payment Realized</option>"+"<option value='PMNT_VOID' >Payment Cancel</option>"+"</select></td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
-         }
-         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='paymentPreferenceId' value='"+paymentList[i].paymentPreferenceId+"'/></td></tr>";
-         }
+		message += "<html><head></head><body><form action='IndentorpreferenceCancel' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
+			
+			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Actual Amount</td><td align='left' class='h3' width='50%'>Applied Balance</td><td align='left' class='h3' width='50%'>Cancel Applied Balance</td></tr>";          
+	        for (i = 0; i < paymentList.length; i++) {
+		         if(paymentList[i].paymentId!="notApplied")
+		         {
+		         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentId + "</pre></td><td align='left' width='50%'>" + paymentList[i].actualAmount + "</td><td align='left'  width='60%'>" + paymentList[i].amountApplied + "</td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='preferenceIds' value='"+paymentList[i].preferenceId+"'/></td></tr>";
+		        // message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
+		         }
+		       }
+
 		   //message +=  "<tr class='h3'><td align='left' class='h3' width='20%'>Are You Sure </td><td align='left' class='h3' width='20%'>Want to Change </td><td align='left' class='h3' width='20%'> Payment Status to Payment Realized. </td></tr>";
-			message += "<tr class='h3'><td></td><td></td><td align='center'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
+			//message += "<tr class='h3'><td></td><td></td><td align='center'><input type='submit' value='Submit' class='smallSubmit'/></td><td align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
+			message +="<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			
 					message +=	"</table></form></body></html>";
 		var title = "Indent Status";
-		Alert(message, title); 
+		Alert(message, title);      
+	 
     }	
 	
 	
