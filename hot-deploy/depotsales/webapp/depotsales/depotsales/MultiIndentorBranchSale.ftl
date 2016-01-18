@@ -361,20 +361,8 @@
 	               	<tr>
 		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Indent Type:</div></td>
-			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
-			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
-			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${parameters.billingType?if_exists}</div>
-			      			</td>       	
-			   			<#else>      	         
-			      			<td valign='middle'>
-			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
-			      					<#--><option value="Direct"> Direct </option>-->
-			      					<option value="onBehalfOf"> On Behalf Of </option>
-			      				</select>
-			      			</td>
-			   			</#if>
+		       	  	    <td>&nbsp;</td> 
+		       	  	    <td>&nbsp;</td>
 		       			
 		       			<td>&nbsp;</td>
 		       			
