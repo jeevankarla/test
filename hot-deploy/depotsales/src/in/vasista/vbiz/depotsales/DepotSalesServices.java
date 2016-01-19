@@ -73,6 +73,29 @@ public class DepotSalesServices{
 		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
 		String partyId=(String) context.get("partyId");
 		String orderId = (String) context.get("orderId");
+		Locale locale = (Locale) context.get("locale");
+		String smsContent = "";
+		String productDetails="";
+		try{
+
+			List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			for (GenericValue item : items) {
+				String productId = item.getString("productId");
+				BigDecimal qty=item.getBigDecimal("quantity");
+				String qtystrng="0";
+				String desc="";
+				if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
+					qtystrng=String.valueOf(qty);                     
+					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+					desc=product.getString("description");
+				}
+				productDetails=productDetails+" "+desc+","+qtystrng;
+				smsContent = smsContent + qtystrng + " KGs of " + desc + ",";
+			}
+		}catch(GenericEntityException ex){
+			Debug.log("Problem in fetching orderItems");
+		}
+		
 		//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 		try{
 			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
@@ -102,6 +125,11 @@ public class DepotSalesServices{
 			}
 			boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
 			
+			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
+			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
+			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
+			Debug.log("indentApprovalMessage =============="+indentApprovalMessage);
+			
 			Map<String, Object> getTelParams = FastMap.newInstance();
         	getTelParams.put("partyId", partyId);
             getTelParams.put("userLogin", userLogin);                    	
@@ -124,7 +152,7 @@ public class DepotSalesServices{
             	 Debug.log("contactNumberTo ===== "+contactNumberTo);
             	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
                  sendSmsParams.put("contactNumberTo", contactNumberTo);
-                 sendSmsParams.put("text", "Your Indent No. "+orderId+" has been approved by Purchase and Sale Committee."); 
+                 sendSmsParams.put("text", indentApprovalMessage); 
                  serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
                  if (ServiceUtil.isError(serviceResult)) {
                      Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
