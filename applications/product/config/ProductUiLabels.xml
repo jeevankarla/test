@@ -25532,6 +25532,11 @@
         <value xml:lang="ta">மீதமுள்ள ஒதுக்கீடு</value>
     </property>
     
+    <property key="IndentApprovalMessage">
+        <value xml:lang="en">Your Indent No. orderId for material has been approved.</value>
+        <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId जो कि material हेतु है, स्वीकृत हो चुका है।</value>
+        <value xml:lang="ta">தங்களின் மூலப்பொருள் தேவை orderId, material ஏற்றுக்கொள்ளப்பட்டு ள்ளது</value>
+    </property>
     
     
 </resource>
