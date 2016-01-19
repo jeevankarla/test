@@ -2853,8 +2853,13 @@ public class DepotSalesServices{
 		         }
 			}
         }
+        if(UtilValidate.isEmpty(amount) && UtilValidate.isEmpty(allStatus))
+        {
+        	return ServiceUtil.returnError("Please Enter Amount");
+        }else{
 	  	 result = ServiceUtil.returnSuccess("Successfully Payment Has Been Created For"+orderId);
-	  	return result;
+        }
+	  	 return result;
    }
 	
 	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {

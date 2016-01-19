@@ -27,7 +27,12 @@
 	
 	partyId = userLogin.get("partyId");
 	
-	salesChannel = parameters.salesChannelEnumId;
+	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
+		salesChannel = parameters.salesChannelEnumId;
+	}else{
+	salesChannel = "BRANCH_CHANNEL";
+	}
+	
 	searchOrderId = parameters.orderId;
 	
 	facilityOrderId = parameters.orderId;
@@ -425,4 +430,4 @@
 	basedList.addAll(allValues);
 	context.orderList = basedList.reverse();
 	
-	
+	Debug.log("orderList=============="+orderList);

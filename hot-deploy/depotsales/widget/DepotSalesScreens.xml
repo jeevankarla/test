@@ -421,7 +421,7 @@
                                         <include-form name="FindTankerSalesOrder" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-								<screenlet title="Depot Indent">
+								<screenlet title="Sales Indent">
 								<platform-specific>
 										<html>
 											<html-template

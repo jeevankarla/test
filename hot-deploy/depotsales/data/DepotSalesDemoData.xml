@@ -82,5 +82,7 @@
     
     
     <Facility defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="DAMAGED STORE" facilityId="DAMAGED_STORE" facilityName="DAMAGED STORE" ownerPartyId="Company"/>
+    
+     <Enumeration createdStamp="2016-01-05 13:18:14.0" createdTxStamp="2016-01-05 13:18:14.0" enumId="NHDC_RECEIPT" lastUpdatedStamp="2016-01-05 13:18:14.0" lastUpdatedTxStamp="2016-01-05 13:18:14.0"/> 
          
 </entity-engine-xml>

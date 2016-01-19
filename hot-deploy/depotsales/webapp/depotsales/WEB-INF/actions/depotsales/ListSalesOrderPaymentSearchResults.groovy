@@ -45,10 +45,14 @@
 	context.formatList = formatList;
 	
 	branchId = parameters.branchId;
-
+ 
+	salesChannel = "";
 	
-	
-	salesChannel = parameters.salesChannelEnumId;
+	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
+		salesChannel = parameters.salesChannelEnumId;
+	}else{
+	salesChannel = "BRANCH_CHANNEL";
+	}
 	searchOrderId = parameters.orderId;
 	
 	facilityOrderId = parameters.orderId;
