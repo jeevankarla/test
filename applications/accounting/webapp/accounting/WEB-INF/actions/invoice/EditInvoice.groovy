@@ -154,6 +154,10 @@ if (invoice) {
 	vatTaxesByType = FastMap.newInstance();
 	productMrpPriceMap = FastMap.newInstance();
 	invoiceItems.each { invoiceItem ->
+		
+		
+		Debug.log("invoiceItem========="+invoiceItem);
+		
 		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate);
 		invoiceItemsConv.add(invoiceItem);
 		glAccountId = null;
@@ -196,7 +200,11 @@ if (invoice) {
 			}
 			Debug.log("productMrpPriceMap==="+productMrpPriceMap);
 		}
+		
+		productDetail=delegator.findOne("Product",[productId : invoiceItem.productId] , false);
+		
 		invoiceItemMap = [:];
+		invoiceItemMap["productName"] = productDetail.productName;
 		invoiceItemMap["description"] = invoiceItem.description;
 		invoiceItemMap["invoiceItemTypeId"] = invoiceItem.invoiceItemTypeId;
 		invoiceItemMap["amount"] = amount;
@@ -221,6 +229,9 @@ if (invoice) {
 			vatTaxesByType.put(taxRate.taxAuthorityRateSeqId, vatTaxesByTypeAmount + invoiceItem.amount);
 		}
 	}
+	
+	Debug.log("invoiceItemList======="+invoiceItemList);
+	
 	context.put("invoiceItemList",invoiceItemList);
 	context.vatTaxesByType = vatTaxesByType;
 	context.vatTaxIds = vatTaxesByType.keySet().asList();
