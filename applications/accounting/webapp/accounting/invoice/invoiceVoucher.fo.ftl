@@ -107,9 +107,8 @@ under the License.
 						        						<fo:table-cell bottom="">
 						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 		        				    								 <fo:table-column column-width="10%"/>
-        						   									 <fo:table-column column-width="60%"/>
-        						   									 <fo:table-column column-width="55%"/>
-        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-column column-width="70%"/>
+        						   									 <fo:table-column column-width="70%"/>	
         						   									 <fo:table-body>
         						   									 <fo:table-row>
         						   									 <fo:table-cell border-style="solid">
@@ -121,11 +120,11 @@ under the License.
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; PARTICULARS </fo:block>
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
+						        							  		<#-->  <fo:table-cell border-style="solid">
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; GL ACCOUNT </fo:block>
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        							  		  </fo:table-cell>
+						        							  		  </fo:table-cell>-->
 						        							  		  <fo:table-cell border-style="solid">
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; AMOUNT Rs. </fo:block>
@@ -144,6 +143,7 @@ under the License.
 												            <#--<#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
 												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>-->
 																 	<#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
+																
 																 	<#if invoiceItem.description?has_content>
 														                <#assign description=invoiceItem.description>
 														            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
@@ -164,22 +164,21 @@ under the License.
 							        						<fo:table-cell bottom="">
 						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 		        				    								 <fo:table-column column-width="10%"/>
-        						   									 <fo:table-column column-width="60%"/>
-        						   									 <fo:table-column column-width="55%"/>
-        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-column column-width="70%"/>
+        						   									 <fo:table-column column-width="70%"/>	
         						   									 <fo:table-body>
         						   									 <fo:table-row>
         						   									 <fo:table-cell border-style="solid">
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${description?if_exists} </fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${invoiceItem.get("productName")?if_exists} </fo:block>
 						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
+						        							  		<#-->  <fo:table-cell border-style="solid">
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; <#if glAccountDetails?has_content>${glAccountDetails.description?if_exists}(${glAccountId})</#if> </fo:block>
-						        							  		  </fo:table-cell>
+						        							  		  </fo:table-cell>-->
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${invoiceItem.amount?if_exists?string("#0.00")} </fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;  ${invoiceItem.get("amount")?if_exists} </fo:block>
 						        							  		  </fo:table-cell>
         						   									 </fo:table-row>
         						   									 </fo:table-body>
