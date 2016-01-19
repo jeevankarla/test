@@ -1202,29 +1202,29 @@
               
               <field name="partyId" title="Weaver Id"><text  size="15"></text></field>
               <field name="groupName" title="Weaver Name"><text  size="15"></text></field>
+             
+           <field name="branchId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
+              <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               <field name="submit" title="Find"><submit/></field>
               
           </form>
        <form name="ListDepotSalesProducer" type="list" list-name="listIt" odd-row-style="alternate-row" 
 				default-entity-name="PartyRoleDetailAndPartyDetail" default-table-style="basic-table hover-bar" >
-			<actions> 
-			<service service-name="performFind" result-map="result" result-map-list="listIt">
-			<field-map field-name="inputFields" from-field="parameters"/>
-			<field-map field-name="entityName" value="PartyRoleDetailAndPartyDetail"/>
-			<field-map field-name="viewIndex" from-field="viewIndex"/>
-			<field-map field-name="viewSize" from-field="viewSize"/>
-			</service> 
-        </actions>
-    	
-    	 <field name="partyId" title="Weaver Id" widget-style="buttontext" id-name = "partyId">
-             <hyperlink target="EditProcProducer" description="${partyId}" target-window="_blank"> 	
+				
+				 <field name="partyId" title="Weaver Id" widget-style="buttontext" id-name = "partyId">
+             		<hyperlink target="EditProcProducer" description="${partyId}" target-window="_blank"> 	
                 	  <parameter param-name="partyId" /> 
-             </hyperlink>
-         </field>
-        <field name="partyName" title="Weaver Name"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>  
-    	<field name="description" title="Role Type"><display/></field>
-    </form>
+             		</hyperlink>
+         		 </field>
+				 <field name="groupName" title="Weaver Name"><display/></field> 
+				 <field name="storeName" title="Branch Name"><display/></field> 
+				<field name="passbookId" title="Passbook Number"><display/></field> 
+			    </form>
       <form name="FindOrderPaymentSeach" title="" type="single" target="orderPayment" header-row-style="header-row" default-table-style="basic-table">
         <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
