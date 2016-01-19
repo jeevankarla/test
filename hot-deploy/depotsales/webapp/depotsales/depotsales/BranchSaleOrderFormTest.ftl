@@ -60,6 +60,10 @@
 				$("#suplierPartyId").autocomplete({ source: supplierAutoJson , select: function( event, ui ) {
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
 				} });	
+				if (e.keyCode === 13){
+	    			$('#indententryinit').submit();
+	    			return false;   
+			}
 		 });
 		  $('#productStoreId').keypress(function (e) { 
 				$("#productStoreId").autocomplete({ source: branchAutoJson , select: function( event, ui ) {
@@ -227,7 +231,7 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" onblur= 'javascript:getParties(this);' />
+				          			<input type="text" name="productStoreId" id="productStoreId"/>
 				          		</td>
 				          	</#if>
 			        	</#if>
@@ -487,9 +491,9 @@
 		       	  		<td>&nbsp;</td>
 			   			<td>&nbsp;</td>
 		       			<td>&nbsp;</td>
-		       			<td align='left' valign='middle' nowrap="nowrap">
+		       			<#--<td align='left' valign='middle' nowrap="nowrap">
 		       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
-		       			</td>
+		       			</td>-->
 	               		
 						</tr>
 	               	</#if>
