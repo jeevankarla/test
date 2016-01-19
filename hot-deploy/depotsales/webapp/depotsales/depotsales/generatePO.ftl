@@ -39,7 +39,6 @@ function dialogue(content, title) {
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-					alert("test");
 					$("#PostalAddress").hide();
 					populateData();
 					//getAllIndentRejects();
@@ -249,26 +248,7 @@ function cancelviewOrderForm(){
 	
 	
 	
-	function showOrderDetails() {
-		
-		var message = "";
-		var title = "";
-		if(orderData != undefined){
-			var orderAmt = 0;
-			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
-			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Batch No.</td><td align='center' class='h3'> Qty</td><td align='center' class='h3'> Tax %</td><td align='center' class='h3'> Amount</td>";
-			for (i = 0; i < orderData.length; ++i) {
-				message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].itemDescription + "</td><td align='center' class='h4'>"+ orderData[i].batchNo +"</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td>";
-				message += "<td align='center' class='h4'>" + orderData[i].taxPercent + "</td><td align='center' class='h4'>" + orderData[i].itemTotal + "</td></tr>";
-				orderAmt = orderAmt+orderData[i].itemTotal;
-			}
-			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelviewOrderForm();' class='submit'>Close</button></span></td><td></td></tr>";
-			title = "<center>Order : " + orderId + "<center><br /><br /> Total Order Value = "+ orderAmt +" ";
-			message += "</table>";
-			Alert(message, title);
-		}
-		
-	};
+	
 	
 	function showOrderBatchDetails(flag) {
 		
@@ -347,7 +327,77 @@ function cancelviewOrderForm(){
 	}	
 	
 	
+	function showOrderDetails() {
+		
+		var message = "";
+		var title = "";
+		
+		alert("orderData============"+orderData);
+		
+		if(orderData != undefined){
+			var orderAmt = 0;
+			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Batch No.</td><td align='center' class='h3'> Qty</td><td align='center' class='h3'> Tax %</td><td align='center' class='h3'> Amount</td>";
+			for (i = 0; i < orderData.length; ++i) {
+				message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].itemDescription + "</td><td align='center' class='h4'>"+ orderData[i].batchNo +"</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td>";
+				message += "<td align='center' class='h4'>" + orderData[i].taxPercent + "</td><td align='center' class='h4'>" + orderData[i].itemTotal + "</td></tr>";
+				orderAmt = orderAmt+orderData[i].itemTotal;
+			}
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelviewOrderForm();' class='submit'>Close</button></span></td><td></td></tr>";
+			title = "<center>Order : " + orderId + "<center><br /><br /> Total Order Value = "+ orderAmt +" ";
+			message += "</table>";
+			Alert(message, title);
+		}
+		
+	};
 	
+	
+	
+	 function fetchOrderInformation(order) {
+		orderId = order;
+		var dataJson = {"orderId": orderId};
+		jQuery.ajax({
+                url: 'getOrderInformation',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+					
+						orderData = result["orderInformationDetails"];
+						
+						
+						showOrderInformation();
+						
+               		}
+               	}							
+		});
+	}
+	
+    
+    function showOrderInformation() {
+		var message = "";
+		var title = "";
+		if(orderData != undefined){
+			var orderAmt = 0;
+			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td>";
+			for (i = 0; i < orderData.length; ++i) {
+			
+			  message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td>";
+			  orderAmt = orderAmt+orderData[i].unitPrice;
+			}
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
+			title = "<center>Order : " + orderId + "<center><br /><br /> Total Order Value = "+ orderAmt +" ";
+			message += "</table>";
+			Alert(message, title);
+		}
+		
+	};
+	
+    
 	
 	
 	

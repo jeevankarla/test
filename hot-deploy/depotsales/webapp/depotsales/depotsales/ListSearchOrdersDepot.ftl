@@ -193,12 +193,11 @@ under the License.
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Party Code</td>
+        <td>Indent Id</td>
+         <td>Indent Date</td>
           <td>Party Name</td>
-          <td>Indent Id</td>
-          <td>Indent Date</td>
-          <td>View</td>
-          <td>Print Indent</td>
+          <td>Supplier Name</td>
+         <#--> <td>Print Indent</td>-->
           <td>Minutes</td>
           <td>Minutes Hindi</td>
           <#--<td>Edit Batch</td>-->
@@ -217,13 +216,26 @@ under the License.
       <tbody>
       <#assign alt_row = false>
        <#list orderList as eachOrder>
+        
+           <#assign supplierPartyId="">
+				<#assign supplierPartyName="">
+				<#assign isgeneratedPO="N">
+		              	<#assign productStoreId="">
+						<#if orderDetailsMap?has_content>
+								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
+								<#if orderDetails?has_content>
+								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
+								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
+								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
+								<#assign productStoreId=orderDetails.get("productStoreId")>
+								</#if>
+				</#if>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            	<td>${eachOrder.partyId?if_exists}</td>
-              	<td>${eachOrder.partyName?if_exists}</td>
-              	<td>${eachOrder.orderId?if_exists}</td>
+      		<td><input type="button" name="viewOrder" id="viewOrder" value="${eachOrder.orderId?if_exists}" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}','${parameters.salesChannelEnumId}');"/></td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>
-              	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
+              	<td>${eachOrder.partyName?if_exists}   [${eachOrder.partyId?if_exists}]</td>
+              	<td>${supplierPartyName?if_exists}  [${supplierPartyId?if_exists}]</td>
+              <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
               	<td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
@@ -252,19 +264,7 @@ under the License.
                 	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
               	</#if>
-				<#assign supplierPartyId="">
-				<#assign supplierPartyName="">
-				<#assign isgeneratedPO="N">
-		              	<#assign productStoreId="">
-						<#if orderDetailsMap?has_content>
-								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
-								<#if orderDetails?has_content>
-								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
-								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
-								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
-								<#assign productStoreId=orderDetails.get("productStoreId")>
-								</#if>
-				</#if>
+				
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
               	
               	<#if (eachOrder.get('statusId') == "ORDER_CREATED")>
