@@ -663,6 +663,7 @@
         <value xml:lang="es">Aplicaciones</value>
         <value xml:lang="fr">Applications</value>
         <value xml:lang="hi_IN">एप्प्लिकेशन्स</value>
+        <value xml:lang="ta">உபயோகித்தல்</value>
         <value xml:lang="it">Applicazioni</value>
         <value xml:lang="nl">Toepassingen</value>
         <value xml:lang="pt">Aplicações</value>
@@ -3062,6 +3063,7 @@
         <value xml:lang="es">Buscar</value>
         <value xml:lang="fr">Rechercher</value>
         <value xml:lang="hi_IN">खोजे</value>
+        <value xml:lang="ta">காணவும்</value>
         <value xml:lang="it">Ricerca</value>
         <value xml:lang="nl">Zoek</value>
         <value xml:lang="pt">Procurar</value>
@@ -8173,6 +8175,7 @@
         <value xml:lang="es">Enviar</value>
         <value xml:lang="fr">Envoyer</value>
         <value xml:lang="hi_IN">जमा करें</value>
+        <value xml:lang="ta">சமர்ப்பிக்க</value>
         <value xml:lang="it">Invia</value>
         <value xml:lang="nl">Submit</value>
         <value xml:lang="pt">Submeter</value>
