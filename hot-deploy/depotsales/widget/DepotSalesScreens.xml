@@ -3267,7 +3267,7 @@
               <actions>
                   <set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="producerSearch"/>
-                  <!-- <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   -->
+                   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               </actions>           
