@@ -85,9 +85,14 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 }*/
 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 partyOrders = delegator.findList("OrderRole", expr, null, null, null, false);
-
-
+orderType="direct"; 
+onbehalfof = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+if(onbehalfof){
+	orderType = "onbehalfof";
+}
+context.orderType=orderType;
 suplierPartyId="";
+suppPartyName="";
 suppAttr = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
 if(suppAttr){
 	Debug.log("suppAttr================="+suppAttr[0].get("partyId"));
@@ -100,7 +105,9 @@ if(suppAttr){
 }
 context.suplierPartyId=suplierPartyId;
 context.suplierPartyName=suppPartyName;
-
+parameters.suplierPartyId=suplierPartyId;
+parameters.suplierPartyName=suppPartyName;
+parameters.societyPartyId=partyId
 JSONArray orderItemsJSON = new JSONArray();
 
 JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
@@ -113,6 +120,7 @@ if(partyOrderIds){
 	orderHeaderTemp=delegator.findOne("OrderHeader",[orderId :updateOrderId], false);
 	if(UtilValidate.isNotEmpty(orderHeaderTemp)){
 		context.orderMessage=orderHeaderTemp.orderMessage;
+		parameters.productStoreId=orderHeaderTemp.productStoreId;
 		context.effectiveDate=UtilDateTime.toDateString(orderHeaderTemp.estimatedDeliveryDate, "dd MMMMM, yyyy");
 		context.productStoreId=orderHeaderTemp.productStoreId;
 	}
@@ -132,9 +140,21 @@ if(partyOrderIds){
 	productCategorySelectIds = EntityUtil.getFieldListFromEntityList(productCategorySelect, "productCategoryId", true);
 	
 	JSONArray productCategoryJSON = new JSONArray();
+	category="";
+	catType="";
 	productCategorySelectIds.each{eachCatId ->
+		category=eachCatId;
 		productCategoryJSON.add(eachCatId);
 	}
+	
+	if(category.contains("SILK")){
+		catType="Silk";
+	}else if(category.contains("COTTON") || category.contains("HANK")){
+	catType="Cotton";
+	}else{
+	catType="other";
+	}
+	context.catType=catType;
 	context.productCategoryJSON = productCategoryJSON;
 	
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
@@ -204,7 +224,13 @@ if(partyOrderIds){
 		yarnUOMAttr = EntityUtil.filterByCondition(orderItemAttr,condExpYarn);
 		
 		
-		
+		//on behalf of customer Id
+		cond.clear();
+		cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WIEVER_CUSTOMER"));			
+		cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+		/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
+		condExpWiever = EntityCondition.makeCondition(cond, EntityOperator.AND);		
+		WieverAttr = EntityUtil.filterByCondition(orderItemAttr,condExpWiever);
 		cond.clear();
 		cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BUNDLE_WGHT"));
 		cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
@@ -230,10 +256,25 @@ if(partyOrderIds){
 		if(yarnUOMAttr){
 		yarnUOM=(yarnUOMAttr.get(0)).get("attrValue");
 		}
+		wieverName="";
+		wieverId="";
+		psbNo="";
+		
+		if(WieverAttr){
+			wieverId=(WieverAttr.get(0)).get("attrValue");
+			partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+			if(partyIdentification){
+				psbNo = partyIdentification.get("idValue");
+			}
+			wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
+			}
 		if(bundleAttr){
 		bundleWeight=(bundleAttr.get(0)).get("attrValue");
 		}
+		newObj.put("customerName",wieverName+"["+psbNo+"]");
+		newObj.put("customerId",wieverId);
 		
+		newObj.put("psbNumber",psbNo);
 		
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
