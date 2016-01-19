@@ -154,6 +154,7 @@
 	context.partyIdsListkkkk=partyIdsList;
 	//supplier json for supplier lookup.
 	JSONArray supplierJSON = new JSONArray();
+	JSONObject supplierIdJson = new JSONObject();
 	
 	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
 	supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
@@ -164,10 +165,12 @@
 			partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
 			partyNameObj.put(supplier.partyId,partyName);
 			newObj.put("label",partyName+"["+supplier.partyId+"]");
+			supplierIdJson.put(supplier.partyId, partyName);
 			supplierJSON.add(newObj);
 		}
 	}
 	context.supplierJSON=supplierJSON;
+	context.supplierIdJson=supplierIdJson;
 	context.partyNameObj = partyNameObj;
 	
 	//societyParty  json.
