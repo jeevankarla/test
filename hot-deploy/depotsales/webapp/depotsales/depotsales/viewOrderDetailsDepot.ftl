@@ -193,36 +193,14 @@
 	}
 	
 	
-	function amountCheck(balance)
+	function amountCheck()
 	{
-	
-	   var amount =  $("#amount").val();
-	    var grandTot =  $("#grandTotal").val();
-	   
-	   if(amount ==''){
-	   alert("Please Enter Amount");
-	   }else if(parseInt(amount) > parseInt(grandTot)){
-	   
-	      alert("Please Enter Amount Less Than The Grand Total.");
-	     
+      var amount = $("#amount").val();
+      var balance = $("#balance").val();
+       if(parseInt(amount) > parseInt(balance)){
+	      alert("Please Enter Amount Less Than The balance Total.");
 	        $("#amount").val(balance);
-	        $("#submitval").parent().parent().hide();
-	        $("#cancel").parent().parent().hide();
-	        
-	   }else if(parseInt(amount) > parseInt(balance)){
-
-          alert("Please Enter Amount Less Than The Balance.");
-
-            $("#amount").val(balance);
-            $("#submitval").parent().parent().hide();
-	        $("#cancel").parent().parent().hide();
- 
-         }
-	   else{
-	       $("#submitval").parent().parent().show();
-	       $("#cancel").parent().parent().show();
 	   }
-	   
 	}
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
@@ -275,6 +253,8 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		orderId = orderId;
 		partyId = partyId;
 		
+		
+		
 		//finalBal = grandTotal-balance;
 		
 		
@@ -309,8 +289,9 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	                   </#list>
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' onblur='javascript:amountCheck(balance);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' onblur='javascript:amountCheck();'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+balance+"</td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></td></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
