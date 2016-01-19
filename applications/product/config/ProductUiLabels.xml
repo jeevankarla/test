@@ -25506,4 +25506,32 @@
     </property>
     
     
+    <property key="QtyInNumbers">
+        <value xml:lang="en">Quantity (Numbers)</value>
+    </property>
+    <property key="cottonUom">
+        <value xml:lang="en">Uom</value>
+    </property>
+    <property key="BundleWtKgs">
+        <value xml:lang="en">Bundle Wt(Kgs)</value>
+    </property>
+    <property key="TotalWeightInKgs">
+        <value xml:lang="en">Total Weight in Kgs</value>
+        <value xml:lang="ta">மொத்த எடை (கிலோகிராம்)</value>
+    </property>
+    <property key="UnitPrice">
+        <value xml:lang="en">Unit Price</value>
+        <value xml:lang="ta">விலை ஒன்றுக்கு</value>
+    </property>
+    <property key="TotalAmtInRs">
+        <value xml:lang="en">Total Amount(Rs)</value>
+        <value xml:lang="ta">மொத்த தொகை ரூபாவில் </value>
+    </property>
+    <property key="QuotaAvailable">
+        <value xml:lang="en">Quota Available</value>
+        <value xml:lang="ta">மீதமுள்ள ஒதுக்கீடு</value>
+    </property>
+    
+    
+    
 </resource>
