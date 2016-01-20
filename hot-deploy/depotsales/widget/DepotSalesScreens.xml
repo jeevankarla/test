@@ -441,6 +441,9 @@
 					/> -->
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
+			    <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />
+					
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"

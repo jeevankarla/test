@@ -61,6 +61,21 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			tempMap.put("partyName","");
 		}
 		tempMap.put("statusId",shipment.statusId);
+		exprCondList=[];
+		exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId));
+		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+		
+		Debug.log("OrderAss========"+OrderAss);
+		
+		if(UtilValidate.isNotEmpty(OrderAss)){
+			salesOrder = OrderAss.get("toOrderId");
+			tempMap.put("salesOrder",salesOrder);
+		}else{
+		tempMap.put("salesOrder","");
+		}
+		
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyId", shipment.partyIdFrom);
@@ -77,6 +92,25 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				tempMap.putAt("partyId", null);
 			}
 		}
+		if(shipment.partyIdTo){
+			tempMap.putAt("weaver", shipment.partyIdTo);
+		}else{
+			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+				ecl = EntityCondition.makeCondition([
+									   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+									   EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER")],
+								   EntityOperator.AND);
+				orderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
+				orderRole=EntityUtil.getFirst(orderRoles);
+				tempMap.put("weaver",orderRole.partyId);
+			}else{
+				tempMap.putAt("weaver", null);
+			}
+		}
+		
+		
+		
+		
 		
 		finalList.add(tempMap);
 	}
