@@ -133,7 +133,12 @@
    		<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditBranchIndent"/>
     </request-map>
-    
+    <request-map uri="getPartyQuotaList">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/"  invoke="getPartyProductQuotas.groovy"/>
+       <response name="success" type="request" value="json"/>
+             
+   </request-map>
       <request-map uri="IndentorEditBranchIndent">
    		<security https="true" auth="true"/>
     	<response name="success" type="view" value="IndentorEditBranchIndent"/>

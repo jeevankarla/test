@@ -533,7 +533,42 @@
         grid.onCellChange.subscribe(function(e,args) {
          
        
-        
+        if (args.cell == 2 ) {
+	
+		var prod = data[args.row]["cProductId"];
+					var cstNm = data[args.row]["customerName"];
+				var custmrId = indcustomerLabelPsbNumMap[cstNm];
+				var qut=0;		
+		   var dataString="partyId=" + custmrId;
+		    $.ajax({
+		             type: "POST",
+		             url: "getPartyQuotaList",
+		             data: dataString ,
+		             dataType: 'json',
+		             async: false,
+		         success: function(result) {
+		               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+		            	   alert(result["_ERROR_MESSAGE_"]);
+		               }else{  
+		                productsQuotaList=result['productQuotaJSON'];
+		               // alert(JSON.stringify(productsQuotaList));
+		                if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
+		                qut=productsQuotaList[prod];
+		                }
+		               }
+		               
+		             } ,
+		             error: function() {
+		            	 	alert(result["_ERROR_MESSAGE_"]);
+		            	 }
+		            }); 				
+				if(isNaN(qut)){
+							qut = 0;
+						}
+				data[args.row]["quota"] = qut;
+				grid.updateRow(args.row);		
+			
+			}
         	
 			if (args.cell == 2 || args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
@@ -622,7 +657,7 @@
 				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 3) {
+			<#-->if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
@@ -630,7 +665,7 @@
 				}
 				data[args.row]["quota"] = quota;
 				grid.updateRow(args.row);
-			}
+			}-->
 			if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
@@ -657,7 +692,7 @@
 				if(isNaN(quota)){
 					quota = 0;
 				}
-				data[args.row]["quota"] = quota;
+				<#-->data[args.row]["quota"] = quota;-->
 				
 				grid.updateRow(args.row);
 				
