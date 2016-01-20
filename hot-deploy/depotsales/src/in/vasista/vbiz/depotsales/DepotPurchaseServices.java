@@ -502,14 +502,15 @@ public class DepotPurchaseServices{
 			   
 			    conditionList.clear();
 			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+			   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 			   EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			   List<GenericValue> orderPreferenceList = delegator.findList("OrderPaymentPreference", condExpr, null, null, null, false);
 			   List orderPreferenceIdList = EntityUtil.getFieldListFromEntityList(orderPreferenceList, "orderPaymentPreferenceId", true);
 		   
 			   conditionList.clear();
-			   conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.IN, orderPreferenceIdList));
+			   conditionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, orderPreferenceIdList));
 			   EntityCondition condExpretion = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			   List<GenericValue> paymentList = delegator.findList("Payment", condExpretion, null, null, null, false);
+			   List<GenericValue> paymentList = delegator.findList("OrderPreferencePaymentApplication", condExpretion, null, null, null, false);
 
 			  //enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
 			
@@ -518,7 +519,7 @@ public class DepotPurchaseServices{
 			if (UtilValidate.isNotEmpty(paymentList)) {
 				for (GenericValue eachPayment : paymentList) {
 					
-					 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amount");
+					 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amountApplied");
 					 paidAmount = paidAmount.add(eachAmount);
 					 Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
 		            	newPayappl.put("invoiceId", invoiceId);

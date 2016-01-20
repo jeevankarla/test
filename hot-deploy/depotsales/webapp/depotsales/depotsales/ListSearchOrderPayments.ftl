@@ -267,19 +267,13 @@ under the License.
 
                  <#assign balance = 0>
                  <#assign balance = (balanceAmountMap.get(eachOrder.orderId)).get("balance")>
-                
-                
-                
                  <#if (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
               	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${balance}');"/></td>
               	 <#else>
               	 <td></td>
               	 </#if>
-              	
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
-              
-              
               	<#else>
               	<td></td>
               	</#if> -->
