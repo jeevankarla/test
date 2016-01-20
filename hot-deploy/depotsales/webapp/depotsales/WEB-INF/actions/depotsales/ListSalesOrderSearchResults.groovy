@@ -27,11 +27,13 @@
 	
 	partyId = userLogin.get("partyId");
 	
-	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
+	salesChannel = parameters.salesChannelEnumId;
+	
+/*	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
 		salesChannel = parameters.salesChannelEnumId;
 	}else{
 	salesChannel = "BRANCH_CHANNEL";
-	}
+	}*/
 	
 	searchOrderId = parameters.orderId;
 	
