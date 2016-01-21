@@ -25489,8 +25489,8 @@
         <value xml:lang="hi_IN">प्रत्यक्ष इंडेंट</value>
         <value xml:lang="ta">நேரடி தேவை</value>
     </property>
-    <property key="onBeHalfIndent">
-        <value xml:lang="en">On-BeHalf Indent</value>
+   <property key="onBeHalfIndent">
+        <value xml:lang="en">On Behalf Of Indent</value>
         <value xml:lang="hi_IN">की ओर से इंडेंट</value>
         <value xml:lang="ta">சார்பில் தேவை</value>
     </property>
