@@ -204,6 +204,8 @@ under the License.
 	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="MYPORTAL_INDENTOR"/>
 	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="MYPORTALBASE_ADMIN"/> 
 	 	 <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="ACCOUNTING_VIEW"/>
+	       <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="ACCTG_ATX_CREATE"/>
+	       <SecurityGroupPermission groupId="MYPORTAL_INDENTOR" permissionId="ACCTG_PREF_VIEW"/>
 	   
 	    <PortalPortlet portalPortletId="INDENTOR_PAGE" portletName="Indentor Portal Screen" screenName="processIndentPortalBranchSales"
             screenLocation="component://depotsales/widget/CommonScreens.xml" description="Indentor Portal Screen"/>
