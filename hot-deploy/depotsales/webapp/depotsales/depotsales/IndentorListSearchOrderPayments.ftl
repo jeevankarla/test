@@ -205,7 +205,7 @@ under the License.
      <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Party Code</td>
+          <td>${uiLabelMap.BranchSalesIndent}</td>
           <td>Party Name</td>
           <td>Indent Id</td>
           <td>Indent Date</td>
