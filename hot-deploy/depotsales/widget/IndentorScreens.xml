@@ -139,7 +139,7 @@
                                                   <include-form name="FindIndentOrderPaymentSeach" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                               </decorator-section>
                                               <decorator-section name="search-results">
-          								<screenlet title="Depot Indents">
+          								<screenlet title="${uiLabelMap.BranchSalesIndent}">
           								<platform-specific>
           										<html>
           											<html-template
