@@ -25535,8 +25535,30 @@
     <property key="IndentApprovalMessage">
         <value xml:lang="en">Your Indent No. orderId for material has been approved.</value>
         <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId जो कि material हेतु है, स्वीकृत हो चुका है।</value>
-        <value xml:lang="ta">தங்களின் மூலப்பொருள் தேவை orderId, material ஏற்றுக்கொள்ளப்பட்டு ள்ளது</value>
+        <value xml:lang="ta">தங்களின் orderId எண்ணுடைய மூலப்பொருள் தேவை வேண்டுகோள் material ற்றுக்கொள்ளப்பட்டு ள்ளது</value>
     </property>
     
+    <property key="PoApprovalMessageToWeaver">
+        <value xml:lang="en">Your Indent No. orderId has been converted into Purchase Order No. poNumber placed on supplierName - NHDCLT</value>
+        <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId के सापेक्ष क्रय आदेश संख्या poNumber मे. supplierName को प्रेषित किया जा चुका है।</value>
+        <value xml:lang="ta">தங்களின் orderId எண்ணுடைய மூலப்பொருள் தேவை வேண்டுகோள் poNumber எண்ணுடைய கொள்முதல் ஆணையாக மாற்றப்பட்டு supplierName க்கு அனுப்பப்பட்டுள்ளது</value>
+    </property>
     
+    <property key="PoApprovalMessageToSupplier">
+        <value xml:lang="en">Purchase Order orderId is placed for societyName for material - NHDCLT</value>
+        <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId के सापेक्ष क्रय आदेश संख्या poNumber मे. supplierName को प्रेषित किया जा चुका है।</value>
+        <value xml:lang="ta">தங்களுக்கு கொள்முதல் ஆணை எண் poNumber, material க்காக societyName க்காக அனுப்பப்பட்டுள்ளது</value>
+    </property>
+    
+    <property key="ShipmentMessageToWeaver">
+        <value xml:lang="en">Material has been booked against your Indent No. orderId for material through transporter vide LR No. lrNo dated lrDate by M/s supplierName expectedDeliveryDate is the expected date of delivery.</value>
+        <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId के सापेक्ष क्रय आदेश संख्या poNumber मे. supplierName को प्रेषित किया जा चुका है।</value>
+        <value xml:lang="ta">தங்களின் orderId எண்ணுடைய மூலப்பொருள் தேவை வேண்டுகோள் material க்காக சரக்குந்து ரசீது எண் lrNo தேதி lrDate அன்று, transporter சரக்குந்து மூலமாக அனுப்பபடுகிறது. அது expectedDeliveryDate தேதி வாக்கில் தங்களுக்கு வந</value>
+    </property>
+    
+    <property key="InvoiceMsgToWeaver">
+        <value xml:lang="en">Invoice No. orderId for Rs InvoiceValue is generated against your Indent No. invoiceNo We have received Rs. advancePaid as advance. Rs. balancePayable is the balance payable by you.</value>
+        <value xml:lang="hi_IN">आपका मांग पत्र संख्या orderId के सापेक्ष क्रय आदेश संख्या poNumber मे. supplierName को प्रेषित किया जा चुका है।</value>
+        <value xml:lang="ta">தங்களின் orderId எண்ணுடைய மூலப்பொருள் தேவை வேண்டுகோளுக்கான invoiceNo எண்ணுடைய பொருள் விபர பட்டியல் ரூபாய் InvoiceValue க்கு தயாராக உள்ளது. தங்களின் முன்பணம் advancePaid எங்களின் கணக்கில் உள்ளது. தங்களிடமிருந்து ரூபாய் balancePayable வர வேண்டியுள்ளது</value>
+    </property>
 </resource>
