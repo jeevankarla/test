@@ -203,63 +203,123 @@
 	    
 	    	<form method="post" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 		
-	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	      	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
+				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if partyId?exists && partyId?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div ><font color="green">
+				               			${partyId} [ ${partyName?if_exists} ] <#--${partyAddress?if_exists}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+						 	<#if party?exists && party?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
+				          		<td valign='middle' colspan="2">
+				            		<div ><font color="green">
+				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
+         								<#assign passBookDetails=partyIdentification?if_exists>
+				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] <#--${partyAddress?if_exists} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				       		<#else>               
+				          		<td valign='middle'>
+                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
+				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+				          		</td>
+				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
+			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
+				          	</#if>
+			        	</#if>
+						
+	               	</tr>
+	               	
 	               	
 	               	<tr>
 			           	<td>&nbsp;</td>
-			           	<td>&nbsp;</td>
-			          	<td>&nbsp;</td>
-		       	  		<td>&nbsp;</td>
 						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if productStoreId?exists && productStoreId?has_content>  
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
+				            		<div ><font color="green">
 				               			${productStoreId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				          	</#if>
 				    	<#else>
-							<#if parameters.productStoreId?exists>  
+							<#if parameters.productStoreId?exists && parameters.productStoreId?has_content>  
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
+				            		<div><font color="green">
 				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId" onblur='javascript:getParties(this);' />
+				          			<input type="text" name="productStoreId" id="productStoreId"/>
+				          			<span class="tooltip" id="branchName"></span>
 				          		</td>
 				          	</#if>
 			        	</#if>
-		       	  		<td><span class="tooltip" id="branchName"></span></td>
+		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
 	               	
 	               	
+	               	
 	               	<tr>
-	               		<td>&nbsp;</td>
-	               		
-	               		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
+		       	  		
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
-		            			<div class='tabletext h3'>${parameters.schemeCategory?if_exists}</div>
+		            			<div><font color="green">${parameters.schemeCategory?if_exists}</div>
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>
 		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
+		          					<option value="MGPS">MGPS</option>
+		          					<option value="General">General</option>	          					
 		          				</select>
 		          			</td>
 		       			</#if>
-	               					           	
-			           	<td>&nbsp;</td>
-			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
+		       			
+		       			<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
+		       			<#if orderTaxType?exists && orderTaxType?has_content>  
+			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div><font color="green">${orderTaxType?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="orderTaxType" id="orderTaxType" class='h3' style="width:162px">
+		          					<option value="INTRA">With in State</option>
+		          					<option value="INTER">Out of State</option>
+		          				</select>
+		          			</td>
+		       			</#if>
+						<td>&nbsp;</td>
+						
+	               	</tr>	
+					<tr>
+		       	  		
+		       	  		<td>&nbsp;</td>
+		       	  		
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
 			           		<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		          			<input type="hidden" name="isFormSubmitted"  value="YES" />
 					      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
@@ -278,7 +338,7 @@
 			          		<#if effectiveDate?exists && effectiveDate?has_content>  
 				  	  			<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
 				          		<td align='left' valign='middle'>
-				            		<div class='tabletext h3'>${effectiveDate}         
+				            		<div><font color="green">${effectiveDate}         
 				            		</div>
 				          		</td>       
 			       	  		<#else> 
@@ -286,58 +346,6 @@
 				            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 				            	</td>
 			       	  		</#if>
-		       	  		
-		       	  		<td>&nbsp;</td>
-			           	
-			           	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
-			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if suplierPartyId?exists && suplierPartyId?has_content>  
-					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-							<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>  
-					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	<#else>
-				          		<td valign='middle'>
-				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
-				          		</td>
-				          	</#if>
-			        	</#if>
-		       	  		<td><span class="tooltip" id="suplierPartyName"></span></td>
-		       	  		
-		       	  		
-	               	</tr> 
-	               	
-	               	<tr><td><br/></td></tr>
-	               	
-	               	<tr>
-		       	  		
-		       	  		<td>&nbsp;</td>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
-		       			<#if orderTaxType?exists && orderTaxType?has_content>  
-			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
-		          			<td valign='middle'>
-		            			<div class='tabletext h3'>${orderTaxType?if_exists}</div>
-		          			</td>       	
-		       			<#else>      	         
-		          			<td valign='middle'>
-		          				<select name="orderTaxType" id="orderTaxType" class='h3' style="width:162px">
-		          					<option value="INTRA">With in State</option>
-		          					<option value="INTER">Out of State</option>
-		          				</select>
-		          			</td>
-		       			</#if>
 		       			
 		       			<td>&nbsp;</td>
 		       	  		
@@ -346,7 +354,7 @@
 							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
 				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
 				   				<td valign='middle'>
-									<div class='h3'>${indentReceivedDate}         
+									<div ><font color="green">${indentReceivedDate}         
 									</div>
 				   				</td>  
 							<#else> 
@@ -361,155 +369,49 @@
 						
 	               	</tr>
 	               	
-	               	
+	               	<tr><td><br/></td></tr>
 	               	
 	               	<tr>
-		       	  		<td>&nbsp;</td>
 		       	  		
-		       	  	<#--	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> ${uiLabelMap.IndentType}:</div></td>
-			   			<#if parameters.billingType?exists && parameters.billingType?has_content>  
-			  	  			<input type="hidden" name="billingType" id="billingType" value="${parameters.billingType?if_exists}"/>  
-			      			<td valign='middle'>
-			        			<div class='tabletext h3'>${parameters.billingType?if_exists}</div>
-			      			</td>       	
-			   			<#else>      	         
-			      			<td valign='middle'>
-			      				<select name="billingType" id="billingType" class='h3' style="width:162px" onchange="addSocietyField(this)" >
-			      					<option value="Direct"> Direct </option>
-			      					<option value="onBehalfOf"> On Behalf Of </option>
-			      				</select>
-			      			</td>
-			   			</#if>-->
-			   			
-			   			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
-		       			
 		       			<td>&nbsp;</td>
-		       			<td>&nbsp;</td>
-		       			<td>&nbsp;</td>
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
-				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if partyId?exists && partyId?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if suplierPartyId?exists && suplierPartyId?has_content>  
+					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
 				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${partyId} [ ${partyName?if_exists} ] ${partyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		<div><font color="green">
+				               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
 				          	</#if>
 				    	<#else>
-						 	<#if party?exists && party?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
-				          		<td valign='middle' colspan="2">
-				            		<div class='tabletext h3'>
-				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
-         								<#assign passBookDetails=partyIdentification?if_exists>
-				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+							<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>  
+					  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
-				       		<#else>               
+				          	<#else>
 				          		<td valign='middle'>
-                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
-				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
 				          		</td>
-				          		<td colspan="2"><span class="tooltip" id="partyName"><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/></td></span></td>
-			        			<#--><td><span class="tooltip">Input party code and press Enter</span></td>-->
+				          		
 				          	</#if>
 			        	</#if>
 						
 	               	</tr>
-	             <#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
-					<tr>
-		       	  		<td>&nbsp;</td>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
-			   		     	         
-			      			<td valign='middle'>
-			      				
-			      			</td>
-			   		
-		       			<td>&nbsp;</td>
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
-				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if societyPartyId?exists && societyPartyId?has_content>  
-					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${societyPartyId} [ ${societyPartyName?if_exists} ] ${societyPartyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${parameters.societyPartyId.toUpperCase()}"/>  
-				          		<td valign='middle' colspan="2">
-				            		<div class='tabletext h3'>
-		            				 <#assign societyPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, parameters.societyPartyId, false)>
- 				               			${societyPartyName?if_exists} [ ${parameters.societyPartyId?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				       		
-			        	</#if>
-						
-	               	</tr>
-
-					<#else>
-
-	               	  	<tr id='societyfield'>
-		       	  		<td>&nbsp;</td>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
-			   		     	         
-			      			<td valign='middle'>
-			      				
-			      			</td>
-			   		
-		       			<td>&nbsp;</td>
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
-				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if societyPartyId?exists && societyPartyId?has_content>  
-					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div class='tabletext h3'>
-				               			${societyPartyId} [ ${societyPartyName?if_exists} ] ${societyPartyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-						 	<#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
-					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${parameters.societyPartyId.toUpperCase()}"/>  
-				          		<td valign='middle' colspan="2">
-				            		<div class='tabletext h3'>
-				               			${parameters.societyPartyName?if_exists} [ ${parameters.societyPartyId?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				       		<#else>               
-				          		<td valign='middle'>
-				          			<input type="text" name="societyPartyId" id="societyPartyId" onblur= 'javascript:dispSuppName(this);' />
-				          		</td>
-				          		<td colspan="2"><span class="tooltip" id="societyPartyName"><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/></td></span></td>
-				          	</#if>
-			        	</#if>
-						
-	               	</tr>
-	               	</#if>
-				<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
-					<tr>
-					</tr>
-					<#else>
-	               		<tr>
-		       	  		<td>&nbsp;</td>
-		       	  		<td>&nbsp;</td>
-		       	  		<td>&nbsp;</td>
-			   			<td>&nbsp;</td>
-		       			<td>&nbsp;</td>
-		       			<#--><td align='left' valign='middle' nowrap="nowrap">
-		       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
-		       			</td>-->
-	               		
-						</tr>
-	               	</#if>
+	               	
+	               			               
+	               	
+	               	   	
+	               	
+	               	
+	               	
+	               	
+	               	
+				
 	               <#--	
 	               	<tr>
 	               		<td>&nbsp;</td>
