@@ -121,9 +121,7 @@ $( "#deliveryChallanDate" ).datepicker({
 				          			</#if>-->
 				          	</#if>
 				        </tr>
-				      	<tr><td><br/></td></tr>
 				      	<#if supplierId?has_content>
-				      		<tr><td><br/></td></tr>
 				      		<tr>
 				      			<td>&nbsp;</td>
 				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
@@ -161,7 +159,6 @@ $( "#deliveryChallanDate" ).datepicker({
 		          			</td>
 				          </#if>
 				        </tr>
-						<tr><td><br/></td></tr>
 						<tr>
 				          <td>&nbsp;</td>
 				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice No: <font color='red'>*</font></div></td>
@@ -196,7 +193,6 @@ $( "#deliveryChallanDate" ).datepicker({
 				          </#if>
 		          			
 				        </tr>
-						<tr><td><br/></td></tr>
 	    				<tr>
 				          <td>&nbsp;</td>
 				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan No: </div></td>
@@ -215,23 +211,6 @@ $( "#deliveryChallanDate" ).datepicker({
 		          			
 				        </tr>
 				        <tr><td><br/></td></tr>
-						<tr>
-							<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <font color='red'>*</font></div></td>
-					        <td>&nbsp;</td>
-					        <#if vehicleId?exists && vehicleId?has_content>  
-						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${vehicleId}         
-					            	</div>
-					          	</td>       
-					       	<#else> 
-					        	<td valign='middle'>          
-					            	<input class='h3' type="text" name="vehicleId" id="vehicleId"/>           		
-					            </td>
-				       	  </#if>
-					  	</tr>
-					  	<tr><td><br/></td></tr>
 					  	<tr>
 							<td>&nbsp;</td>
 					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>LR Number: </div></td>
@@ -248,10 +227,9 @@ $( "#deliveryChallanDate" ).datepicker({
 					            </td>
 				       	  </#if>
 					  	</tr>
-					  	<tr><td><br/></td></tr>
 					  	<tr>
 							<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Carrier Name: </div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Carrier/Courier Name: </div></td>
 					        <td>&nbsp;</td>
 					        <#if carrierName?exists && carrierName?has_content>  
 						  		<input type="hidden" name="carrierName" id="carrierName" value="${carrierName}"/>  
@@ -262,6 +240,22 @@ $( "#deliveryChallanDate" ).datepicker({
 					       	<#else> 
 					        	<td valign='middle'>          
 					            	<input class='h3' type="text" name="carrierName" id="carrierName"/>           		
+					            </td>
+				       	  </#if>
+					  	</tr>
+					  	<tr>
+							<td>&nbsp;</td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <font color='red'>*</font></div></td>
+					        <td>&nbsp;</td>
+					        <#if vehicleId?exists && vehicleId?has_content>  
+						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${vehicleId}         
+					            	</div>
+					          	</td>       
+					       	<#else> 
+					        	<td valign='middle'>          
+					            	<input class='h3' type="text" name="vehicleId" id="vehicleId"/>           		
 					            </td>
 				       	  </#if>
 					  	</tr>

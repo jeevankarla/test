@@ -175,20 +175,20 @@ under the License.
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Party Code</td>
-          <td>Party Name</td>
-          <td>Indent Id</td>
-          <td>Indent Date</td>
-          <td>View</td>
+          <td>${uiLabelMap.PartyCode}</td>
+          <td>${uiLabelMap.CommonCustomerName}</td>
+          <td>${uiLabelMap.IndentNo}</td>
+          <td>${uiLabelMap.IndentDate}</td>
+          <td>${uiLabelMap.CommonView}</td>
          <#-- <td>Print Indent</td>
           <td>Minutes</td>
           <td>Minutes Hindi</td> -->
           <#--<td>Edit Batch</td>-->
-          <td>Approve</td>
+          <td>${uiLabelMap.Approve}</td>
 
         <#-- <td>DC Report</td> -->
           <#-- <td>Payment</td> -->
-          <td>Edit</td>
+          <<td>${uiLabelMap.CommonEdit}</td>
           <#--<td>Party Balance</td>-->
 		<#--  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
           

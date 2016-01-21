@@ -56,6 +56,7 @@ import org.ofbiz.party.contact.ContactHelper;
 
 
 
+
 import java.util.Collection;
 
 
@@ -573,10 +574,19 @@ public class DepotPurchaseServices{
 	        	 String paidAmountStr=String.valueOf(paidAmount.intValue());
 	        	 String balanceStr=String.valueOf(balance.intValue());
 	        	 
+	        	 String invoiceMsgToWeaver = UtilProperties.getMessage("ProductUiLabels", "InvoiceMsgToWeaver", locale);
+	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("orderId", actualOrderId);
+	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("InvoiceValue", grandTotalStr);
+	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("advancePaid", paidAmountStr);
+	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("balancePayable", balanceStr);
+	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("invoiceNo", invoiceId);
+	        	 
+	        	 Debug.log("invoiceMsgToWeaver =============="+invoiceMsgToWeaver);
+	        	 
 	        	 Debug.log("contactNumberTo ===== "+contactNumberTo);
 	        	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
 	             sendSmsParams.put("contactNumberTo", contactNumberTo);
-	             sendSmsParams.put("text","Invoice for Rs "+grandTotalStr+" generated against your Indent No  "+actualOrderId+" We have received Rs "+paidAmountStr+" against the indent. Balance payable is Rs "+balanceStr+" NHDCLTD."); 
+	             sendSmsParams.put("text", invoiceMsgToWeaver); 
 	             Debug.log("sendSmsParams========================"+sendSmsParams);
 	             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
 	             if (ServiceUtil.isError(serviceResult)) {

@@ -622,7 +622,7 @@
      <request-map uri="IndentorprocessBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="processIndentPortalBranchSales">
+        <response name="success"  type="request-redirect-noparam" value="IndentPortalOrderPayment">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
