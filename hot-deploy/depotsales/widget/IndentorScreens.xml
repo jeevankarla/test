@@ -201,7 +201,7 @@
                                         <include-form name="FindIndentorPayment" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-								<screenlet title="Depot Indent">
+								<screenlet title="${uiLabelMap.BranchSalesIndent}">
 								<platform-specific>
 										<html>
 											<html-template
@@ -297,6 +297,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -353,6 +354,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -692,6 +694,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -746,6 +749,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -861,6 +865,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -915,6 +920,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -1030,6 +1036,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -1084,6 +1091,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -1193,6 +1201,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -1247,6 +1256,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -1368,6 +1378,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -1422,6 +1433,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -1541,6 +1553,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -1595,6 +1608,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
@@ -1715,6 +1729,7 @@
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="checkListType" value="indentEntry" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
@@ -1769,6 +1784,7 @@
 					<order-by field-name="sequenceId"/> </entity-condition> -->
 				<set field="checkListType" value="indentEntry" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
 				<set field="orderDate" value="${parameters.orderDate}" />
 				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />

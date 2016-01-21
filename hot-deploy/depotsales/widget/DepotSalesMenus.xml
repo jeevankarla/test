@@ -1116,6 +1116,12 @@
      <menu name="IndentPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
               default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
                
+               <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
+    			    <link target="IndentPortalOrderPayment">
+    				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+    				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+    			   </link>
+    		</menu-item>
               <menu-item name="IndentPortalBranchSales" title="${uiLabelMap.IndentListing}">
             	 <link target="processIndentPortalBranchSales">
             		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
@@ -1125,12 +1131,7 @@
 <!--     	         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.IndentEntry}"> -->
 <!--             		<link target="IndentorBranchSalesOrder"/> -->
 <!--             	 </menu-item> -->
-    			 <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
-    			    <link target="IndentPortalOrderPayment">
-    				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
-    				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
-    			   </link>
-    		</menu-item>
+    			 
     </menu> 
  
     <menu name="SupplierReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 

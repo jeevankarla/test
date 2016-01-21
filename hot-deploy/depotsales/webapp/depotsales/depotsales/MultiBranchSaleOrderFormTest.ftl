@@ -244,7 +244,7 @@
 	               	</tr>
 	           <#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
 					<tr>		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> ${uiLabelMap.WeaverSociety}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if societyPartyId?exists && societyPartyId?has_content>  
 					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
@@ -276,7 +276,7 @@
 			      			
 			   		
 		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> Society Party:</#if><font color="red">*</font></div></td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> ${uiLabelMap.WeaverSociety}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if societyPartyId?exists && societyPartyId?has_content>  
 					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  

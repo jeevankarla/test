@@ -62,6 +62,7 @@ import org.ofbiz.order.order.OrderServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -440,7 +441,7 @@ public class MaterialPurchaseServices {
 				GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
 				String	desc=product.getString("description");
 				//Debug.log("desc============"+desc);
-				 smsContent = smsContent + " " + quantityStr + " KGs of " + desc + ",";
+				 smsContent = smsContent + quantityStr + " KGs of " + desc + ",";
            if (paramMap.containsKey("productId" + thisSuffix)) {
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
@@ -725,6 +726,15 @@ public class MaterialPurchaseServices {
 	
 		}
 
+		String shipmentMessageToWeaver = UtilProperties.getMessage("ProductUiLabels", "ShipmentMessageToWeaver", locale);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("orderId", rlatedId);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("material", smsContent);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("transporter", carrierName);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrNo", lrNumber);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
+		Debug.log("shipmentMessageToWeaver =============="+shipmentMessageToWeaver);
+		
 		
 		//Debug.log("smsContent==========="+smsContent);
 		if(UtilValidate.isNotEmpty(customerId)){
@@ -745,7 +755,7 @@ public class MaterialPurchaseServices {
 	            String contactNumberTo = (String) serviceResult.get("contactNumber");            
 	            String countryCode = (String) serviceResult.get("countryCode");
 	            if(UtilValidate.isEmpty(contactNumberTo)){
-	            	contactNumberTo = "8106416618";
+	            	contactNumberTo = "9502532897";
 	            }
 	            if(UtilValidate.isEmpty(carrierName)){
 	            	carrierName = "_";
@@ -759,7 +769,7 @@ public class MaterialPurchaseServices {
 	            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
 	            	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
 	                 sendSmsParams.put("contactNumberTo", contactNumberTo);
-	                 sendSmsParams.put("text", "Against your Indent No. "+rlatedId+" for "+smsContent+" delivered through M/s "+carrierName+" by M/s "+customerName+" Expected date of arrival is "+estimatedDateStr+" NHDCLTD."); 
+	                 sendSmsParams.put("text", shipmentMessageToWeaver); 
 	                 //Debug.log("sendSmsParams====================="+sendSmsParams);
 	                 serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
 	                 if (ServiceUtil.isError(serviceResult)) {

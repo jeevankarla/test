@@ -205,22 +205,22 @@ under the License.
      <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>${uiLabelMap.BranchSalesIndent}</td>
-          <td>Party Name</td>
-          <td>Indent Id</td>
-          <td>Indent Date</td>
-          <td>Grand Total</td>
-         <td>View Indent</td>
+          <td>${uiLabelMap.PartyCode}</td>
+          <td>${uiLabelMap.CommonCustomerName}</td>
+          <td>${uiLabelMap.IndentNo}</td>
+          <td>${uiLabelMap.IndentDate}</td>
+          <td>${uiLabelMap.GrandTotal}</td>
+         <td>${uiLabelMap.CommonView}</td>
           <#-- <td>Print Indent</td>
           <td>Edit Batch</td>
           <td>Approve</td>
           <td>DC Report</td>-->
-           <td>Indent Payment</td>
+           <td>${uiLabelMap.IndentPayment}</td>
           <#-- <td>Payment</td> -->
-           <td>Payment Status</td>
-           <td>Advance Payments</td>
-             <td>Received Amount</td>
-            <#-- <td>Indent Status</td>-->
+           <td>${uiLabelMap.Status}</td>
+           <td>${uiLabelMap.AdvancePayments}</td>
+          <#-- <td>${uiLabelMap.AdvancePayments}</td>
+             <td>Indent Status</td>-->
         <#--  <td>Edit</td>
           <td>Generate PO</td> -->
           <#--<td>Party Balance</td>
@@ -299,13 +299,13 @@ under the License.
                 <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
                 <td>Payment Received</td>
                 </#if>
-                
+                <#--
                 <#if (advancePaymentVisible.get(eachOrder.orderId)) != "notVisible">
                 <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: IndentorRealizeStatusChange('${eachOrder.orderId}');"/></td>
                 <#else>
                 <td></td>
                 </#if>
-                
+                -->
                 
                 <#if (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")!=-1>
               	<td>${(balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")}</td>
