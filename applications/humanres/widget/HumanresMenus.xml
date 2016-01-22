@@ -216,15 +216,15 @@
             </condition>  
         	<link target="EditLateHours"></link>
         </menu-item>
-        <menu-item name="EditHolidays" title="GH/SS Encashment">
+       <!--  <menu-item name="EditHolidays" title="GH/SS Encashment">
             <condition>
                  <and>
                     <if-has-permission permission="HR"  action="_APPHOLIDAY_VIEW"/>
-	               <!-- <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/> -->
+	               <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
 	             </and> 
             </condition>  
         	<link target="EditHolidays"></link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditPayrollAttendance" title="Edit Payroll Attendance">
         	<condition>
                  <and>
@@ -242,12 +242,12 @@
 			<link target="EditShiftDays"></link>        
         </menu-item> 
         
-        <menu-item name="busTimings" title="Daily Bus Timings">
+      <!--   <menu-item name="busTimings" title="Daily Bus Timings">
            <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
             </condition> 
         	<link target="busTimings"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="FindHoliday" title="Holiday Entry Screen">
         	<condition>
             	<if-has-permission permission="HR"  action="_HOLIDAYENTRY_VIEW"/>
@@ -276,7 +276,7 @@
             </condition> 
             <link target="benefitOrDeduction"/>
         </menu-item>
-		<menu-item name="WaterElectricityCharges" title="Electricity Charges">
+		<!-- <menu-item name="WaterElectricityCharges" title="Electricity Charges">
          	 <condition>
             	<if-has-permission permission="HR"  action="_ELECTR_VIEW"/>
             </condition>
@@ -290,16 +290,16 @@
         </menu-item>
         <menu-item name="TelephoneCUGCharges" title="Telephone CUG Charges">
            	<link target="TelephoneCUGCharges"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
 			<link target="BenefitDeductionCalculator"/>
 		</menu-item>
 		<menu-item name="CreateNewPayHead" title="Create New Pay Head">
     		<link target="PayHeadRules"/>
 		</menu-item>
-		<menu-item name="EmployeeSubsidyGhee" title="Employee Subsidy Ghee">
+		<!-- <menu-item name="EmployeeSubsidyGhee" title="Employee Subsidy Ghee">
             <link target="EmployeeSubsidyGhee"/>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="AnnualItTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
