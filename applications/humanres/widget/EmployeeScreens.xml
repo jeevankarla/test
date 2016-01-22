@@ -241,7 +241,7 @@ under the License.
 		                                        <container style="lefthalf">
 		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
-													<include-screen name="emplPunchType" location="component://humanres/widget/EmployeeScreens.xml"/>
+													<!-- <include-screen name="emplPunchType" location="component://humanres/widget/EmployeeScreens.xml"/> -->
 													<include-screen name="LanguagesKnown" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <screenlet title="Edit Employee Identification Numbers">
@@ -288,7 +288,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="emplPunchType">
+   <!--  <screen name="emplPunchType">
   		<section>
   			<actions>
   				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
@@ -307,7 +307,7 @@ under the License.
   				</section>
   			</widgets>	
   		</section>
-	</screen>
+	</screen> -->
 	<screen name="PreviousEmployementProfile">
 		<section>
 			<actions>
