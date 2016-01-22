@@ -284,6 +284,8 @@ if(partyOrderIds){
 		
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("quota",quota);
+		amount=eachItem.unitListPrice*eachItem.quantity;
+		newObj.put("amount", amount);
 		
 		newObj.put("batchNo", batchNo);
 		newObj.put("daysToStore", daysToStore);
