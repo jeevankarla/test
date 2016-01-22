@@ -34,7 +34,13 @@
 			userCustomerId = (EntityUtil.getFirst(customerParty)).get("partyId");
 			userParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", userCustomerId), false);
 			Debug.log("userParty ================"+userParty);
+			if(userParty){
 			context.party = userParty;
+			}else{
+			personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",userCustomerId), false);
+			Debug.log("personDetails ================"+personDetails);
+			context.party = personDetails;
+			}
 		}
 	}
 	
