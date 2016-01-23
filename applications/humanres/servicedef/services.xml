@@ -783,6 +783,7 @@ under the License.emplpunch
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="caste" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="weeklyOffDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
     </service>
 
 	<service name="updatePreviousEmployment" engine="simple"
@@ -1910,6 +1911,8 @@ under the License.emplpunch
         <attribute name="firstName" mode="IN" type="String" optional="false"></attribute>
         <attribute name="middleName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="lastName" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="fatherName" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="motherName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="birthDate" mode="IN" type="Date" optional="true"></attribute> 
         <attribute name="birthPlace" mode="IN" type="String" optional="true"></attribute>
         <attribute name="bloodGroup" mode="IN" type="String" optional="true"></attribute>
@@ -1917,6 +1920,7 @@ under the License.emplpunch
         <attribute name="maritalStatus" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emergencyContactName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emergencyContactNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="emergencyContactRelationship" mode="IN" type="String" optional="true"></attribute>
         <attribute name="countryCode" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="false"></attribute>
         <attribute name="address1" mode="IN" type="String" optional="false"></attribute>

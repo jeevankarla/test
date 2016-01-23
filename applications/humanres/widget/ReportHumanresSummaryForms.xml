@@ -1486,9 +1486,11 @@
     	<field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
        	<field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text></text></field>
         <field name="lastName"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="fatherName" title="Father's Name"><text></text></field>
+        <field name="motherName" title="Mother's Name"><text></text></field>
         <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
     	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field>
-    	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
+    	<!-- <field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field> -->
     	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
 			<drop-down allow-empty="true">
 			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -1512,15 +1514,22 @@
 			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
 		</drop-down>
 		</field>
-		<field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field>
+	    <!-- <field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field> -->
 		<field name="mobileNumber" title="${uiLabelMap.PartyPhoneNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="15" maxlength="15"/></field>
 	    <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><text></text></field>
 		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>
+		<field name="emergencyContactRelationship" title="Emergency Contact Relationship">
+		<drop-down allow-empty="true">
+                <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}">
+                    <entity-constraint name="parentTypeId" value="Dependent"/>
+                </entity-options>
+             </drop-down>
+		</field>
 		<field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
         <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="locationGeoId" title="Loaction Geo">
-            <drop-down allow-empty="false" no-current-selected-key="BGLR">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="CITY"/>
                     <entity-order-by field-name="geoName"/>
@@ -1528,9 +1537,9 @@
             </drop-down>
         </field>
         <field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down allow-empty="false" no-current-selected-key="IND">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
-                    <entity-constraint name="geoTypeId" value="STATE"/>
+                    <entity-constraint name="geoTypeId" value="INDSTATE"/>
                     <entity-order-by field-name="geoName"/>
                 </entity-options>
             </drop-down>
@@ -1578,14 +1587,14 @@
 				</entity-options>
 			</drop-down>
 		</field> -->
-		<field name="caste" title="${uiLabelMap.Caste}" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
+		<!-- <field name="caste" title="${uiLabelMap.Caste}" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
 					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA" />
 					<entity-order-by field-name="partyClassificationGroupId"/>
 				</entity-options>
 			</drop-down>
-		</field> 
+		</field>  -->
 		 <!-- <field name="nationality" title="${uiLabelMap.Nationality}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">

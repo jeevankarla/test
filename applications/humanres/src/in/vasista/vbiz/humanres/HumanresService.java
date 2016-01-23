@@ -1393,6 +1393,8 @@ public class HumanresService {
 			String firstName = (String) context.get("firstName");
 			String lastName = (String) context.get("lastName");
 			String middleName = (String) context.get("middleName");
+			String fatherName = (String) context.get("fatherName");
+			String motherName = (String) context.get("motherName");
 			Date birthDate =  (Date)context.get("birthDate");
 			String birthPlace = (String) context.get("birthPlace");
 			String bloodGroup =(String)context.get("bloodGroup");
@@ -1400,6 +1402,7 @@ public class HumanresService {
 			String maritalStatus =(String)context.get("maritalStatus");
 			String emergencyContactName =(String)context.get("emergencyContactName");
 			String emergencyContactNumber =(String)context.get("emergencyContactNumber");
+			String emergencyContactRelationship =(String)context.get("emergencyContactRelationship");
 			String countryCode =(String)context.get("countryCode");
 			String mobileNumber =(String)context.get("mobileNumber");
 			address1 =(String)context.get("address1");
@@ -1416,7 +1419,7 @@ public class HumanresService {
 			String quarterType =(String)context.get("quarterType");
 			String motherTongue =(String)context.get("motherTongue");
 			String religion =(String)context.get("religion");
-			String caste =(String)context.get("caste");
+			//String caste =(String)context.get("caste");
 			String nationality =(String)context.get("nationality");
 			String punchType =(String)context.get("punchType");
 			String weeklyOff =(String)context.get("weeklyOff");
@@ -1465,7 +1468,7 @@ public class HumanresService {
 		        	return ServiceUtil.returnError("Error while creating  Party, PartyId already exists" +partyId); 
 		        }
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -1528,11 +1531,13 @@ public class HumanresService {
 				
 				// create Partyclassification
 				try{
-					GenericValue newPartyClassification = delegator.makeValue("PartyClassification");
-					newPartyClassification.set("partyId", ownerPartyId);
-					newPartyClassification.set("partyClassificationGroupId", caste);
-					newPartyClassification.set("fromDate", UtilDateTime.nowTimestamp());
-					delegator.create(newPartyClassification);
+					//GenericValue newPartyClassification = delegator.makeValue("PartyClassification");
+					//newPartyClassification.set("partyId", ownerPartyId);
+					//newPartyClassification.set("partyClassificationGroupId", caste);
+					//newPartyClassification.set("fromDate", UtilDateTime.nowTimestamp());
+					//Debug.log("ownerPartyId====================",ownerPartyId);
+					//Debug.log("caste===================",caste);
+					//delegator.create(newPartyClassification);
 				}catch (Exception e) {
 					Debug.logError(e, module);
 					return ServiceUtil.returnError("Error while creating  PartyClassification" + e);	
@@ -1603,6 +1608,7 @@ public class HumanresService {
 					newEntity.set("employeeId", ownerPartyId);
 					newEntity.set("emergencyContactName", emergencyContactName);
 					newEntity.set("emergencyContactNumber", emergencyContactNumber);
+					newEntity.set("emergencyContactRelationship", emergencyContactRelationship);
 					newEntity.set("weeklyOff", weeklyOff);
 					newEntity.set("attendanceIndn", attendanceIndn);
 					newEntity.set("paymentMode", paymentMode);
@@ -1623,7 +1629,7 @@ public class HumanresService {
 					newEntity.set("shiftType", shiftType);
 					newEntity.set("backgroundVerification", backgroundVerification);
 					//delegator.setNextSubSeqId(newEntity,"employeeId", 5, 1);
-					delegator.create(newEntity);
+					 newEntity.create();
 				}catch (Exception e) {
 					Debug.logError(e, module);
 					return ServiceUtil.returnError("Error while creating  EmployeeDetail" + e);	
