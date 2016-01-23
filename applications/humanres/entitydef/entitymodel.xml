@@ -67,6 +67,7 @@ under the License.
 		<field name="employeeBankAccNo" type="short-varchar"></field>		
 		<field name="emergencyContactName" type="name"></field>
 		<field name="emergencyContactNumber" type="short-varchar"></field>
+		<field name="emergencyContactRelationship" type="name"></field>
 		<field name="recDirect" type="name"></field>
 		<field name="employeeReferral" type="id"></field>
 		<field name="recConsultancy" type="name"></field>
