@@ -34,11 +34,10 @@ supplierId = "";
 
 // usage of po balance if needed
 poBalanceProductMap=[:];
-/*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
+resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
 if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
 	poBalanceProductMap=resultMap.get("productTotals");
 }
-*/
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
@@ -84,7 +83,7 @@ if(orderId){
 		receivedQty=0;
 		maxReceivedQty=0;
 		poBalDetailsMap=[:];
-		if(UtilValidate.isNotEmpty(poBalDetailsMap)){
+		if(UtilValidate.isNotEmpty(poBalanceProductMap)){
 			poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
 		}
 		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("receivedQty"))){
@@ -101,9 +100,9 @@ if(orderId){
 		}
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		
-		
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
+		newObj.put("quantity",eachItem.quantity-receivedQty);
 		newObj.put("maxReceivedQty",maxReceivedQty);
 		newObj.put("uomDescription",uomLabel);
 		orderItemsJSON.add(newObj);
