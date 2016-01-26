@@ -24,7 +24,7 @@
 	        	</drop-down>
         </field>
 <!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
-         <field name="purposeTypeId"><hidden value=""/></field> 
+         <field name="purposeTypeId"><hidden value="MATERIAL_PUR_CHANNEL"/></field> 
          <field name="findPoFlag"><hidden value="Y"/></field>  
     	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -65,7 +65,7 @@
       			<parameter param-name="orderId"/>
       		</hyperlink>
       	</field>
-      	<field name="orderItemSeqId"><display></display></field>
+      	<field name="productStoreId" title="Branch"><display></display></field>
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
@@ -103,7 +103,7 @@
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
-        <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field>
+        <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
         <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelDepotTransPOOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
                  <parameter param-name="orderId"/>

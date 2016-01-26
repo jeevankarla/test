@@ -1671,17 +1671,13 @@ public class MaterialPurchaseServices {
 			cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
-			cart.setBillToCustomerPartyId(billToPartyId);
-			cart.setPlacingCustomerPartyId(billToPartyId);
+			cart.setBillToCustomerPartyId(billFromPartyId);
+			cart.setPlacingCustomerPartyId(billFromPartyId);
 			cart.setShipToCustomerPartyId(shipToPartyId);
-			cart.setEndUserCustomerPartyId(billToPartyId);
+			cart.setEndUserCustomerPartyId(billFromPartyId);
 			//cart.setShipmentId(shipmentId);
 			//for PurchaseOrder we have to use for SupplierId
-			if(UtilValidate.isNotEmpty(billFromPartyId)){
-				 cart.setBillFromVendorPartyId(billFromPartyId);
-			}else{
-		    cart.setBillFromVendorPartyId(partyId);
-			}
+			cart.setBillFromVendorPartyId(partyId);
 		    cart.setShipFromVendorPartyId(partyId);
 		    cart.setSupplierAgentPartyId(partyId);
 			
