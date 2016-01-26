@@ -168,13 +168,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 		getPayTermDes();
 		getDelTermDes();
 		
+		<#--
 		var depotsAutoJson = ${StringUtil.wrapString(depotsJSON)!'[]'};
 		$('#shipToPartyId').keypress(function (e) { 
 		$("#shipToPartyId").autocomplete({ source: depotsAutoJson , select: function( event, ui ) {
 			$('span#depotName').html('<h4>'+ui.item.label+'</h4>');
 			} });
 		});
-		
+		-->
 		var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
 		$('#productStoreId').keypress(function (e) { 
 		$("#productStoreId").autocomplete({ source: branchAutoJSON , select: function( event, ui ) {
