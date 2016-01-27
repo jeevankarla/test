@@ -108,11 +108,11 @@
 	}
 	 
  	
-	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId) {
+	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, productStoreId) {
 		var message = "";
 		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='createSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
 		
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='productId' name='productId' value='"+productId+"'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='STORE'/></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='productId' name='productId' value='"+productId+"'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='"+productStoreId+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Order Date:</td><td align='left' width='50%'><input type='text' id='saleOrderDate' name='saleOrderDate' onmouseover='datepick1()'/></td><input type='hidden'  id='effectiveDate' name='effectiveDate'/><input type='hidden'  id='quantityOnHandTotal' name='quantityOnHandTotal' value='"+quantityOnHandTotal+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Bill to Party:</td><td align='left' width='70%'><input class='h3' type='text' id='partyId' name='partyId' onclick='javascript:autoCompletePartyId();' size='13'/><span align='right' id='partyTooltip'></span></td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Unit Cost:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='unitCost' name='unitCost' value='"+unitCost+"'/></td><input type='hidden'  id='disableAcctgFlag' name='disableAcctgFlag' value='Y'/><input type='hidden'  id='inventoryItemId' name='inventoryItemId' value='"+inventoryItemId+"'/></tr>";
