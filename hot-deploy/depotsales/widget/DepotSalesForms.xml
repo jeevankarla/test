@@ -1516,8 +1516,10 @@
        
         <field name="shipmentId" title="Shipment Id"><display/></field>
         <field name="shipmentTypeId" title="shipment Type"><display-entity entity-name="ShipmentType" key-field-name="shipmentTypeId" description="${description}"></display-entity></field>
-        <!-- <field name="partyName" title="Party"><display></display></field> -->
-        <field name="fromPartyId" title="From Party"><display/></field>
+        <field name="facilityName" title="Depot"><display></display></field>
+        <field name="partyName" title="Supplier"><display></display></field>
+        <field name="fromPartyId"><hidden/></field>
+        <field name="productStoreId"><hidden/></field>
         <field name="estimatedShipDate" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="inventoryItemId" > <hidden/></field>
        <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
@@ -1527,7 +1529,7 @@
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="unitCost"><hidden/></field>
         <field name="Sale" title="Sale Indent" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
+             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}');"></hyperlink>
         </field>
         <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>

@@ -2916,7 +2916,10 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(productId)){
 			productIds.add(productId);
 		}
-		
+		if (UtilValidate.isEmpty(productStoreId)) {
+			request.setAttribute("_ERROR_MESSAGE_",	"Branch(ProductStore) is missing.");
+			return "error";
+		}
 		
 		try{
 			if(UtilValidate.isNotEmpty(unitCostStr)){
@@ -2944,6 +2947,10 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_",	"Problems parsing quantity string.");
 			return "error";
 		}
+		
+		
+		
+		
 		
 		List indentProductList = FastList.newInstance();
 		Map<String  ,Object> productQtyMap = FastMap.newInstance();
@@ -2978,7 +2985,7 @@ public class DepotSalesServices{
 		//processOrderContext.put("orderTaxType", orderTaxType);
 		//processOrderContext.put("orderId", orderId);
 		//processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
-		processOrderContext.put("productStoreId", "1003");
+		processOrderContext.put("productStoreId", productStoreId);
 		/*//processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);

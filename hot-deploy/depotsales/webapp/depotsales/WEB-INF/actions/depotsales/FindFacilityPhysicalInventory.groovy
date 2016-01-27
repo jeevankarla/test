@@ -21,10 +21,12 @@ import org.ofbiz.service.ServiceUtil
 import org.ofbiz.entity.condition.*
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.EntityUtil;
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
 import org.ofbiz.party.party.PartyHelper;
 
 facilityId = parameters.facilityId;
@@ -81,7 +83,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
     ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     physicalInventory = delegator.findList("InventoryItem", ecl, null, ['productId'], null, false);
 
-	shipmentReceiptList
+	//shipmentReceiptList
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"));
@@ -112,6 +114,14 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		}
     }
 	
+	condList = [];
+	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(physicalInventory, "facilityId", true)));
+	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
+		
+    productStoreList = delegator.findList("FacilityAndProductStoreFacility", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+	
     // associate the quantities to each row and store the combined data as our list
     physicalInventoryCombined = [];
     physicalInventory.each { iter ->
@@ -121,6 +131,8 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.inventoryItemId));
 		
 		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", iter.inventoryItemId), false);
+		
+		inventoryProdStore = EntityUtil.filterByCondition(productStoreList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, inventoryItem.facilityId));
 		
 		shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
 		if(shipmentReceiptEach) {
@@ -134,6 +146,10 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
 			row.putAt("fromPartyId", shipment.partyIdFrom);
 			row.putAt("facilityId", inventoryItem.facilityId);
+			if(UtilValidate.isNotEmpty(inventoryProdStore)){
+				row.putAt("productStoreId", (inventoryProdStore.get(0)).get("productStoreId"));
+			}
+			
 			row.putAt("facilityName", facility.facilityName);
 			row.putAt("partyName", partyName);
 			row.putAt("productName", product.productName);
