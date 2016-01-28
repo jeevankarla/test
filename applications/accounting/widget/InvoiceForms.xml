@@ -317,7 +317,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
@@ -390,7 +390,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyId">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                     <entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
@@ -1014,7 +1014,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
@@ -1165,7 +1165,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyId">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                     <entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
