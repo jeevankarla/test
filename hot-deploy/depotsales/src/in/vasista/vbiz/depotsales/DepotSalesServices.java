@@ -1523,6 +1523,9 @@ public class DepotSalesServices{
 					if(UtilValidate.isNotEmpty(baleQuantityStr) && !(baleQuantityStr.equals("NaN"))){
 					baleQuantity = new BigDecimal(baleQuantityStr);
 					}
+					if (UtilValidate.isNotEmpty(bundleWeightStr)) {
+					bundleWeight = new BigDecimal(bundleWeightStr);
+					}
 					if (UtilValidate.isNotEmpty(yarnUOMStr)) {
 						yarnUOM = yarnUOMStr;
 					}
