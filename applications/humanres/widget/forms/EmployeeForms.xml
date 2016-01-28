@@ -534,7 +534,7 @@
             <sort-field name="fatherName"/>
             <sort-field name="motherName"/>
             <sort-field name="gender"/>
-           <!--  <sort-field name="maritalStatus"/> -->
+            <sort-field name="maritalStatus"/>
             <sort-field name="height"/>
         	<sort-field name="weight"/>
             <sort-field name="bloodGroup"/>
@@ -752,8 +752,8 @@
 		<field name="motherName" title="Mother Name"><display-entity entity-name="Person" key-field-name="partyId" description="${motherName}"></display-entity></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
         <field name="gender" title="${uiLabelMap.FormFieldTitle_gender}"><display-entity entity-name="Person" key-field-name="partyId" description="${gender}" ></display-entity></field>
-<!--         <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
- -->      <!--   <field name="height" title="${uiLabelMap.Height}"><display/></field>
+       <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
+     <!--   <field name="height" title="${uiLabelMap.Height}"><display/></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><display/></field>-->
         <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>
         <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity></field>       

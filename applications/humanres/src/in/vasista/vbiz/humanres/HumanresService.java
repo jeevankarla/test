@@ -1830,7 +1830,7 @@ public class HumanresService {
         }catch(GenericEntityException e){
 			Debug.logError("Error while populating employee weekly off calendar"+e.getMessage(), module);
 		}
-        result = ServiceUtil.returnSuccess("Employee weekly off calendar populated...!");
+        result = ServiceUtil.returnSuccess("uploaded successfully...!");
         return result;
     }
     public static Map<String, Object> populateWeeklyOffCalendar(DispatchContext dctx, Map context) {
