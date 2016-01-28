@@ -427,7 +427,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
-				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
 				<set field="tabButtonItem2" value="processOrdersBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
 				<set field="defaultEffectiveDateTime"
@@ -446,11 +446,11 @@
 					
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="BranchSalesIndentTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="BranchSalesIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 						<section>
 							<widgets>
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -1007,7 +1007,7 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<include-menu name="ReceiptTabBar"
@@ -2094,7 +2094,7 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
@@ -2229,7 +2229,7 @@
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
@@ -2353,7 +2353,7 @@
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
@@ -2763,7 +2763,7 @@
 				<set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<container>
@@ -3469,7 +3469,7 @@
     		<section>
     			<actions>
     				<set field="titleProperty" value="Indent Payment" />
-    				<set field="tabButtonItem" value="BranchSalesOrder" />
+    				<set field="tabButtonItem" value="OrderPayment" />
     				<set field="tabButtonItem2" value="OrderPayment" />
     				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
     				<set field="defaultEffectiveDateTime"
@@ -3487,11 +3487,11 @@
     					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />
     			</actions>
     			<widgets>
-    				<decorator-screen name="DepotSalesCommonDecorator"
+    				<decorator-screen name="BranchTransactionsCommonDecorator"
     					location="${parameters.mainDecoratorLocation}">
     					<decorator-section name="body">
-    						<include-menu name="BranchSalesIndentTabBar"
-    							location="component://depotsales/widget/DepotSalesMenus.xml" />
+    						<!-- <include-menu name="BranchSalesIndentTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
     						<section>
     							<widgets>
     							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -4378,7 +4378,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -4549,7 +4549,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -4719,7 +4719,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -4886,7 +4886,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -5057,7 +5057,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -5230,7 +5230,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
@@ -5404,7 +5404,7 @@
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
