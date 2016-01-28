@@ -210,7 +210,7 @@
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
-		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<input type="hidden" name="billingType" id="billingType" value="onBehalfOf"/>  
 		       			
 		       		
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
