@@ -2225,8 +2225,8 @@
             	</or>            
             </condition>
 			<link target="ApInvoices">
-				<parameter param-name="invoiceTypeId" value="COGS_OUT" />
-				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="invoiceTypeId" value="ADMIN_OUT" />
+				<parameter param-name="subTabButtonValue" value="Admin" />
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
@@ -3193,13 +3193,13 @@
 	 
 	  
 	<menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
-          <menu-item name="Manufacturing" title="Manufacturing">
+          <!-- <menu-item name="Manufacturing" title="Manufacturing">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="COGS_OUT" />
              	<parameter param-name="subTabButtonValue" value="Manufacturing" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
-          </menu-item>
+          </menu-item> -->          
           <menu-item name="Admin" title="Admin">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="ADMIN_OUT" />
@@ -3228,7 +3228,7 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-          <menu-item name="Hyderabad" title="Hyderabad Expenses">
+          <!-- <menu-item name="Hyderabad" title="Hyderabad Expenses">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="HYD_OUT" />
              	<parameter param-name="subTabButtonValue" value="Hyderabad" />
@@ -3248,7 +3248,7 @@
              	<parameter param-name="subTabButtonValue" value="MilkPurchasesHyd" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
-          </menu-item>
+          </menu-item> -->
     </menu>
     
     <menu name="APInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

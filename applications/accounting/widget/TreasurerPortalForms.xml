@@ -1898,15 +1898,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="partyId"><hidden value="Company"/></field>
-        <!-- <field position="1" name="organizationPartyId" parameter-name="partyId">
+<!--         <field name="partyId"><hidden value="Company"/></field> -->
+        <field position="1" name="organizationPartyId" parameter-name="partyId">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                     <entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
-        </field> -->                            
+        </field>                            
         <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
         <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->        
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
@@ -1952,15 +1952,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>  -->    
-        <field name="partyIdFrom"><hidden value="Company"/></field>         
-        <!-- <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+<!--         <field name="partyIdFrom"><hidden value="Company"/></field>          -->
+        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+<!--                 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
-        </field> -->
+        </field>
         <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
         <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
