@@ -659,6 +659,14 @@
          <response name="failed" type="view" value="processIndentPortalBranchSales"/>  
       </request-map>
       
+       <request-map uri="createOrderPaymentDepot">
+          <security https="true" auth="true"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createOrderPayment"/>
+          <response name="success" type="view" value="FindSalesIndentPayment"/>   
+         <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+      </request-map>
+      
       
       <request-map uri="createCustomPaymentFromPreference">
          <security https="true" auth="true"/>
@@ -787,6 +795,14 @@
         <response name="success" type="view" value="orderPayment"/>
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
+    
+    <request-map uri="preferenceCancelDepot">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="preferenceCancel"/>
+        <response name="success" type="view" value="FindSalesIndentPayment"/>
+        <response name="error" type="view" value="FindSalesIndentPayment"/>
+    </request-map>
+    
      <request-map uri="IndentorpreferenceCancel">
         <security https="true" auth="true"/>
         <event type="service" invoke="preferenceCancel"/>

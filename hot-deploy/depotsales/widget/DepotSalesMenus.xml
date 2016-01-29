@@ -1069,7 +1069,8 @@
 	    	</link>
     	</menu-item>
     	<menu-item name="paymentForSales" title="Payment for Sales">
-	    	<link target="DepotSalesPaymentForSales">
+	    	<link target="FindSalesIndentPayment">
+	    	   <parameter param-name="salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"/>
 	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
 	    	</link>
     	</menu-item>

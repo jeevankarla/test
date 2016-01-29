@@ -468,7 +468,11 @@
     				<set field="tabButtonItem2" value="paymentForSales" />
     				<set field="screenFlag" value="depotSales" />
     				<set field="targetRequest" value="FindSalesIndentPayment" />
-    				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderPaymentSearchResults.groovy" />
+    				<script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListDepotSalesOrderPaymentSearchResults.groovy" />
+    			    <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListDepotSalesOrderAdvancePayments.groovy" />
+    	
     			</actions>
     			<widgets>
     				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -484,7 +488,8 @@
     								<screenlet title="Depot Orders">
     									<platform-specific>
     										<html>
-    											<html-template location="component://depotsales/webapp/depotsales/depotsales/ListSearchIndentPayments.ftl" />
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/ListDepotSearchOrderPayments.ftl" />
     										</html>
     									</platform-specific>
     								</screenlet>
