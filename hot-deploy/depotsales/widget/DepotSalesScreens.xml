@@ -5549,4 +5549,50 @@
 			</widgets>
 		</section>
 	</screen>
+		<screen name="CreateBranchTransPO">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Purchase Order" />
+    				<set field="tabButtonItem" value="BranchSalesOrder" />
+    				<set field="tabButtonItem2" value="DraftPurchaseOrder" />
+				<set field="targetRequest" value="FindDepotTransPO" />
+				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
+				<set field="parameters.roleTypeId" value="SUPPLIER" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="changeFlag" value="PurchaseOrder" />
+				<set field="parameters.POId" from-field="orderId" />
+				<set field="parameters.changeFlag" value="PurchaseOrder" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditBranchPOEntryForm.groovy" />
+				<set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag" />
+				</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					<include-menu name="BranchSalesIndentWithPoTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<label style="h1">New PO</label>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/CreateBranchTransPO.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
