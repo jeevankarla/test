@@ -199,6 +199,7 @@ under the License.
           <td>Supplier Name</td>
          <#--> <td>Print Indent</td>-->
           <td>Minutes</td>
+           <td>DraftPO</td>
           <td>Minutes Hindi</td>
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
@@ -237,6 +238,11 @@ under the License.
               	<td>${supplierPartyName?if_exists}  [${supplierPartyId?if_exists}]</td>
               <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
               	<td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
+              <#if (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO =="N")>
+              	<td><a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>DraftPO</td>
+              	<#else>
+              	<td></td>
+              	</#if>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>

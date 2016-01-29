@@ -1247,6 +1247,35 @@
        
        </menu>
 	
+	       <menu name="BranchSalesIndentWithPoTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
+			<link target="orderPayment">
+				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
+			</link>
+		</menu-item>
+        	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
+        	<link target="processOrdersBranchSales">
+        		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
+        	</link>
+	        </menu-item>
+	         <menu-item name="DraftPurchaseOrder" title="Purchase Order">
+        	<link target="CreateBranchTransPO">
+        	</link>
+	        </menu-item>
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
 	
 	
 	

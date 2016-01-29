@@ -450,7 +450,7 @@
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
-         <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
+         <response name="success"  type="request-redirect-noparam" value="processOrdersBranchSales"></response>
         <response name="error" type="view" value="processOrdersBranchSales"/>
     </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
@@ -749,6 +749,10 @@
    <request-map uri="CreateDepotTransPO">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreateDepotTransPO"/>
+    </request-map>
+    <request-map uri="CreateBranchTransPO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateBranchTransPO"/>
     </request-map>
     <request-map uri="CreateMaterialDepotTransPO">
         <security https="true" auth="true"/>
@@ -1246,6 +1250,7 @@
     <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
     <view-map name="FindDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindDepotTransPO"/>
     <view-map name="CreateDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateDepotTransPO"/>
+    <view-map name="CreateBranchTransPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateBranchTransPO"/>
     <view-map name="ProcessOrdersSuppliersDepotTrans" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessOrderAndShipmentGeneration"/>
     <view-map name="EditMaterialDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#EditMaterialDepotTransPO"/>
     <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>
