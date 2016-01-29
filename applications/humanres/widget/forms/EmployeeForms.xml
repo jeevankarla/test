@@ -778,9 +778,9 @@
 		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${flexibleShift}"></display-entity></field>
 		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field> -->
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
-		<field name="presentEpf" title="PF Number"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${presentEpf}"></display-entity></field>
 <!--        	<field name="doj" title="D.O.J"><display description="${doj}"></display></field>
  -->        <field name="passportExpiryDate" title="Passport Expiry Date"><display default-value="${passportExpiryDate}"></display></field>
+            <field name="presentEpf" title="PF Number"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${presentEpf}"></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>
    </form>
     
