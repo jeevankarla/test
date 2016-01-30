@@ -1119,6 +1119,16 @@
        <response name="success" type="view" value="CreateNewProduct"/>
        <response name="error" type="view" value="CreateNewProduct"/>    
     </request-map> 
+    <request-map uri="updateShipment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateShipment"/>
+        <response name="success"  type="request-redirect-noparam" value="FindGRNShipmentsDepot">
+     		<redirect-parameter name="shipmentId"/>
+     	</response>
+     		
+        <!-- <response name="success" type="view" value="FindGRNShipmentsDepot"/> -->
+        <response name="error" type="view" value="FindGRNShipmentsDepot"/>
+    </request-map>
         
     <!-- View Mappings -->
     
