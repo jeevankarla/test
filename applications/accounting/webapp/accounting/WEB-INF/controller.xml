@@ -3701,6 +3701,7 @@ under the License.
             <redirect-parameter name="invoiceId"/>
             <redirect-parameter name="actionSubTabButtonValue"/>
             <redirect-parameter name="subTabButtonValue"/>
+            <redirect-parameter name="partyId"/>
         </response>
         <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
         <response name="error" type="view" value="CreateAPInvoice"/>
@@ -3712,6 +3713,7 @@ under the License.
             <redirect-parameter name="invoiceId"/>
             <redirect-parameter name="actionSubTabButtonValue"/>
             <redirect-parameter name="subTabButtonValue"/>
+            <redirect-parameter name="partyId"/>           
         </response>
         <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
         <response name="error" type="view" value="CreateAPInvoice"/>
@@ -3777,6 +3779,7 @@ under the License.
             <redirect-parameter name="invoiceId"/>
             <redirect-parameter name="actionSubTabButtonValue"/>
             <redirect-parameter name="subTabButtonValue"/>
+            <redirect-parameter name="partyIdFrom"/>
         </response>
         <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
         <response name="error" type="view" value="CreateARInvoice"/>
@@ -3788,6 +3791,7 @@ under the License.
             <redirect-parameter name="invoiceId"/>
             <redirect-parameter name="actionSubTabButtonValue"/>
             <redirect-parameter name="subTabButtonValue"/>
+            <redirect-parameter name="partyIdFrom"/>
         </response>
         <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
         <response name="error" type="view" value="CreateARInvoice"/>
