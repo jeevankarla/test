@@ -241,5 +241,19 @@ under the License.
     <!-- To auto pick language preference -->
     	
     	<UserLogin partyId="13670" userLoginId="vikram" preferredLocale="hi_IN"/>
+    	
+    	
+    	<StatusItem description="Dispatched" sequenceId="01" statusCode="DISPATCHED" statusId="DISPATCHED" statusTypeId="SHIPMENT_STATUS"/> 
+    	<StatusItem description="Documents Received" sequenceId="02" statusCode="DOCUMENTS_RECEIVED" statusId="DOCUMENTS_RECEIVED" statusTypeId="SHIPMENT_STATUS"/>
+    	<StatusItem description="Documents Endorsed" sequenceId="03" statusCode="DOCUMENTS_ENDORSED" statusId="DOCUMENTS_ENDORSED" statusTypeId="SHIPMENT_STATUS"/>
+    	<StatusItem description="Goods Received" sequenceId="04" statusCode="GOODS_RECEIVED" statusId="GOODS_RECEIVED" statusTypeId="SHIPMENT_STATUS"/>
+    	
+    	<StatusValidChange statusId="DISPATCHED" statusIdTo="DOCUMENTS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
+    	<StatusValidChange statusId="DOCUMENTS_RECEIVED" statusIdTo="DOCUMENTS_ENDORSED" transitionName="Set Dispatched to Documents Received"/> 
+    	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
+    	
+    	
+    	
+    	
     
 </entity-engine-xml>
