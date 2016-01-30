@@ -2627,6 +2627,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
             	<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" default-value="createInvoice"/>
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+            	<set field="defaultOrganizationPartyId" value="${parameters.partyId}"/>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                        
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js" global="true"/>
                 <set field="headerItem" value="invoices"/>
@@ -3110,6 +3111,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
             	<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" default-value="createInvoice"/>
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+            	<set field="defaultOrganizationPartyId" value="${parameters.partyIdFrom}"/>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                                   
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/> 
 				 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
