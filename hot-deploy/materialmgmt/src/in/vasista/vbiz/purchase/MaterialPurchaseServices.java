@@ -273,9 +273,9 @@ public class MaterialPurchaseServices {
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 	        }else{
-	        newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
 	        }
-	        newEntity.set("statusId", "GENERATED");
+	        newEntity.set("statusId", "DISPATCHED");
 	        newEntity.put("vehicleId",vehicleId);
 	        newEntity.put("lrNumber",lrNumber);
 	        newEntity.put("carrierName",carrierName);
@@ -3591,6 +3591,17 @@ public class MaterialPurchaseServices {
 				}
 				}
 			}
+			try {
+	        	 Map<String, Object> updateShipmentCtx = FastMap.newInstance();
+	        	 updateShipmentCtx.put("userLogin", context.get("userLogin"));
+	        	 updateShipmentCtx.put("shipmentId", shipmentId);
+	        	 updateShipmentCtx.put("statusId", "GOODS_RECEIVED");            
+	             dispatcher.runSync("updateShipment", updateShipmentCtx);
+	        }
+	        catch (GenericServiceException e) {
+	    		Debug.logError(e, "Failed to update shipment status " + shipmentId, module);
+	    		return ServiceUtil.returnError("Failed to update shipment status " + shipmentId + ": " + e);          	
+	        }
 		} catch (Exception e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
