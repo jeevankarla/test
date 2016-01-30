@@ -5584,7 +5584,7 @@
 								<platform-specific>
 									<html>
 										<html-template
-											location="component://depotsales/webapp/depotsales/depotsales/CreateBranchTransPO.ftl" />
+											location="component://depotsales/webapp/depotsales/depotsales/CreateBranchTransPo.ftl" />
 									</html>
 								</platform-specific>
 							</widgets>

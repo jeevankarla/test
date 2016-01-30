@@ -1,7 +1,7 @@
 <#if orderType.equals("onbehalfof")>
 	<#include "CreateBranchOnBehalfTransPOInc.ftl"/>
 <#else>
-	<#include "CreateBranchTransPOInc.ftl"/>
+	<#include "CreateBranchTransPoInc.ftl"/>
 </#if>
 <#--
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
@@ -12,7 +12,36 @@
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
-
+var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
+		var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
+		var CountryOptionList;
+	   var CountryOptions;
+	   var StateOptionList;
+	   var StateOptions;
+	var stateListJSON;
+ function setServiceName(selection) {
+ var country=selection.value;
+  jQuery.ajax({
+                url: 'getCountryStateList',
+                type: 'POST',
+                async: true,
+                data: {countryGeoId:country} ,
+ 				success: function(result){
+ 				stateListJSON = result["stateListJSON"];
+ 				if (stateListJSON) {	
+                     var optionList;	       				        	
+			        	for(var i=0 ; i<stateListJSON.length ; i++){
+							var innerList=stateListJSON[i];	              			             
+			                optionList += "<option value = " + innerList['value'] + " >" + innerList['label'] + "</option>";          			
+			      		}//end of main list for loop
+	  			}else{
+			                optionList += "<option value = " + "_NA_" + " >" + "_NA_" + "</option>";          			
+					 }
+ 					 jQuery("[name='stateProvinceGeoId']").html(optionList);
+            }    
+                   });
+ 
+}
 		
 		
 function makeDatePicker(fromDateId ,thruDateId){
@@ -51,7 +80,46 @@ function makeDatePicker(fromDateId ,thruDateId){
 			}
 		});
 	}
-	
+	function manualAddressEntry(){
+	//$("#ManualAddress").hide();
+	$("#manualEntryDiv").show();
+		$("#PostalAddress").show();
+	$("#autoAddress").show();
+	$("#manualAddEntry").hide();
+	populateData();
+}
+function hideManualEntry(){
+	//$("#ManualAddress").hide();
+		$("#PostalAddress").hide();
+	$("#manualEntryDiv").hide();
+	$("#autoAddress").hide();
+	$("#manualAddEntry").show();
+}
+
+function populateData(){
+	 CountryOptionList += "<option value = IND selected>India  </option>";          			
+
+ 		if(CountryJsonMap != undefined && CountryJsonMap != ""){
+				$.each(CountryJsonMap, function(key, item){
+			         CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+
+				});
+	 	   }
+		  CountryOptions = CountryOptionList;
+ 			jQuery("[name='country']").html(CountryOptions);
+ 					 
+ 		if(StateJsonMap != undefined && StateJsonMap != ""){
+			$.each(StateJsonMap, function(key, item){
+			                StateOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+			});
+	 	   }
+		 
+		 StateOptions = StateOptionList;
+ 		 jQuery("[name='stateProvinceGeoId']").html(StateOptions);
+}
+
+
+
     $(document).ready(function(){
             $("#wizard-2").steps({
                 headerTag: "h3",
@@ -149,6 +217,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	}); 
 	
 	$(document).ready(function(){
+	$("#PostalAddress").hide();
 		makeDatePicker("estimatedDeliveryDate","fromDateId");
 		makeDatePicker("orderDate","fromDateId");
 		makeDatePicker("refDate","fromDateId");
@@ -706,12 +775,41 @@ function makeDatePicker(fromDateId ,thruDateId){
 	      						  <tr>
                                 	<td class="label"><FONT COLOR="#045FB4"><b>Shipping Customer : </b></FONT></td>
                                 	 <td class="label"><FONT COLOR="#108FR8"><b>${orderInfo.get("shipToPartyName")?if_exists}</b></FONT></td>
-                                	
 	    							<td>
 									      <input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
 									      
 		      						</td>
 	      						</tr>
+	      						 <tr>
+	      						 <td></td>
+                                	 <td class="label">
+                                	 <#if shipingAdd?has_content>
+                                	 <FONT COLOR="#108FR8">
+                                	 ${shipingAdd.get("address1")},
+                                	 ${shipingAdd.get("address2")},
+                                	 ${shipingAdd.get("city")}                               	 
+                                	 </font>
+                                	 </#if>
+                                	 </td>
+	      						</tr>
+	      						
+	      						<div id='manualEntryDiv' style='display:none'>
+	     		  <table  id='PostalAddress' cellspacing=10 cellpadding=10 width=400>
+	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address1:</font><font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>
+	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address2: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>
+	     		   <tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>
+	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
+	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
+	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
+	     		   	
+	     		   </table>
+     		   	</div>
+     		   	<table  id='submitfrm' cellspacing=10 cellpadding=10 width=400>
+     		   	<tr id='manualAddEntry' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>
+     		   <tr id='autoAddress' style='display:none' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Auto Pick Address' id='autoAddress'  name='autoAddress' onclick='hideManualEntry()'/></td></tr>
+     		   <#-- <tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>
+			   </table></form></body></html>
+	      						
 				                <#--
 				                <tr>
 								    <td>Ship To Party(<font color="red">*</font>):</td>

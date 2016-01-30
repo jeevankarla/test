@@ -32,6 +32,8 @@ import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.party.contact.ContactMechWorker;
+
 purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
 purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
@@ -113,6 +115,50 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
 		shipToParty=EntityUtil.getFirst(shipToPartyRole);
 		Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
+		shipingAdd=[:];
+		if(shipToParty.partyId){
+		contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
+		Debug.log("contactMechesDetails======================="+contactMechesDetails);
+		if(contactMechesDetails){
+			contactMec=contactMechesDetails.getLast();
+			if(contactMec){
+				partyPostalAddress=contactMec.get("postalAddress");
+				Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+			//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+				if(partyPostalAddress){
+					address1="";
+					address2="";
+					state="";
+					city="";
+					postalCode="";
+					if(partyPostalAddress.get("address1")){
+					address1=partyPostalAddress.get("address1");
+					}
+					if(partyPostalAddress.get("address2")){
+						address2=partyPostalAddress.get("address2");
+						}
+					if(partyPostalAddress.get("city")){
+						city=partyPostalAddress.get("city");
+						}
+					if(partyPostalAddress.get("state")){
+						state=partyPostalAddress.get("state");
+						}
+					if(partyPostalAddress.get("postalCode")){
+						postalCode=partyPostalAddress.get("postalCode");
+						}
+					shipingAdd.put("address1",address1);
+					shipingAdd.put("address2",address2);
+					shipingAdd.put("city",city);
+					shipingAdd.put("postalCode",postalCode);
+				}
+			}
+		}
+		}
+		Debug.log("shipingAdd========================="+shipingAdd);
+		
+		context.shipingAdd=shipingAdd;
+		
+		
 		orderInfoDetail.putAt("shipToPartyId", shipToParty.partyId);
 		
 		shipParty=PartyHelper.getPartyName(delegator, shipToParty.partyId, false)
@@ -330,3 +376,31 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderEditParamMap.putAt("orderTerms", orderTerms);
 }
 context.orderEditParam = orderEditParamMap;
+
+// preparing Country List Json
+dctx = dispatcher.getDispatchContext();
+
+List<GenericValue> countries= org.ofbiz.common.CommonWorkers.getCountryList(delegator);
+JSONArray countryListJSON = new JSONArray();
+countries.each{ eachCountry ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachCountry.geoId);
+		newObj.put("label",eachCountry.geoName);
+		countryListJSON.add(newObj);
+}
+context.countryListJSON = countryListJSON;
+
+// preparing state List Json
+
+
+dctx = dispatcher.getDispatchContext();
+
+List<GenericValue> statesList = org.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator, "IND");
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoCode);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateListJSON = stateListJSON;
