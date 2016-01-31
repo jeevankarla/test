@@ -172,7 +172,7 @@ if("SALES_INVOICE"==parentTypeId){
 		}
 		// for payment method id in ap payments
 		condList.clear();
-		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+//		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
 		condList.add(EntityCondition.makeCondition("paymentMethodId", EntityOperator.NOT_EQUAL, "PAYMENTMETHOD2"));
 		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, ["description"], null, false);
