@@ -1104,8 +1104,8 @@ public class DepotPurchaseServices{
 						request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
 			        }
 				}
-		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
-		request.setAttribute("orderId", result.get("orderId")); 
+		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
+		request.setAttribute("orderId", orderId); 
 		return "success";
 	
 	}
