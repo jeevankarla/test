@@ -629,6 +629,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
+        <field position="1" name="organizationPartyId" >
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+<!--                 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="isPosted" id-name="isPosted">
             <drop-down>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
@@ -638,7 +646,7 @@ under the License.
         </field>
         <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
             <hyperlink target="FinancialAccountTransForMonth.pdf" description="PDF" target-window="_blank"> 	
-                  <parameter param-name="organizationPartyId" from-field="organizationPartyId"/> 
+                  <parameter param-name="organizationPartyId" value="${parameters.organizationPartyId}"/> 
                	  <parameter param-name="finAccountId" from-field="finAccountId" />
                	  <parameter param-name="fromDate" from-field="fromDate" />
                	  <parameter param-name="thruDate" from-field="thruDate" />
