@@ -483,7 +483,7 @@
 				    	<div align="center">
 				    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}}</@ofbizUrl>');"/>   	
+				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processOrdersBranchSales</@ofbizUrl>');"/>   	
 				    	</div>     
 					</#if>
 					
