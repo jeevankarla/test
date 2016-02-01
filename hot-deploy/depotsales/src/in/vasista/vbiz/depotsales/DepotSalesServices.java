@@ -4313,6 +4313,73 @@ public class DepotSalesServices{
 	   	result.put("productFeatureCategoryList",productFeatureCategoryList); 
 	   	return result;
    	}
+	
+	public static String createNewProductAndFeatures(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map resultMap = FastMap.newInstance();
+		String productCategoryId = (String) request.getParameter("productCategoryId");
+		String virtualProductId = (String) request.getParameter("childProductCategoryId");
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		
+		/*Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}*/
+		
+		List productFeatureCategoryList = FastList.newInstance();
+		
+		try{
+			result = dispatcher.runSync("getProductFeatures", UtilMisc.toMap("productCategoryId", productCategoryId));
+			if (ServiceUtil.isError(result)) {
+				request.setAttribute("_ERROR_MESSAGE_", "Error Occurred in Service");
+				return "error";	    	            
+			} 
+			productFeatureCategoryList = EntityUtil.getFieldListFromEntityList( (List<GenericValue>) result.get("productFeatureCategoryList"), "productFeatureCategoryId", true);
+			Debug.log("productFeatureCategoryList =================="+productFeatureCategoryList);
+		}
+		catch (GenericServiceException e) {
+			 Debug.logError(e, "Error Occured in fetching product features: ", module);
+			 request.setAttribute("_ERROR_MESSAGE_", "Error Occured in fetching product features: ");
+			 return "error";
+		}
+		String productFeatureIds = "";
+		for(int i=0; i<productFeatureCategoryList.size(); i++){
+			String productFeatureCategoryId = (String) productFeatureCategoryList.get(i);
+			String productFeatureId = (String) request.getParameter(productFeatureCategoryId);
+			Debug.log("productFeatureId =================="+productFeatureId);
+			if(UtilValidate.isNotEmpty(productFeatureId)){
+				productFeatureIds += "|" + productFeatureId;
+			}
+			
+		}
+		Debug.log("productFeatureIds =================="+productFeatureIds);
+		
+		try{
+			result = dispatcher.runSync("quickAddVariant", UtilMisc.toMap("productId", virtualProductId, "productFeatureIds", productFeatureIds));
+			Debug.log("result =================="+result);
+			if (ServiceUtil.isError(result)) {
+				request.setAttribute("_ERROR_MESSAGE_", "Error Occurred in Service");
+				return "error";	    	            
+			} 
+		}
+		catch (GenericServiceException e) {
+			 Debug.logError(e, "Error Occured in fetching product features: ", module);
+			 request.setAttribute("_ERROR_MESSAGE_", "Error Occured in fetching product features: ");
+			 return "error";
+		}
+		
+		request.setAttribute("_EVENT_MESSAGE_", "Product creation successfull: ");
+		return "success";
+	}
+	
    	
    	
 }
