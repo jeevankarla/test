@@ -33,8 +33,7 @@ import java.text.ParseException;
 import org.ofbiz.party.party.PartyHelper;
 import javolution.util.FastList;
 import javolution.util.FastMap;
-
-
+financialAcctgTransList=[];
 if (organizationPartyId) {
     onlyIncludePeriodTypeIdList = [];
     onlyIncludePeriodTypeIdList.add("FISCAL_MONTH");

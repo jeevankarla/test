@@ -2774,6 +2774,7 @@
 					<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
 					<select-field field-name="groupName"/>
 				</entity-one>
+				<set field="defaultOrganizationPartyId" value="${parameters.organizationPartyId}"/>
 				<set field="titleProperty" value="FinancialAccountingTrans" />
 				<set field="labelTitleProperty" value="Financial Accounting Trans" />
 				<set field="tabButtonItem" value="OrganizationAccountingReports" />
@@ -2788,6 +2789,7 @@
 					<field-map field-name="mainAction" value="REPORTS" />
 				</service>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<set field="organizationPartyId" value="${parameters.organizationPartyId}"/>
 			</actions>
 			<widgets>
 				<section>
@@ -3776,6 +3778,7 @@
 				<set field="reportTypeFlag" from-field="context.reportTypeFlag"/>
 			</actions>
 			<widgets>
+			<label text="================fsdfs=============${parameters.organizationPartyId}"></label>
 				<section>
 					<condition>
 						<if-compare operator="equals" value="true"
