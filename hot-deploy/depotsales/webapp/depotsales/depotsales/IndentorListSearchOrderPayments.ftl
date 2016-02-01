@@ -219,6 +219,7 @@ under the License.
           <#-- <td>Payment</td> -->
            <td>${uiLabelMap.Status}</td>
            <td>${uiLabelMap.AdvancePayments}</td>
+           <td>${uiLabelMap.ReceivedAmount}</td>
           <#-- <td>${uiLabelMap.AdvancePayments}</td>
              <td>Indent Status</td>-->
         <#--  <td>Edit</td>
@@ -299,13 +300,12 @@ under the License.
                 <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
                 <td>Payment Received</td>
                 </#if>
-                <#--
+                
                 <#if (advancePaymentVisible.get(eachOrder.orderId)) != "notVisible">
                 <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: IndentorRealizeStatusChange('${eachOrder.orderId}');"/></td>
                 <#else>
                 <td></td>
                 </#if>
-                -->
                 
                 <#if (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")!=-1>
               	<td>${(balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")}</td>
