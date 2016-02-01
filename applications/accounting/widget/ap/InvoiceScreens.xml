@@ -235,10 +235,10 @@ under the License.
                                  <condition-list combine="or">
                                      <condition-list combine="and">
                                          <condition-expr field-name="partyId" from-field="partyId"/>
-                                         <condition-expr field-name="partyIdFrom" from-field="defaultOrganizationPartyId"/>
+<!--                                          <condition-expr field-name="partyIdFrom" from-field="defaultOrganizationPartyId"/> -->
                                      </condition-list>
                                      <condition-list combine="and">
-                                         <condition-expr field-name="partyId" from-field="defaultOrganizationPartyId"/>
+<!--                                          <condition-expr field-name="partyId" from-field="defaultOrganizationPartyId"/> -->
                                          <condition-expr field-name="partyIdFrom" from-field="partyId"/>
                                      </condition-list>
                                  </condition-list>
