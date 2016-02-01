@@ -113,6 +113,7 @@ under the License.
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set field="defaultOrganizationPartyId" value="${parameters.partyIdFrom}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">
