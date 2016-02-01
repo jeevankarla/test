@@ -41,10 +41,10 @@ invExprs =
         EntityCondition.makeCondition([
             EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, context.defaultOrganizationPartyId)
+//                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, context.defaultOrganizationPartyId)
                 ],EntityOperator.AND),
             EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, context.defaultOrganizationPartyId),
+//                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, context.defaultOrganizationPartyId),
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ],EntityOperator.AND)
             ],EntityOperator.OR)
