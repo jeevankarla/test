@@ -215,6 +215,7 @@
 		}		
 	}
 	
+	<#--
 	function getAttributeTypes() {
 		var subChildProductCategoryId = $('#subChildProductCategoryId').val();
 		
@@ -323,6 +324,7 @@
 			
 		}		
 	}
+	-->
 	
 	
 	
@@ -340,7 +342,7 @@
 	
       		<table id="features" name="features" width="100%" border="0" cellspacing="0" cellpadding="0">
         		 <tr>
-			         <td align='right' class='label'>Type:</td>
+			         <td align='right' class='label'>Product Category:</td>
 			         <td valign='middle'>
 	             		<select name="productCategoryId" id="productCategoryId" onchange="getCategoryMembers()">
 			          		<option value=''></option>
@@ -352,7 +354,7 @@
 			      </tr>
 			      
 			      <tr>
-			         <td align='right' class='label'>Child Type:</td>
+			         <td align='right' class='label'>Product Type:</td>
 			         <td valign='middle'>
 	             		<select name="childProductCategoryId" id="childProductCategoryId" onchange="getProductFeatures()">
 						</select>	

@@ -1095,9 +1095,10 @@
     </request-map>
     <request-map uri="createNewProduct">
        <security https="true" auth="false"/>
-       <event type="service"  invoke="newProductCreation"/>        
-       <response name="success" type="view" value="CreateNewProduct"/>
-       <response name="error" type="view" value="CreateNewProduct"/>    
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="createNewProductAndFeatures" global-transaction="true"/>
+       <!-- <event type="service"  invoke="newProductCreation"/> -->        
+       <response name="success" type="view" value="CreateNewYarnProductScreen"/>
+       <response name="error" type="view" value="CreateNewYarnProductScreen"/>    
     </request-map> 
         
     <!-- View Mappings -->
