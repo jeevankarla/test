@@ -2126,7 +2126,7 @@
 			<link target="DepositTransfer">
 			</link>
 		 </menu-item>  
-		 <menu-item name="IncomingAdvances" title="Advances Received">
+		 <menu-item name="IncomingAdvances" title="Indent Received">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
