@@ -56,7 +56,7 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 apPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
 
 condList.clear();
-condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.IN, UtilMisc.toList("EXPENSE_PAYOUT","STATUTORY_PAYOUT")));
+condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.IN, UtilMisc.toList("AGNSTINV_PAYOUT","STATUTORY_PAYOUT")));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 apTreasurerPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
 context.put("apTreasurerPaymentTypes",apTreasurerPaymentTypes);
