@@ -1444,7 +1444,7 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseInvoiceEntryForm.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<include-menu name="ReceiptTabBar"

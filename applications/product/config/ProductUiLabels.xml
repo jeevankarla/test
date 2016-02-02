@@ -25380,7 +25380,7 @@
     </property>
     
     <property key="ReceiptOfGoods">
-        <value xml:lang="en">Receipt of Goods</value>
+        <value xml:lang="en">Shipment Listing</value>
         <value xml:lang="hi_IN">चीजों की रसीद</value>
         <value xml:lang="ta">மூலப்பொருள் ஒப்புகை</value>
     </property>
