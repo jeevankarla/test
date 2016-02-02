@@ -532,7 +532,7 @@ public class DepotPurchaseServices{
 		            Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
 		            if(ServiceUtil.isError(paymentApplResult)){
 	           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(paymentApplResult), module);
-	           			request.setAttribute("_ERROR_MESSAGE_", "Unable to Create Payment Application For :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(paymentApplResult));
+	           			//request.setAttribute("_ERROR_MESSAGE_", "Unable to Create Payment Application For :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(paymentApplResult));
 	           			return "error";
 	           		}
 		           	
@@ -598,7 +598,7 @@ public class DepotPurchaseServices{
 		    
 		   }catch (Exception e) {
 				Debug.logError(e, "Problems while Calculating balance Amount for order: " + partyId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems while Calculating balance Amount for order: " + partyId);
+				//request.setAttribute("_ERROR_MESSAGE_", "Problems while Calculating balance Amount for order: " + partyId);
 				return "error";
 			}
 		   
