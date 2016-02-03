@@ -98,9 +98,11 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
+        <field name="locationGeoId" title="Employee Location"><display/></field>
         <field name="leaveCountDays" title="Total no.of days"><display/></field> 
 		<field name="leaveTypeId" title="Type"></field>        
 		<field name="emplLeaveReasonTypeId" title="Reason"></field>                
+        <field name="comment" title="Description" ><display size="20"/></field> 
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
         <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
 		<field name="dayFractionId" title="1st/2nd Half"></field>
@@ -114,7 +116,6 @@
         </field>
         <field name="leaveStatus" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
 		<field name="documentsProduced" title="Docs"></field>    
-		<field name="comment" title="Comment" ><display size="20"/></field>        		    
         <field name="updateLeave" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}" target="EditEmplLeave">
                 <parameter param-name="partyId"/>
@@ -257,7 +258,7 @@
         </row-actions>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
-        <field name="description"><hidden/></field>        
+        <field name="comment" title="Description" ><display size="20"/></field>       
 		<field name="emplLeaveApplId" title="Leave Id"><display></display></field>                
         <field name="partyId" field-name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]"><!--
@@ -283,7 +284,7 @@
         <field name="GHSSdays" title="Comp off Leave Days"><display></display></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
 		<field name="documentsProduced" title="Docs"><display></display></field>    
-		<field name="comment" title="Comment" ><display size="20"/></field> 
+		 
         <!-- <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="partyId"/>

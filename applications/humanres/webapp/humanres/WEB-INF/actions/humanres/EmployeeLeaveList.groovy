@@ -136,10 +136,20 @@ if(UtilValidate.isNotEmpty(leaveDetails)){
 		}else{
 			leaveCount = leaveCountDays;
 		}
-		
+		partyId = leave.partyId;
+		thruDate = leave.thruDate; 
+		List locationList=[];
+		locationList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+		locationList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		location = EntityCondition.makeCondition(locationList,EntityOperator.AND);
+		locationGeoList = delegator.findList("Employment", location , null, null, null, false );
+		if(UtilValidate.isNotEmpty(locationGeoList)){
+			locationGeoList = EntityUtil.getFirst(locationGeoList);
+			location = locationGeoList.get("locationGeoId");
 		leaveDetailsMap = [:];
 		leaveDetailsMap.put("emplLeaveApplId", leave.emplLeaveApplId);
 		leaveDetailsMap.put("partyId", leave.partyId);
+		leaveDetailsMap.put("locationGeoId", location);
 		leaveDetailsMap.put("leaveCountDays", leaveCount);
 		leaveDetailsMap.put("leaveTypeId", leave.leaveTypeId);
 		leaveDetailsMap.put("emplLeaveReasonTypeId", leave.emplLeaveReasonTypeId);
@@ -195,4 +205,4 @@ if(UtilValidate.isNotEmpty(emplLeaveApplId)){
 		}
 	}
 }
-
+}
