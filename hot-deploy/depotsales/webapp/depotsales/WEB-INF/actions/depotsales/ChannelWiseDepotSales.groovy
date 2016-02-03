@@ -314,8 +314,13 @@
 					 totalAmount = totalAmount + exclAmt;
 				 }
  
+				 if(productQuantIncluded.get(productId)!=null){
+					 tempQuant = productQuantIncluded.get(productId).multiply(quantity)
+				 }
+				 else{
+					 tempQuant =quantity;
+				 }
 				 
-				 tempQuant = productQuantIncluded.get(productId).multiply(quantity)
 				 /*itemDescription = eachItem.getAt("itemDescription");*/
 				 itemDescription = productId;
 				 
