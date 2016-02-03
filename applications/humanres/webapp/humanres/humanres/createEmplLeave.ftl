@@ -329,7 +329,7 @@ function viewGHandSS(){
                 </td>
               </tr>
              <tr>
-                <td class="label">Leave ReasonType</td>
+                <td class="label">Leave Reason :</td>
                 <td>
                     <option value=''></option>
                     <select name="emplLeaveReasonTypeId" class='h4'>
@@ -342,6 +342,12 @@ function viewGHandSS(){
 							</#if>
 						</#list>      
 					</select>
+                </td>
+              </tr>
+                <tr>
+                <td class="label">Description :</td>
+                <td>
+                    <input type="text" name="comment" value="${comment?if_exists}" size="70"/>
                 </td>
               </tr>
                <tr>
@@ -377,12 +383,6 @@ function viewGHandSS(){
                 <td>
                   <@htmlTemplate.lookupField value="${approverPartyId?if_exists}" formName="EditEmplLeave" name="approverPartyId" id="approverPartyId" fieldFormName="LookupEmployeeName"/>
                   <span class="tooltip"></span>
-                </td>
-              </tr>
-               <tr>
-                <td class="label">${uiLabelMap.Comments} :</td>
-                <td>
-                    <input type="text" name="comment" value="${comment?if_exists}" size="70"/>
                 </td>
               </tr>
               <tr>
