@@ -39,6 +39,14 @@ under the License.
         <set field="newRequirementStatus.statusDate" from-field="nowTimestamp"/>
         <set field="newRequirementStatus.requirementId" from-field="requirementId"/>
         <create-value value-field="newRequirementStatus"/>
+        <if-not-empty field="parameters.partyId">
+          <make-value value-field="requirementRole" entity-name="RequirementRole"/>
+          <set field="requirementRole.requirementId" from-field="requirementId"/>
+          <set field="requirementRole.partyId" from-field="parameters.partyId"/>
+          <set field="requirementRole.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+          <set field="requirementRole.fromDate" from-field="nowTimestamp"/>
+          <create-value value-field="requirementRole"/>
+        </if-not-empty>        
         <field-to-result field="requirementId" result-name="requirementId"/>
     </simple-method>
 

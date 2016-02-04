@@ -42,6 +42,7 @@ under the License.
         <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="requirementId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateRequirement" engine="simple"
             location="component://order/script/org/ofbiz/order/requirement/RequirementServices.xml" invoke="updateRequirement">

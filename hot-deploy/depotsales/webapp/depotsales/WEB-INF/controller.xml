@@ -592,7 +592,7 @@
     <!-- BRANCH SALES -->
     
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
-    <request-map uri="SilkBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkBranchSalesOrder"/></request-map>
+    <request-map uri="SilkBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkBranchSalesOrder"/><response name="error" type="view" value="SilkBranchSalesOrder"/></request-map>
     <request-map uri="CottonBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonBranchSalesOrder"/></request-map>
     <request-map uri="OtherBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherBranchSalesOrder"/></request-map>
        <request-map uri="MultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="MultiBranchSalesOrder"/></request-map>
@@ -1130,7 +1130,261 @@
         <!-- <response name="success" type="view" value="FindGRNShipmentsDepot"/> -->
         <response name="error" type="view" value="FindGRNShipmentsDepot"/>
     </request-map>
-        
+    <request-map uri="FindRequirement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindRequirement"/>
+       <response name="error" type="view" value="FindRequirement"/>
+     </request-map>
+     <request-map uri="newRequirement">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="NewRequirement"/>
+        <response name="error" type="view" value="NewRequirement"/>
+    </request-map>
+     <request-map uri="editRequirement">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditRequirement"/>
+        <response name="error" type="view" value="EditRequirement"/>
+    </request-map>
+    <request-map uri="UpdateRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateRequirement" ></event>
+        <response name="success" type="view" value="FindRequirement"/>
+        <response name="error" type="view" value="FindRequirement"/>
+    </request-map>
+    <request-map uri="rejectRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateRequirement" ></event>
+        <response name="success" type="request-redirect-noparam" value="FindRequirement"/>
+        <response name="error" type="view" value="FindRequirement"/>
+    </request-map>
+    <request-map uri="purchaseIndentReport">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseIndentReport"/>
+    </request-map>
+    <request-map uri="requirementOverView">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="requirementOverView"/>
+       <response name="error" type="view" value="requirementOverView"/>
+     </request-map>
+    <request-map uri="createNewRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="createRequirement" ></event>
+        <response name="success" type="view" value="FindRequirement"/>
+        <response name="error" type="view" value="FindRequirement"/>
+    </request-map>
+    <request-map uri="ApproveRequirement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveRequirement"/>
+       <response name="error" type="view" value="ApproveRequirement"/>
+     </request-map>
+     <request-map uri="approveRequirementEnrties">
+       <security https="true" auth="true"/>
+       <event type="service-multi" invoke="approveRequirement"/>
+       <response name="success" type="view" value="ApproveRequirement"/>
+       <response name="error" type="view" value="ApproveRequirement"/>
+    </request-map> 
+    <request-map uri="EnquiryForApprovedRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EnquiryForApprovedRequirements"/>
+       <response name="error" type="view" value="EnquiryForApprovedRequirements"/>
+   </request-map>
+   <request-map uri="enquiryForApprovedProductRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EnquiryForApprovedRequirements"/>
+       <response name="error" type="view" value="EnquiryForApprovedRequirements"/>
+   </request-map>
+   <request-map uri="sendRequirementIds">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="draftEnquiryForApprovedRequirements" >
+     	</event>
+     	<response name="success" type="request-redirect" value="ViewEnquiry">
+        </response>     	
+        <response name="error" type="request-redirect" value="EnquiryForApprovedRequirements">
+        </response>
+    </request-map>
+    <request-map uri="ViewEnquiry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewEnquiry"/>
+       <response name="error" type="view" value="ViewEnquiry"/>
+     </request-map>
+     <request-map uri="enquiryItemsForQuote">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="enquiryItemsForQuote"/>
+     	<response name="error" type="view" value="ViewEnquiry"/>
+    </request-map>
+    <request-map uri="updateEnquiryStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setRequestStatus"/>
+        <response name="success" type="view" value="ViewEnquiry"/>
+        <response name="error" type="view" value="ViewEnquiry"/>
+    </request-map>
+    <request-map uri="createCustRequestContent">
+       <security https="true" auth="true"/>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
+       <response name="success" type="view" value="ViewEnquiry"/>
+       <response name="error" type="view" value="ViewEnquiry"/>
+     </request-map>
+     <request-map uri="AddEnquiryContent">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="AddEnquiryContent"/>
+     	<response name="error" type="view" value="AddEnquiryContent"/>
+    </request-map>
+    <request-map uri="createCustEnquiryNote">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestNote"/>
+        <response name="success" type="request-redirect" value="ViewEnquiry">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
+        <response name="error" type="view" value="ViewEnquiry"/>
+    </request-map>
+    <request-map uri="addCustRequestParty">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestParty"/>
+        <response name="success" type="request-redirect" value="ViewEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
+        <response name="error" type="view" value="ViewEnquiry"/>
+    </request-map>
+    <request-map uri="FindEnquiry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindEnquiry"/>
+       <response name="error" type="view" value="FindEnquiry"/>
+     </request-map>
+     <request-map uri="cancelEnquiryStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelEnquiry"/>
+        <response name="success" type="request-redirect-noparam" value="FindEnquiry"/>
+        <response name="error" type="request-redirect-noparam" value="FindEnquiry"/>
+    </request-map> 
+    <request-map uri="deleteCustRequestParty">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="deleteCustReqstParty"/>
+        <response name="success" type="request-redirect" value="ViewEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
+        <response name="error" type="view" value="ViewEnquiry"/>
+    </request-map> 
+    <request-map uri="deleteEnquiryContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteCustRequestContent" />
+       <response name="success" type="view" value="ViewEnquiry"/>
+       <response name="error" type="view" value="ViewEnquiry"/>
+     </request-map>
+     <request-map uri="FindQuotes">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindQuotes"/>
+       <response name="error" type="view" value="FindQuotes"/>
+     </request-map>
+     <request-map uri="ViewQuote">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewQuote"/>
+       <response name="error" type="view" value="ViewQuote"/>
+   </request-map>
+     <request-map uri="createQuoteForEnquiry">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteForEnquiry"/>        
+        <response name="success" type="view" value="ViewQuote"/>
+        <response name="error" type="view" value="ViewQuote"/>
+    </request-map>
+    <request-map uri="quoteForAcceptance">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="QuoteForAcceptance"/>
+       <response name="error" type="view" value="QuoteForAcceptance"/>
+   </request-map>
+   <request-map uri="QuoteForEvalution">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuoteForEvalution"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+   <request-map uri="updateQuotesStatusOfEnquiry">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="updateQuotesStatusOfEnquiry" global-transaction="true"/>
+       <response name="success" type="view" value="QuoteForEvalution"/>
+       <response name="error" type="view" value="QuoteForAcceptance"/>
+   </request-map>
+   <request-map uri="updateQuotesForEvaluation">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="updateQuotesForEvaluation" global-transaction="true"/>
+		<response name="success"  type="request-redirect" value="QuoteForEvalution">
+     		<redirect-parameter name="custRequestId"/>
+     	</response>   	
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    <request-map uri="updateQuotesForNegotiation">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="updateQuotesForNegotiation" global-transaction="true"/>
+     	<response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    <request-map uri="QuoteForShortlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForShortlist"/>
+    </request-map>
+    <request-map uri="changeQuoteItemStatusNew">
+        <security https="true" auth="true"/>
+     	<event type="service"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="changeQuoteItemStatus" global-transaction="true"/>
+        <response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForShortlist"/>
+    </request-map>
+    <request-map uri="createQuoteTerm">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createQuoteTerm"></event>
+       <response name="success" type="request-redirect" value="ViewQuote">
+      	 <redirect-parameter name="quoteId"/>
+       </response>
+       <response name="error" type="view" value="ViewQuote"/>
+     </request-map>
+     <request-map uri="EditQuoteContent">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+   </request-map>
+   <request-map uri="createQuoteContent">
+       <security https="true" auth="true"/>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createContentDocument" type="simple"/>
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+     </request-map>
+     <request-map uri="deleteQuoteContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteQuoteContent" />
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+     </request-map>
+     <request-map uri="editQuot">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="EditQuotItems"/>
+     	<response name="error" type="view" value="FindQuotes"/>
+    </request-map>
+    <request-map uri="updateQuoteForEnquiry">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="updateQuoteForEnquiry"/>        
+        <response name="success" type="view" value="ViewQuote"/>
+        <response name="error" type="view" value="ViewQuote"/>
+    </request-map>
+     <request-map uri="MaterialEnquiryReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MaterialEnquiryReport"/>        
+    </request-map>
+    <request-map uri="getTermTypesByParentType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getOrderTaxTypeByTermType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createMaterialQuoteTerm">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createQuoteTerm"></event>
+       <response name="success" type="request-redirect" value="ViewQuote">
+      	 <redirect-parameter name="quoteId"/>
+       </response>
+       <response name="error" type="view" value="ViewQuote"/>
+     </request-map>
     <!-- View Mappings -->
     
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateNewProduct"/>
@@ -1298,4 +1552,24 @@
      <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
      <view-map name="SupplierShipmentOverview" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierShipmentOverview"/>
      <view-map name="creatNewnote" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#OrderNewNote"/>
+     <view-map name="FindRequirement" type="screen" page="component://depotsales/widget/RequirementScreens.xml#FindRequirement"/>
+     <view-map name="EditRequirement" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditRequirement"/>
+     <view-map name="NewRequirement" type="screen" page="component://depotsales/widget/RequirementScreens.xml#NewRequirement"/>
+     <view-map name="ApproveRequirement" type="screen" page="component://depotsales/widget/RequirementScreens.xml#ApproveRequirement"/>
+     <view-map name="requirementOverView" type="screen" page="component://depotsales/widget/RequirementScreens.xml#requirementOverView"/>
+     <view-map name="EnquiryForApprovedRequirements" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EnquiryForApprovedRequirements"/>
+     <view-map name="FindEnquiry" type="screen" page="component://depotsales/widget/RequirementScreens.xml#FindEnquiry"/>
+     <view-map name="ViewEnquiry" type="screen" page="component://depotsales/widget/RequirementScreens.xml#ViewEnquiry"/>
+     <view-map name="enquiryItemsForQuote" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EnquiryItemsForQuote"/>
+     <view-map name="QuoteForAcceptance" type="screen" page="component://depotsales/widget/RequirementScreens.xml#QuoteForAcceptance"/>
+     <view-map name="QuoteForEvalution" type="screen" page="component://depotsales/widget/RequirementScreens.xml#QuoteForEvalution"/>
+     <view-map name="QuoteForShortlist" type="screen" page="component://depotsales/widget/RequirementScreens.xml#QuoteForShortlist"/>
+     <view-map name="AddEnquiryContent" type="screen" page="component://depotsales/widget/RequirementScreens.xml#AddEnquiryContent"/>
+     <view-map name="FindQuotes" type="screen" page="component://depotsales/widget/RequirementScreens.xml#FindQuotes"/>
+     <view-map name="EditQuoteContent" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditQuoteContent"/>
+     <view-map name="ViewQuote" type="screen" page="component://depotsales/widget/RequirementScreens.xml#ViewQuote"/>
+     <view-map name="EditQuotItems" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditQuotItems"/>
+     <view-map name="PurchaseIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
+     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
+     
 </site-conf>
