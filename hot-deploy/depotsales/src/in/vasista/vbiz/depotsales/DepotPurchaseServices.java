@@ -379,7 +379,7 @@ public class DepotPurchaseServices{
 	           Map<String, Object> createInvoiceContext = FastMap.newInstance();
 	           createInvoiceContext.put("partyId", partyId);
 	           try {
-					orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_FROM_VENDOR"));
+					orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_TO_CUSTOMER"));
 				} catch (GenericEntityException e) {
 					Debug.logError(e, module);
 				}
