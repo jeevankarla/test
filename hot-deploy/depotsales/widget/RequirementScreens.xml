@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	<screen name="FindRequirement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Requirements"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindRequirement"/>
+                <set field="tabButtonItem2" value="FindRequirement"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<section>
+                    	<condition>
+                    		<if-has-permission permission="MM_CREATE_REQ"/>
+                    	</condition>
+                    	<widgets>
+                    	<link target="newRequirement"  text="Create New Requirement" style="buttontext" url-mode="plain"/>
+                    	</widgets>
+                    	</section>
+                            <screenlet title="Search-Options">
+                                <include-form name="FindRequirements" location="component://depotsales/widget/RequirementForms.xml"/>
+                                </screenlet>
+                            	<screenlet title="Search-Results">
+                                	<include-form name="ListMaterialRequirements" location="component://depotsales/widget/RequirementForms.xml"/>
+                                </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewRequirement">
+    	<section>
+    		<actions>
+    			<set field="titleProperty" value="Create New Requirement"/>
+                <set field="tabButtonItem" value="FindRequirement"/>
+    		</actions>
+    		<widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet title="Create New Requirement" >
+                    		<include-form location="component://depotsales/widget/RequirementForms.xml" name="AddRequirement"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>    
+    		</widgets>
+    	</section>
+    </screen>
+    <screen name="EditRequirement">
+    	<section>
+    		<actions>
+                <set field="titleProperty" value="Edit Requirement"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindRequirement"/>
+                <set field="tabButtonItem2" value="FindRequirement"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+            </actions>
+    		<widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet title="Edit Requirement" >
+                    		<include-form location="component://depotsales/widget/RequirementForms.xml" name="UpdateRequirement"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>    
+    		</widgets>
+    	</section>
+    </screen>
+    <screen name="ApproveRequirement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Approve Requirement"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindRequirement"/>
+                <set field="tabButtonItem2" value="ApproveRequirement"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/SelectCreatedProposed.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+    					<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindNotApprovedRequirements" location="component://depotsales/widget/RequirementForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                                	<include-form name="ApproveRequirements" location="component://depotsales/widget/RequirementForms.xml"/>
+                                </screenlet>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requirementOverView">
+   	<section>
+   		<actions>
+   		<set field="titleProperty" value="Requirement OverView ${parameters.requirementId}"/>
+        <set field="headerItem" value="Requirement"/>
+        <set field="tabButtonItem" value="FindRequirement"/>
+        <set field="tabButtonItem2" value="requirementOverView"/>
+   		</actions>
+   		<widgets>
+            <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+             	<decorator-section name="body">
+                    <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                			<container style="lefthalf">
+                				<screenlet title="Requirement OverView">
+                					<include-form location="component://depotsales/widget/RequirementForms.xml" name="requirementOverView"/>
+                				</screenlet>
+                			</container>
+                			<container style="righthalf">
+                				<screenlet title="Requirement Status">
+                					<include-form location="component://depotsales/widget/RequirementForms.xml" name="requirementStatus"/>
+                				</screenlet>	
+                			</container>
+                			<container style="clear" />
+                		<container style="full">
+   						<screenlet title="Indent Information">
+   							<include-form location="component://depotsales/widget/RequirementForms.xml" name="indentInformation"/>
+			   			</screenlet>
+			   			</container>
+			   	</decorator-section>
+			</decorator-screen>
+   		</widgets>
+   	</section>
+   </screen>
+    <screen name="EnquiryForApprovedRequirements">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry For Requirements"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindRequirement"/>
+                <set field="tabButtonItem2" value="EnquiryForRequirements"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="_rowSubmit" value="Y"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryForRequirement.groovy"/> 
+           </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                        <screenlet title="Find Approved Requirements">
+                            <include-form name="enquiryForApprovedProductRequirements" location="component://depotsales/widget/RequirementForms.xml"/>
+                        </screenlet>
+                        <section>
+                           <widgets> 
+                                <screenlet title="Approved Product Requirements">
+                                    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/EnquiryForApprovedMatRequirements.ftl"></html-template></html></platform-specific>
+                                </screenlet>
+                          </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindEnquiry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="request"/>
+                <set field="tabButtonItem" value="FindRequirement" />	
+                <set field="tabButtonItem2" value="FindEnquiry"/>
+                <set field="entityName" value="CustRequest"/>
+                <set field="parameters.custRequestTypeId" value="RF_PUR_QUOTE"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindEnquiry" location="component://depotsales/widget/RequirementForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                                	<include-form name="ListEnquiry" location="component://depotsales/widget/RequirementForms.xml"/>
+                                </screenlet>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="ViewEnquiry">
+        <section>
+            <actions>
+                <set field="headerItem" value="request"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindEnquiry" />
+                <set field="tabButtonItem3" value="viewEnquiry" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest"/>
+                <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
+                	<!-- <condition-list combine="and"> -->
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
+                		<!-- <condition-list combine="or">
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_REJECTED"/>
+                		</condition-list>
+                	</condition-list> -->
+                	<order-by field-name="productId"/>
+                </entity-condition>
+                <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+                <entity-and entity-name="CustRequestNoteView" list="enquiryNotes">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+                <!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryDetails.groovy" /> -->
+                <set field="checkStatusId" value="${custRequest.statusId}"/>	
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/email/EnquiryEmailOpen.ftl"/></html></platform-specific>
+                    	<include-menu name="EnquiryTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<container style="button-bar">
+		                    <section>
+			                  	 <condition> 
+			                  	   <and>
+				                  	   	<if-compare operator="equals" value="ENQ_CREATED" field="checkStatusId"/>
+				                  	   	<if-has-permission permission="MM" action="_QUOTE_ADD"/>
+			                  	   </and>
+			                  	 </condition>
+		                  	 	<widgets>
+		                  	 		<link target="enquiryItemsForQuote" text="Add Quotation" style="buttontext create h2" >
+                  	 					<parameter param-name="custRequestId"/>
+                  	 				</link>
+		                  	 	</widgets>
+		                  </section>
+                      </container>
+                      <container style="lefthalf">
+		                  <screenlet title="Overview">
+		                  	 <include-form location="component://depotsales/widget/RequirementForms.xml" name="EnquiryDetails"/>
+		                  </screenlet>
+		                  <!-- <include-screen name="MaterialNotes" location="component://materialmgmt/widget/MaterialRequestScreens.xml"/> -->
+		                  <!-- <screenlet title="Enquiry Contents">
+                   			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryContent"/>
+                  	  	  </screenlet> -->
+                  	  	   <screenlet title="Enquiry Document : ${custRequestId}">
+                            <include-form name="AddCustRequestContent" location="component://depotsales/widget/RequirementForms.xml"/>
+                        </screenlet>
+	                  	<screenlet title="Enquiry Contents">
+	                   		<include-form name="ListEnquiryContent" location="component://depotsales/widget/RequirementForms.xml"/>
+	                  	</screenlet>
+                 	  </container>
+                 	  <container style="righthalf"> 
+                 	  	<screenlet title="Add Supplier">
+                 	  		<include-screen name="AddSupplier"/>
+                 	  	</screenlet>
+                  		<decorator-section-include name="Enquiry items"/>
+		                  <screenlet title="Items In Enquiry"> 
+		                   	<include-form location="component://depotsales/widget/RequirementForms.xml" name="ItemsInEnquiry"/>
+		                  </screenlet>
+		                  <screenlet title="Add Notes"> 
+		                    <include-screen name="AddCustEnquiryNote"/>
+		                  </screenlet>
+		              </container>
+                 	  <container style="righthalf">
+                  		<!-- <section>
+                  			<condition> 
+                  	  			<not> <if-empty field="notes"/></not>
+                  	 		</condition>
+                  	 		<widgets>
+		                  	 <screenlet title="PreBid Meeting Notes">
+		                  	     <label text="PreBid Notes added By  : ${notes[0].firstName} ${notes[0].lastName}" style="h5"></label>
+		                  	     <label ></label>
+		                  	     <label style="h5" text="Create on :${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(noteDate,&quot;dd/MM/yyyy&quot;)}"></label>
+		                  	     <link style="button h2" target="PreBidNotePdf.pdf" text="Pdf" >
+		                             <parameter param-name="custRequestId"/>
+		                         </link>
+		                         <link style="button h6" target="PreBidNotes" text="Show Prebid Notes" >
+		                             <parameter param-name="custRequestId"/>
+		                         </link>
+		                  	 </screenlet>
+		                   </widgets>
+		                  	 <fail-widgets>
+		                  	   <screenlet title="PreBid Meeting Notes">
+		                  	    <label text="Pre Bid Notes are not Available" style="h6"></label>
+		                  	   </screenlet>
+		                  	 </fail-widgets>
+                  		</section> -->
+	               </container>
+                  <container style="clear"></container>
+                  <container style="full">
+                  	<screenlet title="Qualified Enquiry Item">
+                    	<include-form name="ListQualifiedQuotesForPO" location="component://depotsales/widget/RequirementForms.xml"/>
+                    </screenlet>
+                  </container>
+                 
+                  </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EnquiryItemsForQuote">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Add Items to Quote"/>
+                <set field="tabButtonItem" value="FindQuotes"/>
+                <set field="tabButtonItem2" value="createQuotation"/>
+                <set field="headerItem" value="request"/>
+                <set field="flag" value="N"/>
+                <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SelectItemsToQuote.groovy" />
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/materialSupplierAutoComplete.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="FindQuotesTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                     <screenlet title="Select Items to Quote">
+                          <platform-specific>
+                            <html>
+                                <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListEnquiryItemsToQuote.ftl"/>
+                            </html>
+                          </platform-specific>
+                        </screenlet>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="QuoteForAcceptance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindEnquiry" />
+                <set field="tabButtonItem3" value="quoteForAcceptance" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/ListQuoteForAcceptance.groovy"/>   
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<include-menu name="EnquiryTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<screenlet title="Items For Acceptance">
+                    		<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListQuoteForAcceptance.ftl"></html-template></html></platform-specific>
+                    		<!-- <include-form name="ListQuotesForAcceptance" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/> -->
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="QuoteForEvalution">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindEnquiry" />
+                <set field="tabButtonItem3" value="quoteForEvaluation" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
+                <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                	    <condition-expr field-name="statusId" operator="not-equals" value="QUO_CANCELED"/>
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
+                		<condition-expr field-name="qiStatusId" operator="not-equals" value="QTITM_REJECTED"/>
+                	</condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<include-menu name="EnquiryTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<screenlet title="Items For Evaluation">
+                    		<platform-specific>
+                    		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListQuoteForEvaluation.ftl"></html-template></html>
+                    		</platform-specific>       
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="QuoteForShortlist">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindEnquiry" />
+                <set field="tabButtonItem3" value="quoteForShortlist" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                
+                <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                		<condition-list combine="or">
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_NEGOTIATION"/>
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_APPROVED"/>
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_ADUIT_APP"/>
+                		</condition-list>
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
+                	</condition-list>
+                	<order-by field-name="productId"/>
+                	<order-by field-name="quoteUnitPrice"/>
+                </entity-condition>
+               
+                <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
+                	</condition-list>
+                	<order-by field-name="productId"/>
+                </entity-condition>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<include-menu name="EnquiryTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<screenlet title="Qualified For PO">
+                    		<include-form name="ListQualifiedQuotesForPO" location="component://depotsales/widget/RequirementForms.xml"/>
+                    	</screenlet>
+                    	
+                    	<screenlet title="Shortlisting">
+                    		<include-form name="ListQuotesForShortlisting" location="component://depotsales/widget/RequirementForms.xml"/>
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="AddEnquiryContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry Document"/>
+                <set field="tabButtonItem" value="FindEnquiry"/>
+                <set field="tabButtonItem2" value="AddEnquiryContent"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId" />
+                <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="EnquiryTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                     	<screenlet title="Enquiry content : ${custRequestId}">
+                            <include-form name="AddCustRequestContent" location="component://depotsales/widget/RequirementForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListEnquiryContent" location="component://depotsales/widget/RequirementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AddSupplier">
+    <section>
+    	<actions>
+    		<entity-condition list="supplierList" entity-name="CustRequestParty">
+    			<condition-expr field-name="custRequestId" from-field="parameters.custRequestId"/>
+    		</entity-condition>
+    	</actions>
+    	<widgets>
+    		<include-form location="component://depotsales/widget/RequirementForms.xml" name="AddSupplier"/>
+    		<screenlet>
+    			<include-form location="component://depotsales/widget/RequirementForms.xml" name="listSuppliers"/>
+    		</screenlet>
+    	</widgets>
+    </section>
+    </screen>
+    <screen name="AddCustEnquiryNote">
+    <section>
+    	<widgets>
+    			<include-form name="AddCustEnquiryNote" location="component://depotsales/widget/RequirementForms.xml"/>
+    		<screenlet>
+    			<include-form location="component://depotsales/widget/RequirementForms.xml" name="ListEnquiryNotes"/>
+    		</screenlet>
+    	</widgets>
+    </section>
+    </screen>
+    <screen name="FindQuotes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quotes"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindQuotes"/>
+                <set field="tabButtonItem3" value="FindQuotes"/>
+                <set field="entityName" value="QuoteAndItemAndCustRequest"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    	<include-menu name="FindQuotesTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindQuotations" location="component://depotsales/widget/RequirementForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                                	<include-form name="ListQuotes" location="component://depotsales/widget/RequirementForms.xml"/>
+                                </screenlet>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="ViewQuote">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quote Overview"/>
+                <set field="headerItem" value="Quotes"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindQuotes"/>
+                <set field="tabButtonItem3" value="overviewQuote"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>                
+                <entity-condition list="quoteItemList" entity-name="QuoteItem"  >
+                 	<condition-expr field-name="quoteId" value="${quoteId}" operator="equals"/>
+                </entity-condition>
+                <entity-one entity-name="Quote" value-field="quote"/>
+                <entity-and entity-name="QuoteContent" list="quoteItemContents" filter-by-date="true">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and>
+                <entity-condition list="quoteTerms" entity-name="QuoteTerm">
+                	<condition-expr field-name="quoteId" from-field="quoteId"/>
+                </entity-condition>
+                <entity-one entity-name="QuoteTerm" value-field="quoteTerm"/>
+              	<entity-and entity-name="QuoteItemAndContent" list="quoteItemContents" >
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and> 
+                <entity-condition list="quoteStatus" entity-name="QuoteStatus">
+                	<condition-expr field-name="quoteId" value="${parameters.quoteId}" operator="equals"/>
+                	<order-by field-name="quoteItemSeqId"/>
+                	<order-by field-name="quoteStatusId"/>
+                </entity-condition>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/getTermTypeByParentType.js" global="true"/>
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/createPOButtonCheck.groovy" />
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/termTypesAndParentTypes.groovy" />
+            </actions>
+            <widgets>
+              <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                <include-menu name="QuoteTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                   <section>
+ 				 <condition>
+ 				 <and>
+	                <if-has-permission permission="MM"  action="_CREATE_PO"/>
+	                <if-compare operator="equals" value="Y" field="statusFlag"/>
+                </and>
+                    </condition>
+                   		<widgets>
+                   		
+                   		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
+           					<parameter param-name="quoteId" from-field="quoteId"/>
+           				</link>
+                   		</widgets>
+
+                     </section>
+                     <container style="full">
+                    	<container style="lefthalf">
+                     
+                   	 		<screenlet title="Overview">
+                       			<include-form location="component://depotsales/widget/RequirementForms.xml" name="viewQuotation"/>
+                     		</screenlet>
+                     		
+                     		<screenlet title="Quote Documents">
+                   				<include-form location="component://depotsales/widget/RequirementForms.xml" name="ListQuoteContent"/>
+                 	 		</screenlet>                      
+                  		</container>
+                  		
+                 		<container style="righthalf">
+                 			<screenlet title="Quote Status">
+                   				<include-form location="component://depotsales/widget/RequirementForms.xml" name="ViewQuoteStatus"/>
+                 	 		</screenlet>
+                 		</container>
+                 		<container style="clear" />
+               			<container style="full">
+               				<screenlet title="Items In Quote" >
+                    				<include-form location="component://depotsales/widget/RequirementForms.xml" name="viewQuoteItemDetails"/>
+               				</screenlet>
+               			</container>
+                 		<container style="clear" />
+               			<container style="full">
+               			   <screenlet title="Add Quote Term">
+                 	  		      <include-screen name="AddQuoteTerm"/>
+                 	  	   </screenlet>
+               				<!--  <screenlet title="Quote Terms" >
+                    				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
+               				</screenlet>-->
+               				
+               			</container> 	
+                    </container>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AddQuoteTerm">
+    <section>
+    	<widgets>
+    		<include-form location="component://depotsales/widget/RequirementForms.xml" name="AddQuoteTerm"/>
+    		<screenlet>
+    		<include-form location="component://depotsales/widget/RequirementForms.xml" name="ListQuoteTerms"/>
+    		</screenlet>
+    	</widgets>
+    </section>
+    </screen>
+    <screen name="EditQuoteContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quote Content"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindQuotes"/>
+                <set field="tabButtonItem3" value="QuoteContent"/>
+                <set field="headerItem" value="request" />
+                <!-- <set field="quoteItemSeqId" value="00001"/> -->
+                <set field="quoteId" from-field="parameters.quoteId" />
+                <!-- <set field="custRequestId" from-field="parameters.custRequestId" />
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId" /> -->
+                <entity-and entity-name="QuoteItemAndContent" list="quoteItemContents" filter-by-date="true">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and>
+                
+            </actions>
+            <widgets>
+              <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                        <include-menu name="QuoteTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                        <screenlet id="AddBidContentsPanel" title="Quote content : ${quoteId}" collapsible="true">
+                            <include-form name="AddQuoteContent" location="component://depotsales/widget/RequirementForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListQuoteContent" location="component://depotsales/widget/RequirementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditQuotItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Quote Items"/>
+                <set field="tabButtonItem" value="FindRequirement" />
+                <set field="tabButtonItem2" value="FindQuotes"/>
+                <set field="tabButtonItem3" value="updateQuotation"/>
+                <set field="headerItem" value="request"/>
+                <set field="flag" from-field="parameters.flag"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditQuoteItems.groovy" />
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="RequirementTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                    <include-menu name="FindQuotesTabBar" location="component://depotsales/widget/RequirementMenus.xml"/>
+                     <screenlet title="Edit Quote Items">
+                          <platform-specific>
+                            <html>
+                                <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListEnquiryItemsToQuote.ftl"/>
+                            </html>
+                          </platform-specific>
+                        </screenlet>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>    

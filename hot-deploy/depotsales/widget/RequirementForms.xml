@@ -1,0 +1,927 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+<form name="FindRequirements" type="single" target="FindRequirement" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="requirementId"><text-find/></field>
+        <field name="requirementTypeId"><hidden value="PRODUCT_REQUIREMENT"/></field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       <!--  <field name="facilityId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Facility" description="${facilityId}"/>
+            </drop-down>
+        </field> -->
+        <field name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="description"><text-find/></field>
+        <field name="requirementStartDate" title="Requirement Date"><date-find type="date"/></field>
+        <!-- <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListMaterialRequirements" type="list" target="" title="" list-name="listIt" paginate-target="FindRequirement"
+       use-row-submit="true" paginate-style="nav-pager" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" value="Requirement"/>
+                <field-map field-name="orderBy" value="-requirementStartDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <set field="lookupProductId" value="${bsh: (productId == null? &quot;_NA_&quot;: productId);}" type="String"/>
+            <set field="lookupFacilityId" value="${bsh: (facilityIdId == null? &quot;_NA_&quot;: facilityId);}" type="String"/>
+            <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+        <field name="requirementId" title="Requirement Id" widget-style="buttontext"> 
+            <hyperlink  description="${requirementId}" target="requirementOverView" >
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
+        <field name="requirementStartDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(requirementStartDate, &quot;dd-MM-yyyy&quot;);}"/></field>            
+        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
+        </field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="editRequirement" widget-style="buttontext" title="Edit" use-when="statusId.equals(&quot;REQ_CREATED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
+        	<hyperlink description="Edit" target="editRequirement">
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
+        <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="(statusId.equals(&quot;REQ_CREATED&quot;) || statusId.equals(&quot;REQ_APPROVED&quot;)) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
+        	<hyperlink description="Cancel" target="rejectRequirement" confirmation-message="Are you sure to Cancel Requirement..?">
+                <parameter param-name="requirementId"/>
+                <parameter param-name="statusId" value="REQ_REJECTED"/>
+            </hyperlink>
+        </field>
+        <field name="purchaseIndent" title="Purchase Indent" use-when="statusId.equals(&quot;REQ_CREATED&quot;)" widget-style="buttontext"> 
+            <hyperlink  target-window="_blank" description="Report" target="purchaseIndentReport" >
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="AddRequirement" type="single" target="createNewRequirement" >
+    	<actions>
+    	  <entity-condition entity-name="ProductStore" distinct="true" list="prodStore" />
+		  <set field="productStoreId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodStore, 'productStoreId', true);}"/>        	
+    	</actions>
+    	<field name="partyId" title="${uiLabelMap.Customer}" required-field="true" ><lookup target-form-name="LookupPartyName"/></field> 
+    	<field name="productId" title="Product" required-field="true" >
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <!-- <field name="branchId" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="prodStore" description="${storeName}"/>
+              </drop-down>
+        </field> -->
+        <field name="requirementTypeId" title="Requirement Type"><hidden value="PRODUCT_REQUIREMENT"/></field>
+        <field name="quantity" title="Quantity" required-field="true"><text size="10"  /></field>
+        <field name="requirementStartDate" title="Requirement Date"><date-time type="date"/></field>
+    	<field name="description" title="Description"><textarea  /></field>
+    	<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+     <form name="UpdateRequirement" type="single" target="UpdateRequirement" >
+        <actions>
+    	    <entity-condition entity-name="ProductStore" distinct="true" list="prodStore" />
+		    <set field="productStoreId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodStore, 'productStoreId', true);}"/>        	
+	    	<entity-and entity-name="RequirementAndRole" list="RequirementList">
+	    		<field-map field-name="requirementId" from-field="parameters.requirementId" />
+	    	</entity-and>
+	    	<set field="partyId" value="${RequirementList[0].partyId}"/>
+	    	<set field="productId" value="${RequirementList[0].productId}"/>
+	    	<set field="quantity" value="${RequirementList[0].quantity}"/>
+	    	<set field="requirementStartDate" value="${RequirementList[0].requirementStartDate}"/>
+<!-- 	    	<set field="facilityId" value="${RequirementList[0].facilityId}" /> -->
+	    </actions>
+	    <field name="requirementId"><display description="${RequirementList[0].requirementId}" /></field>
+	    <field name="partyId" title="${uiLabelMap.Customer}" required-field="true" ><lookup target-form-name="LookupPartyName"/></field> 
+	    <field name="productId" title="Product" required-field="true">
+	            <lookup target-form-name="LookupProduct" size="10" />
+	    </field>
+	    <field name="updateFlag"><hidden value="updateFlag"/></field>
+	    <!-- <field name="facilityId" required-field="true" >
+            <drop-down allow-empty="false" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+        </field> -->
+	    <field name="quantity" title="Quantity" required-field="true" ><text size="10"/></field>
+        <field name="requirementStartDate" title="Requirement Date" ><date-time type="date" /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    <form name="FindNotApprovedRequirements" type="single" target="ApproveRequirement" title="" header-row-style="header-row" default-table-style="basic-table">
+        <field name="requirementId"><text-find/></field>
+        <field name="requirementTypeId">
+            <!-- <drop-down allow-empty="true">
+                <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down> -->
+            <hidden value="PRODUCT_REQUIREMENT"/>
+        </field>
+        <!-- <field name="facilityId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Facility" description="${facilityId}"/>
+            </drop-down>
+        </field> -->
+        <field name="productId" title="Product">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="requirementStartDate" title="Requirement Date"><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ApproveRequirements" type="multi" use-row-submit="true" target="approveRequirementEnrties" title="" list-name="requirements"
+       separate-columns="true"  odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+          	<service service-name="getLastSupplyMaterialDetails" result-map="resultMap">
+          		<field-map field-name="productId" from-field="productId"/>
+          	</service>
+          	<set field="supplyDetails" value="${resultMap.productSupplyDetails}" type="Object"/>
+          	<set field="partyId" value="${supplyDetails.supplierPartyId}"/>
+          	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+        <field name="requirementId" widget-style="buttontext"><display/>
+            <!-- <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
+                <parameter param-name="requirementId"/>
+            </hyperlink> -->
+        </field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}[UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}[${dec}]"/>
+        </field>
+        <field name="statusId"><hidden/></field>
+        <field name="supplyDate" title="Last Supply Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(supplyDetails.supplyDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="requirementStartDate" title="Requirement Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(requirementStartDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="partyId" title="Last Supplier"><display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName} - [${partyId}]"  key-field-name="partyId" /></field>
+        <field name="supplyQty" title="Last Supply Qty"><display description="${supplyDetails.supplyQty}"/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text size="10"/></field>
+        <!-- <field name="requiredByDate"><display/></field> -->
+        <field name="unitPrice" title="Last Rate"><display description="${supplyDetails.supplyRate}"/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" ><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+          <submit/>
+        </field>
+    <sort-order>
+    	<sort-field name="requirementId"/>
+    	<sort-field name="productId"/>
+    	<sort-field name="requirementStartDate"/>
+    	<sort-field name="quantity"/>
+    	<sort-field name="supplyDate"/>
+    	<sort-field name="partyId"/>
+    	<sort-field name="supplyQty"/>
+    	<sort-field name="unitPrice"/>
+    	<sort-field name="_rowSubmit"/>
+    </sort-order>    
+    </form>
+    <form name="requirementOverView" type="single" default-map-name="requirement"  odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	<actions>
+		<entity-one value-field="requirement" entity-name="Requirement">
+			<field-map field-name="requirementId" from-field="parameters.requirementId"/>
+		</entity-one>
+	</actions>
+	<field name="requirementId"><display></display></field>
+<!-- 	 <field name="facilityId" title="Facility"><display/></field> -->
+	 <field name="productId"><display></display></field>
+	  <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+	  <field name="requirementStartDate"><display></display></field>
+	  <field name="quantity"><display></display></field>
+	  <field name="createdDate"><display></display></field>
+	  <field name="createdByUserLogin"><display></display></field>
+	  <field name="description"><display></display></field>
+	</form>
+	<form name="requirementStatus" type="list" list-name="requirementStatus" separate-columns="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	<actions>
+		<entity-condition list="requirementStatus" entity-name="RequirementStatus">
+        	<condition-expr field-name="requirementId"  from-field="parameters.requirementId" operator="equals"/>
+                	<order-by field-name="-statusDate"/>
+        </entity-condition>
+	</actions>
+	<field name="statusDate"><display></display></field>
+	 <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+	</form>
+	<form name="indentInformation" type="list" list-name="requirementList" separate-columns="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    	<actions>
+    		<entity-condition entity-name="RequirementCustRequestView" list="requirementList">
+    			<condition-expr field-name="requirementId" operator="equals" from-field="parameters.requirementId"/>
+    		</entity-condition>
+    	</actions>
+    	<row-actions>
+    		<entity-one value-field="custItem" entity-name="CustRequestItem">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    			<field-map field-name="custRequestItemSeqId" from-field="custRequestItemSeqId"/>
+    		</entity-one>
+    		<set field="quantity" value="${custItem.quantity}"/>
+    		<entity-one value-field="custRequest" entity-name="CustRequest">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    		</entity-one>
+    		<set field="fromPartyId" value="${custRequest.fromPartyId}"/>
+    	</row-actions>
+    	<field name="requirementId"><hidden/></field>
+    	<field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+    	<field name="custRequestId" title="Indent No"><display></display></field>
+    	<field name="custRequestItemSeqId" title="Item No"><display></display></field>
+    	<field name="quantity"><display></display></field>
+    	 <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+    </form>
+    <form name="enquiryForApprovedProductRequirements" type="single" target="enquiryForApprovedProductRequirements" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
+        	
+			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
+        	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+        	</entity-condition>
+        	
+        </actions>
+        <field name="showList"><hidden value="N"/></field>
+        <field name="requirementId"><text-find/></field>
+        <field name="billToCustomerPartyId">
+            <hidden value="Company"/>
+        </field>
+        <!-- <field name="partyId" title="Product Supplier" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}${firstName}${lastName} [${partyId}]">
+                    <entity-constraint name="roleTypeId"  value="SUPPLIER" operator="equals"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="facilityId">
+            <drop-down allow-empty="true" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+        </field>
+        <field name="productId" title="ProductId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="requirementByDate"><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="EnquiryDetails" type="single" target="updateEnquiryStatus" title="" default-map-name="custRequest"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<set field="currStatusId" value="${custRequest.statusId}"/>
+        </actions>
+     	<field name="custRequestId" title="Enquiry No."><display/></field>
+        <field name="custRequestName" title="Enquiry Ref"><display/></field>
+        <field name="openDateTime" title="Open Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.openDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
+        <field name="closedDateTime" title="Closed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.closedDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/> </field>
+        <field name="closeStatusId" parameter-name="statusId"><hidden value="ENQ_COMPLETED"/></field>
+        <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
+        	<submit/>
+        </field>
+        <field name="Report" widget-style="buttontext">
+            <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
+    </form>
+    <form name="AddCustRequestContent" type="upload" default-map-name="content" 
+        focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createCustRequestContent">
+        <actions>
+            <set field="custRequest" from-field="custRequestId"/>
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <field name="custRequestId"><hidden/></field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>                
+        <field name="contentTypeId" >
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT" >
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
+         <field name="createButton"><submit button-type="button"/></field>
+    </form>
+    <form name="ListEnquiryContent" type="list" list-name="custRequestContents"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="AddEnquiryContent">
+        <field name="custRequestId"><hidden/></field>
+        <field name="contentId" title="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="Uploaded Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"></display></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext" >
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEnquiryContent">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+    </form>
+    <form name="ItemsInEnquiry" type="list" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row" list-name="dashboardList">
+       <actions>
+        <entity-condition entity-name="CustRequestItem" >
+         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
+        </entity-condition>
+       </actions>
+       <row-actions>
+          <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        	<set field="longDescription" from-field="product.longDescription"/>
+       </row-actions>
+       <field name="custRequestId"  sort-field="true"  sort-field-style="true" title="Tender Reference No">
+          <display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName}" also-hidden="true">
+            <sub-hyperlink target="ViewIndent" description="[${custRequestId}]">
+             <parameter param-name="custRequestId" from-field="custRequestId"/>
+            </sub-hyperlink>
+          </display-entity>
+        </field> 
+        <field name="custRequestId" ><hidden/></field> 
+      
+       <field name="productId"> 
+            <display-entity entity-name="Product" description="${description}">
+                <sub-hyperlink  description="[${productId}]" target="EditProduct">
+                    <parameter param-name="productId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+         <field name="dec" title="UOM"><display></display></field>
+        <field name="longDescription" title="Product Specification"> 
+            <display description="${longDescription}"/>
+        </field>
+        <field name="quantity"><display/></field>
+        <!-- <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"></display-entity></field> -->    
+    </form>
+    <form name="AddCustEnquiryNote" type="single" target="createCustEnquiryNote"
+        focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
+        <field name="custRequestId"><hidden/></field>
+<!--         <field name="noteName"><text></text></field> -->
+<!--         <field name="noteDate"><date-time type="timestamp"></date-time></field> -->
+		<field name="noteType" title="Note Type">
+           <drop-down allow-empty="false" >
+				<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="INTERNAL_NOTE_ID"/>
+    			</entity-options>
+    			<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="EXTERNAL_NOTE_ID"/>
+    			</entity-options>
+			</drop-down>
+        </field>
+         <field name="noteInfo"><textarea  default-value=""/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="ViewEnquiry" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="ListEnquiryNotes" type="list" use-row-submit="true"  title="" list-name="enquiryNotes"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="PreBidNotes">
+<!--         <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/> -->
+        <field name="noteParty"><hidden/></field>
+        <!-- <field name="noteType"><display/></field> -->
+        <field name="noteId"><hidden/></field>
+<!--         <field name="noteName"><display></display></field> -->
+        <field name="noteInfo" title="Note"><display/></field>
+        <field name="noteDateTime" title="Note Date Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(noteDateTime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"/></field>
+        <field name="custRequestId"><hidden/></field>
+        <field name="partyId"><hidden/></field>  
+        <field name="name" title="Added by"><display description="${firstName} ${lastName}"/></field>
+        <field name="firstName"><hidden/></field>
+        <field name="lastName"><hidden/></field>
+        <!-- <field name="delete">
+        <hyperlink target="deleteTenderNote" description="Delete">
+        	<parameter param-name="noteId"/>
+        	<parameter param-name="noteType"/>
+        	<parameter param-name="custRequestId"/>
+        </hyperlink>
+        </field> -->
+    </form>
+    <form name="AddSupplier" type="single" target="addCustRequestParty">
+   	<actions>
+   			<entity-one value-field="custRequest" entity-name="CustRequest">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    		</entity-one>
+   		<set field="fromDate" value="${custRequest.custRequestDate}"/>
+   	</actions>
+   	<field name="custRequestId"><hidden/></field>
+   	<field name="roleTypeId"><hidden value="SUPPLIER"/></field>
+   	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+   	<!-- <field name="roleTypeId" title="Role Type">
+   		<drop-down> <entity-options  description="${description}" entity-name="RoleType"><entity-constraint name="roleTypeId" value="SUPPLIER"/> </entity-options></drop-down>
+   	</field> -->
+   	<field name="fromDate"><hidden/></field>
+   	<field name="submitButton" title="${uiLabelMap.Add}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+   </form>
+   <form name="listSuppliers" type="list" list-name="supplierList" separate-columns="true" use-row-submit="true" 
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <field name="partyId" title="Supplier" >
+      		<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+      </field>
+      <field use-when="&quot;${roleTypeId}&quot; == &quot;SUPPLIER&quot;" name="Report" widget-style="buttontext">
+            <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
+      <field use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_ENQUIRYMAIL_SEND&quot;, session)))}"  title="Email" name="Send Email" widget-style="buttontext">
+             <hyperlink target-type="plain" target="javascript:showEnquiryEmail('${partyId}','${custRequestId}');" description="Send Email">
+            </hyperlink>
+      </field>
+      <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate,&quot;dd MMM,yyyy&quot;)}"/></field>
+      <field name="roleTypeId" title="Role Type"><display-entity  entity-name="RoleType" description="${description}" /></field>
+      <field name="delete" widget-style="buttontext">
+        <hyperlink target="deleteCustRequestParty" description="Delete">
+        	<parameter param-name="fromDate"/>
+        	<parameter param-name="partyId"/>
+        	<parameter param-name="custRequestId"/>
+        	<parameter param-name="roleTypeId"/>
+        </hyperlink>
+        </field>  
+   </form>
+    <form name="ListQualifiedQuotesForPO" id="ListApprovedQuotesForPO" type="list"  list-name="quoteQualifiedList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ViewEnquiry">
+        <row-actions>
+        	<entity-condition entity-name="QuoteStatus" list="QuoteStatusList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="quoteId" from-field="quoteId"/>
+        			<condition-expr field-name="quoteItemSeqId" from-field="quoteItemSeqId"/>
+        		</condition-list>
+        	</entity-condition>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        	<set field="productName" from-field="product.productName"/>
+        	<set field="longDescription" from-field="product.longDescription"/>
+        	<set field="size" value="${groovy: return (QuoteStatusList.size());}"/>
+        	<set field="comments" value="${QuoteStatusList[(${size}-1)].comments}"/>
+        </row-actions>
+        <field name="quoteItemSeqId"><hidden/></field>
+        <field name="quoteId" widget-style="buttontext h2" title="Quote No">
+        	<hyperlink also-hidden="false" description="${quoteId}" target="ViewQuote" target-window="_blank">
+                <parameter param-name="quoteId"/>
+        	</hyperlink>
+        </field>
+        <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
+        <field name="productName" title="Material Name - [Code]"><display /></field>
+        <field name="dec" title="UOM"><display/></field>
+        <field name="longDescription" title="Material Specification"><display /></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
+        <field name="comments"><display/></field>
+    </form>
+    <form name="FindEnquiry" target="FindEnquiry" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="custRequestId" title="Enquiry No"><text-find/></field>
+        <field name="custRequestTypeId"><hidden value="parameters.custRequestTypeId"/></field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ENQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="custRequestName" title="Enquiry Reference"><text-find/></field>
+        <field name="fromPartyId" title="From Party"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="custRequestDate" title="Enquiry Date"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+    <form name="ListQuotesForShortlisting" id="ListQuotesForShortlisting" type="list"  list-name="quotesList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance" target="changeQuoteItemStatusNew">
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+        <field name="quoteItemSeqId"><hidden/></field>
+        <field name="quoteId" widget-style="buttontext h2" title="Quote No">
+        	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
+                <parameter param-name="quoteId"/>
+        	</hyperlink>
+        </field>
+        <field name="quoteId"><hidden value="${quoteId}"/></field>
+        <field name="custRequestId"><hidden value="${custRequestId}"/></field>
+        <field name="statusId"> <hidden value="QTITM_REJECTED"/></field>
+        <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
+        <field name="issueDate" title="Quote Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy&quot;)}" /></field>
+        <field name="validFromDate" title="Quote Valid From"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validFromDate,&quot;dd/MM/yyyy&quot;)}" /></field>
+        <field name="validThruDate" title="Quote Valid Thru"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validThruDate,&quot;dd/MM/yyyy&quot;)}" /></field>
+       <field name="productId" title="Material Name - [Code][UOM]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}-[${productId}][${dec}]"/></field>
+        <field name="quantity" title="Qty"><display /></field>
+        <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" /></field>
+        <field name="quoteUnitPrice" title="Unit Price"><display /></field>
+        <field name="comments" title="Comments" widget-style="required" required-field="true"><text size="20" /></field>
+        
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Sec. Head Approval">
+        	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatusNew">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="custRequestId" value="${custRequestId}"/>
+                <parameter param-name="statusId" value="QTITM_APPROVED"/>
+        	</hyperlink>
+        </field>
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot;" name="auditApprove" title="Audit Approval" widget-style="buttontext h3">
+        <hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatusNew">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="custRequestId" value="${custRequestId}"/>
+                <parameter param-name="statusId" value="QTITM_ADUIT_APP"/>
+        	</hyperlink>
+        </field>
+        
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
+        	<submit/>
+        </field>
+        
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="qualifiedLink" widget-style="buttontext h3" title="MD Approval">
+        	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatusNew">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="custRequestId" value="${custRequestId}"/>
+                <parameter param-name="statusId" value="QTITM_QUALIFIED"/>
+        	</hyperlink>
+        </field> 
+    </form>
+    <form name="ListEnquiry" type="list" extends="ListEnquiryList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+        <row-actions>
+           <script  location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryCancel.groovy"/>
+           <set field="cancelFlag" value="${cancelFlag}"/>
+        </row-actions>
+    </form>
+
+    <form name="ListEnquiryList" type="list" use-row-submit="true" list-name="custRequests" title="List of Enquiry"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <row-actions>
+            <entity-condition entity-name="CustRequestItem" list="custRequestItemList" >
+               <condition-list combine="and">
+                    <condition-expr field-name="custRequestId" from-field="custRequestId"/>
+                    <condition-list combine="or">
+                        <condition-expr field-name="statusId" operator="equals" value="ENQ_COMPLETED"/>
+                        <condition-expr field-name="statusId" operator="equals" value="ENQ_ORDERED" />
+                    </condition-list>
+                </condition-list>
+      		</entity-condition>
+      		<set field="itemSize" value="${groovy: custRequestItemList.size();}"/>
+      	</row-actions>
+        <field name="custRequestId" sort-field="true" title="Enquiry No" widget-style="buttontext">
+            <hyperlink description="${custRequestId}" target="ViewEnquiry">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+        <field name="custRequestDate" sort-field="true" title="Enquiry Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+        <!-- <field name="fromPartyId" sort-field="true">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field> -->
+        <field name="custRequestName" title="Enquiry Reference"><display/></field>
+        <field name="statusId" sort-field="true" title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <field name="lastModifiedDate" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastModifiedDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="createdByUserLogin" sort-field="true"><display/></field>      
+        <field use-when="&quot;ENQ_ORDERED&quot;.equals(&quot;${statusId}&quot;)&amp;&amp;!(&quot;ENQ_COMPLETED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_COMPLETED_ENQ&quot;, session)))}" name="Completed" widget-style="buttontext">
+            <hyperlink target="updateEnquiryStatus" description="Completed">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="ENQ_COMPLETED"/>
+            </hyperlink>
+        </field>
+       <field use-when="&quot;N&quot;.equals(&quot;${cancelFlag}&quot;)&amp;&amp;!(&quot;ENQ_CANCELLED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
+            <hyperlink  target="cancelEnquiryStatus" description="Cancel" confirmation-message="Are you sure to Cancel Enquiry..?">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="ENQ_CANCELLED"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="FindQuotations" target="FindQuotes" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="quoteId" title="Quote No"><text-find/></field>
+        <field name="quoteItemSeqId" title="Item No"><text-find/></field>
+        <field name="custRequestId" title="Enquiry No"><text-find/></field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="materialId" title="${uiLabelMap.MaterialMangement_ProductId}"><text-find/></field>
+        <field name="partyId" title="Supplier Code"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+    <form name="ListQuotes" type="list" extends="ListQuoteList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" value="-quoteId"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+        <row-actions>
+           <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/FindQuoteMaterials.groovy"/>
+           <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+    </form>
+    <form name="ListQuoteList" type="list" use-row-submit="true" list-name="custRequests" title="List of Quote Items"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="quoteId" sort-field="true" title="Quote No" widget-style="buttontext">
+            <hyperlink description="${quoteId}" target="ViewQuote">
+                <parameter param-name="quoteId"/>
+            </hyperlink>
+        </field>
+        <field name="quoteItemSeqId" title="Quote Item"><display/></field>
+        <field name="custRequestId" title="Enquiry No"><display/></field>
+        <field name="validFromDate" sort-field="true" title="Valid From"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validFromDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="validThruDate" sort-field="true" title="Valid To"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validThruDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="partyId" sort-field="true" title="Supplier">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <!-- <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink> -->
+            </display-entity>
+        </field>
+        <field name="statusId" sort-field="true" title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
+        </field>
+        <field name="quantity" title="Quote Qty"><display/></field>
+        <field name="quoteUnitPrice" title="Quote Unit Price"><display/></field>
+        <field use-when="statusId.equals(&quot;QUO_CREATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_QUOTE_EDIT&quot;, session)))}" name="editQuote" title="Edit" widget-style="buttontext" >
+        	<hyperlink target="editQuot" description="Edit">
+                 <parameter param-name="quoteId"/>
+                <parameter param-name="flag" value="Y" />
+            </hyperlink>
+        </field>
+        <field use-when="!((statusId.equals(&quot;QUO_ORDERED&quot;)) || (statusId.equals(&quot;QUO_REJECTED&quot;)))" name="cancelQuote" title="Cancel" widget-style="buttontext" >
+        	<hyperlink target="setQuoteStatus" description="Cancel" confirmation-message="Are you sure to Cancel Quote..?">
+                 <parameter param-name="quoteId"/>
+                 <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="QUO_CANCELED"/>
+                <parameter param-name="flag" value="Y" />
+            </hyperlink>
+        </field>
+    </form>
+    <form name="viewQuotation" type="single"  title="" default-map-name="quote" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+           <set field="thruDate"  value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(quote.validThruDate)}" type="Timestamp" />
+        </actions> 
+       <field name="quoteId" title="Quote No"><display/></field>
+       <field name="partyId" title="Supplier Party">
+       	<display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
+       	</display-entity>
+       </field>   
+       <field name="statusId" title="Quote Status">
+       		<display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity>
+       </field>
+       <field name="grandTotal" title="Quote Value"><display/></field>
+       <field name="validFromDate" title="Valid from"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(quote.validFromDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
+       <field name="validThruDate" title="Valid till"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(thruDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
+       <field name="createdStamp" title="Quote created"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(quote.createdStamp,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
+    </form>
+    <form name="ViewQuoteStatus" type="list" list-name="quoteStatus"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <auto-fields-entity entity-name="QuoteStatus" default-field-type="display"/>
+        <!-- <field name="quoteId" title="Quote No"><display/></field> -->
+        <field name="quoteId" title="Quote No"><display/></field>
+        <field name="quoteStatusId"><hidden/></field>
+        <field name="quoteItemSeqId" title="Item No"><display/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusDatetime" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+    </form>
+     <form name="viewQuoteItemDetails" type="list" title="" default-map-name="item" list-name="quoteItemList" 
+        header-row-style="header-row" default-table-style="basic-table" >
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+        <field name="quoteItemSeqId" title="Item" widget-style="buttontext"><display/> 
+        	<!-- <hyperlink target="BidItemOverview" description="${quoteItemSeqId}">
+				<parameter param-name="quoteId"/>
+				<parameter param-name="quoteItemSeqId"/>        
+        	</hyperlink> -->
+        </field>
+        <field name="custRequestId" title="Enquiry Ref No"><display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName} [${custRequestId}]">
+            <!-- <sub-hyperlink target="ViewTenderItemDetails" description="[${custRequestId}]">
+                <parameter param-name="custRequestId"/>
+            </sub-hyperlink> -->
+        </display-entity> </field>
+        <field name="custRequestItemSeqId" title="Enquiry Item No"><hidden/></field> 
+        <field name="productId" title="Name[UOM][Code]">
+            <display-entity entity-name="Product" description="${description}[${dec}][${productId}]">
+               <!--  <sub-hyperlink  description="[${productId}]" target="EditProduct">
+                    <parameter param-name="productId"/>
+                </sub-hyperlink> -->
+            </display-entity>
+        </field>
+        <field name="quantity" title="Quantity"><display/> </field>
+        <field name="quoteUnitPrice" title="Quote Unit Price"><display/> </field>
+        <field name="itemTotal" title="Item Total"><display/> </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/> </field>
+  </form>
+  <form name="AddQuoteTerm" type="single" target="createMaterialQuoteTerm" default-map-name="quote">
+    	<field name="parentTypeId" id-name="parentTypeId" tooltip="${uiLabelMap.CommonRequired}" title="Parent" event="onchange" action="javascript:termTypesByParent();">
+            <drop-down allow-empty="true" current-description="">
+            	<list-options  list-name="filterTermTypeList" key-name="termTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}" id-name="termTypeId" event="onchange" action="javascript:showOrderTax();">
+        	<drop-down allow-empty="true" current-description="">
+       			 <list-options  list-name="termTypeIdList" key-name="termTypeId" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="quoteItemSeqId" tooltip="${uiLabelMap.OrderQuoteEmpty}">
+            <drop-down allow-empty="true">
+                <entity-options description="${quoteItemSeqId}" entity-name="QuoteItem">
+                    <entity-constraint name="quoteId" operator="equals" value="${quoteId}"/>
+                    <entity-order-by field-name="quoteItemSeqId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field id-name="uomId" name="uomId" title="Uom" event="onchange" action="javascript:showOrderTax();">
+        	<drop-down allow-empty="false">
+        		<option key="INR" description="Rupees"/>
+        		<option key="PERCENT" description="Percentage"/>
+        	</drop-down>
+        </field>
+        <field name="quoteId"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field  name="orderTaxTypeId" id-name="orderTaxTypeId" title="Order Tax Type"  >
+        	<drop-down allow-empty="true" current-description="">
+       			 <list-options  list-name="orderTaxTypeList" key-name="orderTaxTypeId" description="${taxRate}"/>
+        	</drop-down>
+        </field>
+        <field name="termValue" id-name="termValue" title="Value"><text/></field>
+        <field name="termDays" title="term Days"><text/></field>
+        <!-- <field name="textValue" title="text Value"><text/></field> -->
+        <field name="description" title="description"><text/></field>
+        <field name="createButton" event="onclick" action="javascript:setTermValue();"><submit button-type="button"/></field>
+      </form>
+      <form name="ListQuoteTerms" type="list" list-name="quoteTerms"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteTerms">
+        <entity-one value-field="quoteTerm" entity-name="QuoteTerm">
+        	<field-map field-name="quoteId" from-field="quoteId"/>
+        </entity-one>
+	   	<entity-one value-field="quote" entity-name="Quote">
+        	<field-map field-name="quoteId" from-field="quoteTerm.quoteId"/>
+        </entity-one>
+        <row-actions>
+        <entity-one value-field="termType" entity-name="TermType">
+        	<field-map field-name="termTypeId" from-field="termTypeId"/>
+        </entity-one>
+        <set field="parentTypeId" from-field="termType.parentTypeId"/>
+        <set field="statusId" from-field="quote.statusId"/>
+        </row-actions>
+        <auto-fields-entity entity-name="QuoteTerm" default-field-type="display"/>
+        <field name="termTypeId" >
+            <display-entity entity-name="TermType" description="${description}" key-field-name="termTypeId"/>
+        </field>
+        <field name="parentTypeId"><display></display></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="statusId.equals(&quot;QUO_CREATED&quot;)">
+            <hyperlink target="deleteMaterialQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
+                <parameter param-name="termTypeId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="quoteId"/>
+            </hyperlink>
+        </field>
+        <sort-order>
+        <sort-field name="termTypeId"/>
+        <sort-field name="parentTypeId"/>
+        </sort-order>
+    </form>
+    <form name="AddQuoteContent" type="upload" default-map-name="content" 
+        focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createQuoteContent">
+        <actions>
+            <set field="quoteId" from-field="parameters.quoteId"/>
+            <set field="quoteItemSeqId" from-field="quoteItemSeqId"/>
+            <!-- <set field="custRequestId" from-field="parameters.custRequestId"/>
+            <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/> --> 
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <field name="quoteId" map-name="parameters"><display></display></field>
+        <field name="quoteItemSeqId">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${quoteItemSeqId}" entity-name="QuoteItem">
+        			<entity-constraint name="quoteId" operator="equals" value="${quoteId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>                
+        
+        <field name="contentTypeId" >
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT" >
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
+         <field name="createButton"><submit button-type="button"/></field>
+    </form>
+     <form name="ListQuoteContent" type="list" list-name="quoteItemContents" 
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="EditQuoteContent">
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId"><hidden/></field>
+        <field name="contentId" title="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+       <field name="fromDate" title="Uploaded Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext" >
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteQuoteContent">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+          </hyperlink>
+        </field>
+    </form>
+ </forms>    
