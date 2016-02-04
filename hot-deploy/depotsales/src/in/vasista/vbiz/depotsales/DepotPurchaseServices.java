@@ -633,6 +633,18 @@ public class DepotPurchaseServices{
 		  	String currencyUomId = "INR";
 			Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 			String partyId="Company";
+	        List<GenericValue> orderParty = null;  
+
+			try {
+				orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER"));
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+			
+			if (UtilValidate.isNotEmpty(orderParty)) {
+				GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
+				partyId = custOrderRole.getString("partyId");
+			}
 			if (UtilValidate.isEmpty(partyIdFrom)) {
 				Debug.logError("Cannot create invoice without partyId: "+ partyIdFrom, module);
 				return ServiceUtil.returnError("partyId is empty");
