@@ -884,12 +884,12 @@ public class DepotPurchaseServices{
 
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
-		String billFromVendorPartyId = (String) request.getParameter("billFromVendorPartyId");
+		String billFromVendorPartyId = (String) request.getParameter("billToPartyId");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderId = (String) request.getParameter("orderId");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		String effectiveDateStr = (String) request.getParameter("orderDate");
-		String partyIdTo = (String) request.getParameter("partyId");
+		String partyIdTo = (String) request.getParameter("shipToPartyId");
 		// contact Details
 		String city = (String) request.getParameter("city");
 		String address1 = (String) request.getParameter("address1");
