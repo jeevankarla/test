@@ -371,7 +371,7 @@
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
           		</hyperlink>
             </field>
-            <field name="partyId">
+            <field name="partyId" title="Supplier">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                     <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
                         <parameter param-name="partyId" from-field="partyId"/>
@@ -386,6 +386,7 @@
                 </display-entity>
             </field>
             <field name="vehicleId" title="Vehicle No"><display/></field>
+            <field name="billToPartyId"><hidden/></field>
             <field name="partyIdTo" ><hidden/></field>
             <field name="partyName" ><hidden/></field>
             <field name="statusId" title="Status">
@@ -423,6 +424,7 @@
             <field name="raiseInvoice" widget-style="buttontext" title="Raise Purchase Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(statusId.equals(&quot;GOODS_RECEIVED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                 <hyperlink target="MaterialInvoiceInit" description="Purchase Invoice">
                     <parameter param-name="shipmentId"/>
+                    <parameter param-name="billToPartyId"/>
                 </hyperlink>
             </field>
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Raise Sales Invoice" use-when="(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">

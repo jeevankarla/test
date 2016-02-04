@@ -67,18 +67,27 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 		
-		Debug.log("OrderAss========"+OrderAss);
-		
 		if(UtilValidate.isNotEmpty(OrderAss)){
 			salesOrder = OrderAss.get("toOrderId");
 			tempMap.put("salesOrder",salesOrder);
 		}else{
-		tempMap.put("salesOrder","");
+			tempMap.put("salesOrder","");
 		}
 		
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyId", shipment.partyIdFrom);
+			
+			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+				ecl = EntityCondition.makeCondition([
+					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+					EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER")],
+				EntityOperator.AND);
+				billToOrderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
+				billToOrderRole=EntityUtil.getFirst(billToOrderRoles);
+				tempMap.put("billToPartyId",billToOrderRole.partyId);
+			}
+			
 		}else{
 			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
 				ecl = EntityCondition.makeCondition([
@@ -88,6 +97,15 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				orderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
 				orderRole=EntityUtil.getFirst(orderRoles);
 				tempMap.put("partyId",orderRole.partyId);
+				
+				ecl = EntityCondition.makeCondition([
+					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+					EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER")],
+				EntityOperator.AND);
+				billToOrderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
+				billToOrderRole=EntityUtil.getFirst(billToOrderRoles);
+				tempMap.put("billToPartyId",billToOrderRole.partyId);
+				
 			}else{
 				tempMap.putAt("partyId", null);
 			}
