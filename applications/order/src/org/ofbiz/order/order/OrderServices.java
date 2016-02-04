@@ -7571,7 +7571,7 @@ public class OrderServices {
            Map<String, Object> paymentParams = new HashMap<String, Object>();
            BigDecimal maxAmount = orderPaymentPreference.getBigDecimal("maxAmount");
            //if (maxAmount > 0.0) {
-               paymentParams.put("paymentTypeId", "SALES_PAYIN");
+               paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
                paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
                paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
                paymentParams.put("amount", amount);
