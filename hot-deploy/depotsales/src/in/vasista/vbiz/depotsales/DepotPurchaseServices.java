@@ -374,11 +374,22 @@ public class DepotPurchaseServices{
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		
 		BigDecimal grandTotal = BigDecimal.ZERO;
-		
+		List<GenericValue> orderParty=null;
 		   if (UtilValidate.isNotEmpty(shipmentId)) {
 	           Map<String, Object> createInvoiceContext = FastMap.newInstance();
 	           createInvoiceContext.put("partyId", partyId);
-	           createInvoiceContext.put("partyIdFrom", "COMPANY");
+	           try {
+					orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_FROM_VENDOR"));
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
+				}
+				
+				if (UtilValidate.isNotEmpty(orderParty)) {
+					GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
+					partyIdFrom = custOrderRole.getString("partyId");
+				}
+				Debug.log("partyIdFrom====================="+partyIdFrom);
+	           createInvoiceContext.put("partyIdFrom", partyIdFrom);
 	           createInvoiceContext.put("shipmentId", shipmentId);
 	           createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
 	           createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
