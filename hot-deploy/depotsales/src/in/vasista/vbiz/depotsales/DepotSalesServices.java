@@ -124,7 +124,15 @@ public class DepotSalesServices{
 					 }*/
 			}
 			boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-			
+			// Approving  Associated Purchase order
+			 List condList= FastList.newInstance();;
+	           condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+			   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+			   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+	           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
+	         // end approving  Associated Purchase order
+	         
 			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
 			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
 			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
