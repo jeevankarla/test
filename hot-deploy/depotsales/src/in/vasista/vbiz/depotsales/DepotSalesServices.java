@@ -4010,8 +4010,12 @@ public class DepotSalesServices{
    	    		Debug.logError(e, module);
    			}
    	    }
+        String ownerPartyId = "";
+        if(UtilValidate.isNotEmpty(depotsList)){
+        	ownerPartyId = (String)EntityUtil.getFirst(depotsList).get("ownerPartyId");
+        }
         Debug.log("depotsList =========="+depotsList);
-		
+        result.put("ownerPartyId", ownerPartyId);
 		result.put("depotsList", depotsList);
         return result;
     }
