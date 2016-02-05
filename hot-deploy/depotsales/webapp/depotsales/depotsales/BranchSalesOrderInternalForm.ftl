@@ -142,6 +142,7 @@
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
+			var remarks = data[rowCount]["remarks"];
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
@@ -152,6 +153,8 @@
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
+				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputBaleQty));
 				jQuery(formId).append(jQuery(inputYarnUOM));
@@ -361,13 +364,14 @@
 		var columns = [
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
-			{id:"baleQuantity", name:"${uiLabelMap.QtyInNumbers}", field:"baleQuantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
+			{id:"remarks", name:"Remarks", field:"remarks", width:180, minWidth:180, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"${uiLabelMap.QtyInNumbers}", field:"baleQuantity", width:100, minWidth:60, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:100, minWidth:100, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"${uiLabelMap.TotalWeightInKgs}Total Weight in Kgs", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
-			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter},	
+			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 			
 			<#--
@@ -395,7 +399,7 @@
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right"},
 			{id:"ltrPrice", name:"Ltr/Kg Price", field:"ltrPrice", width:80, minWidth:80, sortable:false, formatter: rateFormatter, align:"right"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, sortable:false, formatter: rateFormatter},
+			{id:"amount", name:"Total Amount(Rs)", field:"", width:100, minWidth:100, sortable:false, formatter: rateFormatter},
 			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, sortable:false, focusable :false}
 			<#else>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, sortable:false, formatter: rateFormatter , align:"right"},
@@ -515,7 +519,7 @@
       		grid.render();
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
-	      	if ( (args.cell == 1) || (args.cell == 2) || ((args.cell == 3)) ) {
+	      	if ( (args.cell == 2) || (args.cell == 3) || ((args.cell == 4)) ) {
 	      		
 	      		var productName = data[args.row]["productNameStr"];
       			<#if changeFlag?exists && changeFlag != "EditDepotSales">
@@ -531,7 +535,7 @@
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 2) {
+        	if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var uomId = productUOMMap[prod];
@@ -622,7 +626,7 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			
-			if (args.cell == 0 || args.cell == 1) {
+			if (args.cell == 0 || args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				
 				var calcQty = 0;
@@ -709,7 +713,7 @@
 				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 3) {
+			if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var uom = data[args.row]["cottonUom"];
@@ -744,7 +748,7 @@
 				
 				//jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 4) {
+			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
@@ -753,7 +757,7 @@
 				data[args.row]["quota"] = quota;
 				grid.updateRow(args.row);
 			}
-			if (args.cell == 5) {
+			if (args.cell == 6) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -798,12 +802,56 @@
 				
 				jQuery("#totalAmount").html(dispText);
 			}
-			
+			if (args.cell == 7) {
+				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['amount'];
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}				
+				var roundedAmount;
+					roundedAmount = price/qty;
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["unitPrice"] = roundedAmount;
+				
+				quota = parseFloat(productQuotaJSON[prod]);
+				if(isNaN(quota)){
+					quota = 0;
+				}
+				data[args.row]["quota"] = quota;
+				
+				grid.updateRow(args.row);
+				
+				var totalAmount = 0;
+				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+				}
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+				var dispText = "";
+				if(amt > 0 ){
+					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				
+				jQuery("#totalAmount").html(dispText);
+			}
 			
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-				if (args.cell == 1 && data[args.row] != null) {
+				if (args.cell == 2 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];
@@ -813,7 +861,7 @@
 	      		grid.updateRow(args.row);
 	      		grid.updateRowCount();
 	      		grid.render();
-	      		$(grid.getCellNode(args.row, 1)).click();
+	      		$(grid.getCellNode(args.row, 2)).click();
 			}
 			
 		});
