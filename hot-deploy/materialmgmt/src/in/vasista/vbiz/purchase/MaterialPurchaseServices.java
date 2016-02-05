@@ -1308,7 +1308,7 @@ public class MaterialPurchaseServices {
 		String partyId = (String) request.getParameter("supplierId");
 		String orderId = (String) request.getParameter("orderId");
 		String billFromPartyId = (String) request.getParameter("billToPartyId");
-		String shipToPartyId = (String) request.getParameter("shipToPartyId");
+		String shipToPartyId = (String) request.getParameter("facilityId");
 		String issueToDeptId = (String) request.getParameter("issueToDeptId");
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
@@ -1673,8 +1673,9 @@ public class MaterialPurchaseServices {
 			cart.setChannelType(salesChannel);
 			cart.setBillToCustomerPartyId(billFromPartyId);
 			cart.setPlacingCustomerPartyId(billFromPartyId);
-			cart.setShipToCustomerPartyId(shipToPartyId);
+			//cart.setShipToCustomerPartyId(shipToPartyId);
 			cart.setEndUserCustomerPartyId(billFromPartyId);
+			cart.setFacilityId(shipToPartyId);
 			//cart.setShipmentId(shipmentId);
 			//for PurchaseOrder we have to use for SupplierId
 			cart.setBillFromVendorPartyId(partyId);

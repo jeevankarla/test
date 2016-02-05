@@ -125,11 +125,11 @@ function makeDatePicker(fromDateId ,thruDateId){
                 },
                 onFinishing: function (event, currentIndex)
                 {	
-                    var shipToPartyId = $("#shipToPartyId").val();  
-            	    if( (shipToPartyId).length < 1 ) {
-				    	$('#shipToPartyId').css('background', 'yellow'); 
+                    var facilityId = $("#facilityId").val(); 
+            	    if( (facilityId).length < 1 ) {
+				    	$('#facilityId').css('background', 'yellow'); 
 				       	setTimeout(function () {
-				           	$('#shipToPartyId').css('background', 'white').focus(); 
+				           	$('#facilityId').css('background', 'white').focus(); 
 				       	}, 800);
 				    	return false;
 			    	}
@@ -256,7 +256,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		  });	
 		}  
 		 
-		 
+		var billToPartyId;
 		function populateBranchDepots() {
 			var productStoreId = $("#productStoreId").val();
 			$.ajax({
@@ -268,15 +268,17 @@ function makeDatePicker(fromDateId ,thruDateId){
 				 success:function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 	                    alert('Error Fetching available courses');
-					}else{
+					}else{					
 						depotsList = result["depotsList"];
-						var paramName = 'shipToPartyId';
+						billToPartyId = result["ownerPartyId"];
+						CreateMPO.billToPartyId.value=billToPartyId;						
+						var paramName = 'facilityId';
 						var optionList = '';   		
 						var list= depotsList;
 						if (list) {		       				        	
 				        	for(var i=0 ; i<list.length ; i++){
 								var innerList=list[i];	              			             
-				                optionList += "<option value = " + innerList.ownerPartyId + " >" + innerList.facilityName + "</option>";          			
+				                optionList += "<option value = " + innerList.facilityId + " >" + innerList.facilityName + "</option>";          			
 				      		}
 				      	}		
 				      	if(paramName){
@@ -447,7 +449,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</tr>
 					</#if>
       		        <tr>
-					    <td class="label">Bill To Party :</td>
+					    <#--<td class="label">Bill To Party :</td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
 					    	<#assign billToPartyId=orderInfo.get("billToPartyId")>
@@ -456,7 +458,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 					      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
       		                </#if>
       		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
-					    </td>
+					    </td>-->
+					    <input type="hidden" name="billToPartyId" id="billToPartyId"  value=""/>
+					    
 					 </tr>
 					 <tr>
 					    <td class="label"><b>Ref No. :</b></td>
@@ -697,7 +701,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				                <tr>
                                 	<td class="label"><FONT COLOR="#045FB4"><b>Select Depot</b></FONT></td>
 	    							<td>
-	                                	<select name="shipToPartyId" id="shipToPartyId"></select>
+	                                	<select name="facilityId" id="facilityId"></select>
 		      						</td>
 	      						</tr>
 				                <#--

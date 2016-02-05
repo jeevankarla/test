@@ -115,6 +115,7 @@
     <service name="populateBranchDepots" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateBranchDepots" auth="false">
         <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/>
         <attribute name="depotsList" mode="OUT" type="List" optional="true"/>
     </service>
     
