@@ -1354,6 +1354,7 @@ public class DepotSalesServices{
 		
 		String productId = null;
 		String customerId = null;
+		String remarks = null;
 		String productFeatureId = null;
 		String batchNo = null;
 		String daysToStore = null;
@@ -1462,6 +1463,9 @@ public class DepotSalesServices{
 					request.setAttribute("_ERROR_MESSAGE_",
 							"Missing product quantity");
 					return "error";
+				}
+				if (paramMap.containsKey("remarks" + thisSuffix)) {
+					remarks = (String) paramMap.get("remarks" + thisSuffix);
 				}
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap
@@ -1589,6 +1593,7 @@ public class DepotSalesServices{
 				productQtyMap.put("productId", productId);
 				productQtyMap.put("quantity", quantity);
 				productQtyMap.put("customerId", customerId);
+				productQtyMap.put("remarks", remarks);
 				productQtyMap.put("baleQuantity", baleQuantity);
 				productQtyMap.put("bundleWeight", bundleWeight);
 				productQtyMap.put("yarnUOM", yarnUOM);
@@ -1945,6 +1950,7 @@ public class DepotSalesServices{
 
 		String productId = "";
 		String customerId = "";
+		String remarks = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal baleQuantity = BigDecimal.ZERO;
 		BigDecimal bundleWeight = BigDecimal.ZERO;
@@ -1964,7 +1970,9 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("customerId"))){
 				customerId = (String)prodQtyMap.get("customerId");
 			}
-			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
+				remarks = (String)prodQtyMap.get("remarks");
+			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
 				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
 			}
@@ -2107,6 +2115,9 @@ public class DepotSalesServices{
 							if(UtilValidate.isNotEmpty(yarnUOM)){
 								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
 							}
+							if(UtilValidate.isNotEmpty(remarks)){
+								item.setOrderItemAttribute("REMARKS",remarks.toString());
+							}
 							if(UtilValidate.isNotEmpty(bundleWeight)){
 								item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
 							}
@@ -2130,6 +2141,9 @@ public class DepotSalesServices{
 							item.setOrderItemAttribute("productId",productId);
 							if(UtilValidate.isNotEmpty(customerId)){
 								item.setOrderItemAttribute("WIEVER_CUSTOMER",customerId);
+							}
+							if(UtilValidate.isNotEmpty(remarks)){
+								item.setOrderItemAttribute("REMARKS",remarks.toString());
 							}
 							if(UtilValidate.isNotEmpty(yarnUOM)){
 								item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
@@ -2156,6 +2170,9 @@ public class DepotSalesServices{
 							}
 							if(UtilValidate.isNotEmpty(customerId)){
 								item.setOrderItemAttribute("WIEVER_CUSTOMER",customerId);
+							}
+							if(UtilValidate.isNotEmpty(remarks)){
+								item.setOrderItemAttribute("REMARKS",remarks.toString());
 							}
 							BigDecimal discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
 				               
@@ -2185,6 +2202,9 @@ public class DepotSalesServices{
 						}
 						if(UtilValidate.isNotEmpty(customerId)){
 							item.setOrderItemAttribute("WIEVER_CUSTOMER",customerId);
+						}
+						if(UtilValidate.isNotEmpty(remarks)){
+							item.setOrderItemAttribute("REMARKS",remarks.toString());
 						}
 						//item.setAttribute(productId,quantity);
 		        		item.setTaxDetails(taxList);
