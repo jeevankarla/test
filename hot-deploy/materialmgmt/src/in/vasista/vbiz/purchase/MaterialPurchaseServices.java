@@ -190,7 +190,7 @@ public class MaterialPurchaseServices {
 				TransactionUtil.rollback();
 		  		return "error";
 			}
-			
+			String originFacilityId ="";
 			GenericValue orderHeader = null;
 			if(UtilValidate.isNotEmpty(orderId)){
 				orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -198,6 +198,10 @@ public class MaterialPurchaseServices {
 				String statusId = orderHeader.getString("statusId");
 				String orderTypeId = orderHeader.getString("orderTypeId");
 				purposeTypeId = orderHeader.getString("purposeTypeId");
+				if(UtilValidate.isNotEmpty(orderHeader.getString("originFacilityId")))
+				  {
+					originFacilityId = orderHeader.getString("originFacilityId");
+				  }
 				if(statusId.equals("ORDER_CANCELLED")){
 					Debug.logError("Cannot create GRN for cancelled orders : "+orderId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Cannot create GRN for cancelled orders : "+orderId);	
@@ -458,7 +462,7 @@ public class MaterialPurchaseServices {
 		        }
 		        
 		        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
-		        List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+		        //List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
 				List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue ordItm = null;
 				if(UtilValidate.isNotEmpty(filteredOrderItem)){
@@ -471,7 +475,7 @@ public class MaterialPurchaseServices {
 					}
 				}
 				
-				List<GenericValue> filterProdFacility = EntityUtil.filterByCondition(productsFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				/*List<GenericValue> filterProdFacility = EntityUtil.filterByCondition(productsFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				List prodFacilityIds = EntityUtil.getFieldListFromEntityList(filterProdFacility, "facilityId", true);
 				List facilityConditionList = FastList.newInstance();
 				facilityConditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
@@ -479,7 +483,7 @@ public class MaterialPurchaseServices {
 				facilityConditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds));
 				EntityCondition facilityCondition = EntityCondition.makeCondition(facilityConditionList, EntityOperator.AND);
 				List<GenericValue> facilities = delegator.findList("Facility", facilityCondition, null, null, null, false);
-				GenericValue facilityProd = EntityUtil.getFirst(facilities);
+				GenericValue facilityProd = EntityUtil.getFirst(facilities);*/
 				//Product should mapped to any one of facility
 				/* if (UtilValidate.isEmpty(facilityProd)) {
 			        	Debug.logError("Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility !", module);
@@ -501,7 +505,7 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
-				inventoryReceiptCtx.put("facilityId", "BRANCH1");//facilityProd.getString("facilityId"));
+				inventoryReceiptCtx.put("facilityId", originFacilityId);//facilityProd.getString("facilityId"));
 				inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
 				if(UtilValidate.isNotEmpty(ordItm)){
 					inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitListPrice"));

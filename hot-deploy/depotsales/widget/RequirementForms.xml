@@ -84,7 +84,7 @@
     	  <entity-condition entity-name="ProductStore" distinct="true" list="prodStore" />
 		  <set field="productStoreId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodStore, 'productStoreId', true);}"/>        	
     	</actions>
-    	<field name="partyId" title="${uiLabelMap.Customer}" required-field="true" ><lookup target-form-name="LookupPartyName"/></field> 
+    	<field name="partyId" title="${uiLabelMap.Customer}" required-field="true" ><lookup target-form-name="LookupEmpanelledPartyName"/></field> 
     	<field name="productId" title="Product" required-field="true" >
             <lookup target-form-name="LookupProduct"/>
         </field>
