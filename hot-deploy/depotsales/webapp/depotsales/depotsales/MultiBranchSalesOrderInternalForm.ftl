@@ -370,9 +370,9 @@
 		
 		var columns = [
 			{id:"customerName", name:"Customer", field:"customerName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableIndCustTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},
-			{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:150, minWidth:150, cssClass:"readOnlyColumnClass",focusable :false},
+			{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:100, minWidth:100, cssClass:"readOnlyColumnClass",focusable :false},
 			{id:"cProductName", name:"Product", field:"cProductName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Remarks", field:"remarks", width:200, minWidth:200, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"baleQuantity", name:"Quantity (Numbers)", field:"baleQuantity", width:100, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"Uom", field:"cottonUom", width:100, minWidth:100, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
