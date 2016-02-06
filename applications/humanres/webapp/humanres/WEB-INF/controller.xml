@@ -1986,7 +1986,7 @@ under the License.
    	<request-map uri="Form16Report.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="Form16Report"></response>
-    </request-map>
+    </request-map>   
     <request-map uri="findMasters">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="findMasters"></response>
@@ -2250,6 +2250,10 @@ under the License.
     <request-map uri="PFform6A.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PFform6A"/>        
+    </request-map>
+     <request-map uri="PFform7.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="PFform7"></response>
     </request-map>
     <request-map uri="ESIMonthlystatement.pdf">
         <security https="true" auth="true"/>                        
@@ -2755,6 +2759,8 @@ under the License.
     <view-map name="TaxRates" type="screen" page="component://humanres/widget/HumanresScreens.xml#TaxRates"></view-map>
     <view-map name="OtherInputs" type="screen" page="component://humanres/widget/HumanresScreens.xml#OtherInputs"></view-map>
     <view-map name="Form16Report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Form16Report" content-type="application/pdf" encoding="none"/>
+    <view-map name="PFForm7report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFForm7report" content-type="application/pdf" encoding="none"/>
+    
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
     <view-map name="FindHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindHoliday"/>
    	<view-map name="NewHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewHoliday"/>
@@ -2889,6 +2895,9 @@ under the License.
     <view-map name="PFMonthlyStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFMonthlyStatement" content-type="application/pdf" encoding="none"/>
     <view-map name="PFform3A" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFform3A" content-type="application/pdf" encoding="none"/>
     <view-map name="PFform6A" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFform6A" content-type="application/pdf" encoding="none"/>
+    <view-map name="PFform7" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFform7" content-type="application/pdf" encoding="none"/>
+    
+    
     <view-map name="ESIMonthlystatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIMonthlystatement" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIFormSix" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIFormSix" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIFormSeven" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIFormSeven" content-type="application/pdf" encoding="none"/>
