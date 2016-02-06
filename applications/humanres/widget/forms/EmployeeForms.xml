@@ -420,6 +420,15 @@
 				</entity-options>
 			</drop-down><hidden/>
 		</field>
+		<field name="maritalStatus" title="${uiLabelMap.MaritalStatus}">
+		<drop-down allow-empty="false" no-current-selected-key="S">
+			<option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}" />
+			<option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}" />
+			<option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}" />
+			<option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}" />
+			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
+		</drop-down><hidden/>
+		</field>
 		<field name="religion" title="${uiLabelMap.Religion}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -434,10 +443,10 @@
 					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA"/>
 					<entity-order-by field-name="partyClassificationGroupId"/>
 				</entity-options>
-			</drop-down>
+			</drop-down><hidden/>
 		</field>
 		<field name="nationality" title="${uiLabelMap.Nationality}">
-			<drop-down allow-empty="true">
+			<drop-down allow-empty="false" >
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="PERSON_REC_NA" />
 					<entity-order-by field-name="sequenceId" />
@@ -520,7 +529,7 @@
 				</entity-options>
 			</drop-down>         
         </field> 
-        <field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><text></text></field>      
+        <field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><hidden/></field>      
         <field name="height" title="${uiLabelMap.Height}"><hidden></hidden></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><hidden></hidden></field>  
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><drop-down allow-empty="false" no-current-selected-key="Y"><option key="N"></option><option key="Y"/></drop-down></field>
@@ -582,7 +591,7 @@
 			<!-- <sort-field name="quarterType" /> -->
 			<!-- <sort-field name="motherTongue" /> -->
 			<sort-field name="religion" />  
-			<sort-field name="caste" /> 
+			<!-- <sort-field name="caste" />  -->
 			<sort-field name="nationality" /> 
 			<!-- <sort-field name="punchType" /> -->
 			<sort-field name="weeklyOff" />
