@@ -85,6 +85,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ESIForm6thruDate","ESIForm6thruDate");
 		makeDatePicker("ESIForm7fromDate","ESIForm7fromDate");
 		makeDatePicker("ESIForm7thruDate","ESIForm7thruDate");
+		makeDatePicker("PFform7fromDate","PFform7fromDate");
+		makeDatePicker("PFform7thruDate","PFform7tthruDate");		
 		makeDatePicker("EDLISfromDate","EDLISfromDate");
 		makeDatePicker("EDLISthruDate","EDLISthruDate");
 		makeDatePicker("GSfromDate","GSfromDate");
@@ -1268,9 +1270,9 @@ function setOrgPartyId() {
 						<form id="PFform3A" name="PFform3A" method="post" action="<@ofbizUrl>PFform3A.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="20%"><span class='h3'>PF Form 3A</span></td>
+										<td width="40%"><span class='h3'>PF Form 3A</span></td>
 										<td width="30%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="Form16Report" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
-										<td width="32%"><span class='h3'>Period Id</span>
+										<td width="30%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 												<#list customTimePeriodIdsList as customTimePeriod>
 													 <#if finYearId?exists && (finYearId == customTimePeriod.customTimePeriodId)>
@@ -1305,6 +1307,27 @@ function setOrgPartyId() {
 								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 								                  		</option>
 								      				</#if>
+												</#list>
+											</select>
+										</td>	
+										<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									</tr>
+								</table>	
+							</form>
+						</table>
+					</tr>
+				</#if>
+				<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("PFform7.pdf")?exists) && (reportDetailsMap.get("PFform7.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("PFform7.pdf"))?exists))> 
+					<tr class="alternate-row">
+						<form id="PFform7" name="PFform7" method="post" action="<@ofbizUrl>PFform7.pdf</@ofbizUrl>" target="_blank">	
+							<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="20%"><span class='h3'>PFform7</span></td>
+										<td width="30%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="PFform7" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
+										<td width="32%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											    <#list customTimePeriodIdsList as customTimePeriod>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")?if_exists} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")?if_exists}</option>
 												</#list>
 											</select>
 										</td>	
@@ -1500,7 +1523,7 @@ function setOrgPartyId() {
 								</table>
 							</form>
 						</tr>
-					</#if>
+					</#if>										
 			   	</table>
 			</div>
 		</div>

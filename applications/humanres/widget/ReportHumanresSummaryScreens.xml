@@ -292,6 +292,22 @@
    			</widgets>
    		</section>
 	</screen>
+	<screen name="PFform7">
+        <section>
+           <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/PFform7.groovy"/> 
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/PFform7.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+   	</screen>
 	<screen name="ESIMonthlystatement">
 		<section>
 			<actions>
@@ -2355,7 +2371,7 @@
                 </platform-specific>
             </widgets>
         </section>
-   	</screen>
+   	</screen>   	
 </screens>
 
     
