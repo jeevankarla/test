@@ -238,7 +238,13 @@ if(partyOrderIds){
 		condExpBundle = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		
 		bundleAttr = EntityUtil.filterByCondition(orderItemAttr,condExpBundle);
-		
+		// remarks
+		cond.clear();
+		cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+		cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+		/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
+		condExpRmrk = EntityCondition.makeCondition(cond, EntityOperator.AND);
+		RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
 		productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		quota=0;
 		if(productQuotaDetails){
@@ -255,6 +261,10 @@ if(partyOrderIds){
 		}
 		if(yarnUOMAttr){
 		yarnUOM=(yarnUOMAttr.get(0)).get("attrValue");
+		}
+		remrk="";
+		if(RmrkAttr){
+			remrk=(RmrkAttr.get(0)).get("attrValue");
 		}
 		wieverName="";
 		wieverId="";
@@ -273,6 +283,7 @@ if(partyOrderIds){
 		}
 		newObj.put("customerName",wieverName+"["+psbNo+"]");
 		newObj.put("customerId",wieverId);
+		newObj.put("remarks",remrk);
 		
 		newObj.put("psbNumber",psbNo);
 		
