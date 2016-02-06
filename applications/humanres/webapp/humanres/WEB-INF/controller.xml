@@ -2759,8 +2759,6 @@ under the License.
     <view-map name="TaxRates" type="screen" page="component://humanres/widget/HumanresScreens.xml#TaxRates"></view-map>
     <view-map name="OtherInputs" type="screen" page="component://humanres/widget/HumanresScreens.xml#OtherInputs"></view-map>
     <view-map name="Form16Report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Form16Report" content-type="application/pdf" encoding="none"/>
-    <view-map name="PFForm7report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFForm7report" content-type="application/pdf" encoding="none"/>
-    
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
     <view-map name="FindHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindHoliday"/>
    	<view-map name="NewHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewHoliday"/>
