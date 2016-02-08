@@ -146,11 +146,8 @@
     <service name="getAttributeTypes" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getAttributeTypes">
         <description>Get Child Categories</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="packingTypes" type="List" mode="OUT" optional="true"/>
-        <attribute name="spinningTypes" type="List" mode="OUT" optional="true"/>
-        <attribute name="processingTypes" type="List" mode="OUT" optional="true"/>
-        <attribute name="plyandcountTypes" type="List" mode="OUT" optional="true"/>
-        <attribute name="uomTypes" type="List" mode="OUT" optional="true"/>
+        <attribute name="productAttributesMap" type="Map" mode="OUT" optional="true"/>
+        <attribute name="productAttributeTypesList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="newProductCreation" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreateNewProduct">
         <description>Create New Product</description>
