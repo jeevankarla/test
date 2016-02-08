@@ -491,7 +491,7 @@ public class MaterialPurchaseServices {
 						TransactionUtil.rollback();
 				  		return "error";
 			        }*/
-				 
+				if(UtilValidate.isNotEmpty(originFacilityId)){
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
 				inventoryReceiptCtx.put("userLogin", userLogin);
@@ -540,6 +540,7 @@ public class MaterialPurchaseServices {
 					shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
 					delegator.createSetNextSeqId(shipmentReceiptStatus);
 				}
+           }
               }
            }
 			
