@@ -491,7 +491,6 @@ public class MaterialPurchaseServices {
 						TransactionUtil.rollback();
 				  		return "error";
 			        }*/
-				if(UtilValidate.isNotEmpty(originFacilityId)){
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
 				inventoryReceiptCtx.put("userLogin", userLogin);
@@ -505,7 +504,13 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
-				inventoryReceiptCtx.put("facilityId", originFacilityId);//facilityProd.getString("facilityId"));
+				if(UtilValidate.isNotEmpty(originFacilityId)){
+
+				inventoryReceiptCtx.put("facilityId", originFacilityId);
+				}else{
+					inventoryReceiptCtx.put("facilityId", "BRANCH1");
+				}
+				//facilityProd.getString("facilityId"));
 				inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
 				if(UtilValidate.isNotEmpty(ordItm)){
 					inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitListPrice"));
@@ -541,7 +546,7 @@ public class MaterialPurchaseServices {
 					delegator.createSetNextSeqId(shipmentReceiptStatus);
 				}
            }
-              }
+              
            }
 			
 			if(UtilValidate.isNotEmpty(orderId) && landingCharges.compareTo(BigDecimal.ZERO)>0){
