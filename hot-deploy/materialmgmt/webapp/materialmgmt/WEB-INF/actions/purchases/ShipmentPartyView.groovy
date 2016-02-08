@@ -14,7 +14,7 @@ import org.ofbiz.party.party.PartyHelper;
 List finalList=[];
 List conditionList=[];
 
-if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
+//if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 	/*if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
 	}
@@ -134,7 +134,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		
 		finalList.add(tempMap);
 	}
-	}
+	//}
 	newFinalList=[];
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		finalList.each{list->
