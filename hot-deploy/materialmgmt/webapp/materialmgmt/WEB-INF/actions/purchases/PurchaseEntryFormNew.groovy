@@ -118,8 +118,12 @@ prodList.each{eachItem ->
 	newObj.put("value",eachItem.productId);
 	newObj.put("label",eachItem.description);
 	productItemJSON.add(newObj);
-	productIdItemLabelsJSON.put(eachItem.productId, eachItem.description);
-	productLabelIdsJSON.put(eachItem.description, eachItem.productId);
+	if(eachItem.description){
+		productIdItemLabelsJSON.put(eachItem.productId, eachItem.description);
+		productLabelIdsJSON.put(eachItem.description, eachItem.productId);
+	}
+	
+	
 	
 	productUOMJSON.put(eachItem.productId, "WT_kg");
 	uomLabelJSON.put("WT_kg", "kg");
