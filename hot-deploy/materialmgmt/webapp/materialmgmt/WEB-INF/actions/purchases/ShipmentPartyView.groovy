@@ -85,7 +85,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				EntityOperator.AND);
 				billToOrderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
 				billToOrderRole=EntityUtil.getFirst(billToOrderRoles);
+				if(billToOrderRole && billToOrderRole.partyId){
 				tempMap.put("billToPartyId",billToOrderRole.partyId);
+				}
 			}
 			
 		}else{
