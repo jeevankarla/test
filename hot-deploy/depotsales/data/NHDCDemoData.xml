@@ -253,7 +253,71 @@ under the License.
     	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
     	
     	
-    	
+    	<!-- <ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHPR"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHPR"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="SPINNING"  attrName="RF"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="SPINNING"  attrName="OE"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLYANDCOUNT"  attrName="PLY"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLYANDCOUNT"  attrName="COUNT"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Mercerdised"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Gassed"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="NF"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="S"/> -->
+		
+		
+		<EnumerationType enumTypeId="PROD_ATTRIBUTE_TYPE" description="Product Attribute Types" hasTable="N"/> 
+		<EnumerationType enumTypeId="ATTR_DROPDOWN_MANDATORY" parentTypeId="PROD_ATTRIBUTE_TYPE" description="Booth Facility Category Type" hasTable="N"/> 
+		
+		
+		
+		
+		
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHPR"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHPR"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHCR"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHCR"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="CONE"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="ORGANIC"  attrName="ORGANIC"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="CARDING"  attrName="CARDED"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="COMBED"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="SUPER-COMBED"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="SEMI-COMBED"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="OE"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="HS"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="RF(TFO)"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="RF"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="LUSTER"  attrName="MERCERIZED"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="LUSTER"  attrName="GAS MERCERIZED"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COLORING"  attrName="Bleached"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COLORING"  attrName="Dyed"/>
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLY"  attrName="PLY"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COUNT"  attrName="COUNT"/>
+		
+		<!-- <ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Mercerdised"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Gassed"/> -->
+		
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="NF"/>
+		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="S"/>
+		
+		
+		
+		
+		
+		
+		
+		
+		
     	
     
 </entity-engine-xml>
