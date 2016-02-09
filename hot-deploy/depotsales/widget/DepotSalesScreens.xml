@@ -4007,7 +4007,7 @@
                                     	<section>
                                     		<widgets>
                                                <container style="button-bar">
-                                                  <link target="CreateNewYarnProductScreen" text="Create New Product" style="buttontext create h2"></link>		
+                                                  <link target="CreateNewProduct" text="Create New Product" style="buttontext create h2"></link>		
                                                </container>
                                             </widgets>
                                     	</section>
@@ -4059,7 +4059,34 @@
    			</widgets>
    		</section>
 	</screen>
-    
+    <screen name="CreateNewProduct">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Create New Product" />
+    				<set field="tabButtonItem" value="Product" />
+    				<entity-condition list="productCategoryList" entity-name="ProductCategory">
+    					<condition-list>
+    						<condition-expr field-name="primaryParentCategoryId" operator="in" value="NATURAL_FIBERS,SYNTH_ARTIFIBER"/>
+    					</condition-list>
+    				</entity-condition>
+    			</actions>
+    			<widgets>
+    					<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    						<decorator-section name="body"> 
+    							<section>
+    								<widgets>
+    									<screenlet title="Create New Product">
+    										<platform-specific>
+    												<html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreateNewYarnProduct.ftl" /></html>
+    										</platform-specific>
+    									</screenlet>
+    								</widgets>
+    							</section>
+    						</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+	</screen>
     
     <!-- <screen name="CreateNewYarnProductScreen">
        <section>
@@ -5553,7 +5580,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Purchase Order" />
-    				<set field="tabButtonItem" value="BranchSalesOrder" />
+    				<set field="tabButtonItem" value="processOrdersBranchSales" />
     				<set field="tabButtonItem2" value="DraftPurchaseOrder" />
 				<set field="targetRequest" value="FindDepotTransPO" />
 				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
@@ -5573,7 +5600,7 @@
 				<set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag" />
 				</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 					<include-menu name="BranchSalesIndentWithPoTabBar"
