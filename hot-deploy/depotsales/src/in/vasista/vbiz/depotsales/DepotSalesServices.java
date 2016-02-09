@@ -4133,19 +4133,25 @@ public class DepotSalesServices{
 				return ServiceUtil.returnError(e.toString());
 		}	
 	   	
-	   	List<GenericValue> packingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PACKING"));
+	   	List productAttributeTypesList = EntityUtil.getFieldListFromEntityList(productCategoryAttribute, "attrType", true);
+	   	
+	   	Map productAttributesMap = FastMap.newInstance();
+	   	for(int i=0; i<productAttributeTypesList.size(); i++){
+	   		String productAttributeType = (String) productAttributeTypesList.get(i);
+	   		productAttributesMap.put(productAttributeType, EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, productAttributeType)));
+	   	}
+	   	
+	   	
+	   	/*List<GenericValue> packingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PACKING"));
 	   	List<GenericValue> spinningTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "SPINNING"));
 	   	List<GenericValue> processingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PROCESSING"));
 	   	List<GenericValue> plyandcountTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PLYANDCOUNT"));
 	   	List<GenericValue> uomTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "UOM"));
-	   	
+	   	*/
 	   	
 	   	    
-	   	result.put("packingTypes",packingTypes);
-	   	result.put("spinningTypes",spinningTypes);
-	   	result.put("processingTypes",processingTypes);
-	   	result.put("plyandcountTypes",plyandcountTypes);
-	   	result.put("uomTypes",uomTypes);
+	   	result.put("productAttributeTypesList",productAttributeTypesList);
+	   	result.put("productAttributesMap",productAttributesMap);
 	   	return result;
 	     	
    	}
