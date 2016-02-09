@@ -187,7 +187,10 @@
 		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+		
+		POorder="";
 		if(OrderAss){
+			POorder=OrderAss.get("orderId");
 			isgeneratedPO="Y";
 		}
 		
@@ -206,6 +209,7 @@
 		tempMap=[:];
 		tempMap.put("supplierPartyId", supplierPartyId);
 		tempMap.put("isgeneratedPO", isgeneratedPO);
+		tempMap.put("POorder", POorder);	
 		supplierPartyName="";
 		if(supplierPartyId){
 			supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);

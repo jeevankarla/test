@@ -198,6 +198,7 @@ under the License.
           <td>Party Name</td>
           <td>Supplier Name</td>
          <#--> <td>Print Indent</td>-->
+          <td>Edit</td>
           <td>Minutes</td>
            <td>DraftPO</td>
           <td>Minutes Hindi</td>
@@ -206,7 +207,6 @@ under the License.
 
         <#-- <td>DC Report</td> -->
           <#-- <td>Payment</td> -->
-          <td>Edit</td>
          <#-- <td>Generate PO</td>-->
           <#--<td>Party Balance</td>-->
           <td>Cancel</td>
@@ -221,6 +221,8 @@ under the License.
            <#assign supplierPartyId="">
 				<#assign supplierPartyName="">
 				<#assign isgeneratedPO="N">
+				<#assign POorderId="">
+				
 		              	<#assign productStoreId="">
 						<#if orderDetailsMap?has_content>
 								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
@@ -228,6 +230,7 @@ under the License.
 								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
 								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
 								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
+								<#assign POorderId=orderDetails.get("POorder")>
 								<#assign productStoreId=orderDetails.get("productStoreId")>
 								</#if>
 				</#if>
@@ -237,11 +240,17 @@ under the License.
               	<td>${eachOrder.partyName?if_exists}   [${eachOrder.partyId?if_exists}]</td>
               	<td>${supplierPartyName?if_exists}  [${supplierPartyId?if_exists}]</td>
               <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
+             
+             	<#if (eachOrder.get('statusId') == "ORDER_CREATED") && isgeneratedPO =="N">
+              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+				<#else>
+				<td></td>
+				</#if>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
               <#if (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO =="N")>
               	<td><a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>DraftPO</td>
               	<#else>
-              	<td></td>
+              	<td>${POorderId?if_exists}</td>
               	</#if>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
@@ -278,11 +287,7 @@ under the License.
 				
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
               	
-              	<#if (eachOrder.get('statusId') == "ORDER_CREATED")>
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-				<#else>
-				<td></td>
-				</#if>
+              
               	<#--><#if (eachOrder.get('statusId') == "ORDER_APPROVED") && (isgeneratedPO =="N")>
 					<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}', '${eachOrder.billFromVendorPartyId}');"/></td>
          		<#else>
