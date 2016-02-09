@@ -183,9 +183,10 @@ if(partyOrderIds){
 //	  
 	  prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);
 
+	cList=[];
+	cList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,updateOrderId ));
 	
-	
-	
+	  orderAdjList = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
 	JSONObject OrderItemUIJSON = new JSONObject();
 	
 	orderItems.each{ eachItem ->
@@ -292,7 +293,12 @@ if(partyOrderIds){
 		newObj.put("baleQuantity",baleQty);
 		newObj.put("cottonUom",yarnUOM);
 		newObj.put("bundleWeight",bundleWeight);
-		
+		if(orderAdjList){
+		orderAdjDetails = EntityUtil.filterByCondition(orderAdjList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		if(orderAdjDetails && orderAdjDetails.get(0).get("quantity")){
+			quota=quota+orderAdjDetails.get(0).get("quantity");
+		}
+		}
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("quota",quota);
 		amount=eachItem.unitListPrice*eachItem.quantity;
