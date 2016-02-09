@@ -1113,20 +1113,26 @@
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
     </request-map>
-    <request-map uri="createNewProduct">
+   <!--  <request-map uri="createNewProduct">
        <security https="true" auth="false"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="createNewProductAndFeatures" global-transaction="true"/>
-       <!-- <event type="service"  invoke="newProductCreation"/> -->        
+       <event type="service"  invoke="newProductCreation"/>        
        <response name="success" type="view" value="CreateNewYarnProductScreen"/>
        <response name="error" type="view" value="CreateNewYarnProductScreen"/>    
-    </request-map> 
+    </request-map> -->
+    <request-map uri="createNewProduct">
+           <security https="true" auth="false"/>
+           <event type="service"  invoke="newProductCreation"/>        
+           <response name="success" type="view" value="CreateNewProduct"/>
+           <response name="error" type="view" value="CreateNewProduct"/>    
+        </request-map> 
     <request-map uri="updateShipment">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipment"/>
-        <response name="success"  type="request-redirect-noparam" value="FindGRNShipmentsDepot">
+        <!-- <response name="success"  type="view" value="FindGRNShipmentsDepot">
      		<redirect-parameter name="shipmentId"/>
-     	</response>
-     		
+     	</response> -->
+     	<response name="success" type="view" value="FindGRNShipmentsDepot"/>	
         <!-- <response name="success" type="view" value="FindGRNShipmentsDepot"/> -->
         <response name="error" type="view" value="FindGRNShipmentsDepot"/>
     </request-map>
@@ -1387,7 +1393,7 @@
      </request-map>
     <!-- View Mappings -->
     
-    <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateNewProduct"/>
+    <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
     <view-map name="FindYarnProducts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindYarnProducts"/>
 	<view-map name="CreateNewYarnProductScreen" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewYarnProductScreen"/>
 	    
