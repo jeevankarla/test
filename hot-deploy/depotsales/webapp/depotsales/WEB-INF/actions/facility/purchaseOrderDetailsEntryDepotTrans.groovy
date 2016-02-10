@@ -80,6 +80,7 @@ if(orderId){
 			uomLabel = uomLabelMap.get(uomId);
 		}
 		newObj.put("cProductId",eachItem.productId);
+		orderItemQty = eachItem.quantity;
 		receivedQty=0;
 		maxReceivedQty=0;
 		poBalDetailsMap=[:];
@@ -107,6 +108,9 @@ if(orderId){
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("quantity",eachItem.quantity-receivedQty);
+		if(receivedQty>eachItem.quantity){
+		    newObj.put("quantity",0);
+		}
 		newObj.put("maxReceivedQty",maxReceivedQty);
 		newObj.put("uomDescription",uomLabel);
 		orderItemsJSON.add(newObj);
