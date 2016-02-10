@@ -34,10 +34,10 @@ supplierId = "";
 
 // usage of po balance if needed
 poBalanceProductMap=[:];
-resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
+/*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
 if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
 	poBalanceProductMap=resultMap.get("productTotals");
-}
+}*/
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
@@ -60,18 +60,18 @@ if(orderId){
 
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	//conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	orderItemsAndRole = delegator.findList("OrderHeaderItemAndRoles", condition, null, null, null, false);
+	orderItems = delegator.findList("OrderItem", condition, null, null, null, false);
 	
-	productIds = EntityUtil.getFieldListFromEntityList(orderItemsAndRole, "productId", true);
+	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	result = MaterialHelperServices.getProductUOM(delegator, productIds);
 	uomLabelMap = result.get("uomLabel");
 	productUomMap = result.get("productUom");
 	prodQtyMap = [:];
 	
 	JSONArray orderItemsJSON = new JSONArray();
-	orderItemsAndRole.each{ eachItem ->
+	orderItems.each{ eachItem ->
 		
 		JSONObject newObj = new JSONObject();
 		uomId = productUomMap.get(eachItem.productId);
@@ -83,6 +83,10 @@ if(orderId){
 		receivedQty=0;
 		maxReceivedQty=0;
 		poBalDetailsMap=[:];
+		resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", eachItem.orderId,"orderItemSeqId", eachItem.orderItemSeqId));
+		if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
+			poBalanceProductMap=resultMap.get("productTotals");
+		}
 		if(UtilValidate.isNotEmpty(poBalanceProductMap)){
 			poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
 		}
@@ -99,7 +103,7 @@ if(orderId){
 		newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		}
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
-		
+		newObj.put("orderItemSeqId",eachItem.orderItemSeqId);
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("quantity",eachItem.quantity-receivedQty);

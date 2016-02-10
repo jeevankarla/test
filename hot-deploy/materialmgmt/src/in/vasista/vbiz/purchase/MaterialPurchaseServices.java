@@ -305,6 +305,7 @@ public class MaterialPurchaseServices {
 		        String quantityStr = "";
 		        String deliveryChallanQtyStr = "";
 		        String oldRecvdQtyStr = "";
+		        String orderItemSeqId = "";
 				BigDecimal quantity = BigDecimal.ZERO;
 				BigDecimal deliveryChallanQty = BigDecimal.ZERO;
 				BigDecimal oldRecvdQty = BigDecimal.ZERO;
@@ -329,7 +330,10 @@ public class MaterialPurchaseServices {
 				else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 				    return "error";
-				}		  
+				}	
+				if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+					orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
+				}
 				if(UtilValidate.isNotEmpty(quantityStr)){
 					quantity = new BigDecimal(quantityStr);
 				}
@@ -357,11 +361,10 @@ public class MaterialPurchaseServices {
 						BigDecimal orderChangeQty=BigDecimal.ZERO;
 						BigDecimal orderQty=BigDecimal.ZERO;
 						String orderSeqNo="";
-						List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-						if(UtilValidate.isNotEmpty(orderItemSeq)){
+						List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+						if(UtilValidate.isNotEmpty(orderItemSeqId)){
 							orderSeqNo=(String)orderItemSeq.get(productId);
-
-							List<GenericValue> ordersequenceChangeList = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderSeqNo));
+							List<GenericValue> ordersequenceChangeList = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 				 			if(UtilValidate.isNotEmpty(ordersequenceChangeList)){
 				 				orderChangeQty = (EntityUtil.getFirst(ordersequenceChangeList)).getBigDecimal("quantity");
 
@@ -463,12 +466,11 @@ public class MaterialPurchaseServices {
 		        
 		        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
 		        //List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
-				List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 				GenericValue ordItm = null;
 				if(UtilValidate.isNotEmpty(filteredOrderItem)){
 					ordItm = EntityUtil.getFirst(filteredOrderItem);
-					String orderItemSeqId = ordItm.getString("orderItemSeqId");
-					
+				    orderItemSeqId = ordItm.getString("orderItemSeqId");
 					List<GenericValue> itemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 					if(UtilValidate.isNotEmpty(itemChanges)){
 						ordItm = EntityUtil.getFirst(itemChanges);

@@ -100,6 +100,7 @@
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
+			var orderItemSeqId  = data[rowCount]["orderItemSeqId"];		
 						
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -114,8 +115,10 @@
 	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCountIndex).val(qty);
+				var orderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCountIndex).val(orderItemSeqId);
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(orderItemSeqId));
 				
 				var dcQty = parseFloat(data[rowCount]["deliveryChallanQty"]);
 		 		if (!isNaN(dcQty) && dcQty>0 ) {	 	

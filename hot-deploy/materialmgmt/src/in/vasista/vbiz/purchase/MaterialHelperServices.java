@@ -2256,6 +2256,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		//String productId = (String) context.get("productId");
 		String orderId = (String) context.get("orderId");
+		String orderItemSeqId = (String) context.get("orderItemSeqId");
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2270,6 +2271,9 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			 if(UtilValidate.isNotEmpty(fromDate) &&UtilValidate.isNotEmpty(thruDate))
 					condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
 		     condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		     if(UtilValidate.isNotEmpty(orderItemSeqId)){
+			     condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+		     }
 			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
 			 fieldsToSelect.add("orderId");
@@ -2300,10 +2304,10 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 	    				runningTotalAmount = runningTotalAmount.add(amount);
 	    				productMap.put("receivedQtyValue", runningTotalAmount);
 	    				receiptItemTotals.put(tmpProductId, productMap);
-	    				}
-				 }       
-			   shipmentReceiptItr.close();
-			   List<GenericValue> orderItemsList = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId",orderId));
+	    			}
+			  }    
+			  shipmentReceiptItr.close();
+			  List<GenericValue> orderItemsList = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId",orderId));
 			  for(GenericValue orderItem:orderItemsList) {
 				  String productId=orderItem.getString("productId");
 				 
