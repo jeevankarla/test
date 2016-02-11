@@ -647,7 +647,7 @@ public class DepotPurchaseServices{
 	        List<GenericValue> orderParty = null;  
 
 			try {
-				orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER"));
+				orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_FROM_VENDOR"));
 			} catch (GenericEntityException e) {
 				Debug.logError(e, module);
 			}
