@@ -369,7 +369,7 @@
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
+			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} In Kgs", field:"quota", width:150, minWidth:150, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 			
 		];
 		
@@ -485,64 +485,27 @@
 			
 			if (args.cell == 0 || args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
-				
-				var calcQty = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					calcQty = parseFloat(data[args.row]["crQuantity"]);
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
-				</#if>
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var udp = data[args.row]['basicPrice'];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['unitPrice'];
 				var price = 0;
 				if(udp){
-					var basic_price = data[args.row]['basicPrice'];
-					var vat_price = data[args.row]['vatPrice'];
-					var cst_price = data[args.row]['cstPrice'];
-					var bed_price = data[args.row]['bedPrice'];
-					var serviceTax_price = data[args.row]['serviceTaxPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
+					var totalPrice = udp;
 					price = totalPrice;
 				}
-				else{
-					price = parseFloat(priceTags[prod]);
-				}
-				var literPrice = parseFloat(priceTags[prod]);
-				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-				}
-				
 				if(isNaN(price)){
 					price = 0;
 				}
-				if(isNaN(calculateQty)){
-					calculateQty = 0;
+				if(isNaN(qty)){
+					qty = 0;
 				}
 				var roundedAmount;
-					roundedAmount = Math.round(calculateQty*price);
+				roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
-				data[args.row]["unitPrice"] = price;
+				//data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
+				//data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
 				grid.updateRow(args.row);
 				var totalAmount = 0;
 				var totalCrates = 0;
@@ -571,6 +534,7 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			if (args.cell == 2) {
+			if(!(data[args.row]["quota"])){
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
@@ -578,6 +542,7 @@
 				}
 				data[args.row]["quota"] = quota;
 				grid.updateRow(args.row);
+				}
 			}
 			if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];

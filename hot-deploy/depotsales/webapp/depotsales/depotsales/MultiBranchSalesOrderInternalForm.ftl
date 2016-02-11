@@ -377,11 +377,11 @@
 			{id:"baleQuantity", name:"Quantity (Numbers)", field:"baleQuantity", width:100, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"Uom", field:"cottonUom", width:100, minWidth:100, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"quantity", name:"Total Weight in Kgs", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"quantity", name:"Total Weight in Kgs", field:"quantity", width:100, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
+			{id:"quotaAvbl", name:"Quota Available In kgs", field:"quota", width:120, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 			
 			<#--
 			{id:"productFeature", name:"Count", field:"productFeature", width:70, minWidth:70, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "INR,PERCENT,asdf"},
@@ -792,12 +792,35 @@
 				//jQuery("#totalAmount").html(dispText);
 			}
 			if (args.cell == 7) {
+			if(!(data[args.row]["quota"])){
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
 					quota = 0;
 				}
 				data[args.row]["quota"] = quota;
+				
+				}
+				
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['unitPrice'];
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+					roundedAmount = Math.round(qty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 			}
 			if (args.cell == 8) {

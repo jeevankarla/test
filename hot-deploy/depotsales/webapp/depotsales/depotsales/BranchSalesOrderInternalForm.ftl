@@ -367,12 +367,12 @@
 			{id:"remarks", name:"Remarks", field:"remarks", width:180, minWidth:180, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"${uiLabelMap.QtyInNumbers}", field:"baleQuantity", width:100, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:100, minWidth:100, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
-			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"quantity", name:"${uiLabelMap.TotalWeightInKgs}Total Weight in Kgs", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+			{id:"quantity", name:"${uiLabelMap.TotalWeightInKgs}", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
-			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}Total Amount(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
+			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
+			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} In kgs", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 			
 			<#--
 			{id:"productFeature", name:"Count", field:"productFeature", width:70, minWidth:70, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "INR,PERCENT,asdf"},
@@ -749,12 +749,34 @@
 				//jQuery("#totalAmount").html(dispText);
 			}
 			if (args.cell == 5) {
+			if(!(data[args.row]["quota"])){
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
 					quota = 0;
 				}
 				data[args.row]["quota"] = quota;
+				}
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['unitPrice'];
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+				roundedAmount = Math.round(qty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				//data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 			}
 			if (args.cell == 6) {
@@ -778,13 +800,13 @@
 					roundedAmount = 0;
 				}
 				data[args.row]["amount"] = roundedAmount;
-				
+				if(!(data[args.row]["quota"])){
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
 					quota = 0;
 				}
 				data[args.row]["quota"] = quota;
-				
+				}
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
