@@ -208,6 +208,8 @@
     
     <extend-entity entity-name="ProductCategoryAttribute">
       <field name="attrTypeId" type="id-ne"></field>
+      <field name="attrCode" type="short-varchar"></field>
+      <field name="sequenceId" type="id"></field>
       <relation type="one" fk-name="PROD_ATTR_TYPE" rel-entity-name="ProductCategoryAttributeType">
         <key-map field-name="attrTypeId"/>
       </relation>
@@ -220,6 +222,7 @@
       <field name="attributeApplType" type="id"></field>
       <field name="inputType" type="id"></field>
       <field name="description" type="description"></field>
+      <field name="sequenceId" type="id"></field>
       <prim-key field="attrTypeId"/>
       <relation type="one" fk-name="ATTR-_TYPE_PARENT" title="Parent" rel-entity-name="ProductCategoryAttributeType">
         <key-map field-name="parentTypeId" rel-field-name="attrTypeId"/>
