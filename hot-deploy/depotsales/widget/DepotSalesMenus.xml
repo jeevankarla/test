@@ -403,7 +403,17 @@
 				<menu-item name="OtherIndent" title="${uiLabelMap.OtherIndent}">
 				    <link target="OtherBranchSalesOrder">
 						<parameter param-name="menuName" value="OtherIndent"/>
-				   </link>silk
+				   </link>
+				</menu-item>
+				<menu-item name="DyesIndent" title="Dyes Indent">
+				    <link target="DyesBranchSalesOrder">
+						<parameter param-name="menuName" value="DyesIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="ChemicalIndent" title="Chemical Indent">
+				    <link target="ChemicalBranchSalesOrder">
+						<parameter param-name="menuName" value="ChemicalIndent"/>
+				   </link>
 				</menu-item>
         	   
 	      
@@ -432,7 +442,16 @@
 						<parameter param-name="menuName" value="OtherIndent"/>
 				   </link>
 				</menu-item>
-        	   
+        	    <menu-item name="DyesIndent" title="Dyes Indent">
+				    <link target="DyesBranchSalesOrder">
+						<parameter param-name="menuName" value="DyesIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="ChemicalIndent" title="Chemical Indent">
+				    <link target="ChemicalBranchSalesOrder">
+						<parameter param-name="menuName" value="ChemicalIndent"/>
+				   </link>
+				</menu-item>
 	      
        </menu>
        
@@ -599,12 +618,37 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
-       
-       
-       
-       
-       
-        <menu name="BranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+       <menu name="DyesIndentorIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="DirectIndent" title="${uiLabelMap.DirectIndent}">
+		     <link target="DyesIndentorSalesOrder">
+			    <parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+			    <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+		     </link>
+		  </menu-item>
+          <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	<link target="DyesMultiIndentorSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	     </menu-item>
+       </menu>
+        <menu name="ChemicalIndentorIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="DirectIndent" title="${uiLabelMap.DirectIndent}">
+		     <link target="ChemicalIndentorSalesOrder">
+			    <parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+			    <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+		     </link>
+		  </menu-item>
+          <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	<link target="ChemicalMultiIndentorSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	     </menu-item>
+       </menu>
+       <menu name="BranchSalesEntryIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
 	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
