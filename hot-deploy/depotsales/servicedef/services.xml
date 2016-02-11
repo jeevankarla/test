@@ -142,12 +142,15 @@
         <description>Get Child Categories</description>
         <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="childCategoriesList" type="List" mode="OUT" optional="true"/>
+        <attribute name="productCatAssocMap" type="Map" mode="OUT" optional="true"/>
+        <attribute name="productCategoryAssocTypeList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="getAttributeTypes" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getAttributeTypes">
         <description>Get Child Categories</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="productAttributesMap" type="Map" mode="OUT" optional="true"/>
         <attribute name="productAttributeTypesList" type="List" mode="OUT" optional="true"/>
+        <attribute name="productCategoryAttributeTypesList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="newProductCreation" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreateNewProduct">
         <description>Create New Product</description>
