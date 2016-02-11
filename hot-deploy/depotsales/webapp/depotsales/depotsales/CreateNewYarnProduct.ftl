@@ -17,6 +17,10 @@
 	
 		jQuery("input[name='ply']").parent().parent().hide();
 		jQuery("input[name='count']").parent().parent().hide();
+		
+		getChildCategories();
+		getSubChildCategories();
+		getAttributeTypes();
 	});
 	
 
@@ -36,7 +40,13 @@
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 	                    alert('Error Fetching available types');
 					}else{
+						$('.schemeCategory').remove();
+					
 						childCategoriesList = result["childCategoriesList"];
+						productCatAssocMap = result["productCatAssocMap"];
+						productCategoryAssocTypeList = result["productCategoryAssocTypeList"];
+						
+						
 						var paramName = 'childProductCategoryId';
 						var optionList = '';   		
 						var list= childCategoriesList;
@@ -50,6 +60,39 @@
 				      	if(paramName){
 				      		jQuery("[name='"+paramName+"']").html(optionList);
 				      	}
+				      	
+				      	if (productCategoryAssocTypeList) {
+							$('#features tr:last').after('<tr class="schemeCategory"><td><FONT COLOR="#04B431"><b>Scheme Applicability</FONT></td></tr>');
+							for(var i=0 ; i<productCategoryAssocTypeList.length ; i++){
+								var prodCatAssocType = productCategoryAssocTypeList[i];
+								var tableElement = '<tr class="schemeCategory"><td align="right" class="label">'+prodCatAssocType.description+':</td>';
+								var tableElement = tableElement + '<td width="10%">';	
+								
+								var tableElement = tableElement + '<select name="'+prodCatAssocType.productCategoryAssocTypeId+'" id="'+prodCatAssocType.productCategoryAssocTypeId+'"> ';
+								
+								tableElement = tableElement + '<option value = "" ></option>';
+								var prodCatAssocList = productCatAssocMap[prodCatAssocType.productCategoryAssocTypeId];
+								for(var j=0 ; j<prodCatAssocList.length ; j++){
+									var prodCatAssoc = prodCatAssocList[j];
+									tableElement = tableElement + '<option value = "' + prodCatAssoc.productCategoryIdTo + '" >'+ prodCatAssoc.productCategoryIdTo+'</option>';
+								}
+								tableElement = tableElement + '</select>';	
+								
+								
+								tableElement = tableElement + '</td>';		
+								tableElement = tableElement + '</tr>';	
+								
+								if(i % 3 === 0){
+									tableElement = tableElement + '<tr class="productAttributes"><td>&nbsp;</td></tr>';	
+								}  
+										 
+								$('#features tr:last').after(tableElement);	
+								//$('#categories').append(tableElement);
+							}
+							
+						}
+				      	
+				      	
 				      	
 					}								 
 				},
@@ -103,14 +146,13 @@
 	
 	
 	function getAttributeTypes() {
-		var subChildProductCategoryId = $('#subChildProductCategoryId').val();
-		alert("childProduct = "+subChildProductCategoryId);
-		if((subChildProductCategoryId)){
-
+		var childProductCategoryId = $('#childProductCategoryId').val();
+		if((childProductCategoryId)){
+			$('.productAttributes').remove();
 			$.ajax({
 				 type: "POST",
 	             url: 'getAttributeTypesAjax',
-	             data: {productCategoryId : subChildProductCategoryId},
+	             data: {productCategoryId : childProductCategoryId},
 	             dataType: 'json',
 		            
 				 success:function(result){
@@ -120,37 +162,73 @@
 						
 						productAttributesMap = result["productAttributesMap"];
 						productAttributeTypesList = result["productAttributeTypesList"];
-						if (productAttributeTypesList) {
-						
-							for(var i=0 ; i<productAttributeTypesList.length ; i++){
+						productCategoryAttributeTypesList = result["productCategoryAttributeTypesList"];
+						if (productCategoryAttributeTypesList) {
+							
+							$('#features tr:last').after('<tr class="productAttributes"><td><FONT COLOR="#04B431"><b>Product Features</FONT></td></tr>');	
+							
+							for(var i=0 ; i<productCategoryAttributeTypesList.length ; i++){
 								
-								var attributeType = productAttributeTypesList[i];
-								var tableElement = '<tr><td align="right" class="label">'+attributeType+':</td>';
+								var attributeType = productCategoryAttributeTypesList[i];
+								var tableElement = '<tr class="productAttributes"><td align="right" class="label">'+attributeType.description+':</td>';
 								var tableElement = tableElement + '<td width="10%">';	
 								
-								if((attributeType == "PLY") || (attributeType == "COUNT") ){
-									tableElement = tableElement + '<input type="text" name="'+attributeType+'" id="'+attributeType+'" size="30" maxlength="60" autocomplete="off" />';
-								}
-								else{
-									var tableElement = tableElement + '<select name="'+attributeType+'" id="'+attributeType+'"> ';
-									
-									var attributesList = productAttributesMap[attributeType];
-									for(var j=0 ; j<attributesList.length ; j++){
-										var attribute = attributesList[j];
-										tableElement = tableElement + '<option value = " + attribute.attrName + " >'+ attribute.attrName+'</option>';
-									}
+								if((attributeType.inputType == "Indicator")){
+									var tableElement = tableElement + '<select name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'"> ';
+									tableElement = tableElement + '<option value = "" >N</option>';
+									tableElement = tableElement + '<option value = "'+attributeType.attrCode+'" >Y</option>';
 									tableElement = tableElement + '</select>';	
 								}
 								
+								if((attributeType.inputType == "Number")){
+									if((attributeType.attributeApplType == "Mandatory")){
+										tableElement = tableElement + '<input type="text" name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'" size="30" maxlength="60" autocomplete="off" required/>';
+									}
+									else{
+										tableElement = tableElement + '<input type="text" name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'" size="30" maxlength="60" autocomplete="off" />';
+									}
+								}
+								
+								if((attributeType.inputType == "Select")){
+									if((attributeType.attributeApplType == "Mandatory")){
+										var tableElement = tableElement + '<select name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'"> ';
+									
+										var attributesList = productAttributesMap[attributeType.attrTypeId];
+										for(var j=0 ; j<attributesList.length ; j++){
+											var attribute = attributesList[j];
+											tableElement = tableElement + '<option value = "' + attribute.attrCode + '" >'+ attribute.attrName+'</option>';
+										}
+										tableElement = tableElement + '</select>';	
+									}
+									else{
+										var tableElement = tableElement + '<select name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'"> ';
+										tableElement = tableElement + '<option value = "" ></option>';
+										
+										var attributesList = productAttributesMap[attributeType.attrTypeId];
+										for(var j=0 ; j<attributesList.length ; j++){
+											var attribute = attributesList[j];
+											tableElement = tableElement + '<option value = "' + attribute.attrCode + '" >'+ attribute.attrName+'</option>';
+										}
+										tableElement = tableElement + '</select>';	
+									}
+								}
+								
+								
+								
+								
 								tableElement = tableElement + '</td>';		
 								tableElement = tableElement + '</tr>';	
+								
+								if(i % 3 === 0){
+									tableElement = tableElement + '<tr class="productAttributes"><td>&nbsp;</td></tr>';	
+								}  
 										 
 								$('#features tr:last').after(tableElement);	
 							
 							}
 							
 						}
-						$('#features tr:last').after('<tr><td></td><td><input type="submit" class="smallSubmit" value="Submit"/></td></tr>');
+						$('#features tr:last').after('<tr class="productAttributes"><td>&nbsp;</td></tr><tr class="productAttributes"><td></td><td><input type="submit" class="smallSubmit" value="Submit"/></td></tr>');
 						
 					}								 
 				},
@@ -178,7 +256,7 @@
 	
       		<table id="features" name="features" width="100%" border="0" cellspacing="0" cellpadding="0">
         		 <tr>
-			         <td align='right' class='label'>Type:</td>
+			         <td align='right' class='label'>Select Product:</td>
 			         <td valign='middle'>
 	             		<select name="productCategoryId" id="productCategoryId" onchange="getChildCategories()">
 			          		<option value=''></option>
@@ -190,13 +268,14 @@
 			      </tr>
 			      
 			      <tr>
-			         <td align='right' class='label'>Child Type:</td>
+			         <td align='right' class='label'>Product Type:</td>
 			         <td valign='middle'>
-	             		<select name="childProductCategoryId" id="childProductCategoryId" onchange="getSubChildCategories()">
+	             		<select name="childProductCategoryId" id="childProductCategoryId" onchange="getAttributeTypes()">
 						</select>	
 			         </td>
 			      </tr> 
 			      
+			      <#--
 			      <tr>
 			         <td align='right' class='label'>Sub Child Type:</td>
 			         <td valign='middle'>
@@ -204,19 +283,13 @@
 						</select>	
 			         </td>
 			      </tr>
-			      
+			      -->
 			      <tr>
 			       	 <td>
 			       	 	&nbsp;
 			       	 </td>
 			      </tr>
-			      <tr>
-			       	 <td>
-			       	 	<FONT COLOR="#04B431"><b>
-			       	 		Product Features
-			       	 	</FONT>
-			       	 </td>
-			      </tr>
+			      
 			      
 			      
 			      
@@ -231,7 +304,8 @@
 			      	-->
 								      
       		</table>
-     
+     		<table id="categories" name="categories" width="100%" border="0" cellspacing="0" cellpadding="0">
+     		</table>
 		</form>
 
 	 </div> 
