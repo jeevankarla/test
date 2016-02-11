@@ -253,62 +253,54 @@ under the License.
     	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
     	
     	
-    	<!-- <ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHPR"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHPR"/>
+    	<ProductCategoryAssocType description="Scheme Applicability" productCategoryAssocTypeId="SCHEME_APPLICABILITY"/> 
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="SPINNING"  attrName="RF"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="SPINNING"  attrName="OE"/>
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLYANDCOUNT"  attrName="PLY"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLYANDCOUNT"  attrName="COUNT"/>
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Mercerdised"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Gassed"/>
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="NF"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="S"/> -->
+		<ProductCategoryAssoc productCategoryId="COTTON" productCategoryIdTo="COTTON_40ABOVE" productCategoryAssocTypeId="SCHEME_APPLICABILITY" fromDate="2014-04-01 00:00:00.0" /> 
+		<ProductCategoryAssoc productCategoryId="COTTON" productCategoryIdTo="COTTON_UPTO40" productCategoryAssocTypeId="SCHEME_APPLICABILITY" fromDate="2014-04-01 00:00:00.0" /> 
 		
 		
-		<EnumerationType enumTypeId="PROD_ATTRIBUTE_TYPE" description="Product Attribute Types" hasTable="N"/> 
-		<EnumerationType enumTypeId="ATTR_DROPDOWN_MANDATORY" parentTypeId="PROD_ATTRIBUTE_TYPE" description="Booth Facility Category Type" hasTable="N"/> 
+		<ProductCategoryAttributeType attrTypeId="ORGANIC" attributeApplType="Mandatory" description="Organic" inputType="Indicator" sequenceId="01"/>
+		<ProductCategoryAttributeType attrTypeId="FINESSE" attributeApplType="Mandatory" description="Finesse" inputType="Select" sequenceId="02"/> 
+		<ProductCategoryAttributeType attrTypeId="FINISHING" attributeApplType="Mandatory" description="Finishing" inputType="Select" sequenceId="03"/> 
+		<ProductCategoryAttributeType attrTypeId="LUSTER" attributeApplType="Selectable" description="Luster" inputType="Select" sequenceId="04"/> 
+		<ProductCategoryAttributeType attrTypeId="COLORING" attributeApplType="Selectable" description="Coloring" inputType="Select" sequenceId="05"/>
+		<ProductCategoryAttributeType attrTypeId="PACKING" attributeApplType="Mandatory" description="Packing" inputType="Select" sequenceId="06"/>  
+		<ProductCategoryAttributeType attrTypeId="COUNT" attributeApplType="Mandatory" description="Count" inputType="Number" sequenceId="08"/> 
+		<ProductCategoryAttributeType attrTypeId="PLY" attributeApplType="Mandatory" description="Ply" inputType="Number" sequenceId="07"/>
+		<ProductCategoryAttributeType attrTypeId="UOM" attributeApplType="Mandatory" description="Uom" inputType="Select" sequenceId="09"/>  
+		 
 		
 		
 		
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="SHPR" sequenceId="01" attrCode="SHPR"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="DHPR" sequenceId="02" attrCode="DHPR"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="SHCR" sequenceId="03" attrCode="SHCR"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="DHCR" sequenceId="04" attrCode="DHCR"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="CONE" sequenceId="05" attrCode="CONE"/>
 		
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="ORGANIC"  attrName="ORGANIC" attrCode="ORGANIC"/>
 		
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="CARDED" sequenceId="01" attrCode="K"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="COMBED" sequenceId="02" attrCode="C"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="SUPER-COMBED" sequenceId="03" attrCode="SUPER COMBED"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="SEMI-COMBED" sequenceId="04" attrCode="SEMI COMBED"/>
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHPR"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHPR"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="SHCR"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="DHCR"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PACKING"  attrName="CONE"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="OE" attrCode="OE"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="HS" attrCode="HS"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="RF(TFO)" attrCode="TFO"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="RF" attrCode="RF"/>
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="ORGANIC"  attrName="ORGANIC"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="CARDING"  attrName="CARDED"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="LUSTER"  attrName="MERCERIZED" sequenceId="01" attrCode="MERC"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="LUSTER"  attrName="GAS MERCERIZED" sequenceId="02" attrCode="GAS MERC"/>
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="COMBED"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="SUPER-COMBED"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COMBING"  attrName="SEMI-COMBED"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COLORING"  attrName="BLEACHED" sequenceId="01" attrCode="BLEACHED"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COLORING"  attrName="DYED" sequenceId="02" attrCode="DYED"/>
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="OE"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="HS"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="RF(TFO)"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="FINISHING"  attrName="RF"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PLY"  attrName="PLY" attrCode=""/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COUNT"  attrName="COUNT" attrCode=""/>
 		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="LUSTER"  attrName="MERCERIZED"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="LUSTER"  attrName="GAS MERCERIZED"/>
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COLORING"  attrName="Bleached"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COLORING"  attrName="Dyed"/>
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PLY"  attrName="PLY"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="COUNT"  attrName="COUNT"/>
-		
-		<!-- <ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Mercerdised"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="PROCESSING"  attrName="Gassed"/> -->
-		
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="NF"/>
-		<ProductCategoryAttribute productCategoryId="CONE_ORGANIC" attrType="UOM"  attrName="S"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="NF" sequenceId="02" attrCode="NF"/>
+		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="S" sequenceId="01" attrCode="S"/>
 		
 		
 		
