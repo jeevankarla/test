@@ -576,64 +576,25 @@
         	
 			if (args.cell == 2 || args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
-				
-				var calcQty = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					calcQty = parseFloat(data[args.row]["crQuantity"]);
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
-				</#if>
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var udp = data[args.row]['basicPrice'];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['unitPrice'];
 				var price = 0;
 				if(udp){
-					var basic_price = data[args.row]['basicPrice'];
-					var vat_price = data[args.row]['vatPrice'];
-					var cst_price = data[args.row]['cstPrice'];
-					var bed_price = data[args.row]['bedPrice'];
-					var serviceTax_price = data[args.row]['serviceTaxPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
+					var totalPrice = udp;
 					price = totalPrice;
 				}
-				else{
-					price = parseFloat(priceTags[prod]);
-				}
-				var literPrice = parseFloat(priceTags[prod]);
-				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-				}
-				
 				if(isNaN(price)){
 					price = 0;
 				}
-				if(isNaN(calculateQty)){
-					calculateQty = 0;
+				if(isNaN(qty)){
+					qty = 0;
 				}
 				var roundedAmount;
-					roundedAmount = Math.round(calculateQty*price);
+					roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
-				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
 				grid.updateRow(args.row);
 				var totalAmount = 0;
 				var totalCrates = 0;
