@@ -341,7 +341,7 @@
 			orderPreferenceMap.put(eachList.orderId, orderPreferenceIds[0]);
 			conditonList = [];
 			conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
-			conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
+			conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS,"PMNT_CONFIRMED"));
 			cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 			PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 			
