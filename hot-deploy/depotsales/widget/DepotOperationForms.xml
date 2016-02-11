@@ -12,6 +12,7 @@
         </field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
+        <field title="Entry Date" name="entryDate"><date-find/></field>
         <field name="sequenceId"><text-find/></field>
        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
