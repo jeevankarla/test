@@ -4106,15 +4106,43 @@ public class DepotSalesServices{
    	    Map result = ServiceUtil.returnSuccess();
    	    
    	    List<GenericValue> productCategory = null;
-   	 
-	   	 try{
-	   		productCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,primaryParentCategoryId), null, null, null, false);
-	   	 } catch (Exception e) {
-				Debug.logError(e, module);
-				return ServiceUtil.returnError(e.toString());
-		 }	
-	   	 result.put("childCategoriesList",productCategory);  
-	   	 return result;
+   	    try{
+   	    	productCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,primaryParentCategoryId), null, null, null, false);
+   	    } catch (Exception e) {
+   	    	Debug.logError(e, module);
+   	    	return ServiceUtil.returnError(e.toString());
+   	    }
+   	    
+   	    List productCategoryAssocTypeIdsList = FastList.newInstance();
+   	    List<GenericValue> assocProdCategories = null;
+	    try{
+	    	assocProdCategories = delegator.findList("ProductCategoryAssoc", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,primaryParentCategoryId), null, null, null, false);
+	    	if(UtilValidate.isNotEmpty(assocProdCategories)){
+	    		productCategoryAssocTypeIdsList = EntityUtil.getFieldListFromEntityList(assocProdCategories, "productCategoryAssocTypeId", true);
+	    	}
+	    } catch (Exception e) {
+	    	Debug.logError(e, module);
+	    	return ServiceUtil.returnError(e.toString());
+	    }
+   	    
+	    Map productCatAssocMap = FastMap.newInstance();
+	   	for(int i=0; i<productCategoryAssocTypeIdsList.size(); i++){
+	   		String productCatAssocType = (String) productCategoryAssocTypeIdsList.get(i);
+	   		productCatAssocMap.put(productCatAssocType, EntityUtil.filterByCondition(assocProdCategories, EntityCondition.makeCondition("productCategoryAssocTypeId", EntityOperator.EQUALS, productCatAssocType)));
+	   	}
+	    
+	   	List<GenericValue> productCategoryAssocTypeList = null;
+	   	try{
+	   		productCategoryAssocTypeList = delegator.findList("ProductCategoryAssocType", EntityCondition.makeCondition("productCategoryAssocTypeId", EntityOperator.IN, productCategoryAssocTypeIdsList), null, null, null, false);
+	   	} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+	   	
+   	    result.put("childCategoriesList",productCategory);
+   	    result.put("productCatAssocMap",productCatAssocMap);
+   	    result.put("productCategoryAssocTypeList",productCategoryAssocTypeList);
+   	    return result;
    	}
    	
 	public static Map<String, Object> getAttributeTypes(DispatchContext dctx, Map<String, ? extends Object> context){
@@ -4125,38 +4153,37 @@ public class DepotSalesServices{
    	    Map result = ServiceUtil.returnSuccess();
    	    
 	   	List<GenericValue> productCategoryAttribute = null;
-	   	 
 	   	try{
-	   		productCategoryAttribute = delegator.findList("ProductCategoryAttribute", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId), null, null, null, false);
+	   		productCategoryAttribute = delegator.findList("ProductCategoryAttribute", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId), null, UtilMisc.toList("sequenceId"), null, false);
 	   	} catch (Exception e) {
 				Debug.logError(e, module);
 				return ServiceUtil.returnError(e.toString());
 		}	
 	   	
-	   	List productAttributeTypesList = EntityUtil.getFieldListFromEntityList(productCategoryAttribute, "attrType", true);
+	   	List productAttributeTypesList = EntityUtil.getFieldListFromEntityList(productCategoryAttribute, "attrTypeId", true);
 	   	
 	   	Map productAttributesMap = FastMap.newInstance();
 	   	for(int i=0; i<productAttributeTypesList.size(); i++){
 	   		String productAttributeType = (String) productAttributeTypesList.get(i);
-	   		productAttributesMap.put(productAttributeType, EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, productAttributeType)));
+	   		productAttributesMap.put(productAttributeType, EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrTypeId", EntityOperator.EQUALS, productAttributeType)));
 	   	}
 	   	
+	   	List<GenericValue> productCategoryAttributeTypesList = null;
+	   	try{
+	   		productCategoryAttributeTypesList = delegator.findList("ProductCategoryAttributeType", EntityCondition.makeCondition("attrTypeId", EntityOperator.IN,productAttributeTypesList), null, UtilMisc.toList("sequenceId"), null, false);
+	   	} catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		}	
 	   	
-	   	/*List<GenericValue> packingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PACKING"));
-	   	List<GenericValue> spinningTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "SPINNING"));
-	   	List<GenericValue> processingTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PROCESSING"));
-	   	List<GenericValue> plyandcountTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "PLYANDCOUNT"));
-	   	List<GenericValue> uomTypes = EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrType", EntityOperator.EQUALS, "UOM"));
-	   	*/
-	   	
-	   	    
+	   	result.put("productCategoryAttributeTypesList",productCategoryAttributeTypesList);    
 	   	result.put("productAttributeTypesList",productAttributeTypesList);
 	   	result.put("productAttributesMap",productAttributesMap);
 	   	return result;
 	     	
    	}
 	
-	public static Map<String, Object> CreateNewProduct(DispatchContext dctx, Map<String, ? extends Object> context){
+	/*public static Map<String, Object> CreateNewProduct(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();
    	    Map result = ServiceUtil.returnSuccess();
@@ -4285,7 +4312,308 @@ public class DepotSalesServices{
    	    
    	    return result;
   	
+	}*/
+	
+	public static String CreateNewProduct(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map resultMap = FastMap.newInstance();
+		List invoices = FastList.newInstance(); 
+		HttpSession session = request.getSession();
+	  	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+		String productCategoryId = (String) request.getParameter("productCategoryId");
+		String childProductCategoryId = (String) request.getParameter("childProductCategoryId");
+		
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		
+		String ply = (String) paramMap.get("PLY");
+   	    String count = (String) paramMap.get("COUNT");
+   	    String uom = (String) paramMap.get("UOM");
+   	    String finesse = (String) paramMap.get("FINESSE");
+   	    String finishing = (String) paramMap.get("FINISHING");
+   	    String coloring = (String) paramMap.get("COLORING");
+   	    String luster = (String) paramMap.get("LUSTER");
+   	    String packing = (String) paramMap.get("PACKING");
+   	    String categoryId = (String) paramMap.get("childProductCategoryId");
+   	    String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");
+		
+		String productName = "";
+	   	if(UtilValidate.isNotEmpty(ply) && !ply.equals("1")){
+	   		productName = productName+ ply+"/";
+	   	}
+	   	if(UtilValidate.isNotEmpty(count)){
+	   		productName = productName+ count;
+	   	}
+	   	if(UtilValidate.isNotEmpty(uom)){
+	   		productName = productName+ uom;
+	   	}
+	   	if(UtilValidate.isNotEmpty(finesse)){
+	   		productName = productName+" "+ finesse;
+	   	}
+	   	if(UtilValidate.isNotEmpty(finishing)){
+	   		productName = productName+" "+ finishing;
+	   	}
+	   	if(UtilValidate.isNotEmpty(coloring)){
+	   		productName = productName+" "+ coloring;
+	   	}
+	   	if(UtilValidate.isNotEmpty(luster)){
+	   		productName = productName+" "+ luster;
+	   	}
+	   	
+	   	if(UtilValidate.isNotEmpty(categoryId)){
+	   		try{
+				GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId), false);
+				if(UtilValidate.isEmpty(productCategory)){
+					request.setAttribute("_ERROR_MESSAGE_","Not a valid Party");
+					return "error";
+				}
+				String categoryName = (String) productCategory.get("categoryName");
+				productName = productName+" "+ categoryName;
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Error fetching ProductCategory", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error fetching ProductCategory");
+				return "error";
+			}
+	   	}
+	   	
+	   	if(UtilValidate.isNotEmpty(packing)){
+	   		productName = productName+" "+ packing;
+	   	}
+	   	
+		String productId = null;
+	   	try{
+			Map newProduct = FastMap.newInstance();
+			newProduct.put("userLogin", userLogin);
+			newProduct.put("productTypeId", "FINISHED_GOOD");
+			newProduct.put("primaryProductCategoryId", categoryId);
+			newProduct.put("internalName", productName);
+			newProduct.put("brandName", productName);
+			newProduct.put("productName", productName);
+			newProduct.put("description", productName);
+			newProduct.put("isVirtual", "N");
+			newProduct.put("isVariant", "Y");
+			newProduct.put("quantityIncluded",new BigDecimal(1));
+			newProduct.put("quantityUomId", "WT_kg");
+			newProduct.put("longDescription", productName);
+			result = dispatcher.runSync("createProduct", newProduct);
+			productId = (String)result.get("productId");
+			if (ServiceUtil.isError(result)) {
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product ");
+				return "error";
+			}
+		}
+		catch (Exception e) {
+			Debug.logError(e, "Error Creating Product ", module);
+			request.setAttribute("_ERROR_MESSAGE_","Error Creating Product ");
+			return "error";
+	    }
+	   	
+	   	Map productCatgMap = FastMap.newInstance();
+		if(UtilValidate.isNotEmpty(categoryId)){
+			try{
+				productCatgMap.put("productCategoryId", categoryId);
+				productCatgMap.put("productId", productId);
+				productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+				productCatgMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+		}
+	   	
+	   	// Add product to one of Scheme category as well
+		
+		productCatgMap.clear();
+		if(UtilValidate.isNotEmpty(categoryId)){
+			try{
+				productCatgMap.put("productCategoryId", schemeCategoryId);
+				productCatgMap.put("productId", productId);
+				productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+				productCatgMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+		}
+		
+		if(UtilValidate.isNotEmpty(ply)){
+			try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","PLY");
+				productAttributeMap.put("attrValue",ply);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+			}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(count)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","COUNT");
+				productAttributeMap.put("attrValue",count);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(uom)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","UOM");
+				productAttributeMap.put("attrValue",uom);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(finesse)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","FINESSE");
+				productAttributeMap.put("attrValue",finesse);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(finishing)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","FINISHING");
+				productAttributeMap.put("attrValue",finishing);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(coloring)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","COLORING");
+				productAttributeMap.put("attrValue",coloring);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+	   	if(UtilValidate.isNotEmpty(luster)){
+	   		try{
+				Map productAttributeMap = FastMap.newInstance();
+				productAttributeMap.put("productId",productId);
+				productAttributeMap.put("attrName","LUSTER");
+				productAttributeMap.put("attrValue",luster);
+				productAttributeMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Error Creating Product Attribute", module);
+					request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+					return "error";
+				}
+	   		}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+	   	}
+		
+		
+		
+		
+		
+		/*Map resultCtx = FastMap.newInstance();
+		
+				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+					return "error";
+				}
+			}catch(Exception e){
+				Debug.logError(e, module);
+				return "error";
+			}*/
+		
+		
+		request.setAttribute("_EVENT_MESSAGE_", "Product Successfully Created : "+productId);
+		return "success";
 	}
+	
+	
+	
+	
+	
+	
 	public static Map<String, Object> getCategoryMembers(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -4346,8 +4674,6 @@ public class DepotSalesServices{
    	    } catch (GenericEntityException e) {
    	    	Debug.logError(e, "Error getting feature categories associated with the category with ID: " + productCategoryId, module);
    	    }	
-   	    Debug.log("featuresByCategoryMap =========="+featuresByCategoryMap);
-   	    Debug.log("productFeatureCategoryList =========="+productFeatureCategoryList);
 	   	result.put("featuresByCategoryMap",featuresByCategoryMap); 
 	   	result.put("productFeatureCategoryIdsList",productFeatureCategoryIdsList);
 	   	result.put("productFeatureCategoryList",productFeatureCategoryList); 
