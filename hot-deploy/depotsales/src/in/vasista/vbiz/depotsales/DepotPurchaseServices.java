@@ -707,12 +707,12 @@ public class DepotPurchaseServices{
 				Map input = FastMap.newInstance();
 				input.put("userLogin", userLogin);
 		        input.put("invoiceTypeId", "PURCHASE_INVOICE");        
-		        input.put("partyIdFrom", partyIdFrom);	
+		        input.put("partyIdFrom", partyId);	
 		        input.put("statusId", "INVOICE_IN_PROCESS");	
 		        input.put("currencyUomId", currencyUomId);
 		        input.put("invoiceDate", invoiceDate);
 		        input.put("dueDate", invoiceDate); 	        
-		        input.put("partyId", partyId);
+		        input.put("partyId",partyIdFrom );
 		        input.put("purposeTypeId", purposeTypeId);
 		        if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			        input.put("isEnableAcctg", "N");
