@@ -203,6 +203,7 @@
 			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
 			var orderMessage = $("#orderMessage").val();
+			var schemeCategory = $("#schemeCategory").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
 			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
@@ -213,6 +214,7 @@
 			var bilngType = jQuery("<input>").attr("type", "hidden").attr("name", "billingType").val(billingType);
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
+			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -229,6 +231,7 @@
 			jQuery(formId).append(jQuery(productStore));
 			jQuery(formId).append(jQuery(orderMessageInPut));
 			jQuery(formId).append(jQuery(disableAcctgFlag));
+			jQuery(formId).append(jQuery(schemeCategoryObj));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
