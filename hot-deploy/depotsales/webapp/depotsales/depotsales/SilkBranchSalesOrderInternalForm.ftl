@@ -573,8 +573,9 @@
 				if(isNaN(quota)){
 					quota = 0;
 				}
+				if(!(data[args.row]["quota"])){
 				data[args.row]["quota"] = quota;
-				
+				}
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
