@@ -573,7 +573,7 @@
 				if(isNaN(quota)){
 					quota = 0;
 				}
-				data[args.row]["quota"] = quota;
+				<#-->data[args.row]["quota"] = quota;-->
 				
 				grid.updateRow(args.row);
 				
