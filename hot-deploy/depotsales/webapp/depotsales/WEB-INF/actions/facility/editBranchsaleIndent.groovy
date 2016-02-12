@@ -108,6 +108,21 @@ context.suplierPartyName=suppPartyName;
 parameters.suplierPartyId=suplierPartyId;
 parameters.suplierPartyName=suppPartyName;
 parameters.societyPartyId=partyId
+schemeCategory="";
+orderTaxType="";
+orderAttTax=delegator.findOne("OrderAttribute",[orderId :orderId, attrName:"INDET_TAXTYPE" ], false);
+if(orderAttTax){
+	orderTaxType=orderAttTax.attrValue;
+	parameters.orderTaxType=orderTaxType;
+}
+
+orderAttCat=delegator.findOne("OrderAttribute",[orderId :orderId, attrName:"SCHEME_CAT" ], false);
+if(orderAttCat){
+	schemeCategory=orderAttCat.attrValue;
+	parameters.schemeCategory=schemeCategory;
+}
+
+
 JSONArray orderItemsJSON = new JSONArray();
 
 JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json

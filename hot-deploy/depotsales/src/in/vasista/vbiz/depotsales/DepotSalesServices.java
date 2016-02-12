@@ -1331,6 +1331,7 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		//String productStoreId = "STORE";
 		String orderTaxType = (String) request.getParameter("orderTaxType");
+		String schemeCategory = (String) request.getParameter("schemeCategory");
 		String billingType = (String) request.getParameter("billingType");
 		String schemePartyId=partyId;
 		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
@@ -1713,6 +1714,32 @@ public class DepotSalesServices{
 				  request.setAttribute("_ERROR_MESSAGE_", "Error While Creating OrderRole(SUPPLIER)  for Sale Indent  : "+orderId);
 					return "error";
 	  	 	}
+		}
+		if(UtilValidate.isNotEmpty(orderTaxType)){
+			try{
+			GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+			orderAttribute.set("orderId", orderId);
+			orderAttribute.set("attrName", "INDET_TAXTYPE");
+			orderAttribute.set("attrValue", orderTaxType);
+			delegator.createOrStore(orderAttribute);
+			}catch (GenericEntityException e) {
+				 request.setAttribute("_ERROR_MESSAGE_"," Could not add Attribute tax type ");
+					Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
+					return "error";
+			 }
+		}
+		if(UtilValidate.isNotEmpty(schemeCategory)){
+			try{
+				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+				orderAttribute.set("orderId", orderId);
+				orderAttribute.set("attrName", "SCHEME_CAT");
+				orderAttribute.set("attrValue", schemeCategory);
+				delegator.createOrStore(orderAttribute);
+				}catch (GenericEntityException e) {
+					 request.setAttribute("_ERROR_MESSAGE_"," Could not add Attribute SchemeCategory ");
+						Debug.logError(e, "Could not add role to order for SchemeCategory " + orderId, module);
+						return "error";
+				 }
 		}
 		Map resultCtx = FastMap.newInstance();
 		
