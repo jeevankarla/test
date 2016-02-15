@@ -52,7 +52,7 @@ for (String eachPartyList : partyIdsList) {
 		   conditonList = [];
 		   conditonList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,eachPartyList));
 		   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
-		   conditonList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.IN,["ADVFRMOTHERS_PAYIN","ADVFRMDAIRYCU_PAYIN","ADVFRMDEEP_PAYIN","ADVFRMOTHERS_PAYIN","ADVFRMICPCUST_PAYIN"]));
+		   conditonList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.IN,["ADVFRMOTHERS_PAYIN","ADVFRMDAIRYCU_PAYIN","ADVFRMDEEP_PAYIN","ADVFRMOTHERS_PAYIN","ADVFRMICPCUST_PAYIN","INDENTADV_PAYIN"]));
 		   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 		   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 		   
@@ -69,6 +69,7 @@ for (String eachPartyList : partyIdsList) {
 				   //==============for Advance Payments============
 				   
 				      mainBalance = eachPaymentList.amount;
+					  appliedAmount = 0;
 				   
 				   conditonList = [];
 				   conditonList.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.EQUALS,eachPaymentList.paymentId));
@@ -76,32 +77,32 @@ for (String eachPartyList : partyIdsList) {
 				   OrderPrefePaymentApplicationList = delegator.findList("OrderPreferencePaymentApplication", cond, null, null, null ,false);
 				
 				   
-				   orderPreferenceAppliedIds = EntityUtil.getFieldListFromEntityList(OrderPrefePaymentApplicationList,"orderPaymentPreferenceId", true);
-				  
-				   conditonList.clear();
-				   conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceAppliedIds));
-				   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
-				   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-				   OrderPaymentPreferenceList = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
-				
-				   actualOrderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreferenceList,"orderPaymentPreferenceId", true);
-				   
-				   
-				   OrderPreferencePaymentApplicationList = EntityUtil.filterByCondition(OrderPrefePaymentApplicationList, EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, actualOrderPreferenceIds));
-				   
-				   
-				  // Debug.log("OrderPreferencePaymentApplicationList============="+OrderPreferencePaymentApplicationList);
-				   
-				   appliedAmount = 0;
-				   
-				   if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationList)){
-				   //appliedAmount = OrderPreferencePaymentApplicationList[0].amountApplied;
-				   
-				   for (eachPreferenceList in OrderPreferencePaymentApplicationList) {
-					   appliedAmount = appliedAmount+eachPreferenceList.get("amountApplied");
-				   }
-				   
-				   
+				   if(OrderPrefePaymentApplicationList){
+					   orderPreferenceAppliedIds = EntityUtil.getFieldListFromEntityList(OrderPrefePaymentApplicationList,"orderPaymentPreferenceId", true);
+					   
+					   conditonList.clear();
+					   conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceAppliedIds));
+					   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
+					   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+					   OrderPaymentPreferenceList = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+					
+					   actualOrderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreferenceList,"orderPaymentPreferenceId", true);
+					   
+					   
+					   OrderPreferencePaymentApplicationList = EntityUtil.filterByCondition(OrderPrefePaymentApplicationList, EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, actualOrderPreferenceIds));
+					   
+					   
+					  // Debug.log("OrderPreferencePaymentApplicationList============="+OrderPreferencePaymentApplicationList);
+					   
+					   
+					   if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationList)){
+					   //appliedAmount = OrderPreferencePaymentApplicationList[0].amountApplied;
+					   
+					   for (eachPreferenceList in OrderPreferencePaymentApplicationList) {
+						   appliedAmount = appliedAmount+eachPreferenceList.get("amountApplied");
+					   }
+					   					   
+					   }
 				   }
 				   balance = mainBalance-appliedAmount;
 				   
