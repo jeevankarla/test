@@ -4933,7 +4933,7 @@ public class DepotSalesServices{
            createInvoiceItemContext.put("invoiceItemTypeId", "INV_RAWPROD_ITEM");
            createInvoiceItemContext.put("description", eachShipmentList.get("description"));
            createInvoiceItemContext.put("quantity",eachShipmentList.get("quantity"));
-           createInvoiceItemContext.put("amount",orderItem.getBigDecimal("unitPrice").multiply(eachShipmentList.getBigDecimal("quantity")));
+           createInvoiceItemContext.put("amount",orderItem.getBigDecimal("unitPrice"));
            createInvoiceItemContext.put("productId", eachShipmentList.get("productId"));
            createInvoiceItemContext.put("unitPrice", orderItem.getBigDecimal("unitPrice"));
            createInvoiceItemContext.put("unitListPrice", orderItem.getBigDecimal("unitListPrice"));

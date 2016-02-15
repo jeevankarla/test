@@ -1639,7 +1639,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		}
 		
 		result.put("grandTotal", grandTotal);
-		result.put("itemDetail", productItemDetails);
+		result.put("itemDetail", itemDetail);
 		result.put("adjustmentDetail", adjustmentDetail);
 		result.put("termsDetail", termsDetail);
 		result.put("productAdjustmentPerUnit", productAdjustmentPerUnit);
