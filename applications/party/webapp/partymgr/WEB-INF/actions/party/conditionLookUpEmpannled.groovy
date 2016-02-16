@@ -43,7 +43,7 @@ if(parameters.ajaxLookup == 'Y'){
 
 if(roleTypeId != null){
 	parameters.roleTypeId=roleTypeId;
-	context.entityName="PartyRoleAndPartyDetail";
+	context.entityName="PartyIdentificationAndPerson";
 	
 		conditionFields.roleTypeId=roleTypeId;
 		context.conditionFields=conditionFields;	
