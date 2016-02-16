@@ -305,9 +305,17 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		condExpWiever = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		WieverAttr = EntityUtil.filterByCondition(orderItemAttr,condExpWiever);
 		
+		cond1 = [];
+		cond1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+		cond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+		condExpRmrk = EntityCondition.makeCondition(cond1, EntityOperator.AND);
+		RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
+		
 		wieverName="";
 		wieverId="";
 		psbNo="";
+		remarks="";
+		
 		
 		if(WieverAttr){
 			wieverId=(WieverAttr.get(0)).get("attrValue");
@@ -318,13 +326,17 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
 			}
 		
-		
+		if(RmrkAttr){
+			remarks=(RmrkAttr.get(0)).get("attrValue");
+			}
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
 		newObj.put("customerName",wieverName+"["+psbNo+"]");
 		newObj.put("customerId",wieverId);
 		newObj.put("psbNumber",psbNo);
+		newObj.put("remarks",remarks);
+		
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);

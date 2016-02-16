@@ -528,9 +528,9 @@
         }
         var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:270, minWidth:270, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
-			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"uomDescription", name:"UOM", field:"uomDescription", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
-			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
+			{id:"unitPrice", name:"Basic Unit Price in Kgs", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
