@@ -245,7 +245,7 @@ $( "#deliveryChallanDate" ).datepicker({
 					  	</tr>
 					  	<tr>
 							<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <font color='red'>*</font></div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <#--><font color='red'>*</font>--></div></td>
 					        <td>&nbsp;</td>
 					        <#if vehicleId?exists && vehicleId?has_content>  
 						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
