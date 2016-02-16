@@ -35,6 +35,7 @@ List conditionList=[];
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
+		if(shipment){
 		tempMap.put("shipmentId",shipment.shipmentId);
 		tempMap.put("estimatedShipDate",shipment.estimatedShipDate);
 		tempMap.put("vehicleId",shipment.vehicleId);
@@ -131,7 +132,7 @@ List conditionList=[];
 		
 		
 		
-		
+	}
 		finalList.add(tempMap);
 	}
 	//}
@@ -147,10 +148,10 @@ List conditionList=[];
 				tempMap.put("statusId",list.statusId);
 				tempMap.put("primaryOrderId",list.primaryOrderId);
 				tempMap.put("partyId", partyId);
-				tempMap.put("partyIdTo",shipment.partyIdTo);
+				tempMap.put("partyIdTo",list.partyIdTo);
 				
 				conditionList = [];
-				conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,shipment.partyIdTo));
+				conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,list.partyIdTo));
 				condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				facilityList=delegator.findList("Facility",condition,null,null,null,false);
 				
@@ -162,8 +163,8 @@ List conditionList=[];
 				}else{
 				tempMap.put("depoPartyName","");
 				}
-				if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
-					partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
+				if(UtilValidate.isNotEmpty(list.partyIdTo)){
+					partyName=PartyHelper.getPartyName(delegator, list.partyIdTo, false);
 					   tempMap.put("partyName",partyName);
 				   }
 				   else{
