@@ -427,6 +427,22 @@
 				}
 				grid.updateRow(args.row);
 			}
+			if (args.cell == 2) {
+				var balanceQty = data[args.row]["balanceQty"];
+				var quantity=data[args.row]["quantity"];
+				if(isNaN(balanceQty)){
+					balanceQty = 0;
+				}
+				if(isNaN(quantity)){
+					quantity = 0;
+				}
+				var balqty=balanceQty-quantity;
+				if(balqty<0){
+				balqty=0;
+				}
+					data[args.row]["balance"]=balqty;
+				grid.updateRow(args.row);
+			}
 			
 		}); 
 		
