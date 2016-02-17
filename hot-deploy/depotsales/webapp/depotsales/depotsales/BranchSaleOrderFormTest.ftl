@@ -61,6 +61,43 @@
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
 				} });	
 				if (e.keyCode === 13){
+				
+					// Validation
+					
+					if(indententryinit.partyId.value.length < 1){
+			  			alert("Customer is Mandatory");
+			  			$('#0_lookupId_partyId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#0_lookupId_partyId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#0_lookupId_partyId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+			  		else if(indententryinit.productStoreId.value.length < 1){
+			  			alert("Branch is Mandatory");
+			  			$('#productStoreId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#productStoreId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#productStoreId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+					else if(indententryinit.suplierPartyId.value.length < 1){
+			  			alert("Supplier is Mandatory");
+			  			$('#suplierPartyId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#suplierPartyId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#suplierPartyId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+				
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}

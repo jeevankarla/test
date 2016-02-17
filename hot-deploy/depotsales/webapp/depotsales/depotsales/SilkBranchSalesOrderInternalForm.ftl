@@ -16,6 +16,19 @@
 		font-weight: normal;
 		background: mistyrose;
 	}
+	.readOnlyColumnAndWarningClass {
+		font-weight: bold;
+		color: red;
+		background: white;
+		animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
+	}
+	@keyframes blinker {  
+	  from { opacity: 1; }
+	  to { opacity: 0; }
+	}
+	
+});
+	
 	
 	.righthalf {
 	    float: right;
@@ -372,7 +385,8 @@
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"${uiLabelMap.TotalAmtInRs}", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} In Kgs", field:"quota", width:150, minWidth:150, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
+			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} In Kgs", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+			{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 			
 		];
 		
@@ -479,7 +493,15 @@
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
 	      	
-	      	
+	      	if (args.cell == 1) {
+				var prod = data[args.row]["cProductId"];
+				quota = parseFloat(productQuotaJSON[prod]);
+				if(isNaN(quota)){
+					quota = 0;
+				}
+				data[args.row]["quota"] = quota;
+				grid.updateRow(args.row);
+			}
 	      	
 	      	
 	    });
@@ -537,15 +559,27 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			if (args.cell == 2) {
-			if(!(data[args.row]["quota"])){
 				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
 					quota = 0;
 				}
-				data[args.row]["quota"] = quota;
-				grid.updateRow(args.row);
+				if(isNaN(qty)){
+					qty = 0;
 				}
+				if(!(data[args.row]["quota"])){
+					data[args.row]["quota"] = quota;
+				}
+				
+				if(qty > quota){
+					data[args.row]["warning"] = 'Quantity exeeds the quota limit.';
+				}
+				else{
+					data[args.row]["warning"] = '';
+				}
+				grid.updateRow(args.row);
 			}
 			if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
@@ -574,7 +608,7 @@
 					quota = 0;
 				}
 				if(!(data[args.row]["quota"])){
-				data[args.row]["quota"] = quota;
+					data[args.row]["quota"] = quota;
 				}
 				grid.updateRow(args.row);
 				
@@ -620,8 +654,8 @@
 					quota = 0;
 				}
 				if(!(data[args.row]["quota"])){
-				data[args.row]["quota"] = quota;
-				}				
+					data[args.row]["quota"] = quota;
+				}
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
@@ -955,6 +989,10 @@
 // to show special related fields in form			
 	
 	$(document).ready(function(){
+	
+		//(function blink() { 
+		//    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
+		//})();
 		$('#boothId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
