@@ -2123,11 +2123,16 @@ public class DepotSalesServices{
 				ShoppingCartItem item = null;
 				try{
 					
-					int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
+					item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 					
-					item = cart.findCartItem(itemIndx);
+					
+					/*int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
+				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));*/
+					
+					//item = cart.findCartItem(itemIndx);
 					item.setListPrice(totalPrice);
 					item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
 					item.setOrderItemAttribute("productId",productId);
@@ -2164,8 +2169,7 @@ public class DepotSalesServices{
 						item.addAdjustment(orderAdjustment);
 					}
 					item.setTaxDetails(taxList);
-					
-					
+					cart.addItemToEnd(item);
 				}
 				catch (Exception exc) {
 					Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
