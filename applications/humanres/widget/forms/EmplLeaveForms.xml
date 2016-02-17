@@ -281,6 +281,7 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
+        <field name="locationGeoId" title="Employee Location"><display/></field>
         <field name="GHSSdays" title="Comp off Leave Days"><display></display></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
 		<field name="documentsProduced" title="Docs"><display></display></field>    
