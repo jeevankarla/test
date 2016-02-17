@@ -108,10 +108,13 @@ if(orderId){
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("quantity",eachItem.quantity-receivedQty);
-		newObj.put("balance",eachItem.quantity-receivedQty);		
+		newObj.put("balance",eachItem.quantity-receivedQty);
+		newObj.put("balanceQty",eachItem.quantity-receivedQty);
+		
 		if(receivedQty>eachItem.quantity){
 		    newObj.put("quantity",0);
-			newObj.put("balance",0);			
+			newObj.put("balance",0);
+			newObj.put("balanceQty",0);
 		}
 		newObj.put("maxReceivedQty",maxReceivedQty);
 		newObj.put("uomDescription",uomLabel);
