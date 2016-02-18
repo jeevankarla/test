@@ -217,44 +217,80 @@ function populateData(){
 	}); 
 	
 	$(document).ready(function(){
-	$("#PostalAddress").hide();
-		makeDatePicker("estimatedDeliveryDate","fromDateId");
-		makeDatePicker("orderDate","fromDateId");
-		makeDatePicker("refDate","fromDateId");
-		makeDatePicker("quoteDate","fromDateId");
-		
-		makeDayDatePicker("effectiveDate","fromDateId");
-		makeDayDatePicker("SInvoiceDate","fromDateId");
-		
-		makeDatePicker("fromDate","fromDateId");
-        makeDatePicker("thruDate","fromDateId");
 	
-		//$(this.target).find('input').autocomplete();
-		
-		$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
+		// bind a click event to the "addnew" link
+		$('#addnew').click(function() {
 			
-		});	
-		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
-		$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
-		$('#ui-datepicker-div').css('clip', 'auto');
-		hideExtPO();	
-		getPayTermDes();
-		getDelTermDes();
+					
+		    // increment the counter
+		    newRowNum = $(customFields).children('tbody').children('tr').length;
+		    var addRow = $(this).parent().parent();
 		
-		var depotsAutoJson = ${StringUtil.wrapString(depotsJSON)!'[]'};
-	//	$('#shipToPartyId').keypress(function (e) { 
-	//	$("#shipToPartyId").autocomplete({ source: depotsAutoJson , select: function( event, ui ) {
-		//	$('span#depotName').html('<h4>'+ui.item.label+'</h4>');
-		//	} });
-		//});
+		    var newRow = addRow.clone();
+		    $('input', addRow).val('');
 		
-		var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
-		$('#productStoreId').keypress(function (e) { 
-		$("#productStoreId").autocomplete({ source: branchAutoJSON , select: function( event, ui ) {
-			$('span#branchName').html('<h4>'+ui.item.label+'</h4>');
-			} });
+			$('td:last-child', newRow).html('<a href="" class="remove"><i class="icon-minus">Remove<\/i><\/a>');
+		
+		    addRow.before(newRow);
+		
+		    // add the remove function to the new row
+		    $('a.remove', newRow).click(function() {
+		        $(this).closest('tr').remove();
+		        return false;
+		    });
+		
+		    $('#paymentTermDescription_o_0', newRow).each(function(i) {
+		        var newID = 'paymentTermDescription_o_' + newRowNum;
+		        $(this).attr('id', newID);
+		    });
+		    
+		    $('#paymentTermTypeId_o_0', newRow).each(function(i) {
+		        var newID = 'paymentTermTypeId_o_' + newRowNum;
+		        $(this).attr('id', newID);
+		    });
+		    
+		
+		    return false;
 		});
+	
+		$("#PostalAddress").hide();
+			makeDatePicker("estimatedDeliveryDate","fromDateId");
+			makeDatePicker("orderDate","fromDateId");
+			makeDatePicker("refDate","fromDateId");
+			makeDatePicker("quoteDate","fromDateId");
+			
+			makeDayDatePicker("effectiveDate","fromDateId");
+			makeDayDatePicker("SInvoiceDate","fromDateId");
+			
+			makeDatePicker("fromDate","fromDateId");
+	        makeDatePicker("thruDate","fromDateId");
 		
+			//$(this.target).find('input').autocomplete();
+			
+			$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
+				
+			});	
+			$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
+			$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+			$('#ui-datepicker-div').css('clip', 'auto');
+			hideExtPO();	
+			getPayTermDes();
+			getDelTermDes();
+			
+			var depotsAutoJson = ${StringUtil.wrapString(depotsJSON)!'[]'};
+		//	$('#shipToPartyId').keypress(function (e) { 
+		//	$("#shipToPartyId").autocomplete({ source: depotsAutoJson , select: function( event, ui ) {
+			//	$('span#depotName').html('<h4>'+ui.item.label+'</h4>');
+			//	} });
+			//});
+			
+			var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
+			$('#productStoreId').keypress(function (e) { 
+			$("#productStoreId").autocomplete({ source: branchAutoJSON , select: function( event, ui ) {
+				$('span#branchName').html('<h4>'+ui.item.label+'</h4>');
+				} });
+			});
+			
 	});
 	function hideExtPO(){
 		var orderTypeId = $("#orderTypeId").val();
@@ -419,7 +455,7 @@ function populateData(){
     <h3>PO Information</h3>
     <section>
       <fieldset>
-            <table cellpadding="15" cellspacing="15" class='h3' width="50%">
+            <table cellpadding="8" cellspacing="8" class='h4' width="100%">
                    <tr>
 						<td class="label">Order Type(<font color="red">*</font>) :</td>
 					    <td>
@@ -457,10 +493,11 @@ function populateData(){
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly onblur= 'javascript:dispSuppName(this);'/>
-					    		<span> ${orderInfo.get("supplierName")?if_exists}</span>
+					    		<span class="tooltip"> ${orderInfo.get("supplierName")?if_exists}</span>
+					    		
 					    	<#else>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
-					    		<span id="supplierName"></span>
+					    		<span class="tooltip" id="supplierName"></span>
 					    	</#if>
 					      	
 					    </td>
@@ -522,12 +559,12 @@ function populateData(){
 					    <td class="label">Bill To Party :</td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
-					    	<#assign billToPartyId=orderInfo.get("billToPartyId")>
-					    	<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="CreateMPO" size="18" maxlength="60" name="billToPartyId"  id="billToPartyId" fieldFormName="LookupPartyName"/>
+					    		<#assign billToPartyId=orderInfo.get("billToPartyId")>
+					    		<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="CreateMPO" size="18" maxlength="60" name="billToPartyId"  id="billToPartyId" fieldFormName="LookupPartyName"/>
 					    	<#else>
-					      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
+					      		<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
       		                </#if>
-      		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
+      		                <#--<span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>-->
 					    </td>
 					 </tr>
 					 <tr>
@@ -671,86 +708,45 @@ function populateData(){
            <h3>Payment Terms</h3>
 		          <section>
 			          <fieldset>
-			            <table cellpadding="15" cellspacing="15" class='h2'>
+			            <table cellpadding="15" cellspacing="15" class='h3'>
 							<tr>
 			          			<td align='left' valign='middle' nowrap="nowrap"></td>
 				                <td>
-				               	
 				               	<table border="0" cellspacing="10" cellpadding="10" id="paymentTermsTable" style="width:200px;" align="center">
-					                <tr>
-								       <td>
-								       		<table class='h3' cellspacing="15">
-								       			<tr>
-								           			<td><input type="button" id="addPaymentTerm" value="Add" style="padding: 2.5px;"/></td>
-								        			<td> <input type="button" id="delPaymentTerm" value="Delete" style="padding: 2.5px;"/></td>
-								        		</tr> 
-								        	</table>
-								        </td>
-								        <td></td>
-								        <td></td>
-								    </tr>
-								    <tr></tr>
-								    <tr>
-							        	<td align="center">Term Type</td>
-							         	<#--<td align="center">Term Days</td>
-							          	<td align="center">Term Value</td>
-							          	<td align="center">UOM</td>-->
-							          	<td align="center">Description</td>
-							    	</tr>
-							    	<#if orderId?exists && orderPayTermInfo?has_content>
-							    		<#assign rowCount = 0>
-							    		<#list orderPayTermInfo as eachPayTerm>
-									    	<tr>
-									    		<input type="hidden"  name="paymentTermTypeId_o_${rowCount}" value="${eachPayTerm.get("termTypeId")?if_exists}"/>
-									        	<td>
-									          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" size="40"/>
-									        	</td>
-								            	<#--<td>
-								                	<input type="text" name="paymentTermDays_o_${rowCount}" value="${eachPayTerm.get("termDays")?if_exists}" size="10"/>
-								            	</td>
-								            	<td>
-								                	<input type="text" name="paymentTermValue_o_${rowCount}" value="${eachPayTerm.get("termValue")?if_exists}" size="10"/>
-								            	</td>
-								            	<td>
-								            		<select name="paymentTermUom_o_${rowCount}">
-								            			<#if eachPayTerm.get("uomId") == "INR">
-								            				<option value="INR" selected>Rupees</option>
-								            				<option value="PERCENT">Percent</option>
-								            			<#else>
-								            				<option value="INR">Rupees</option>
-								            				<option value="PERCENT" selected>Percent</option>
-								            			</#if>
-								            			
-								            		</select>
-								            	</td>-->
-								            	<td>
-								                	<input type="textarea" cols="40" rows="5" maxlength="255" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" />
-								            	</td>
-									    	</tr>
-									    	<#assign rowCount = rowCount+1>
-								    	</#list> 
-							    	<#else>
-							    		<tr>
-							        	<td>
-							        		<select id='payTermDes' name="paymentTermTypeId_o_0" class='flexselect' ></select>
-							        	</td>
-						            	<#--<td>
-						                	<input type="text" name="paymentTermDays_o_0" value=""  size="10"/>
-						            	</td>
-						            	<td>
-						                	<input type="text" name="paymentTermValue_o_0" value="" size="10"/>
-						            	</td>
-						            	<td>
-						            		<select name="paymentTermUom_o_0">
-						            			<option value="INR">Rupees</option>
-						            			<option value="PERCENT">Percent</option>
-						            		</select>
-						            	</td>-->
-						            	<td>
-						                	<input type="textarea" name="paymentTermDescription_o_0" value="" maxlength="255"/>
-						            	</td>
-							    	</tr>
-							    	</#if>
+							    	<tr>
+								    	<table class="form-table" id="customFields">
+											 <thead>
+										        <tr>
+										         <th>Term Type</th>
+										         <th>Description</th>
+										         <th></th>
+										        </tr>
+										     </thead>
+											 <tbody>  
+										    	<#if orderId?exists && orderPayTermInfo?has_content>
+										    		<#assign rowCount = 0>
+										    		<#list orderPayTermInfo as eachPayTerm>
+												    	<tr>
+												    		<input type="hidden"  name="paymentTermTypeId_o_${rowCount}" value="${eachPayTerm.get("termTypeId")?if_exists}" />
+												        	<td>
+												          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" class='flexselect' size='90'/>
+												        	</td>
+											            	<td>
+											                	<input type="textarea" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" class='flexselect'/>
+											            	</td>
+												    	</tr>
+												    	<#assign rowCount = rowCount+1>
+											    	</#list> 
+										    	<#else>
+												    <tr>
+												        <td><input id="paymentTermTypeId_o_0" class="input-medium" name="paymentTermTypeId_o_0" type="text" class='flexselect'/></td>
+												        <td><input id="paymentTermDescription_o_0" class="input-medium" name="paymentTermDescription_o_0" type="text" class='flexselect' size='90'/></td>
+												        <td><a id="addnew" href="" >add</a></td>
+												    </tr>
+										    	</#if>
+							    			</tbody>
+										</table>
+						    		</tr>
 								</table>
           				     </td>
 						  </tr>
@@ -760,86 +756,160 @@ function populateData(){
                  <h3>Delivery Terms</h3>
 		         <section>
 			          <fieldset>
-			            <table cellpadding="15" cellspacing="15" class='h2'>
-						         <tr>
-			          				<td align='left' valign='middle' nowrap="nowrap"></td>
-				                 <td>
-				               <table border="2" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
-				                
-				              <#-->  <tr>
-                                	<td class="label"><FONT COLOR="#045FB4"><b>Select Depot</b></FONT></td>
-	    							<td>
-	                                	<select name="shipToPartyId" id="shipToPartyId"></select>
-		      						</td>
-	      						</tr>-->
-	      						  <tr>
-                                	<td class="label"><FONT COLOR="#045FB4"><b>Shipping Customer : </b></FONT></td>
-                                	 <td class="label"><FONT COLOR="#108FR8"><b>${orderInfo.get("shipToPartyName")?if_exists}</b></FONT></td>
-	    							<td>
-									      <input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
-									      
-		      						</td>
-	      						</tr>
-	      						 <tr>
-	      						 <td></td>
-                                	 <td class="label">
-                                	 <#if shipingAdd?has_content>
-                                	 <FONT COLOR="#108FR8">
-                                	 ${shipingAdd.get("address1")},
-                                	 ${shipingAdd.get("address2")},
-                                	 ${shipingAdd.get("city")}                               	 
-                                	 </font>
-                                	 </#if>
-                                	 </td>
-	      						</tr>
-	      						
-	      						<div id='manualEntryDiv' style='display:none'>
-	     		  <table  id='PostalAddress' cellspacing=10 cellpadding=10 width=400>
-	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address1:</font><font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>
-	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address2: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>
-	     		   <tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>
-	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
-	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
-	     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
-	     		   	
-	     		   </table>
-     		   	</div>
-     		   	<table  id='submitfrm' cellspacing=10 cellpadding=10 width=400>
-     		   	<tr id='manualAddEntry' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>
-     		   <tr id='autoAddress' style='display:none' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Auto Pick Address' id='autoAddress'  name='autoAddress' onclick='hideManualEntry()'/></td></tr>
-     		   <#-- <tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>
-			   </table></form></body></html>
-	      						
-				                <#--
-				                <tr>
-								    <td>Ship To Party(<font color="red">*</font>):</td>
-								    <td>
-								        <#if orderId?exists && orderInfo.get("shipToPartyId")?exists>
-								        <#assign shipToPartyId=orderInfo.get("shipToPartyId")>
-								    		<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off" value="${shipToPartyId?if_exists}"/>
-								    	<#else>
-									      	<input type="text" name="shipToPartyId" id="shipToPartyId" size="18" maxlength="60" autocomplete="off"/>
-									      	<span id="depotName"></span>
-								      	</#if>
-								    </td>
-								 </tr>
-								 -->
-				                <tr>
-							       <td><table cellspacing="15"><tr>
-							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 2.5px;"/>  </td>
-							        	<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 2.5px;"/></td>
-							        </tr> </table>
-							          </td>
-							         <td> </td>
-							          <td></td>
-							    </tr>
-							    <tr>
-						        	<td align="center">Term Type</td>
-						         	<#--<td align="center">Term Days</td>
-						          	<td align="center">Term Value</td>
-						          	<td align="center">UOM</td>-->
-						          	<td align="center">Description</td>
-							    </tr>
+			          <#--
+			          	  <table cellpadding="15" cellspacing="15" class='h3'>
+								<tr>
+				          			<td align='left' valign='middle' nowrap="nowrap"></td>
+					                <td>
+					               	<table border="0" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
+								    	<tr>
+									    	<table class="form-table" id="deliveryTermsCustomFields">
+												 <thead>
+											        <tr>
+											         <th>Term Type</th>
+											         <th>Description</th>
+											         <th></th>
+											        </tr>
+											     </thead>
+												 <tbody>  
+											    	<#if orderId?exists && orderPayTermInfo?has_content>
+											    		<#assign rowCount = 0>
+											    		<#list orderPayTermInfo as eachPayTerm>
+													    	<tr>
+													    		<input type="hidden"  name="paymentTermTypeId_o_${rowCount}" value="${eachPayTerm.get("termTypeId")?if_exists}" />
+													        	<td>
+													          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" class='flexselect' size='90'/>
+													        	</td>
+												            	<td>
+												                	<input type="textarea" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" class='flexselect'/>
+												            	</td>
+													    	</tr>
+													    	<#assign rowCount = rowCount+1>
+												    	</#list> 
+											    	<#else>
+													    <tr>
+													        <td><input id="paymentTermTypeId_o_0" class="input-medium" name="paymentTermTypeId_o_0" type="text" class='flexselect'/></td>
+													        <td><input id="paymentTermDescription_o_0" class="input-medium" name="paymentTermDescription_o_0" type="text" class='flexselect' size='90'/></td>
+													        <td><a id="addnew" href="" >add</a></td>
+													    </tr>
+											    	</#if>
+								    			</tbody>
+											</table>
+							    		</tr>
+									</table>
+	          				     </td>
+							  </tr>
+						  </table>
+						 --> 	
+						 <#--
+						  <table cellpadding="15" cellspacing="15" class='h3'>
+						  	  <tr>
+                    			<td class="label"><FONT COLOR="#045FB4"><b>Shipping Details : </b></FONT></td>
+                    	 		<td class="label"><FONT COLOR="#108FR8">${orderInfo.get("shipToPartyName")?if_exists}</FONT></td>
+								<td>
+						      		<input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
+  								</td>
+							  </tr>
+					 		  <tr>
+      						 	<td></td>
+                            		<td class="label">
+                            	 <#if shipingAdd?has_content>
+                            	 <FONT COLOR="#108FR8">
+                            	 ${shipingAdd.get("address1")},
+                            	 ${shipingAdd.get("address2")},
+                            	 ${shipingAdd.get("city")}                               	 
+                            	 </font>
+                            	 </#if>
+                            	 </td>
+      						  </tr>
+							<tr>
+							<div id='manualEntryDiv' style='display:none'>
+	  							<table  id='PostalAddress' cellspacing=5 cellpadding=5 width=500>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address1:</font><font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address2: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
+					     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
+				     		   </table>
+   							</div>
+   							</tr>
+   							<tr>
+   							<table  id='submitfrm' cellspacing=10 cellpadding=10 width=400>
+   								<tr id='manualAddEntry' class='h4'><td align='center' class='h4' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>
+  								<tr id='autoAddress' style='display:none' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Auto Pick Address' id='autoAddress'  name='autoAddress' onclick='hideManualEntry()'/></td></tr>
+						  	</table>
+						  	</tr>
+						  </table>
+			          -->
+			          <table cellpadding="5" cellspacing="5" class='h3'>
+			          		<tr>
+                    			<td class="label"><FONT COLOR="#045FB4"><b>Shipping Details : </b></FONT></td>
+                    	 		<td class="label"><FONT COLOR="#108FR8">${orderInfo.get("shipToPartyName")?if_exists}</FONT></td>
+								<td>
+						      		<input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
+  								</td>
+							</tr>
+							<tr>
+      						 	<td></td>
+                            		<td class="label">
+                            	 <#if shipingAdd?has_content>
+                            	 <FONT COLOR="#108FR8">
+                            	 ${shipingAdd.get("address1")},
+                            	 ${shipingAdd.get("address2")},
+                            	 ${shipingAdd.get("city")}                               	 
+                            	 </font>
+                            	 </#if>
+                            	 </td>
+      						</tr>
+      						
+			           </table>
+			           <table cellpadding="5" cellspacing="5" class='h3'>
+			           		<tr>
+	      						<td>
+		      						<div id='manualEntryDiv' style='display:none'>
+				  						<table  id='PostalAddress' cellspacing=5 cellpadding=5 width=500>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address1:</font><font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address2: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
+							     		</table>
+		   							</div>
+	   							</td>
+   							</tr>
+   							<tr>
+   								<td>
+		   							<table  id='submitfrm' cellspacing=10 cellpadding=10 width=400>
+		   								<tr id='manualAddEntry' class='h4'><td align='center' class='h4' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Manual Address Entry' id='ManualAddress'  name='ManualAddress' onclick='manualAddressEntry()'/></td></tr>
+		  								<tr id='autoAddress' style='display:none' class='h3'><td align='center' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='button' class='h4'  value='Auto Pick Address' id='autoAddress'  name='autoAddress' onclick='hideManualEntry()'/></td></tr>
+								  	</table>
+						  		</td>
+						  	</tr>
+			           </table>
+			            <table cellpadding="5" cellspacing="5" class='h3'>
+						    <tr>
+			          			<td align='left' valign='middle' nowrap="nowrap"></td>
+				                <td>
+				               		<table border="2" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
+	      						  		<tr>
+							       			<td><table cellspacing="15"><tr>
+							           		<td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 2.5px;"/>  </td>
+							        		<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 2.5px;"/></td>
+							        	</tr> 
+							        </table>
+							    </td>
+							    <td> </td>
+							    <td></td>
+							</tr>
+			    			<tr>
+					        	<td align="center">Term Type</td>
+					         	<#--<td align="center">Term Days</td>
+					          	<td align="center">Term Value</td>
+					          	<td align="center">UOM</td>-->
+					          	<td align="center">Description</td>
+						    </tr>	
 							    <#if orderId?exists && orderShipTermInfo?has_content>
 						    		<#assign rowCount = 0>
 						    		<#list orderShipTermInfo as eachShipTerm>
