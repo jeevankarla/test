@@ -52,7 +52,7 @@ for (String eachPartyList : partyIdsList) {
 		   conditonList = [];
 		   conditonList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,eachPartyList));
 		   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
-		   conditonList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.IN,["ADVFRMOTHERS_PAYIN","ADVFRMDAIRYCU_PAYIN","ADVFRMDEEP_PAYIN","ADVFRMOTHERS_PAYIN","ADVFRMICPCUST_PAYIN","INDENTADV_PAYIN"]));
+		   conditonList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.IN,["ADVFRMOTHERS_PAYIN","ADVFRMDAIRYCU_PAYIN","ADVFRMDEEP_PAYIN","ADVFRMOTHERS_PAYIN","ADVFRMICPCUST_PAYIN","INDENTADV_PAYIN", "ONACCOUNT_PAYIN"]));
 		   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 		   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 		   

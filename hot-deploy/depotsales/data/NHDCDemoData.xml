@@ -251,7 +251,7 @@ under the License.
     	<StatusValidChange statusId="DISPATCHED" statusIdTo="DOCUMENTS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
     	<StatusValidChange statusId="DOCUMENTS_RECEIVED" statusIdTo="DOCUMENTS_ENDORSED" transitionName="Set Dispatched to Documents Received"/> 
     	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
-    	
+    	<StatusValidChange statusId="DISPATCHED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Goods Accepted"/>
     	
     	<ProductCategoryAssocType description="Scheme Applicability" productCategoryAssocTypeId="SCHEME_APPLICABILITY"/> 
 		
