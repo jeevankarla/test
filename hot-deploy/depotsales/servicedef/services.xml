@@ -176,5 +176,28 @@
         <attribute name="productFeatureCategoryList" type="List" mode="OUT" optional="true"/>
         <attribute name="productFeatureCategoryIdsList" type="List" mode="OUT" optional="true"/>
     </service>
+        <service name="getPartyAvailableQuotaBalanceHistory" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyAvailableQuotaBalanceHistory" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
+    </service>
+    <service name="getSchemeTimePeriodId" engine="java" auth="true" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getSchemeTimePeriodId">
+        <description>Get Scheme time period</description>
+        <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="schemeTimePeriodIdList" mode="OUT" type="List" optional="true"/>
+    </service>
+    <service name="createPartyQuotaBalanceHistory" engine="java" auth="false" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createPartyQuotaBalanceHistory">
+        <description>create Part yQuota Balance History</description>
+        <attribute name="schemeId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
+        <attribute name="schemeTimePeriodIdList" mode="IN" type="List" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="quota" mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
 </services>
 
