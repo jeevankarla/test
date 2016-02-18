@@ -325,7 +325,6 @@ productCategoryQuotasMap = [:];
 resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
 	productCategoryQuotasMap = resultCtx.get("schemesMap");
 	
-	
 //	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 //		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
 //	}
