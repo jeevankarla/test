@@ -5607,7 +5607,7 @@
     							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>
-								<label style="h1">New PO</label>
+								<!-- <label style="h1">New PO</label> -->
 								<platform-specific>
 									<html>
 										<html-template
