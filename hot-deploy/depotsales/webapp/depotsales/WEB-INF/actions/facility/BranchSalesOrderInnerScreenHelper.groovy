@@ -319,13 +319,15 @@
 	
 	//Quotas handling
 	
-	resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
-	schemesMap = resultCtx.get("schemesMap");
+//resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+//	schemesMap = resultCtx.get("schemesMap");
+productCategoryQuotasMap = [:];
+resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+	productCategoryQuotasMap = resultCtx.get("schemesMap");
 	
-	productCategoryQuotasMap = [:];
-	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
-		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
-	}
+//	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+//		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+//	}
 	
 	// Get Scheme Categories
 	schemeCategoryIds = [];
@@ -344,10 +346,17 @@
 	    //productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
 	  JSONObject productQuotaJSON=new JSONObject();
 	  for(int i=0; i<prodCategoryMembers.size(); i++){
+		  quota = 0;
 		  schemeProdId = (prodCategoryMembers.get(i)).get("productId");
 		  schemeCatId = (prodCategoryMembers.get(i)).get("productCategoryId");
 		  if(productCategoryQuotasMap.containsKey(schemeCatId)){
-			  quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			
+//			  quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			  if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
+				  quota = productCategoryQuotasMap.get(schemeCatId);
+			  }
+			 
+			  //Debug.log(schemeCatId+"(((((((((((((((((("+partyId+"((((((((((((((("+quota);
 			  productQuotaJSON.put(schemeProdId, quota);
 		  }
 	  }

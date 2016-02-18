@@ -253,6 +253,7 @@ under the License.
     	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
     	<StatusValidChange statusId="DISPATCHED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Goods Accepted"/>
     	
+    	<PeriodType description="Ten Percent Scheme Period" periodTypeId="TEN_PERC_PERIOD"/> 
     	<ProductCategoryAssocType description="Scheme Applicability" productCategoryAssocTypeId="SCHEME_APPLICABILITY"/> 
 		
 		<ProductCategoryAssoc productCategoryId="COTTON" productCategoryIdTo="COTTON_40ABOVE" productCategoryAssocTypeId="SCHEME_APPLICABILITY" fromDate="2014-04-01 00:00:00.0" /> 

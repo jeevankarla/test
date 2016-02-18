@@ -214,6 +214,53 @@
         <key-map field-name="attrTypeId"/>
       </relation>
     </extend-entity>
+   <entity entity-name="PartyQuotaBalanceHistory"
+            package-name="org.ofbiz.product.promo"
+            title="Party Quota Balance History">
+        <field name="schemeId" type="id-ne"></field> 
+        <field name="partyId" type="id-ne"></field>    
+      	<field name="productCategoryId" type="id-ne"></field>
+      	<field name="schemeTimePeriodId" type="id-ne"></field>
+      	<field name="quotaEligibility" type="fixed-point"></field>
+      	<field name="usedQuota" type="fixed-point"></field>
+      	<field name="balancequota" type="fixed-point"></field>
+      	<prim-key field="schemeId"/>
+      	<prim-key field="partyId"/>
+      	<prim-key field="productCategoryId"/>
+      	<prim-key field="schemeTimePeriodId"/>
+      	<relation type="one" fk-name="SCH_PRO" rel-entity-name="Scheme">
+        	<key-map field-name="schemeId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PTY_PTY" rel-entity-name="Party">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_PROD_CAT" rel-entity-name="ProductCategory">
+        	<key-map field-name="productCategoryId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCH_SCH_TPD" rel-entity-name="SchemeTimePeriod">
+        	<key-map field-name="schemeTimePeriodId"/>
+      	</relation>
+      	
+    </entity>
+     <entity entity-name="SchemeTimePeriod"
+            package-name="org.ofbiz.common.period"
+            title="Scheme Time Period Entity">
+      <field name="schemeTimePeriodId" type="id-ne"></field>
+      <field name="parentPeriodId" type="id"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="periodNum" type="numeric"></field>
+      <field name="periodName" type="name"></field>
+      <field name="fromDate" type="date"></field>
+      <field name="thruDate" type="date"></field>
+      <field name="isClosed" type="indicator"></field>
+      <prim-key field="schemeTimePeriodId"/>
+      <relation type="one" fk-name="ORG_PRD_PARPER" title="Parent" rel-entity-name="SchemeTimePeriod">
+        <key-map field-name="parentPeriodId" rel-field-name="schemeTimePeriodId"/>
+      </relation>
+      <relation type="one" fk-name="ORG_PRD_PERTYP" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductCategoryAttributeType"
             package-name="org.ofbiz.product.category"
             title="Product Category Type Attribute Entity">
