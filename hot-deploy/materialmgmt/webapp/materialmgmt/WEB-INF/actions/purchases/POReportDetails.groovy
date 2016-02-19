@@ -30,6 +30,7 @@ import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.order.order.*;
 import java.math.RoundingMode;
+import org.ofbiz.party.contact.ContactMechWorker;
 
 rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
@@ -316,12 +317,30 @@ bedPercents=EntityUtil.getFieldListFromEntityList(orderBedPercents, "termValue",
 context.bedPercents=bedPercents;
 //to get product details
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+Debug.log("orderDetails================="+orderDetails);
+
 vatpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "vatPercent", true);
 cstpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "cstPercent", true);
 context.cstpercents=cstpercents;
 context.vatpercents=vatpercents;
+
+exprCondList=[];
+exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+
+orderAssc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false);
+
+
+
+toOrderId=orderAssc.toOrderId;
+
+
+
+
 if(UtilValidate.isNotEmpty(orderDetails)){
 	orderDetails.each{orderitems->
+		
 		orderDetailsMap=[:];
 		orderDetailsMap["productId"]=orderitems.productId;
 		product = delegator.findOne("Product",["productId":orderitems.productId],false);
@@ -337,7 +356,25 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		 orderDetailsMap["unit"]=unitDesciption.get("abbreviation");
 			}
 		}}
+		remarks="";
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
 		
+		conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
+		
+		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+		Debug.log("orderItemAttr=================="+orderItemAttr);
+		
+		orderItemAttr.each{ attr ->
+		Debug.log("remark=================="+attr.attrValue);
+		
+		if(attr.attrValue){
+			remarks=attr.attrValue;
+			}
+		}
+		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
@@ -565,4 +602,146 @@ context.vatAmount=vatAmount;
 context.cstAmount=cstAmount;
 context.bedPercent=bedPercent;
 context.listSize=listSize;
+
+conditionList=[];
+
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR","SHIP_TO_CUSTOMER")));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
+//Debug.log("orderRoles========================"+orderRoles);
+
+shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SHIP_TO_CUSTOMER")],EntityOperator.AND);
+shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
+shipToParty=EntityUtil.getFirst(shipToPartyRole);
+//Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
+
+
+
+shipingAdd=[:];
+if(shipToParty.partyId){
+contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
+//Debug.log("contactMechesDetails======================="+contactMechesDetails);
+if(contactMechesDetails){
+	contactMec=contactMechesDetails.getLast();
+	if(contactMec){
+		partyPostalAddress=contactMec.get("postalAddress");
+		//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+		if(partyPostalAddress){
+			address1="";
+			address2="";
+			state="";
+			city="";
+			postalCode="";
+			if(partyPostalAddress.get("address1")){
+			address1=partyPostalAddress.get("address1");
+			//Debug.log("address1=========================="+address1);
+			}
+			if(partyPostalAddress.get("address2")){
+				address2=partyPostalAddress.get("address2");
+				}
+			if(partyPostalAddress.get("city")){
+				city=partyPostalAddress.get("city");
+				}
+			if(partyPostalAddress.get("state")){
+				state=partyPostalAddress.get("state");
+				}
+			if(partyPostalAddress.get("postalCode")){
+				postalCode=partyPostalAddress.get("postalCode");
+				}
+			shipingAdd.put("address1",address1);
+			shipingAdd.put("address2",address2);
+			shipingAdd.put("city",city);
+			shipingAdd.put("postalCode",postalCode);
+			//Debug.log("shipingAdd========================="+shipingAdd);
+			
+		}
+	}
+}
+}
+
+context.shipingAdd=shipingAdd;
+
+
+
+conditionList=[];
+
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR","SHIP_TO_CUSTOMER")));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
+//Debug.log("orderRoles========================"+orderRoles);
+
+shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPPLIER_AGENT")],EntityOperator.AND);
+shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
+shipToParty=EntityUtil.getFirst(shipToPartyRole);
+//Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
+
+
+
+suppAdd=[:];
+supppartyName="";
+if(shipToParty.partyId){
+	supppartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
+	//Debug.log("supppartyName===================="+supppartyName);
+
+contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
+//Debug.log("contactMechesDetails======================="+contactMechesDetails);
+if(contactMechesDetails){
+	contactMec=contactMechesDetails.getLast();
+	if(contactMec){
+		partyPostalAddress=contactMec.get("postalAddress");
+		//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+		if(partyPostalAddress){
+			address1="";
+			address2="";
+			state="";
+			city="";
+			postalCode="";
+			if(partyPostalAddress.get("address1")){
+			address1=partyPostalAddress.get("address1");
+			}
+			if(partyPostalAddress.get("address2")){
+				address2=partyPostalAddress.get("address2");
+				}
+			if(partyPostalAddress.get("city")){
+				city=partyPostalAddress.get("city");
+				}
+			if(partyPostalAddress.get("state")){
+				state=partyPostalAddress.get("state");
+				}
+			if(partyPostalAddress.get("postalCode")){
+				postalCode=partyPostalAddress.get("postalCode");
+				}
+			suppAdd.put("address1",address1);
+			//Debug.log("address1-------------"+address1);
+			suppAdd.put("address2",address2);
+			//Debug.log("address2-------------"+address2);
+			suppAdd.put("city",city);
+			suppAdd.put("postalCode",postalCode);
+			
+		}
+	}
+}
+}
+
+context.suppAdd=suppAdd;
+
+context.supppartyName=supppartyName;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
