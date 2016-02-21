@@ -1579,6 +1579,7 @@ public class DepotSalesServices{
 			//end of adjustment check
 		}
 		processOrderContext.put("userLogin", userLogin);
+		processOrderContext.put("schemeCategory", schemeCategory);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("schemePartyId", schemePartyId);
@@ -1680,6 +1681,7 @@ public class DepotSalesServices{
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String schemeCategory = (String) context.get("schemeCategory");
 	    List<Map> productQtyList = (List) context.get("productQtyList");
 	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
 	    Locale locale = (Locale) context.get("locale");
@@ -1781,7 +1783,7 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		Map schemesMap = FastMap.newInstance();
+		/*Map schemesMap = FastMap.newInstance();
 		Map schemeCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 		schemeCtx.put("partyId", schemePartyId);
 	  	try{
@@ -1794,12 +1796,12 @@ public class DepotSalesServices{
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError(e , module);
 	  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
-	  	}
+	  	}*/
 	  	// Handling 10% scheme separately
-	  	Map productCategoryQuotasMap = FastMap.newInstance();
+	  	/*Map productCategoryQuotasMap = FastMap.newInstance();
 	  	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 	  		productCategoryQuotasMap = (Map) schemesMap.get("TEN_PERCENT_MGPS");
-	  	}
+	  	}*/
 	  	// Get Scheme Categories
 	  	List schemeCategoryIds = FastList.newInstance();
 	  	try{
@@ -1945,6 +1947,8 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
 			}						
+			
+			// Scheme Calculation
 			List productCategoriesList = FastList.newInstance();
 			condsList.clear();
 		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -1961,22 +1965,25 @@ public class DepotSalesServices{
 			}
 			BigDecimal quota = BigDecimal.ZERO;
 			// Get first productCategoriesList. We got productCategoryId here
-			String periodTypeId="TEN_PERC_PERIOD";
-			List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
-			Map<String, Object> resultMap = ServiceUtil.returnSuccess();
-			try {
-			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",nowTimeStamp,"thruDate",nowTimeStamp,"userLogin", userLogin));  
-			} catch (Exception e) {
-				Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
-				return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
-			}
-			if (ServiceUtil.isError(resultMap)) {
-            	Debug.logError("Error getting Scheme Time Period", module);	
-                return ServiceUtil.returnError("Error getting Scheme Time Period");
+			
+			if(schemeCategory.equals("MGPS_10Pecent")){
+				String periodTypeId="TEN_PERC_PERIOD";
+				List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
+				Map<String, Object> resultMap = ServiceUtil.returnSuccess();
+				try {
+				resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",nowTimeStamp,"thruDate",nowTimeStamp,"userLogin", userLogin));  
+				} catch (Exception e) {
+					Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
+					return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
 				}
-			schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
-			String schemeId="TEN_PERCENT_MGPS";
-			String productCategoryId=(String)productCategoriesList.get(0);
+				if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError("Error getting Scheme Time Period", module);	
+		            return ServiceUtil.returnError("Error getting Scheme Time Period");
+					}
+				schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
+				String schemeId="TEN_PERCENT_MGPS";
+				String productCategoryId=(String)productCategoriesList.get(0);
+				
 				try {
 					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory",UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin) );
 					quota=(BigDecimal)resultMapquota.get("quota");
@@ -1984,6 +1991,7 @@ public class DepotSalesServices{
 					Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 					return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
 				}
+			}	
 //			String schemeCategory = null;
 //			if(UtilValidate.isNotEmpty(productCategoriesList)){
 //				schemeCategory = (String)productCategoriesList.get(0);

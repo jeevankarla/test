@@ -322,9 +322,10 @@
 //resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
 //	schemesMap = resultCtx.get("schemesMap");
 productCategoryQuotasMap = [:];
-resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
+    resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
 	productCategoryQuotasMap = resultCtx.get("schemesMap");
-	
+}	
 //	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 //		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
 //	}
