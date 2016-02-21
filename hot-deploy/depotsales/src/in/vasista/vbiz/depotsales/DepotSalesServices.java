@@ -60,12 +60,8 @@ import org.ofbiz.security.Security;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 public class DepotSalesServices{
-
    public static final String module = DepotSalesServices.class.getName();
-   
     public static final String resource = "AccountingUiLabels";
-
-   
     public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -78,7 +74,6 @@ public class DepotSalesServices{
 		String smsContent = "";
 		String productDetails="";
 		try{
-
 			List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			for (GenericValue item : items) {
 				String productId = item.getString("productId");
@@ -96,8 +91,6 @@ public class DepotSalesServices{
 		}catch(GenericEntityException ex){
 			Debug.log("Problem in fetching orderItems");
 		}
-		
-		//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 		try{
 			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
 			GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
@@ -139,8 +132,6 @@ public class DepotSalesServices{
 			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
 			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
 			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
-			Debug.log("indentApprovalMessage =============="+indentApprovalMessage);
-			
 			Map<String, Object> getTelParams = FastMap.newInstance();
         	getTelParams.put("partyId", partyId);
             getTelParams.put("userLogin", userLogin);                    	
@@ -150,9 +141,6 @@ public class DepotSalesServices{
             } 
             String contactNumberTo = (String) serviceResult.get("contactNumber");
             String countryCode = (String) serviceResult.get("countryCode");
-            Debug.log("contactNumberTo = "+contactNumberTo);
-            Debug.log("countryCode ===="+countryCode);
-            Debug.log("contactNumberTo = "+contactNumberTo);
             if(UtilValidate.isEmpty(contactNumberTo)){
             	contactNumberTo = "9502532897";
             }
@@ -160,7 +148,6 @@ public class DepotSalesServices{
             	 if(UtilValidate.isNotEmpty(countryCode)){
             		 contactNumberTo = countryCode + contactNumberTo;
             	 }
-            	 Debug.log("contactNumberTo ===== "+contactNumberTo);
             	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
                  sendSmsParams.put("contactNumberTo", contactNumberTo);
                  sendSmsParams.put("text", indentApprovalMessage); 
@@ -179,7 +166,6 @@ public class DepotSalesServices{
        return result;
 	}
    
-   
    public static Map<String, Object> CreditapproveDepotOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -188,13 +174,9 @@ public class DepotSalesServices{
 		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
 		String partyId=(String) context.get("partyId");
 		String orderId = (String) context.get("orderId");
-		//Debug.log("====Before Approving Depot Order==============partyId===>"+partyId);
 		try{
-			
-			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
-			
+			 List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
 			 GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
-			 
 			 if(UtilValidate.isEmpty(creditPartyRole)){
 					GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
 					BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
@@ -263,7 +245,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
-		
 		String productId = null;
 		String batchNo = null;
 		String daysToStore = null;
@@ -288,14 +269,11 @@ public class DepotSalesServices{
 		String cstPercentStr = null;
 		String tcsPercentStr = null;
 		String serviceTaxPercentStr = null;
-		
 		BigDecimal bedPercent=BigDecimal.ZERO;
 		BigDecimal vatPercent=BigDecimal.ZERO;
 		BigDecimal cstPercent=BigDecimal.ZERO;
 		BigDecimal tcsPercent=BigDecimal.ZERO;
 		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
-		
-		
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -423,7 +401,6 @@ public class DepotSalesServices{
 					serviceTaxPercentStr = (String) paramMap
 							.get("serviceTaxPercent" + thisSuffix);
 				}
-
 				try {
 					quantity = new BigDecimal(quantityStr);
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
@@ -531,7 +508,6 @@ public class DepotSalesServices{
 			}
 			//end of adjustment check
 		}
-		
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
@@ -548,7 +524,6 @@ public class DepotSalesServices{
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
-		
 		try{
 		result = processDepotSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
@@ -556,16 +531,13 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
-		
 		orderId = (String)result.get("orderId");
 		if(UtilValidate.isEmpty(orderId)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
-		
 		Map resultCtx = FastMap.newInstance();
-		
 				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
 				if(ServiceUtil.isError(resultCtx)){
 					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
@@ -576,11 +548,10 @@ public class DepotSalesServices{
 				Debug.logError(e, module);
 				return "error";
 			}
-		
-		
 		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
 	}
+   
    public static Map<String, Object> processDepotSaleOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -618,7 +589,6 @@ public class DepotSalesServices{
 			Map resultCtx = ByProductNetworkServices.getOrderDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
-			
 		/*	List<Map> prevQtyList = FastList.newInstance();
 			for(GenericValue extItem : extOrderItems){
 				Map prevQtyMap = FastMap.newInstance();
@@ -629,7 +599,6 @@ public class DepotSalesServices{
 			if((UtilValidate.isNotEmpty(prevQtyList) &&  !prevQtyList.equals(productQtyList))){
 				indentNotChanged = false;
 	        }*/
-			
 			try{
 				if(!indentNotChanged){
 					result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
@@ -640,7 +609,6 @@ public class DepotSalesServices{
 				}
 				else{
 					List condList = FastList.newInstance();
-					
 					for(Map prodBatch : productQtyList){
 						String prod = (String)prodBatch.get("productId");
 						String batchNum = null;
@@ -650,20 +618,15 @@ public class DepotSalesServices{
 						List<GenericValue> orderItem = EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prod));
 						if(UtilValidate.isNotEmpty(orderItem) && batchNum != null){
 							String orderItemSeqId = (EntityUtil.getFirst(orderItem)).getString("orderItemSeqId");
-							
 							GenericValue orderItemBatch = delegator.makeValue("OrderItemAttribute");
 							orderItemBatch.set("orderId", orderId);
 							orderItemBatch.set("orderItemSeqId", orderItemSeqId);
 							orderItemBatch.set("attrName", "batchNumber");
 							orderItemBatch.set("attrValue", batchNum);
 							delegator.createOrStore(orderItemBatch);
-							
 						}
-						
 					}
-					
 				}
-				  			
 			}catch (GenericServiceException e) {
 				  Debug.logError(e, e.toString(), module);
 				  return ServiceUtil.returnError("Problem cancelling order");
@@ -683,14 +646,11 @@ public class DepotSalesServices{
 				geoTax = "VAT";
 			}
 		}
-		
 		BigDecimal promoAmt = BigDecimal.ZERO;
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
-		
 		try {
 			//get inventoryFacility details through productStore.
 			String  inventoryFacilityId="";
@@ -707,7 +667,6 @@ public class DepotSalesServices{
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			cart.setOrderId(orderId);
-			Debug.log("====orderId==="+orderId);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);
 			cart.setFacilityId(inventoryFacilityId);//for store inventory we need this so that inventoryItem query by this orginFacilityId
@@ -770,7 +729,6 @@ public class DepotSalesServices{
 		String batchNo = "";
 		String daysToStore = "";
 		for (Map<String, Object> prodQtyMap : productQtyList) {
-			
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
@@ -809,7 +767,6 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
 			}
-			
 			//add percentages
 			BigDecimal bedPercent=BigDecimal.ZERO;
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -831,12 +788,10 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPercent"))){
 				serviceTaxPercent = (BigDecimal)prodQtyMap.get("serviceTaxPercent");
 			}
-			
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
 			priceContext.put("productId", productId);	
-			
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
 			priceContext.put("productStoreId", productStoreId);
@@ -859,7 +814,6 @@ public class DepotSalesServices{
 				priceContext.put("partyId", partyId);
 				priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
 			}
-			
 			if (ServiceUtil.isError(priceResult)) {
 				Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
 				return ServiceUtil.returnError("There was an error while calculating the price");
@@ -930,7 +884,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
 			orderId = (String) orderCreateResult.get("orderId");
 		}
-		Debug.log("==orderId===After==Creation==="+orderId);
 		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			promoAdjCtx.put("orderId", orderId);
@@ -948,7 +901,6 @@ public class DepotSalesServices{
 	         }
 		}
 		//creating adjustemnts by list
-		//Debug.log("=====orderAdjChargesList="+orderAdjChargesList);
 		if(UtilValidate.isNotEmpty(orderAdjChargesList)){
 			Map inputAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			inputAdjCtx.put("orderId", orderId);
@@ -959,7 +911,6 @@ public class DepotSalesServices{
 				 return ServiceUtil.returnError(" Unable to generate Adjustments:");
 	  		}	
 		}
-		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -1037,12 +988,9 @@ public class DepotSalesServices{
 		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 		String quantityStr="";
 		String salesChannel = (String)request.getParameter("salesChannel");
-
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-		 Map<String  ,Object> returnHeaderMap = FastMap.newInstance();
-		 List detailReturnsList = FastList.newInstance();
-		 
-		 
+		Map<String  ,Object> returnHeaderMap = FastMap.newInstance();
+		List detailReturnsList = FastList.newInstance();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
@@ -1081,15 +1029,9 @@ public class DepotSalesServices{
 	  		  Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 	  		  return "success";
 	  	  }
-	  	
-	  	  
 	  	  for (int i = 0; i < rowCount; i++) {
-	  		 
-	  		 
-	  		List<GenericValue> subscriptionProductsList = FastList.newInstance();
-	  		 Map<String  ,Object> productQtyMap = FastMap.newInstance();
-	  		
-	  		  
+	  		  List<GenericValue> subscriptionProductsList = FastList.newInstance();
+	  		  Map<String  ,Object> productQtyMap = FastMap.newInstance();
 	  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 	  		  if (paramMap.containsKey("productId" + thisSuffix)) {
 	  			  productId = (String) paramMap.get("productId" + thisSuffix);
@@ -1101,7 +1043,6 @@ public class DepotSalesServices{
 	  		  }
 	  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
 	  			  quantityStr = (String) paramMap.get("quantity" + thisSuffix);
-	  			 
 	  		  }
 	  		  else {
 	  			  request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
@@ -1125,7 +1066,6 @@ public class DepotSalesServices{
 	  		  } 
 	  		detailReturnsList.add(productQtyMap);
 	  	}
-	  	 
 	  	returnHeaderMap.put("returnHeaderTypeId",returnHeaderTypeId);
   		returnHeaderMap.put("fromPartyId",partyId);
   		returnHeaderMap.put("productStoreId",productStoreId);
@@ -1133,7 +1073,6 @@ public class DepotSalesServices{
   		returnHeaderMap.put("needsInventoryReceive", receiveInventory);
   		returnHeaderMap.put("userLogin", userLogin);
   		returnHeaderMap.put("detailReturnsList", detailReturnsList);
-	  	  
 	  	try{
 			result = dispatcher.runSync("createDepotSalesReturnHeader", returnHeaderMap);
 	    	  if (ServiceUtil.isError(result)) {
@@ -1151,7 +1090,6 @@ public class DepotSalesServices{
 		return "success";
 	}
    
-   
    public static Map<String, Object> createDepotSalesReturnHeader(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1168,14 +1106,11 @@ public class DepotSalesServices{
 	    String geoTax = "";
 	    BigDecimal paymentAmount = BigDecimal.ZERO;
 	    String paymentId = "";
-
 	    boolean isSale = Boolean.TRUE;
-	   
 	    if((UtilValidate.isEmpty(returnHeaderTypeId)) || UtilValidate.isEmpty(fromPartyId)){
 	    	Debug.logError("Error creating ReturnHeader: " + ServiceUtil.getErrorMessage(result), module);
 			  return ServiceUtil.returnError("Error creating ReturnHeader: returnHeaderTypeId or fromPartyId is Empty" + ServiceUtil.getErrorMessage(result));     
 	    }
-	    
 	    try{
 	    	GenericValue newEntryReturnHeader = delegator.makeValue("ReturnHeader");
 	    	newEntryReturnHeader.set("returnHeaderTypeId", returnHeaderTypeId);
@@ -1194,10 +1129,8 @@ public class DepotSalesServices{
 			  Debug.logError(e, "Problem Creating the Return Header for party " + fromPartyId, module);		  
 			  return ServiceUtil.returnError("Problem Creating the Return Header for party " + fromPartyId);			  
 		  }
-	    
 	   //Creating ReturnItem
 	    try{
-	    		    	
 	    	Iterator<Map> itr = detailReturnsList.iterator();
 	    	while (itr.hasNext()) {
 	            Map detailReturn = itr.next();
@@ -1230,7 +1163,6 @@ public class DepotSalesServices{
                		 }
                 }
 	            //------------------------------------
-	            
 	            GenericValue returnItem = delegator.makeValue("ReturnItem");
 	    		returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
 	    		if(UtilValidate.isNotEmpty(detailReturn.get("returnReasonId"))){
@@ -1248,9 +1180,7 @@ public class DepotSalesServices{
 	    		returnItem.put("vatPercent", vatPercent);
 	   		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 	    		delegator.create(returnItem);
-	    		
 	    		paymentAmount = paymentAmount.add(new BigDecimal((priceResult.get("totalPrice")).toString()));
-	    		
 	    		//creating Inventory for Damaged goods
 	    		try {
 	                Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", detailReturn.get("productId"),
@@ -1266,7 +1196,6 @@ public class DepotSalesServices{
 	                serviceContext.put("userLogin", userLogin);
 	                Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
 	                String inventoryItemId = (String)resultService.get("inventoryItemId");
-	               
 	                serviceContext.clear();
 	                serviceContext.put("inventoryItemId", inventoryItemId);
 	                serviceContext.put("returnId", returnId);
@@ -1280,40 +1209,33 @@ public class DepotSalesServices{
 	            }
 
 	    	}
-	    	
 	    	Map paymentCtx = FastMap.newInstance();
         	paymentCtx.put("paymentTypeId", "SALES_PAYIN");
             paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
             paymentCtx.put("partyIdTo", "Company");
             paymentCtx.put("partyIdFrom", fromPartyId);
-           
            // paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));
             if (!UtilValidate.isEmpty(effectiveDate) ) {
                 paymentCtx.put("effectiveDate", effectiveDate);                        	
             }
             paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
-            
             paymentCtx.put("statusId", "PMNT_RECEIVED");
             paymentCtx.put("paymentPurposeType", "NHDC_RECEIPT");
             paymentCtx.put("amount", paymentAmount);
             paymentCtx.put("userLogin", userLogin);
-            
             paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
             paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
-            
             Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
             if (ServiceUtil.isError(paymentResult)) {
             	Debug.logError(paymentResult.toString(), module);    			
                 return ServiceUtil.returnError(null, null, null, paymentResult);
             }
             paymentId = (String)paymentResult.get("paymentId");
-
 	    }
 	    catch(Exception e){
 	    	 Debug.logError(e, "Problem Creating the Return Item for party " + fromPartyId, module);		  
 			  return ServiceUtil.returnError("Problem Creating the Return Item for party " + fromPartyId);			
 	    }
-
 	    return result;
    }
    
@@ -1353,7 +1275,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
-		
 		String productId = null;
 		String customerId = null;
 		String remarks = null;
@@ -1387,14 +1308,11 @@ public class DepotSalesServices{
 		String cstPercentStr = null;
 		String tcsPercentStr = null;
 		String serviceTaxPercentStr = null;
-		
 		BigDecimal bedPercent=BigDecimal.ZERO;
 		BigDecimal vatPercent=BigDecimal.ZERO;
 		BigDecimal cstPercent=BigDecimal.ZERO;
 		BigDecimal tcsPercent=BigDecimal.ZERO;
 		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
-		
-		
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -1660,7 +1578,6 @@ public class DepotSalesServices{
 			}
 			//end of adjustment check
 		}
-		
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
@@ -1679,7 +1596,6 @@ public class DepotSalesServices{
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
-		
 		try{
 		result = processBranchSalesOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
@@ -1705,7 +1621,6 @@ public class DepotSalesServices{
 					return "error";
 			 }
 		}
-		
 		if(UtilValidate.isNotEmpty(supplierPartyId)){
 			try{
 				GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
@@ -1759,6 +1674,7 @@ public class DepotSalesServices{
 		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
 	}
+   
    	public static Map<String, Object> processBranchSalesOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1829,14 +1745,12 @@ public class DepotSalesServices{
 						List<GenericValue> orderItem = EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prod));
 						if(UtilValidate.isNotEmpty(orderItem) && batchNum != null){
 							String orderItemSeqId = (EntityUtil.getFirst(orderItem)).getString("orderItemSeqId");
-							
 							GenericValue orderItemBatch = delegator.makeValue("OrderItemAttribute");
 							orderItemBatch.set("orderId", orderId);
 							orderItemBatch.set("orderItemSeqId", orderItemSeqId);
 							orderItemBatch.set("attrName", "batchNumber");
 							orderItemBatch.set("attrValue", batchNum);
 							delegator.createOrStore(orderItemBatch);
-							
 						}
 						
 					}
@@ -1863,12 +1777,10 @@ public class DepotSalesServices{
 				geoTax = "VAT";
 			}
 		}
-		
 		BigDecimal promoAmt = BigDecimal.ZERO;
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		
 		Map schemesMap = FastMap.newInstance();
 		Map schemeCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 		schemeCtx.put("partyId", schemePartyId);
@@ -1883,14 +1795,11 @@ public class DepotSalesServices{
 	  		Debug.logError(e , module);
 	  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 	  	}
-		
 	  	// Handling 10% scheme separately
-	  	
 	  	Map productCategoryQuotasMap = FastMap.newInstance();
 	  	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 	  		productCategoryQuotasMap = (Map) schemesMap.get("TEN_PERCENT_MGPS");
 	  	}
-	  	
 	  	// Get Scheme Categories
 	  	List schemeCategoryIds = FastList.newInstance();
 	  	try{
@@ -1900,9 +1809,7 @@ public class DepotSalesServices{
 			Debug.logError(e, "Failed to retrive ProductCategory ", module);
 			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 		}
-	  	
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
-		
 		try {
 			//get inventoryFacility details through productStore.
 			String  inventoryFacilityId="";
@@ -1937,7 +1844,6 @@ public class DepotSalesServices{
 			Debug.logError(e, "Error in setting cart parameters", module);
 			return ServiceUtil.returnError("Error in setting cart parameters");
 		}
-		
 		List<GenericValue> applicableTaxTypes = null;
 		try {
 			applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
@@ -2038,11 +1944,8 @@ public class DepotSalesServices{
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
-			}
-			
-			
+			}						
 			List productCategoriesList = FastList.newInstance();
-			
 			condsList.clear();
 		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
@@ -2056,15 +1959,13 @@ public class DepotSalesServices{
 				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 			}
-			
 			BigDecimal quota = BigDecimal.ZERO;
 			// Get first productCategoriesList. We got productCategoryId here
 			String periodTypeId="TEN_PERC_PERIOD";
 			List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
 			Map<String, Object> resultMap = ServiceUtil.returnSuccess();
 			try {
-				
-			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",nowTimeStamp,"thruDate",nowTimeStamp,"userLogin", userLogin));   
+			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",nowTimeStamp,"thruDate",nowTimeStamp,"userLogin", userLogin));  
 			} catch (Exception e) {
 				Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
 				return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
@@ -2076,16 +1977,13 @@ public class DepotSalesServices{
 			schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
 			String schemeId="TEN_PERCENT_MGPS";
 			String productCategoryId=(String)productCategoriesList.get(0);
-
 				try {
-					Debug.log(UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin)+"--!!!!!!!!!!!!!!!!!!!!!!!!!!----1");
 					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory",UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin) );
 					quota=(BigDecimal)resultMapquota.get("quota");
 				} catch (Exception e) {
 					Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 					return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
 				}
-				Debug.log("=============quota==========="+quota);
 //			String schemeCategory = null;
 //			if(UtilValidate.isNotEmpty(productCategoriesList)){
 //				schemeCategory = (String)productCategoriesList.get(0);
@@ -2119,7 +2017,6 @@ public class DepotSalesServices{
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
 			priceContext.put("productId", productId);	
-			
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
 			priceContext.put("productStoreId", productStoreId);
@@ -2268,7 +2165,6 @@ public class DepotSalesServices{
 	         }
 		}
 		//creating adjustemnts by list
-		//Debug.log("=====orderAdjChargesList="+orderAdjChargesList);
 		if(UtilValidate.isNotEmpty(orderAdjChargesList)){
 			Map inputAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			inputAdjCtx.put("orderId", orderId);
@@ -2279,7 +2175,6 @@ public class DepotSalesServices{
 				 return ServiceUtil.returnError(" Unable to generate Adjustments:");
 	  		}	
 		}
-		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -2289,7 +2184,6 @@ public class DepotSalesServices{
 					orderHeader.set("isInterState", "Y");
 				}
 				orderHeader.store();
-				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
 				for(GenericValue orderItem : orderItems){
 					if(UtilValidate.isNotEmpty(productQtyList)){
@@ -2300,14 +2194,12 @@ public class DepotSalesServices{
 						newItemAttr.set("attrName", "batchNumber");
 						newItemAttr.set("attrValue", (String)batchMap.get("batchNo"));
 						newItemAttr.create();
-						
 						GenericValue newDayStoreAttr = delegator.makeValue("OrderItemAttribute");        	 
 						newDayStoreAttr.set("orderId", orderItem.getString("orderId"));
 						newDayStoreAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
 						newDayStoreAttr.set("attrName", "daysToStore");
 						newDayStoreAttr.set("attrValue", (String)batchMap.get("daysToStore"));
 						newDayStoreAttr.create();
-						
 						productQtyList.remove(0);
 					}
 				}
@@ -2315,7 +2207,6 @@ public class DepotSalesServices{
 				Debug.logError("Error in creating shipmentId for DirectOrder", module);
 				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
 			}
-			
 		}
 		//store OrderMessage
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
@@ -2327,9 +2218,7 @@ public class DepotSalesServices{
 				Debug.logError("Error While Saving Order Message ", module);
 				return ServiceUtil.returnError("Error While Saving Order Message");
 			}
-			
 		}
-		
 		result.put("orderId", orderId);
 		return result;
    }
@@ -2356,7 +2245,6 @@ public class DepotSalesServices{
 	    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-		
 		List<GenericValue> partyLooms = null;
 		try {
 			partyLooms = delegator.findList("PartyLoom", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2383,13 +2271,11 @@ public class DepotSalesServices{
 			Debug.logError("Unable to get records from PartyClassificationGroup" + e,module);
 			return ServiceUtil.returnError("Unable to get records from PartyClassificationGroup");
 		}
-		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyClassificationGroupId", true)));
 		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-		
 		List<GenericValue> groupApplicableSchemes = null;
 		try {
 			groupApplicableSchemes = delegator.findList("SchemePartyClassificationGroup", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2399,15 +2285,11 @@ public class DepotSalesServices{
 		}
 		List partyGrpSchemeIds = EntityUtil.getFieldListFromEntityList(groupApplicableSchemes, "schemeId", true);
 		partySchemeIds.addAll(partyGrpSchemeIds);
-		
 		Set partySchemeIdsSet = new HashSet(partySchemeIds);
 		partySchemeIds = new ArrayList(partySchemeIdsSet);
-		
 		Map schemesMap = FastMap.newInstance();
-		
 		Timestamp periodBegin = null;
 		Timestamp periodEnd = null;
-		
 		/*List condList = FastList.newInstance();
 		condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
 		//condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
@@ -2452,7 +2334,6 @@ public class DepotSalesServices{
 		} catch (NullPointerException e) {
 			Debug.logError(e, "Cannot parse date string: ", module);
 		}
-		
 		/*List condPeriodList = FastList.newInstance();
 		condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"FISCAL_YEAR"));
 		condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -2482,7 +2363,6 @@ public class DepotSalesServices{
 			// Scheme applicability for products are based on product, productCategory or both.
 			
 			// Get Product Categories that are applicable for the scheme.
-			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
 			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -2514,21 +2394,16 @@ public class DepotSalesServices{
 			Map productCategoryQuatasMap = FastMap.newInstance();
 			List productCategoryQuatasList = FastList.newInstance();
 			if(schemeId.equals("TEN_PERCENT_MGPS")){
-				
 				for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
 					GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
 					String productCategoryId = schemeProductCategory.getString("productCategoryId");
 					//Timestamp monthStart = UtilDateTime.getMonthStart(effectiveDate);
 				    //Timestamp monthEnd = UtilDateTime.getMonthEnd(effectiveDate);
-				    
 					// Get relevant looms qty party possess and calculate quota
 					List catPartyLooms = EntityUtil.filterByCondition(partyLooms, EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
-					Debug.log("catPartyLooms =============="+catPartyLooms);
 					if(UtilValidate.isNotEmpty(catPartyLooms)){
-						
 						// Get productCategoryMembers
 						List productIdsList = FastList.newInstance();
-						
 						conditionList.clear();
 						conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
 						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -2541,57 +2416,40 @@ public class DepotSalesServices{
 							Debug.logError(e, "Failed to retrive ProductCategoryMember ", module);
 							return ServiceUtil.returnError("Failed to retrive ProductCategoryMember " + e);
 						}
-						
 						BigDecimal periodTime = BigDecimal.ONE;
 						if( UtilValidate.isNotEmpty(schemeProductCategory.get("periodTime")) ){
 							periodTime = (BigDecimal)schemeProductCategory.get("periodTime");
 						}
-						
 						// calculate the quota already used for the month and reduce it from the actual quota.
-						
 						BigDecimal allocatedQuotaPerMonth = ((BigDecimal)schemeProductCategory.get("maxQty")).multiply( (BigDecimal)(((GenericValue)catPartyLooms.get(0)).get("quantity")));
 						BigDecimal allocatedQuotaAdvances = periodTime.multiply(allocatedQuotaPerMonth);
 						BigDecimal availableQuota = BigDecimal.ZERO;
-						
 						// Two months advance can be taken at any time. I am trying to iterate through each month, and see if he has taken any advances. With this I will get the current month's quota.
-						
 						BigDecimal outstandingQuotaAvailable = BigDecimal.ZERO;
 						BigDecimal quotaAdvanceUsed = BigDecimal.ZERO;
-						
 						// If advances are allowed(periodTime > 1), check if the party has taken any advance.
 						if(periodTime.compareTo(BigDecimal.ONE)>0){
-							
 							Timestamp periodMonthStart = periodBegin;
 							Timestamp periodMonthEnd = null;
-							
 							Calendar startCalendar=Calendar.getInstance();
 							startCalendar.setTime(UtilDateTime.toSqlDate(periodBegin));
 				    		Calendar endCalendar=Calendar.getInstance();
 				    		endCalendar.setTime(UtilDateTime.toSqlDate(effectiveDate));
-							
 				    		int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-				    		Debug.log("diffYear =============="+diffYear);
 				    		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
-				    		Debug.log("diffMonth =============="+diffMonth);
-				    		
 							/*int currentMonth = UtilDateTime.getMonth(tempMonthStart, timeZone, locale);
 							int noOfPastMonths = currentMonth - periodStartMonth;*/
 							
 				    		//Check Quota Advances taken for current month
-				    		
-							
 							for(int k=0; k<diffMonth; k++){
 								Timestamp monthIterStartDate = UtilDateTime.getMonthStart(periodMonthStart);
 								Timestamp monthIterEndDate = UtilDateTime.getMonthEnd(periodMonthStart, timeZone, locale);
-								Debug.log("monthIterStartDate =============="+monthIterStartDate);
-								Debug.log("monthIterEndDate =============="+monthIterEndDate);
 								conditionList.clear();
 								conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 								conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER", "ON_BEHALF_OF")));
 								conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthIterStartDate));
 								conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, monthIterEndDate));
 								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-								
 								List<GenericValue> orderHeaderAndRoles = null;
 								try {
 									orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2599,11 +2457,7 @@ public class DepotSalesServices{
 									Debug.logError(e, "Failed to retrive OrderHeader ", module);
 									return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
 								}
-								Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-								
 								List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
-								Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-								
 								BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
 								if(UtilValidate.isNotEmpty(orderIds)){
 									conditionList.clear();
@@ -2611,10 +2465,8 @@ public class DepotSalesServices{
 									if(UtilValidate.isNotEmpty(productIdsList)){
 										conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
 									}
-									
 									conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 									conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-									Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 									List<GenericValue> orderItemAndAdjustment = null;
 									try {
 										orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2622,15 +2474,11 @@ public class DepotSalesServices{
 										Debug.logError(e, "Failed to retrive OrderHeader ", module);
 										return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
 									}
-									Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
-									
 									for(int a=0; a<orderItemAndAdjustment.size(); a++){
 										totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(a)).get("quantity") );
 									}
 								}
-								
 								totalQuotaUsedUp = totalQuotaUsedUp.add(quotaAdvanceUsed);
-								
 								if(allocatedQuotaPerMonth.compareTo(totalQuotaUsedUp)>0){
 									quotaAdvanceUsed = BigDecimal.ZERO;
 								}
@@ -2643,7 +2491,6 @@ public class DepotSalesServices{
 							}
 							
 						}
-						
 						// Current month quota operations
 						if(quotaAdvanceUsed.compareTo(allocatedQuotaPerMonth)>=0){
 							outstandingQuotaAvailable = BigDecimal.ZERO;
@@ -2655,8 +2502,6 @@ public class DepotSalesServices{
 							conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getMonthStart(effectiveDate)));
 							conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getMonthEnd(effectiveDate, timeZone, locale)));
 							conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-							
-							Debug.log("condition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 							List<GenericValue> orderHeaderAndRoles = null;
 							try {
 								orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2664,11 +2509,7 @@ public class DepotSalesServices{
 								Debug.logError(e, "Failed to retrive OrderHeader ", module);
 								return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
 							}
-							Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-							
 							List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles,"orderId", true);
-							Debug.log("orderHeaderAndRoles ================="+orderHeaderAndRoles);
-							
 							BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
 							if(UtilValidate.isNotEmpty(orderIds)){
 								conditionList.clear();
@@ -2679,7 +2520,6 @@ public class DepotSalesServices{
 								
 								conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-								Debug.log("adjustmentCondition ================="+EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 								List<GenericValue> orderItemAndAdjustment = null;
 								try {
 									orderItemAndAdjustment = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -2687,18 +2527,12 @@ public class DepotSalesServices{
 									Debug.logError(e, "Failed to retrive OrderHeader ", module);
 									return ServiceUtil.returnError("Failed to retrive OrderHeader " + e);
 								}
-								Debug.log("orderItemAndAdjustment ================="+orderItemAndAdjustment);
-								
 								for(int a=0; a<orderItemAndAdjustment.size(); a++){
 									totalQuotaUsedUp = totalQuotaUsedUp.add( (BigDecimal)((GenericValue)orderItemAndAdjustment.get(a)).get("quantity") );
 								}
 							}
-							
 							outstandingQuotaAvailable = (allocatedQuotaAdvances.subtract(totalQuotaUsedUp)).subtract(quotaAdvanceUsed);
-							
 						}
-						
-						
 						// The below commented code is to implement period wise quota.
 						/*if(periodTime.compareTo(BigDecimal.ONE)>0){
 							// get current period
@@ -2724,9 +2558,6 @@ public class DepotSalesServices{
 							}
 							
 						}*/
-						
-						
-						
 						Map productCategoryQuotaMap = FastMap.newInstance();
 						productCategoryQuotaMap.put("productCategoryId", productCategoryId);
 						productCategoryQuotaMap.put("quotaPerMonth", allocatedQuotaPerMonth);
@@ -2734,28 +2565,20 @@ public class DepotSalesServices{
 						productCategoryQuotaMap.put("availableQuota", outstandingQuotaAvailable);
 						productCategoryQuotaMap.put("categoryQuota", (BigDecimal)schemeProductCategory.get("maxQty"));
 						productCategoryQuotaMap.put("looms",  (BigDecimal)((GenericValue)catPartyLooms.get(0)).get("quantity"));
-						
 						// Add logic to calculate quota already used for the period
 						Map tempCatMap = FastMap.newInstance();
 						tempCatMap.putAll(productCategoryQuotaMap);
-						
 						productCategoryQuatasMap.put(productCategoryId, tempCatMap);
 					}
 				}
 			}
-			
 			Map tempSchemeMap = FastMap.newInstance();
 			tempSchemeMap.putAll(productCategoryQuatasMap);
-			
 			schemesMap.put(schemeId, tempSchemeMap);
-		    
 		}
-		Debug.log("schemesMap =============="+schemesMap);
 		result.put("schemesMap", schemesMap);
 	    return result;
-   
    	}
-   	
 	
    	public static Map<String, Object> createOrderPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
@@ -2763,7 +2586,6 @@ public class DepotSalesServices{
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    Locale locale = (Locale) context.get("locale");
-		
 	    String paymentDate = (String) context.get("paymentDate");
 	    String orderId = (String) context.get("orderId");
 	  	String partyId = (String) context.get("partyId");
@@ -2776,20 +2598,10 @@ public class DepotSalesServices{
 	  	List advancePayments = (List) context.get("advPayments");
 	  	List allStatus = (List) context.get("allStatus");
 	  	List advPaymentIds = (List) context.get("advPaymentIds");
-	  	
-	  	Debug.log("advancePayments==============="+advancePayments);
-        Debug.log("paymentDate==============="+paymentDate);	  	
-        Debug.log("comments==============="+comments);
-        Debug.log("allStatus==============="+allStatus);
-        Debug.log("paymentMethodTypeId==============="+paymentMethodTypeId);	  	
-        Debug.log("amount==============="+amount);
-        Debug.log("advPaymentIds==============="+advPaymentIds);
-        
         if(UtilValidate.isNotEmpty(amount)){
 	  	Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId,"statusId","PMNT_RECEIVED", "userLogin", userLogin);
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
-	  	
 	  	Timestamp eventDate = null;
 	      if (UtilValidate.isNotEmpty(paymentDate)) {
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
@@ -2805,15 +2617,10 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         
-	         Debug.log("orderPaymentPreferenceId============"+orderPaymentPreferenceId);
-	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
-	         Debug.log("createCustPaymentFromPreferenceMap============"+createCustPaymentFromPreferenceMap.get("paymentId"));
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	         GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
-	        
 	         orderPreferencePaymentApplication.set("orderPaymentPreferenceId", orderPaymentPreferenceId);
 	         orderPreferencePaymentApplication.set("paymentId",paymentId);
 	         orderPreferencePaymentApplication.set("amountApplied", new BigDecimal(amount));
@@ -2825,29 +2632,19 @@ public class DepotSalesServices{
 	  	}
        }
         if(UtilValidate.isNotEmpty(allStatus)){
-	         
 	         for (int i = 0; i < advancePayments.size(); i++) {
-	        	 
 		         if(allStatus.contains(String.valueOf(i))){
-		        	 
-//		        	 Debug.log("=====iiiiiiii======="+i);
-//			         Debug.log("=====iiiiiiii======="+advancePayments.get(i));
-			         
 			         BigDecimal balance = BigDecimal.ZERO;
 			         BigDecimal grandTotal = BigDecimal.ZERO;
-			         
 			         try {
 				         GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
-				         
 				         grandTotal = orderHeader.getBigDecimal("grandTotal");
-				         
 				         List conditionList = FastList.newInstance();
 				         conditionList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
 				         conditionList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 				         EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				    	 List<GenericValue> OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
 				    	 List<String> orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
-				         
 				        conditionList.clear();
 			   	        conditionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, orderPreferenceIds));
 			   	        EntityCondition conditionPay = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -2884,15 +2681,8 @@ public class DepotSalesServices{
 				 	  	   GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
 				 	  	   String frompaymentId =(String)advPaymentIds.get(i);
 				 	  	   String advPay = (String)advancePayments.get(i);
-				 	  	   // BigDecimal amountApplied = new BigDecimal(balance);
-				 	  	   
-				 	  	   //Debug.log("amountApplied======"+i+"======="+amountApplied);
-				 	       Debug.log("orderPaymentPreferenceId===="+i+"========="+orderPaymentPreferenceId);
-				 	  	   Debug.log("frompaymentId======="+i+"======"+frompaymentId);
-				 	  	   
 				 	  	   orderPreferencePaymentApplication.set("orderPaymentPreferenceId", orderPaymentPreferenceId);
 				           orderPreferencePaymentApplication.set("paymentId",frompaymentId);
-				           
 				           if(balance.floatValue()>Integer.parseInt(advPay)){
 				           orderPreferencePaymentApplication.set("amountApplied", new BigDecimal(advPay));
 				           }else{
@@ -2933,7 +2723,6 @@ public class DepotSalesServices{
 		String salesChannel = (String) request.getParameter("salesChannel");
 		String orderId = (String) request.getParameter("orderId");
 		String inventoryItemId = (String) request.getParameter("inventoryItemId");
-		
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal unitCost = BigDecimal.ZERO;
 		Timestamp effectiveDate=null;
@@ -2974,16 +2763,10 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_",	"Problems parsing quantity string.");
 			return "error";
 		}
-		
-		
-		
-		
-		
 		List indentProductList = FastList.newInstance();
 		Map<String  ,Object> productQtyMap = FastMap.newInstance();
 		Map processOrderContext = FastMap.newInstance();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-		
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
 		productQtyMap.put("basicPrice", unitCost);
@@ -2999,9 +2782,7 @@ public class DepotSalesServices{
 		productQtyMap.put("cstPercent", cstPercent);
 		productQtyMap.put("tcsPercent", tcsPercent);
 		productQtyMap.put("serviceTaxPercent", serviceTaxPercent);*/
-
 		indentProductList.add(productQtyMap);
-		
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
@@ -3018,7 +2799,6 @@ public class DepotSalesServices{
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);*/
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
-		
 		try{
 		result = processDepotSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
@@ -3026,58 +2806,51 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
-		
 		orderId = (String)result.get("orderId");
 		if(UtilValidate.isEmpty(orderId)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
-		
 		Map resultCtx = FastMap.newInstance();
-		
-				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
-				if(ServiceUtil.isError(resultCtx)){
-					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+		resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+			return "error";
+		}
+		//Creating Order Item Attribute
+		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(inventoryItemId)){
+			List<GenericValue> orderItems = null;
+			orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(orderItems)){
+				for(GenericValue orderItemEntry : orderItems){
+	   				String orderItemSeqId=orderItemEntry.getString("orderItemSeqId");
+				try{
+   					GenericValue newEntity = delegator.makeValue("OrderItemAttribute");
+   			        newEntity.set("orderId", orderId);	
+   			        newEntity.set("orderItemSeqId", orderItemSeqId);
+   			        newEntity.set("attrName", "ORDRITEM_INVENTORY_ID");
+   			        newEntity.set("attrValue", inventoryItemId);
+   		            delegator.create(newEntity);
+   		        } catch (GenericEntityException e) {
+   		            Debug.logError(e, module);
+   		            request.setAttribute("_ERROR_MESSAGE_", "Failed to create OrderItemAttribute for orderId: : "+orderId);
 					return "error";
+   		        	}
 				}
-			//Creating Order Item Attribute
-			if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(inventoryItemId)){
-				List<GenericValue> orderItems = null;
-				orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId), null, null, null, false);
-				if(UtilValidate.isNotEmpty(orderItems)){
-					for(GenericValue orderItemEntry : orderItems){
-		   				String orderItemSeqId=orderItemEntry.getString("orderItemSeqId");
-					try{
-	   					GenericValue newEntity = delegator.makeValue("OrderItemAttribute");
-	   			        newEntity.set("orderId", orderId);	
-	   			        newEntity.set("orderItemSeqId", orderItemSeqId);
-	   			        newEntity.set("attrName", "ORDRITEM_INVENTORY_ID");
-	   			        newEntity.set("attrValue", inventoryItemId);
-	   		            delegator.create(newEntity);
-	   		        } catch (GenericEntityException e) {
-	   		            Debug.logError(e, module);
-	   		            request.setAttribute("_ERROR_MESSAGE_", "Failed to create OrderItemAttribute for orderId: : "+orderId);
-						return "error";
-	   		        	}
-					}
-				}
-				
 			}
 			
-			}catch(Exception e){
-				Debug.logError(e, module);
-				return "error";
-			}
+		}
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Sale Indent successful for party : "+partyId+" OrderId: "+orderId);
-		return "success";
-		
-   		
+		}catch(Exception e){
+			Debug.logError(e, module);
+			return "error";
+		}
+	
+	request.setAttribute("_EVENT_MESSAGE_", "Sale Indent successful for party : "+partyId+" OrderId: "+orderId);
+	return "success";
    	}
-   	
-   	//
   //Issuance for Depot SalesOrder
    	public static Map<String, Object> createIssuanceForDepotOrder(DispatchContext ctx,Map<String, ? extends Object> context) {
    		
@@ -3124,21 +2897,17 @@ public class DepotSalesServices{
    			//setting shipment to order
    			orderHeader.set("shipmentId",shipmentId);
    			orderHeader.store();
-   			
    		    List conditionList = FastList.newInstance();
    	        conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
    	        /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));*/
    	        conditionList.add(EntityCondition.makeCondition("quantity", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
-   	       
    	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
    	        List<GenericValue> issuedOrderItems = delegator.findList("OrderItem", condition, null, UtilMisc.toList("orderItemSeqId"), null, false);
-   	        
    	        for(GenericValue orderItem : issuedOrderItems){
    				Map prevQtyMap = FastMap.newInstance();
    				String orderItemSeqId=orderItem.getString("orderItemSeqId");
    				BigDecimal requestedQuantity = orderItem.getBigDecimal("quantity");
    				String productId=orderItem.getString("productId");
-   				
    				GenericValue orderItemInventoryItem = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId", orderId,"orderItemSeqId",orderItemSeqId,"attrName","ORDRITEM_INVENTORY_ID"), false);
    				if(UtilValidate.isEmpty(orderItemInventoryItem)){
    						return ServiceUtil.returnError("Not issuing InventoryItem for OrderId....! "+orderId);
@@ -3151,12 +2920,9 @@ public class DepotSalesServices{
    				if(requestedQuantity.compareTo(inventoryQOH)>0){
    					return ServiceUtil.returnError("Not issuing InventoryItem to orderId "+orderId+" : "+orderItemSeqId+", because the quantity to issue "+requestedQuantity+" is greater than the quantity left to issue (i.e "+inventoryQOH+") for inventoryItemId : "+inventoryItemId);
    				}
-   				
    				if(UtilValidate.isEmpty(requestedQuantity) || (UtilValidate.isNotEmpty(requestedQuantity) && requestedQuantity.compareTo(BigDecimal.ZERO)<= 0)){
    					return ServiceUtil.returnError("Not issuing InventoryItem to orderId "+orderId+" : "+orderItemSeqId+", because the quantity to issue "+requestedQuantity+" is less than or equal to 0");
    				}
-   		
-
    				/*//caliculating issuence Qty
    				BigDecimal issuedQty=BigDecimal.ZERO;
    				List filterIssuenceReq = FastList.newInstance();
@@ -3196,7 +2962,6 @@ public class DepotSalesServices{
    				}
    				
    				String itemIssuanceId = (String)resultCtx.get("itemIssuanceId");
-   				
    				GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
    				itemIssuance.set("shipmentId", shipmentId);
    				itemIssuance.store();
@@ -3249,27 +3014,21 @@ public class DepotSalesServices{
    		return result;
    	}
    	
-   	
    	public static Map<String, Object> preferenceCancel(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();
    	    GenericValue userLogin = (GenericValue) context.get("userLogin");
    	    Locale locale = (Locale) context.get("locale");     
 	    Map result = ServiceUtil.returnSuccess();
-   	    
    	    List preferenceIds = (List) context.get("preferenceIds");
      	List allStatus = (List) context.get("allStatus");
-     	
    	    for (int i = 0; i < preferenceIds.size(); i++) {
 			
    	    	if((allStatus.contains(String.valueOf(i)) == true)){
 			     try {	
 			        GenericValue OrderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", preferenceIds.get(i)), false);
-			    	
-			        Debug.log("OrderPaymentPreferenceList================"+OrderPaymentPreferenceList);
-			        
-					   	     OrderPaymentPreferenceList.set("statusId","PMNT_VOID");
-					   	      OrderPaymentPreferenceList.store();
+			   	    OrderPaymentPreferenceList.set("statusId","PMNT_VOID");
+			   	    OrderPaymentPreferenceList.store();
 			        
 			     }catch (Exception e) {
 					Debug.logError(e, "Error While change OrderPaymentPreference Status", module);
@@ -3287,21 +3046,10 @@ public class DepotSalesServices{
    	    GenericValue userLogin = (GenericValue) context.get("userLogin");
    	    List orderPaymentPreferenceId = (List) context.get("paymentPreferenceId");
      	List allStatus = (List) context.get("allStatus");
-     	
      	List paymentStatus = (List) context.get("paymentStatus");
    	    Locale locale = (Locale) context.get("locale");     
    	    Map result = ServiceUtil.returnSuccess();
-   	    
-   	    
-   	 
-   	    Debug.log("orderPaymentPreferenceId=========="+orderPaymentPreferenceId);
-   	    Debug.log("allStatus=========="+allStatus);
-   	    
-   	 Debug.log("paymentStatus=========="+paymentStatus);
-   	    
    		try {
-   	 
-   			
    			/*List conditionList = FastList.newInstance();
    			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,paymentPreferenceId));
    			List<GenericValue> PaymentList = null;
@@ -3320,105 +3068,67 @@ public class DepotSalesServices{
    				 }*/
    		
    			   for(int i=0;i<orderPaymentPreferenceId.size();i++){
-   		  
-   				   
-   				   
    				   String prference = (String)orderPaymentPreferenceId.get(i);
-   				    
    				   // String status = (String)allStatus.get(i);
-   				    
-   				   
-				    	String payStatus = (String)paymentStatus.get(i);
-
-   				    
+				    String payStatus = (String)paymentStatus.get(i);
    				    if((allStatus.contains(String.valueOf(i)) == true)){
-   				    
    				    	
-   				   if(!(prference.isEmpty()) && (allStatus.contains(String.valueOf(i)))){
+   				         if(!(prference.isEmpty()) && (allStatus.contains(String.valueOf(i)))){
    				   
-						 try {
-							 GenericValue orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId.get(i)), false);
-					       
-						    
-							 if (UtilValidate.isNotEmpty(orderPaymentPreferenceList)) {
-				 				 
-								 if((payStatus.equals("PMNT_VOID"))){
-									 orderPaymentPreferenceList.set("statusId","PMNT_VOID");
-								 }
-								 else{
-								   orderPaymentPreferenceList.set("statusId","PMNT_CONFIRMED");
-								 }
-								 
 								 try {
-				 		        	orderPaymentPreferenceList.store();
-				 		        } catch (GenericEntityException e) {
-				 		            Debug.logError(e, module);
-				 		            return ServiceUtil.returnError(e.getMessage());
-				 		        }
-				 		        
-				 		        
-				 			 }
-							 
-							 
-							 Debug.log("orderPaymentPreferenceList===="+i+"========="+orderPaymentPreferenceList);
-						 
-						    } catch (GenericEntityException e) {
+									    GenericValue orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId.get(i)), false);
+									    if (UtilValidate.isNotEmpty(orderPaymentPreferenceList)) {
+						 				 
+											 if((payStatus.equals("PMNT_VOID"))){
+												 orderPaymentPreferenceList.set("statusId","PMNT_VOID");
+											 }
+											 else{
+											   orderPaymentPreferenceList.set("statusId","PMNT_CONFIRMED");
+											 }
+											 
+											 try {
+							 		        	orderPaymentPreferenceList.store();
+							 		        } catch (GenericEntityException e) {
+							 		            Debug.logError(e, module);
+							 		            return ServiceUtil.returnError(e.getMessage());
+							 		        }
+						 			   }
+								  } catch (GenericEntityException e) {
+							            Debug.logError(e, module);
+							            return ServiceUtil.returnError(e.getMessage());
+							      }
+   				         }//if
+		   				if( !(prference.isEmpty()) && (allStatus.contains(String.valueOf(i))) && (payStatus.equals("PMNT_VOID"))){
+		   					
+		   		   			List conditionList = FastList.newInstance();
+		   		   			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,prference));
+		   		   			List<GenericValue> PaymentList = null;
+		   		   			try {
+		   		   				
+		   		   				PaymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		   		   				GenericValue PaymentFirstList = EntityUtil.getFirst(PaymentList);
+		   		   				 String paymentId = (String)PaymentFirstList.get("paymentId");
+		   		   				 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+		   		   				 setPaymentStatusMap.put("paymentId", paymentId);
+		   		   				 setPaymentStatusMap.put("statusId", "PMNT_VOID");
+		   		   				 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+		   		   				 if (ServiceUtil.isError(pmntResults)) {
+		   		   					 Debug.logError(pmntResults.toString(), module);
+		   		   					 return ServiceUtil.returnError(null, null, null, pmntResults);
+		   		   				 }
+			   		         } catch (GenericEntityException e) {
 					            Debug.logError(e, module);
 					            return ServiceUtil.returnError(e.getMessage());
-					        }
-	 		  
-   				   }//if
-   				   
-   				   
-					 Debug.log("prference===="+i+"========="+prference);
-					 
-					 Debug.log("allStatus===="+i+"========="+allStatus.contains(String.valueOf(i)));
-					 
-					 Debug.log("payStatus===="+i+"========="+payStatus.equals("PMNT_VOID"));
-					 
-   				   
-   				if( !(prference.isEmpty()) && (allStatus.contains(String.valueOf(i))) && (payStatus.equals("PMNT_VOID"))){
-   					
-   		   			List conditionList = FastList.newInstance();
-   		   			conditionList.add(EntityCondition.makeCondition("paymentPreferenceId", EntityOperator.EQUALS,prference));
-   		   			List<GenericValue> PaymentList = null;
-   		   			try {
-   		   				
-   		   				PaymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-   		   			
-						 Debug.log("PaymentList===="+i+"========="+PaymentList);
-
-   		   				
-   		   				GenericValue PaymentFirstList = EntityUtil.getFirst(PaymentList);
-   		   				 String paymentId = (String)PaymentFirstList.get("paymentId");
-   		   				 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
-   		   				 setPaymentStatusMap.put("paymentId", paymentId);
-   		   				 setPaymentStatusMap.put("statusId", "PMNT_VOID");
-   		   				 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
-   		   				 if (ServiceUtil.isError(pmntResults)) {
-   		   					 Debug.logError(pmntResults.toString(), module);
-   		   					 return ServiceUtil.returnError(null, null, null, pmntResults);
-   		   				 }
-   		   		         } catch (GenericEntityException e) {
-				            Debug.logError(e, module);
-				            return ServiceUtil.returnError(e.getMessage());
-            		     }
-   					
-   				}
+		        		     }
+		   					
+		   				 }
    				   
    				    }
-   				    
-   				 
-   				
    			   }//for
-   			  
-   			
-   		
    		} catch (Exception e) {
    			Debug.logError(e, module);
    			return ServiceUtil.returnError(e.toString());
    		}
-   		
    	    result = ServiceUtil.returnSuccess("Successfully Changed Payment Status!!");
    	    return result;
    	}
@@ -3441,7 +3151,6 @@ public class DepotSalesServices{
         if(UtilValidate.isEmpty(transferGroupTypeId)){
        	 transferGroupTypeId = "_NA_";
         }
-        
         Timestamp xferDate = null;
         try {
        	 
@@ -3532,7 +3241,6 @@ public class DepotSalesServices{
        	 
        	 List<GenericValue> inventoryItemDetail = null;
        	 Iterator<GenericValue> itr = inventoryItems.iterator();
-       	 
        	 while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
                 String invItemId = inventoryItem.getString("inventoryItemId");
@@ -3543,8 +3251,6 @@ public class DepotSalesServices{
                 } else {
                	 xferQuantity = requestedQty;
                 }
-                
-                
                 Map inputCtx = FastMap.newInstance();
                 inputCtx.put("statusId", statusId);
                 inputCtx.put("comments", comments);
@@ -3560,13 +3266,10 @@ public class DepotSalesServices{
     	  			return ServiceUtil.returnError("Error in processing transfer entry ");
     	  		 }
     	  		 
-    	  		 requestedQty = requestedQty.subtract(xferQuantity);
-    	  		 
+    	  		requestedQty = requestedQty.subtract(xferQuantity);
     	  		String inventoryTransferId = (String)resultMap.get("inventoryTransferId");
-    	  		
     	  		Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
     	  		Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-
     	  		conditionList.clear();
     	  		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, invItemId));
     	  		conditionList.add(EntityCondition.makeCondition("availableToPromiseDiff", EntityOperator.EQUALS, xferQuantity.negate()));
@@ -3583,7 +3286,6 @@ public class DepotSalesServices{
 	  				}
 	  				invItemDet.store();
     	  		}
-    	  		
     	  		GenericValue newEntityMember = delegator.makeValue("InventoryTransferGroupMember");
     	  		newEntityMember.set("transferGroupId", transferGroupId);
     	  		newEntityMember.set("inventoryTransferId", inventoryTransferId);
@@ -3650,6 +3352,7 @@ public class DepotSalesServices{
         result = ServiceUtil.returnSuccess("Sucessfully initated transfer");
         return result;
     }
+   	
    	public static String updateTransferGroupStatus(HttpServletRequest request, HttpServletResponse response) {
 	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
 	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -3739,9 +3442,7 @@ public class DepotSalesServices{
          		  String facilityIdTo = (EntityUtil.getFirst(inventoryTransfers)).getString("facilityIdTo");
          		  
          		  GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityIdTo), false);
-         		  
          		    //shipment
-        	  	  
          		  	GenericValue newEntity = delegator.makeValue("Shipment");
          		  	if(UtilValidate.isNotEmpty(receivedDate)){
          		  		newEntity.set("estimatedShipDate", receivedDate);
@@ -3787,28 +3488,22 @@ public class DepotSalesServices{
 			  			  return "error";
 			  		  }
 		  		  }
-		  		
 		  		  transferGroup.set("statusId", statusId);
 		  		  transferGroup.store();
-		  		  
 		  		  transferGroupMembers.clear();
 		  		  transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
 		  		  inventoryTransferIds.clear();
 		  		  inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
 		  		  inventoryTransfers.clear();
 		  		  inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
-		  		  
 		  		  for(GenericValue eachTransfer : inventoryTransfers){
-		  			  
 		  		    //shipmentitem
-		  			  
 		  			Map<String,Object> itemInMap = FastMap.newInstance();
 			        itemInMap.put("shipmentId",shipmentId);
 			        itemInMap.put("userLogin",userLogin);
 			        itemInMap.put("productId",prod);
 			        itemInMap.put("quantity",transferQty);
 			        Map resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
-			        
 			        if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError("Problem creating shipment Item for orderId :", module);
 						request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item :");	
@@ -3816,9 +3511,7 @@ public class DepotSalesServices{
 				  		return "error";
 			        }
 			        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");  
-		  			  
 		  			// shipemtreceipt
-			        
 			        GenericValue shipmentReceipt = delegator.makeValue("ShipmentReceipt");
 			        shipmentReceipt.set("inventoryItemId", eachTransfer.getString("inventoryItemId"));
 			        shipmentReceipt.put("shipmentId",shipmentId);
@@ -4022,7 +3715,6 @@ public class DepotSalesServices{
         if(UtilValidate.isNotEmpty(depotsList)){
         	ownerPartyId = (String)EntityUtil.getFirst(depotsList).get("ownerPartyId");
         }
-        Debug.log("depotsList =========="+depotsList);
         result.put("ownerPartyId", ownerPartyId);
 		result.put("depotsList", depotsList);
         return result;
@@ -4034,23 +3726,18 @@ public class DepotSalesServices{
         LocalDispatcher dispatcher = dctx.getDispatcher();   
         Map<String, Object> result = new HashMap<String, Object>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-       
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         String partyId = (String) userLogin.get("partyId");
-        
         List productStoreList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(partyId)){
-        	
         	List conditionList = FastList.newInstance();
   			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
   			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
   			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
   	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-  	        
   			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
-			
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
 			List orgsList = FastList.newInstance();
 			try{
@@ -4059,7 +3746,6 @@ public class DepotSalesServices{
    				// TODO: handle exception
    	    		Debug.logError(e, module);
    			}
-        	
 			if(UtilValidate.isNotEmpty(orgsList)){
 				List condList =FastList.newInstance();
 	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true)));
@@ -4073,7 +3759,6 @@ public class DepotSalesServices{
 			}
         	
    	    }
-        
         if(UtilValidate.isEmpty(productStoreList)){
         	try{
    	    		productStoreList = delegator.findList("ProductStore", null, null, null, null, false);
@@ -4082,10 +3767,10 @@ public class DepotSalesServices{
    	    		Debug.logError(e, module);
    			}
         }
-		
 		result.put("productStoreList", productStoreList);
         return result;
     }
+   	
    	public static Map<String, Object> getChildCategories(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
    	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -4312,12 +3997,9 @@ public class DepotSalesServices{
 		HttpSession session = request.getSession();
 	  	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Map result = ServiceUtil.returnSuccess();
-		
 		String productCategoryId = (String) request.getParameter("productCategoryId");
 		String childProductCategoryId = (String) request.getParameter("childProductCategoryId");
-		
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-		
 		String ply = (String) paramMap.get("PLY");
    	    String count = (String) paramMap.get("COUNT");
    	    String uom = (String) paramMap.get("UOM");
@@ -4328,7 +4010,6 @@ public class DepotSalesServices{
    	    String packing = (String) paramMap.get("PACKING");
    	    String categoryId = (String) paramMap.get("childProductCategoryId");
    	    String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");
-		
 		String productName = "";
 	   	if(UtilValidate.isNotEmpty(ply) && !ply.equals("1")){
 	   		productName = productName+ ply+"/";
@@ -4433,7 +4114,6 @@ public class DepotSalesServices{
 				return "error";
 			}
 		}
-		
 		if(UtilValidate.isNotEmpty(ply)){
 			try{
 				Map productAttributeMap = FastMap.newInstance();
@@ -4574,11 +4254,6 @@ public class DepotSalesServices{
 				return "error";
 			}
 	   	}
-		
-		
-		
-		
-		
 		/*Map resultCtx = FastMap.newInstance();
 		
 				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
@@ -4591,16 +4266,9 @@ public class DepotSalesServices{
 				Debug.logError(e, module);
 				return "error";
 			}*/
-		
-		
 		request.setAttribute("_EVENT_MESSAGE_", "Product Successfully Created : "+productId);
 		return "success";
 	}
-	
-	
-	
-	
-	
 	
 	public static Map<String, Object> getCategoryMembers(DispatchContext dctx, Map<String, ? extends Object> context){
    	    Delegator delegator = dctx.getDelegator();
@@ -4697,7 +4365,6 @@ public class DepotSalesServices{
 				return "error";	    	            
 			} 
 			productFeatureCategoryList = EntityUtil.getFieldListFromEntityList( (List<GenericValue>) result.get("productFeatureCategoryList"), "productFeatureCategoryId", true);
-			Debug.log("productFeatureCategoryList =================="+productFeatureCategoryList);
 		}
 		catch (GenericServiceException e) {
 			 Debug.logError(e, "Error Occured in fetching product features: ", module);
@@ -4708,17 +4375,12 @@ public class DepotSalesServices{
 		for(int i=0; i<productFeatureCategoryList.size(); i++){
 			String productFeatureCategoryId = (String) productFeatureCategoryList.get(i);
 			String productFeatureId = (String) request.getParameter(productFeatureCategoryId);
-			Debug.log("productFeatureId =================="+productFeatureId);
 			if(UtilValidate.isNotEmpty(productFeatureId)){
 				productFeatureIds += "|" + productFeatureId;
 			}
-			
 		}
-		Debug.log("productFeatureIds =================="+productFeatureIds);
-		
 		try{
 			result = dispatcher.runSync("quickAddVariant", UtilMisc.toMap("productId", virtualProductId, "productFeatureIds", productFeatureIds));
-			Debug.log("result =================="+result);
 			if (ServiceUtil.isError(result)) {
 				request.setAttribute("_ERROR_MESSAGE_", "Error Occurred in Service");
 				return "error";	    	            
@@ -4735,8 +4397,6 @@ public class DepotSalesServices{
 	}
 	
 //	sales invoice generation based on shipment
-	
-	
 	public static String processDepotSaleInvoice(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -4776,7 +4436,6 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
 			return "error";
 		}
-		Debug.log("partyId======================"+partyId);
 		try{
 			GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
 			if(UtilValidate.isEmpty(party)){
@@ -4788,7 +4447,6 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_","Invalid party Id");
 			return "error";
 		}
-		Debug.log("shipmentId======================"+shipmentId);
 		try{
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",shipmentId), false);
 		}catch(GenericEntityException e){
@@ -4797,75 +4455,58 @@ public class DepotSalesServices{
 			return "error";
 		}
 	
-			String statusId = (String)shipment.getString("statusId");
-	
-			if(UtilValidate.isNotEmpty(shipment) && statusId.equals("SHIPMENT_CANCELLED")){
-				Debug.logError("Unable to generate Shipment: " + ServiceUtil.getErrorMessage(result), module);
-				request.setAttribute("_ERROR_MESSAGE_", "Unable to generate shipment  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
-				return "error";	
+		String statusId = (String)shipment.getString("statusId");
+
+		if(UtilValidate.isNotEmpty(shipment) && statusId.equals("SHIPMENT_CANCELLED")){
+			Debug.logError("Unable to generate Shipment: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate shipment  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+			return "error";	
+		}
+		partyId = (String)shipment.getString("partyIdTo");
+		String primaryOrderId = (String)shipment.getString("primaryOrderId");
+		BigDecimal grandTotal = BigDecimal.ZERO;
+		List<GenericValue> orderParty=null;
+		   if (UtilValidate.isNotEmpty(shipmentId)) {
+	           Map<String, Object> createInvoiceContext = FastMap.newInstance();
+	           createInvoiceContext.put("partyId", partyId);
+	           try {
+					orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_TO_CUSTOMER"));
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
 				}
-			
-			partyId = (String)shipment.getString("partyIdTo");
-			
-			
-			String primaryOrderId = (String)shipment.getString("primaryOrderId");
-			
-			
-			BigDecimal grandTotal = BigDecimal.ZERO;
-			List<GenericValue> orderParty=null;
-			   if (UtilValidate.isNotEmpty(shipmentId)) {
-		           Map<String, Object> createInvoiceContext = FastMap.newInstance();
-		           createInvoiceContext.put("partyId", partyId);
-		           try {
-						orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_TO_CUSTOMER"));
-					} catch (GenericEntityException e) {
-						Debug.logError(e, module);
-					}
-					
-					if (UtilValidate.isNotEmpty(orderParty)) {
-						GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
-						partyIdFrom = custOrderRole.getString("partyId");
-					}
-					Debug.log("partyIdFrom====================="+partyIdFrom);
-		           createInvoiceContext.put("partyIdFrom", partyIdFrom);
-		           createInvoiceContext.put("shipmentId", shipmentId);
-		           createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
-		           createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
-		           createInvoiceContext.put("userLogin", userLogin);
-	
-		           // store the invoice first
-		           Map<String, Object> createInvoiceResult = FastMap.newInstance();
-		         
-		           try{
-			            createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
-				        if(ServiceUtil.isError(createInvoiceResult)){
-							Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
-							request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
-							return "error";
-						}
-		           } catch (Exception e) {
-						Debug.logError(e, "Problems while calling createInvoice : " + partyId, module);
-						request.setAttribute("_ERROR_MESSAGE_", "Problems while calling createInvoice : " + partyId);
+				
+				if (UtilValidate.isNotEmpty(orderParty)) {
+					GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
+					partyIdFrom = custOrderRole.getString("partyId");
+				}
+	           createInvoiceContext.put("partyIdFrom", partyIdFrom);
+	           createInvoiceContext.put("shipmentId", shipmentId);
+	           createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
+	           createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+	           createInvoiceContext.put("userLogin", userLogin);
+
+	           // store the invoice first
+	           Map<String, Object> createInvoiceResult = FastMap.newInstance();
+	         
+	           try{
+		            createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+			        if(ServiceUtil.isError(createInvoiceResult)){
+						Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
+						request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
 						return "error";
 					}
+	           } catch (Exception e) {
+					Debug.logError(e, "Problems while calling createInvoice : " + partyId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problems while calling createInvoice : " + partyId);
+					return "error";
+			   }
 		           
-		           // call service, not direct entity op: delegator.create(invoice);
-		
-		
-		
-		
-		
-		
-		Debug.log("createInvoiceResult======================"+createInvoiceResult);
+		  // call service, not direct entity op: delegator.create(invoice);
 		 String invoiceId = (String) createInvoiceResult.get("invoiceId");
-	     
-	     Debug.log("invoiceId========================"+invoiceId);
-		
-	    List conditionList = FastList.newInstance();
+	     List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			EntityCondition ficondExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> shipmentItemList =null;
-			
 			try{
 				shipmentItemList = delegator.findList("ShipmentItem", ficondExpr, null, null, null, false);
 			} catch (Exception e) {
@@ -4873,22 +4514,15 @@ public class DepotSalesServices{
 				request.setAttribute("_ERROR_MESSAGE_", "Problems while getting shipmentItems : " + shipmentId);
 				return "error";
 			}
-			
-			Debug.log("shipmentItemList======================"+shipmentItemList);
-			
 			for (int i = 0; i < shipmentItemList.size(); i++) {
 				GenericValue eachShipmentList = (GenericValue)shipmentItemList.get(i);
 				GenericValue orderItem=null;
-				Debug.log("primaryOrderId==========================="+primaryOrderId+"=============="+eachShipmentList.get("shipmentItemSeqId"));
 				try{
 				 orderItem = delegator.findOne("OrderItem",UtilMisc.toMap("orderId",primaryOrderId,"orderItemSeqId",eachShipmentList.get("shipmentItemSeqId")), false);
 				}catch (GenericEntityException e) {
 					Debug.logError(e, module);
 				}
-				Debug.log("orderItem========="+orderItem);
-				
 		 // grandTotal = grandTotal.add(eachShipmentList.getBigDecimal("amount").multiply(eachShipmentList.getBigDecimal("quantity")));
-	
 		   Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 	       createInvoiceItemContext.put("invoiceId",invoiceId);
 	       createInvoiceItemContext.put("invoiceItemTypeId", "INV_RAWPROD_ITEM");
@@ -4900,13 +4534,8 @@ public class DepotSalesServices{
 	       createInvoiceItemContext.put("unitListPrice", orderItem.getBigDecimal("unitListPrice"));
 	       //createInvoiceItemContext.put("uomId", "");
 	       createInvoiceItemContext.put("userLogin", userLogin);
-	       
-	       Debug.log("createInvoiceItemContext======================"+createInvoiceItemContext);
-	       
 	       try{
 	           Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-	           
-	           
 	           if(ServiceUtil.isError(createInvoiceItemResult)){
 	      			Debug.logError("Unable to create invoiceItems for invoice: " + ServiceUtil.getErrorMessage(result), module);
 	      			request.setAttribute("_ERROR_MESSAGE_", "Unable to Change invoice Status For Shipment :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
@@ -4932,8 +4561,6 @@ public class DepotSalesServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
 					return "error";
 				}
-	           Debug.log("invoiceId=============2222==========="+invoiceId);
-	           
 	            nextStatusId = "INVOICE_APPROVED";
 	           try {
 	                   Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
@@ -4947,64 +4574,42 @@ public class DepotSalesServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
 					return "error";
 				}
-	           
-		    
-	          
 		   try{
-			   
 			   conditionList.clear();
 			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 			   EntityCondition condExpress = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
-			
-		   
 			   String actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
-			   
-			    conditionList.clear();
+			   conditionList.clear();
 			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 			   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 			   EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			   List<GenericValue> orderPreferenceList = delegator.findList("OrderPaymentPreference", condExpr, null, null, null, false);
 			   List orderPreferenceIdList = EntityUtil.getFieldListFromEntityList(orderPreferenceList, "orderPaymentPreferenceId", true);
-		   
 			   conditionList.clear();
 			   conditionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, orderPreferenceIdList));
 			   EntityCondition condExpretion = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			   List<GenericValue> paymentList = delegator.findList("OrderPreferencePaymentApplication", condExpretion, null, null, null, false);
-	
 			  //enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
-			
 			  BigDecimal paidAmount = BigDecimal.ZERO;
-			
-			if (UtilValidate.isNotEmpty(paymentList)) {
+			  if (UtilValidate.isNotEmpty(paymentList)) {
 				for (GenericValue eachPayment : paymentList) {
-					
 					 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amountApplied");
 					 paidAmount = paidAmount.add(eachAmount);
 					 Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
-		            	newPayappl.put("invoiceId", invoiceId);
-		            	newPayappl.put("paymentId", eachPayment.get("paymentId"));
-		            	newPayappl.put("amountApplied", eachAmount);
-		            	
-		            Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
-		            if(ServiceUtil.isError(paymentApplResult)){
+	            	 newPayappl.put("invoiceId", invoiceId);
+	            	 newPayappl.put("paymentId", eachPayment.get("paymentId"));
+	            	 newPayappl.put("amountApplied", eachAmount);
+		             Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+		             if(ServiceUtil.isError(paymentApplResult)){
 	           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(paymentApplResult), module);
 	           			//request.setAttribute("_ERROR_MESSAGE_", "Unable to Create Payment Application For :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(paymentApplResult));
 	           			return "error";
 	           		}
-		           	
-		           	
 				}
 			}
-			
 			BigDecimal balance = grandTotal.subtract(paidAmount);
-		   
-			Debug.log("grantTotal========"+grandTotal);
-			Debug.log("paidAmount========"+paidAmount);
-			Debug.log("balance========"+balance);
-			
 			 //for Sent SMS 
-			
 			Map<String, Object> getTelParams = FastMap.newInstance();
 	    	getTelParams.put("partyId", partyId);
 	        getTelParams.put("userLogin", userLogin);                    	
@@ -5017,7 +4622,6 @@ public class DepotSalesServices{
 	        String contactNumberTo = (String) serviceResult.get("contactNumber");
 	        String countryCode = (String) serviceResult.get("countryCode");
 	        Debug.log("contactNumberTo = "+contactNumberTo);
-	        Debug.log("countryCode ===="+countryCode);
 	        Debug.log("contactNumberTo = "+contactNumberTo);
 	        if(UtilValidate.isEmpty(contactNumberTo)){
 	        	contactNumberTo = "9502532897";
@@ -5026,25 +4630,18 @@ public class DepotSalesServices{
 	        	 if(UtilValidate.isNotEmpty(countryCode)){
 	        		 contactNumberTo = countryCode + contactNumberTo;
 	        	 }
-	        	 
 	        	 String grandTotalStr=String.valueOf(grandTotal.intValue());
 	        	 String paidAmountStr=String.valueOf(paidAmount.intValue());
 	        	 String balanceStr=String.valueOf(balance.intValue());
-	        	 
 	        	 String invoiceMsgToWeaver = UtilProperties.getMessage("ProductUiLabels", "InvoiceMsgToWeaver", locale);
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("orderId", actualOrderId);
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("InvoiceValue", grandTotalStr);
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("advancePaid", paidAmountStr);
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("balancePayable", balanceStr);
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("invoiceNo", invoiceId);
-	        	 
-	        	 Debug.log("invoiceMsgToWeaver =============="+invoiceMsgToWeaver);
-	        	 
-	        	 Debug.log("contactNumberTo ===== "+contactNumberTo);
 	        	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
 	             sendSmsParams.put("contactNumberTo", contactNumberTo);
 	             sendSmsParams.put("text", invoiceMsgToWeaver); 
-	             Debug.log("sendSmsParams========================"+sendSmsParams);
 	             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
 	             if (ServiceUtil.isError(serviceResult)) {
 	            	 Debug.logError("Unable to Send SMS: " + ServiceUtil.getErrorMessage(result), module);
@@ -5061,28 +4658,7 @@ public class DepotSalesServices{
 		   
 		   }
 		   request.setAttribute("_EVENT_MESSAGE_", "Sales Invoice created sucessfully : "+partyId);   
-	
-		   Debug.log("invoiceItemList======================Success");
-	
-		
-				
-				
-				
-				
-			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
+	/*
 		
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -5303,7 +4879,6 @@ public class DepotSalesServices{
 	  	String orderId = (String) context.get("orderId");
 	  	String isDisableAcctg = (String) context.get("isDisableAcctg");
 	  	String shipmentId = (String) context.get("shipmentId");
-	  	Debug.log("#####context#########"+context);
 	  	boolean beganTransaction = false;
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -5365,7 +4940,6 @@ public class DepotSalesServices{
   		  		Debug.logError(errMsg , module);
   		  		return ServiceUtil.returnError(errMsg);
 			}
-			Debug.log("#####resultCtx#########"+resultCtx);
 			List<Map> itemDetails = (List)resultCtx.get("itemDetail");
 			List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
 			Map input = FastMap.newInstance();
@@ -5387,7 +4961,6 @@ public class DepotSalesServices{
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error while creating invoice for party : "+partyId, null, null, result);
 			}
-			
 			String invoiceId = (String)result.get("invoiceId");
 			for (Map<String, Object> prodQtyMap : itemDetails) {
 				
@@ -5574,14 +5147,11 @@ public class DepotSalesServices{
 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
 			  EntityCondition schemeCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			  schemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeCondition, null, null, null,false); 
-			  Debug.log("schemeTimePeriodId++++++++++++1++++++++"+schemeTimePeriodList);
 			 if(UtilValidate.isNotEmpty(schemeTimePeriodList)){
 				 List<GenericValue> resultSchemeTimePeriodList =FastList.newInstance();
 				 for (GenericValue schemeTimePeriodObj : schemeTimePeriodList) {
 					 resultSchemeTimePeriodList.add((GenericValue)schemeTimePeriodObj);
 				}
-				 Debug.log("schemeTimePeriodId++++++++++++1++++++++"+resultSchemeTimePeriodList);
-			      Debug.log("schemeTimePeriodId"+schemeTimePeriodId);
 			      result.put("schemeTimePeriodIdList",resultSchemeTimePeriodList);
 			 }
 			 if(UtilValidate.isEmpty(schemeTimePeriodList)){
@@ -5755,8 +5325,6 @@ public class DepotSalesServices{
 		return result;
 	}	
 	
-	
-	
 public static Map<String, Object> getPartyQuotaBalanceHistory(DispatchContext dctx, Map context) {
 	    GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -5784,7 +5352,6 @@ public static Map<String, Object> getPartyQuotaBalanceHistory(DispatchContext dc
   		}
 		return result;
 	}
-	
 	
 public static Map<String, Object> getPartyAvailableQuotaBalanceHistory(DispatchContext dctx, Map context) {
     GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -5886,7 +5453,190 @@ public static Map<String, Object> getPartyAvailableQuotaBalanceHistory(DispatchC
 	return result;
 }
 
-
-   	
+	public static Map<String, Object> createSOForQuote(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String currencyUomId = (String) context.get("defaultOrganizationPartyCurrencyUomId");
+		String quoteId = (String)context.get("quoteId");
+		String orderTaxType = "INTRA";
+		String schemeCategory = "MGPS_10Pecent";
+		String billingType = "Direct";
+		GenericValue quote =null;
+		String orderId = null;
+		String PONumber = null;
+		String promotionAdjAmt = null;
+		String orderMessage = null;
+		String billFromPartyId ="Company";
+		String disableAcctgFlag ="Y";
+		List orderAdjChargesList = FastList.newInstance();
+		Map processOrderContext = FastMap.newInstance();
+		String salesChannel = (String) context.get("salesChannelEnumId");
+		List<GenericValue> quoteItemList = FastList.newInstance();
+		String supplierPartyId = "";
+		String partyId = ""; 
+		String productStoreId = "";
+		String custRequestId = "";
+		try {
+			
+			List productIds = FastList.newInstance();
+			List<GenericValue> inventoryItems = FastList.newInstance();
+			quote=delegator.findOne("Quote",UtilMisc.toMap("quoteId", quoteId), false);
+			List conditionList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+	        conditionList.add(EntityCondition.makeCondition("qiStatusId", EntityOperator.EQUALS, "QTITM_QUALIFIED"));
+	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			quoteItemList = delegator.findList("QuoteAndItemAndCustRequest", condition, null, UtilMisc.toList("quoteItemSeqId"), null, false);
+			productIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "productId", true);
+			supplierPartyId = quote.getString("partyId");
+			GenericValue quoteItems = EntityUtil.getFirst(quoteItemList);
+			custRequestId = quoteItems.getString("custRequestId");
+	    	List<GenericValue> requirements = delegator.findList("RequirementCustRequest", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+	    	String requirementId = (EntityUtil.getFirst(requirements)).getString("requirementId");
+	    	List<GenericValue> requirementRole = delegator.findList("RequirementRole", EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId), null, null, null, false);
+		    partyId = (EntityUtil.getFirst(requirementRole)).getString("partyId");
+			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
+			String partyIdFrom = (EntityUtil.getFirst(partyRelations)).getString("partyIdFrom");
+			GenericValue partyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyIdFrom), false);
+			if(UtilValidate.isNotEmpty(partyGroup)){
+				productStoreId =partyGroup.getString("groupName");
+			}
+			List indentProductList = FastList.newInstance();
+			String schemePartyId=partyId;
+			String productId = null;
+			String remarks = null;
+			String productFeatureId = null;
+			String batchNo = null;
+			String daysToStore = null;
+			BigDecimal quantity = BigDecimal.ZERO;
+			BigDecimal unitPrice = BigDecimal.ZERO;
+			BigDecimal baleQuantity = BigDecimal.ZERO;
+			BigDecimal bundleWeight = BigDecimal.ZERO;
+			String yarnUOM="Bale";
+			BigDecimal basicPrice = BigDecimal.ZERO;
+			BigDecimal cstPrice = BigDecimal.ZERO;
+			BigDecimal tcsPrice = BigDecimal.ZERO;
+			BigDecimal vatPrice = BigDecimal.ZERO;
+			BigDecimal bedPrice = BigDecimal.ZERO;
+			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+	        if(UtilValidate.isNotEmpty(quoteItemList)){
+	        	Iterator<GenericValue> itr = quoteItemList.iterator();
+	        	 while (itr.hasNext()) {
+	        	    Map<String  ,Object> productQtyMap = FastMap.newInstance(); 
+	                GenericValue quoteItem = itr.next();
+	                productId = quoteItem.getString("productId");
+	                quantity = quoteItem.getBigDecimal("quantity");
+	                unitPrice = quoteItem.getBigDecimal("quoteUnitPrice");
+	                Map<String, Object> quoteItemCtx = FastMap.newInstance();
+	                productQtyMap.put("productId", productId);
+					productQtyMap.put("quantity", quantity);
+					productQtyMap.put("customerId", partyId);
+					productQtyMap.put("remarks", remarks);
+					productQtyMap.put("baleQuantity", baleQuantity);
+					productQtyMap.put("bundleWeight", bundleWeight);
+					productQtyMap.put("yarnUOM", yarnUOM);
+					productQtyMap.put("batchNo", batchNo);
+					productQtyMap.put("daysToStore", daysToStore);
+					productQtyMap.put("basicPrice", unitPrice);
+					productQtyMap.put("bedPrice", bedPrice);
+					productQtyMap.put("cstPrice", cstPrice);
+					productQtyMap.put("tcsPrice", tcsPrice);
+					productQtyMap.put("vatPrice", vatPrice);
+					productQtyMap.put("serviceTaxPrice", serviceTaxPrice);
+					indentProductList.add(productQtyMap);
+	            }
+	        }
+	        if( UtilValidate.isEmpty(indentProductList)){
+				Debug.logWarning("indentProductList is Empty", module);
+			}
+	        processOrderContext.put("userLogin", userLogin);
+			processOrderContext.put("productQtyList", indentProductList);
+			processOrderContext.put("partyId", partyId);
+			processOrderContext.put("schemePartyId", "");
+			processOrderContext.put("supplierPartyId", supplierPartyId);
+			processOrderContext.put("billToCustomer", partyId);
+			processOrderContext.put("productIds", productIds);
+			processOrderContext.put("supplyDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+			processOrderContext.put("salesChannel", salesChannel);
+			processOrderContext.put("orderTaxType", orderTaxType);
+			processOrderContext.put("orderId", orderId);
+			processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
+			processOrderContext.put("productStoreId", productStoreId);
+			processOrderContext.put("PONumber", "");
+			processOrderContext.put("promotionAdjAmt", "");
+			processOrderContext.put("orderMessage", "");
+			processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
+			processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+			try{
+				result = processBranchSalesOrder(ctx, processOrderContext);
+				if(ServiceUtil.isError(result)){
+					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+				}
+				
+				orderId = (String)result.get("orderId");
+				if(UtilValidate.isEmpty(orderId)){
+					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+				}
+				if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+					 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
+					 try {
+					 GenericValue value = delegator.makeValue("OrderRole", fields);
+					 delegator.create(value);
+					 } catch (GenericEntityException e) {
+							Debug.logError(e, "Could not add role to order for OnBeHalf  party " + schemePartyId, module);
+					 }
+				}
+				
+				if(UtilValidate.isNotEmpty(supplierPartyId)){
+					try{
+						GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
+						delegator.createOrStore(supplierOrderRole);
+					}catch (Exception e) {
+						  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
+			  	 	}
+				}
+				if(UtilValidate.isNotEmpty(orderTaxType)){
+					try{
+	    				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+	    				orderAttribute.set("orderId", orderId);
+	    				orderAttribute.set("attrName", "INDET_TAXTYPE");
+	    				orderAttribute.set("attrValue", orderTaxType);
+	    				delegator.createOrStore(orderAttribute);
+					}catch (GenericEntityException e) {
+							Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
+					}
+				}
+				if(UtilValidate.isNotEmpty(schemeCategory)){
+					try{
+						GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+						orderAttribute.set("orderId", orderId);
+						orderAttribute.set("attrName", "SCHEME_CAT");
+						orderAttribute.set("attrValue", schemeCategory);
+						delegator.createOrStore(orderAttribute);
+					}catch (GenericEntityException e) {
+						Debug.logError(e, "Could not add role to order for SchemeCategory " + orderId, module);
+				    }
+				}
+				Map resultCtx = FastMap.newInstance();
+				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+				}
+			}catch(Exception e){
+				Debug.logError(e, module);
+			}
+			
+	     }catch(Exception e){
+	    	 Debug.logError("Order Entry successfully for party : "+partyId, module);
+	 		 return ServiceUtil.returnError("Order Entry successfully for party : "+partyId);
+		 }
+			
+		result.put("orderId", orderId);
+		return result;
+		
+	 }
+	   	
    	
 }

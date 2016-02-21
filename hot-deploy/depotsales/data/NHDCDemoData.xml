@@ -303,14 +303,8 @@ under the License.
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="NF" sequenceId="02" attrCode="NF"/>
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="S" sequenceId="01" attrCode="S"/>
 		
-		
-		
-		
-		
-		
-		
-		
-		
-    	
-    
+		<SchemeTimePeriod schemeTimePeriodId="JAN_16" fromDate="2016-01-01" thruDate="2016-01-31" periodName="SCH_JAN_16" periodNum="1" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="2" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="3" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="APR_16" fromDate="2016-04-01" thruDate="2016-04-30" periodName="SCH_APR_16" periodNum="4" periodTypeId="TEN_PERC_PERIOD"/>  
 </entity-engine-xml>
