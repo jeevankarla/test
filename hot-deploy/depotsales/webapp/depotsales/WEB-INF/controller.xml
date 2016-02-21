@@ -1313,6 +1313,12 @@
        </response>
        <response name="error" type="view" value="ViewQuote"/>
      </request-map>
+     <request-map uri="createSOForQuote">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createSOForQuote"></event>
+       <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
+     </request-map>
     <!-- View Mappings -->
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
     <view-map name="FindYarnProducts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindYarnProducts"/>

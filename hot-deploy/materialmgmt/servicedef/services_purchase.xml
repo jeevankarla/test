@@ -90,6 +90,12 @@
          <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/>
          <attribute name="orderId" mode="OUT" type="String" optional="true"/>
     </service>
+    <service name="createSOForQuote" engine="java" auth="true"
+         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createSOForQuote">
+         <attribute name="quoteId" mode="IN" type="String" optional="false"/>
+         <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/>
+         <attribute name="orderId" mode="OUT" type="String" optional="true"/>
+    </service>
     
     <service name="getLastSupplyMaterialDetails" engine="java" auth="true"
          location="in.vasista.vbiz.purchase.MaterialHelperServices" invoke="getLastSupplyMaterialDetails">

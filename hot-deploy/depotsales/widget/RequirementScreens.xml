@@ -591,8 +591,9 @@
                     </condition>
                    		<widgets>
                    		
-                   		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
+                   		<link target="createSOForQuote" text="Create SO" style="buttontext h2" >
            					<parameter param-name="quoteId" from-field="quoteId"/>
+           					<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
            				</link>
                    		</widgets>
 
