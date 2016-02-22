@@ -620,6 +620,7 @@ shipToParty=EntityUtil.getFirst(shipToPartyRole);
 
 shipingAdd=[:];
 if(shipToParty.partyId){
+shippPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
 contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
 //Debug.log("contactMechesDetails======================="+contactMechesDetails);
 if(contactMechesDetails){
@@ -650,6 +651,7 @@ if(contactMechesDetails){
 			if(partyPostalAddress.get("postalCode")){
 				postalCode=partyPostalAddress.get("postalCode");
 				}
+			shipingAdd.put("name",shippPartyName);
 			shipingAdd.put("address1",address1);
 			shipingAdd.put("address2",address2);
 			shipingAdd.put("city",city);
