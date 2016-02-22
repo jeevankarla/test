@@ -20,6 +20,7 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
+import org.ofbiz.party.contact.ContactMechWorker;
 
 //Debug.log("================== hii******** welcome** to** new** groovy====================");
 
@@ -27,6 +28,106 @@ import in.vasista.vbiz.byproducts.icp.ICPServices;
 partyId = parameters.partyId;
 
 context.partyId=parameters.partyId;
+
+if(parameters.partyId){
+	address1="";
+	address2="";
+	state="";
+	city="";
+	postalCode="";
+contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, parameters.partyId, false,"POSTAL_ADDRESS");
+//Debug.log("contactMechesDetails======================="+contactMechesDetails);
+if(contactMechesDetails){
+	contactMec=contactMechesDetails.getLast();
+	if(contactMec){
+		partyPostalAddress=contactMec.get("postalAddress");
+		//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+		if(partyPostalAddress){
+			
+			if(partyPostalAddress.get("address1")){
+			address1=partyPostalAddress.get("address1");
+			//Debug.log("address1=========================="+address1);
+			}
+			if(partyPostalAddress.get("address2")){
+				address2=partyPostalAddress.get("address2");
+				}
+			if(partyPostalAddress.get("city")){
+				city=partyPostalAddress.get("city");
+				}
+			if(partyPostalAddress.get("state")){
+				state=partyPostalAddress.get("state");
+				}
+			if(partyPostalAddress.get("postalCode")){
+				postalCode=partyPostalAddress.get("postalCode");
+				}
+			
+			//partyJSON.put("name",shippPartyName);
+			
+			
+		
+			
+			//Debug.log("shipingAdd========================="+shipingAdd);
+			
+		}
+	}
+}
+
+conditionList=[];
+conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,parameters.partyId));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
+Debug.log("facilityDepo======================"+facilityDepo);
+String Depo="NO";
+if(facilityDepo){
+   Depo="YES";
+   }
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+PartyLoomDetails =  EntityUtil.getFirst(delegator.findList("PartyLoom",condition,null,null,null,false));
+Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
+parameters.custName=custPartyName;
+loomType="";
+loomQuota="";
+loomQty="";
+Desc="";
+
+if(PartyLoomDetails){
+	loomQuota=PartyLoomDetails.quotaPerLoom;
+	loomQty=PartyLoomDetails.quantity;
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,PartyLoomDetails.loomTypeId));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	LoomTypeDetails =delegator.findList("LoomType",condition,null,null,null,false);
+	Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+	if(LoomTypeDetails){
+		type=LoomTypeDetails.loomTypeId;
+		/*if(LoomTypeDetails.description){
+		Desc=LoomTypeDetails.description
+		}*/
+		Desc +=type;
+	}
+}
+psbNo="";
+partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+if(partyIdentification){
+	psbNo = partyIdentification.get("idValue");
+}
+parameters.psbNo=psbNo;
+
+parameters.address=address1+address2+city;
+
+parameters.postalCode=postalCode;
+parameters.Depo=Depo;
+parameters.loomType=Desc;
+parameters.loomQuota=loomQuota;
+parameters.loomQty=loomQty;
+
+
+
+}
 
 partyPostalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null,null,null, false);
 if(partyPostalAddress){
@@ -182,13 +283,14 @@ if(partyOrderIds){
 	
 	//Quotas handling
 	
-	resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
-	schemesMap = resultCtx.get("schemesMap");
-	
-	productCategoryQuotasMap = [:];
-	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
-		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
-	}
+	//resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+//        schemesMap = resultCtx.get("schemesMap");
+productCategoryQuotasMap = [:];
+resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+       productCategoryQuotasMap = resultCtx.get("schemesMap");
+//        if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+//                productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+//        }
 	condsList = [];
 	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
@@ -262,11 +364,14 @@ if(partyOrderIds){
 		condExpRmrk = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
 		productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-		quota=0;
+		quota=0;		
 		if(productQuotaDetails){
 		schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
 		if(productCategoryQuotasMap.containsKey(schemeCatId)){
-			quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
+				quota = productCategoryQuotasMap.get(schemeCatId);
+			    //quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			}
 		}
 		}
 		baleQty=0;
