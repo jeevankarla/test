@@ -437,9 +437,9 @@
 					quantity = 0;
 				}
 				var balqty=balanceQty-quantity;
-				if(balqty<0){
-				balqty=0;
-				}
+				//if(balqty<0){
+				//balqty=0;
+				//}
 					data[args.row]["balance"]=balqty;
 				grid.updateRow(args.row);
 			}
