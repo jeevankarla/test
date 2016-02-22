@@ -182,13 +182,14 @@ if(partyOrderIds){
 	
 	//Quotas handling
 	
-	resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
-	schemesMap = resultCtx.get("schemesMap");
-	
-	productCategoryQuotasMap = [:];
-	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
-		productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
-	}
+	//resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+//        schemesMap = resultCtx.get("schemesMap");
+productCategoryQuotasMap = [:];
+resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+       productCategoryQuotasMap = resultCtx.get("schemesMap");
+//        if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+//                productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+//        }
 	condsList = [];
 	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
@@ -262,11 +263,14 @@ if(partyOrderIds){
 		condExpRmrk = EntityCondition.makeCondition(cond, EntityOperator.AND);
 		RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
 		productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-		quota=0;
+		quota=0;		
 		if(productQuotaDetails){
 		schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
 		if(productCategoryQuotasMap.containsKey(schemeCatId)){
-			quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
+				quota = productCategoryQuotasMap.get(schemeCatId);
+			    //quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
+			}
 		}
 		}
 		baleQty=0;
