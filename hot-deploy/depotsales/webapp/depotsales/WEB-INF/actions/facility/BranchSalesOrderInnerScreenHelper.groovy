@@ -19,6 +19,7 @@
 	import in.vasista.vbiz.byproducts.icp.ICPServices;
 	import in.vasista.vbiz.purchase.MaterialHelperServices;
 	import org.ofbiz.party.party.PartyHelper;
+	import org.ofbiz.party.contact.ContactMechWorker;
 	
 	
 	
@@ -86,6 +87,106 @@
 	supplierPartyId=parameters.suplierPartyId;
 	if(supplierPartyId){
 		suppPartyName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
+	}
+	
+	if(parameters.partyId){
+		address1="";
+		address2="";
+		state="";
+		city="";
+		postalCode="";
+	contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, parameters.partyId, false,"POSTAL_ADDRESS");
+	//Debug.log("contactMechesDetails======================="+contactMechesDetails);
+	if(contactMechesDetails){
+		contactMec=contactMechesDetails.getLast();
+		if(contactMec){
+			partyPostalAddress=contactMec.get("postalAddress");
+			//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+		//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+			if(partyPostalAddress){
+				
+				if(partyPostalAddress.get("address1")){
+				address1=partyPostalAddress.get("address1");
+				//Debug.log("address1=========================="+address1);
+				}
+				if(partyPostalAddress.get("address2")){
+					address2=partyPostalAddress.get("address2");
+					}
+				if(partyPostalAddress.get("city")){
+					city=partyPostalAddress.get("city");
+					}
+				if(partyPostalAddress.get("state")){
+					state=partyPostalAddress.get("state");
+					}
+				if(partyPostalAddress.get("postalCode")){
+					postalCode=partyPostalAddress.get("postalCode");
+					}
+				
+				//partyJSON.put("name",shippPartyName);
+				
+				
+			
+				
+				//Debug.log("shipingAdd========================="+shipingAdd);
+				
+			}
+		}
+	}
+	
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,parameters.partyId));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
+	Debug.log("facilityDepo======================"+facilityDepo);
+	String Depo="NO";
+	if(facilityDepo){
+	   Depo="YES";
+	   }
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	PartyLoomDetails =  EntityUtil.getFirst(delegator.findList("PartyLoom",condition,null,null,null,false));
+	Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+	custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
+	parameters.custName=custPartyName;
+	loomType="";
+	loomQuota="";
+	loomQty="";
+	Desc="";
+	
+	if(PartyLoomDetails){
+		loomQuota=PartyLoomDetails.quotaPerLoom;
+		loomQty=PartyLoomDetails.quantity;
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,PartyLoomDetails.loomTypeId));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		LoomTypeDetails =delegator.findList("LoomType",condition,null,null,null,false);
+		Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+		if(LoomTypeDetails){
+			type=LoomTypeDetails.loomTypeId;
+			/*if(LoomTypeDetails.description){
+			Desc=LoomTypeDetails.description
+			}*/
+			Desc +=type;
+		}
+	}
+	psbNo="";
+	partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+	if(partyIdentification){
+		psbNo = partyIdentification.get("idValue");
+	}
+	parameters.psbNo=psbNo;
+	
+	parameters.address=address1+address2+city;
+	
+	parameters.postalCode=postalCode;
+	parameters.Depo=Depo;
+	parameters.loomType=Desc;
+	parameters.loomQuota=loomQuota;
+	parameters.loomQty=loomQty;
+	
+	
+	
 	}
 	
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
