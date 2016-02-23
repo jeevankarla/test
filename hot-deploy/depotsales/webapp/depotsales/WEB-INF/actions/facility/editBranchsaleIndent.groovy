@@ -303,7 +303,7 @@ resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.t
 	cList=[];
 	cList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,updateOrderId ));
 	
-	  orderAdjList = delegator.findList("OrderItemAndAdjustment", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
+	  orderAdjList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
 	JSONObject OrderItemUIJSON = new JSONObject();
 	
 	orderItems.each{ eachItem ->
@@ -414,10 +414,15 @@ resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.t
 		newObj.put("cottonUom",yarnUOM);
 		newObj.put("bundleWeight",bundleWeight);
 		if(orderAdjList){
-		orderAdjDetails = EntityUtil.filterByCondition(orderAdjList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-		if(orderAdjDetails && orderAdjDetails.get(0).get("quantity")){
-			quota=quota+orderAdjDetails.get(0).get("quantity");
-		}
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
+			
+			orderAdjDetails = EntityUtil.filterByCondition(orderAdjList, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+			if(orderAdjDetails && orderAdjDetails.get(0).get("attrValue")){
+				Float f = new Float(orderAdjDetails.get(0).get("attrValue"));
+				quota=quota+f;
+			}
 		}
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("quota",quota);
