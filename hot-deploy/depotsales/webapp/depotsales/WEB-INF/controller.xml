@@ -77,6 +77,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+     <request-map uri="getpartyContactDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="partyContactDetails.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      <request-map uri="getOrderInformation">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getOrderInformation.groovy"/> 
@@ -997,7 +1003,16 @@
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
     </request-map>   
-    
+    <request-map uri="CreateNewWeaver">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewWeaver"/>
+    </request-map> 
+    <request-map uri="createWeaver">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplier"/>
+        <response name="success" type="request-redirect" value="FindProcProducer"/>
+        <response name="error" type="view" value="FindProcProducer"/>
+    </request-map>
     <!-- Product -->
     <request-map uri="CreateNewProduct">
       <security https="true" auth="true"/>
@@ -1313,8 +1328,15 @@
        </response>
        <response name="error" type="view" value="ViewQuote"/>
      </request-map>
+     <request-map uri="createSOForQuote">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createSOForQuote"></event>
+       <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
+     </request-map>
     <!-- View Mappings -->
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
+    <view-map name="CreateNewWeaver" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewWeaver"/>
     <view-map name="FindYarnProducts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindYarnProducts"/>
 	<view-map name="CreateNewYarnProductScreen" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewYarnProductScreen"/>
     <view-map name="IndentorPortalScreen" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalScreen"/>
