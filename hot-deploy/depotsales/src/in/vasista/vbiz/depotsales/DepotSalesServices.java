@@ -1885,7 +1885,7 @@ public class DepotSalesServices{
 		prodPriceType = EntityUtil.filterByDate(prodPriceType, effectiveDate);
 
 		String productId = "";
-		String customerId = "";
+		
 		String remarks = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal baleQuantity = BigDecimal.ZERO;
@@ -1894,6 +1894,7 @@ public class DepotSalesServices{
 		String batchNo = "";
 		String daysToStore = "";
 		for (Map<String, Object> prodQtyMap : productQtyList) {
+			String customerId = "";
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
@@ -1984,8 +1985,15 @@ public class DepotSalesServices{
 				String schemeId="TEN_PERCENT_MGPS";
 				String productCategoryId=(String)productCategoriesList.get(0);
 				
+				Map partyBalanceHistoryContext = FastMap.newInstance();
+				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin);
+				
+				if(UtilValidate.isNotEmpty(customerId)){
+					partyBalanceHistoryContext.put("partyId",customerId);
+				}
+						
 				try {
-					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory",UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin) );
+					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 					quota=(BigDecimal)resultMapquota.get("quota");
 				} catch (Exception e) {
 					Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
