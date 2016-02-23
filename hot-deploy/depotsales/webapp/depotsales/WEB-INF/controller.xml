@@ -1003,7 +1003,16 @@
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
     </request-map>   
-    
+    <request-map uri="CreateNewWeaver">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewWeaver"/>
+    </request-map> 
+    <request-map uri="createWeaver">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplier"/>
+        <response name="success" type="request-redirect" value="FindProcProducer"/>
+        <response name="error" type="view" value="FindProcProducer"/>
+    </request-map>
     <!-- Product -->
     <request-map uri="CreateNewProduct">
       <security https="true" auth="true"/>
@@ -1327,6 +1336,7 @@
      </request-map>
     <!-- View Mappings -->
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
+    <view-map name="CreateNewWeaver" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewWeaver"/>
     <view-map name="FindYarnProducts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindYarnProducts"/>
 	<view-map name="CreateNewYarnProductScreen" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewYarnProductScreen"/>
     <view-map name="IndentorPortalScreen" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalScreen"/>
