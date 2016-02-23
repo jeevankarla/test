@@ -36,10 +36,31 @@ under the License.
         <#list printPaymentsList as paymentListReport>
            <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
-		    	   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
+		    	   <#--<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 			       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  &#160;&#160;   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>-->
+					<fo:block text-align="left" keep-together="always"  white-space-collapse="false">
+        			<fo:table>
+			            <fo:table-column column-width="150pt"/>
+			            <fo:table-column column-width="150pt"/>
+			            <fo:table-column column-width="150pt"/>
+			            <fo:table-column column-width="150pt"/> 
+			            <fo:table-body>
+			                <fo:table-row>
+			                    <fo:table-cell number-columns-spanned="4">
+					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> VARANSI-221002 </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> EMAIL:nhdcltdvaranasi@yahoo.in </fo:block>
+					            </fo:table-cell>
+							</fo:table-row>
+			            </fo:table-body>
+			        </fo:table>
+        		</fo:block>
                     <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>------------------------------------------------------------------------</fo:block>
               		
