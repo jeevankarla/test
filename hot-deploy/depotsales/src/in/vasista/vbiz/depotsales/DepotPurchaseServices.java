@@ -688,6 +688,7 @@ public class DepotPurchaseServices{
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
+				conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_EQUAL, "SALES_INVOICE"));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				List<GenericValue> invoices = delegator.findList("Invoice", condition, null, null, null, false);
 				
