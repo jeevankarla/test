@@ -269,19 +269,35 @@ under the License.
               	
               <#-->	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 && (eachOrder.get('statusId') != "ORDER_APPROVED")>-->
               	<#if (eachOrder.orderTotal) == (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") && (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO !="N")>
-                    <#if (eachOrder.orderTotal)<= 200000> 
+                     <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
               		       <td><input type="button" name="approveOrder" id="approveOrder" value="    BO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-                    <#else>
-                           <td><input type="button" name="approveOrder" id="approveOrder" value="    RO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-                     </#if> 
+                     <#else>
+                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
+                                <td><input type="button" name="approveOrder" id="approveOrder" value="    RO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                           <#else>
+                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
+                                      <td><input type="button" name="approveOrder" id="approveOrder" value="    HO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                  <#else>  
+                                        <td><input type="button" name="approveOrder" id="approveOrder" value="    MD Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                   </#if>
+                           </#if>
+                    </#if> 
                  <#elseif (eachOrder.get('statusId') == "ORDER_APPROVED")>
               	  <td>Approved</td>
               	 <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") != -1 && (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO !="N")>
 					<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                    <#if (eachOrder.orderTotal)<= 200000>
+                    <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
 	            	     <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
 	            	<#else>
-                         <td><input type="button" name="approveOrder" id="approveOrder" value="RO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
+                               <td><input type="button" name="approveOrder" id="approveOrder" value="RO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                           <#else>
+                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
+                                       <td><input type="button" name="approveOrder" id="approveOrder" value="HO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                  <#else>
+                                         <td><input type="button" name="approveOrder" id="approveOrder" value="MD Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                  </#if>
+                          </#if>  
                      </#if>      	
 	          		<#else>
 	          		<#if isgeneratedPO !="N">
