@@ -16,7 +16,6 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 
 orderId = parameters.orderId;
-Debug.log("orderId=======22========"+orderId);
 
 orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
@@ -53,7 +52,6 @@ for (eachItem in orderItems) {
 		orderItemAttributes = EntityUtil.filterByCondition(orderAttributes, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		if(UtilValidate.isNotEmpty(orderItemAttributes)){
 			quotaAvbl = (orderItemAttributes.get(0)).get("attrValue");
-			Debug.log("quotaAvbl=======dg=========="+quotaAvbl);
 		}
 	}
 	remarks = "";
