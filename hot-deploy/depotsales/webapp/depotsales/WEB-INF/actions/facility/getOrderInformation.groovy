@@ -34,7 +34,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 OrderItemRemarks = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-Debug.log("OrderItemRemarks=====te=========="+OrderItemRemarks);
+
 
 JSONArray orderInformationDetails = new JSONArray();
 
@@ -59,11 +59,9 @@ for (eachItem in orderItems) {
 	remarks = "";
 	if(UtilValidate.isNotEmpty(OrderItemRemarks)){
 		orderRemarks = EntityUtil.filterByCondition(OrderItemRemarks, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-		Debug.log("orderRemarks=====te=========="+orderRemarks);
-		
+	
 		if(UtilValidate.isNotEmpty(orderRemarks)){
 			remarks = (orderRemarks.get(0)).get("attrValue");
-			Debug.log("remarks=======dg=========="+remarks);
 		}
 	}
 	
@@ -78,8 +76,7 @@ for (eachItem in orderItems) {
 	orderDetail.put("adjustmentAmount", adjustmentAmount);
 	orderDetail.put("quotaAvbl", quotaAvbl);
 	orderDetail.put("remarks", remarks);
-	Debug.log("orderDetail=======dg=========="+orderDetail);
-	
+
 	orderDetail.put("payableAmt", (eachItem.quantity)*(eachItem.unitPrice) + adjustmentAmount);
 	orderInformationDetails.add(orderDetail);
 	   
@@ -87,6 +84,5 @@ for (eachItem in orderItems) {
 
 
 request.setAttribute("orderInformationDetails", orderInformationDetails);
-Debug.log("orderInformationDetails======================="+orderInformationDetails);
 return "success";
 
