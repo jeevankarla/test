@@ -176,7 +176,7 @@
         <attribute name="productFeatureCategoryList" type="List" mode="OUT" optional="true"/>
         <attribute name="productFeatureCategoryIdsList" type="List" mode="OUT" optional="true"/>
     </service>
-        <service name="getPartyAvailableQuotaBalanceHistory" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyAvailableQuotaBalanceHistory" >
+    <service name="getPartyAvailableQuotaBalanceHistory" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyAvailableQuotaBalanceHistory" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
@@ -198,6 +198,50 @@
         <attribute name="schemeTimePeriodIdList" mode="IN" type="List" optional="false"/>
         <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
         <attribute name="quota" mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
+    <service name="getTaxApplicabilityDetails" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getTaxApplicabilityDetails" auth="false">
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="supplierPartyId" mode="IN" type="String" optional="true"/>
+        <attribute name="geoIdsMap" mode="OUT" type="Map" optional="true"/>
+    </service>
+    <service name="getAllChildProductCategoriesAndMembers" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getAllChildProductCategoriesAndMembers">
+        <description>Get Child Categories and Category Members</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="completeProductCategoryMembers" type="List" mode="OUT" optional="true"/>
+        <attribute name="completeProductIdsList" type="List" mode="OUT" optional="true"/>
+        <attribute name="completeChildCategoriesList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="calculateTaxesByGeoId" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="calculateTaxesByGeoId">
+        <description>Get Child Categories and Category Members</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthorityRateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxPercentage" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="taxAuthProdCatList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="createBranchSaleInvoice" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleInvoice">
+        <description>Issue Products to Order</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="billToPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="createInvoiceForOrderOrig" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForOrderOrig">
+        <description>
+            Create an invoice from existing order
+            orderId = The orderId to associate the invoice with
+            billItems = List of ItemIssuance records to use for creating the invoice
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="billItems" type="List" mode="IN" optional="false"/>
+        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="invoiceTypeId" type="String" mode="OUT" optional="true"/>
     </service>
 </services>
 
