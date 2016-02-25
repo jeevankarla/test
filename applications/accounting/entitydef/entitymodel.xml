@@ -2345,6 +2345,7 @@
 		<alias entity-alias="ATE" name="partyId" />
 		<alias entity-alias="ATE" name="reconcileStatusId" />
 		<alias entity-alias="ATE" name="acctgTransEntryTypeId" />
+		<alias entity-alias="GLA" name="externalId" />
 		<view-link entity-alias="ATR" rel-entity-alias="ATE">
 			<key-map field-name="acctgTransId" />
 		</view-link>

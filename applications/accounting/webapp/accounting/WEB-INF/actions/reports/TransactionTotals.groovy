@@ -94,9 +94,10 @@ glhistoryList =[];
 if (allPostedTransactionTotals) {
     Map postedTransactionTotalsMap = [:]
     allPostedTransactionTotals.each { postedTransactionTotal ->
+		GenericValue glAccount =null;
         Map accountMap = (Map)postedTransactionTotalsMap.get(postedTransactionTotal.glAccountId);
         if (!accountMap) {
-            GenericValue glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", postedTransactionTotal.glAccountId), true);
+            glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", postedTransactionTotal.glAccountId), true);
             if (glAccount) {
                 boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
                 // Get the opening balances at the end of the last closed time period
@@ -145,7 +146,10 @@ if (allPostedTransactionTotals) {
 				}
 			}
         }
-        UtilMisc.addToBigDecimalInMap(accountMap, postedTransactionTotal.debitCreditFlag, postedTransactionTotal.amount);
+        UtilMisc.addToBigDecimalInMap(accountMap, postedTransactionTotal.debitCreditFlag, postedTransactionTotal.amount);		
+		if((glAccount) && (glAccount.externalId)){		
+			accountMap.put("externalId",glAccount.externalId);
+		}
         postedTransactionTotalsMap.put(postedTransactionTotal.glAccountId, accountMap);
     }
 	//124200
@@ -238,9 +242,10 @@ List allUnpostedTransactionTotals = delegator.findList("AcctgTransEntrySums", an
 if (allUnpostedTransactionTotals) {
     Map unpostedTransactionTotalsMap = [:]
     allUnpostedTransactionTotals.each { unpostedTransactionTotal ->
+    GenericValue glAccount = null;
         Map accountMap = (Map)unpostedTransactionTotalsMap.get(unpostedTransactionTotal.glAccountId);
         if (!accountMap) {
-            GenericValue glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", unpostedTransactionTotal.glAccountId), true);
+            glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", unpostedTransactionTotal.glAccountId), true);
             if (glAccount) {
                 boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
                 // Get the opening balances at the end of the last closed time period
@@ -288,6 +293,9 @@ if (allUnpostedTransactionTotals) {
 			}*/
         }
         UtilMisc.addToBigDecimalInMap(accountMap, unpostedTransactionTotal.debitCreditFlag, unpostedTransactionTotal.amount);
+        if((glAccount) && (glAccount.externalId)){		
+			accountMap.put("externalId",glAccount.externalId);
+		}
         unpostedTransactionTotalsMap.put(unpostedTransactionTotal.glAccountId, accountMap);
     }
     unpostedTotals = unpostedTransactionTotalsMap.values().asList();
@@ -331,9 +339,10 @@ allOpeningTransactionTotals.addAll(allUnpostedOpeningTransactionTotals);
 if (allTransactionTotals) {
     Map allTransactionTotalsMap = [:]
     allTransactionTotals.each { allTransactionTotal ->
+        GenericValue glAccount = null;
         Map accountMap = (Map)allTransactionTotalsMap.get(allTransactionTotal.glAccountId);
         if (!accountMap) {
-            GenericValue glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", allTransactionTotal.glAccountId), true);
+            glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", allTransactionTotal.glAccountId), true);
             if (glAccount) {
                 boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
                 // Get the opening balances at the end of the last closed time period
@@ -380,6 +389,9 @@ if (allTransactionTotals) {
             }
         }
         UtilMisc.addToBigDecimalInMap(accountMap, allTransactionTotal.debitCreditFlag, allTransactionTotal.amount);
+        if((glAccount) && (glAccount.externalId)){		
+			accountMap.put("externalId",glAccount.externalId);
+		}
         allTransactionTotalsMap.put(allTransactionTotal.glAccountId, accountMap);
     }
     allTotals = allTransactionTotalsMap.values().asList();

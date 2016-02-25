@@ -57,7 +57,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="partyId" title="${uiLabelMap.AccountingCompanies}"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>       
         <field name="accounting" title="${uiLabelMap.CommonEmptyHeader}" use-when="hasBasicPermission" widget-style="buttontext">
-            <hyperlink target="TrialBalance" description="${uiLabelMap.AccountingReports}">
+            <hyperlink target="TransactionTotals" description="${uiLabelMap.AccountingReports}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
