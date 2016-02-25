@@ -475,7 +475,7 @@ under the License.
             <set field="closingC" value="${openingC + C}" type="BigDecimal"/>
         </row-actions>
         <field name="accountCode">
-            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+            <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
@@ -756,7 +756,7 @@ under the License.
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
         <field name="accountCode">
-            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+            <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
@@ -778,7 +778,7 @@ under the License.
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
         <field name="accountCode">
-            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+            <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>

@@ -164,7 +164,9 @@ import org.ofbiz.accounting.util.*;
 	  glAccountAndHistories.eachWithIndex {sub, idx ->
 		  //retObj.put("id",idx+1);
 		// retObj.put("item", "");
-		  retObj.put("value", sub.accountCode);
+		  if(sub.externalId){
+		       retObj.put("value", sub.externalId);			   
+		  }
 		  retObj.put("text", sub.accountName+" ["+sub.accountCode+" ]");
 		  dataJSONList.add(retObj);
 		  accountCodeList.add(sub.accountCode);
