@@ -4695,7 +4695,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleCottonOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
@@ -4744,7 +4744,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleCottonOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
@@ -4752,7 +4752,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTest.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleCottonOrderFormTest.ftl" />
 							</html>
 						</platform-specific>
 					</fail-widgets>
