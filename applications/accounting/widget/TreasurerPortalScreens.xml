@@ -2490,13 +2490,13 @@
                 <set field="titleProperty" value="CreateBankAccountReconciliationsTitle"/>
                 <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/dateFindConvert.groovy"/>
-                <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
+<!--             <set field="parameters.glReconciliationId" value="${glReconciliationId}"/>instead of Form we are setting in Screen  -->
                <!--  <set field="parameters.finAccountId" value="${parameters.finAccountId}"/> -->
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="fromTransactionDate" value="${parameters.fromDateReport}"/>
                   <set field="thruTransactionDate" value="${parameters.thruDateReport}"/>
-                 <set field="glReconciliationId" value="${glReconciliationId}"/>
+                 <set field="glReconciliationId" value="${glReconciliationId}" default-value="${parameters.glReconciliationId}"/>
                  <set field="parameters.noConditionFind" value="Y"/>                       
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
@@ -2515,6 +2515,7 @@
                   <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
             </actions>
 			<widgets>
+			<label></label>
 				<platform-specific> 
 				  <xsl-fo><html-template location="component://accounting/webapp/accounting/finaccounttrans/ReconcilationStatement.fo.ftl"/></xsl-fo> 
                 </platform-specific>
