@@ -558,7 +558,6 @@ function reportTypeChangeFunc() {
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-                         <option value='NONROLE'>Others</option>
   						</select></td> 
                      <td width="10%">Report Type 
 					    <select name="reportTypeFlag" id="reportTypeFlag">
@@ -608,7 +607,6 @@ function reportTypeChangeFunc() {
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-                         <option value='NONROLE'>Others</option>
   						</select></td> 
                      <td width="10%">Report Type 
 					    <select name="reportTypeFlag" id="reportTypeFlag">
@@ -633,7 +631,6 @@ function reportTypeChangeFunc() {
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-                         <option value='NONROLE'>Others</option>
   						</select></td> 
                       <td width="10%">Report Type 
 					    <select name="reportTypeFlag" id="reportTypeFlag">
