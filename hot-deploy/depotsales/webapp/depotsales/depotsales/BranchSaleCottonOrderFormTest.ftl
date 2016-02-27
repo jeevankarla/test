@@ -279,7 +279,7 @@
 	
 <div class="full">
 	<div class="lefthalf">
-		<div class="screenlet" style="width:100%">
+		<div class="screenlet" style="width:173%">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
 					<label>Branch sale Entry </label>
@@ -511,88 +511,91 @@
 		</div>
 		</div>
 	</div>
-
-	<div class="righthalf">
-		<div class="screenlet" style="width:50%">
-    		<div class="screenlet-body">
-		 		<div class="grid-header" style="width:50%">
-		 			<label>Customer Details</label>
+	
+	<div class="righthalf" >
+		<div class="screenlet" style="width:71%; margin-left:29%">
+			<div class="screenlet-title-bar">
+         		<div class="grid-header" style="width:100%">
+					<label>Customer Details</label>
 				</div>
+		     </div>
+    		<div class="screenlet-body">
+		 		
 				 <form  name="partyDetails" id="partyDetails">
 	      				<table width="50%" border="0" cellspacing="0" cellpadding="0">
 		               		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="10%"><font color="green">PartyName       : </font></td><td width="60%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">PartyName       : </font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="10%"><font color="green">PartyName       : </font></td><td width="60%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">PartyName       : </font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 			       			 <tr>
-			       				<td width="10%"><font color="green">PassBook Num        : </font></td><td width="60%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">PassBook Num        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">PassBook Num    : </font></td><td width="60%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">PassBook Num    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Address         : </font></td><td width="60%"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">Address         : </font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="10%"><font color="green">Address         : </font></td><td width="60%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">Address         : </font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">postal Code     : </font></td><td width="60%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">postal Code     : </font></td><td width="60%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder     : </font></td><td width="60%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">Depo Holder     : </font></td><td width="85%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder     : </font></td><td width="60%"> <label  align="left" id="Depo" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">Depo Holder     : </font></td><td width="85%"> <label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.loomType?exists && parameters.loomType?has_content> 
 			       			
 			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type : </font></td><td width="60%"><font color="blue"><b>${parameters.loomType}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">Party Loom Type : </font></td><td width="85%"><font color="blue"><b>${parameters.loomType}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type : </font></td><td width="60%"> <label  align="left" id="loomType" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">Party Loom Type : </font></td><td width="85%"> <label  align="left" id="loomType" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.loomQuota?exists && parameters.loomQuota?has_content> 
 			       			
 			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom    : </font></td><td width="60%"><font color="blue"><b>${parameters.loomQuota}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">QuotaPerLoom    : </font></td><td width="85%"><font color="blue"><b>${parameters.loomQuota}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom    : </font></td><td width="60%"> <label  align="left" id="loomQuota" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">QuotaPerLoom    : </font></td><td width="85%"> <label  align="left" id="loomQuota" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.loomQty?exists && parameters.loomQty?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Quantity        : </font></td><td width="60%"><font color="blue"><b> ${parameters.loomQty}</b></font></td>
+			       				<td width="35%" keep-together="always"><font color="green">Quantity        : </font></td><td width="85%"><font color="blue"><b> ${parameters.loomQty}</b></font></td>
 			       			</tr> 
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">Quantity        : </font></td><td width="60%"> <label  align="left" id="loomQty" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">Quantity        : </font></td><td width="85%"> <label  align="left" id="loomQty" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       		</table>
@@ -604,17 +607,19 @@
 	
 	
 	</div>
-	<div class="full" style="height:250px;">
-	</br> 
-	
-	</div>
+		<div class="full" style="height:250px;">
+			</br> 
+		</div>
 	
 	<div class="bottom">
 		<div class="screenlet" >
-		    <div class="screenlet-body">
-		 		<div class="grid-header" style="width:100%">
+			<div class="screenlet-title-bar">
+         		<div class="grid-header" style="width:100%">
+					<label>Indent Items</label>
 					<span id="totalAmount"></span>
 				</div>
+		     </div>
+		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
 					<#assign formAction='processBranchSalesOrder'>			
