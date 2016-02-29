@@ -1126,7 +1126,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="position" entry-name="emplPositionType.emplPositionTypeId">
+        <field name="position" entry-name="emplPositionType.emplPositionTypeId" title = "Designation">
             <hyperlink target="emplPositionView" description="${employmentData.emplPositionType.description} [${employmentData.emplPosition.emplPositionId}]">
                 <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
             </hyperlink>

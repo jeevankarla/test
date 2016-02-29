@@ -32,6 +32,19 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="EmplPosition" default-field-type="display"/>
+    
+        <field name="emplPositionTypeId" title ="Designation"></field>
+        <field name="budgetId"><hidden/></field>
+        <field name="budgetItemSeqId"><hidden/></field>
+        <field name="salaryFlag"><hidden/></field>
+        <field name="exemptFlag"><hidden/></field>
+        <field name="fulltimeFlag"><hidden/></field>
+        <field name="temporaryFlag"><hidden/></field>
+        <field name="estimatedFromDate"><hidden/></field>
+        <field name="estimatedThruDate"><hidden/></field>
+        <field name="actualFromDate"><hidden/></field>	
+        <field name="actualThruDate"><hidden/></field>
+        
         <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="linktext">
             <hyperlink also-hidden="false" description="${emplPositionId}" target="emplPositionView">
                 <parameter param-name="emplPositionId"/>
@@ -50,11 +63,11 @@ under the License.
     <form name="ListEmplPositionsParty" extends="ListEmplPositions" list-name="ListEmplPositions">
         <actions>
             <entity-and entity-name="EmplPositionAndFulfillment">
-                <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
+                <field-map field-name="employeePartyId" from-field="parameters.partyId"  title ="Empl Name/Empl Code" />
             </entity-and>
         </actions>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate"><display type="date"/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="thruDate" title = "To Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     </form>
     <form name="EditEmplPosition" type="single" target="updateEmplPosition" title="" default-map-name="emplPosition"
         header-row-style="header-row" default-table-style="basic-table">
