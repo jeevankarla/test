@@ -270,6 +270,7 @@
       <field name="inputType" type="id"></field>
       <field name="description" type="description"></field>
       <field name="sequenceId" type="id"></field>
+      <field name="namingSeqId" type="id"></field>
       <prim-key field="attrTypeId"/>
       <relation type="one" fk-name="ATTR-_TYPE_PARENT" title="Parent" rel-entity-name="ProductCategoryAttributeType">
         <key-map field-name="parentTypeId" rel-field-name="attrTypeId"/>
