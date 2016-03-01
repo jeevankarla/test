@@ -174,9 +174,10 @@
 								var tableElement = tableElement + '<td width="10%">';	
 								
 								if((attributeType.inputType == "Indicator")){
+									var attributesList = productAttributesMap[attributeType.attrTypeId];
 									var tableElement = tableElement + '<select name="'+attributeType.attrTypeId+'" id="'+attributeType.attrTypeId+'"> ';
-									tableElement = tableElement + '<option value = "" >N</option>';
-									tableElement = tableElement + '<option value = "'+attributeType.attrCode+'" >Y</option>';
+									tableElement = tableElement + '<option value = "N" >N</option>';
+									tableElement = tableElement + '<option value = "'+attributesList[0].attrCode+'" >Y</option>';
 									tableElement = tableElement + '</select>';	
 								}
 								
