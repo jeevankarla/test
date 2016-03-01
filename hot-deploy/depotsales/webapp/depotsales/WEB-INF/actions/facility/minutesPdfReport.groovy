@@ -76,7 +76,6 @@ context.balanceAmt = balanceAmt;
 condtList.clear();
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
 condtList.add(EntityCondition.makeCondition("orderAdjustmentTypeId" ,EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));//
-//condtList.add(EntityCondition.makeCondition("amount" ,EntityOperator.LESS_THAN, 0));
 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 OrderAdjustmentList = delegator.findList("OrderAdjustment", cond, null, null, null ,false);
 
@@ -110,11 +109,15 @@ conditionList=[];
 			OrderItemList = delegator.findList("OrderItem", condition, null, null, null, false);
 
 			
+			
+			
+			
+			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
 			
-						condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			orderRoleList = delegator.findList("OrderRole", condition,  UtilMisc.toSet("partyId"), null, null, false);
 
 			supplierPartyId = "";
@@ -137,9 +140,24 @@ conditionList=[];
 			totannum = 0;
 			
 			SrNo = 1;
-			
+			remarkMap=[:];
 			for (eachOrderItem in OrderItemList) {
 				
+					conditionList1=[];
+					
+					
+				conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderItem.orderId));
+				
+				conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+				conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachOrderItem.orderItemSeqId));
+				
+				condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
+				orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+				if((orderItemAttr) && (orderItemAttr.get(0).attrValue)){
+					remarkMap.put(eachOrderItem.orderItemSeqId, orderItemAttr.get(0).attrValue);
+					
+				}
+				Debug.log("orderItemAttr=========7777777========="+orderItemAttr);
 				 tempMap = [:];
 				 productName = ""
 				 prod=delegator.findOne("Product",[productId:eachOrderItem.productId],false);
@@ -219,12 +237,10 @@ conditionList=[];
 			
 			
 	context.OrderItemList = OrderItemList;
-	
-	Debug.log("OrderItemList======444444============="+OrderItemList);
+	context.remarkMap=remarkMap;
 	
 	context.orderedHindiItemList = orderedHindiItemList;
 	
-	//Debug.log("orderedHindiItemList==================="+orderedHindiItemList);
 	
 	
 	contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
