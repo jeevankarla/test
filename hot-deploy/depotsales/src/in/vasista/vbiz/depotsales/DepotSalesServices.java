@@ -4227,7 +4227,6 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_","No Product Attributes were configured"+childProductCategoryId);
 			return "error";
 		}
-		
 		String categoryName = "";
 		if(UtilValidate.isNotEmpty(childProductCategoryId)){
 	   		try{
@@ -4243,7 +4242,7 @@ public class DepotSalesServices{
 				return "error";
 			}
 	   	}
-		
+		Debug.log("categoryName===================="+categoryName);
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");
 		
@@ -4256,7 +4255,7 @@ public class DepotSalesServices{
 				Debug.log("attrValue========org============"+attrValue);
 				continue;
 			}
-			if(attribute.equals("packing")){
+			if(attribute.equals("PACKING")){
 				productName = productName + categoryName;
 			}
 			productName = productName + attrValue;
