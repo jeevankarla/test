@@ -4103,7 +4103,7 @@
     			<actions>
     				<set field="titleProperty" value="Create New Product" />
     				<set field="tabButtonItem" value="Product" />
-    				<entity-condition list="productCategoryList" entity-name="ProductCategory">
+    				<entity-condition list="productCategoryList" entity-name="ProductCategoryType">
     					<condition-list>
     						<condition-expr field-name="ProductCategoryTypeId" operator="in" value="NATURAL_FIBERS,SYNTHETIC,ZARI"/>
     					</condition-list>
