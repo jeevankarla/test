@@ -65,13 +65,15 @@ under the License.
         		<fo:block>
              		<fo:table border-style="solid">
              		    <fo:table-column column-width="4%"/>
-			            <fo:table-column column-width="35%"/>
+			            <fo:table-column column-width="25%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+			           <#-- <fo:table-column column-width="10%"/> -->
 			            <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="10%"/>
+			            
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
@@ -80,6 +82,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Item</fo:block>
 					            </fo:table-cell >
+					            <#--<fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
+					            </fo:table-cell > -->
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>
 					            </fo:table-cell>
@@ -110,9 +115,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">&#160;</fo:block>
-					            </fo:table-cell>
+					        <#--  <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${totalsMap.get("remarks")?if_exists}</fo:block>
+					            </fo:table-cell>  -->
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
 					            </fo:table-cell>
@@ -142,11 +147,12 @@ under the License.
 	             <fo:block  text-align="left" font-size="12pt" font-weight="bold">DETAILS OF PURCHASE &amp; SALES :</fo:block>
              		<fo:table border-style="solid">
              		    <fo:table-column column-width="4%"/>
-			            <fo:table-column column-width="35%"/>
+			            <fo:table-column column-width="25%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-body>
@@ -156,6 +162,9 @@ under the License.
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Item</fo:block>
+					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>
@@ -191,7 +200,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">&#160;</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
