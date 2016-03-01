@@ -5297,7 +5297,7 @@ public class DepotSalesServices{
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		String schemeTimePeriodId=null;
-		BigDecimal partyLooms = BigDecimal.ONE;
+		BigDecimal partyLooms = BigDecimal.ZERO;
 		try{
 			List condsList = FastList.newInstance();
 			condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId));
@@ -5307,13 +5307,16 @@ public class DepotSalesServices{
 			//get PartyLoom start  
 			condsList.clear();
 			condsList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			condsList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
 			condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
 			condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
 					
 					try {
 						List<GenericValue> partyLoomsList = delegator.findList("PartyLoom", EntityCondition.makeCondition(condsList, EntityOperator.AND), null, null, null, false);
-						partyLooms=(BigDecimal)partyLoomsList.get(0).get("quantity");
+						if(UtilValidate.isNotEmpty(partyLoomsList)){
+							partyLooms=(BigDecimal)partyLoomsList.get(0).get("quantity");
+						}
 					} catch (GenericEntityException e) {
 						Debug.logError(e, "Failed to retrive SchemeParty ", module);
 						return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
@@ -5500,7 +5503,6 @@ public class DepotSalesServices{
 		String partyId=(String) context.get("partyId");
 		Timestamp effectiveDate = UtilDateTime.nowTimestamp();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		BigDecimal partyLooms = BigDecimal.ONE;
 		//get schemeTime period List start
 		
 		String periodTypeId="TEN_PERC_PERIOD";
@@ -5520,23 +5522,7 @@ public class DepotSalesServices{
 		  schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
 		
 		//schemeTime period List ends 
-		
-		//get PartyLoom start  
-		    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-		    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-			
-			try {
-				List<GenericValue> partyLoomsList = delegator.findList("PartyLoom", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-				partyLooms=(BigDecimal)partyLoomsList.get(0).get("quantity");
-			} catch (GenericEntityException e) {
-				Debug.logError(e, "Failed to retrive SchemeParty ", module);
-				return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
-			}
-			//get PartyLoom ends 
 
-		  
 		//get SchemeProductCategory List start
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
@@ -5552,13 +5538,34 @@ public class DepotSalesServices{
 		}
 		
 		if(UtilValidate.isNotEmpty(schemeTimePeriodIdList)){
-			
+			BigDecimal partyLooms = BigDecimal.ZERO;
 			for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
 				GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
 				String productCategoryId = schemeProductCategory.getString("productCategoryId");
-				BigDecimal availableQuata=((BigDecimal)schemeProductCategory.get("maxQty")).multiply(partyLooms);
 				BigDecimal usedQuata=BigDecimal.ZERO;
 				BigDecimal periodTime=(BigDecimal)schemeProductCategory.get("periodTime");
+				partyLooms = BigDecimal.ZERO;
+				//get PartyLoom start  
+				conditionList.clear();
+			    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			    conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS, productCategoryId));
+			    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+				
+				try {
+					List<GenericValue> partyLoomsList = delegator.findList("PartyLoom", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+					if(UtilValidate.isNotEmpty(partyLoomsList)){
+						partyLooms=(BigDecimal)partyLoomsList.get(0).get("quantity");
+					}
+				} catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive SchemeParty ", module);
+					return ServiceUtil.returnError("Failed to retrive SchemeParty " + e);
+				}
+				//get PartyLoom ends 
+				
+				BigDecimal availableQuata=((BigDecimal)schemeProductCategory.get("maxQty")).multiply(partyLooms);
+				
 				if(UtilValidate.isNotEmpty(periodTime)){
 					availableQuata=availableQuata.multiply(periodTime);
 					
