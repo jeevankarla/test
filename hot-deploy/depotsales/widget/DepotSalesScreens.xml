@@ -4105,7 +4105,7 @@
     				<set field="tabButtonItem" value="Product" />
     				<entity-condition list="productCategoryList" entity-name="ProductCategory">
     					<condition-list>
-    						<condition-expr field-name="primaryParentCategoryId" operator="equals" value="NATURAL_FIBERS"/>
+    						<condition-expr field-name="ProductCategoryTypeId" operator="in" value="NATURAL_FIBERS,SYNTHETIC,ZARI"/>
     					</condition-list>
     				</entity-condition>
     			</actions>
