@@ -4041,9 +4041,13 @@ public class DepotSalesServices{
 	   		productAttributesMap.put(productAttributeType, EntityUtil.filterByCondition(productCategoryAttribute, EntityCondition.makeCondition("attrTypeId", EntityOperator.EQUALS, productAttributeType)));
 	   	}
 	   	
+	   	List condList =FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("attrTypeId", EntityOperator.IN, productAttributeTypesList));
+    	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+	   	
 	   	List<GenericValue> productCategoryAttributeTypesList = null;
 	   	try{
-	   		productCategoryAttributeTypesList = delegator.findList("ProductCategoryAttributeType", EntityCondition.makeCondition("attrTypeId", EntityOperator.IN,productAttributeTypesList), null, UtilMisc.toList("sequenceId"), null, false);
+	   		productCategoryAttributeTypesList = delegator.findList("ProductCategoryAttributeType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("sequenceId"), null, false);
 	   	} catch (Exception e) {
 				Debug.logError(e, module);
 				return ServiceUtil.returnError(e.toString());
