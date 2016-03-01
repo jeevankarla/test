@@ -4262,6 +4262,12 @@ public class DepotSalesServices{
 			if(attribute.equals("PACKING")){
 				productName = productName + categoryName + " ";
 			}
+			
+			if( (attribute.equals("PLY")) && (attrValue.equals("1")) ){
+				continue;
+			}
+			
+			
 			productName = productName + attrValue;
 			if(attribute.equals("PLY")){
 				if( productCategoryId.equals("COTTON")){
