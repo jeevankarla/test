@@ -61,6 +61,11 @@
     </property>
     <property key="CustomerName">
         <value xml:lang="en">Customer Name</value>        
+        <value xml:lang="hi_IN">ग्राहक का नाम</value>
+    </property>
+    <property key="PassbookNo">
+        <value xml:lang="en">Passbook Num</value>        
+        <value xml:lang="hi_IN">पासबुक नंबर</value>
     </property>
     <property key="TimePeriod">
         <value xml:lang="en">Time Period</value>        
@@ -25368,6 +25373,24 @@
         <value xml:lang="ta">நுகர்வோர்</value>
     </property>
     
+    <property key="PartyCode">
+        <value xml:lang="en">Party Code</value>
+        <value xml:lang="hi_IN">पार्टी के कोड</value>
+        <value xml:lang="ta">நுகர்வோர்</value>
+    </property>
+    
+    <property key="IndentNo">
+        <value xml:lang="en">Indent No</value>
+        <value xml:lang="hi_IN">इंडेंट संख्या</value>
+        <value xml:lang="ta">தேவை</value>
+    </property>
+    
+    <property key="Approve">
+        <value xml:lang="en">Approval</value>
+        <value xml:lang="hi_IN">अनुमोदन</value>
+        <value xml:lang="ta">தேவை</value>
+    </property>
+    
     <property key="Product">
         <value xml:lang="en">Product</value>
         <value xml:lang="hi_IN">उत्पाद</value>
@@ -25377,6 +25400,41 @@
     <property key="PurchaseOrder">
         <value xml:lang="en">Purchase Order</value>
         <value xml:lang="hi_IN">खरीद आदेश</value>
+    </property>
+    
+    <property key="PurchaseOrderNo">
+        <value xml:lang="en">PO No</value>
+        <value xml:lang="hi_IN">खरीद आदेश</value>
+    </property>
+    
+    <property key="ShipmentDate">
+        <value xml:lang="en">Shipment Date</value>
+        <value xml:lang="hi_IN">शिपमेंट तिथि</value>
+    </property>
+    
+    <property key="FindShipment">
+        <value xml:lang="en">Find Shipment</value>
+        <value xml:lang="hi_IN">शिपमेंट खोजें</value>
+    </property>
+    
+    <property key="ShipmentId">
+        <value xml:lang="en">Shipment Id</value>
+        <value xml:lang="hi_IN">शिपमेंट संख्या</value>
+    </property>
+    
+    <property key="VechicleNo">
+        <value xml:lang="en">Vechicle No</value>
+        <value xml:lang="hi_IN">वाहन संख्या</value>
+    </property>
+    
+    <property key="AcceptShipment">
+        <value xml:lang="en">Accept Shipment</value>
+        <value xml:lang="hi_IN">शिपमेंट स्वीकार करें</value>
+    </property>
+    
+    <property key="Report">
+        <value xml:lang="en">Report</value>
+        <value xml:lang="hi_IN">रिपोर्ट</value>
     </property>
     
     <property key="ReceiptOfGoods">
@@ -25484,6 +25542,18 @@
         <value xml:lang="hi_IN">अन्य इंडेंट</value>
         <value xml:lang="ta">மற்ற தேவை</value>
     </property>
+    <property key="DyesIndent">
+        <value xml:lang="en">Dyes Indent</value>
+        <value xml:lang="hi_IN">रंगों इंडेंट</value>
+        <value xml:lang="ta">மற்ற தேவை</value>
+    </property>
+    <property key="ChemicalIndent">
+        <value xml:lang="en">Chemical Indent</value>
+        <value xml:lang="hi_IN">रसायन  इंडेंट</value>
+        <value xml:lang="ta">மற்ற தேவை</value>
+    </property>
+    
+    
     <property key="DirectIndent">
         <value xml:lang="en">Direct Indent</value>
         <value xml:lang="hi_IN">प्रत्यक्ष इंडेंट</value>
