@@ -1148,7 +1148,7 @@
       
        <menu name="FindIndentPortalTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
-         <menu-item name="IndentPortalPayment" title="${uiLabelMap.BranchSalesIndent}">
+         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.BranchSalesIndent}">
 			<link target="IndentPortal"></link>
 		</menu-item>
 		
@@ -1160,7 +1160,7 @@
       
       
      <menu name="IndentPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-              default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
+              default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem2">
                
                <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
     			    <link target="IndentPortalOrderPayment">
@@ -1223,12 +1223,12 @@
 		<menu-item name="BranchSalesOrder" title="${uiLabelMap.IndentEntry}">
        		<link target="SilkBranchSalesOrder"/>
        	</menu-item>
-       	<menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
+       	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
         	</link>
-	    </menu-item>
+	    </menu-item> -->
        	<menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
 			<link target="orderPayment">
 				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
