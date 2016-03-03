@@ -465,20 +465,20 @@
 	      				<table width="30%" border="0" cellspacing="0" cellpadding="0">
 		               		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="10%"><font color="green">${uiLabelMap.CustomerName}: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="10%"><font color="green">${uiLabelMap.CustomerName}: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="custName"style="color: blue" ></label></td>
+			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="custName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 			       			 <tr>
-			       				<td width="10%"><font color="green">${uiLabelMap.PassbookNo}: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">${uiLabelMap.PassbookNo}: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.address?exists && parameters.address?has_content> 
