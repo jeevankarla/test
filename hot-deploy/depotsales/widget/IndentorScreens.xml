@@ -179,6 +179,8 @@
 				<set field="screenFlag" value="depotSales" />
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
 					/> -->
+			    <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />		
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
 			</actions>

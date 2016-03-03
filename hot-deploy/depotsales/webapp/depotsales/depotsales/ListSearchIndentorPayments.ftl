@@ -188,7 +188,7 @@ under the License.
 
         <#-- <td>DC Report</td> -->
           <#-- <td>Payment</td> -->
-          <<td>${uiLabelMap.CommonEdit}</td>
+          <td>${uiLabelMap.CommonEdit}</td>
           <#--<td>Party Balance</td>-->
 		<#--  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
           

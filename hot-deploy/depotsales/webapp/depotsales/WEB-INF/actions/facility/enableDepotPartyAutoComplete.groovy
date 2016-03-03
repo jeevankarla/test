@@ -24,21 +24,18 @@
 	dctx = dispatcher.getDispatchContext();
 	
 	userPartyId = userLogin.partyId;
+	context.partyId = userPartyId;
 	partyRoles = delegator.findList("PartyRole", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId), null,null,null, false);
-	Debug.log("partyRoles ================"+partyRoles);
 	userCustomerId = null;
 	if(UtilValidate.isNotEmpty(partyRoles)){
 		customerParty = EntityUtil.filterByCondition(partyRoles, EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-		Debug.log("customerParty ================"+customerParty);
 		if(UtilValidate.isNotEmpty(customerParty)){
 			userCustomerId = (EntityUtil.getFirst(customerParty)).get("partyId");
 			userParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", userCustomerId), false);
-			Debug.log("userParty ================"+userParty);
 			if(userParty){
 			context.party = userParty;
 			}else{
 			personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",userCustomerId), false);
-			Debug.log("personDetails ================"+personDetails);
 			context.party = personDetails;
 			}
 		}
@@ -87,9 +84,7 @@
 	}
 	//branch Party Json
 	
-	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
-	Debug.log("resultCtx ================"+resultCtx);
-	
+	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));	
 	productStoreIds=[];
 	productStoreDetails = resultCtx.get("productStoreList");
 	//productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
@@ -102,7 +97,6 @@
 	if(productStoreIds.size() == 1){
 		context.productStoreId = productStoreIds.get(0);
 		parameters.productStoreId = productStoreIds.get(0);
-		Debug.log("productStoreId ====================="+productStoreIds.get(0));
 	}
 	productStoreIds.each{ productStoreId ->
 		JSONArray brcpartyJSON = new JSONArray();
