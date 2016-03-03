@@ -151,12 +151,12 @@
 		       	  				  
 		       	  				  var tableElement;
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="green">PartyLoomType</font></td>';
-		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Quota</font></td>';
+		       	  				   //tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Qty</font></td></tr>';
 		       	  				   
 		       	  				  for(var i=0 ; i<LoomDetails.length ; i++){
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomType+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
+		       	  				//   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
 		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQty+'</font></td></tr>';
 		       	  				  }
 		       	  				  
@@ -538,48 +538,48 @@
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		               		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="10%"><font color="green">PartyName       : </font></td><td width="60%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="20%"><font color="green">PartyName       : </font></td><td width="60%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="10%"><font color="green">PartyName       : </font></td><td width="60%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="20%"><font color="green">PartyName       : </font></td><td width="60%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 			       			 <tr>
-			       				<td width="10%"><font color="green">PassBook Num        : </font></td><td width="60%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       				<td width="20%"><font color="green">PassBook Num        : </font></td><td width="60%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">PassBook Num    : </font></td><td width="60%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">PassBook Num    : </font></td><td width="60%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Address         : </font></td><td width="60%"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       				<td width="20%"><font color="green">Address         : </font></td><td width="60%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="10%"><font color="green">Address         : </font></td><td width="60%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">Address         : </font></td><td width="60%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">postal Code     : </font></td><td width="60%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       				<td width="20%"><font color="green">postal Code     : </font></td><td width="60%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">postal Code     : </font></td><td width="60%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">postal Code     : </font></td><td width="60%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder     : </font></td><td width="60%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       				<td width="20%"><font color="green">Depo Holder     : </font></td><td width="60%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder     : </font></td><td width="60%"> <label  align="left" id="Depo" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">Depo Holder     : </font></td><td width="60%"> <label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			
