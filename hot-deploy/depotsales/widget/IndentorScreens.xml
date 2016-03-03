@@ -107,7 +107,8 @@
           		<section>
           			<actions>
           				<set field="titleProperty" value="Indent Payment" />
-          				<set field="tabButtonItem" value="IndentPortalOrderPayment" />
+          				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+          				<set field="tabButtonItem2" value="IndentPortalOrderPayment" />
           				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
           				<set field="defaultEffectiveDateTime"
           					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
@@ -167,8 +168,8 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
-				<set field="tabButtonItem" value="IndentPortalBranchSales" />
-				<set field="tabButtonItem2" value="processIndentPortalBranchSales" />
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="IndentPortalBranchSales" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
 				<set field="defaultEffectiveDateTime"
 					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
@@ -179,6 +180,8 @@
 				<set field="screenFlag" value="depotSales" />
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
 					/> -->
+			    <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />		
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
 			</actions>
