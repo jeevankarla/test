@@ -8,7 +8,8 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
- 
+ userPartyId = userLogin.partyId;
+ context.partyId = userPartyId;
 if(UtilValidate.isEmpty(parameters.productId)){
 	
 	
