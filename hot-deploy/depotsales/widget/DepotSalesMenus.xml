@@ -405,12 +405,12 @@
 						<parameter param-name="menuName" value="OtherIndent"/>
 				   </link>
 				</menu-item>
-				<menu-item name="DyesIndent" title="Dyes Indent">
+				<menu-item name="DyesIndent" title="${uiLabelMap.DyesIndent}">
 				    <link target="DyesBranchSalesOrder">
 						<parameter param-name="menuName" value="DyesIndent"/>
 				   </link>
 				</menu-item>
-				<menu-item name="ChemicalIndent" title="Chemical Indent">
+				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
 				    <link target="ChemicalBranchSalesOrder">
 						<parameter param-name="menuName" value="ChemicalIndent"/>
 				   </link>
@@ -442,12 +442,12 @@
 						<parameter param-name="menuName" value="OtherIndent"/>
 				   </link>
 				</menu-item>
-        	    <menu-item name="DyesIndent" title="Dyes Indent">
+        	    <menu-item name="DyesIndent" title="${uiLabelMap.DyesIndent}">
 				    <link target="DyesBranchSalesOrder">
 						<parameter param-name="menuName" value="DyesIndent"/>
 				   </link>
 				</menu-item>
-				<menu-item name="ChemicalIndent" title="Chemical Indent">
+				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
 				    <link target="ChemicalBranchSalesOrder">
 						<parameter param-name="menuName" value="ChemicalIndent"/>
 				   </link>
@@ -710,7 +710,7 @@
         <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceiptsDepot"/>
         </menu-item> -->
-        <menu-item name="FindGRNShipments" title="Find GRN">
+        <menu-item name="FindGRNShipments" title="${uiLabelMap.FindShipment}">
         	<link target="FindGRNShipmentsDepot"/>
         </menu-item>
         <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
@@ -746,7 +746,7 @@
         <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceiptsDepot"/>
         </menu-item> -->
-        <menu-item name="FindGRNShipments" title="Find GRN">
+        <menu-item name="FindGRNShipments" title="${uiLabelMap.FindShipment}">
         	<link target="IndentorFindGRNShipments"/>
         </menu-item>
         <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
@@ -785,7 +785,7 @@
        <!--  <menu-item name="DepotTransMaterialReceipts" title="Supplier Delivery">
         	<link target="DepotTransMaterialReceipts"/>
         </menu-item> -->
-        <menu-item name="DepotTransGRNShipments" title="Find GRN">
+        <menu-item name="DepotTransGRNShipments" title="${uiLabelMap.FindShipment}">
         	<link target="FindDepotTransGRNShipments"/>
         </menu-item>
         <menu-item name="DepotTransMaterialShipmentOverview" title="Material Shipment Overview">	

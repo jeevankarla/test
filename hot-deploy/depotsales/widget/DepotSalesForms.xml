@@ -293,11 +293,11 @@
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
 <!--         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> -->
-        <field name="estimatedShipDate" title="Shipment Date"><date-find default-option-from="sameDay"  /></field>
-        <field name="primaryOrderId" title="PO no"><text-find/></field>
-        <field name="shipmentId" title="Shipment Id"><text-find/></field>
-        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="vehicleId" title="Vehicle No"><text-find/></field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
+        <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
+        <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
+        <field name="partyId" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
         	<drop-down allow-empty="true" > 
         		<option key="DISPATCHED" description="Dispatched" > </option>
@@ -474,47 +474,47 @@
             	</entity-condition>
             	<set field="invoiceReceiptSize" value="${groovy: invoiceReceiptList.size();}"/>
             </row-actions>
-          	<field name="shipmentId" widget-style="buttontext h3" title="GRN Shipment Id">
+          	<field name="shipmentId" widget-style="buttontext h3" title="${uiLabelMap.ShipmentId}">
           		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" target-window="_blank" >
                     <parameter param-name="shipmentId"/>
                 </hyperlink>
           	</field>
-            <field name="estimatedShipDate" title="GRN Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
-            <field name="primaryOrderId" title="PO No" widget-style="buttontext">
+            <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
+            <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}" widget-style="buttontext">
             	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
           		</hyperlink>
             </field>
-            <field name="partyId">
+            <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                     <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
                         <parameter param-name="partyId" from-field="partyId"/>
                     </sub-hyperlink>
                 </display-entity>
             </field>
-            <field name="vehicleId" title="Vehicle No"><display/></field>
+            <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><display/></field>
             <field name="partyIdTo" ><hidden/></field>
             <field name="partyName" ><hidden/></field>
-            <field name="statusId" title="Status">
+            <field name="statusId" title="${uiLabelMap.CommonStatus}">
             	<display-entity entity-name="StatusItem" description="${description}"/>
             </field>
-            <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
+            <!-- <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
                 <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
                 </hyperlink>
-            </field> 
-            <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+            </field> --> 
+            <!-- <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
                 <hyperlink target="IndentorCancelGrnShipment" description="Cancel GRN">
                     <parameter param-name="shipmentId"/>
                 </hyperlink>
-            </field>
-            <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            </field> -->
+            <field name="report" title="${uiLabelMap.Report}" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
                 <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
                  	<parameter param-name="shipmentId" value="${shipmentId}"/>
                  	<parameter param-name="orderId" value="${primaryOrderId}"/>
                    	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
                 </hyperlink>
             </field>
-            <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+            <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="${uiLabelMap.AcceptShipment}" widget-style="buttontext">
                  <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCIndentorApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
             </field> 
             <!-- <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">

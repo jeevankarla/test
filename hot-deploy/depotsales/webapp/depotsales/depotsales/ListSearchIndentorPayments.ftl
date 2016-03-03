@@ -176,7 +176,7 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>${uiLabelMap.PartyCode}</td>
-          <td>${uiLabelMap.CommonCustomerName}</td>
+          <td>${uiLabelMap.Customer}</td>
           <td>${uiLabelMap.IndentNo}</td>
           <td>${uiLabelMap.IndentDate}</td>
           <td>${uiLabelMap.CommonView}</td>
