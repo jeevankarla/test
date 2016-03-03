@@ -15,7 +15,7 @@
 
 		$(document).ready(function(){
 			 $("#societyfield").hide();
-	
+				fillPartyData();
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -119,9 +119,16 @@
 			
 			
 			$("#partyId").blur(function() {
-			var partyId = $('[name=partyId]').val();
+			fillPartyData();
+			});
 			
-			
+		});
+
+		function fillPartyData(partyId){
+					var partyId = $('[name=partyId]').val();
+		
+				       	  				 if( partyId != undefined && partyId != ""){
+			$('.partyLoom').remove();
 				var dataString="partyId=" + partyId ;
 	      	$.ajax({
 	             type: "POST",
@@ -140,9 +147,19 @@
 		       	  				   address1 +=contactDetails["city"];
 		       	  				   
 		       	  				   var custName=contactDetails["custPartyName"];
-		       	  				   var loomType=contactDetails["loomType"];
-		       	  				   var loomQty=contactDetails["loomQty"];
-		       	  				   var loomQuota=contactDetails["loomQuota"];
+		       	  				  var LoomDetails=contactDetails["LoomDetails"];
+		       	  				  
+		       	  				  var tableElement;
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="green">PartyLoomType</font></td>';
+		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Quota</font></td>';
+		       	  				  tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Qty</font></td></tr>';
+		       	  				   
+		       	  				  for(var i=0 ; i<LoomDetails.length ; i++){
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomType+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQty+'</font></td></tr>';
+		       	  				  }
+		       	  				  
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   
@@ -152,12 +169,10 @@
 		       	  				  $("#postalCode").html("<h4>"+postalCode+"</h4>");
 		   						   $("#address").html("<h4>"+address1+"</h4>");
 		       	  				   $("#partyName").html("<h4>"+custName+"</h4>");
-		       	  				   $("#loomType").html("<h4>"+loomType+"</h4>");
 		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
 		       	  				   
-		       	  				    $("#loomQty").html("<h4>"+loomQty+"</h4>");
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
-		       	  				   	$("#loomQuota").html("<h4>"+loomQuota+"</h4>");
+		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
 	      			}
@@ -166,11 +181,12 @@
 	         	 error: function() {
 	          	 	alert(result["_ERROR_MESSAGE_"]);
 	         	 }
-	        }); 
-			
-			});
-			
-		});
+	         	 });
+	         	 }
+	        }
+		
+		
+		
 		
 		var partyName;
 		function dispSuppName(selection){
@@ -566,35 +582,42 @@
 			       				<td width="10%"><font color="green">Depo Holder     : </font></td><td width="60%"> <label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
-			       			<#if parameters.loomType?exists && parameters.loomType?has_content> 
 			       			
 			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type : </font></td><td width="60%"><font color="blue"><b>${parameters.loomType}</b></font></td>
-			       			</tr>
-			       			<#else>
+			       			<table id="loomTypes">
 			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type : </font></td><td width="60%"> <label  align="left" id="loomType" style="color: blue"></label></td>
-			       			</tr>
+			       			<#--><#if parameters.loomType?exists && parameters.loomType?has_content> 
+			       			
+			       			<td>
+			       				<td width="20%"><font color="green">Party Loom Type</font></td>
+			       			</td>
+			       			<#else>
+			       			<td>
+			       				<td width="20%"><font color="green">Party Loom Type</font></td>
+			       			</td>
 			       			</#if>
 			       			<#if parameters.loomQuota?exists && parameters.loomQuota?has_content> 
 			       			
-			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom    : </font></td><td width="60%"><font color="blue"><b>${parameters.loomQuota}</b></font></td>
-			       			</tr>
+			       			<td>
+			       				<td width="20%"><font color="green">QuotaPerLoom</font></td>
+			       			</td>
 			       			<#else>
-			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom    : </font></td><td width="60%"> <label  align="left" id="loomQuota" style="color: blue"></label></td>
-			       			</tr>
+			       			<td>
+			       				<td width="20%"><font color="green">QuotaPerLoom</font></td>
+			       			</td>
 			       			</#if>
 			       			<#if parameters.loomQty?exists && parameters.loomQty?has_content> 
-			       			<tr>
-			       				<td width="10%"><font color="green">Quantity        : </font></td><td width="60%"><font color="blue"><b> ${parameters.loomQty}</b></font></td>
-			       			</tr> 
+			       			<td>
+			       				<td width="20%"><font color="green">Quantity</font></td>
+			       			</td> 
 			       			<#else>
-			       			<tr>
-			       				<td width="10%"><font color="green">Quantity        : </font></td><td width="60%"> <label  align="left" id="loomQty" style="color: blue"></label></td>
+			       			<td>
+			       				<td width="20%"><font color="green">Quantity</font></td>
+			       			</td>
+			       			</#if>-->
 			       			</tr>
-			       			</#if>
+			       			</table>
+			       			</tr>
 			       		</table>
 		       	</form>
 				

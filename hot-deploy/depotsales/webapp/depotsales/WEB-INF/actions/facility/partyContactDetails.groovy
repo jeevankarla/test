@@ -99,25 +99,33 @@ PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false
 Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
 partyJSON.put("custPartyName",custPartyName);
-loomType="";
-loomQuota="";
-loomQty="";
-Desc="";
-
+JSONArray partyLoomArrayJSON = new JSONArray();
 if(PartyLoomDetails){
-	loomQuota=PartyLoomDetails.quotaPerLoom;
-	loomQty=PartyLoomDetails.quantity;
+	PartyLoomDetails.each{ eachPartyLoom ->
+		loomType="";
+		loomQuota="";
+		loomQty="";
+		Desc="";
+	loomQuota=eachPartyLoom.quotaPerLoom;
+	loomQty=eachPartyLoom.quantity;
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,PartyLoomDetails.loomTypeId));
+	conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	LoomTypeDetails = delegator.findList("LoomType",condition,null,null,null,false);
-	Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+	LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,null,null,null,false));
+	//Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 	if(LoomTypeDetails){
 		type=LoomTypeDetails.loomTypeId;
 		/*if(LoomTypeDetails.description){
 		Desc=LoomTypeDetails.description
 		}*/
 		Desc +=type;
+	}
+	JSONObject partyLoomJSON = new JSONObject();
+	
+	partyLoomJSON.put("loomType",Desc);
+	partyLoomJSON.put("loomQuota",loomQuota);
+	partyLoomJSON.put("loomQty",loomQty);
+	partyLoomArrayJSON.add(partyLoomJSON);
 	}
 }
 psbNo="";
@@ -132,12 +140,7 @@ partyJSON.put("address2",address2);
 partyJSON.put("city",city);
 partyJSON.put("postalCode",postalCode);
 partyJSON.put("Depo",Depo);
-partyJSON.put("loomType",Desc);
-partyJSON.put("loomQuota",loomQuota);
-partyJSON.put("loomQty",loomQty);
-
-
-
+partyJSON.put("LoomDetails",partyLoomArrayJSON);
 }
 context.partyJSON=partyJSON;
 Debug.log("partyJSON====================="+partyJSON);
