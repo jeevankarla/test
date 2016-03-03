@@ -122,7 +122,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	 
-	 <fo:block  keep-together="always" text-align="center"  white-space-collapse="false" font-size="12pt" font-weight="bold"> <fo:inline font-weight="bold">TERMS &amp; CONDITIONS</fo:inline>                          </fo:block>		
+	<#-- <fo:block  keep-together="always" text-align="center"  white-space-collapse="false" font-size="12pt" font-weight="bold"> <fo:inline font-weight="bold">TERMS &amp; CONDITIONS</fo:inline>                          </fo:block>		
 	  
 	 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >-------------------</fo:block>		 
           <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -155,7 +155,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			 
 	<fo:block   text-align="left"  white-space-collapse="false" font-size="10pt" >PURCHASE ORDER NO./DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate?if_exists, "dd-MMM-yy")} </fo:block>
 				          <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	<fo:block   text-align="left"  white-space-collapse="false" font-size="10pt" >Arrangment made for supply </fo:block>
+	<fo:block   text-align="left"  white-space-collapse="false" font-size="10pt" >Arrangment made for supply </fo:block>-->
 		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	 <fo:block  keep-together="always" text-align="right"  white-space-collapse="false" font-size="11pt" font-weight="bold">        Authorized Signature &#160;&#160;&#160;</fo:block>
