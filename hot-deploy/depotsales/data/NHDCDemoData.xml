@@ -253,7 +253,6 @@ under the License.
     	<StatusValidChange statusId="DOCUMENTS_ENDORSED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Documents Received"/> 
     	<StatusValidChange statusId="DISPATCHED" statusIdTo="GOODS_RECEIVED" transitionName="Set Dispatched to Goods Accepted"/>
     	
-    	<PeriodType description="Ten Percent Scheme Period" periodTypeId="TEN_PERC_PERIOD"/> 
     	<ProductCategoryAssocType description="Scheme Applicability" productCategoryAssocTypeId="SCHEME_APPLICABILITY"/> 
 		
 		<ProductCategoryAssoc productCategoryId="COTTON" productCategoryIdTo="COTTON_40ABOVE" productCategoryAssocTypeId="SCHEME_APPLICABILITY" fromDate="2014-04-01 00:00:00.0" /> 
@@ -303,6 +302,8 @@ under the License.
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="NF" sequenceId="02" attrCode="NF"/>
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="S" sequenceId="01" attrCode="S"/>
 		
+		<PeriodType description="Ten Percent Scheme Period" periodTypeId="TEN_PERC_PERIOD"/> 
+    	
 		<SchemeTimePeriod schemeTimePeriodId="JAN_16" fromDate="2016-01-01" thruDate="2016-01-31" periodName="SCH_JAN_16" periodNum="1" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="2" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="3" periodTypeId="TEN_PERC_PERIOD"/> 
