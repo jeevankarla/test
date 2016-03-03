@@ -82,6 +82,54 @@
 				showStoreCatalog(productStoreObjOnload);
 			}
 			
+			
+			$("#societyPartyId").blur(function() {
+			var partyId = $('[name=societyPartyId]').val();
+			alert
+			
+				var dataString="partyId=" + partyId ;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyContactDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				  contactDetails =result["partyJSON"];
+	       	  				 if( contactDetails != undefined && contactDetails != ""){
+		       	  				  var address1=contactDetails["address1"];
+		       	  				   address1 +=contactDetails["address2"];
+		       	  				   address1 +=contactDetails["city"];
+		       	  				   var custName=contactDetails["custPartyName"];
+		       	  				   var loomType=contactDetails["loomType"];
+		       	  				   var loomQty=contactDetails["loomQty"];
+		       	  				   var loomQuota=contactDetails["loomQuota"];
+		       	  				   var Depo=contactDetails["Depo"];
+		       	  				   var psbNo=contactDetails["psbNo"];
+		       	  				   var postalCode=contactDetails["postalCode"];
+		       	  				   $("#postalCode").html("<h4>"+postalCode+"</h4>");
+		   						   $("#address").html("<h4>"+address1+"</h4>");
+		       	  				   $("#custName").html("<h4>"+custName+"</h4>");
+		       	  				   $("#loomType").html("<h4>"+loomType+"</h4>");
+		       	  				   $("#psbNo").html("<h4>"+psbNo+"</h4>");
+		       	  				   $("#loomQty").html("<h4>"+loomQty+"</h4>");
+		       	  				   $("#Depo").html("<h4>"+Depo+"</h4>");
+		       	  				   $("#loomQuota").html("<h4>"+loomQuota+"</h4>");
+		       	  				   
+	       	  				   }
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	        }); 
+			
+			});
+			
 		});
 		
 		var partyName;
@@ -180,43 +228,38 @@
 	 
 	</script>
 	
-	<#assign changeRowTitle = "Changes">     
+	<#assign changeRowTitle = "Changes">   
 	<#if parameters.formAction?has_content && (parameters.formAction=="SilkMultiIndentorSalesOrder" || parameters.formAction=="OtherMultiIndentorSalesOrder")>
-	<#include "SilkMultiBranchSalesOrderInternalForm.ftl"/>
+		<#include "SilkMultiBranchSalesOrderInternalForm.ftl"/>
 	<#else>
-	<#include "MultiIndentorSalesOrderInternalForm.ftl"/>
-	</#if>   	         
+		<#include "MultiIndentorSalesOrderInternalForm.ftl"/>
+	</#if>             
 	<#include "EditUDPPriceDepot.ftl"/>
+	<div class="top">
 	
-	<div class="full">
-	<div>
-	<div class="screenlet" style="width:95%">
-		<div class="screenlet-title-bar">
-	        <div class="grid-header" style="width:100%">
-				<label>Branch Sales Entry </label>
-			</div>
-	    </div>
-
-	    <div class="screenlet-body">
-	     <#assign frmAction="MultiIndentorBranchSalesOrder">
+<div class="full">
+	<div class="lefthalf" style="width:30%;height:40px;">
+		<div class="screenlet" style="width:173%">
+			<div class="screenlet-title-bar">
+         		<div class="grid-header" style="width:100%">
+					<label>Branch sales Entry </label>
+				</div>
+		     </div>
+      
+    		<div class="screenlet-body">
+    		  <#assign frmAction="MultiIndentorBranchSalesOrder">
 	    <#if parameters.formAction?has_content>
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
 	    
 	    	<form method="post" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
-		
-	      	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	               	
+	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	               	<tr>
-		       	  		
-		       			<td>&nbsp;</td>
 		       			<input type="hidden" name="billingType" id="billingType" value="onBehalfOf"/>  
-		       			
-		       		
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+					  	   		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		
 				          		</td>       
@@ -243,7 +286,7 @@
 			        	</#if>
 						
 	               	</tr>
-	             <#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
+	           <#if parameters.societyPartyId?exists && parameters.societyPartyId?has_content>  
 					<tr>		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> ${uiLabelMap.WeaverSociety}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -263,21 +306,11 @@
  				               			${societyPartyName?if_exists} [ ${parameters.societyPartyId?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          		</td>       
-				       		
 			        	</#if>
-						
 	               	</tr>
-
 					<#else>
-
 	               	  	<tr id='societyfield'>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'></div></td>
-			   		     	         
-			      			
-			   		
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else> ${uiLabelMap.WeaverSociety}:</#if><font color="red">*</font></div></td>
+			   		    <td align='left' ><div class='h3'>${uiLabelMap.WeaverSociety}:<font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if societyPartyId?exists && societyPartyId?has_content>  
 					  	  		<input type="hidden" name="societyPartyId" id="societyPartyId" value="${societyPartyId?if_exists}"/>  
@@ -306,7 +339,6 @@
 	               	</tr>
 	               	</#if>
 	               	<tr>
-			           	<td>&nbsp;</td>
 						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if productStoreId?exists && productStoreId?has_content>  
@@ -327,20 +359,14 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId"/>
-				          			<span class="tooltip" id="branchName"></span>
+				          			<input type="text" name="productStoreId" id="productStoreId"/></td>
+				          		<td><span class="tooltip" id="branchName"></span>
 				          		</td>
 				          	</#if>
 			        	</#if>
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
-	               	
-	               	
-	               	
 	               	<tr>
-		       	  		
-		       	  		<td>&nbsp;</td>
-		       	  		
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
@@ -356,10 +382,9 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-		       			
-		       			<td>&nbsp;</td>
-		       	  		
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
+		       		</tr>	
+					<tr>
+					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
 		       			<#if orderTaxType?exists && orderTaxType?has_content>  
 			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
 		          			<td valign='middle'>
@@ -373,13 +398,8 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-						<td>&nbsp;</td>
-						
 	               	</tr>	
-					<tr>
-		       	  		
-		       	  		<td>&nbsp;</td>
-		       	  		
+                    <tr>  
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
 			           		<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		          			<input type="hidden" name="isFormSubmitted"  value="YES" />
@@ -407,9 +427,8 @@
 				            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 				            	</td>
 			       	  		</#if>
-		       			
-		       			<td>&nbsp;</td>
-		       	  		
+		       	  </tr>	
+                      <tr>
 		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
 							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ReceivedDate}:</div></td>
 							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
@@ -424,17 +443,8 @@
 				 				</td>
 							</#if>
 						</#if>
-						<td>&nbsp;</td>
-						
-							
-						
-	               	</tr>
-	               	
-	               	<tr><td><br/></td></tr>
-	               	
+	               	</tr>	               	
 	               	<tr>
-		       	  		
-		       			<td>&nbsp;</td>
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if suplierPartyId?exists && suplierPartyId?has_content>  
@@ -463,17 +473,7 @@
 			        	</#if>
 						
 	               	</tr>
-	               	
-	               			               
-	               	
-	               	   	
-	               	
-	               	
-	               	
-	               	
-	               	
-				
-	               <#--	
+	                 <#--	
 	               	<tr>
 	               		<td>&nbsp;</td>
 	               		<td>&nbsp;</td>
@@ -501,23 +501,109 @@
 		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<br>
-	</form>
-	</div>
-	</div>
-	
-	<#if changeFlag?exists && changeFlag=='AdhocSaleNew'>			
-		<div class="screenlet">
-		    <div class="screenlet-body">
-		 		<div class="grid-header" style="width:100%">
-					<label>Last Change <#if lastChangeSubProdMap?exists && lastChangeSubProdMap?has_content>[made by ${lastChangeSubProdMap.modifiedBy?if_exists} at ${lastChangeSubProdMap.modificationTime?if_exists}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entries Made by ${parameters.userLogin.userLoginId} Today: ${entrySize?if_exists}</#if></label>
-				</div>
-				<div id="myGrid2" style="width:100%;height:75px;"></div>		
-		    </div>
+	</form>    
 		</div>
-	</#if>     
+		</div>
+	</div>
+
+	<div class="righthalf" style="width:46%;height:30px;">
+		<div class="screenlet">
+		    <div class="grid-header" style="width:100%">
+		 			<label>Customer Details</label>
+				</div>
+    		<div class="screenlet-body">
+		 		
+				 <form  name="partyDetails" id="partyDetails">
+	      				<table width="30%" border="0" cellspacing="0" cellpadding="0">
+		               		<#if parameters.custName?exists && parameters.custName?has_content> 
+		               		 <tr>
+			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       			</tr>
+			       			<#else>
+		               		<tr>
+			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="custName"style="color: blue" ></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+			       			 <tr>
+			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.address?exists && parameters.address?has_content> 
+			       			<tr>
+			       				<td width="10%"><font color="green">Address: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       			</tr>
+			       			<#else>
+		               		<tr>
+			       				<td width="10%"><font color="green">Address: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="address" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
+			       			<tr>
+			       				<td width="10%"><font color="green">postal Code: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">postal Code: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
+			       			<tr>
+			       				<td width="10%"><font color="green">Depo Holder: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">Depo Holder: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="Depo" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.loomType?exists && parameters.loomType?has_content> 
+			       			
+			       			<tr>
+			       				<td width="10%"><font color="green">Party Loom Type: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.loomType}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">Party Loom Type: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomType" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.loomQuota?exists && parameters.loomQuota?has_content> 
+			       			
+			       			<tr>
+			       				<td width="10%"><font color="green">QuotaPerLoom: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.loomQuota}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">QuotaPerLoom: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomQuota" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.loomQty?exists && parameters.loomQty?has_content> 
+			       			<tr>
+			       				<td width="10%"><font color="green">Quantity: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b> ${parameters.loomQty}</b></font></td>
+			       			</tr> 
+			       			<#else>
+			       			<tr>
+			       				<td width="10%"><font color="green">Quantity: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomQty" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>
+			       		</table>
+		       	</form>
+				
+		</div>     
+	</div>
+</div>
+	
+	
+	</div>
+	<div class="full" style="height:250px;">
+	</br> 
+	
 	</div>
 	
-	<div>
+	<div class="bottom">
 		<div class="screenlet" >
 		    <div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
@@ -544,11 +630,11 @@
 				    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}</@ofbizUrl>');"/>   	
-				    	</div>     
+				    	</div>      
 					</#if>
 					
 				</div>
 			</div>     
 		</div>
-	</div>
-	 
+		</div>
+	
