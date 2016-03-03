@@ -84,7 +84,7 @@ if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
 }
 else{
-	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
+	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED","ORDER_COMPLETED")));
 }
 condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
 condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
@@ -458,8 +458,6 @@ List basedList = [];
 basedList.addAll(allValues);
 
 context.orderList = basedList.reverse();
-
-Debug.log("orderList========"+orderList);
 
 
 //context.partyOBMap = partyOBMap;
