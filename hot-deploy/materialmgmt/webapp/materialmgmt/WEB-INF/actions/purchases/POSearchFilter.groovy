@@ -9,7 +9,10 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
  userPartyId = userLogin.partyId;
- context.partyId = userPartyId;
+ partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "EMPANELLED_SUPPLIER"), false);
+ if(partyRole){
+    context.partyId = userPartyId;
+ }	
 if(UtilValidate.isEmpty(parameters.productId)){
 	
 	
