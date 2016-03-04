@@ -67,6 +67,18 @@
         <value xml:lang="en">Passbook Num</value>        
         <value xml:lang="hi_IN">पासबुक नंबर</value>
     </property>
+    <property key="Address">
+        <value xml:lang="en">Address</value>        
+        <value xml:lang="hi_IN">पता</value>
+    </property>
+    <property key="PostalCode">
+        <value xml:lang="en">PostalCode</value>        
+        <value xml:lang="hi_IN">डाक कोड</value>
+    </property>
+    <property key="DepoHolder">
+        <value xml:lang="en">Depo Holder</value>        
+        <value xml:lang="hi_IN">डिपो धारक</value>
+    </property>
     <property key="TimePeriod">
         <value xml:lang="en">Time Period</value>        
     </property>
