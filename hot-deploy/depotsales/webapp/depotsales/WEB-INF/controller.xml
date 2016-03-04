@@ -113,7 +113,7 @@
     <request-map uri="approveDepotSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveDepotOrder"/>
-        <response name="success" type="view" value="processOrdersBranchSales"/>   
+        <response name="success" type="view" value="FindPO"/>   
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
     
