@@ -180,8 +180,8 @@ under the License.
           <td>${uiLabelMap.IndentNo}</td>
           <td>${uiLabelMap.IndentDate}</td>
           <td>${uiLabelMap.CommonView}</td>
-         <td>Print Indent</td>
-          <#-- <td>Minutes</td>
+        <#-- <td>Print Indent</td>
+           <td>Minutes</td>
           <td>Minutes Hindi</td> -->
           <#--<td>Edit Batch</td>-->
           <td>${uiLabelMap.Approve}</td>
@@ -203,8 +203,8 @@ under the License.
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>
-             	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
-              	<#-- <td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
+             	<#--<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
+              	 <td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>-->
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
