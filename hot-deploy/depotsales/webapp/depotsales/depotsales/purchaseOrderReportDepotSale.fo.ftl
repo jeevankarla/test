@@ -67,9 +67,9 @@ under the License.
                                   </fo:table-row>
                                   -->
                                   <fo:table-row>
-				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Phone No : 09152300064</fo:block></fo:table-cell> 
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Tin No : 09152300064</fo:block></fo:table-cell> 
 				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
-				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email: nhdcltd@yahoo.in </fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email: nhdcltdvns@yahoo.in </fo:block></fo:table-cell>       			
                                   </fo:table-row>
 			                	</fo:table-body>
 			                		</fo:table>
@@ -184,14 +184,14 @@ under the License.
               	              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteRef")?has_content>QUOTE REF NO     :${allDetailsMap.get("quoteRef")?if_exists}</#if>       </fo:block>
               	
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM           QUANTITY     REMARKS         BASIC RATE     AMOUNT</fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM           REMARKS       QUANTITY       BASIC RATE     AMOUNT</fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                  <fo:table text-align="center" >
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="140pt"/>
-               	    <fo:table-column column-width="80pt"/>
                	    <fo:table-column column-width="100pt"/>
+               	    <fo:table-column column-width="80pt"/>
             		 <fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="110pt"/>
             		
@@ -209,8 +209,8 @@ under the License.
                   	 <fo:table-row >
                 	   <fo:table-cell ><fo:block text-align="center"  font-size="12pt" >${sNo} </fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left" font-size="12pt"> ${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("remarks")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
   				       
   			          <fo:table-cell  ><fo:block text-align="right"   font-size="12pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="12pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     

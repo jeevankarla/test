@@ -47,9 +47,9 @@ under the License.
                                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> EMAIL:nhdcltdvaranasi@yahoo.in </fo:block>
+					            <#--	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>-->
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> EMAIL:nhdcltdvns@yahoo.in </fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
@@ -72,7 +72,7 @@ under the License.
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+			            <#--<fo:table-column column-width="10%"/>-->
 			            
 			            <fo:table-body>
 			                <fo:table-row>
@@ -85,9 +85,9 @@ under the License.
 					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
 					            </fo:table-cell > -->
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>
-					            </fo:table-cell>
+					            </fo:table-cell>-->
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Quantity</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(KGS)</fo:block>
@@ -149,7 +149,7 @@ under the License.
              		    <fo:table-column column-width="4%"/>
 			            <fo:table-column column-width="25%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+			             <#--<fo:table-column column-width="10%"/>-->
 			            <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
@@ -166,9 +166,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
 					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>
-					            </fo:table-cell>
+					            </fo:table-cell>-->
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Quantity</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(KGS)</fo:block>

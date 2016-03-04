@@ -206,9 +206,18 @@
       		<entity-condition entity-name="OrderItem" list="orderItemList" >
       			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
       		</entity-condition>
+      		<entity-condition entity-name="OrderRole" list="orderRoleList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER"/>
+      			</condition-list>
+      		</entity-condition>
       		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
+      		      		<set field="newSize" value="${orderItemsSize}" />
+      		
       		<set field="size" value="${groovy: return(orderItemList.size())}"/>
+      		
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
       		<hyperlink target="SupplierPoOverView" description="${orderId}" target-window="_blank">
@@ -220,6 +229,8 @@
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
         <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+        <field name="customerId" title="Agency"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, orderRoleList[0].partyId, false);} - [${partyId}]"/></field>
+
        <!--  <field use-when="&quot;${orderTypeId}&quot; == &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="LetterOfIndentReport.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
