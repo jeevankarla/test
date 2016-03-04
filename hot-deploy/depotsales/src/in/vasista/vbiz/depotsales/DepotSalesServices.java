@@ -78,6 +78,7 @@ public class DepotSalesServices{
   		Locale locale = (Locale) context.get("locale");
   		String smsContent = "";
   		String productDetails="";
+  		 String POOrderId="";
   		try{
   			List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
   			for (GenericValue item : items) {
@@ -124,14 +125,14 @@ public class DepotSalesServices{
   			}
   			boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
   			// Approving  Associated Purchase order
-  			/* List condList= FastList.newInstance();;
+  			 List condList= FastList.newInstance();;
   	           condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
   			   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
   			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
   			  if(UtilValidate.isNotEmpty(orderAssocList)){
-  			   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
-  	           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
-  			  }*/
+  			    POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+  			 /*boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);*/
+  			  }
   	         // end approving  Associated Purchase order
   	         
   			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
@@ -168,6 +169,7 @@ public class DepotSalesServices{
   			return ServiceUtil.returnError(e.toString());
   		}
          result.put("salesChannelEnumId", salesChannelEnumId);
+         result.put("orderId", POOrderId);
          return result;
   	}
    
