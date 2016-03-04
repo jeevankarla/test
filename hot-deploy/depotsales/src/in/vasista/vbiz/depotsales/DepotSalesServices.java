@@ -135,7 +135,7 @@ public class DepotSalesServices{
   			  }
   	         // end approving  Associated Purchase order
   	         
-  			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", "hi_IN");
+  			String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
   			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
   			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
   			Map<String, Object> getTelParams = FastMap.newInstance();
