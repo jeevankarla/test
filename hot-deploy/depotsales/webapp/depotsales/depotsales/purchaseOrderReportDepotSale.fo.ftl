@@ -375,6 +375,10 @@ under the License.
 								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
 								  </fo:table-cell>
+								  <#else>
+								  <fo:table-cell>
+								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
+								  </fo:table-cell>
 							 </#if>
 							  </fo:table-row>
 						</fo:table-body>

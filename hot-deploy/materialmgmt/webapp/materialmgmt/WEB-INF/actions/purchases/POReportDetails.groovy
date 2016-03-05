@@ -684,7 +684,7 @@ shipToParty=EntityUtil.getFirst(shipToPartyRole);
 
 suppAdd=[:];
 supppartyName="";
-if(shipToParty.partyId){
+if(shipToParty && shipToParty.partyId){
 	supppartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
 	//Debug.log("supppartyName===================="+supppartyName);
 
