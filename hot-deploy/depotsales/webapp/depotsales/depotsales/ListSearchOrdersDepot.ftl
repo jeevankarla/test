@@ -302,7 +302,19 @@ under the License.
 	          		<#else>
 	          		<#if isgeneratedPO !="N">
 	          		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-	            	<td><input type="button" name="approveOrder" id="approveOrder" value="Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                      <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
+                         <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+	            	  <#else>
+                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
+                         	  <td><input type="button" name="approveOrder" id="approveOrder" value="RO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                           <#else>
+                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
+                         	          <td><input type="button" name="approveOrder" id="approveOrder" value="HO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                  <#else>
+                         	          <td><input type="button" name="approveOrder" id="approveOrder" value="MD Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+                                  </#if>
+                          </#if>  
+                     </#if>    
 	          	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
  					<#else>
  					<td></td>
