@@ -132,6 +132,14 @@ under the License.
 		jQuery(formId).append(jQuery(param2));
         jQuery(formId).submit();
     }
+   function approveDraftPO(orderId, statusId){
+		var formId = "#" + "approveDraftPoForm";
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "statusId").val(statusId);
+		jQuery(formId).append(jQuery(param1));
+		jQuery(formId).append(jQuery(param2));
+        jQuery(formId).submit();
+    }
         
 //]]>
 </script>
@@ -176,7 +184,7 @@ under the License.
 		action="createShipAndInvForIUSTransferOrders"
 	</#if>>
 </form>
-
+<form name="approveDraftPoForm" id="approveDraftPoForm" method="post" action="approvalLevelOfDraftPo"/>		
 <#if orderList?has_content>
   
   <form name="listOrders" id="listOrders"  method="post" >
@@ -200,7 +208,8 @@ under the License.
          <#--> <td>Print Indent</td>-->
           <td>Edit</td>
           <td>Minutes</td>
-           <td>DraftPO</td>
+          <td>DraftPO</td>
+          <td>P&S Approvals</td>
           <td>Minutes Hindi</td>
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
@@ -252,6 +261,28 @@ under the License.
               	<#else>
               	<td>${POorderId?if_exists}</td>
               	</#if>
+                <#if (isgeneratedPO =="Y")> 
+	                <#if (eachOrder.get('statusId') == "ORDER_CREATED")>          
+	                       <#assign statusId ="APPROVE_LEVEL1">
+	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                </#if>
+	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL1")>          
+	                       <#assign statusId ="APPROVE_LEVEL2">
+	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                </#if>
+	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL2")>          
+	                       <#assign statusId ="APPROVE_LEVEL3">
+	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                </#if>
+	                <#if eachOrder.get('statusId') == "APPROVE_LEVEL3" || eachOrder.get('statusId') == "ORDER_APPROVED">      
+                             <td>P&S Approved</td>
+                     </#if>
+                <#else>
+                   <td></td>
+                </#if>
               	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
@@ -284,7 +315,7 @@ under the License.
                     </#if> 
                  <#elseif (eachOrder.get('statusId') == "ORDER_APPROVED")>
               	  <td>Approved</td>
-              	 <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") != -1 && (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO !="N")>
+              	 <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") != -1 && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
 					<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                     <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
 	            	     <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
@@ -300,7 +331,7 @@ under the License.
                           </#if>  
                      </#if>      	
 	          		<#else>
-	          		<#if isgeneratedPO !="N">
+	          		<#if isgeneratedPO !="N" && (eachOrder.get('statusId') == "APPROVE_LEVEL3")>
 	          		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                       <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
                          <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
@@ -316,11 +347,11 @@ under the License.
                           </#if>  
                      </#if>    
 	          	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
- 					<#else>
- 					<td></td>
- 					</#if>             
+                 <#else>
+                   <td></td>
               	</#if>
-				
+				</#if>
+               
               <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
               	
               

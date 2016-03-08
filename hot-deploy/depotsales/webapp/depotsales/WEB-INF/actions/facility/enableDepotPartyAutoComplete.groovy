@@ -24,12 +24,12 @@
 	dctx = dispatcher.getDispatchContext();
 	
 	userPartyId = userLogin.partyId;
-	context.partyId = userPartyId;
 	partyRoles = delegator.findList("PartyRole", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId), null,null,null, false);
 	userCustomerId = null;
 	if(UtilValidate.isNotEmpty(partyRoles)){
 		customerParty = EntityUtil.filterByCondition(partyRoles, EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 		if(UtilValidate.isNotEmpty(customerParty)){
+			context.partyId = userPartyId;
 			userCustomerId = (EntityUtil.getFirst(customerParty)).get("partyId");
 			userParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", userCustomerId), false);
 			if(userParty){

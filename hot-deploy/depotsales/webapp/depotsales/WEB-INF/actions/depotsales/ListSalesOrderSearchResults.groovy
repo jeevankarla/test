@@ -85,7 +85,7 @@
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
 	}
 	else{
-		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
+		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 	}
 	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
@@ -191,6 +191,7 @@
 		POorder="";
 		if(OrderAss){
 			POorder=OrderAss.get("orderId");
+			context.orderId =POorder;
 			isgeneratedPO="Y";
 		}
 		
