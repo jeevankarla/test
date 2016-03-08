@@ -1448,4 +1448,13 @@ under the License.
       <attribute name="idvalue" mode="IN" type="String" optional="true"/>
       <attribute name="partyIdentityList" mode="OUT" type="List" optional="true"/>
     </service>
+    
+     <service name="createBranchSalesTransactions" engine="java" default-entity-name="BranchSaleTransactionInfo"
+            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleTransEntries" auth="true">
+        <description>Create a new Party Relationship type</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
+    </service>
+    
+    
 </services>

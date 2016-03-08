@@ -54,4 +54,47 @@ under the License.
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
+    
+
+      <entity entity-name="BranchSaleTransactionInfo"
+             package-name="org.ofbiz.party.party"
+             title="Branch sale Transactions Entity">
+      <field name="SNo" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="effectiveDate" type="date-time"></field>
+      <field name="shipmentTypeId" type="id"></field>
+      <field name="salesChannel" type="id"></field>
+      <field name="remarks" type="long-varchar" encrypt="true"></field>
+      <field name="productId" type="id"></field>
+      <field name="baleQuantity" type="floating-point"></field>
+      <field name="yarnUOM" type="short-varchar"></field>
+      <field name="bundleWeight" type="floating-point"></field>
+      <field name="quantity" type="fixed-point" ></field>
+      <field name="unitPrice" type="fixed-point" ></field>
+      <field name="suplierPartyId" type="id-ne"></field>
+      <field name="societyPartyId" type="id-ne"></field>
+      <field name="billingType" type="short-varchar"></field>
+      <field name="orderTaxType" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="disableAcctgFlag" type="short-varchar"></field>
+      <field name="schemeCategory" type="id-ne"></field>
+      <field name="orderTypeId" type="id"></field>
+      <field name="indentId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="shippedQuantity" type="fixed-point" ></field>
+      <field name="lrNumber" type="short-varchar"></field>
+      <field name="vehicleId" type="short-varchar"></field>
+      <field name="suppInvoiceId" type="short-varchar"></field>
+      <field name="suppInvoiceDate" type="date-time"></field>
+      <field name="receiptDate" type="date-time"></field>     
+      <field name="carrierName" type="short-varchar"></field>
+      <field name="deliveryChallanNo" type="short-varchar"></field>
+      <field name="paymentTypeId" type="id"></field>
+      <field name="paymentDate" type="date-time"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="inFavourOf" type="long-varchar"></field>
+      <field name="paymentRefNum" type="long-varchar"></field>
+      <field name="issuingAuthority" type="long-varchar"></field>
+      <prim-key field="SNo"/>
+    </entity>
 </entitymodel>
