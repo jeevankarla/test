@@ -125,6 +125,12 @@
         <response name="success" type="view" value="processOrdersBranchSales"/>   
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
+    <request-map uri="approvalLevelOfDraftPo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+    </request-map>
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
