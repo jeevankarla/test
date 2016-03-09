@@ -134,6 +134,17 @@ public class DepotSalesServices{
   			  if(UtilValidate.isNotEmpty(orderAssocList)){
   			    POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
   			 /*boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);*/
+  	  			Map<String, Object> approvePOParams = FastMap.newInstance();
+  	  		approvePOParams.put("orderId",POOrderId);
+  	  		approvePOParams.put("partyId",partyId);
+  	  		approvePOParams.put("statusId","ORDER_APPROVED");
+  	  		approvePOParams.put("salesChannelEnumId",salesChannelEnumId);
+  	  		approvePOParams.put("userLogin",userLogin);
+  	  		Map approveServiceResult = dispatcher.runSync("approvePurchaseOrderWithEmail", approvePOParams);
+		         if (ServiceUtil.isError(approveServiceResult)) {
+		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(approveServiceResult));
+		         }   
+  			    
   			  }
   	         // end approving  Associated Purchase order
   	         
@@ -223,7 +234,17 @@ public class DepotSalesServices{
 		   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
 		   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
-           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);           
+//           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
+		   Map<String, Object> approvePOParams = FastMap.newInstance();
+ 	  		approvePOParams.put("orderId",POOrderId);
+ 	  		approvePOParams.put("partyId",partyId);
+ 	  		approvePOParams.put("statusId","ORDER_APPROVED");
+ 	  		approvePOParams.put("salesChannelEnumId",salesChannelEnumId);
+ 	  		approvePOParams.put("userLogin",userLogin);
+ 	  		Map approveServiceResult = dispatcher.runSync("approvePurchaseOrderWithEmail", approvePOParams);
+		         if (ServiceUtil.isError(approveServiceResult)) {
+		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(approveServiceResult));
+		         } 
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
