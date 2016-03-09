@@ -1150,6 +1150,12 @@
 								<include-form name="shipmentReceiptsForInvoice"
 									location="component://depotsales/widget/DepotSalesForms.xml" />
 							</screenlet>
+								<screenlet title="${uiLabelMap.ShipmentDocumentsList}">
+                          			  <include-form name="ListShipmentContents" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                       			</screenlet>
+		                        <screenlet title="${uiLabelMap.ADDShipmentDocuments}">
+		                     			<include-form name="AddShipmentContent" location="component://depotsales/widget/DepotSalesForms.xml"/>
+		                        </screenlet>
 						</widgets>
 					</section>
 				</container>

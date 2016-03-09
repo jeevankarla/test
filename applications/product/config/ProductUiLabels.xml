@@ -82,6 +82,14 @@
     <property key="TimePeriod">
         <value xml:lang="en">Time Period</value>        
     </property>
+    <property key="ShipmentDocumentsList">
+        <value xml:lang="en">Shipment Documents List</value>        
+        <value xml:lang="hi_IN">शिपमेंट दस्तावेजों सूची</value>
+    </property>
+    <property key="ADDShipmentDocuments">
+        <value xml:lang="en">Add Shipment Documents</value>        
+        <value xml:lang="hi_IN">जोड़े शिपमेंट दस्तावेजों</value>
+    </property>
     <property key="Booth">
         <value xml:lang="en">Booth</value>        
     </property>

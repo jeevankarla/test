@@ -295,4 +295,21 @@ under the License.
         <now-timestamp field="lookedUpValue.thruDate"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
+        <simple-method method-name="createShipmentContent" short-description="Create shipment Content"> 
+        <make-value entity-name="ShipmentContent" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate">
+            <now-timestamp field="newEntity.fromDate"/>
+        </if-empty>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="deleteShipmentContent" short-description="Delete Content From shipment">
+        <make-value value-field="lookupPKMap" entity-name="ShipmentContent"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShipmentContent" map="lookupPKMap" value-field="lookedUpValue"/>
+        <now-timestamp field="lookedUpValue.thruDate"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

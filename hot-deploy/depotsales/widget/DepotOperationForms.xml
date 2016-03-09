@@ -345,6 +345,9 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
+         <field name="addContent" title="Content" widget-style="buttontext" use-when="true">
+           <hyperlink target-type="plain" description="Add Content" target="javascript:addContent('${shipmentId}','${primaryOrderId}');"></hyperlink>
+        </field>
        <!--  <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
             <hyperlink target="MaterialInvoiceInit" description="Invoice">
                 <parameter param-name="shipmentId"/>

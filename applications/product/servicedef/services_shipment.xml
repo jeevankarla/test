@@ -1006,4 +1006,17 @@ under the License.
          <attribute name="shipmentSequenceTypeId" type="String" mode="IN" optional="true"/>
          <attribute name="shipmentTypeId" type="String" default-value="MATERIAL_SHIPMENT" mode="IN" optional="false"/>
     </service> 
+      <service name="createShipmentContent" engine="simple" default-entity-name="ShipmentContent"
+        location="component://product/script/org/ofbiz/product/storage/StorageServices.xml" invoke="createShipmentContent" auth="true">
+        <description>Create a Facility Content</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    
+    <service name="deleteShipmentContent" engine="simple" default-entity-name="ShipmentContent"
+                location="component://product/script/org/ofbiz/product/storage/StorageServices.xml" invoke="deleteShipmentContent" auth="true">
+        <description>Delete Content From Facility</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>
