@@ -125,6 +125,12 @@
         <response name="success" type="view" value="processOrdersBranchSales"/>   
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>
+    <request-map uri="approvalLevelOfDraftPo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="processOrdersBranchSales"/>   
+       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+    </request-map>
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
@@ -635,6 +641,28 @@
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="processIndentPortalBranchSales"/>
+    </request-map>
+     <request-map uri="createDepotSalesShipmentContent">
+        <security auth="true" https="true"/>
+        <event path="component://product/script/org/ofbiz/product/store/ShipmentContentEvents.xml" type="simple" invoke="createShipmentContent"/>
+        <response name="success" type="request-redirect-noparam" value="FindSupplierShipments" >
+        <redirect-parameter name="shipmentId"/>
+        </response>
+        <response name="error" type="request-redirect-noparam" value="FindSupplierShipments"/>
+    </request-map>
+    <request-map uri="deleteDepotSalesShipmentContent">
+        <security auth="true" https="true"/>
+        <event invoke="deleteShipmentContent" type="service"/>
+        <response name="success" type="request-redirect-noparam" value="FindSupplierShipments">
+            <redirect-parameter name="shipmentId"/>
+        </response>
+        <response name="error" type="view" value="FindSupplierShipments"/>
+    </request-map>
+        <request-map uri="img">
+        <security auth="false" https="false"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage"/>
+        <response name="success" type="none" value="SupplierShipmentOverview"/>
+        <response name="error" type="request" value="SupplierShipmentOverview"/>
     </request-map>
     
     <request-map uri="FindProcProducer">

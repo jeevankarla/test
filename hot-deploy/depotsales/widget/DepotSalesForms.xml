@@ -1792,5 +1792,92 @@
         <field name="parentTypeId"><hidden value="REFUND_PAYOUT"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+    <form name="ListShipmentContents" type="list" separate-columns="false"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-and entity-name="ShipmentContentDetail">
+                <field-map field-name="shipmentId"/>
+                <order-by field-name="-fromDate"/>
+            </entity-and>
+        </actions>
+        
+        <row-actions>
+            <entity-one entity-name="DataResource" value-field="dataResource"/>
+            <entity-one entity-name="DataCategory" value-field="dataCategory">
+                <field-map field-name="dataCategoryId" from-field="dataResource.dataCategoryId"/>            
+            </entity-one> 
+            <set field="dataCategoryId" from-field="dataCategory.categoryName"/>
+        </row-actions>
+        <field name="shipmentId"><hidden/></field>
+        <field name="contentId"><hidden/></field>
+        <field name="contentName">
+            <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
+                <sub-hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" link-style="smallSubmit">
+                    <parameter param-name="imgId" value="${dataResource.dataResourceId}"/>
+                </sub-hyperlink>                
+            </display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonDate}"><display/></field>
+        <field name="dataCategoryId" title="Category"><display/></field>
+        <field name="isPublic"><display description="${dataResource.isPublic}" /></field>        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit">
+            <hyperlink target="deleteDepotSalesShipmentContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="contentId"/>
+                <parameter param-name="shipmentId"/>
+                <parameter param-name="partyContentTypeId"/>                
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>        
+    </form>
+
+
+
+<!-- Shipment Content Form -->
+
+    <form name="AddShipmentContent" target="createDepotSalesShipmentContent" type="upload" 
+  		header-row-style="header-row">
+
+        <!-- <auto-fields-entity entity-name="Content"/> -->
+
+        <field name="shipmentId" map-name="parameters"><hidden/></field>  
+<!--         <field name="partyContentTypeId"><hidden value="INTERNAL"/></field> -->
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>
+        <!-- note sure if these two are necessray, but they are kind of confusing in this context:
+        <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>-->
+<!--         <field name="dataResourceName"><lookup target-form-name="LookupDataResource"/></field> -->
+        
+<!--         <field name="contentTypeId"><hidden value="DOCUMENT"/></field> -->
+        <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field><!--
+        <field name="mimeTypeId" >
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="MimeType"/>
+            </drop-down>
+        </field>
+        -->
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
+        <field name="contentTypeId" title="Category">
+            <drop-down allow-empty="false">
+                <option key="LR_DOCUMENT" description="LR-Document"/>
+            </drop-down>
+        </field>
+        <!-- <field name="isPublic">            
+        	<drop-down>
+                <option key="Y" description="${uiLabelMap.CommonYes}" />
+                <option key="N" description="${uiLabelMap.CommonNo}" />
+            </drop-down>
+        </field> -->
+        <field name="createButton"><submit button-type="button"/></field>
+    </form>
+
+
+
+
+
+
+
+    
+    
+    
         
 </forms>

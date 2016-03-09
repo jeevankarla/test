@@ -955,6 +955,12 @@
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>
+							<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/DocumentUploadFormsToolTip.ftl" />
+									</html>
+								</platform-specific>
 								<platform-specific>
 									<html>
 										<html-template
