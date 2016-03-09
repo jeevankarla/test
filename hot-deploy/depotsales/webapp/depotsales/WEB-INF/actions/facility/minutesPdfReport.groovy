@@ -43,10 +43,30 @@ condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, pa
 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
 getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
-
 orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
 
+conditionList1 = [];
+OrderPreferencePaymentApplicationDetailList = [];
+conditionList1.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,	orderPreferenceIds));
+cond1 = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
+OrderPreferencePaymentApplicationDetailList = delegator.findList("OrderPreferencePaymentApplication", cond1, null, null, null ,false);
+paymentIds = EntityUtil.getFieldListFromEntityList(OrderPreferencePaymentApplicationDetailList,"paymentId", true);
 
+conditionList2 = [];
+paymentDetailList = [];
+ 
+conditionList2.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,paymentIds));
+cond2 = EntityCondition.makeCondition(conditionList2, EntityOperator.AND);
+paymentDetailList = delegator.findList("Payment", cond2, null, null, null ,false);
+paymentRefNumList =[];
+paymentDetailList.each{eachPayment->
+	if((eachPayment) && (eachPayment.paymentRefNum)){
+		paymentRefNum = eachPayment.paymentRefNum; 
+		paymentRefNumList.add(paymentRefNum);
+	}
+	
+}
+context.paymentRefNumList = paymentRefNumList;
 totAmt = 0;
 
 
@@ -94,25 +114,11 @@ else{
 
 context.Scheam =Scheam;
 
-
-
-
- 
-
-
-
-
-
 conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItemList = delegator.findList("OrderItem", condition, null, null, null, false);
 
-			
-			
-			
-			
-			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
@@ -157,7 +163,6 @@ conditionList=[];
 					remarkMap.put(eachOrderItem.orderItemSeqId, orderItemAttr.get(0).attrValue);
 					
 				}
-				Debug.log("orderItemAttr=========7777777========="+orderItemAttr);
 				 tempMap = [:];
 				 productName = ""
 				 prod=delegator.findOne("Product",[productId:eachOrderItem.productId],false);
@@ -238,18 +243,13 @@ conditionList=[];
 			
 	context.OrderItemList = OrderItemList;
 	context.remarkMap=remarkMap;
-	
 	context.orderedHindiItemList = orderedHindiItemList;
-	
-	
-	
+		
 	contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
-	
 	
 	contextMap = UtilMisc.toMap("translateList", totalsList);
 	totalsHindiList = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	
 	context.totalsHindiList = totalsHindiList[0];
 	context.dayWiseEntriesLidast = dayWiseEntriesLidast;
-	
