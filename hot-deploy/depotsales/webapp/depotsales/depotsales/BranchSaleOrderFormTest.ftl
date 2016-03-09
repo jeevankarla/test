@@ -150,14 +150,14 @@
 		       	  				  var LoomDetails=contactDetails["LoomDetails"];
 		       	  				  
 		       	  				  var tableElement;
-		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="green">PartyLoomType</font></td>';
-		       	  				   //tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Quota</font></td>';
-		       	  				  tableElement += '<td width="20%" align="right" class="label"><font color="green">loom Qty</font></td></tr>';
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
+		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
 		       	  				  for(var i=0 ; i<LoomDetails.length ; i++){
-		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomType+'</font></td>';
-		       	  				//   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="right" class="label"><font color="blue">'+LoomDetails[i].loomQty+'</font></td></tr>';
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomType+'</font></td>';
+		       	  				//   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomQty+'</font></td></tr>';
 		       	  				  }
 		       	  				  
 		       	  				   var Depo=contactDetails["Depo"];
