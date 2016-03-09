@@ -58,7 +58,7 @@ under the License.
         		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MMM/yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Minute of Purchase and Sales Committee meeting for the purchase of following item(s).</fo:block>
-             	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">he committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
+             	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold"><#if supplierPartyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, false)}<#else>&#160;</#if></fo:inline></fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">towards the requirement of user agency M/s : <fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>  
         		<fo:block  text-align="left" font-size="12pt" font-weight="bold">PRICE FIXATION CHART :</fo:block>
@@ -80,7 +80,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">SNo</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Item</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Items</fo:block>
 					            </fo:table-cell >
 					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
@@ -93,10 +93,10 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Rate</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Int for 0 Days @0.00% per Annum</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Int for 0 Days @ 0.00% per Annum</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">Handling Charges @ 0.00%</fo:block>
@@ -161,7 +161,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">SNo</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Item</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Items</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Remarks</fo:block>
@@ -174,16 +174,24 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Rate</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs.)</fo:block>
+					            	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Int for 0 Days @0.00% per Annum</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs.)</fo:block>
+					            	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">Handling Charges @ 0.00%</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">Selling Rate/Unit</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs.)</fo:block>
+					            	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="10pt" white-space-collapse="false">Sale Price/Unit</fo:block>
+					            	<fo:block   text-align="left" font-size="10pt" white-space-collapse="false">Sale Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs.)</fo:block>
+					            	
 					            </fo:table-cell>
 							</fo:table-row>
 			                     <#assign sr=1>
@@ -310,9 +318,10 @@ under the License.
 			   </fo:table>
 		  </fo:block>
 	<fo:block>.</fo:block>
-	<fo:block>Advance Details: Cheque/DD No :Cr on Account amounting  received from user agency</fo:block>
+    <#assign size = paymentRefNumList.size()>
+	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1>${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
 	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
-    <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+    <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block> 
     <fo:block text-align="center"><fo:inline text-decoration="underline">Supdt(C)/AM(C)/DM(C)                  Supdt(F&amp;A)/A.M.(F&amp;A)Dy.M(F&amp;A)/Manager(F&amp;A)                             Mgr(C)/Sr.Mgr(C)/Ch.Mg r(C)</fo:inline></fo:block>  			
     <fo:block text-align="center">Head Office : 10th &amp; 11th Floor, Vikas Deep , 22 Station Road , Lucknow-226001</fo:block>				
 			</fo:flow>

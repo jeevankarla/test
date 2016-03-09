@@ -299,7 +299,7 @@ under the License.
               	</#if>
               	
               <#-->	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 && (eachOrder.get('statusId') != "ORDER_APPROVED")>-->
-              	<#if (eachOrder.orderTotal) == (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") && (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO !="N")>
+              	<#if (eachOrder.orderTotal) == (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT") && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
                      <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
               		       <td><input type="button" name="approveOrder" id="approveOrder" value="    BO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
                      <#else>
