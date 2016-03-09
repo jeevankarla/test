@@ -308,4 +308,9 @@ under the License.
         <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="2" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="3" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="APR_16" fromDate="2016-04-01" thruDate="2016-04-30" periodName="SCH_APR_16" periodNum="4" periodTypeId="TEN_PERC_PERIOD"/>  
+
+<!-- shipment document upload content types -->
+
+ <ContentType contentTypeId="INVOICE_DOCUMENT" createdStamp="2016-03-09 14:44:50.0" createdTxStamp="2016-03-09 14:44:50.0" description="Invoice Document" lastUpdatedStamp="2016-03-09 14:44:50.0" lastUpdatedTxStamp="2016-03-09 14:44:50.0"/>
+ <ContentType contentTypeId="LR_DOCUMENT" createdStamp="2016-03-09 14:44:50.0" createdTxStamp="2016-03-09 14:44:50.0" description="LR Document" lastUpdatedStamp="2016-03-09 14:44:50.0" lastUpdatedTxStamp="2016-03-09 14:44:50.0"/>
 </entity-engine-xml>

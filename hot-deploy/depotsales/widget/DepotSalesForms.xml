@@ -1858,7 +1858,8 @@
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="contentTypeId" title="Category">
             <drop-down allow-empty="false">
-                <option key="LR_DOCUMENT" description="LR-Document"/>
+                <option key="LR_DOCUMENT" description="LR Document"/>
+                <option key="INVOICE_DOCUMENT" description="Invoice Document"/>
             </drop-down>
         </field>
         <!-- <field name="isPublic">            
