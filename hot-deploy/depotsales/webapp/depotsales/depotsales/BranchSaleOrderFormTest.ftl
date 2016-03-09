@@ -15,7 +15,7 @@
 
 		$(document).ready(function(){
 			 $("#societyfield").hide();
-				fillPartyData();
+			 	fillPartyData();
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -119,7 +119,7 @@
 			
 			
 			$("#partyId").blur(function() {
-			fillPartyData();
+				fillPartyData();
 			});
 			
 		});
@@ -162,7 +162,15 @@
 		       	  				  
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var psbNo=contactDetails["psbNo"];
-		       	  				   
+		       	  				   var prodStoreId=contactDetails["productStoreId"];
+			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
+			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
+			       	  					$('#productStoreId').focus().val(prodStoreId);
+			       	  					jQuery("#branchName").html(prodStoreId);
+			       	  					$('#suplierPartyId').focus();
+	    								$('#productStoreId').autocomplete('close');
+			       	  			   }
+			       	  				
 		       	  				   
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];

@@ -133,6 +133,20 @@ partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("pa
 if(partyIdentification){
 	psbNo = partyIdentification.get("idValue");
 }
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId));
+	Debug.log("resultCtx ================"+resultCtx);
+	
+	productStoreIds=[];
+	productStoreDetails = resultCtx.get("productStoreList");
+	//productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
+	productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
+	Debug.log("productStoreIds ================"+productStoreIds);
+	
+	if(productStoreIds.size() == 1){
+		partyJSON.put("productStoreId",productStoreIds.get(0));
+	}
+	
 partyJSON.put("psbNo",psbNo);
 
 partyJSON.put("address1",address1);
