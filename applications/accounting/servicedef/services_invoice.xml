@@ -608,5 +608,11 @@ under the License.
         location="org.ofbiz.accounting.payment.PaymentWorker" invoke="sendPaymentSms" max-retry="3">
         <description>Send an payment sms</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>                                              
-    </service>      
+    </service>
+    <service name="getAcctTransEnries" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="getAcctTransEnries" auth="true">    
+       <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentId" type="String" mode="IN" optional="true"/>                                              
+       <attribute name="AcctgTransAndEntries" type="List" mode="OUT"/>                                   
+    </service>       
 </services>

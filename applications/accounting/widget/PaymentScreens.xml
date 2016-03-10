@@ -400,11 +400,13 @@ under the License.
                 <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
                 <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
-                <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
+                <service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
+			    <set field="AcctgTransAndEntries" type="List" from-field="AcctgTransAndEntries.AcctgTransAndEntries"/>
+               <!--  <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
                     <condition-expr field-name="paymentId" from-field="paymentId"/>
                     <order-by field-name="acctgTransId"/>
                     <order-by field-name="acctgTransEntrySeqId"/>
-                </entity-condition>
+                </entity-condition> -->
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>

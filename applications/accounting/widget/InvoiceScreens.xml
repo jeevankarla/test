@@ -363,12 +363,14 @@
 				<set field="appliedAmount"
 					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}"
 					type="BigDecimal" />
-				<entity-condition entity-name="AcctgTransAndEntries"
+				<service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
+			    <set field="AcctgTransAndEntries" type="List" from-field="AcctgTransAndEntries.AcctgTransAndEntries"/>
+				<!-- <entity-condition entity-name="AcctgTransAndEntries"
 					list="AcctgTransAndEntries">
 					<condition-expr field-name="invoiceId" operator="equals"
 						from-field="invoiceId" />
 					<order-by field-name="acctgTransId" />
-				</entity-condition>
+				</entity-condition> -->
 				<service service-name="acctgInvoicePermissionCheck"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />

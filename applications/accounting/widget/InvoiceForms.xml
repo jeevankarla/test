@@ -228,8 +228,38 @@ under the License.
         <field name="amountApplied" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
     <form name="AcctgTransAndEntries" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">       
-        <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>        
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
+        <field name="acctgTransEntrySeqId" title="Acct Trans Entry Seq Id"><display /></field>
+        <field name="accountCode" title="account Code"><display/></field>
+        <field name="isPosted" title="Is Posted"><display/></field>       
+        <field name="glFiscalTypeId" title="Fisical GL Type Id"><display/></field>       
+        <field name="acctgTransTypeId" title="acctg Trans Type Id"><display/></field>       
+        <field name="transactionDate" title="Transaction Date"><display/></field>       
+        <field name="postedDate" title="Posted Date"><display/></field>       
+        <field name="glJournalId" title="GL Journal"><display/></field>       
+        <field name="transTypeDescription" title="Trans Type Description"><display/></field>       
+        <field name="paymentId" title="Payment Id"><display/></field>       
+        <field name="fixedAssetId" title="Fixed Asset Id"><display/></field>       
+        <field name="finAccountTransId" title="Fin Account Trans Id"><display/></field>       
+        <field name="glAccountId" title="Gl Account Id"><display/></field>       
+        <field name="productId" title="Product Id"><display/></field>       
+        <field name="debitCreditFlag" title="debitCredit Flag"><display/></field>
+        <field name="amount" title="Amount"><display/></field>       
+        <field name="origAmount" title="orig Amount"><display/></field>       
+        <field name="organizationPartyId" title="organization PartyId"><display/></field>       
+        <field name="glAccountTypeId" title="GL Account Type Id"><display/></field>       
+        <field name="accountName" title="Account Name"><display/></field>       
+        <field name="glAccountClassId" title="GL Account Party Class"><display/></field>       
+        <field name="reconcileStatusId" title="Reconcile Status Id"><display/></field>       
+        <field name="acctgTransEntryTypeId" title="Acctg Trans Entry Type Id"><display/></field>       
+        <sort-order>   
+            <sort-field name="acctgTransId"/>
+             <sort-field name="acctgTransEntrySeqId"/> 
+             <sort-field name="accountCode"/>
+        </sort-order>               
+               
+        <!-- <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>        
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="amount"><display type="currency" currency="${currencyUomId}" size="25"/></field>
@@ -255,7 +285,7 @@ under the License.
             <sort-field name="acctgTransId"/>
              <sort-field name="acctgTransEntrySeqId"/> 
              <sort-field name="externalId"/>
-        </sort-order>
+        </sort-order> -->
     </form>
     <form name="AcctgTransAndEntriespdf" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
