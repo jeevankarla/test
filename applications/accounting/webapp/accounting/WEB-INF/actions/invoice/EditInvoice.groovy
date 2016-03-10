@@ -204,7 +204,9 @@ if (invoice) {
 		productDetail=delegator.findOne("Product",[productId : invoiceItem.productId] , false);
 		
 		invoiceItemMap = [:];
-		invoiceItemMap["productName"] = productDetail.productName;
+		if((productDetail) && (productDetail.productName)){
+			invoiceItemMap["productName"] = productDetail.productName;
+		}
 		invoiceItemMap["description"] = invoiceItem.description;
 		invoiceItemMap["invoiceItemTypeId"] = invoiceItem.invoiceItemTypeId;
 		invoiceItemMap["amount"] = amount;
