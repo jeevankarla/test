@@ -5706,11 +5706,87 @@ public class InvoiceServices {
         return result;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	public static Map<String, Object>  getAcctTransEnries(DispatchContext dctx, Map<String, Object> context)  {
+        String invoiceId = (String) context.get("invoiceId");
+        String paymentId = (String) context.get("paymentId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");      
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();        
+        Map<String, Object> serviceResult;
+        List<GenericValue> acctgTransEntries = new ArrayList<GenericValue>();
+        List  AcctgTransAndEntries = FastList.newInstance();
+		Map<String, Object> result = ServiceUtil.returnSuccess(); 
+		Map<String, Object> AcctgTransEntriesMap = FastMap.newInstance();
+
+		try {
+	            if(UtilValidate.isNotEmpty(invoiceId)){
+				    acctgTransEntries = delegator.findList("AcctgTransAndEntries", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, UtilMisc.toList("acctgTransId"), null, false);
+	            }
+	            if(UtilValidate.isNotEmpty(paymentId)){
+	    			acctgTransEntries = delegator.findList("AcctgTransAndEntries", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, UtilMisc.toList("acctgTransId"), null, false);	
+	            }
+				if (UtilValidate.isEmpty(acctgTransEntries)) {
+	                Debug.logError("NO account Entries for InvoiceId ", module);
+	                AcctgTransAndEntries.add(AcctgTransEntriesMap);
+	                result.put("AcctgTransAndEntries", AcctgTransAndEntries);
+	                return result;
+	            }
+				for (GenericValue acctTransEntry : acctgTransEntries) {
+					  String accountCode ="";
+					  BigDecimal amount = ZERO;
+		              BigDecimal origAmount = ZERO;
+		              String partyAcctCode = ""; 
+		              String orgPartyAcctCode = "";
+		              String externalId ="";
+		              AcctgTransEntriesMap = FastMap.newInstance();
+					  String partyId = acctTransEntry.getString("partyId");
+					  if(UtilValidate.isNotEmpty(acctTransEntry.getString("externalId"))){
+					      externalId = acctTransEntry.getString("externalId");
+					  }    
+					  String organizationPartyId = acctTransEntry.getString("organizationPartyId");
+					  amount = acctTransEntry.getBigDecimal("amount");
+					  origAmount = acctTransEntry.getBigDecimal("origAmount");
+					  GenericValue partyAttributes = delegator.findOne("PartyAttribute", UtilMisc.toMap("partyId", partyId,"attrName","ACCOUNT_CODE"), false);
+		              if ((partyAttributes != null) && (partyAttributes.getString("attrValue") != null)) {
+					        partyAcctCode = partyAttributes.getString("attrValue");
+	                  }
+					  GenericValue orgPartyAttributes = delegator.findOne("PartyAttribute", UtilMisc.toMap("partyId", organizationPartyId,"attrName","ACCOUNT_CODE"), false);
+		              if ((orgPartyAttributes != null) && (orgPartyAttributes.getString("attrValue") != null)) {
+					      orgPartyAcctCode = orgPartyAttributes.getString("attrValue");
+	                  }    
+					  accountCode =externalId+orgPartyAcctCode+partyAcctCode;
+					  AcctgTransEntriesMap.put("acctgTransId",acctTransEntry.getString("acctgTransId"));
+					  AcctgTransEntriesMap.put("acctgTransEntrySeqId",acctTransEntry.getString("acctgTransEntrySeqId"));
+					  AcctgTransEntriesMap.put("accountCode",accountCode);
+					  AcctgTransEntriesMap.put("isPosted",acctTransEntry.getString("isPosted"));
+					  AcctgTransEntriesMap.put("glFiscalTypeId",acctTransEntry.getString("glFiscalTypeId"));
+					  AcctgTransEntriesMap.put("acctgTransTypeId",acctTransEntry.getString("acctgTransTypeId"));
+					  AcctgTransEntriesMap.put("transactionDate",acctTransEntry.getTimestamp("transactionDate"));
+					  AcctgTransEntriesMap.put("postedDate",acctTransEntry.getTimestamp("postedDate"));
+					  AcctgTransEntriesMap.put("glJournalId",acctTransEntry.getString("glJournalId"));
+					  AcctgTransEntriesMap.put("transTypeDescription",acctTransEntry.getString("transTypeDescription"));
+					  AcctgTransEntriesMap.put("paymentId",acctTransEntry.getString("paymentId"));
+					  AcctgTransEntriesMap.put("fixedAssetId",acctTransEntry.getString("fixedAssetId"));
+					  AcctgTransEntriesMap.put("finAccountTransId",acctTransEntry.getString("finAccountTransId"));
+					  AcctgTransEntriesMap.put("glAccountId",acctTransEntry.getString("glAccountId"));
+					  AcctgTransEntriesMap.put("productId",acctTransEntry.getString("productId"));
+					  AcctgTransEntriesMap.put("debitCreditFlag",acctTransEntry.get("debitCreditFlag"));
+					  AcctgTransEntriesMap.put("amount",amount);
+					  AcctgTransEntriesMap.put("origAmount",origAmount);
+					  AcctgTransEntriesMap.put("organizationPartyId",organizationPartyId);
+					  AcctgTransEntriesMap.put("glAccountTypeId",acctTransEntry.getString("glAccountTypeId"));
+					  AcctgTransEntriesMap.put("accountName",acctTransEntry.getString("accountName"));
+					  AcctgTransEntriesMap.put("glAccountClassId",acctTransEntry.getString("glAccountClassId"));
+					  AcctgTransEntriesMap.put("reconcileStatusId",acctTransEntry.getString("reconcileStatusId"));
+					  AcctgTransEntriesMap.put("acctgTransEntryTypeId",acctTransEntry.getString("acctgTransEntryTypeId"));	
+					  AcctgTransAndEntries.add(AcctgTransEntriesMap);
+			}
+        } catch (Exception e) {
+            Debug.logError(e, "Problem getting AcctgTransAndEntries", module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        
+	        result.put("AcctgTransAndEntries", AcctgTransAndEntries);
+	        return result;
+    }	
 }
