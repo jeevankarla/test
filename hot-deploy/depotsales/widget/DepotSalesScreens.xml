@@ -2219,7 +2219,7 @@
 	<screen name="DepotSalesInvoice">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Find Purchase Invoices" />
+				<set field="titleProperty" value="Find Sales Invoices" />
 				<set field="filterByDate" value="true" />
 				<service service-name="performFind" result-map="result">
 					<field-map field-name="inputFields" from-field="parameters" />
