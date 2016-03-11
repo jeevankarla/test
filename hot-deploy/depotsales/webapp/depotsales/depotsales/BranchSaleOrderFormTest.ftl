@@ -6,6 +6,45 @@
 	 	.labelFontCSS {
 	    	font-size: 13px;
 		}
+		
+		
+		hr.style17 { 
+		display: block; 
+  content: ""; 
+  height: 30px; 
+  margin-top: -31px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 0 0 0 0; 
+  border-radius: 20px; 
+  
+} 
+hr.style17:before { 
+  height: 1px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 1px 0 0 0; 
+  border-radius: 40px; 
+}
+		
+		hr.style18 { 
+  height: 1px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 1px 0 0 0; 
+  border-radius: 40px; 
+} 
+hr.style18:before { 
+  display: block; 
+  content: ""; 
+  height: 30px; 
+  margin-top: -31px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 0 0 1px 0; 
+  border-radius: 20px; 
+}
+
 	
 	</style>
 	
@@ -124,7 +163,7 @@
 			
 		});
 
-		function fillPartyData(partyId){
+		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
 				       	  				 if( partyId != undefined && partyId != ""){
@@ -148,21 +187,37 @@
 		       	  				   
 		       	  				   var custName=contactDetails["custPartyName"];
 		       	  				  var LoomDetails=contactDetails["LoomDetails"];
+		       	  				  var LoomList=contactDetails["LoomList"];
+		       	  				  var silkLooms=0;
+		       	  				  var cottonLooms=0;
+		       	  				  var WoolLooms=0;
+		       	  				  var obj ={};
+		       	  				 // alert(JSON.stringify(LoomDetails));
+		       	  				  $.each(LoomList, function(key, item){
+		       	  				  obj [item.loomType]=0;
+		       	  				  	for(var i=0 ; i<LoomDetails.length ; i++){
+			       	  				  if(LoomDetails[i].loomType==item.loomType){
+			       	  				 		 obj [item.loomType] = LoomDetails[i].loomQty;
+          									  
+			       	  				 	}			       	  				 	
+		       	  				  }
 		       	  				  
+								});		       	  				   
 		       	  				  var tableElement;
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
-		       	  				  for(var i=0 ; i<LoomDetails.length ; i++){
-		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomType+'</font></td>';
-		       	  				//   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomQuota+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+LoomDetails[i].loomQty+'</font></td></tr>';
-		       	  				  }
-		       	  				  
+		       	  				 $.each(LoomList, function(key, item){
+		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				   });
+		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
+		       	  				   var DAO=contactDetails["DAO"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
+		       	  				   var partyType=contactDetails["partyType"];
 			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
 			       	  					$('#productStoreId').focus().val(prodStoreId);
@@ -174,12 +229,13 @@
 		       	  				   
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];
-		       	  				  $("#postalCode").html("<h4>"+postalCode+"</h4>");
+		       	  				 // $("#postalCode").html("<h4>"+postalCode+"</h4>");
 		   						   $("#address").html("<h4>"+address1+"</h4>");
 		       	  				   $("#partyName").html("<h4>"+custName+"</h4>");
 		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
-		       	  				   
+		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
+		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -539,94 +595,98 @@
 	<div class="righthalf">
 		<div class="screenlet">
     		<div class="screenlet-body">
-		 		<div class="grid-header" style="width:30%">
+		 		<div class="grid-header" style="width:100%">
 		 			<label>Customer Details</label>
 				</div>
 				 <form  name="partyDetails" id="partyDetails">
-	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		               		<#if parameters.custName?exists && parameters.custName?has_content> 
+				 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.CustomerName}       : </font></td><td width="60%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.CustomerName}       : </font></td><td width="60%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
-			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
-			       			 <tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.PassbookNo}        : </font></td><td width="60%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
-			       			</tr>
-			       			<#else>
+				 	 	 <#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.PassbookNo}    : </font></td><td width="60%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.address?exists && parameters.address?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Address}         : </font></td><td width="60%"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Address}         : </font></td><td width="60%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
-			       			<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.PostalCode}     : </font></td><td width="60%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+				 	 	</table>	
+				 	 	<hr class="style17"></hr>
+				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
+					 	<tr>
+						<td>
+	      				<table width="150%" border="1" border-style="solid">
+		               
+			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+			       			 <tr>
+			       				<td width="35%" keep-together="always"><font color="green">PassBook Num        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.PostalCode}     : </font></td><td width="60%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">PassBook Num    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
+			       			
+			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
+			       			<tr>
+			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       			</tr>
+			       			</#if>-->
 			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.DepoHolder}     : </font></td><td width="60%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       				<td width="50%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.DepoHolder}     : </font></td><td width="60%"> <label  align="left" id="Depo" style="color: blue"></label></td>
+			       				<td width="50%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
-			       			
+			       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
 			       			<tr>
-			       			<table id="loomTypes">
-			       			<tr>
-			       			<#--><#if parameters.loomType?exists && parameters.loomType?has_content> 
-			       			
-			       			<td>
-			       				<td width="20%"><font color="green">Party Loom Type</font></td>
-			       			</td>
-			       			<#else>
-			       			<td>
-			       				<td width="20%"><font color="green">Party Loom Type</font></td>
-			       			</td>
-			       			</#if>
-			       			<#if parameters.loomQuota?exists && parameters.loomQuota?has_content> 
-			       			
-			       			<td>
-			       				<td width="20%"><font color="green">QuotaPerLoom</font></td>
-			       			</td>
-			       			<#else>
-			       			<td>
-			       				<td width="20%"><font color="green">QuotaPerLoom</font></td>
-			       			</td>
-			       			</#if>
-			       			<#if parameters.loomQty?exists && parameters.loomQty?has_content> 
-			       			<td>
-			       				<td width="20%"><font color="green">Quantity</font></td>
-			       			</td> 
-			       			<#else>
-			       			<td>
-			       				<td width="20%"><font color="green">Quantity</font></td>
-			       			</td>
-			       			</#if>-->
+			       				<td width="50%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
 			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="50%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
+			       			<tr>
+			       				<td width="50%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="50%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+			       			</tr>
+			       			</#if>
 			       			</table>
+			       			</td>
+			       			<td>
+			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
+			       			<tr>
+			       			
 			       			</tr>
+			       			
+			       			</table>
+			       			</td>
+			       			</tr>
+			       			
 			       		</table>
+			       						 	 	<hr class="style18"></hr>
+			       		
 		       	</form>
 				
 		</div>     

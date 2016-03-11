@@ -38,6 +38,7 @@ import net.sf.json.JSONArray;
 
 
 JSONObject partyJSON = new JSONObject();
+JSONArray AllLoomArrayJSON = new JSONArray();
 
 if(parameters.partyId){
 	address1="";
@@ -89,14 +90,56 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
 Debug.log("facilityDepo======================"+facilityDepo);
 String Depo="NO";
-if(facilityDepo){
+String DAO="";
+if(UtilValidate.isNotEmpty(facilityDepo)){
    Depo="YES";
+  /*depoFacility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityDepo.facilityId), false);
+   Debug.log("depoFacility===========IN========="+depoFacility);
+   
+   if(depoFacility && depoFacility.get("openedDate")){
+	   Debug.log("depoFacility===========IN=========");
+	   
+	   DAO=depoFacility.get("openedDate");
+   }*/
+   
    }
+AllLoomDetails = delegator.findList("LoomType",null,null,null,null,false);
+
+AllLoomDetails.each{ eachloom ->
+	JSONObject AllLoomsJSON = new JSONObject();
+	
+	desc="";
+	loomType="";
+	loomType=eachloom.loomTypeId;
+		//Debug.log("loomType==========111============"+loomType);
+		if(eachloom.description){
+			desc=eachloom.description;
+		}
+	AllLoomsJSON.put("loomType",loomType);
+	AllLoomsJSON.put("desc",desc);
+	
+	AllLoomArrayJSON.add(AllLoomsJSON);
+	
+}
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
-Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+PartyClassificationDetails = EntityUtil.getFirst(delegator.findList("PartyClassification",condition,null,null,null,false));
+partyType="";
+
+if(PartyClassificationDetails){
+	Debug.log("PartyClassificationDetails==================="+PartyClassificationDetails);
+	PartyClassificationDetails.each{ eachPartyClassificationDetails ->
+		partyClassificationGroupId=PartyClassificationDetails.get("partyClassificationGroupId");
+		if(partyClassificationGroupId){
+			partyClassificationGroupIdList = delegator.findOne("PartyClassificationGroup",UtilMisc.toMap("partyClassificationGroupId", partyClassificationGroupId), false);
+			if(partyClassificationGroupIdList && partyClassificationGroupIdList.get("description")){
+				partyType=partyClassificationGroupIdList.get("description");
+			}
+		}
+	}
+}
 custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
 partyJSON.put("custPartyName",custPartyName);
 JSONArray partyLoomArrayJSON = new JSONArray();
@@ -135,13 +178,13 @@ if(partyIdentification){
 }
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId));
-	Debug.log("resultCtx ================"+resultCtx);
+	//Debug.log("resultCtx ================"+resultCtx);
 	
 	productStoreIds=[];
 	productStoreDetails = resultCtx.get("productStoreList");
 	//productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
 	productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
-	Debug.log("productStoreIds ================"+productStoreIds);
+	//Debug.log("productStoreIds ================"+productStoreIds);
 	
 	if(productStoreIds.size() == 1){
 		partyJSON.put("productStoreId",productStoreIds.get(0));
@@ -154,7 +197,11 @@ partyJSON.put("address2",address2);
 partyJSON.put("city",city);
 partyJSON.put("postalCode",postalCode);
 partyJSON.put("Depo",Depo);
+partyJSON.put("DAO",DAO);
+partyJSON.put("partyType",partyType);
 partyJSON.put("LoomDetails",partyLoomArrayJSON);
+partyJSON.put("LoomList",AllLoomArrayJSON);
+
 }
 context.partyJSON=partyJSON;
 Debug.log("partyJSON====================="+partyJSON);
