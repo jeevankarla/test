@@ -595,8 +595,7 @@
     		<div class="screenlet-body">
 		 		
 				 <form  name="partyDetails" id="partyDetails">
-				 				 	 	<hr class="style17"></hr>
-				 
+				 		<hr class="style17"></hr>
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
@@ -684,7 +683,7 @@
 			       			</tr>
 			       			
 			       		</table>
-			       						 	 	<hr class="style18"></hr>
+			       		<hr class="style18"></hr>
 		 	       	</form>
 		</div>     
 	</div>
