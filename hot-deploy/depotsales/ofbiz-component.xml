@@ -31,7 +31,7 @@
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="depotsales"
-        title="DepotSales"
+        title="Commercial"
         server="default-server"
         location="webapp/depotsales"
         base-permission="OFBTOOLS,DEPOTSALES"
