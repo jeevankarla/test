@@ -6379,26 +6379,14 @@ public class DepotSalesServices{
 		        Debug.log("======================schemeCategory=================="+schemeCategory);
 
 		        String orderTypeId ="";
-				if(UtilValidate.isEmpty(BrachTrans.get("orderTypeId"))){
+				if(UtilValidate.isNotEmpty(BrachTrans.get("orderTypeId"))){
 					 orderTypeId = (String) BrachTrans.get("orderTypeId");
 			        Debug.log("======================orderTypeId=================="+orderTypeId);
 				}
 				String billingType = (String) BrachTrans.get("billingType");
-				/*String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-				String productStoreId = (String) BrachTrans.get("baleQuantity");
-	*/
-
-				String orderId = (String) BrachTrans.getString("orderId");
-		        Debug.log("======================orderId=================="+orderId);
-
-				//String PONumber = (String) BrachTrans.getString("PONumber");
-				//String orderMessage=(String) BrachTrans.getString("orderMessage");
+				String entryOrderId = (String) BrachTrans.getString("orderId");
+		        Debug.log("======================entryOrderId=================="+entryOrderId);
+		        String orderId ="";
 				String subscriptionTypeId = "AM";
 				String partyIdFrom = "";
 				String shipmentId = "";
@@ -6480,86 +6468,76 @@ public class DepotSalesServices{
 				
 				
 				try{
-				result = processBranchSalesOrder(ctx, processOrderContext);
+						result = processBranchSalesOrder(ctx, processOrderContext);
 				
-				if(ServiceUtil.isError(result)){
-					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-				}
-				
-				orderId = (String)result.get("orderId");
-				Debug.log("orderId================"+orderId);
-				if(UtilValidate.isEmpty(orderId)){
-					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-				}
-				if(UtilValidate.isNotEmpty(orderId)){
-				
-				String schemePartyId="";
-				if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
-					 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
-					 try {
-					 GenericValue value = delegator.makeValue("OrderRole", fields);
-					 delegator.create(value);
-					 } catch (GenericEntityException e) {
-			  			  Debug.logError(e, "Could not roleback transaction for entity engine error occurred while fetching data", module);
-
-					 }
-				}
-				
-				if(UtilValidate.isNotEmpty(suplierPartyId)){
-					try{
-						GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", suplierPartyId, "roleTypeId", "SUPPLIER"));
-						delegator.createOrStore(supplierOrderRole);
-					}catch (Exception e) {
-						  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
-			  	 	}
-				}
-				if(UtilValidate.isNotEmpty(orderTaxType)){
-					try{
-					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-					orderAttribute.set("orderId", orderId);
-					orderAttribute.set("attrName", "INDET_TAXTYPE");
-					orderAttribute.set("attrValue", orderTaxType);
-					delegator.createOrStore(orderAttribute);
-					}catch (GenericEntityException e) {
-							Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
-					 }
-				}
-				if(UtilValidate.isNotEmpty(schemeCategory)){
-					try{
-						GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-						orderAttribute.set("orderId", orderId);
-						orderAttribute.set("attrName", "SCHEME_CAT");
-						orderAttribute.set("attrValue", schemeCategory);
-						delegator.createOrStore(orderAttribute);
-						}catch (GenericEntityException e) {
-								Debug.logError(e, "Could not add role to order for SchemeCategory " + orderId, module);
-						 }
-				}
-				Map resultCtx = FastMap.newInstance();
-				
-						resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
-						if(ServiceUtil.isError(resultCtx)){
-							Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+						if(ServiceUtil.isError(result)){
+							Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+							return ServiceUtil.returnError(null, null, null,result);
 						}
 				
-				
-				
-				
-				
-				
-				
-				}
-				
-				
-				
-					}catch(Exception e){
+						orderId = (String)result.get("orderId");
+						Debug.log("orderId================"+orderId);
+						if(UtilValidate.isNotEmpty(orderId)){
+						
+						String schemePartyId="";
+						if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+							 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
+							 try {
+							 GenericValue value = delegator.makeValue("OrderRole", fields);
+							 delegator.create(value);
+							 } catch (GenericEntityException e) {
+					  			  Debug.logError(e, "Could not roleback transaction for entity engine error occurred while fetching data", module);
+		
+							 }
+						}
+						
+						if(UtilValidate.isNotEmpty(suplierPartyId)){
+							try{
+								GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", suplierPartyId, "roleTypeId", "SUPPLIER"));
+								delegator.createOrStore(supplierOrderRole);
+							}catch (Exception e) {
+								  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
+					  	 	}
+						}
+						if(UtilValidate.isNotEmpty(orderTaxType)){
+							try{
+							GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+							orderAttribute.set("orderId", orderId);
+							orderAttribute.set("attrName", "INDET_TAXTYPE");
+							orderAttribute.set("attrValue", orderTaxType);
+							delegator.createOrStore(orderAttribute);
+							}catch (GenericEntityException e) {
+									Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
+							 }
+						}
+						if(UtilValidate.isNotEmpty(schemeCategory)){
+							try{
+								GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+								orderAttribute.set("orderId", orderId);
+								orderAttribute.set("attrName", "SCHEME_CAT");
+								orderAttribute.set("attrValue", schemeCategory);
+								delegator.createOrStore(orderAttribute);
+								}catch (GenericEntityException e) {
+										Debug.logError(e, "Could not add role to order for SchemeCategory " + orderId, module);
+								 }
+						}
+						Map resultCtx = FastMap.newInstance();
+						
+								resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+								if(ServiceUtil.isError(resultCtx)){
+									Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+								}
+					}
+			}catch(Exception e){
 						Debug.logError(e, module);
 					}
 				if(UtilValidate.isNotEmpty(orderId)){
 
-	/*		// create Payment
+			// create Payment
 				
 		 String amount = (BrachTrans.getBigDecimal("amount")).toString();
+	        BigDecimal receivedAmount =  BrachTrans.getBigDecimal("amount");
+
 	        Debug.log("======================bundleWeight=================="+amount);
 
 	        String paymentTypeId = (String) BrachTrans.get("paymentTypeId");
@@ -6594,8 +6572,76 @@ public class DepotSalesServices{
 				}
 				}catch(Exception e){
 					Debug.logError(e, module);
-				}*/
-				Debug.log("orderId================================"+orderId);
+				}
+				Debug.log("result================payment================"+result);
+				String paymentId=(String)result.get("paymentId");
+						Debug.log("paymentId================payment================"+paymentId);
+					if(UtilValidate.isNotEmpty(paymentId)){
+						//payment deposit into bank
+						Map paymentDepositContext = FastMap.newInstance();
+						List<String> paymentIds = FastList.newInstance();
+						paymentIds.add(paymentId);
+						paymentDepositContext.put("organizationPartyId","COMPANY");
+						
+						paymentDepositContext.put("finAccountId","FIN_ACCNT10");
+						paymentDepositContext.put("paymentMethodTypeId","");
+						paymentDepositContext.put("cardType","");
+						paymentDepositContext.put("partyIdFrom","");
+						paymentDepositContext.put("fromDate","");
+						paymentDepositContext.put("thruDate","");
+						paymentDepositContext.put("paymentGroupTypeId","BATCH_PAYMENT");
+						paymentDepositContext.put("transactionDate",paymentDate);
+						paymentDepositContext.put("paymentIds",paymentIds);
+						Map paymentDepositResult=FastMap.newInstance();;
+						try{
+							 paymentDepositResult= dispatcher.runSync("depositWithdrawPayments",paymentDepositContext);
+					  		if (ServiceUtil.isError(paymentDepositResult)) {
+					  	 		String errMsg =  ServiceUtil.getErrorMessage(paymentDepositResult);
+					  	 		Debug.logError(errMsg , module);
+								return ServiceUtil.returnError(null, null, null,paymentDepositResult);
+
+					  		}	
+				         }catch (GenericServiceException e) {
+				        	 Debug.logError(e , module);
+				             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+				         }
+						
+						Debug.log("paymentDepositResult======================"+paymentDepositResult);
+						String finAccountTransId=(String)paymentDepositResult.get("finAccountTransId");
+						
+						Debug.log("finAccountTransId======================"+finAccountTransId);
+						if(UtilValidate.isNotEmpty(finAccountTransId)){
+							//payment deposit into bank
+							Map paymentReconsileContext = FastMap.newInstance();
+							List<String> finAccountTransIds = FastList.newInstance();
+							finAccountTransIds.add(finAccountTransId);
+							paymentReconsileContext.put("organizationPartyId","Company");							
+							paymentReconsileContext.put("finAccountId","FIN_ACCNT10");
+							paymentReconsileContext.put("bulkReconsileName","Create Reconcile");
+							paymentReconsileContext.put("paymentGroupTypeId","BATCH_PAYMENT");
+							paymentReconsileContext.put("statusId","FINACT_TRNS_APPROVED");
+							paymentReconsileContext.put("finAccountTransIds",finAccountTransIds);
+							Map paymentReconsileResult=FastMap.newInstance();;
+							try{
+								paymentReconsileResult= dispatcher.runSync("createReconsileAndUpdateFinAccountTrans",paymentReconsileContext);
+						  		if (ServiceUtil.isError(paymentReconsileResult)) {
+						  	 		String errMsg =  ServiceUtil.getErrorMessage(paymentReconsileResult);
+						  	 		Debug.logError(errMsg , module);
+									return ServiceUtil.returnError(null, null, null,paymentReconsileResult);
+
+						  		}	
+					         }catch (GenericServiceException e) {
+					        	 Debug.logError(e , module);
+					             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+					         }
+							
+							Debug.log("paymentReconsileResult======================"+paymentReconsileResult);
+						}
+						
+		            	
+					}
+				
+				
 				
 				//generate PO
 				String PoOrderId="";
@@ -6713,8 +6759,8 @@ public class DepotSalesServices{
 						processPOContext.put("incTax", "Y");
 						result = DepotPurchaseServices.CreateMaterialPO(ctx, processPOContext);
 						if(ServiceUtil.isError(result)){
-							Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-							
+							Debug.logError("Unable to generate Purchase order: "+orderId+"=" + ServiceUtil.getErrorMessage(result), module);
+							return ServiceUtil.returnError(null, null, null,result);
 						}
 						Debug.log("result======================"+result);
 						PoOrderId=(String)result.get("orderId");;
@@ -6725,405 +6771,384 @@ public class DepotSalesServices{
 				}
 				//making order Association with sales and Po
 				if(UtilValidate.isNotEmpty(PoOrderId)){
-					Map<String, Object> orderAssocMap = FastMap.newInstance();
-					orderAssocMap.put("orderId", PoOrderId);
-					orderAssocMap.put("toOrderId", orderId);
-					orderAssocMap.put("userLogin", userLogin);
-					result = DepotPurchaseServices.createOrderAssoc(ctx,orderAssocMap);
+						Map<String, Object> orderAssocMap = FastMap.newInstance();
+						orderAssocMap.put("orderId", PoOrderId);
+						orderAssocMap.put("toOrderId", orderId);
+						orderAssocMap.put("userLogin", userLogin);
+						result = DepotPurchaseServices.createOrderAssoc(ctx,orderAssocMap);
 						if(ServiceUtil.isError(result)){
 							Debug.logError("Unable do Order Assoc: " + ServiceUtil.getErrorMessage(result), module);
+							return ServiceUtil.returnError(null, null, null,result);
 						}
-					
+					 
+						if(grandTotal.compareTo(receivedAmount) < 0){					
 				
-				// approving Purchase Order
-				
-				try{
-					Map<String, Object> approvePoContext = FastMap.newInstance();
-					approvePoContext.put("userLogin", userLogin);
-					approvePoContext.put("orderId", PoOrderId);
-					approvePoContext.put("partyId", partyId);
-					approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
-					approvePoContext.put("locale", locale);
-
-
-					result = DepotPurchaseServices.approvePurchaseOrderWithEmail(ctx, approvePoContext);
-				}catch (Exception e) {
-					Debug.logError(e, "Failed to approve purchase Order ", module);
-				}
-				
-				// credit APPROVE
-				try{
-					Map<String, Object> approvePoContext = FastMap.newInstance();
-					approvePoContext.put("userLogin", userLogin);
-					approvePoContext.put("orderId", PoOrderId);
-					approvePoContext.put("partyId", partyId);
-					approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
-					approvePoContext.put("locale", locale);
-
-
-					result = CreditapproveDepotOrder(ctx, approvePoContext);
-				}catch (Exception e) {
-					Debug.logError(e, "Failed to approve purchase Order ", module);
-				}
-				
-				//generating shipment
-				
-				try{
-
-					String vehicleId = (String) BrachTrans.get("vehicleId");
-					String suppInvoiceId = (String) BrachTrans.get("suppInvoiceId");
-					String lrNumber = (String) BrachTrans.get("lrNumber");
-					String carrierName = (String) BrachTrans.get("carrierName");
-					String deliveryChallanNo = (String) BrachTrans.get("deliveryChallanNo");
-					Timestamp receiptDate = null;
-			        BigDecimal shippedQuantity = (BigDecimal) BrachTrans.get("shippedQuantity");
-
-					  receiptDate =  BrachTrans.getTimestamp("receiptDate");
-					Timestamp  suppInvoiceDate =  BrachTrans.getTimestamp("suppInvoiceDate");
-					
-					String withoutPO="N";
-					//String shipmentId ="";
-					String receiptId="";
-					String purposeTypeId="";
-					String supplierId="";
-					GenericValue shipmentReceipt=null;
-					String smsContent="";
-					if (UtilValidate.isEmpty(PoOrderId) && UtilValidate.isEmpty(withoutPO)) {
-						Debug.logError("Cannot process receipts without orderId: "+ PoOrderId, module);
-					}
-					Timestamp supplierInvoiceDate = null;
-					
-					SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:mm:yyyy hh:mm");
-					
-					SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMMM, yyyy");
-					receiptDate = UtilDateTime.nowTimestamp();
-					Timestamp estimatedDate = UtilDateTime.addDaysToTimestamp(receiptDate,6);
-					String estimatedDateStr=UtilDateTime.toDateString(estimatedDate,"dd-MM-yyyy");
-					String receiptDateStr=UtilDateTime.toDateString(receiptDate,"dd-MM-yyyy");
-
-			        DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy hh:mm");
-			        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			        if(UtilValidate.isNotEmpty(receiptDateStr)){
-				        try {
-				        Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
-				        receiptDate = new java.sql.Timestamp(givenReceiptDate.getTime());
-				        }catch (ParseException e) {
-					  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
-					  	} catch (NullPointerException e) {
-				  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
-					  	}
-			        }
-			        
-					
-					
-			    	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
-			    	Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
-
-			  	  	BigDecimal poValue = BigDecimal.ZERO;
-			  	  	boolean beganTransaction = false;
-			  		try{
-			  			beganTransaction = TransactionUtil.begin(7200);
-			  			
-			  			List conditionList = FastList.newInstance();
-			  			List<GenericValue> extPOItems = FastList.newInstance();
-			  			List<GenericValue> extReciptItems = FastList.newInstance();
-			  			
-			  			boolean directPO = Boolean.TRUE;
-			  			String extPOId = "";
-			  			List productList = FastList.newInstance();
-			  			
-			  			if((UtilDateTime.getIntervalInDays(UtilDateTime.getDayStart(receiptDate), UtilDateTime.getDayStart(nowTimeStamp))) != 0){
-			  	    		Debug.logError("Check local system date", module);
-			  				TransactionUtil.rollback();
-			  			}
-			  			String originFacilityId ="";
-			  			GenericValue orderHeader = null;
-			            BigDecimal landingCharges = BigDecimal.ZERO;
-
-			  			if(UtilValidate.isNotEmpty(PoOrderId)){
-			  				orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", PoOrderId), false);
-			  				
-			  				String statusId = orderHeader.getString("statusId");
-			  				 orderTypeId = orderHeader.getString("orderTypeId");
-			  				purposeTypeId = orderHeader.getString("purposeTypeId");
-			  				if(UtilValidate.isNotEmpty(orderHeader.getString("originFacilityId")))
-			  				  {
-			  					originFacilityId = orderHeader.getString("originFacilityId");
-			  				  }
-			  				if(statusId.equals("ORDER_CANCELLED")){
-			  					Debug.logError("Cannot create GRN for cancelled orders : "+PoOrderId, module);
-			  					TransactionUtil.rollback();
-			  				}
-			  				poValue = orderHeader.getBigDecimal("grandTotal");
-			  				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
-			  				conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, orderTypeId));
-			  				List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-			  				
-			  				if(UtilValidate.isNotEmpty(orderAssoc)){
-			  					extPOId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
-			  					directPO = Boolean.FALSE;
-			  				}
-			  				if(UtilValidate.isNotEmpty(extPOId)){
-			  					List<GenericValue> annualContractPOAsso = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, extPOId), UtilMisc.toSet("orderId"), null, null, false);
-			  					List orderIds = EntityUtil.getFieldListFromEntityList(annualContractPOAsso, "orderId", true);
-			  					conditionList.clear();
-			  					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
-			  					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
-			  					extPOItems = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-			  					
-			  					conditionList.clear();
-			  					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
-			  					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-			  					extReciptItems = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-			  				}
-			  				
-			  				
-			  				conditionList.clear();
-			  				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
-			  				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-			  				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			  				List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
-			  				
-			  				if(UtilValidate.isEmpty(orderRole)){
-			  					Debug.logError("No Vendor for the order : "+PoOrderId, module);
-			  					TransactionUtil.rollback();
-			  				}
-			  					
-			  				supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
-			  				
-			  			}
-			  			
-					
-					List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId), null, null, null, false);
-					List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId), null, null, null, false);
-					List changeExprList = FastList.newInstance();
-					changeExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
-					changeExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, receiptDate));
-					EntityCondition condExpr1 = EntityCondition.makeCondition(changeExprList, EntityOperator.AND);
-					List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", condExpr1, null, UtilMisc.toList("-effectiveDatetime"), null, false);
-					
-					Timestamp effectiveDatetime = null;
-					if(UtilValidate.isNotEmpty(orderItemChanges)){
-						effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
-						orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
-					}
-
-					Map orderItemSeq = FastMap.newInstance();
-					for(GenericValue orderItemsValues : orderItems){
-						 productId = orderItemsValues.getString("productId");
-						String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
-						orderItemSeq.put(productId, orderItemSeqId);
-					}
-
-					List orderAdjustmentTypes = EntityUtil.getFieldListFromEntityList(orderAdjustments, "orderAdjustmentTypeId", true);
-					
-					productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
-					GenericValue newEntity = delegator.makeValue("Shipment");
-			        newEntity.set("estimatedShipDate", receiptDate);
-			        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
-				        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
-			        }else{
-			        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
-			        }
-			        newEntity.set("statusId", "DISPATCHED");
-			        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
-			        newEntity.put("vehicleId",vehicleId);
-			        newEntity.put("lrNumber",lrNumber);
-			        newEntity.put("carrierName",carrierName);
-			        newEntity.put("partyIdFrom",supplierId);
-			        newEntity.put("partyIdTo",partyId);
-			        newEntity.put("supplierInvoiceId",suppInvoiceId);
-			        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
-			        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
-			        newEntity.put("description",remarks);
-			        newEntity.put("deliveryChallanDate",deliveryChallanDate);
-			        newEntity.put("primaryOrderId",PoOrderId);
-			        newEntity.set("createdDate", nowTimeStamp);
-			        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-			        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-			        Debug.log("newEntity========================="+newEntity);
-		            delegator.createSetNextSeqId(newEntity);            
-		            shipmentId = (String) newEntity.get("shipmentId");
-			       
-					Debug.log("shipmentId==================="+shipmentId);
-					if(UtilValidate.isNotEmpty(shipmentId)){
-		
-							//Debug.log("quantityStr======="+quantityStr);
-							GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
-							String	desc=product.getString("description");
-							//Debug.log("desc============"+desc);
-							Map<String,Object> itemInMap = FastMap.newInstance();
-					        itemInMap.put("shipmentId",shipmentId);
-					        itemInMap.put("userLogin",userLogin);
-					        itemInMap.put("productId",productId);
-					        itemInMap.put("quantity",shippedQuantity);
-					         resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
-					        
-					        if (ServiceUtil.isError(resultMap)) {
-					        	Debug.logError("Problem creating shipment Item for orderId :"+orderId, module);
-								TransactionUtil.rollback();
-					        }
-					        
-					        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
-		
-							Debug.log("shipmentItemSeqId==========================="+shipmentItemSeqId);
+							// credit APPROVE
+							try{
+									Map<String, Object> approvePoContext = FastMap.newInstance();
+									approvePoContext.put("userLogin", userLogin);
+									approvePoContext.put("orderId", PoOrderId);
+									approvePoContext.put("partyId", partyId);
+									approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
+									approvePoContext.put("locale", locale);
+									result = CreditapproveDepotOrder(ctx, approvePoContext);
+									if(ServiceUtil.isError(result)){
+										Debug.logError("Unable to do Credit Approve for Order " + ServiceUtil.getErrorMessage(result), module);
+										return ServiceUtil.returnError(null, null, null,result);
+									}
+							}catch (Exception e) {
+								Debug.logError(e, "Failed to approve purchase Order ", module);
+							}
+						}else{
+							// approving Purchase Order
 							
-							List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "00001"));
-							GenericValue ordItm = null;
-							String orderItemSeqId="";
-							if(UtilValidate.isNotEmpty(filteredOrderItem)){
-								ordItm = EntityUtil.getFirst(filteredOrderItem);
-							    orderItemSeqId = ordItm.getString("orderItemSeqId");
-								List<GenericValue> itemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "00001"));
-								if(UtilValidate.isNotEmpty(itemChanges)){
-									ordItm = EntityUtil.getFirst(itemChanges);
+							try{
+									Map<String, Object> approvePoContext = FastMap.newInstance();
+									approvePoContext.put("userLogin", userLogin);
+									approvePoContext.put("orderId", PoOrderId);
+									approvePoContext.put("partyId", partyId);
+									approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
+									approvePoContext.put("locale", locale);
+									result = approveDepotOrder(ctx, approvePoContext);
+									if(ServiceUtil.isError(result)){
+										Debug.logError("Unable to Approve Purchase Order " + ServiceUtil.getErrorMessage(result), module);
+										return ServiceUtil.returnError(null, null, null,result);
+									}
+							}catch (Exception e) {
+								Debug.logError(e, "Failed to approve purchase Order ", module);
+							}
+						}
+						//generating shipment
+						try{
+
+								String vehicleId = (String) BrachTrans.get("vehicleId");
+								String suppInvoiceId = (String) BrachTrans.get("suppInvoiceId");
+								String lrNumber = (String) BrachTrans.get("lrNumber");
+								String carrierName = (String) BrachTrans.get("carrierName");
+								String deliveryChallanNo = (String) BrachTrans.get("deliveryChallanNo");
+								Timestamp receiptDate = null;
+								BigDecimal shippedQuantity = (BigDecimal) BrachTrans.get("shippedQuantity");
+								receiptDate =  BrachTrans.getTimestamp("receiptDate");
+								Timestamp  suppInvoiceDate =  BrachTrans.getTimestamp("suppInvoiceDate");
+								String withoutPO="N";
+								String receiptId="";
+								String purposeTypeId="";
+								String supplierId="";
+								GenericValue shipmentReceipt=null;
+								String smsContent="";
+								if (UtilValidate.isEmpty(PoOrderId)) {
+									Debug.logError("Cannot process receipts without orderId: "+ PoOrderId, module);
+									return ServiceUtil.returnError(null, null, null,result);
 								}
-							}
-							Map inventoryReceiptCtx = FastMap.newInstance();
-							
-							inventoryReceiptCtx.put("userLogin", userLogin);
-							inventoryReceiptCtx.put("productId", productId);
-							inventoryReceiptCtx.put("datetimeReceived", receiptDate);
-							inventoryReceiptCtx.put("quantityAccepted", shippedQuantity);
-							inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
-							if(shippedQuantity.compareTo(BigDecimal.ZERO)>0){
-								inventoryReceiptCtx.put("deliveryChallanQty",shippedQuantity);
-					        }
-							inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
-							inventoryReceiptCtx.put("ownerPartyId", supplierId);
-							/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
-							if(UtilValidate.isNotEmpty(originFacilityId)){
-		
-							inventoryReceiptCtx.put("facilityId", originFacilityId);
-							}else{
-								inventoryReceiptCtx.put("facilityId", "BRANCH1");
-							}
-							//facilityProd.getString("facilityId"));
-							inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
-							if(UtilValidate.isNotEmpty(ordItm)){
-								inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitListPrice"));
-								inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
-								inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
-							}
-							/*inventoryReceiptCtx.put("shipmentId", shipmentId);
-							inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);*/
-							Map<String, Object> receiveInventoryResult;
-							receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
-							
-							if (ServiceUtil.isError(receiveInventoryResult)) {
-								Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
-								TransactionUtil.rollback();
-				            }
-							
-							receiptId = (String)receiveInventoryResult.get("receiptId");
-							shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
-							if(UtilValidate.isNotEmpty(shipmentReceipt)){
-								shipmentReceipt.set("shipmentId", shipmentId);
-								shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
-								shipmentReceipt.store();
-							}
-							//storing shipment receipt status Here 
-							if(UtilValidate.isNotEmpty(receiptId)){
-								GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
-								shipmentReceiptStatus.set("receiptId", receiptId);
-								shipmentReceiptStatus.set("statusId", (String) shipmentReceipt.get("statusId"));
-								shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
-								shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
-								delegator.createSetNextSeqId(shipmentReceiptStatus);
-							}
-							
-							Map shipmentStatusChange = FastMap.newInstance();
-							
-							shipmentStatusChange.put("shipmentId",shipmentId);
-							shipmentStatusChange.put("statusId","DOCUMENTS_RECEIVED");
-							shipmentStatusChange.put("userLogin",userLogin);
-		
-						    receiveInventoryResult = dispatcher.runSync("updateShipment", shipmentStatusChange);
-							
-							if (ServiceUtil.isError(receiveInventoryResult)) {
-								Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
-								TransactionUtil.rollback();
-				            }
-		
-							shipmentStatusChange.put("shipmentId",shipmentId);
-							shipmentStatusChange.put("statusId","DOCUMENTS_ENDORSED");
-							 receiveInventoryResult = dispatcher.runSync("updateShipment", shipmentStatusChange);
-							
-							if (ServiceUtil.isError(receiveInventoryResult)) {
-								Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
-				            }
-							Map shipmentStatusAccept = FastMap.newInstance();
-		
-							shipmentStatusAccept.put("shipmentId",shipmentId);
-							shipmentStatusAccept.put("statusIdTo","SR_QUALITYCHECK");
-							shipmentStatusAccept.put("partyId",partyId);
-							shipmentStatusAccept.put("userLogin",userLogin);
-							 receiveInventoryResult = dispatcher.runSync("shipmentSendForQC", shipmentStatusAccept);
-							
-							if (ServiceUtil.isError(receiveInventoryResult)) {
-								Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
-				            }
-							
-							// raising sales invoice
-							Map salesInvoiceMap = FastMap.newInstance();
-		
-							salesInvoiceMap.put("shipmentId",shipmentId);
-							//salesInvoiceMap.put("partyId",supplierId);
-							Debug.log("orderId==========================="+orderId);				
-		
-							salesInvoiceMap.put("orderId",orderId);
-							salesInvoiceMap.put("userLogin",userLogin);
-							salesInvoiceMap.put("billToPartyId",partyId);
-							salesInvoiceMap.put("locale",locale);
-							Map saleInoiceResult = dispatcher.runSync("createBranchSaleInvoice", salesInvoiceMap);
-		
-							if (ServiceUtil.isError(saleInoiceResult)) {
-								Debug.logWarning("There was an error sales Invoice: " + ServiceUtil.getErrorMessage(saleInoiceResult), module);
-				            }
-							Debug.log("saleInoiceResult==========================="+saleInoiceResult);				
-								
-							/*// raising purchase invoice
-							Map purchaseInvoiceMap = FastMap.newInstance();
-		
-							purchaseInvoiceMap.put("shipmentId",shipmentId);
-							//salesInvoiceMap.put("partyId",supplierId);
-							Debug.log("PoOrderId==========================="+PoOrderId);				
-		
-							purchaseInvoiceMap.put("orderId",PoOrderId);
-							purchaseInvoiceMap.put("userLogin",userLogin);
-							purchaseInvoiceMap.put("billToPartyId",partyId);
-							purchaseInvoiceMap.put("locale",locale);
-							Map purInoiceResult = dispatcher.runSync("createBranchSaleInvoice", purchaseInvoiceMap);
-		
-							if (ServiceUtil.isError(purInoiceResult)) {
-								Debug.logWarning("There was an error sales Invoice: " + ServiceUtil.getErrorMessage(purInoiceResult), module);
-				            }
-							Debug.log("purInoiceResult======purchase====================="+purInoiceResult);	
-								
-		*/		    
-							}
-			  		}catch (GenericEntityException e) {
-						try {
-							TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
-				  		} catch (GenericEntityException e2) {
-				  			Debug.logError(e2, "Could not rollback transaction: "+orderId + e2.toString(), module);
-					     	
-				  		}
-				  		Debug.logError("An entity engine error occurred while fetching data", module);
-				  		
+								Timestamp supplierInvoiceDate = null;
+								SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:mm:yyyy hh:mm");
+								SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMMM, yyyy");
+								receiptDate = UtilDateTime.nowTimestamp();
+								Timestamp estimatedDate = UtilDateTime.addDaysToTimestamp(receiptDate,6);
+								String estimatedDateStr=UtilDateTime.toDateString(estimatedDate,"dd-MM-yyyy");
+								String receiptDateStr=UtilDateTime.toDateString(receiptDate,"dd-MM-yyyy");
+								DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+								DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+								if(UtilValidate.isNotEmpty(receiptDateStr)){
+									try {
+											Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
+											receiptDate = new java.sql.Timestamp(givenReceiptDate.getTime());
+									}catch (ParseException e) {
+										Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+						     			//return ServiceUtil.returnError(e.toString());
 
-				  	}
-			  		catch (GenericServiceException e) {
+									} catch (NullPointerException e) {
+										Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+						     			//return ServiceUtil.returnError(e.toString());
+
+									}
+								}
+								Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
+								Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+								BigDecimal poValue = BigDecimal.ZERO;
+								try{
+										List conditionList = FastList.newInstance();
+										List<GenericValue> extPOItems = FastList.newInstance();
+										List<GenericValue> extReciptItems = FastList.newInstance();
+										boolean directPO = Boolean.TRUE;
+										String extPOId = "";
+										List productList = FastList.newInstance();
+										if((UtilDateTime.getIntervalInDays(UtilDateTime.getDayStart(receiptDate), UtilDateTime.getDayStart(nowTimeStamp))) != 0){
+											Debug.logError("Check local system date", module);
+											TransactionUtil.rollback();
+										}
+										String originFacilityId ="";
+										GenericValue orderHeader = null;
+										BigDecimal landingCharges = BigDecimal.ZERO;
+										if(UtilValidate.isNotEmpty(PoOrderId)){
+											orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", PoOrderId), false);
+											String statusId = orderHeader.getString("statusId");
+											orderTypeId = orderHeader.getString("orderTypeId");
+											purposeTypeId = orderHeader.getString("purposeTypeId");
+											if(UtilValidate.isNotEmpty(orderHeader.getString("originFacilityId")))
+											{
+												originFacilityId = orderHeader.getString("originFacilityId");
+											}
+											if(statusId.equals("ORDER_CANCELLED")){
+												Debug.logError("Cannot create GRN for cancelled orders : "+PoOrderId, module);
+												TransactionUtil.rollback();
+												return ServiceUtil.returnError("Cannot create GRN for cancelled orders : "+PoOrderId);
+											}
+											poValue = orderHeader.getBigDecimal("grandTotal");
+											conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
+											conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, orderTypeId));
+											List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+											if(UtilValidate.isNotEmpty(orderAssoc)){
+												extPOId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+												directPO = Boolean.FALSE;
+											}
+											if(UtilValidate.isNotEmpty(extPOId)){
+												List<GenericValue> annualContractPOAsso = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, extPOId), UtilMisc.toSet("orderId"), null, null, false);
+												List orderIds = EntityUtil.getFieldListFromEntityList(annualContractPOAsso, "orderId", true);
+												conditionList.clear();
+												conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+												conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
+												extPOItems = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+												conditionList.clear();
+												conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+												conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+												extReciptItems = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+											}			  				
+											conditionList.clear();
+											conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
+											conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+											EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+											List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
+			  				
+											if(UtilValidate.isEmpty(orderRole)){
+												Debug.logError("No Vendor for the order : "+PoOrderId, module);
+												TransactionUtil.rollback();
+											}
+			  					
+											supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
+										}
+										List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId), null, null, null, false);
+										List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId), null, null, null, false);
+										List changeExprList = FastList.newInstance();
+										changeExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, PoOrderId));
+										changeExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, receiptDate));
+										EntityCondition condExpr1 = EntityCondition.makeCondition(changeExprList, EntityOperator.AND);
+										List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", condExpr1, null, UtilMisc.toList("-effectiveDatetime"), null, false);
+					
+										Timestamp effectiveDatetime = null;
+										if(UtilValidate.isNotEmpty(orderItemChanges)){
+											effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
+											orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
+										}
+
+										Map orderItemSeq = FastMap.newInstance();
+										for(GenericValue orderItemsValues : orderItems){
+											productId = orderItemsValues.getString("productId");
+											String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
+											orderItemSeq.put(productId, orderItemSeqId);
+										}
+										
+										List orderAdjustmentTypes = EntityUtil.getFieldListFromEntityList(orderAdjustments, "orderAdjustmentTypeId", true);
+					
+										productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+										GenericValue newEntity = delegator.makeValue("Shipment");
+								        newEntity.set("estimatedShipDate", receiptDate);
+								        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
+									        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+								        }else{
+								        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+								        }
+								        newEntity.set("statusId", "DISPATCHED");
+								        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+								        newEntity.put("vehicleId",vehicleId);
+								        newEntity.put("lrNumber",lrNumber);
+								        newEntity.put("carrierName",carrierName);
+								        newEntity.put("partyIdFrom",supplierId);
+								        newEntity.put("partyIdTo",partyId);
+								        newEntity.put("supplierInvoiceId",suppInvoiceId);
+								        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
+								        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
+								        newEntity.put("description",remarks);
+								        newEntity.put("deliveryChallanDate",deliveryChallanDate);
+								        newEntity.put("primaryOrderId",PoOrderId);
+								        newEntity.set("createdDate", nowTimeStamp);
+								        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+								        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+								        Debug.log("newEntity========================="+newEntity);
+							            delegator.createSetNextSeqId(newEntity);            
+							            shipmentId = (String) newEntity.get("shipmentId");
+							            if(UtilValidate.isEmpty(shipmentId)){
+							            	Debug.logError("Problem creating shipment for orderId :"+orderId, module);
+							     			return ServiceUtil.returnError("Problem creating shipment for orderId :"+orderId);
+							            }
+							            Debug.log("shipmentId==================="+shipmentId);
+							            if(UtilValidate.isNotEmpty(shipmentId)){
+							            	//Debug.log("quantityStr======="+quantityStr);
+							            	GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+							            	String	desc=product.getString("description");
+							            	//Debug.log("desc============"+desc);
+							            	Map<String,Object> itemInMap = FastMap.newInstance();
+							            	itemInMap.put("shipmentId",shipmentId);
+							            	itemInMap.put("userLogin",userLogin);
+							            	itemInMap.put("productId",productId);
+							            	itemInMap.put("quantity",shippedQuantity);
+							            	resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
+							            	if (ServiceUtil.isError(resultMap)) {
+							            		Debug.logError("Problem creating shipment Item for orderId :"+orderId, module);
+							            		TransactionUtil.rollback();
+							            	}
+							            	String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
+							            	Debug.log("shipmentItemSeqId==========================="+shipmentItemSeqId);
+							            	List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "00001"));
+							            	GenericValue ordItm = null;
+							            	String orderItemSeqId="";
+							            	if(UtilValidate.isNotEmpty(filteredOrderItem)){
+							            		ordItm = EntityUtil.getFirst(filteredOrderItem);
+							            		orderItemSeqId = ordItm.getString("orderItemSeqId");
+							            		List<GenericValue> itemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "00001"));
+							            		if(UtilValidate.isNotEmpty(itemChanges)){
+							            			ordItm = EntityUtil.getFirst(itemChanges);
+							            		}
+							            	}
+											Map inventoryReceiptCtx = FastMap.newInstance();
+											
+											inventoryReceiptCtx.put("userLogin", userLogin);
+											inventoryReceiptCtx.put("productId", productId);
+											inventoryReceiptCtx.put("datetimeReceived", receiptDate);
+											inventoryReceiptCtx.put("quantityAccepted", shippedQuantity);
+											inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+											if(shippedQuantity.compareTo(BigDecimal.ZERO)>0){
+												inventoryReceiptCtx.put("deliveryChallanQty",shippedQuantity);
+									        }
+											inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+											inventoryReceiptCtx.put("ownerPartyId", supplierId);
+											/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
+											if(UtilValidate.isNotEmpty(originFacilityId)){
+						
+											inventoryReceiptCtx.put("facilityId", originFacilityId);
+											}else{
+												inventoryReceiptCtx.put("facilityId", "BRANCH1");
+											}
+											//facilityProd.getString("facilityId"));
+											inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+											if(UtilValidate.isNotEmpty(ordItm)){
+												inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitListPrice"));
+												inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
+												inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
+											}
+											/*inventoryReceiptCtx.put("shipmentId", shipmentId);
+											inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);*/
+											Map<String, Object> receiveInventoryResult;
+											receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
+											
+											if (ServiceUtil.isError(receiveInventoryResult)) {
+												Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+												TransactionUtil.rollback();
+												return ServiceUtil.returnError(null, null, null,receiveInventoryResult);
+
+								            }
+											
+											receiptId = (String)receiveInventoryResult.get("receiptId");
+											shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+											if(UtilValidate.isNotEmpty(shipmentReceipt)){
+												shipmentReceipt.set("shipmentId", shipmentId);
+												shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
+												shipmentReceipt.store();
+											}
+											//storing shipment receipt status Here 
+											if(UtilValidate.isNotEmpty(receiptId)){
+												GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+												shipmentReceiptStatus.set("receiptId", receiptId);
+												shipmentReceiptStatus.set("statusId", (String) shipmentReceipt.get("statusId"));
+												shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+												shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+												delegator.createSetNextSeqId(shipmentReceiptStatus);
+											}
+											
+											Map shipmentStatusChange = FastMap.newInstance();
+											
+											shipmentStatusChange.put("shipmentId",shipmentId);
+											shipmentStatusChange.put("statusId","DOCUMENTS_RECEIVED");
+											shipmentStatusChange.put("userLogin",userLogin);
+						
+										    receiveInventoryResult = dispatcher.runSync("updateShipment", shipmentStatusChange);
+											
+											if (ServiceUtil.isError(receiveInventoryResult)) {
+												Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+												TransactionUtil.rollback();
+												return ServiceUtil.returnError(null, null, null,receiveInventoryResult);
+
+								            }
+						
+											shipmentStatusChange.put("shipmentId",shipmentId);
+											shipmentStatusChange.put("statusId","DOCUMENTS_ENDORSED");
+											 receiveInventoryResult = dispatcher.runSync("updateShipment", shipmentStatusChange);
+											
+											if (ServiceUtil.isError(receiveInventoryResult)) {
+												Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+												return ServiceUtil.returnError(null, null, null,receiveInventoryResult);
+
+											}
+											Map shipmentStatusAccept = FastMap.newInstance();
+						
+											shipmentStatusAccept.put("shipmentId",shipmentId);
+											shipmentStatusAccept.put("statusIdTo","SR_QUALITYCHECK");
+											shipmentStatusAccept.put("partyId",partyId);
+											shipmentStatusAccept.put("userLogin",userLogin);
+											 receiveInventoryResult = dispatcher.runSync("shipmentSendForQC", shipmentStatusAccept);
+											
+											if (ServiceUtil.isError(receiveInventoryResult)) {
+												Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+												return ServiceUtil.returnError(null, null, null,receiveInventoryResult);
+
+											}
+											
+											// raising sales invoice
+											Map salesInvoiceMap = FastMap.newInstance();
+						
+											salesInvoiceMap.put("shipmentId",shipmentId);
+											//salesInvoiceMap.put("partyId",supplierId);
+											Debug.log("orderId==========================="+orderId);				
+						
+											salesInvoiceMap.put("orderId",orderId);
+											salesInvoiceMap.put("userLogin",userLogin);
+											salesInvoiceMap.put("billToPartyId",partyId);
+											salesInvoiceMap.put("locale",locale);
+											Map saleInoiceResult = dispatcher.runSync("createBranchSaleInvoice", salesInvoiceMap);
+						
+											if (ServiceUtil.isError(saleInoiceResult)) {
+												Debug.logWarning("There was an error sales Invoice: " + ServiceUtil.getErrorMessage(saleInoiceResult), module);
+												return ServiceUtil.returnError(null, null, null,saleInoiceResult);
+				
+											}
+											Debug.log("saleInoiceResult==========================="+saleInoiceResult);				
+												
+										// raising purchase invoice
+										Map purchaseInvoiceMap = FastMap.newInstance();
+					
+										purchaseInvoiceMap.put("shipmentId",shipmentId);
+										//salesInvoiceMap.put("partyId",supplierId);
+										Debug.log("PoOrderId==========================="+PoOrderId);				
+					
+										purchaseInvoiceMap.put("orderId",PoOrderId);
+										purchaseInvoiceMap.put("userLogin",userLogin);
+										purchaseInvoiceMap.put("billToPartyId",partyId);
+										purchaseInvoiceMap.put("locale",locale);
+										Map purInoiceResult = dispatcher.runSync("createBranchSaleInvoice", purchaseInvoiceMap);
+					
+										if (ServiceUtil.isError(purInoiceResult)) {
+											Debug.logWarning("There was an error sales Invoice: " + ServiceUtil.getErrorMessage(purInoiceResult), module);
+							            	return ServiceUtil.returnError(null, null, null,purInoiceResult);
+			
+							            }
+										Debug.log("purInoiceResult======purchase====================="+purInoiceResult);	
+											
+							    
+							}
+			  		}catch (GenericServiceException e) {
 		    	  		Debug.logError("Shipment status change error: for Order "+orderId, module);
 		    	     	
-		    	  	}finally {
-				  		try {
-				  			TransactionUtil.commit(beganTransaction);
-				  		} catch (GenericEntityException e) {
-				  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
-				  			
-				  		}
-				  	}
+		    	  	}
 					
 				}catch (Exception e) {
 					Debug.logError(e, "Failed to approve purchase Order for sale Order"+orderId, module);
@@ -7135,7 +7160,6 @@ public class DepotSalesServices{
 	  }
 	    }catch (GenericEntityException e) {
 				  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
-
 	        
 	    }
 	    
