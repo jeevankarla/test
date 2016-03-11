@@ -79,6 +79,10 @@
         <value xml:lang="en">Depo Holder</value>        
         <value xml:lang="hi_IN">डिपो धारक</value>
     </property>
+     <property key="Depot">
+        <value xml:lang="en">Depot</value>        
+        <value xml:lang="hi_IN">डिपो</value>
+    </property>
     <property key="TimePeriod">
         <value xml:lang="en">Time Period</value>        
     </property>
