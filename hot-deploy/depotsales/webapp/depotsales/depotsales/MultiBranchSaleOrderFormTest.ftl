@@ -6,6 +6,43 @@
 	 	.labelFontCSS {
 	    	font-size: 13px;
 		}
+		hr.style17 { 
+			  display: block; 
+			  content: ""; 
+			  height: 5px; 
+			  margin-top: -5px; 
+			  border-style: solid; 
+			  border-color: #8c8b8b; 
+			  border-width: 0 0 0 0; 
+			  border-radius: 20px; 
+  
+		} 
+		hr.style17:before { 
+		  height: 1px; 
+		  border-style: solid; 
+		  border-color: #8c8b8b; 
+		  border-width: 1px 0 0 0; 
+		  border-radius: 40px; 
+		}
+		
+		hr.style18 { 
+		  height: 1px; 
+		  border-style: solid; 
+		  border-color: #8c8b8b; 
+		  border-width: 1px 0 0 0; 
+		  border-radius: 40px; 
+		} 
+		hr.style18:before { 
+			  display: block; 
+			  content: ""; 
+			  height: 30px; 
+			  margin-top: -31px; 
+			  border-style: solid; 
+			  border-color: #8c8b8b; 
+			  border-width: 0 0 1px 0; 
+			  border-radius: 20px; 
+		}
+		
 	
 	</style>
 	
@@ -14,7 +51,7 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
-	
+			fillPartyData();
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -83,51 +120,8 @@
 			
 			
 			$("#societyPartyId").blur(function() {
-			var partyId = $('[name=societyPartyId]').val();
-			alert
-			
-				var dataString="partyId=" + partyId ;
-	      	$.ajax({
-	             type: "POST",
-	             url: "getpartyContactDetails",
-	           	 data: dataString ,
-	           	 dataType: 'json',
-	           	 async: false,
-	        	 success: function(result) {
-	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-	       	  		 alert(result["_ERROR_MESSAGE_"]);
-	          			}else{
-	       	  				  contactDetails =result["partyJSON"];
-	       	  				 if( contactDetails != undefined && contactDetails != ""){
-		       	  				  var address1=contactDetails["address1"];
-		       	  				   address1 +=contactDetails["address2"];
-		       	  				   address1 +=contactDetails["city"];
-		       	  				   var custName=contactDetails["custPartyName"];
-		       	  				   var loomType=contactDetails["loomType"];
-		       	  				   var loomQty=contactDetails["loomQty"];
-		       	  				   var loomQuota=contactDetails["loomQuota"];
-		       	  				   var Depo=contactDetails["Depo"];
-		       	  				   var psbNo=contactDetails["psbNo"];
-		       	  				   var postalCode=contactDetails["postalCode"];
-		       	  				   $("#postalCode").html("<h4>"+postalCode+"</h4>");
-		   						   $("#address").html("<h4>"+address1+"</h4>");
-		       	  				   $("#custName").html("<h4>"+custName+"</h4>");
-		       	  				   $("#loomType").html("<h4>"+loomType+"</h4>");
-		       	  				   $("#psbNo").html("<h4>"+psbNo+"</h4>");
-		       	  				   $("#loomQty").html("<h4>"+loomQty+"</h4>");
-		       	  				   $("#Depo").html("<h4>"+Depo+"</h4>");
-		       	  				   $("#loomQuota").html("<h4>"+loomQuota+"</h4>");
-		       	  				   
-	       	  				   }
-	      			}
-	               
-	          	} ,
-	         	 error: function() {
-	          	 	alert(result["_ERROR_MESSAGE_"]);
-	         	 }
-	        }); 
-			
-			});
+			fillPartyData();
+				});
 			
 		});
 		
@@ -200,7 +194,94 @@
 	        }); 
 	           
 	    }
+	     function fillPartyData(){
 	     
+	     
+	     var partyId = $('[name=societyPartyId]').val();
+			$('.partyLoom').remove();			
+				var dataString="partyId=" + partyId ;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyContactDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				  contactDetails =result["partyJSON"];
+	       	  				 if( contactDetails != undefined && contactDetails != ""){
+		       	  				  var address1=contactDetails["address1"];
+		       	  				   address1 +=contactDetails["address2"];
+		       	  				   address1 +=contactDetails["city"];
+		       	  				   
+		       	  				   var custName=contactDetails["custPartyName"];
+		       	  				  var LoomDetails=contactDetails["LoomDetails"];
+		       	  				  var LoomList=contactDetails["LoomList"];
+		       	  				  var silkLooms=0;
+		       	  				  var cottonLooms=0;
+		       	  				  var WoolLooms=0;
+		       	  				  var obj ={};
+		       	  				 // alert(JSON.stringify(LoomDetails));
+		       	  				  $.each(LoomList, function(key, item){
+		       	  				  obj [item.loomType]=0;
+		       	  				  	for(var i=0 ; i<LoomDetails.length ; i++){
+			       	  				  if(LoomDetails[i].loomType==item.loomType){
+			       	  				 		 obj [item.loomType] = LoomDetails[i].loomQty;
+          									  
+			       	  				 	}			       	  				 	
+		       	  				  }
+		       	  				  
+								});		       	  				   
+		       	  				  var tableElement;
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
+		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
+		       	  				   
+		       	  				 $.each(LoomList, function(key, item){
+		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="right" class="label"><font color="blue">'+item.loomType+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				   });
+		       	  				  		       	  				   
+		       	  				   var Depo=contactDetails["Depo"];
+		       	  				   var DAO=contactDetails["DAO"];
+		       	  				   var psbNo=contactDetails["psbNo"];
+		       	  				   var prodStoreId=contactDetails["productStoreId"];
+		       	  				   var partyType=contactDetails["partyType"];
+			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
+			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
+			       	  					$('#productStoreId').focus().val(prodStoreId);
+			       	  					jQuery("#branchName").html(prodStoreId);
+			       	  					$('#suplierPartyId').focus();
+	    								$('#productStoreId').autocomplete('close');
+			       	  			   }
+			       	  				
+		       	  				   
+		       	  				   
+		       	  				  var postalCode=contactDetails["postalCode"];
+		       	  				 // $("#postalCode").html("<h4>"+postalCode+"</h4>");
+		   						   $("#address").html("<h4>"+address1+"</h4>");
+		       	  				   $("#custName").html("<h4>"+custName+"</h4>");
+		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
+		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
+		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
+		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
+		       	  				    $('#loomTypes tr:last').after(tableElement);	
+		       	  				   
+	       	  				   }
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	        }); 
+			
+		
+	     
+	     
+	     }
 	  	function validateParty(){
 	  		if(indententryinit.productStoreId.value.length < 1){
 	  			alert("Branch is Mandatory");
@@ -514,84 +595,97 @@
     		<div class="screenlet-body">
 		 		
 				 <form  name="partyDetails" id="partyDetails">
-	      				<table width="30%" border="0" cellspacing="0" cellpadding="0">
-		               		<#if parameters.custName?exists && parameters.custName?has_content> 
+				 				 	 	<hr class="style17"></hr>
+				 
+	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       			</tr>
+			       			<#else>
+		               		
+		               		<tr>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="custName"style="color: blue" ></label></td>
+			       			</tr>
+			       			</#if>
+				 	 	 <#if parameters.address?exists && parameters.address?has_content> 
+			       			<tr>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="10%"><font color="green">PartyName: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="custName"style="color: blue" ></label></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
+				 	 	</table>	
+				 	 	
+				 	 	<hr class="style18"></hr>
+				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
+					 	<tr>
+						<td width="60%">
+	      				<table width="100%" border="1" border-style="solid">
+		               
 			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 			       			 <tr>
-			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">PassBook Num: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
-			       			<#if parameters.address?exists && parameters.address?has_content> 
+			       			
+			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Address: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <font color="blue"><b>${parameters.address}</b></font></td>
-			       			</tr>
-			       			<#else>
-		               		<tr>
-			       				<td width="10%"><font color="green">Address: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="address" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
-			       			<tr>
-			       				<td width="10%"><font color="green">postal Code: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">postal Code: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
 			       			</tr>
-			       			</#if>
+			       			</#if>-->
 			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="10%"><font color="green">Depo Holder: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="Depo" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
-			       			<#if parameters.loomType?exists && parameters.loomType?has_content> 
+			       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
+			       			<tr>
+			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+			       			</tr>
+			       			</#if>
+			       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
+			       			<tr>
+			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+			       			</tr>
+			       			<#else>
+			       			<tr>
+			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+			       			</tr>
+			       			</#if>
+			       			</table>
+			       			</td>
+			       			<td width="40%">
+			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
+			       			<tr>
 			       			
-			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.loomType}</b></font></td>
 			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="10%"><font color="green">Party Loom Type: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomType" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.loomQuota?exists && parameters.loomQuota?has_content> 
 			       			
-			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b>${parameters.loomQuota}</b></font></td>
+			       			</table>
+			       			</td>
 			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="10%"><font color="green">QuotaPerLoom: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomQuota" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.loomQty?exists && parameters.loomQty?has_content> 
-			       			<tr>
-			       				<td width="10%"><font color="green">Quantity: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"><font color="blue"><b> ${parameters.loomQty}</b></font></td>
-			       			</tr> 
-			       			<#else>
-			       			<tr>
-			       				<td width="10%"><font color="green">Quantity: </font><td width="60%" align='left' valign='middle' nowrap="nowrap"> <label  align="left" id="loomQty" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
+			       			
 			       		</table>
-		       	</form>
-				
+			       						 	 	<hr class="style18"></hr>
+		 	       	</form>
 		</div>     
 	</div>
 </div>

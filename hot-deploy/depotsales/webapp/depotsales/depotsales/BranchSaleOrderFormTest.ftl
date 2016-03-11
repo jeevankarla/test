@@ -7,45 +7,43 @@
 	    	font-size: 13px;
 		}
 		
-		
 		hr.style17 { 
-		display: block; 
-  content: ""; 
-  height: 30px; 
-  margin-top: -31px; 
-  border-style: solid; 
-  border-color: #8c8b8b; 
-  border-width: 0 0 0 0; 
-  border-radius: 20px; 
+			  display: block; 
+			  content: ""; 
+			  height: 5px; 
+			  margin-top: -5px; 
+			  border-style: solid; 
+			  border-color: #8c8b8b; 
+			  border-width: 0 0 0 0; 
+			  border-radius: 20px; 
   
-} 
-hr.style17:before { 
-  height: 1px; 
-  border-style: solid; 
-  border-color: #8c8b8b; 
-  border-width: 1px 0 0 0; 
-  border-radius: 40px; 
-}
+		} 
+		hr.style17:before { 
+		  height: 1px; 
+		  border-style: solid; 
+		  border-color: #8c8b8b; 
+		  border-width: 1px 0 0 0; 
+		  border-radius: 40px; 
+		}
 		
 		hr.style18 { 
-  height: 1px; 
-  border-style: solid; 
-  border-color: #8c8b8b; 
-  border-width: 1px 0 0 0; 
-  border-radius: 40px; 
-} 
-hr.style18:before { 
-  display: block; 
-  content: ""; 
-  height: 30px; 
-  margin-top: -31px; 
-  border-style: solid; 
-  border-color: #8c8b8b; 
-  border-width: 0 0 1px 0; 
-  border-radius: 20px; 
-}
-
-	
+		  height: 1px; 
+		  border-style: solid; 
+		  border-color: #8c8b8b; 
+		  border-width: 1px 0 0 0; 
+		  border-radius: 40px; 
+		} 
+		hr.style18:before { 
+			  display: block; 
+			  content: ""; 
+			  height: 30px; 
+			  margin-top: -31px; 
+			  border-style: solid; 
+			  border-color: #8c8b8b; 
+			  border-width: 0 0 1px 0; 
+			  border-radius: 20px; 
+		}
+		
 	</style>
 	
 	<script type="text/javascript">
@@ -599,46 +597,49 @@ hr.style18:before {
 		 			<label>Customer Details</label>
 				</div>
 				 <form  name="partyDetails" id="partyDetails">
-				 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+				 	  			 	 	<hr class="style17"></hr>
+				 
+	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	 <#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
-			       				<td width="35%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="35%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	</table>	
-				 	 	<hr class="style17"></hr>
+				 	 	
+				 	 	<hr class="style18"></hr>
 				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>
-						<td>
-	      				<table width="150%" border="1" border-style="solid">
+						<td width="60%">
+	      				<table width="100%" border="1" border-style="solid">
 		               
 			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 			       			 <tr>
-			       				<td width="35%" keep-together="always"><font color="green">PassBook Num        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+			       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="35%" keep-together="always"><font color="green">PassBook Num    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+			       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			
 			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 			       			<tr>
-			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+			       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
@@ -647,34 +648,34 @@ hr.style18:before {
 			       			</#if>-->
 			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 			       			<tr>
-			       				<td width="50%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="50%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
+			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
 			       			<tr>
-			       				<td width="50%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="50%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
 			       			</tr>
 			       			</#if>
 			       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
 			       			<tr>
-			       				<td width="50%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
 			       			</tr>
 			       			<#else>
 			       			<tr>
-			       				<td width="50%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
 			       			</tr>
 			       			</#if>
 			       			</table>
 			       			</td>
-			       			<td>
+			       			<td width="40%">
 			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
 			       			<tr>
 			       			
