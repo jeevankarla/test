@@ -207,9 +207,9 @@
          <!-- <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
            <submit button-type="button"  />
         </field> -->
-      	<field name="SendtoQC" use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"  title="Send to QC" widget-style="buttontext">
+      	<!-- <field name="SendtoQC" use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"  title="Send to QC" widget-style="buttontext">
              <hyperlink  target-type="plain" description="Send to QC"  target="javascript:showQCApprovalQTip('${receiptId}');"></hyperlink>
-        </field> 
+        </field>  -->
     </form>
     <form name="listOrderRoles" type="list" list-name="orderRolesList" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row"   default-table-style="basic-table hover-bar">

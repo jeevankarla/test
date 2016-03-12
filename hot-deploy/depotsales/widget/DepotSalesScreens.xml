@@ -1246,9 +1246,9 @@
 											location="component://materialmgmt/widget/MaterialPurchaseForms.xml"
 											name="invoiceDetailList" />
 									</screenlet>
-									<screenlet title="Content">
+									<!-- <screenlet title="Content">
 										<include-screen name="POcontent" />
-									</screenlet>
+									</screenlet> -->
 									<platform-specific>
 										<html>
 											<html-template

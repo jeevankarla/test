@@ -39,7 +39,7 @@
             </condition>        
         	<link target="FindFacility"/>
         </menu-item> -->
-       <menu-item name="producerSearch" title="${uiLabelMap.FindWeaver}">
+       <menu-item name="producerSearch" title="Weaver Master">
 			<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
