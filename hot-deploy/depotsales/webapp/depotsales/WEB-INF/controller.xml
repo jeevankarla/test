@@ -1260,8 +1260,8 @@
            <security https="true" auth="false"/>
            <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="CreateNewProduct" global-transaction="true"/>
            <!-- <event type="service"  invoke="newProductCreation"/> -->        
-           <response name="success" type="view" value="CreateNewProduct"/>
-           <response name="error" type="view" value="CreateNewProduct"/>    
+           <response name="success" type="view" value="searchProduct"/>
+           <response name="error" type="view" value="searchProduct"/>    
         </request-map> 
     <request-map uri="updateShipment">
         <security https="true" auth="true"/>

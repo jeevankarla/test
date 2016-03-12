@@ -49,10 +49,10 @@
             </condition>        
         	<link target="FindProcProducer"/>
         </menu-item>
-        <menu-item name="Product" title="${uiLabelMap.Product}">       
+        <!-- <menu-item name="Product" title="${uiLabelMap.Product}">       
             <link target="FindYarnProducts">               
             </link>
-        </menu-item>
+        </menu-item> -->
        
         <!-- <menu-item name="BranchSalesOrder" title="${uiLabelMap.BranchSalesIndent}">
 	      <condition>
