@@ -452,7 +452,7 @@ function populateData(){
 <form id="CreateMPO"  action="<@ofbizUrl>createPOByOrder</@ofbizUrl>" name="CreateMPO" method="post">
 
 <div id="wizard-2">
-    <h3>PO Information</h3>
+    <h3>PO Header</h3>
     <section>
       <fieldset>
             <table cellpadding="8" cellspacing="8" class='h4' width="100%">
@@ -631,7 +631,7 @@ function populateData(){
              </section>
 		
 		<#-- Working area-->
-        <h3>Add Material </h3>
+        <h3>PO Items </h3>
         <section>
         
         	<div class="full" style="width:100%;height:500px;">
@@ -643,11 +643,11 @@ function populateData(){
 			 			<div class="screenlet-body" id="FieldsDIV" >
 			 				<table width="100%" border="0" cellspacing="10" cellpadding="10">
 				 		        <tr>
-				 		        	<#if includeTax?exists && includeTax=="Y">
+				 		        	<#--<#if includeTax?exists && includeTax=="Y">
 						        	<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" checked /></font></h3></td>
 									<#else>
 									<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" onClick="javascript: updateGridAmount();" /></font></h3></td>
-									</#if>
+									</#if>-->
 						        	<td align="center"><h2><font color="black">Total PO Value :</font> <font color="green"><span id="totalPOAmount">Rs. 0</span></font></h2></td>
 						        	<td align='right'><input class="styled-button" type="button" id="calculateBtn"  name="calculateBtn" value="Calculate" onClick="javascript: calculatePOValue();"/></td>
 				 		         </tr>

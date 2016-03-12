@@ -39,7 +39,7 @@
             </condition>        
         	<link target="FindFacility"/>
         </menu-item> -->
-       <menu-item name="producerSearch" title="${uiLabelMap.FindWeaver}">
+       <menu-item name="producerSearch" title="Weaver Master">
 			<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -49,10 +49,10 @@
             </condition>        
         	<link target="FindProcProducer"/>
         </menu-item>
-        <menu-item name="Product" title="${uiLabelMap.Product}">       
+        <!-- <menu-item name="Product" title="${uiLabelMap.Product}">       
             <link target="FindYarnProducts">               
             </link>
-        </menu-item>
+        </menu-item> -->
        
         <!-- <menu-item name="BranchSalesOrder" title="${uiLabelMap.BranchSalesIndent}">
 	      <condition>
@@ -64,7 +64,7 @@
             <link target="processOrdersBranchSales">
             </link>
         </menu-item> --> 
-        <menu-item name="NonRouteCustomPayments" title="${uiLabelMap.Receipts}"> 
+       <!--  <menu-item name="NonRouteCustomPayments" title="${uiLabelMap.Receipts}"> 
     		 <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
@@ -77,7 +77,7 @@
             	<parameter param-name="subTabItem" value="${subTabItem}"/>
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
-       </menu-item>
+       </menu-item> -->
         <!-- <menu-item name="DepotSalesOrder" title="Depot Sales Indent">
 	      <condition>
 	     	    <or>
@@ -135,7 +135,7 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item> -->
-        <menu-item name="depotpayments" title="${uiLabelMap.Payments}">
+        <!-- <menu-item name="depotpayments" title="${uiLabelMap.Payments}">
 		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -143,11 +143,11 @@
             	</or>            
             </condition> 
 			<link target="finddepotPayments">
-<!-- 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" /> -->
+				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
 			<parameter param-name="subTabButtonValue" value="Find Payments" />
-<!-- 				<parameter param-name="actionSubTabButtonValue" value="find" /> -->
+				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
-		</menu-item>
+		</menu-item> -->
        
 	    <menu-item name="stockPositionDepotSales" title="${uiLabelMap.StockPosition}">
         	<condition>

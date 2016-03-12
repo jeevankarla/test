@@ -1246,9 +1246,9 @@
 											location="component://materialmgmt/widget/MaterialPurchaseForms.xml"
 											name="invoiceDetailList" />
 									</screenlet>
-									<screenlet title="Content">
+									<!-- <screenlet title="Content">
 										<include-screen name="POcontent" />
-									</screenlet>
+									</screenlet> -->
 									<platform-specific>
 										<html>
 											<html-template
@@ -2002,7 +2002,18 @@
 									location="component://materialmgmt/webapp/materialmgmt/purchase/editMaterialDetails.ftl" />
 							</html>
 						</platform-specific>
-
+										<section>
+                                    	<condition>
+                            				
+                            					<if-has-permission permission="PRODUCT" action="_CREATE"/>
+                            				
+                           				 </condition> 
+                                    		<widgets>
+                                               <container style="button-bar">
+                                                  <link target="CreateNewProduct" text="Create New Product" style="buttontext create h2"></link>		
+                                               </container>
+                                            </widgets>
+                                    	</section>
 						<screenlet title="Search-Options">
 							<include-form location="component://depotsales/widget/DepotSalesForms.xml"
 								name="findMaterial" />
@@ -3290,7 +3301,13 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                 	<decorator-section name="menu-bar">
                                     	<section>
+                                    	 <condition>
+                            				
+                            					<if-has-permission permission="WEAVER" action="_CREATE"/>
+                            				
+                           				 </condition>
                                     		<widgets>
+                                    		
                                                <container style="button-bar">
                                                   <link target="CreateNewWeaver" text="Create New Weaver" style="buttontext create h2"></link>		
                                                </container>
@@ -4025,6 +4042,11 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                 	<decorator-section name="menu-bar">
                                     	<section>
+                                    	 <condition>
+                            				
+                            					<if-has-permission permission="PRODUCT" action="_CREATE"/>
+                            				
+                           				 </condition>
                                     		<widgets>
                                                <container style="button-bar">
                                                   <link target="CreateNewProduct" text="Create New Product" style="buttontext create h2"></link>		
@@ -4108,7 +4130,7 @@
     		<section>
     			<actions>
     				<set field="titleProperty" value="Create New Product" />
-    				<set field="tabButtonItem" value="Product" />
+    				<set field="tabButtonItem" value="searchProduct" />
     				<entity-condition list="productCategoryList" entity-name="ProductCategory">
     					<condition-list>
     						<condition-expr field-name="productCategoryTypeId" operator="in" value="NATURAL_FIBERS,SYNTHETIC,ZARI"/>

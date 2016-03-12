@@ -6574,7 +6574,20 @@ public class DepotSalesServices{
 					Debug.logError(e, module);
 				}
 				Debug.log("result================payment================"+result);
-				String paymentId=(String)result.get("paymentId");
+				List<GenericValue> orderPaymentPreferences = null;
+                try {
+                    orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
+                } catch (GenericEntityException e) {
+                    String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingOrderPaymentPreferences", locale);
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+				
+                String paymentId = null;
+                GenericValue cardOrderPaymentPref = EntityUtil.getFirst(orderPaymentPreferences);
+                if (cardOrderPaymentPref != null) {
+                	paymentId = cardOrderPaymentPref.getString("paymentId");
+                }
 						Debug.log("paymentId================payment================"+paymentId);
 					if(UtilValidate.isNotEmpty(paymentId)){
 						//payment deposit into bank
