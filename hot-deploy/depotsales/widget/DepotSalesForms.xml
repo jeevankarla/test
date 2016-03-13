@@ -631,10 +631,10 @@
 	<!-- <field name="productId" title="Product">
      	<display-entity entity-name="Product" description="${description} [${productId}]" ></display-entity>
     </field>  -->    
-    <field name="productId" title="Product" use-when="productId!=null" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${description} [${productId}]" target="/catalog/control/EditProduct" target-window="_blank" target-type="inter-app">
+    <field name="productId" title="Product" use-when="productId!=null" ><display description="${description} [${productId}]"></display>
+            <!-- <hyperlink also-hidden="false" description="${description} [${productId}]" target="/catalog/control/EditProduct" target-window="_blank" target-type="inter-app">
                 <parameter param-name="productId"/>
-            </hyperlink>
+            </hyperlink> -->
      </field>
     
      <field name="longDescription" title="Specification"><display size="50"/></field>
@@ -657,10 +657,10 @@
      	   <parameter param-name="productId"/>
      	</hyperlink>
      </field>
-      <field name="updateMaterial" widget-style="buttontext" title="Update Details" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
+      <!-- <field name="updateMaterial" widget-style="buttontext" title="Update Details" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
             <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
             </hyperlink>
-      </field> 
+      </field>  -->
     </form>
     <form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>  

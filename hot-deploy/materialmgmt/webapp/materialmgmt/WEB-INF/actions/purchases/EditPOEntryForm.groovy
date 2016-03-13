@@ -53,6 +53,22 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderInfoDetail.putAt("estimatedDeliveryDate", estDeliveryDate);
 	orderInfoDetail.putAt("PONumber", orderHeader.externalId);
 	orderInfoDetail.putAt("productStoreId", orderHeader.productStoreId);
+	orderInfoDetail.putAt("originFacilityId", orderHeader.originFacilityId);
+	String originFacilityName="";
+	if(orderHeader.originFacilityId){
+		facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", orderHeader.originFacilityId), false);
+		//Debug.log("facilityDetails=============="+facilityDetails);
+		if(facilityDetails && facilityDetails.facilityName){
+			originFacilityName=facilityDetails.facilityName;
+			//Debug.log("originFacilityName=============="+originFacilityName);
+			
+		}
+	
+	}
+	
+	orderInfoDetail.putAt("originFacilityName", originFacilityName);
+	
+	
 	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	
 	fileNo = "";

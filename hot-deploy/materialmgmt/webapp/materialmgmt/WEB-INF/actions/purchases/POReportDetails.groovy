@@ -357,21 +357,24 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 			}
 		}}
 		remarks="";
-		conditionList=[];
-		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
-		
-		conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
-		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
-		
-		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
-		Debug.log("orderItemAttr=================="+orderItemAttr);
-		
-		orderItemAttr.each{ attr ->
-		Debug.log("remark=================="+attr.attrValue);
-		
-		if(attr.attrValue){
-			remarks=attr.attrValue;
+		if(toOrderId){
+			conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
+			
+			conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
+			
+			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+			//Debug.log("orderItemAttr=================="+orderItemAttr);
+			if(orderItemAttr){
+				orderItemAttr.each{ attr ->
+				//Debug.log("remark=================="+attr.attrValue);
+				
+				if(attr.attrValue){
+					remarks=attr.attrValue;
+					}
+				}
 			}
 		}
 		orderDetailsMap["remarks"]=remarks;

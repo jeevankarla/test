@@ -1388,9 +1388,9 @@
 				</entity-and>
 			</actions>
 			<widgets>
-				<include-form
+				<!-- <include-form
 					location="component://materialmgmt/widget/materialmgmtForms.xml"
-					name="addAttribute" />
+					name="addAttribute" /> -->
 				<screenlet>
 					<include-form
 						location="component://materialmgmt/widget/materialmgmtForms.xml"
