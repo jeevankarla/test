@@ -710,9 +710,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    							<td>
 	    							
 	                                	<select name="facilityId" id="facilityId"></select>
-						   				
+						   				<#if orderId?exists && orderInfo.get("originFacilityId")?has_content>
 						   			<input type="hidden"  name="originFacilityId" id="originFacilityId" value="${orderInfo.get("originFacilityId")?if_exists}"/>
 						   			<input type="hidden"  name="originFacilityName" id="originFacilityName" value="${orderInfo.get("originFacilityName")?if_exists}"/>
+						   			<#else>
+						   			<input type="hidden"  name="originFacilityId" id="originFacilityId" value=""/>
+						   			<input type="hidden"  name="originFacilityName" id="originFacilityName" value=""/>
+						   		
+						   			</#if>
 						   			
 		      						</td>
 	      						</tr>
