@@ -49,6 +49,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	}
 	
     $(document).ready(function(){
+    		populateBranchDepots();
             $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -259,6 +260,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 		var billToPartyId;
 		function populateBranchDepots() {
 			var productStoreId = $("#productStoreId").val();
+			var originFacilityId=$("#originFacilityId").val();
+			var originFacilityName=$("#originFacilityName").val();
+			
 			$.ajax({
 				 type: "POST",
 	             url: 'populateBranchDepotsAjax',
@@ -275,7 +279,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 						var paramName = 'facilityId';
 						var optionList = '';   		
 						var list= depotsList;
-						if (list) {		       				        	
+						if (list) {	
+							if (originFacilityId != null || originFacilityId != undefined || originFacilityId !=""){
+								 optionList += "<option value = " + originFacilityId + "  selected>" + originFacilityName + "</option>";          			
+							  }     				        	
 				        	for(var i=0 ; i<list.length ; i++){
 								var innerList=list[i];	              			             
 				                optionList += "<option value = " + innerList.facilityId + " >" + innerList.facilityName + "</option>";          			
@@ -346,7 +353,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 <form id="CreateMPO"  action="<@ofbizUrl>CreateMaterialDepotTransPO</@ofbizUrl>" name="CreateMPO" method="post">
 
 <div id="wizard-2">
-    <h3>PO Information</h3>
+    <h3>PO Header</h3>
     <section>
       <fieldset>
             <table cellpadding="15" cellspacing="15" class='h3' width="50%">
@@ -526,7 +533,7 @@ function makeDatePicker(fromDateId ,thruDateId){
              </section>
 		
 		<#-- Working area-->
-        <h3>Add Material </h3>
+        <h3>PO Items </h3>
         <section>
         
         	<div class="full" style="width:100%;height:500px;">
@@ -538,11 +545,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 			 			<div class="screenlet-body" id="FieldsDIV" >
 			 				<table width="100%" border="0" cellspacing="10" cellpadding="10">
 				 		        <tr>
-				 		        	<#if includeTax?exists && includeTax=="Y">
+				 		        	<#--<#if includeTax?exists && includeTax=="Y">
 						        	<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" checked /></font></h3></td>
 									<#else>
 									<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" onClick="javascript: updateGridAmount();" /></font></h3></td>
-									</#if>
+									</#if>-->
 						        	<td align="center"><h2><font color="black">Total PO Value :</font> <font color="green"><span id="totalPOAmount">Rs. 0</span></font></h2></td>
 						        	<td align='right'><input class="styled-button" type="button" id="calculateBtn"  name="calculateBtn" value="Calculate" onClick="javascript: calculatePOValue();"/></td>
 				 		         </tr>
@@ -701,7 +708,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 				                <tr>
                                 	<td class="label"><FONT COLOR="#045FB4"><b>Select Depot</b></FONT></td>
 	    							<td>
+	    							
 	                                	<select name="facilityId" id="facilityId"></select>
+						   				
+						   			<input type="hidden"  name="originFacilityId" id="originFacilityId" value="${orderInfo.get("originFacilityId")?if_exists}"/>
+						   			<input type="hidden"  name="originFacilityName" id="originFacilityName" value="${orderInfo.get("originFacilityName")?if_exists}"/>
+						   			
 		      						</td>
 	      						</tr>
 				                <#--
