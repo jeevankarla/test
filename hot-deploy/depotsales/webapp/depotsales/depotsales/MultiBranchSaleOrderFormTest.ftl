@@ -309,7 +309,7 @@
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
-	<#if parameters.formAction?has_content && (parameters.formAction=="SilkBranchSalesOrder" || parameters.formAction=="OtherBranchSalesOrder")>
+	<#if parameters.formAction?has_content && (parameters.formAction=="SilkMultiBranchSalesOrder" || parameters.formAction=="OtherMultiBranchSalesOrder")>
 		<#include "SilkMultiBranchSalesOrderInternalForm.ftl"/>
 	<#else>
 		<#include "MultiBranchSalesOrderInternalForm.ftl"/>

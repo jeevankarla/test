@@ -86,7 +86,7 @@
 	};
 	function QCApprovalQTip(shipmentId,partyIdTo,partyName) {
 		var message = "";
-		message += "<form action='shipmentSendForQC' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
+		message += "<form action='DepotshipmentSendForQC' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ShipmentId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='shipmentId' name='shipmentId' value='"+shipmentId+"'/></td><input class='h4' type='hidden' readonly id='statusIdTo' name='statusIdTo' value='SR_QUALITYCHECK'/></tr>";
 		

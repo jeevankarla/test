@@ -269,8 +269,8 @@
      <request-map uri="CancelGrnShipment">
        <security https="true" auth="true"/>
         <event type="service" path="" invoke="processCancelGrnShipment"></event>
-       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
-       <response name="error" type="view" value="FindGRNShipmentsDepot"/>
+       <response name="success" type="request-redirect-noparam" value="FindSupplierShipments"/>
+       <response name="error" type="view" value="FindSupplierShipments"/>
      </request-map>
      
      
