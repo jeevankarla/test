@@ -1434,7 +1434,7 @@
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="vehicleId" title="Vehicle No"><text-find/></field>
         <field name="statusId" title="Status"  >
-        <drop-down no-current-selected-key="GENERATED" allow-empty="true" > 
+        <drop-down allow-empty="true" > 
         <option key="SHIPMENT_CANCELLED" description="Cancelled" > </option>
         <option key="GENERATED" description="Generated"  ></option>
         </drop-down>
