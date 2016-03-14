@@ -282,7 +282,65 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
+     <screen name="FindFinAccountTransAltNew">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindBankAccountTrans"/>
+                <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+<!--                   	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="FinAccountTrans"/>
+                <set field="glReconciliationId" value="${parameters.glReconciliationId}"/>
+                <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
+                <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
+                <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
+                <set field="grandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.grandTotal"/>
+                <set field="createdGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdGrandTotal"/>
+                <set field="totalCreatedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedTransactions"/>
+                <set field="approvedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.approvedGrandTotal"/>
+                <set field="totalApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalApprovedTransactions"/>
+                <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
+                <set field="totalCreatedApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedApprovedTransactions"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNTTX_EDIT"/>
+                </service>
+                <set field="hasFinTxEditPermission" from-field="permResult.hasPermission"/> 
+            </actions>
+            <widgets>
+                    <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck"  main-action="FINACCOUNTREC_EDIT"> </if-service-permission>
+                                <if-compare field="finAccount.finAccountTypeId" operator="equals" value="CASH" type="String"></if-compare>
+                            </condition>
+                            <widgets>
+                              <!--   <link target="FinancialAccountReconciliation" text="${uiLabelMap.FinAccountReconciliation}" style="buttontext">
+                                    <parameter param-name="finAccountId" from-field="finAccountId"/>
+                                    <parameter param-name="statusId" value="FINACT_TRNS_CREATED"/>
+                                </link> -->
+                            </widgets>
+                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindFinAccountTransactionsAltNew" location="component://accounting/widget/FinAccountForms.xml"/>
+                            </decorator-section> 
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/FinAccountTrans.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditFinAccountAuths">
         <section>
             <actions>

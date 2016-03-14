@@ -766,7 +766,7 @@ under the License.
     <screen name="newPayablePayment">
         <section>
             <actions>
-               <set field="tabButtonItem" value="CashPaymentOther"/>
+               <set field="tabButtonItem" value="APCashPaymentOther"/>
                 <set field="subTabButtonItem" value="findCashPayblePayment" />
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
@@ -826,7 +826,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newReceipts" text="Create New Receipt" style="buttontext create"/>
+                                            <link target="newReceipts" text="Create New AR Payment" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options" > 
@@ -904,7 +904,7 @@ under the License.
             <set field="titleProperty" value="Cash Payble Payment Search"/>
                <set field="headerItem" value="payments"/>
                <set field="subTabButtonItem" value="findCashPayblePayment" />
-                <set field="tabButtonItem" value="CashPaymentOther"/>
+                <set field="tabButtonItem" value="APCashPaymentOther"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
@@ -913,7 +913,7 @@ under the License.
             <widgets>
                <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="CashPaymentTabBar"/>
                         <section>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -924,7 +924,7 @@ under the License.
                                     		</condition>
                                     		<widgets>
                                     		   <container style="button-bar">
-		                                            <link target="newPayablePayment" text="Create New Payment" style="buttontext create"/>
+		                                            <link target="newPayablePayment" text="Create New AP Payment" style="buttontext create"/>
 		                                        </container>
                                        		</widgets>
                                        	</section>		
