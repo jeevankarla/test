@@ -1941,7 +1941,7 @@
     <menu name="CashierPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem">
            
-          <menu-item name="findRouteCashPayment" title="Route Marketing">
+         <!--  <menu-item name="findRouteCashPayment" title="Route Marketing">
           	<condition>
 				<or>
 				  <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -1952,8 +1952,17 @@
             	<parameter param-name="subTabItem" value="CashPayment"/>
             	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
             </link>
+          </menu-item> -->
+          <menu-item name="APCashPaymentOther" title="AP Payments">
+            <condition>
+				<or>
+            		<if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+             <link target="findCashPayblePayment">
+            </link>
           </menu-item>
-          <menu-item name="CashPaymentOther" title="Non Route Marketing">
+          <menu-item name="CashPaymentOther" title="AR Payments">
             <condition>
 				<or>
             		<if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -1985,7 +1994,8 @@
 		 </menu-item> -->
 		 
           
-          <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
+          
+          <menu-item name="EditFinAccountTransAlt" title="Deposit into Bank">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -1995,7 +2005,17 @@
 			<link target="EditFinAccountTransAlt">
 			</link>
 		 </menu-item>
-		  <menu-item name="AdhocSalePayment" title="AdhocSale Payment">
+		 <menu-item name="FinAccountTrans"
+			title="Find FinAccount Transations">
+			<condition>
+				    <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+            </condition>
+			<link target="FindFinAccountTransAltNew">
+				<parameter param-name="finAccountId" value="FIN_ACCNT1" />
+				<parameter param-name="subTabItem" value="FinAccountTrans" />
+			</link>
+		</menu-item>
+		 <!--  <menu-item name="AdhocSalePayment" title="AdhocSale Payment">
           <condition>
 				<or>
 				 <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -2003,7 +2023,7 @@
             </condition>
 			<link target="findAdhocSalePayment">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		  <menu-item name="FinAccntCashBook" title="Cash Book">
           <condition>
 				<or>
@@ -2014,7 +2034,7 @@
 			<parameter param-name="organizationPartyId" value="Company"/>
 			</link>
 		 </menu-item>
-		  <menu-item name="CashierReports" title="CashReports">
+		 <!--  <menu-item name="CashierReports" title="CashReports">
           <condition>
 				<or>
 				 <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -2022,11 +2042,11 @@
             </condition>
 			<link target="showCashierReports">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
     </menu> 
      <menu name="NonRoutePaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
-           <menu-item name="findCashReceipts" title="Receipts">
+           <menu-item name="findCashReceipts" title="AR Payments">
             <condition>
 				<or>
             		<if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -2035,7 +2055,7 @@
             <link target="findCashReceipts">
             </link>
           </menu-item>
-          <menu-item name="findCashPayblePayment" title="Payments">
+          <!-- <menu-item name="findCashPayblePayment" title="Payments">
           	<condition>
 				<or>
             		<if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -2043,11 +2063,21 @@
             </condition>
             <link target="findCashPayblePayment">
             </link>
-          </menu-item>
+          </menu-item> -->
           
-    </menu> 
-    
-    
+    </menu>
+    <menu name="CashPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
+         <menu-item name="findCashPayblePayment" title="AP Payments">
+          	<condition>
+				<or>
+            		<if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+            <link target="findCashPayblePayment">
+            </link>
+          </menu-item> 
+    </menu>
     <!--
          -->
          <menu name="TreasurerMainTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -2063,7 +2093,7 @@
 			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
 			</link>
 		 </menu-item>
-		 <menu-item name="FindNonBankAccount" title="Non BankAccounts">
+		<!--  <menu-item name="FindNonBankAccount" title="Non BankAccounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2071,8 +2101,8 @@
             </condition>
 			<link target="FindNonBankAccount">
 			</link>
-		 </menu-item>
-		  <menu-item name="FindInterUnitBankAccount" title="Inter Unit Accounts">
+		 </menu-item> -->
+		  <menu-item name="FindInterUnitBankAccount" title="Head Office Accounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2081,7 +2111,7 @@
 			<link target="FindInterUnitBankAccount">
 			</link>
 		 </menu-item>
-		  <menu-item name="FindEmpLoanFinAccount" title="Loan Accounts">
+		  <menu-item name="FindEmpLoanFinAccount" title="Scheme Accounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2117,7 +2147,7 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
-		   <menu-item name="DepositTransfer" title="Deposit Transfer">
+		   <!-- <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2125,7 +2155,7 @@
             </condition>
 			<link target="DepositTransfer">
 			</link>
-		 </menu-item>  
+		 </menu-item>   -->
 		 <menu-item name="IncomingAdvances" title="Advances Received">
           <condition>
 				<or>
@@ -2144,7 +2174,7 @@
 			<link target="OutgoingAdvancesPaid">
 			</link>
 		 </menu-item>
-		 <menu-item name="BankGuaranteeReceipt" title="Bank Guarantee">
+		 <!-- <menu-item name="BankGuaranteeReceipt" title="Bank Guarantee">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2152,7 +2182,7 @@
             </condition>
 			<link target="BankGuaranteeReceipt">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		 <!-- <menu-item name="IncomingDeposits" title="Deposits Received">
           <condition>
 				<or>
@@ -2190,7 +2220,7 @@
 			<link target="BankContraEntry">
 			</link>
 		</menu-item>
-		<menu-item name="InterUnitContraEntry" title="Inter Unit Contra">
+		<!-- <menu-item name="InterUnitContraEntry" title="Inter Unit Contra">
 		  <condition>
 		   	<and>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2198,7 +2228,7 @@
            </condition>
 			<link target="InterUnitContraEntry">
 			</link>
-		</menu-item>  
+		</menu-item> -->  
 		<menu-item name="BatchContraEntry" title="Batch Contra">
 		  <condition>
 		   	<and>

@@ -477,7 +477,7 @@
     <screen name="FindInterUnitBankAccount">
         <section>
             <actions>
-                <set field="titleProperty" value="Inter Unit Financial Accounts"/>
+                <set field="titleProperty" value="Head Office Financial Accounts"/>
                   <set field="tabButtonItem" value="FindInterUnitBankAccount"/>
                  <set field="tabButtonItem2" value="FindInterUnitBankAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -507,7 +507,7 @@
 									<parameter param-name="screenFlag" value="INTERUNIT_ACCOUNT"/>
 									</link>
 								</container>
-								<screenlet title="Inter Unit Accounts List">				
+								<screenlet title="Head Office Accounts List">				
 									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
@@ -520,7 +520,7 @@
       <screen name="FindEmpLoanFinAccount">
         <section>
             <actions>
-                <set field="titleProperty" value="Loan Financial Accounts"/>
+                <set field="titleProperty" value="Scheme Financial Accounts"/>
                   <set field="tabButtonItem" value="FindEmpLoanFinAccount"/>
                  <set field="tabButtonItem2" value="FindEmpLoanFinAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -552,8 +552,8 @@
 									<parameter param-name="screenFlag" value="FIND_LOAN_ACCOUNT"/>
 									</link>
 								</container>
-								<screenlet title="Loan Accounts List">				
-									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								<screenlet title="Scheme Accounts List">				
+									 <include-form name="ListSchemeAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
                     	</section>

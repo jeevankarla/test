@@ -447,28 +447,28 @@ under the License.
         <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
             <drop-down no-current-selected-key="WITHDRAWAL">
                 <entity-options description="${description}" entity-name="FinAccountTransType">  
-                	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
+                	<entity-constraint name="finAccountTransTypeId" operator="equals" value="WITHDRAWAL"/>              	
                     <entity-order-by field-name="-description"/>
                 </entity-options>
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->
-        <field name="transactionDate"> <date-time/> </field>
-        <field name="entryDate"><date-time/></field>
+        <field name="transactionDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="entryDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
         <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>       
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+       <!--  <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
          <field name="contraFinAccountId"  title="To Financial Account"  >
             <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
@@ -739,6 +739,36 @@ under the License.
         <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="glAccountId"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="reconciledDate"  title="${uiLabelMap.ReconciledDate}"><date-time type="date" default-value=""/></field>
+        <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="FindFinAccountTransactionsAltNew" type="single" target="FindFinAccountTransAltNew">
+        <actions>
+            <entity-and entity-name="GlReconciliation" list="glReconciliations">
+                <field-map field-name="glAccountId" from-field="finAccount.postToGlAccountId"/>
+                <order-by field-name="reconciledDate DESC"/>
+            </entity-and>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountId"><hidden value="${finAccountId}"/></field>
+        <field name="finAccountTransId" title="Finaccount Trans Id"><text ></text></field>
+        <field name="finAccountTransTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="FinAccountTransType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromTransactionDate" position="1"><date-time/></field>
+        <field name="thruTransactionDate" position="2"><date-time/></field>
+        <field name="fromEntryDate" position="1"><date-time/></field>
+        <field name="thruEntryDate" position="2"><date-time/></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -791,10 +791,18 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+        <!-- <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType"  description="${description}">
                 	<entity-constraint name="paymentMethodTypeId" operator="like" value="%CASH_PAYIN%"/>
+                    <entity-order-by field-name="description"/>                   
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethod"  description="${description}">
+                	<entity-constraint name="finAccountId" operator="equals" value="FIN_ACCNT1"/>
                     <entity-order-by field-name="description"/>                   
                 </entity-options>
             </drop-down>
@@ -803,7 +811,7 @@ under the License.
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->      
         <field name="amount" position="1" required-field="true"><text/></field>
-       <field name="comments" position="2"><text size="70"/></field>
+       <field name="comments" title="Description" position="2" required-field="true"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
@@ -925,8 +933,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-         <field name="paymentMethodTypeId"><hidden value="CASH_PAYIN"/></field>
-    </form>
+<!--          <field name="paymentMethodTypeId"><hidden value="CASH_PAYIN"/></field>
+ -->    </form>
      <form name="findCashPayblePayment" type="single" target="findCashPayblePayment" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
        <field name="parentTypeId"><hidden value="DISBURSEMENT"/></field>
        <field name="paymentTypeId" position="1">

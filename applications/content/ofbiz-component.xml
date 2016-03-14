@@ -69,7 +69,7 @@ under the License.
 
     <webapp name="content"
         title="Documents"
-        app-bar-display="true"        
+        app-bar-display="false"        
         server="default-server"
         location="webapp/content"
         

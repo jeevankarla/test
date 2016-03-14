@@ -105,13 +105,16 @@ under the License.
                         <field name="micrNumber"><ignored></ignored></field>
                            <field name="fromDate"><ignored></ignored></field>
                             <field name="thruDate"><ignored></ignored></field>
-      
+                            <field name="finAccountBranch"><ignored></ignored></field>
+                            <field name="ifscCode"><ignored></ignored></field>
       <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
-        <field name="finAccountName">
+        <field name="finAccountName" title ="Head Office Name">
             <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
+        <field name="finAccountCode" title ="Head Office Code"><display/></field>
+        <field name="finAccPrefix" title ="Head Office Prefix"><display/></field>
       <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
        <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
@@ -128,6 +131,38 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+    </form> 
+    <form name="ListSchemeAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+     
+        <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
+         <field name="finAccountId"><hidden></hidden></field>
+         <field name="gbCode"><ignored></ignored></field>
+          <field name="bCode"><ignored></ignored></field>
+           <field name="bPlace"><ignored></ignored></field>
+            <field name="categoryTypeEnum"><ignored></ignored></field>
+             <field name="organizationPartyId"><ignored></ignored></field>
+              <field name="ownerPartyId"><ignored></ignored></field>
+               <field name="isRefundable"><ignored></ignored></field>
+                <field name="finAccountId"><ignored></ignored></field>
+                 <field name="replenishPaymentId"><ignored></ignored></field>
+                  <field name="replenishLevel"><ignored></ignored></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+                            <field name="finAccountBranch"><ignored></ignored></field>
+                            <field name="ifscCode"><ignored></ignored></field>
+      <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
+        <field name="finAccountName" title ="Scheme Name">
+            <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="finAccountCode" title ="Scheme Code"><display/></field>
+        <field name="finAccPrefix" title ="Scheme Acct Prefix"><display/></field>
     </form>    
     <form name="FindDepositAccount" type="single" target="FindDepositAccount" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
