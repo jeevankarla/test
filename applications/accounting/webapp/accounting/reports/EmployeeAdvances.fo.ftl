@@ -41,7 +41,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
             		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.getKey()}, true)>
                     <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.getKey(),"organizationPartyId":"Company"}, true)>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                       MOTHER DAIRY, YALAHANKA KMF UNIT : GKVK POST.BANGALORE-560 065                              Page No:<fo:page-number/></fo:block>
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}                              Page No:<fo:page-number/></fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;STATEMENT FOR ${finAccountTypeglAccnt.glAccountId?if_exists} - ${finAccountType.description?if_exists?upper_case}</fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
