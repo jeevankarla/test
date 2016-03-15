@@ -48,6 +48,8 @@ under the License.
 	        <#assign finAccountTransId = finAccountTransList.get("paymentTransSequenceId")?if_exists>
 		        <fo:page-sequence master-reference="main">		        	
 		        	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+		        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 						<fo:block>
 					    <#--
 		        		 Table Start -->
@@ -61,8 +63,8 @@ under the License.
 			                             </fo:table-row>	
         								<fo:table-row>
 		    								<fo:table-cell border-style="solid">
-				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="15pt" keep-together="always">&#160;KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BANGALORE:560065</fo:block>
+				                                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >                 ${reportHeader.description?if_exists} </fo:block>
+				  	                            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">      ${reportSubHeader.description?if_exists}           </fo:block>
 				                             </fo:table-cell>
 			                             </fo:table-row>	
 				                             <fo:table-row>
