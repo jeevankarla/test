@@ -176,7 +176,7 @@
 	//societyParty  json.
 	JSONArray societyJSON = new JSONArray();
 	cond = [];
-	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.LIKE, "%SOCIETY%"));
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
 	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
 	societyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
 	if(societyList){
