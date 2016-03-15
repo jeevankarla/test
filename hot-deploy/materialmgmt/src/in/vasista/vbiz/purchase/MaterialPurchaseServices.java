@@ -3120,7 +3120,7 @@ public class MaterialPurchaseServices {
 				Debug.logError("Order set status failed for orderId: " + orderId, module);
 				return resultCtx;
 			}
-			String oldStatusId = (String)resultCtx.get("oldStatusId");
+			String oldStatusId = (String)resultCtx.get("orderStatusId");
 			result.put("oldStatusId", oldStatusId);
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("quoteId"), null, null, false);
 			
@@ -3208,7 +3208,7 @@ public class MaterialPurchaseServices {
                 Debug.logWarning(e.getMessage(), module);
                 orderAssocList = null;
             }
-            if (orderAssocList != null) {
+            if (UtilValidate.isNotEmpty(orderAssocList)) {
 	            try {
 	            	GenericValue orderAssoc = EntityUtil.getFirst(orderAssocList);
 	

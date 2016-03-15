@@ -225,9 +225,50 @@ under the License.
 	
 	
 	
+	function fetchOrderInformation(order) {
+		orderId = order;
+		var dataJson = {"orderId": orderId};
+		
+		jQuery.ajax({
+                url: 'getOrderInformation',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+					
+						orderData = result["orderInformationDetails"];
+						
+						
+						showOrderInformation();
+						
+               		}
+               	}							
+		});
+	}
 	
 	
 	
+	function showOrderInformation() {
+		var message = "";
+		var title = "";
+		if(orderData != undefined){
+			var orderAmt = 0;
+			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Payable</td>";
+			for (i = 0; i < orderData.length; ++i) {
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	orderAmt = orderAmt+orderData[i].payableAmt;
+			}
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
+			title = "<center>Order : " + orderId + "<center><br /> Total Order Value = "+ orderAmt +" ";
+			message += "</table>";
+			Alert(message, title);
+		}
+		
+	};
 	
 	
 	
@@ -303,7 +344,7 @@ under the License.
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
             <#-->    <td>${eachOrder.orderTotal?if_exists}</td>  -->
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>
               
               	<#assign partyOb=0>
               	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
