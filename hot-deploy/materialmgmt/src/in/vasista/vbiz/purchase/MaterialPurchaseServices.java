@@ -4055,4 +4055,292 @@ catch(Exception e){
 		return result;
 	}	
 		
+
+	
+	
+	public static Map<String, Object>  createWeaver(DispatchContext dctx, Map<String, ? extends Object> context)  {
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String) context.get("partyId");
+        Locale locale = (Locale) context.get("locale");
+        String contactMechId ="";
+        String groupName = (String) context.get("groupName");
+        String panId = (String) context.get("USER_PANID");
+       // String serviceTax = (String) context.get("USER_SERVICETAXNUM");
+        String tinNumber= (String) context.get("USER_TINNUMBER");
+        String cstNumber = (String) context.get("USER_CSTNUMBER");
+        String address1 = (String) context.get("address1");
+        String address2 = (String) context.get("address2");
+        String city = (String) context.get("city");
+        String postalCode = (String) context.get("postalCode");
+		String email = (String) context.get("emailAddress");
+		String mobileNumber = (String) context.get("mobileNumber");
+		String contactNumber =(String)context.get("contactNumber");
+		String countryGeoId = (String) context.get("countryGeoId");
+		String stateProvinceGeoId = (String) context.get("stateProvinceGeoId");
+		String partyIdFrom = (String) context.get("productStoreId");
+		String partyClassificationTypeId = (String) context.get("partyClassificationTypeId");
+        String Depot= (String) context.get("Depot");
+        String daoDate= (String) context.get("daoDate");
+        String firstName= (String) context.get("firstName");
+        String midName= (String) context.get("midName");
+        String lastName= (String) context.get("lastName");
+        String weaverCode= (String) context.get("weaverCode");
+        String passBook= (String) context.get("passBook");
+        String accName= (String) context.get("accName");
+        String accNo= (String) context.get("accNo");
+        String accBranch= (String) context.get("accBranch");
+        String IfscCode= (String) context.get("IfscCode");
+        String CottonAbove= (String) context.get("COTTON_40ABOVE");
+        String CottonUpto= (String) context.get("COTTON_UPTO40");
+        String silkYarn= (String) context.get("SILK_YARN");
+        String WoolST= (String) context.get("WOOLYARN_10STO39NM");
+        String WoolSNM= (String) context.get("WOOLYARN_40SNMABOVE");
+        String Woolbelow= (String) context.get("WOOLYARN_BELOW10NM");
+        String salutation= (String) context.get("salutation");
+        String gender= (String) context.get("gender");
+        Map<String, Object> inMap = FastMap.newInstance();
+        Map<String, Object> outMap = FastMap.newInstance();
+		String roleTypeId = (String) context.get("roleTypeId");		
+		/*String tenantId = (String) context.get("tenantId");
+        
+        delegator = DelegatorFactory.getDelegator("default#" + tenantId);
+        dispatcher = dispatcher.getLocalDispatcher("materialmgmt#"+tenantId, delegator);*/
+        
+		if(partyClassificationTypeId.equals("INDIVIDUAL_WEAVERS")){	        
+		     // lets Create party 
+				Map inPartyMap = UtilMisc.toMap("userLogin", userLogin);
+				inPartyMap.put("salutation", salutation);
+				inPartyMap.put("firstName",firstName);
+				inPartyMap.put("middleName", midName);
+				inPartyMap.put("lastName", lastName);
+				inPartyMap.put("gender", gender);
+				inPartyMap.put("partyId", weaverCode);
+				try{            	
+					Map resultMap = dispatcher.runSync("createPerson", inPartyMap);
+					if (ServiceUtil.isError(resultMap)) {
+	  					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	  					Debug.logError(errMsg , module);
+	  					return ServiceUtil.returnError(errMsg);
+	                 }
+					partyId = (String)resultMap.get("partyId");
+					
+	            }catch (GenericServiceException e) {
+	             Debug.logError(e, module);
+	             return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+	          }
+				Debug.log("partyId============================"+partyId);
+		
+		}else{
+			try {
+				 outMap=dispatcher.runSync("createPartyGroup", UtilMisc.toMap("groupName",groupName,"partyId",weaverCode,"userLogin", userLogin));
+				if (ServiceUtil.isError(outMap)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(outMap);
+	  		  		Debug.logError(errMsg , module);
+	  		  	}
+	            partyId = (String) outMap.get("partyId");
+			}catch(GenericServiceException e){
+		  		Debug.logError(e, e.toString(), module);
+		  		return ServiceUtil.returnError(e.toString());
+	  		}
+
+		}
+		 // Create Party Role
+        inMap.clear();
+        inMap.put("userLogin", userLogin);
+        inMap.put("partyId", partyId);
+        inMap.put("roleTypeId",roleTypeId);
+        try{
+            outMap = dispatcher.runSync("createPartyRole", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("failed service create party role:"+ServiceUtil.getErrorMessage(outMap), module);
+            }
+	    }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+		 // Create Postal Address And Contact Mech Purpose
+        inMap.clear();
+        String postalContactId = null;
+        inMap.put("partyId", partyId);
+        inMap.put("address1", address1);
+        inMap.put("address2", address2);
+        if(UtilValidate.isEmpty(address2)){
+        	inMap.put("address2", address1);
+        }
+        inMap.put("city", city);
+        inMap.put("countryGeoId", countryGeoId);
+        if(UtilValidate.isNotEmpty(stateProvinceGeoId)){
+        	inMap.put("stateProvinceGeoId", stateProvinceGeoId);
+        }
+        if(UtilValidate.isNotEmpty(postalCode)){
+        	inMap.put("postalCode", postalCode);
+        }
+        inMap.put("userLogin", userLogin);
+
+        //inMap.put("geoPointId", geoPointId);
+        inMap.put("fromDate", UtilDateTime.nowTimestamp());
+        //String contactMechId = null;
+        try{
+        	outMap = dispatcher.runSync("createPartyPostalAddress", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("faild service create party postal Address:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+            contactMechId = (String) outMap.get("contactMechId");
+	    }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
+        inMap.clear();
+//        inMap.put("userLogin", userLoginToRunAs);
+        inMap.put("userLogin", userLogin);
+        inMap.put("contactMechId", contactMechId);
+        inMap.put("partyId", partyId);
+        inMap.put("contactMechPurposeTypeId", "BILLING_LOCATION");
+        try{
+        	outMap = dispatcher.runSync("createPartyContactMechPurpose", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("failed service create party postal Address contactmech Purpose:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+        }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
+        
+        // create phone number
+        inMap.clear();
+//        inMap.put("userLogin", userLoginToRunAs);
+        inMap.put("userLogin", userLogin);
+        inMap.put("contactNumber",mobileNumber);
+        inMap.put("contactMechPurposeTypeId","PRIMARY_PHONE");
+        inMap.put("partyId", partyId);
+        try{
+        	outMap = dispatcher.runSync("createPartyTelecomNumber", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+        }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
+        
+        // create landLine number
+        inMap.clear();
+//        inMap.put("userLogin", userLoginToRunAs);
+        inMap.put("userLogin", userLogin);
+        inMap.put("contactNumber",contactNumber);
+        inMap.put("contactMechPurposeTypeId","PHONE_HOME");
+        inMap.put("partyId", partyId);
+        try{
+        	outMap = dispatcher.runSync("createPartyTelecomNumber", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+        }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
+        // Create Party Email
+        inMap.clear();
+        //inMap.put("userLogin", userLoginToRunAs);
+        inMap.put("userLogin", userLogin);
+        inMap.put("contactMechPurposeTypeId", "PRIMARY_EMAIL");
+        inMap.put("emailAddress", email);
+        inMap.put("partyId", partyId);
+        inMap.put("verified", "Y");
+        inMap.put("fromDate", UtilDateTime.nowTimestamp());
+        try{
+        	outMap = dispatcher.runSync("createPartyEmailAddress", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+        }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        try{
+		        if(UtilValidate.isNotEmpty(panId)){
+		       	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
+		  	    }
+		       if(UtilValidate.isNotEmpty(passBook)){
+		      	     dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"userLogin", context.get("userLogin")));
+		 	    }
+		       if(UtilValidate.isNotEmpty(tinNumber)){
+		         	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","TIN_NUMBER","idValue",tinNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+		    	}
+		       if(UtilValidate.isNotEmpty(cstNumber)){
+		        	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+		   		}
+        }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
+        inMap.clear();
+        inMap.put("userLogin", userLogin);
+		inMap.put("partyIdFrom",partyIdFrom);
+		inMap.put("partyIdTo",partyId);
+		inMap.put("roleTypeIdFrom","ORGANIZATION_UNIT");
+		inMap.put("roleTypeIdTo",roleTypeId);
+        inMap.put("fromDate", UtilDateTime.nowTimestamp());
+        try {
+        	outMap= dispatcher.runSync("createPartyRelationship", inMap); // Create new one
+        	 if(ServiceUtil.isError(outMap)){
+            	 	Debug.logError("faild service create party RelationShip:"+ServiceUtil.getErrorMessage(outMap), module);
+            	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+             }
+        } catch (GenericServiceException e) {
+        	Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+        }
+		
+
+		
+		return result;
+	}
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

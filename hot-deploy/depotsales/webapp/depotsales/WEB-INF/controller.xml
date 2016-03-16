@@ -1193,7 +1193,7 @@
     </request-map> 
     <request-map uri="createWeaver">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createSupplier"/>
+        <event type="service" path="" invoke="createWeaver"/>
         <response name="success" type="request-redirect" value="FindProcProducer"/>
         <response name="error" type="view" value="FindProcProducer"/>
     </request-map>

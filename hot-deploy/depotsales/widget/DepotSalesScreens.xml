@@ -4085,6 +4085,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                  <set field="layoutSettings.javaScripts[]" value="/depotsales/webapp/depotsales/depotsales/CreatNewWeaverValidations.js" global="true"/>      
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/> 
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/createNewWieverInfo.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">

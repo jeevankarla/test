@@ -178,15 +178,15 @@
    
    
 <!--    create product permissions -->
-<SecurityPermission description="weaver creation " permissionId="WEAVER_ CREATE"/>
-    <SecurityGroup description="creating the new weaver!" groupId=" WEAVER_ CREATE "/>
-    <SecurityGroupPermission groupId=" WEAVER_ CREATE "  permissionId=" WEAVER_ CREATE "/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId=" WEAVER_ CREATE "/>
+<SecurityPermission description="weaver creation " permissionId="WEAVER_CREATE"/>
+    <SecurityGroup description="creating the new weaver!" groupId="WEAVER_CREATE"/>
+    <SecurityGroupPermission groupId="WEAVER_CREATE"  permissionId="WEAVER_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEAVER_CREATE"/>
 
-<SecurityPermission description="New Product creation " permissionId="PRODUCT_ CREATE"/>
-    <SecurityGroup description="creating the new Product!" groupId=" PRODUCT _ CREATE "/>
-    <SecurityGroupPermission groupId=" PRODUCT _ CREATE "  permissionId=" PRODUCT _ CREATE "/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId=" PRODUCT _ CREATE "/>
+<SecurityPermission description="New Product creation " permissionId="PRODUCT_CREATE"/>
+    <SecurityGroup description="creating the new Product!" groupId="PRODUCT_CREATE"/>
+    <SecurityGroupPermission groupId="PRODUCT_CREATE"  permissionId="PRODUCT_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRODUCT_CREATE"/>
 
    
 	
