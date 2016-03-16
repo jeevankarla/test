@@ -1655,6 +1655,8 @@ public class HumanresService {
 	        String customTimePeriodId = (String)context.get("customTimePeriodId");
 	        String organizationPartyId = (String)context.get("orgPartyId");
 	        String holiDayDateStr = (String)context.get("holidayDate");
+	        String stateName = (String)context.get("state");
+	        Debug.log("stateName====================="+stateName);
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
 	        
@@ -1666,7 +1668,11 @@ public class HumanresService {
 			}
 			try{
 				GenericValue holList = delegator.findOne("HolidayCalendar", UtilMisc.toMap("customTimePeriodId", customTimePeriodId, "organizationPartyId",organizationPartyId, "holiDayDate", UtilDateTime.toTimestamp(holiDayDate)), true);
-				if(UtilValidate.isEmpty(holList)){
+				GenericValue stateList = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateName), true);
+				if(UtilValidate.isNotEmpty(stateList)){
+				        stateNamee = stateList.getString("geoName");
+						}
+				    if(UtilValidate.isEmpty(holList)){
 					GenericValue newEntity = delegator.makeValue("HolidayCalendar");
 			        if(UtilValidate.isNotEmpty(customTimePeriodId)){
 			        	newEntity.set("customTimePeriodId", customTimePeriodId);
@@ -1679,6 +1685,9 @@ public class HumanresService {
 			        } 
 			        if(UtilValidate.isNotEmpty(description)){
 			        	newEntity.set("description", description);
+			        }
+			        if(UtilValidate.isNotEmpty(stateNamee)){
+			        	newEntity.set("stateName", stateNamee);
 			        }
 			        try {
 			        	if(UtilValidate.isNotEmpty(holiDayDate)){
