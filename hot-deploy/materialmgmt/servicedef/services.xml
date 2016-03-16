@@ -127,6 +127,51 @@
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
     </service>
+     <service name="createWeaver" engine="java" auth="true" invoke="createWeaver" 
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>Create Party Froup  And Identification</description>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+           <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+         <attribute name="partyId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="groupName" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_PANID" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_TINNUMBER" mode="IN" type="String" optional="true"/> 
+        <attribute name="USER_CSTNUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="partyClassificationTypeId" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <attribute name="roleTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="Depot" mode="IN" type="String" optional="true"/>
+        <attribute name="daoDate" mode="IN" type="Date" optional="true"/>
+        <attribute name="firstName" mode="IN" type="String" optional="true"/>
+        <attribute name="midName" mode="IN" type="String" optional="true"/>
+        <attribute name="lastName" mode="IN" type="String" optional="true"/>
+        <attribute name="salutation" mode="IN" type="String" optional="true"/>
+        <attribute name="gender" mode="IN" type="String" optional="true"/>
+        <attribute name="weaverCode" mode="IN" type="String" optional="true"/>
+        <attribute name="passBook" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String" optional="true"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/>
+        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="accName" mode="IN" type="String" optional="true"/>
+        <attribute name="accBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="IfscCode" mode="IN" type="String" optional="true"/>
+        <attribute name="COTTON_40ABOVE" mode="IN" type="String" optional="true"/>
+        <attribute name="COTTON_UPTO40" mode="IN" type="String" optional="true"/>
+        <attribute name="SILK_YARN" mode="IN" type="String" optional="true"/>
+        <attribute name="WOOLYARN_10STO39NM" mode="IN" type="String" optional="true"/>
+        <attribute name="WOOLYARN_40SNMABOVE" mode="IN" type="String" optional="true"/>
+        <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="String" optional="true"/>        
+     </service>
      <service name="getEmailForIndentIssuance" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForIndentIssuance.groovy" invoke="" transaction-timeout="12000">
         <description>Get DeptEmail Details  For Indent Issuance</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>  
