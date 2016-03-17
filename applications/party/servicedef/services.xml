@@ -1456,5 +1456,22 @@ under the License.
         <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
     </service>
     
-    
+    <!--     party loom service -->
+ 	<service name="createPartyLoom" engine="simple"
+            location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createPartyLoom" auth="true">
+        <description>Create a Party Loom (add a Loom to a Party). The logged in user must have PARTYMGR_CREATE or have
+            permission to change the Loom of this partyId</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        
+    </service>
+    <service name="deletePartyLoom" engine="simple"
+            location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deletePartyLoom" auth="true">
+        <description>Delete a Party Loom (remove a Loom from a Party). The logged in user must have PARTYMGR_DELETE or have
+            permission to change the Loom of this partyId</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

@@ -4093,12 +4093,12 @@ catch(Exception e){
         String accNo= (String) context.get("accNo");
         String accBranch= (String) context.get("accBranch");
         String IfscCode= (String) context.get("IfscCode");
-        String CottonAbove= (String) context.get("COTTON_40ABOVE");
-        String CottonUpto= (String) context.get("COTTON_UPTO40");
-        String silkYarn= (String) context.get("SILK_YARN");
-        String WoolST= (String) context.get("WOOLYARN_10STO39NM");
-        String WoolSNM= (String) context.get("WOOLYARN_40SNMABOVE");
-        String Woolbelow= (String) context.get("WOOLYARN_BELOW10NM");
+        BigDecimal CottonAbove= (BigDecimal) context.get("COTTON_40ABOVE");
+        BigDecimal CottonUpto= (BigDecimal) context.get("COTTON_UPTO40");
+        BigDecimal silkYarn= (BigDecimal) context.get("SILK_YARN");
+        BigDecimal WoolST= (BigDecimal) context.get("WOOLYARN_10STO39NM");
+        BigDecimal WoolSNM= (BigDecimal) context.get("WOOLYARN_40SNMABOVE");
+        BigDecimal Woolbelow= (BigDecimal) context.get("WOOLYARN_BELOW10NM");
         String salutation= (String) context.get("salutation");
         String gender= (String) context.get("gender");
         Map<String, Object> inMap = FastMap.newInstance();
@@ -4108,7 +4108,31 @@ catch(Exception e){
         
         delegator = DelegatorFactory.getDelegator("default#" + tenantId);
         dispatcher = dispatcher.getLocalDispatcher("materialmgmt#"+tenantId, delegator);*/
-        
+        Map loomsMap = FastMap.newInstance();
+		if (CottonAbove.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("COTTON_40ABOVE",CottonAbove);
+        }
+		if (CottonUpto.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("COTTON_UPTO40",CottonUpto);
+
+        }
+		if (silkYarn.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("SILK_YARN",silkYarn);
+
+        }
+		if (WoolST.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("WOOLYARN_10STO39NM",WoolST);
+
+        }
+		if (WoolSNM.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("WOOLYARN_40SNMABOVE",WoolSNM);
+
+        }
+		if (Woolbelow.compareTo(BigDecimal.ZERO) > 0) {
+			loomsMap.put("WOOLYARN_BELOW10NM",Woolbelow);
+
+        }		
+		
 		if(partyClassificationTypeId.equals("INDIVIDUAL_WEAVERS")){	        
 		     // lets Create party 
 				Map inPartyMap = UtilMisc.toMap("userLogin", userLogin);
@@ -4304,6 +4328,36 @@ catch(Exception e){
         	Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
         }
+        Iterator entries = loomsMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry entry = (Map.Entry) entries.next();
+            String key = (String)entry.getKey();
+            BigDecimal value = (BigDecimal)entry.getValue();
+           Debug.log("Key = " + key + ", Value = " + value);
+           
+           
+        // Create Party Loom
+           inMap.clear();
+           inMap.put("userLogin", userLogin);
+           inMap.put("partyId", partyId);
+           inMap.put("loomTypeId",key);
+           inMap.put("quantity",value);
+           try{
+               outMap = dispatcher.runSync("createPartyLoom", inMap);
+               if(ServiceUtil.isError(outMap)){
+              	 	Debug.logError("failed service create party loom:"+ServiceUtil.getErrorMessage(outMap), module);
+               }
+   	    }catch(GenericServiceException e){
+   	  		Debug.logError(e, e.toString(), module);
+   	  		return ServiceUtil.returnError(e.toString());
+     		}
+        }
+        		
+        
+        
+        
+        
+        
 		
 
 		
