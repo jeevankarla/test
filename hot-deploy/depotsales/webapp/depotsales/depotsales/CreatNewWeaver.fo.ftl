@@ -16,6 +16,22 @@
 		}
 </style>
 <script type="application/javascript">
+function datepick()	{
+		$( "#daoDate" ).datetimepicker({
+			dateFormat:'yy-mm-dd',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
+			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
+	        //    var nowTime = new Date(); 
+	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
+	        //    $('#transactionDate').val(onlyDate);
+	        //},
+	        changeMonth: false,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+	}		
+		
+	
 	function validateEmail(email) { 
     	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     	return re.test(email);
@@ -29,16 +45,7 @@
 				  $('#lastNamelabel').hide();
   				 $('#daoDatelabel').hide();
 			      $('#daoDate').hide();
-			    $('#daoDate').datepicker({
-				dateFormat:'d MM, yy',
-				changeMonth: true,
-				numberOfMonths: 1,
-				//minDate: new Date(),
-				maxDate: 14,
-				onSelect: function( selectedDate ) {
-					$( "#effectiveDate" ).datepicker("option", selectedDate);
-				}
-			});
+			   
       	      $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -184,7 +191,7 @@
 				            </td>
 				          <td class="label" id="daoDatelabel"><b>DAO Date :</b></td>		
 						    <td >          
-				            		<input class='h3' type="text" name="daoDate" id="daoDate"/>           		
+				            		<input class='h3' type="text" name="daoDate" id="daoDate" onmouseover='datepick()'/>           		
 				            	</td>
 				           
 						</tr>
