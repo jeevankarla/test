@@ -1534,8 +1534,14 @@
        <response name="success" type="view" value="orderPayment"/>
         <response name="error" type="view" value="orderPayment"/>
      </request-map>
+     <request-map uri="SupplierMasters.csv">
+     	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="SupplierMastersCSV"/>
+    </request-map>
      <!-- View Mappings -->
     
+    <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
+	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
     <view-map name="CreateNewWeaver" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewWeaver"/>
     <view-map name="Weaverviewprofile" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#Weaverviewprofile"/>
