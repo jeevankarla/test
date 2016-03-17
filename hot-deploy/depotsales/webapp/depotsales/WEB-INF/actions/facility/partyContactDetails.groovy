@@ -87,21 +87,15 @@ if(contactMechesDetails){
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,parameters.partyId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
-Debug.log("facilityDepo======================"+facilityDepo);
+facilityDepo = EntityUtil.getFirst(delegator.findList("Facility",condition,null,null,null,false));
 String Depo="NO";
 String DAO="";
 if(UtilValidate.isNotEmpty(facilityDepo)){
    Depo="YES";
-  /*depoFacility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityDepo.facilityId), false);
-   Debug.log("depoFacility===========IN========="+depoFacility);
-   
-   if(depoFacility && depoFacility.get("openedDate")){
-	   Debug.log("depoFacility===========IN=========");
-	   
-	   DAO=depoFacility.get("openedDate");
-   }*/
-   
+	   if(UtilValidate.isNotEmpty(facilityDepo.openedDate)){
+	   DAO=UtilDateTime.toDateString(facilityDepo.openedDate,"dd-MM-yyyy");
+	   Debug.log("DAO=====IN=============="+DAO);
+	   }
    }
 AllLoomDetails = delegator.findList("LoomType",null,null,null,null,false);
 
