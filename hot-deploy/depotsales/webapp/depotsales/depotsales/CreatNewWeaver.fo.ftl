@@ -45,21 +45,97 @@ function datepick()	{
 				  $('#lastNamelabel').hide();
   				 $('#daoDatelabel').hide();
 			      $('#daoDate').hide();
-			   
+
       	      $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
                 transitionEffect: "slideLeft",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
-                
-                
+                	if(currentIndex==0){	
+                			var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
+                	
+                			if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
+                			
+                			var firstName1=$('#firstName').val();
+			                	if( (firstName1).length < 1 ) {
+								    	$('#firstName').css('background', 'red'); 
+								        jQuery('#firstName').after("<div class='FNLabel'><font color='red'>Please Enter FirstName.</font></div>");
+								       	setTimeout(function () {
+								        $('#firstName').css('background', 'white').focus(); 
+								        $('.FNLabel').remove();
+								       	}, 900);
+								    	return false;
+							    	}
+                			
+				    		}else{
+				    		var groupName=$('#groupName').val();
+			                	if( (groupName).length < 1 ) {
+								    	$('#groupName').css('background', 'red'); 
+								    	jQuery('#groupName').after("<div class='groupLabel'><font color='red'>Please Enter GroupName.</font></div>");
+								    	
+								       	setTimeout(function () {
+								        $('#groupName').css('background', 'white').focus(); 
+								        $('.groupLabel').remove();
+								       	}, 900);
+								    	return false;
+							    	}
+				    		
+				    		}  
+				    		
+				    		          	
+                 	 }
+                 	 if(currentIndex==1){
+                 	                 	
+                 	       var address1=$('#address1').val();
+			               if( (address1).length < 1 ) {
+									 $('#address1').css('background', 'red'); 
+								        jQuery('#address1').after("<div class='ADDLabel'><font color='red'>Please Enter Address.</font></div>");
+									 setTimeout(function () {
+									        $('#address1').css('background', 'white').focus(); 
+								       		 $('.ADDLabel').remove();
+									     	}, 900);
+								  	return false;
+							   }
+							    var city=$('#city').val();
+			             		  if( (city).length < 1 ) {
+									 $('#city').css('background', 'red'); 
+									  jQuery('#city').after("<div class='CITYLabel'><font color='red'>Please Enter City.</font></div>");
+									 setTimeout(function () {
+									        $('#city').css('background', 'white').focus(); 
+									        $('.CITYLabel').remove();
+									     	}, 800);
+								  	return false;
+							  	 }
+							  	 var emailAddress=$('#emailAddress').val();
+			             		  if( (emailAddress).length < 1 ) {
+									 $('#emailAddress').css('background', 'red');
+									  jQuery('#emailAddress').after("<div class='EMAILLabel'><font color='red'>Please Enter Email.</font></div>");
+									 setTimeout(function () {
+									        $('#emailAddress').css('background', 'white').focus(); 
+									        $('.EMAILLabel').remove();
+									     	}, 800);
+								  	return false;
+							  	 }
+							  	 
+                 	                 	
+                 	   }	
+                 	    
                 
                 	return true;
                 },
                 onFinishing: function (event, currentIndex)
                 {	
-	                	
+	                	 var passBook=$('#passBook').val();
+			                	if( (passBook).length < 1 ) {
+								    	$('#passBook').css('background', 'red'); 
+								    	 jQuery('#passBook').after("<div class='PSBLabel'><font color='red'>Please Enter PassBook.</font></div>");
+								       	setTimeout(function () {
+								        $('#passBook').css('background', 'white').focus();
+								        $('.PSBLabel').remove();
+								       	}, 800);
+								    	return false;
+							    	}
                     return true;
                 },
                 onFinished: function (event, currentIndex)
@@ -171,10 +247,10 @@ function datepick()	{
 						 </tr>
 				       
 	                    <tr>
-				        <td class="label" id="groupNamelabel"><b> Group Name*</b></td>
+				        <td class="label" id="groupNamelabel"><b> Group Name<FONT COLOR="red">*</font></b></td>
 				        <td>
         		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName"  />
-          				</td>
+				       </td>
 				        </tr>
 				         <tr>
 						    <td width="20%" id="genderlabel"><b>Gender :</b></td>
@@ -197,7 +273,7 @@ function datepick()	{
 						</tr>
 	                    <tr>
 				         <tr>
-				        <td class="label" id="frstNamelabel"><b> First Name*</b></td>
+				        <td class="label" id="frstNamelabel"><b> First Name<FONT COLOR="red">*</font></b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="firstName" id="firstName"  />
           				</td>
@@ -215,34 +291,9 @@ function datepick()	{
           				</td>
 				        </tr>
 				        <tr>
-						 <td class="label"><b> Weaver Code*</b></td>
+						 <td class="label"><b> Weaver Code</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="weaverCode" id="weaverCode"  />
-          				</td>
-				        </tr>
-				         <tr>
-						 <td class="label"><b> passBook*</b></td>
-				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  />
-          				</td>
-				        </tr>
-						<tr>
-				        <td class="label"><b>Pan Number</b></td>
-				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
-          				</td>
-				        </tr>
-				        <tr>
-				         <td class="label"><b>Tin Number</b></td>
-				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUMBER" id="USER_TINNUMBER" onblur="javascript:partyIdentificationVal();" />
-          				</td>
-				        </tr>
-				        <tr>
-				         
-                        <td class="label"><b>Cst Number</b></td>
-				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUMBER" id="USER_CSTNUMBER"  />
           				</td>
 				        </tr>
 				         <#--<tr>
@@ -262,7 +313,7 @@ function datepick()	{
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Personal Details</div></td>
 					               </tr>
 									<tr>
-									    <td class="label"><b> Address1</b></td>
+									    <td class="label"><b> Address1<FONT COLOR="red">*</font></b></td>
 									    <td>
 									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -274,7 +325,7 @@ function datepick()	{
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> City</b></td>
+									    <td class="label"><b> City<FONT COLOR="red">*</font></b></td>
 									    <td>
 									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -284,9 +335,22 @@ function datepick()	{
 									    <td>
 									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
+									    </tr>
+									    <tr>
+									    <td class="label"><b>Cast</b></td>
+									    <td>
+									    <select name="Cast" id="Cast">
+				                            <option value="general" selected="selected">General</option>
+				                            <option value="BC">BC</option>
+				                            <option value="OBC">OBC</option>
+				                            <option value="SC">SC</option>
+				                            <option value="ST">ST</option>
+							            </select>
+							            </td>
+				          
 									</tr>
 									<tr>
-									    <td class="label"><b> E-mail Address</b></td>
+									    <td class="label"><b> E-mail Address<FONT COLOR="red">*</font></b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -306,7 +370,7 @@ function datepick()	{
 								      </td>
 	    							</tr>
 	    							 <tr>
-								      <td class="label"><FONT COLOR="#045FB4"><b>${uiLabelMap.PartyState}</b></FONT></td>
+								      <td class="label"><b>${uiLabelMap.PartyState}</b></td>
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
 										
@@ -320,7 +384,7 @@ function datepick()	{
 								      </td>
 								    </tr>	   								 
 	   								 <tr>
-								      <td class="label"><b>Sore :</b></td>
+								      <td class="label"><b>Branch :</b></td>
 								      <td>
 								        <select name="productStoreId" id="productStoreId">
 								         <#list productStoreDetails as eachstore>
@@ -356,7 +420,7 @@ function datepick()	{
 		                 </table>
                     </fieldset>  
                </section>
-                <h3>BANK DETAILS</h3>
+                <h3>BANK AND IDENTIFICATION DETAILS</h3>
             <section>
             	<fieldset>
 				    <table cellpadding="2" cellspacing="1" class="table-style-9">
@@ -387,6 +451,32 @@ function datepick()	{
 									      	<input type="text" name="IfscCode" id="IfscCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
+									<tr>
+							        <td class="label"><b>Pan Number</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
+			          				</td>
+							        </tr>
+							        <tr>
+							         <td class="label"><b>Tin Number</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUMBER" id="USER_TINNUMBER" onblur="javascript:partyIdentificationVal();" />
+			          				</td>
+							        </tr>
+							        <tr>
+							         
+			                        <td class="label"><b>Cst Number</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUMBER" id="USER_CSTNUMBER"  />
+			          				</td>
+							        </tr>
+							         <tr>
+							         
+			                        <td class="label"><b>Adhar Number</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
+			          				</td>
+							        </tr>
 									
 					        </tr>
 		                 </table>
@@ -399,6 +489,12 @@ function datepick()	{
           			 <tr>
 		       			       <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Loom Details</div></td>
 					      </tr>
+					       <tr>
+						 <td class="label"><b> passBook<FONT COLOR="red">*</font></b></td>
+				        <td>
+        		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  />
+          				</td>
+				        </tr>
 				     <#list AllLoomDetails as eachloom>
 				        <tr>
 									    <td class="label"  width="50%"><b>${eachloom.loomTypeId}</b></td>
