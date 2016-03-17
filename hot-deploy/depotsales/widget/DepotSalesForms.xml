@@ -1871,15 +1871,27 @@
         <field name="createButton"><submit button-type="button"/></field>
     </form>
 	
-	<form name="SupplierMastersCSV" type="list" list-name="supplierMastersList" view-size="99999">
-        <field name="partyId" title="Party Code"><display/></field>
+	<form name="ProductMastersCSV" type="list" list-name="listIt" view-size="99999">
+		<field name="parentCategory" title="Yarn Type"><display/></field>
+        <field name="productId" title="Product Id"><display/></field>
         <field name="name" title="Name"><display/></field>
-        <field name="paAddress1" title="Address 1"><display /></field>
-        <field name="paAddress2" title="Address 2"><display/></field>
-        <field name="postCode" title="Post Code"><display/></field>
-        <field name="state" title="State"><display/></field>
-        <field name="country" title="Country"><display/></field>
-        <field name="contactNo" title="Contact No."><display/></field>
+        <field name="categoryName" title="Category"><display /></field>
+        
+        <field name="PLY" title="Ply"><display/></field>
+        <field name="COUNT" title="Count"><display/></field>
+        <field name="UOM" title="Uom"><display /></field>
+        
+        <field name="COLORING" title="Coloring"><display/></field>
+        <field name="FINESSE" title="Finesse"><display/></field>
+        <field name="FINISHING" title="Finishing"><display /></field>
+        
+        <field name="LUSTER" title="Luster"><display/></field>
+        <field name="ORGANIC" title="Organic"><display/></field>
+        <field name="PACKING" title="Packing"><display /></field>
+        
+        <field name="STRENGTH" title="Strength"><display/></field>
+        <field name="STYLE" title="Style"><display/></field>
+       
     </form>
 
 
