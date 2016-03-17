@@ -151,7 +151,7 @@
         <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
         <attribute name="roleTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="Depot" mode="IN" type="String" optional="true"/>
-        <attribute name="daoDate" mode="IN" type="Date" optional="true"/>
+        <attribute name="daoDate" mode="IN" type="String" optional="true"/>
         <attribute name="firstName" mode="IN" type="String" optional="true"/>
         <attribute name="midName" mode="IN" type="String" optional="true"/>
         <attribute name="lastName" mode="IN" type="String" optional="true"/>

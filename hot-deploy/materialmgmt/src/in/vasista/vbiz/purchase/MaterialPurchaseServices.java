@@ -4083,7 +4083,7 @@ catch(Exception e){
 		String partyIdFrom = (String) context.get("productStoreId");
 		String partyClassificationTypeId = (String) context.get("partyClassificationTypeId");
         String Depot= (String) context.get("Depot");
-        String daoDate= (String) context.get("daoDate");
+        String daoDateStr= (String) context.get("daoDate");
         String firstName= (String) context.get("firstName");
         String midName= (String) context.get("midName");
         String lastName= (String) context.get("lastName");
@@ -4352,15 +4352,53 @@ catch(Exception e){
    	  		return ServiceUtil.returnError(e.toString());
      		}
         }
-        		
-        
-        
-        
-        
-        
-		
+		SimpleDateFormat SimpleDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		
+        if(Depot.equals("Y")){
+        try{
+	        	inMap.clear();
+	        	inMap.put("userLogin",userLogin);
+	        	inMap.put("ownerPartyId",partyId);
+	        	inMap.put("facilityTypeId","DEPOT_SOCIETY");
+				String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,partyId, false);
+				if(UtilValidate.isNotEmpty(customerName)){
+					inMap.put("facilityName",customerName);
+					inMap.put("description",customerName);
+				}else{
+					inMap.put("facilityName","");
+					inMap.put("description","");
+				}
+	        	
+	        	//Timestamp openedDate = UtilDateTime.nowTimestamp();
+			 if(UtilValidate.isNotEmpty(context.get("daoDate"))){
+				 Timestamp openedDate = null;
+
+				 if(UtilValidate.isNotEmpty(daoDateStr)){
+			  		try {
+			  			openedDate = new java.sql.Timestamp(SimpleDF.parse(daoDateStr).getTime());
+				  	} catch (ParseException e) {
+				  		Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+				  	} catch (NullPointerException e) {
+			  			Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+				  	}
+			  	}
+				 inMap.put("openedDate",openedDate);	
+			 }
+			 Map resultFacilityMap =  dispatcher.runSync("createFacility", inMap);
+				 if (ServiceUtil.isError(resultFacilityMap)) {
+					 Debug.logError(ServiceUtil.getErrorMessage(resultFacilityMap), module);
+		            return resultFacilityMap;
+		        }
+        }catch(GenericServiceException e){
+   	  		Debug.logError(e, e.toString(), module);
+   	  		return ServiceUtil.returnError(e.toString());
+     		}
+        
+        
+        }
+        
+        result.put("partyId",partyId);
+			
 		return result;
 	}
 		
