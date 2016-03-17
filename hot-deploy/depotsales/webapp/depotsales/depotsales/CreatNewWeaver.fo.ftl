@@ -143,7 +143,7 @@
 					      </tr>
 	           			 <tr>
 						    <td class="label"><b> Role Type Id</b></td>
-						            		 			<input  type="hidden"  name="roleTypeId" id="roleTypeId" value="EMPANELLED_CUSTOMER" />
+						     <input  type="hidden"  name="roleTypeId" id="roleTypeId" value="EMPANELLED_CUSTOMER" />
 						    
 						   <td>
 						    <select name="partyClassificationTypeId" id="partyClassificationTypeId" onchange="setFeilds()">
@@ -159,10 +159,8 @@
 						    <select name="salutation" id="salutation">
 	                            <option value="Mrs"  selected="selected" >Mrs</option>
 	                            <option value="Mis" >Mis</option>
-	                            
 				            </select>
 				            </td>
-						
 						 </tr>
 				       
 	                    <tr>

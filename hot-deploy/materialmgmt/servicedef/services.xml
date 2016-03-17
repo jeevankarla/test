@@ -165,12 +165,12 @@
         <attribute name="accName" mode="IN" type="String" optional="true"/>
         <attribute name="accBranch" mode="IN" type="String" optional="true"/>
         <attribute name="IfscCode" mode="IN" type="String" optional="true"/>
-        <attribute name="COTTON_40ABOVE" mode="IN" type="String" optional="true"/>
-        <attribute name="COTTON_UPTO40" mode="IN" type="String" optional="true"/>
-        <attribute name="SILK_YARN" mode="IN" type="String" optional="true"/>
-        <attribute name="WOOLYARN_10STO39NM" mode="IN" type="String" optional="true"/>
-        <attribute name="WOOLYARN_40SNMABOVE" mode="IN" type="String" optional="true"/>
-        <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="String" optional="true"/>        
+        <attribute name="COTTON_40ABOVE" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="COTTON_UPTO40" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="SILK_YARN" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="WOOLYARN_10STO39NM" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="WOOLYARN_40SNMABOVE" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="BigDecimal" optional="true"/>        
      </service>
      <service name="getEmailForIndentIssuance" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForIndentIssuance.groovy" invoke="" transaction-timeout="12000">
         <description>Get DeptEmail Details  For Indent Issuance</description>
