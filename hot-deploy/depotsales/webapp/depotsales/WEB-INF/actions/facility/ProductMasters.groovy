@@ -20,28 +20,33 @@
 	import org.ofbiz.service.ServiceUtil;
 	import org.ofbiz.party.contact.ContactHelper;
 	
-	productsIter = delegator.find("Product",null, null,UtilMisc.toSet("productId","productName","primaryProductCategoryId"), null, null);
 	
+	condList = [];
+	condList.add(EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.IN, ["SYNTHETIC","NATURAL_FIBERS"]));
+	Debug.log("condList=======sfcsd==============="+condList);
+	productsIter = delegator.find("ProductAndCategoryAndCategoryMember",EntityCondition.makeCondition(condList, EntityOperator.AND), null,UtilMisc.toSet("productId","productName","primaryProductCategoryId","categoryName","productCategoryTypeId" ), ["productCategoryTypeId","primaryProductCategoryId", "categoryName"], null);
 	List prodCategoryAttrType = delegator.findList("ProductCategoryAttributeType", null,null,null,null,false);
 	attributeTypeList = EntityUtil.getFieldListFromEntityList(prodCategoryAttrType, "attrTypeId", true);
 	Debug.log("attributeTypeList=======sfcsd==============="+attributeTypeList);
 	
 	List productAttributeList = delegator.findList("ProductAttribute", null,null,null,null,false);
-	Debug.log("productAttributeList=======sfcsd==============="+productAttributeList);
 	
 	finalList = [];
+	//while (inventoryItem = inventoryItemItr.next()) {
+	
 	while (product = productsIter.next()) {
 		
 		productId = product.productId;
 		
-		primaryProductCategoryId = product.primaryProductCategoryId;
-		productCategory = delegator.findOne("ProductCategory", [productCategoryId : primaryProductCategoryId], false);
+		//primaryProductCategoryId = product.primaryProductCategoryId;
+		//productCategory = delegator.findOne("ProductCategory", [productCategoryId : primaryProductCategoryId], false);
 		
 		prodMap = [:];
-		prodMap.put("parentCategory", productCategory.primaryParentCategoryId);
+		prodMap.put("categoryType", product.productCategoryTypeId);
+		prodMap.put("parentCategory", product.primaryParentCategoryId);
 		prodMap.put("productId", productId);
 		prodMap.put("name", product.productName);
-		prodMap.put("categoryName", productCategory.description);
+		prodMap.put("categoryName", product.categoryName);
 		
 		productAttributes = EntityUtil.filterByCondition(productAttributeList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 		
