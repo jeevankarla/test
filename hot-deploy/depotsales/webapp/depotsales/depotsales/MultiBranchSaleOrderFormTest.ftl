@@ -246,6 +246,7 @@
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
+		       	  				   var issueDate=contactDetails["issueDate"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var partyType=contactDetails["partyType"];
@@ -265,6 +266,7 @@
 		       	  				   $("#custName").html("<h4>"+custName+"</h4>");
 		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
 		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
+		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
@@ -633,6 +635,15 @@
 			       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
+			       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
+				       		<tr>
+				       			<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
+				       		</tr>
+				       		<#else>
+				       		<tr>
+				       			<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
+				       		</tr>
+				       		</#if>
 			       			
 			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 			       			<tr>
