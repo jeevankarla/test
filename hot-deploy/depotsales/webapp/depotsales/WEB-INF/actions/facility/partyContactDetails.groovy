@@ -166,9 +166,14 @@ if(PartyLoomDetails){
 	}
 }
 psbNo="";
+issueDate="";
 partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 if(partyIdentification){
 	psbNo = partyIdentification.get("idValue");
+	if(UtilValidate.isNotEmpty(partyIdentification.get("issueDate"))){
+		issueDate=UtilDateTime.toDateString(partyIdentification.issueDate,"dd-MM-yyyy");
+		Debug.log("issueDate=====IN=============="+issueDate);
+		}
 }
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId));
@@ -192,6 +197,7 @@ partyJSON.put("city",city);
 partyJSON.put("postalCode",postalCode);
 partyJSON.put("Depo",Depo);
 partyJSON.put("DAO",DAO);
+partyJSON.put("issueDate",issueDate);
 partyJSON.put("partyType",partyType);
 partyJSON.put("LoomDetails",partyLoomArrayJSON);
 partyJSON.put("LoomList",AllLoomArrayJSON);

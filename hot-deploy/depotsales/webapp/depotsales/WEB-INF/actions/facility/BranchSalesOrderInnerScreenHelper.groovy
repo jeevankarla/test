@@ -171,12 +171,17 @@
 		}
 	}
 	psbNo="";
+	issueDate="";
 	partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 	if(partyIdentification){
 		psbNo = partyIdentification.get("idValue");
+		if(UtilValidate.isNotEmpty(partyIdentification.get("issueDate"))){
+			issueDate=UtilDateTime.toDateString(partyIdentification.issueDate,"dd-MM-yyyy");
+			Debug.log("issueDate=====IN=============="+issueDate);
+			}
 	}
 	parameters.psbNo=psbNo;
-	
+	parameters.issueDate=issueDate;
 	parameters.address=address1+address2+city;
 	
 	parameters.postalCode=postalCode;
