@@ -281,5 +281,33 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
-    
+    <view-entity entity-name="ProductAndCategoryAndCategoryMember"
+        package-name="org.ofbiz.product.category"
+        title="Product And ProductCategoryMember View Entity">
+        <member-entity entity-alias="PROD" entity-name="Product"/>
+        <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+        <member-entity entity-alias="PC" entity-name="ProductCategory"/>
+        <alias-all entity-alias="PROD"/>
+        <alias-all entity-alias="PCM">
+            <exclude field="comments"/>
+        </alias-all>
+        <alias entity-alias="PC" name="productCategoryTypeId"/>
+	    <alias entity-alias="PC" name="primaryParentCategoryId"/>
+	    <alias entity-alias="PC" name="categoryName"/>
+        <alias name="memberComments" entity-alias="PCM" field="comments"/>
+        <view-link entity-alias="PROD" rel-entity-alias="PCM">
+            <key-map field-name="productId"/>
+        </view-link>
+        <view-link entity-alias="PCM" rel-entity-alias="PC">
+        	<key-map field-name="productCategoryId"/>
+      	</view-link>
+        <relation type="one-nofk" rel-entity-name="ProductCategoryMember">
+            <key-map field-name="productCategoryId"/>
+            <key-map field-name="productId"/>
+            <key-map field-name="fromDate"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+    </view-entity>
 </entitymodel>
