@@ -372,13 +372,13 @@
 	function setupGrid1() {
 		
 		var columns = [
-			{id:"customerName", name:"Customer", field:"customerName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableIndCustTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},
-			{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:100, minWidth:100, cssClass:"readOnlyColumnClass",focusable :false},
-			{id:"cProductName", name:"Product", field:"cProductName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"customerName", name:"Customer", field:"customerName", width:350, minWidth:350, cssClass:"cell-title", url: "LookupEmpanelledPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
+			<#--{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:100, minWidth:100, cssClass:"readOnlyColumnClass",focusable :false},-->
+			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
-			{id:"baleQuantity", name:"Quantity (Numbers)", field:"baleQuantity", width:100, minWidth:60, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:100, minWidth:100, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Total Weight in Kgs", field:"quantity", width:100, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
@@ -523,10 +523,11 @@
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;  
       		var custId= item['customerName'];
+      		var splited = (((custId.split("["))[1]).split("]"))[0];
       		var productLabel = item['cProductName']; 
       		item['productNameStr'] = productLabel;
       		var custmerID=indcustomerLabelPsbNumMap[custId];
-      		item['customerId'] = indcustomerLabelPsbNumMap[custId];
+      		item['customerId'] = splited;
       		item['psbNumber'] = partyPsbNumber[custmerID];
       		item['cProductId'] = productLabelIdMap[productLabel];  
       		grid.invalidateRow(data.length);
@@ -543,16 +544,17 @@
         grid.onCellChange.subscribe(function(e,args) {
          
        
-        if (args.cell == 2 ) {
-		var prod = data[args.row]["cProductId"];
-				var cstNm = data[args.row]["customerName"];
-				var custmrId = indcustomerLabelPsbNumMap[cstNm];
-				var qut=0;
-		   var dataString="partyId=" + custmrId;
+        if (args.cell == 1 ) {
+			 var prod = data[args.row]["cProductId"];
+			 var qut=0;
+	   		 var dataString = {"partyId": args.item['customerId'],
+					   			"schemeCategory":$("#schemeCategory").val()
+							  };
+		   		
    			 $.ajax({
 	             type: "POST",
 	             url: "getPartyQuotaList",
-	             data: dataString ,
+	             data: dataString,
 	             dataType: 'json',
 	             async: false,
 	         success: function(result) {
@@ -581,7 +583,7 @@
 				
 			}
         
-        	if (args.cell == 5) {
+        	if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var uomId = productUOMMap[prod];
@@ -672,7 +674,7 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			
-			if (args.cell == 2 || args.cell == 4) {
+			if (args.cell == 1 || args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				
 				var calcQty = 0;
@@ -759,7 +761,7 @@
 				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 6) {
+			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var uom = data[args.row]["cottonUom"];
@@ -794,14 +796,14 @@
 				
 				//jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 7) {
-			if(!(data[args.row]["quota"])){
-				var prod = data[args.row]["cProductId"];
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				data[args.row]["quota"] = quota;
+			if (args.cell == 6) {
+				if(!(data[args.row]["quota"])){
+					var prod = data[args.row]["cProductId"];
+					quota = parseFloat(productQuotaJSON[prod]);
+					if(isNaN(quota)){
+						quota = 0;
+					}
+					data[args.row]["quota"] = quota;
 				
 				}
 				
@@ -826,7 +828,7 @@
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 			}
-			if (args.cell == 8) {
+			if (args.cell == 7) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -871,7 +873,7 @@
 				
 				jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 9) {
+			if (args.cell == 8) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['amount'];
@@ -923,7 +925,7 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
 		
-				if (args.cell == 6 && data[args.row] != null) {
+				if (args.cell == 8 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];

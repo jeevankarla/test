@@ -43,13 +43,19 @@ partyId = parameters.partyId;
 
 //Quotas handling
 
-resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
-schemesMap = resultCtx.get("schemesMap");
+//resultCtx = dispatcher.runSync("getPartySchemeEligibility",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+//schemesMap = resultCtx.get("schemesMap");
+
 
 productCategoryQuotasMap = [:];
-if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
-	productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
+    resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+	productCategoryQuotasMap = resultCtx.get("schemesMap");
 }
+
+//if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
+//	  productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
+//}
 
 // Get Scheme Categories
 schemeCategoryIds = [];
@@ -57,25 +63,32 @@ productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondi
 schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
 
 condsList = [];
-//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
-if(effectiveDate){
-condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-	  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
- }
-  prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);
-	//productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
-  JSONObject productQuotaJSON=new JSONObject();
-  for(int i=0; i<prodCategoryMembers.size(); i++){
-	  schemeProdId = (prodCategoryMembers.get(i)).get("productId");
-	  schemeCatId = (prodCategoryMembers.get(i)).get("productCategoryId");
-	  if(productCategoryQuotasMap.containsKey(schemeCatId)){
-		  quota = (productCategoryQuotasMap.get(schemeCatId)).get("availableQuota");
-		  productQuotaJSON.put(schemeProdId, quota);
+	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+	if(effectiveDate){
+	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+		  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+	 }
+	  prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);	  
+	    //productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+	  JSONObject productQuotaJSON=new JSONObject();
+	  for(int i=0; i<prodCategoryMembers.size(); i++){
+		  quota = 0;
+		  schemeProdId = (prodCategoryMembers.get(i)).get("productId");
+		  schemeCatId = (prodCategoryMembers.get(i)).get("productCategoryId");
+		  if(productCategoryQuotasMap.containsKey(schemeCatId)){
+			
+			  if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
+				  quota = productCategoryQuotasMap.get(schemeCatId);
+			  }
+			 
+			  //Debug.log(schemeCatId+"(((((((((((((((((("+partyId+"((((((((((((((("+quota);
+			  productQuotaJSON.put(schemeProdId, quota);
+		  }
 	  }
-  }
-  context.productQuotaJSON = productQuotaJSON;
+	  context.productQuotaJSON = productQuotaJSON;
+	  Debug.log("productQuotaJSON = "+productQuotaJSON);
   request.setAttribute("productQuotaJSON", productQuotaJSON);
   
 return "success";
