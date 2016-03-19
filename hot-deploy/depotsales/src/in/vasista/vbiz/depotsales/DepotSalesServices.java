@@ -6304,9 +6304,15 @@ public class DepotSalesServices{
 
 	    Locale locale = (Locale) context.get("locale");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
-	    
+		String sNo = (String) context.get("sNo");
+		List<GenericValue> BranchSaleTransactionsList=FastList.newInstance();
 	    try{
-	    List<GenericValue> BranchSaleTransactionsList = delegator.findList("BranchSaleTransactionInfo", null, null,null, null, false);
+	        if(UtilValidate.isNotEmpty(sNo)){
+		    	    BranchSaleTransactionsList = delegator.findList("BranchSaleTransactionInfo", EntityCondition.makeCondition("sNo", EntityOperator.EQUALS, sNo), null,null, null, false);
+
+	        }else{
+	    	    BranchSaleTransactionsList = delegator.findList("BranchSaleTransactionInfo", null, null,null, null, false);
+	        }
 	    
 	    Debug.log("======================test=================="+BranchSaleTransactionsList);
 	    
@@ -6780,7 +6786,8 @@ public class DepotSalesServices{
 					}
 				}catch(GenericEntityException e){
 					Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
-					
+	     			return ServiceUtil.returnError(e.toString());
+
 				}
 				//making order Association with sales and Po
 				if(UtilValidate.isNotEmpty(PoOrderId)){
@@ -6794,6 +6801,43 @@ public class DepotSalesServices{
 							return ServiceUtil.returnError(null, null, null,result);
 						}
 					 
+//						Approve levels
+						//						Approve1
+
+						 Map<String, Object> serviceApprResult = null;
+	                        try {
+	                        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", "APPROVE_LEVEL1", "userLogin", userLogin));
+	                        } catch (GenericServiceException e) {
+	                            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+	                            return ServiceUtil.returnError(e.getMessage());
+	                        }
+	                        if (ServiceUtil.isError(serviceApprResult)) {
+	                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceApprResult));
+	                        }
+	                        //						Approve2
+	                        try {
+	                        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", "APPROVE_LEVEL2", "userLogin", userLogin));
+	                        } catch (GenericServiceException e) {
+	                            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+	                            return ServiceUtil.returnError(e.getMessage());
+	                        }
+	                        if (ServiceUtil.isError(serviceApprResult)) {
+	                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceApprResult));
+	                        }
+	                        //						Approve3
+	                        try {
+	                        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", "APPROVE_LEVEL3", "userLogin", userLogin));
+	                        } catch (GenericServiceException e) {
+	                            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+	                            return ServiceUtil.returnError(e.getMessage());
+	                        }
+	                        if (ServiceUtil.isError(serviceApprResult)) {
+	                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceApprResult));
+	                        }
+						
+						
+						
+						
 						if(grandTotal.compareTo(receivedAmount) < 0){					
 				
 							// credit APPROVE
@@ -6811,6 +6855,8 @@ public class DepotSalesServices{
 									}
 							}catch (Exception e) {
 								Debug.logError(e, "Failed to approve purchase Order ", module);
+				     			return ServiceUtil.returnError(e.toString());
+
 							}
 						}else{
 							// approving Purchase Order
@@ -6829,6 +6875,8 @@ public class DepotSalesServices{
 									}
 							}catch (Exception e) {
 								Debug.logError(e, "Failed to approve purchase Order ", module);
+				     			return ServiceUtil.returnError(e.toString());
+
 							}
 						}
 						//generating shipment

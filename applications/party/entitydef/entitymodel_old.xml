@@ -59,16 +59,16 @@ under the License.
       <entity entity-name="BranchSaleTransactionInfo"
              package-name="org.ofbiz.party.party"
              title="Branch sale Transactions Entity">
-      <field name="SNo" type="id-ne"></field>
+      <field name="sNo" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="effectiveDate" type="date-time"></field>
       <field name="shipmentTypeId" type="id"></field>
       <field name="salesChannel" type="id"></field>
       <field name="remarks" type="long-varchar" encrypt="true"></field>
       <field name="productId" type="id"></field>
-      <field name="baleQuantity" type="floating-point"></field>
+      <field name="baleQuantity" type="fixed-point"></field>
       <field name="yarnUOM" type="short-varchar"></field>
-      <field name="bundleWeight" type="floating-point"></field>
+      <field name="bundleWeight" type="fixed-point"></field>
       <field name="quantity" type="fixed-point" ></field>
       <field name="unitPrice" type="fixed-point" ></field>
       <field name="suplierPartyId" type="id-ne"></field>
@@ -95,6 +95,6 @@ under the License.
       <field name="inFavourOf" type="long-varchar"></field>
       <field name="paymentRefNum" type="long-varchar"></field>
       <field name="issuingAuthority" type="long-varchar"></field>
-      <prim-key field="SNo"/>
+      <prim-key field="sNo"/>
     </entity>
 </entitymodel>
