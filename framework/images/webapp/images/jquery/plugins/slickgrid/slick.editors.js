@@ -811,6 +811,124 @@
 
             this.init();
         },
+        
+        AutoCompleteEditorAjax : function(args) {            
+        	var $input;
+            var defaultValue;
+            var scope = this;
+            var calendarOpen = false;
+           
+            this.init = function () {
+              //alert(args.column.url);
+              //alert(args.column.valueContainer);
+              $input = $("<INPUT  class='editor-text' />");
+              $input.appendTo(args.container);
+              $input.bind("keydown.nav", function(e) {
+                if ((e.keyCode === $.ui.keyCode.DOWN) || (e.keyCode === $.ui.keyCode.UP)) {
+                  e.stopPropagation();
+                }
+              });              
+              $input.focus().select();
+              $input.autocomplete({
+
+    			  source: function( request, response ) {
+        			$.ajax({
+          					url: args.column.url,
+          					dataType: "html",
+          					data: {
+            					ajaxLookup: "Y",
+            					term : request.term
+          					},
+          					success: function( data ) {
+          						var dom = $(data);
+        						dom.filter('script').each(function(){
+            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
+        						});
+            					response($.map(autocomp, function(v,i){
+    								return {
+                						label: v.label,
+                						value: v.value
+               						};
+								}));
+          					}
+        			});
+      			  },
+                  position: {  collision: "fit flip"  },
+                  select: function(event, ui) {
+                      event.preventDefault();
+                      $input.val(ui.item.label);
+                      //$input.val(ui.item.label);
+                      //alert(ui.item.label);
+                      //alert(ui.item.value);
+                      
+                      //args.item[args.column.valueContainer] = (ui.item.value);
+                      //$("#"+args.column.valueContainer).val(ui.item.value);
+                  },
+                  focus: function(event, ui) {
+                      event.preventDefault();
+                      $input.val(ui.item.label);                      
+                  }             
+               }); 
+              // Overrides the default autocomplete filter function to search only from the beginning of the string
+    
+              $.ui.autocomplete.filter = function (array, term) { 
+            	  var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+            	  if(args.column.regexMatcher == "contains"){
+            		 matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
+            	  }
+                  //var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+                  return $.grep(array, function (value) {
+                      return matcher.test(value.label || value.value || value);
+                  });
+              };
+
+            };
+
+            this.destroy = function () {
+              $input.autocomplete("destroy");
+            };
+
+            this.focus = function () {
+              $input.focus();
+            };
+
+            this.loadValue = function (item) {
+              defaultValue = item[args.column.field];
+              if(defaultValue != null ){
+                  $input.val(defaultValue);
+                  $input[0].defaultValue = defaultValue;
+                  $input.select();
+              }
+              
+            };
+
+            this.serializeValue = function () {
+              return $input.val();
+            };
+
+            this.applyValue = function (item, state) {
+              item[args.column.field] = state;
+            };
+
+            this.isValueChanged = function () {
+              return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);
+            };
+
+            this.validate = function (item) {
+            	
+                if (args.column.validator) {
+                    var validationResults = args.column.validator($input.val(),item);
+                    if (!validationResults.valid)
+                        return validationResults;
+                }            	
+              return {
+                valid: true,
+                msg: null
+              };
+            };
+
+            this.init();
+        },        
 
         /*
          * An example of a "detached" editor.
