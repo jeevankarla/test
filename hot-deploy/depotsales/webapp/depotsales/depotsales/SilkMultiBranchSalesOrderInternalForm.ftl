@@ -372,10 +372,10 @@
 	function setupGrid1() {
 		
 		var columns = [
-			{id:"customerName", name:"Customer", field:"customerName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableIndCustTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},
-			{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:150, minWidth:150, cssClass:"readOnlyColumnClass",focusable :false},
-			{id:"cProductName", name:"Product", field:"cProductName", width:150, minWidth:150, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Remarks", field:"remarks", width:200, minWidth:200, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"customerName", name:"Customer", field:"customerName", width:400, minWidth:400, cssClass:"cell-title", url: "LookupEmpanelledPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
+			<#--{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:150, minWidth:150, cssClass:"readOnlyColumnClass",focusable :false},-->
+			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"quantity", name:"Total Weight in Kgs", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
@@ -500,7 +500,7 @@
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
-            //here ESC to Save grid
+            	//here ESC to Save grid
         		if (cell && cell.cell == 0) {
         			$(grid.getCellNode(cell.row - 1, cellNav)).click();
         			return false;
@@ -516,14 +516,14 @@
             }
         });
         
-                
-    	grid.onAddNewRow.subscribe(function (e, args) {
+        grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;  
       		var custId= item['customerName'];
+      		var splited = (((custId.split("["))[1]).split("]"))[0];
       		var productLabel = item['cProductName']; 
       		item['productNameStr'] = productLabel;
       		var custmerID=indcustomerLabelPsbNumMap[custId];
-      		item['customerId'] = indcustomerLabelPsbNumMap[custId];
+      		item['customerId'] = splited;
       		item['psbNumber'] = partyPsbNumber[custmerID];
       		item['cProductId'] = productLabelIdMap[productLabel];  
       		grid.invalidateRow(data.length);
@@ -540,13 +540,13 @@
         grid.onCellChange.subscribe(function(e,args) {
          
        
-        if (args.cell == 2 ) {
+        if (args.cell == 1 ) {
 	
-		var prod = data[args.row]["cProductId"];
-					var cstNm = data[args.row]["customerName"];
-				var custmrId = indcustomerLabelPsbNumMap[cstNm];
-				var qut=0;		
-		   var dataString="partyId=" + custmrId;
+			var prod = data[args.row]["cProductId"];
+		   	var qut=0;
+		   	var dataString = {"partyId": args.item['customerId'],
+						   		"schemeCategory":$("#schemeCategory").val()
+						 		};
 		    $.ajax({
 		             type: "POST",
 		             url: "getPartyQuotaList",
@@ -577,7 +577,7 @@
 			
 			}
         	
-			if (args.cell == 2 || args.cell == 4) {
+			if (args.cell == 1 || args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -625,7 +625,7 @@
 				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
-			<#-->if (args.cell == 3) {
+			<#--if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				quota = parseFloat(productQuotaJSON[prod]);
 				if(isNaN(quota)){
@@ -634,7 +634,7 @@
 				data[args.row]["quota"] = quota;
 				grid.updateRow(args.row);
 			}-->
-			if (args.cell == 5) {
+			if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -679,7 +679,7 @@
 				
 				jQuery("#totalAmount").html(dispText);
 			}
-			if (args.cell == 6) {
+			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['amount'];
@@ -731,7 +731,7 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
 		
-				if (args.cell == 6 && data[args.row] != null) {
+				if (args.cell == 5 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];
@@ -1006,6 +1006,8 @@
 	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
 	    // alert("====partyId==="+partyId);
+	    //setupGrid1();
+		 
 		 if(boothId || partyId){
 		 	setupGrid1();
 		 	//setupGrid2();

@@ -177,8 +177,7 @@
 		psbNo = partyIdentification.get("idValue");
 		if(UtilValidate.isNotEmpty(partyIdentification.get("issueDate"))){
 			issueDate=UtilDateTime.toDateString(partyIdentification.issueDate,"dd-MM-yyyy");
-			Debug.log("issueDate=====IN=============="+issueDate);
-			}
+		}
 	}
 	parameters.psbNo=psbNo;
 	parameters.issueDate=issueDate;
@@ -490,7 +489,7 @@ if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory
 	 // JSONArray indcustomerPsbNumJson = new JSONArray();
 	  JSONObject indcustomerLabelPsbNumJson = new JSONObject();
 	  
-	  
+/*	  
 	  condList=[];
 	 	  condList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS,"INDIVIDUAL_WEAVERS"));
 	  EntityCondition cond=EntityCondition.makeCondition(condList,EntityOperator.AND);
@@ -522,6 +521,7 @@ if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory
 			}
 	 	}
 	  }
+*/	  
 	  //Debug.log("indcustomerJson====================="+indcustomerJson);
 	  //Debug.log("indcustomerLabelPsbNumJson====================="+indcustomerLabelPsbNumJson);
 	  context.indcustomerJson=indcustomerJson;
