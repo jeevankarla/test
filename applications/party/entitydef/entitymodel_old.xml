@@ -90,7 +90,10 @@ under the License.
       <field name="carrierName" type="short-varchar"></field>
       <field name="deliveryChallanNo" type="short-varchar"></field>
       <field name="paymentTypeId" type="id"></field>
+      <field name="paymentMethodTypeId" type="id"></field>
+      <field name="finAccountId" type="id-ne"></field>
       <field name="paymentDate" type="date-time"></field>
+      <field name="depositDate" type="date-time"></field>     
       <field name="amount" type="currency-amount"></field>
       <field name="inFavourOf" type="long-varchar"></field>
       <field name="paymentRefNum" type="long-varchar"></field>
