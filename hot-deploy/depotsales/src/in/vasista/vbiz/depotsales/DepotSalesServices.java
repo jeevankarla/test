@@ -6876,14 +6876,14 @@ public class DepotSalesServices{
 						
 						
 						
-						
+							
 						if(grandTotal.compareTo(receivedAmount) < 0){					
 				
 							// credit APPROVE
 							try{
 									Map<String, Object> approvePoContext = FastMap.newInstance();
 									approvePoContext.put("userLogin", userLogin);
-									approvePoContext.put("orderId", PoOrderId);
+									approvePoContext.put("orderId", orderId);
 									approvePoContext.put("partyId", partyId);
 									approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
 									approvePoContext.put("locale", locale);
@@ -6903,7 +6903,7 @@ public class DepotSalesServices{
 							try{
 									Map<String, Object> approvePoContext = FastMap.newInstance();
 									approvePoContext.put("userLogin", userLogin);
-									approvePoContext.put("orderId", PoOrderId);
+									approvePoContext.put("orderId", orderId);
 									approvePoContext.put("partyId", partyId);
 									approvePoContext.put("salesChannelEnumId", "BRANCH_CHANNEL");
 									approvePoContext.put("locale", locale);
