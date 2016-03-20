@@ -6550,6 +6550,8 @@ public class DepotSalesServices{
 	        Debug.log("======================quantity=================="+paymentTypeId);
 
 	        Timestamp paymentDate = (Timestamp) BrachTrans.getTimestamp("paymentDate");
+	        Timestamp depositDate = (Timestamp) BrachTrans.getTimestamp("depositDate");
+
 	        Debug.log("======================paymentDate=================="+paymentDate);
 
 			String inFavourOf = (String) BrachTrans.get("inFavourOf");
@@ -6588,28 +6590,64 @@ public class DepotSalesServices{
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
-				
                 String paymentId = null;
-                GenericValue cardOrderPaymentPref = EntityUtil.getFirst(orderPaymentPreferences);
-                if (cardOrderPaymentPref != null) {
-                	paymentId = cardOrderPaymentPref.getString("paymentId");
-                }
-						Debug.log("paymentId================payment================"+paymentId);
-					if(UtilValidate.isNotEmpty(paymentId)){
+                String orderPaymentPreferenceId=null;
+      			if (UtilValidate.isNotEmpty(orderPaymentPreferences)) {
+	                GenericValue cardOrderPaymentPref = EntityUtil.getFirst(orderPaymentPreferences);
+	                if (cardOrderPaymentPref != null) {
+	                	orderPaymentPreferenceId = cardOrderPaymentPref.getString("orderPaymentPreferenceId");
+	                }
+	                if (orderPaymentPreferenceId != null) {
+	                	try{
+	                
+		                	List condExpretionList=FastList.newInstance() ;
+		                	condExpretionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.EQUALS, orderPaymentPreferenceId));
+		      			   	EntityCondition condExpretion = EntityCondition.makeCondition(condExpretionList, EntityOperator.AND);
+		      			   	List<GenericValue> paymentList = delegator.findList("OrderPreferencePaymentApplication", condExpretion, null, null, null, false);
+		
+		      			   	//enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
+		      			
+		      			   	BigDecimal paidAmount = BigDecimal.ZERO;
+		      			
+			      			if (UtilValidate.isNotEmpty(paymentList)) {
+			      				for (GenericValue eachPayment : paymentList) {
+			      	      			if (UtilValidate.isNotEmpty(eachPayment) && UtilValidate.isNotEmpty(eachPayment.get("paymentId"))) {      				
+			      		            	paymentId=(String)eachPayment.get("paymentId"); 
+			      	      			}
+			      				}
+			      			}
+	                	}catch (GenericEntityException e) {
+	      				  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+				             return ServiceUtil.returnError(" Error While Fetching PaymentId "+e);
+	            	    }
+	
+	                }
+      			}
+				Debug.log("paymentId================payment================"+paymentId);
+				if(UtilValidate.isNotEmpty(paymentId)){
 						//payment deposit into bank
 						Map paymentDepositContext = FastMap.newInstance();
 						List<String> paymentIds = FastList.newInstance();
 						paymentIds.add(paymentId);
 						paymentDepositContext.put("organizationPartyId","COMPANY");
-						
-						paymentDepositContext.put("finAccountId","FIN_ACCNT10");
+						paymentDepositContext.put("userLogin", userLogin);
+				        String finAccountId = (String) BrachTrans.get("finAccountId");
+				        if(UtilValidate.isEmpty(finAccountId)){
+				        	paymentDepositContext.put("finAccountId","FIN_ACCNT1");
+				        }else{
+							paymentDepositContext.put("finAccountId",finAccountId);
+				        }
 						paymentDepositContext.put("paymentMethodTypeId","");
 						paymentDepositContext.put("cardType","");
 						paymentDepositContext.put("partyIdFrom","");
 						paymentDepositContext.put("fromDate","");
 						paymentDepositContext.put("thruDate","");
 						paymentDepositContext.put("paymentGroupTypeId","BATCH_PAYMENT");
-						paymentDepositContext.put("transactionDate",paymentDate);
+						if(UtilValidate.isNotEmpty(depositDate)){
+							paymentDepositContext.put("transactionDate",depositDate);
+						}else{
+							paymentDepositContext.put("transactionDate",paymentDate);
+						}
 						paymentDepositContext.put("paymentIds",paymentIds);
 						Map paymentDepositResult=FastMap.newInstance();;
 						try{
@@ -6634,7 +6672,8 @@ public class DepotSalesServices{
 							Map paymentReconsileContext = FastMap.newInstance();
 							List<String> finAccountTransIds = FastList.newInstance();
 							finAccountTransIds.add(finAccountTransId);
-							paymentReconsileContext.put("organizationPartyId","Company");							
+							paymentReconsileContext.put("organizationPartyId","Company");
+							paymentReconsileContext.put("userLogin", userLogin);
 							paymentReconsileContext.put("finAccountId","FIN_ACCNT10");
 							paymentReconsileContext.put("bulkReconsileName","Create Reconcile");
 							paymentReconsileContext.put("paymentGroupTypeId","BATCH_PAYMENT");
@@ -6752,7 +6791,7 @@ public class DepotSalesServices{
 
 						processPOContext.put("userLogin", userLogin);
 						processPOContext.put("productQtyList", itemDetail);
-						processPOContext.put("orderTypeId", orderTypeId);
+						processPOContext.put("orderTypeId","PURCHASE_ORDER");
 						processPOContext.put("orderId", orderId);
 						processPOContext.put("termsList", termsList);
 						processPOContext.put("partyId",suplierPartyId );
@@ -7208,11 +7247,12 @@ public class DepotSalesServices{
 							}
 			  		}catch (GenericServiceException e) {
 		    	  		Debug.logError("Shipment status change error: for Order "+orderId, module);
-		    	     	
+		     			return ServiceUtil.returnError(e.toString());
 		    	  	}
 					
 				}catch (Exception e) {
-					Debug.logError(e, "Failed to approve purchase Order for sale Order"+orderId, module);
+					Debug.logError(e, "error while generating Shipment for order"+orderId, module);
+	     			return ServiceUtil.returnError(e.toString());
 				}
 				}
 				
@@ -7220,8 +7260,9 @@ public class DepotSalesServices{
 	      }
 	  }
 	    }catch (GenericEntityException e) {
-				  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
-	        
+				  Debug.logError(e, "Could not commit transaction", module);
+	     			return ServiceUtil.returnError("Could not commit transaction"+e.toString());
+
 	    }
 	    
 	    

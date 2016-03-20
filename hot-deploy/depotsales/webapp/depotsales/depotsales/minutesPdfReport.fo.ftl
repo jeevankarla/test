@@ -118,10 +118,10 @@ under the License.
 					            </fo:table-cell>
 					             <#assign productDetails = delegator.findOne("Product", {"productId" :orderList.productId}, true)>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
+					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
@@ -210,10 +210,10 @@ under the License.
 					            </fo:table-cell>
 					             <#assign productDetails = delegator.findOne("Product", {"productId" :orderList.productId}, true)>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
+					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
