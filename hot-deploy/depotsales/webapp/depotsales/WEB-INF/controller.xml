@@ -10,7 +10,7 @@
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
 	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/> 
 	<include location="component://humanres/webapp/humanres/WEB-INF/controller.xml"/>
-
+    <include location="component://materialmgmt/webapp/materialmgmt/WEB-INF/controller.xml"/>
     <description>DepotSales Component Site Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
@@ -677,7 +677,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewSupplier"/>
     </request-map> 
-    <request-map uri="createVendor">
+    <request-map uri="createSupplier">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
         <response name="success" type="request-redirect" value="viewprofile"/>
@@ -1202,12 +1202,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewSupplier"/>
     </request-map> 
-    <request-map uri="CreateNewSupplier">
+   <!--  <request-map uri="CreateNewSupplier">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
         <response name="success" type="request-redirect" value="viewprofile"/>
         <response name="error" type="view" value="EditVendor"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="editVendor">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditVendor"/>
