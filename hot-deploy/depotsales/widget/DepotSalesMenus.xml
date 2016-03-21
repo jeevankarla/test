@@ -49,6 +49,13 @@
             </condition>        
         	<link target="FindProcProducer"/>
         </menu-item>
+        <menu-item name="FindSupplier" title="Supplier Master">
+		      <!--  <condition>
+		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
+		    </condition> -->
+		           <link target="FindSupplier"/>
+	   </menu-item>
+      
         <!-- <menu-item name="Product" title="${uiLabelMap.Product}">       
             <link target="FindYarnProducts">               
             </link>
@@ -1327,7 +1334,13 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
-	
+	<menu name="groupUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editVendor">
+                <parameter param-name="partyId" from-field="party.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
 	
 	
 	

@@ -1893,6 +1893,67 @@
         <field name="STYLE" title="Style"><display/></field>
        
     </form>
+     <form name="weaverMastersCSV" type="list" list-name="listIt" view-size="99999">
+        <field name="srNo" title="Sr.No."><display/></field>
+        <field name="groupName" title="Party Name"><display/></field>
+        <field name="adress" title="Address"><display /></field>
+        <field name="district" title="District"><display/></field>
+        <field name="cluster" title="Cluster"><display/></field>
+        <field name="state" title="State Name"><display/></field>
+        <field name="agencyType" title="Agency Type"><display/></field>
+        <field name="depotStatus" title="Depo Status"><display/></field>
+        <field name="passBookNo" title="Passbook Number"><display/></field>
+        <field name="application" title="Application"><display/></field>
+        <field name="appDate" title="Application Date"><display/></field>
+        <field name="category" title="Category"><display/></field>
+        <field name="noOfLooms" title="No.of Looms"><display/></field>
+        <field name="ledgerQuota" title="Ledger Quota"><display/></field>
+        <field name="phone" title="Phone"><display/></field>
+        <field name="mobileNo" title="Mobile No."><display/></field>
+        <field name="fax" title="Fax"><display/></field>
+        <field name="email" title="E-Mail "><display/></field>
+        <field name="panNo" title="Pan No."><display/></field>
+        <field name="tinNo" title="TIN/VAT No."><display/></field>
+        <field name="cstNo" title="CST No."><display/></field>
+        <field name="serviceTax" title="Service Tax No."><display/></field>
+        <field name="type" title="Type"><display/></field>
+        <field name="rationCardNo" title="Ration Card No."><display/></field>
+        <field name="voterId" title="Voter Card Id."><display/></field>
+        <field name="aadharNo" title="Aadhar No."><display/></field>
+        <field name="male" title="Male"><display/></field>
+       <field name="female" title="Female"><display/></field>
+       <field name="male" title="Male in SC"><display/></field>
+       <field name="female" title="Female in SC"><display/></field>
+       <field name="male" title="Male ST"><display/></field>
+       <field name="female" title="Female ST"><display/></field>
+       <field name="male" title="Male OBC"><display/></field>
+       <field name="female" title="Female OBC"><display/></field>
+       <field name="male" title="Male Minority"><display/></field>
+       <field name="female" title="Female Minority"><display/></field>
+       <field name="male" title="Male General"><display/></field>
+       <field name="female" title="Female General"><display/></field>
+    </form>
+    <form name="EditSupplier" type="single" target="EditVendor" default-map-name="partyGroup"
+        focus-field-name="groupName" header-row-style="header-row" default-table-style="basic-table">
+        <field use-when="partyGroup!=null" name="partyId" title="${uiLabelMap.VendorId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="groupName" required-field="true" ><text></text></field>
+        <!--  <field  name="roleTypeId"  event="onChange" action="javascript:vendorValidation();">   
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>  -->
+        <field use-when="partyGroup==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+   </form>
+    
 
 
 
