@@ -43,8 +43,10 @@ function datepick()	{
 				  $('#midNamelabel').hide();
 				  $("#lastName").hide();
 				  $('#lastNamelabel').hide();
-  				 $('#daoDatelabel').hide();
+  				  $('#daoDatelabel').hide();
 			      $('#daoDate').hide();
+			      $('#salutationlabel').hide();
+			      $('#salutation').hide();
 
       	      $("#wizard-2").steps({
                 headerTag: "h3",
@@ -67,7 +69,6 @@ function datepick()	{
 								       	}, 900);
 								    	return false;
 							    	}
-                			
 				    		}else{
 				    		var groupName=$('#groupName').val();
 			                	if( (groupName).length < 1 ) {
@@ -151,6 +152,8 @@ function datepick()	{
 		var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
 		if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
 			$("#firstName").show();
+				 $('#salutationlabel').show();
+			     $('#salutation').show();
 			     $('#frstNamelabel').show();
 				 $("#midName").show();
 				 $('#midNamelabel').show();
@@ -164,6 +167,8 @@ function datepick()	{
 			      $('#groupName').hide();
 			
 			}else{
+				  $('#salutationlabel').hide();
+			      $('#salutation').hide();
 				  $('#firstName').hide();
 			      $('#frstNamelabel').hide();
 				  $("#midName").hide();
@@ -225,7 +230,7 @@ function datepick()	{
 		       			       <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Basic Information</div></td>
 					      </tr>
 	           			 <tr>
-						    <td class="label"><b> Role Type Id</b></td>
+						    <td class="label"><b> Classification :</b></td>
 						     <input  type="hidden"  name="roleTypeId" id="roleTypeId" value="EMPANELLED_CUSTOMER" />
 						    
 						   <td>
@@ -237,27 +242,29 @@ function datepick()	{
 				            </td>
 						</tr>
 						 <tr>
-						    <td class="label" id="salutationlabel"><b>salutation</b></td>					    
+						    <td class="label" id="salutationlabel"><b>Salutation :</b></td>					    
 						   <td>
 						    <select name="salutation" id="salutation">
-	                            <option value="Mrs"  selected="selected" >Mrs</option>
-	                            <option value="Mis" >Mis</option>
+	                            <option value="Mr"  selected="selected" >Mr</option>
+	                            <option value="Ms" >Ms</option>
+	                            <option value="Mrs">Mrs</option>
+	                            <option value="Mis" >Miss</option>
 				            </select>
 				            </td>
 						 </tr>
 				       
 	                    <tr>
-				        <td class="label" id="groupNamelabel"><b> Group Name<FONT COLOR="red">*</font></b></td>
+				        <td class="label" id="groupNamelabel"><b><FONT COLOR="red">*</font> Group Name :</b></td>
 				        <td>
-        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName"  />
+        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" />
 				       </td>
 				        </tr>
 				         <tr>
 						    <td width="20%" id="genderlabel"><b>Gender :</b></td>
-	    					 <td> <input type="radio" id="gender" name="gender" value="F" >Female</input><input type="radio" id="gender" name="gender" value="M">Male</input> </td>
+	    					 <td><input type="radio" id="gender" name="gender" value="M">Male</input> <input type="radio" id="gender" name="gender" value="F" >Female</input></td>
 						 </tr>
 				        <tr>
-						    <td class="label" id="Depotlabel"><b>Depot</b></td>					    
+						    <td class="label" id="Depotlabel"><b>Depot :</b></td>					    
 						   <td>
 						    <select name="Depot" id="Depot" onchange="setDAO()">
 	                            <option value="Y" >Yes</option>
@@ -273,25 +280,25 @@ function datepick()	{
 						</tr>
 	                    <tr>
 				         <tr>
-				        <td class="label" id="frstNamelabel"><b> First Name<FONT COLOR="red">*</font></b></td>
+				        <td class="label" id="frstNamelabel"><b><FONT COLOR="red">*</font> First Name :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="firstName" id="firstName"  />
           				</td>
 				        </tr>
 				         <tr>
-				        <td class="label" id="midNamelabel"><b> Middle Name</b></td>
+				        <td class="label" id="midNamelabel"><b> Middle Name :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="midName" id="midName"  />
           				</td>
 				        </tr>
 				         <tr>
-				        <td class="label" id="lastNamelabel"><b> Last Name</b></td>
+				        <td class="label" id="lastNamelabel"><b> Last Name :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="lastName" id="lastName"  />
           				</td>
 				        </tr>
 				        <tr>
-						 <td class="label"><b> Weaver Code</b></td>
+						 <td class="label"><b> Weaver Code :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="weaverCode" id="weaverCode"  />
           				</td>
@@ -313,31 +320,31 @@ function datepick()	{
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Personal Details</div></td>
 					               </tr>
 									<tr>
-									    <td class="label"><b> Address1<FONT COLOR="red">*</font></b></td>
+									    <td class="label"><b><FONT COLOR="red">*</font> Address1 :</b></td>
 									    <td>
 									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> Address2</b></td>
+									    <td class="label"><b> Address2 :</b></td>
 									    <td>
 									      	<input type="text" name="address2" id="address2" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> City<FONT COLOR="red">*</font></b></td>
+									    <td class="label"><b><FONT COLOR="red">*</font> City :</b></td>
 									    <td>
 									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> Postal Code</b></td>
+									    <td class="label"><b> Postal Code :</b></td>
 									    <td>
 									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									    </tr>
 									    <tr>
-									    <td class="label"><b>Cast</b></td>
+									    <td class="label"><b>Caste :</b></td>
 									    <td>
 									    <select name="Cast" id="Cast">
 				                            <option value="general" selected="selected">General</option>
@@ -350,13 +357,13 @@ function datepick()	{
 				          
 									</tr>
 									<tr>
-									    <td class="label"><b> E-mail Address<FONT COLOR="red">*</font></b></td>
+									    <td class="label"><b><FONT COLOR="red">*</font> E-mail Address :</b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-								      <td class="label"><b>${uiLabelMap.CommonCountry}</b></td>
+								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
 								      <td>
 								        <select name="countryGeoId" id="editcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
 										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
@@ -370,7 +377,7 @@ function datepick()	{
 								      </td>
 	    							</tr>
 	    							 <tr>
-								      <td class="label"><b>${uiLabelMap.PartyState}</b></td>
+								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
 										
@@ -403,13 +410,13 @@ function datepick()	{
 								      </td>
 	   								 </tr>
 									<tr>
-									    <td class="label"><b>Mobile Number</b></td>
+									    <td class="label"><b>Mobile Number :</b></td>
 									    <td>
 									      	<input type="text" name="mobileNumber" id="mobileNumber" size="15" maxlength="10" autocomplete="off" />
 									    </td>
 								   </tr>
 									<tr>
-									    <td class="label"><b>Contact Number</b></td>
+									    <td class="label"><b>Contact Number :</b></td>
 									    <td>
 									      	<input type="text" name="contactNumber" id="contactNumber" size="15" maxlength="15" autocomplete="off"/>
 									    </td>
@@ -428,51 +435,51 @@ function datepick()	{
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bank Details</div></td>
 					               </tr>
 									<tr>
-									    <td class="label"><b> Account No</b></td>
+									    <td class="label"><b> Account No :</b></td>
 									    <td>
 									      	<input type="text" name="accNo" id="accNo" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> Account Name</b></td>
+									    <td class="label"><b> Account Name :</b></td>
 									    <td>
 									      	<input type="text" name="accName" id="accName" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b>Account Branch</b></td>
+									    <td class="label"><b>Account Branch :</b></td>
 									    <td>
 									      	<input type="text" name="accBranch" id="accBranch" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> Ifsc Code</b></td>
+									    <td class="label"><b> Ifsc Code :</b></td>
 									    <td>
 									      	<input type="text" name="IfscCode" id="IfscCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-							        <td class="label"><b>Pan Number</b></td>
+							        <td class="label"><b>Pan Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
 			          				</td>
 							        </tr>
 							        <tr>
-							         <td class="label"><b>Tin Number</b></td>
+							         <td class="label"><b>Tin Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUMBER" id="USER_TINNUMBER" onblur="javascript:partyIdentificationVal();" />
 			          				</td>
 							        </tr>
 							        <tr>
 							         
-			                        <td class="label"><b>Cst Number</b></td>
+			                        <td class="label"><b>Cst Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUMBER" id="USER_CSTNUMBER"  />
 			          				</td>
 							        </tr>
 							         <tr>
 							         
-			                        <td class="label"><b>Adhar Number</b></td>
+			                        <td class="label"><b>Aadhar Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
 			          				</td>
@@ -490,14 +497,14 @@ function datepick()	{
 		       			       <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Loom Details</div></td>
 					      </tr>
 					       <tr>
-						 <td class="label"><b> passBook<FONT COLOR="red">*</font></b></td>
+						 <td class="label"><b><FONT COLOR="red">*</font> PassBook :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  />
           				</td>
 				        </tr>
 				     <#list AllLoomDetails as eachloom>
 				        <tr>
-									    <td class="label"  width="50%"><b>${eachloom.loomTypeId}</b></td>
+									    <td class="label"  width="50%"><b>${eachloom.loomTypeId} :</b></td>
 									    <td  width="50%">
 									      	<input type="text" name=${eachloom.loomTypeId} id=${eachloom.loomTypeId} size="30" maxlength="60" autocomplete="off" value="0"/>
 									    </td>
