@@ -32,20 +32,33 @@ import org.ofbiz.base.conversion.NetConverters.StringToURL;
 List roleTypeList=[];
 if(parameters.ajaxLookup == 'Y'){
 	roleTypeId=parameters.roleTypeId;
-
+	partyClassificationGroupId=parameters.partyClassificationGroupId;
 // initialising  conditionFields Map 
 	
 	conditionFields=[:];
 //checking for the roleType parameter in Ajax call
 //if roleTypeId is null use the default view  "PartyNameView"
 
-
+	
 
 if(roleTypeId != null){
+	if(partyClassificationGroupId != null){
+		parameters.partyClassificationGroupId=partyClassificationGroupId;
+	}
 	parameters.roleTypeId=roleTypeId;
-	context.entityName="PartyIdentificationAndPerson";
-	
+	String screenFlag="";
+	if(parameters.screenFlag){
+	 screenFlag=parameters.screenFlag;
+	}
+	if(screenFlag && screenFlag.equals("onlyIndividual")){
+		context.entityName="PartyIdentificationAndPersonClassification";		
+	}else{
+		context.entityName="PartyIdentificationAndPerson";
+	}
 		conditionFields.roleTypeId=roleTypeId;
+		if(partyClassificationGroupId != null){
+		conditionFields.partyClassificationGroupId=partyClassificationGroupId;
+		}
 		context.conditionFields=conditionFields;	
 	
 	

@@ -99,6 +99,47 @@ under the License.
             </widgets>
         </section>
     </screen>
+     <screen name="LookupIndividualPartyName">
+        <section>
+            <condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PartyLookupPartyByName}"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER" />
+                <set field="parameters.partyClassificationGroupId" value="INDIVIDUAL_WEAVERS" />
+                <!-- entries needed for lookup ajax auto completer -->
+                <!-- required: entity to search in -->
+                <set field="entityName" value="PartyIdentificationAndPerson"/>
+                <set field="parameters.screenFlag" value="onlyIndividual"></set>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/conditionLookUpEmpannled.groovy"/>                 
+                <!-- required: fields to search a match -->
+                <!-- the first element from searchFields is returned after user selection --> 
+                <!-- it might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->                
+                <set field="searchFields" value="[partyId, idValue, firstName, middleName, lastName, groupName]"/>
+                <!-- optional: fields to display in the given order, default is searchFields -->
+                <set field="displayFields" value="[firstName, lastName, groupName]"/>
+                
+                <!-- optional: additional entity condition (named andCondition) added to search query -->
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/StatusCondition.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupEmpanelledPartyName" location="component://party/widget/partymgr/LookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listLookupPartyName" location="component://party/widget/partymgr/LookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
     
     <screen name="LookupTaxAuthPartyName">

@@ -6,6 +6,16 @@
 	 	.labelFontCSS {
 	    	font-size: 13px;
 		}
+		.form-style-8{
+		    max-width: 650px;
+		    max-height: 150px;
+		    max-right: 10px;
+			margin-bottom: -10px;
+		    padding: 30px;
+		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+		    border-radius: 20px;
+		    border: 1px solid #305A72;
+		}
 		hr.style17 { 
 			  display: block; 
 			  content: ""; 
@@ -334,7 +344,7 @@
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
 	    
-	    	<form method="post" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
+	    	<form method="post" class="form-style-8" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	               	<tr>
 		       			<input type="hidden" name="billingType" id="billingType" value="onBehalfOf"/>  
