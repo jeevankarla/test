@@ -730,7 +730,51 @@
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-		
+		if (args.cell == 1 ) {
+       		var currentrow=args.row;
+       		if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
+       		var prod=data[currentrow-1]["cProductId"];
+       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
+       		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
+       		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
+       		data[args.row]['quantity'] = data[currentrow-1]["quantity"];
+       		data[args.row]['amount'] = data[currentrow-1]["amount"];
+       		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
+		   	var qut=0;
+		   	if(data[args.row]['customerId'] != "undefined"){
+		   	var dataString = {"partyId": data[args.row]['customerId'],
+						   		"schemeCategory":$("#schemeCategory").val()
+						 		};
+		     $.ajax({
+		             type: "POST",
+		             url: "getPartyQuotaList",
+		             data: dataString ,
+		             dataType: 'json',
+		             async: false,
+		         success: function(result) {
+		               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+		            	   alert(result["_ERROR_MESSAGE_"]);
+		               }else{  
+		                productsQuotaList=result['productQuotaJSON'];
+		               // alert(JSON.stringify(productsQuotaList));
+		                if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
+		                qut=productsQuotaList[prod];
+		                }
+		               }
+		               
+		             } ,
+		             error: function() {
+		            	 	alert(result["_ERROR_MESSAGE_"]);
+		            	 }
+		            }); 				
+				if(isNaN(qut)){
+							qut = 0;
+						}
+				data[args.row]["quota"] = qut;
+      		 grid.updateRow(args.row);
+      		 }
+      		 }
+       		}
 				if (args.cell == 5 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
