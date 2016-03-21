@@ -175,8 +175,15 @@
 	
 	//societyParty  json.
 	JSONArray societyJSON = new JSONArray();
+	conditionDeopoList=[];
+	conditionDeopoList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,null));
+	conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+	facilityDepoList = delegator.findList("Facility",conditionDepo,null,null,null,false);
 	cond = [];
 	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
+	if(facilityDepoList && facilityDepoList.ownerPartyId){
+	cond.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, facilityDepoList.ownerPartyId));
+	}
 	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
 	societyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
 	if(societyList){
