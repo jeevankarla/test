@@ -1659,6 +1659,7 @@ public class HumanresService {
 	        Debug.log("stateName====================="+stateName);
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
+	        String stateNamee=null;    
 	        
 	        
 	        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
