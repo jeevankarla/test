@@ -539,6 +539,7 @@ under the License.
             title="Holiday calendar Entity">
         <field name="customTimePeriodId" type="id-ne"/>
          <field name="organizationPartyId" type="id-ne"/>
+          <field name="stateName" type="description"/>
         <field name="holiDayDate" type="date-time"/>
         <field name="description" type="description"/>
         <field name="createdByUserLogin" type="id-vlong"></field>
