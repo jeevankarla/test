@@ -4295,7 +4295,7 @@ public class DepotSalesServices{
 			
 			productName = productName + attrValue;
 			if(attribute.equals("PLY")){
-				if( (productCategoryId.equals("COTTON")) || (productCategoryId.equals("WOOL")) || (productCategoryId.equals("STAPLE")) || (productCategoryId.equals("ACRYLIC"))){
+				if( (productCategoryId.equals("COTTON")) || (productCategoryId.equals("WOOL")) || (productCategoryId.equals("STAPLE")) || (productCategoryId.equals("ACRYLIC")) || (productCategoryId.equals("BLENDED"))){
 					productName = productName + "/";
 				}
 				else{
