@@ -20,14 +20,16 @@
 	import org.ofbiz.service.ServiceUtil;
 	import org.ofbiz.party.contact.ContactHelper;
 	
-	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.IN, ["SYNTHETIC","NATURAL_FIBERS"]));
-	Debug.log("condList=======sfcsd==============="+condList);
+	List prodCategoryIds = delegator.findList("ProductCategory", null,null,null,null,false);
+	
+	condList = [];
+	condList.add(EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN, EntityUtil.getFieldListFromEntityList(prodCategoryIds, "productCategoryId", true)));
 	productsIter = delegator.find("ProductAndCategoryAndCategoryMember",EntityCondition.makeCondition(condList, EntityOperator.AND), null,UtilMisc.toSet("productId","productName","primaryProductCategoryId","categoryName","productCategoryTypeId" ), ["productCategoryTypeId","primaryProductCategoryId", "categoryName"], null);
+	
 	List prodCategoryAttrType = delegator.findList("ProductCategoryAttributeType", null,null,null,null,false);
 	attributeTypeList = EntityUtil.getFieldListFromEntityList(prodCategoryAttrType, "attrTypeId", true);
-	Debug.log("attributeTypeList=======sfcsd==============="+attributeTypeList);
 	
 	List productAttributeList = delegator.findList("ProductAttribute", null,null,null,null,false);
 	
