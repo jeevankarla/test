@@ -4080,7 +4080,7 @@
                 <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
                 <set field="titleProperty" value="Create New Weaver"/>
-                <set field="tabButtonItem" value="Find Weaver"/>
+                <set field="tabButtonItem" value="producerSearch"/>
                 <set field="headerItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
