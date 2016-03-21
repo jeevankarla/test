@@ -2556,13 +2556,13 @@
                                             <!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link>
                                             <link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"/></link>
                                             <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
-                                            <link target="CreateAPInvoice" text="Create Cash Voucher" style="buttontext create" > 
+                                            <!-- <link target="CreateAPInvoice" text="Create Cash Voucher" style="buttontext create" > 
                                             	<parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter>
                                             	<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
                                             	<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
                                             	<parameter param-name="showCreateButton" value="Y"></parameter>
-                                            </link>
-                                        	<link target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" >
+                                            </link> -->
+                                        	<link target="CreateAPInvoice" text="Create New Invoice" style="buttontext create" >
                                         		<parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter>
                                         		<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
                                         		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
@@ -3043,13 +3043,13 @@
                                             		<!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter></link>
                                             		<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter></link>  -->
                                             		
-                                            		<link target="CreateARInvoice" text="Create Cash Voucher" style="buttontext create" > 
+                                            		<!-- <link target="CreateARInvoice" text="Create Cash Voucher" style="buttontext create" > 
 		                                            	<parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter>
 		                                            	<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
 		                                            	<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
 		                                            	<parameter param-name="showCreateButton" value="Y"></parameter>
-		                                            </link>
-		                                        	<link target="CreateARInvoice" text="Create Bank Voucher" style="buttontext create" >
+		                                            </link> -->
+		                                        	<link target="CreateARInvoice" text="Create New Invoice" style="buttontext create" >
 		                                        		<parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter>
 		                                        		<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
 		                                        		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
