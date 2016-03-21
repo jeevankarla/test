@@ -4071,6 +4071,7 @@ catch(Exception e){
        // String serviceTax = (String) context.get("USER_SERVICETAXNUM");
         String tinNumber= (String) context.get("USER_TINNUMBER");
         String cstNumber = (String) context.get("USER_CSTNUMBER");
+        String adharNumber = (String) context.get("USER_ADHNUMBER");
         String address1 = (String) context.get("address1");
         String address2 = (String) context.get("address2");
         String city = (String) context.get("city");
@@ -4275,37 +4276,42 @@ catch(Exception e){
   		}
         
         // Create Party Email
-        inMap.clear();
-        //inMap.put("userLogin", userLoginToRunAs);
-        inMap.put("userLogin", userLogin);
-        inMap.put("contactMechPurposeTypeId", "PRIMARY_EMAIL");
-        inMap.put("emailAddress", email);
-        inMap.put("partyId", partyId);
-        inMap.put("verified", "Y");
-        inMap.put("fromDate", UtilDateTime.nowTimestamp());
-        try{
-        	outMap = dispatcher.runSync("createPartyEmailAddress", inMap);
-            if(ServiceUtil.isError(outMap)){
-           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
-           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
-            }
-        }catch(GenericServiceException e){
-	  		Debug.logError(e, e.toString(), module);
-	  		return ServiceUtil.returnError(e.toString());
-  		}
-        try{
-		        if(UtilValidate.isNotEmpty(panId)){
+        if(UtilValidate.isNotEmpty(email)){
+	        inMap.clear();
+	        //inMap.put("userLogin", userLoginToRunAs);
+	        inMap.put("userLogin", userLogin);
+	        inMap.put("contactMechPurposeTypeId", "PRIMARY_EMAIL");
+	        inMap.put("emailAddress", email);
+	        inMap.put("partyId", partyId);
+	        inMap.put("verified", "Y");
+	        inMap.put("fromDate", UtilDateTime.nowTimestamp());
+	        try{
+	        	outMap = dispatcher.runSync("createPartyEmailAddress", inMap);
+	            if(ServiceUtil.isError(outMap)){
+	           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+	            }
+	        }catch(GenericServiceException e){
+		  		Debug.logError(e, e.toString(), module);
+		  		return ServiceUtil.returnError(e.toString());
+	  		}
+        }
+     try{
+		     if(UtilValidate.isNotEmpty(panId)){
 		       	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
-		  	    }
-		       if(UtilValidate.isNotEmpty(passBook)){
-		      	     dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"userLogin", context.get("userLogin")));
-		 	    }
-		       if(UtilValidate.isNotEmpty(tinNumber)){
-		         	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","TIN_NUMBER","idValue",tinNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
-		    	}
-		       if(UtilValidate.isNotEmpty(cstNumber)){
-		        	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
-		   		}
+		  	  }
+		     if(UtilValidate.isNotEmpty(passBook)){
+		        dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"userLogin", context.get("userLogin")));
+		 	  }
+		     if(UtilValidate.isNotEmpty(adharNumber)){
+	      	     dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","ADR_NUMBER","idValue",adharNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+		     }
+		     if(UtilValidate.isNotEmpty(tinNumber)){
+		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","TIN_NUMBER","idValue",tinNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+		     }
+		     if(UtilValidate.isNotEmpty(cstNumber)){
+		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+		   	 }
         }catch(GenericServiceException e){
 	  		Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());

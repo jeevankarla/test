@@ -145,6 +145,7 @@
         <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
         <attribute name="USER_TINNUMBER" mode="IN" type="String" optional="true"/> 
         <attribute name="USER_CSTNUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_ADHNUMBER" mode="IN" type="String" optional="true"/>
         <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="partyClassificationTypeId" mode="IN" type="String" optional="false"></attribute>

@@ -108,21 +108,25 @@ function datepick()	{
 									     	}, 800);
 								  	return false;
 							  	 }
-							  	 var emailAddress=$('#emailAddress').val();
-			             		  if( (emailAddress).length < 1 ) {
-									 $('#emailAddress').css('background', 'red');
-									  jQuery('#emailAddress').after("<div class='EMAILLabel'><font color='red'>Please Enter Email.</font></div>");
-									 setTimeout(function () {
-									        $('#emailAddress').css('background', 'white').focus(); 
-									        $('.EMAILLabel').remove();
-									     	}, 800);
-								  	return false;
-							  	 }
+							  	 
 							  	 
                  	                 	
                  	   }	
-                 	    
-                
+                 	  if(currentIndex==2){
+                 	  	var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
+                		if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
+		                 	    var adrNum=$('#USER_ADHNUMBER').val();
+					             		  if( (adrNum).length < 1 ) {
+											 $('#USER_ADHNUMBER').css('background', 'red');
+											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Adhar Number.</font></div>");
+											 setTimeout(function () {
+											        $('#USER_ADHNUMBER').css('background', 'white').focus(); 
+											        $('.ADHRLabel').remove();
+											     	}, 800);
+										  	return false;
+									  	 }
+		               		 }
+		               }
                 	return true;
                 },
                 onFinishing: function (event, currentIndex)
@@ -357,7 +361,7 @@ function datepick()	{
 				          
 									</tr>
 									<tr>
-									    <td class="label"><b><FONT COLOR="red">*</font> E-mail Address :</b></td>
+									    <td class="label"><b>E-mail Address :</b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
