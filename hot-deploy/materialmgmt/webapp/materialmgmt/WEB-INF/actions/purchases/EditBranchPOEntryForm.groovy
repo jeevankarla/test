@@ -75,12 +75,16 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	refNo = "";
 	thruDate = "";
 	fromDate = "";
+	quotationNo = "";
 	orderAttr.each{ eachAttr ->
 		if(eachAttr.attrName == "FILE_NUMBER"){
 			fileNo =  eachAttr.attrValue;
 		}
 		if(eachAttr.attrName == "REF_NUMBER"){
 			refNo = eachAttr.attrValue;
+		}
+		if(eachAttr.attrName == "QUOTATION_NUMBER"){
+			quotationNo = eachAttr.attrValue;
 		}
 		if(eachAttr.attrName == "VALID_FROM"){
 			fromDate = eachAttr.attrValue;
@@ -91,6 +95,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	}
 	orderInfoDetail.putAt("fileNo", fileNo);
 	orderInfoDetail.putAt("refNo", refNo);
+	orderInfoDetail.putAt("quotationNo", quotationNo);
 	orderInfoDetail.putAt("validFromDate", fromDate);
 	orderInfoDetail.putAt("validThruDate", thruDate);
 	
