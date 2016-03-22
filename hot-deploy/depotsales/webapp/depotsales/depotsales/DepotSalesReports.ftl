@@ -63,6 +63,17 @@ function makeDatePicker3(fromDateId ,thruDateId){
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row">
+			<form id="customerMasters" name="customerMasters" method="post" action="<@ofbizUrl>CustomerMasters.csv</@ofbizUrl>" target="_blank">	
+				<td width="30%">Customer Masters</td>
+				<td width="15%"></td>
+			    <td width="15%"></td>
+      			<td></td>
+      			<td width="15%"></td>
+				<td width="10%">
+				<input type="submit" value="CSV" onClick="javascript:appendParams('customerMasters', '<@ofbizUrl>CustomerMasters.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+          </tr>
+      	<tr class="alternate-row">
 			<form id="supplierMasters" name="supplierMasters" method="post" action="<@ofbizUrl>SupplierMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Supplier Masters</td>
 				<td width="15%"></td>

@@ -1542,10 +1542,15 @@
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ProductMastersCSV"/>
     </request-map>
+    <request-map uri="CustomerMasters.csv">
+     	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CustomerMastersCSV"/>
+    </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
 	<view-map name="ProductMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#ProductMastersCSV" content-type="text/csv"/>
+	<view-map name="CustomerMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerMastersCSV" content-type="text/csv"/>
 	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
     <view-map name="CreateNewWeaver" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewWeaver"/>
