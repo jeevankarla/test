@@ -260,15 +260,18 @@
 	}else{
 		if(parameters.screenFlag){
 			if(parameters.screenFlag == "CottonIndent"){
-				//catIds=["COTTON_40ABOVE","COTTON_UPTO40"];
-				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,["HANK_CROSS_REEL","HANK_PLAIN_REEL"]));
+				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,["COTTON_GREY","CHENILE", "SLUB", "WASTE"]));
 			}else if(parameters.screenFlag == "SilkIndent"){
-				//catIds=["SILK_YARN"];
-				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.LIKE,"%SILK%"));
+				condList = [];
+				condList.add(EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.EQUALS, "SILK"));
+				List prodCategoryIds = delegator.findList("ProductCategory", EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
+				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(prodCategoryIds, "productCategoryId", true)));
 				
 			}else if(parameters.screenFlag == "OtherIndent"){
-				//catIds=["WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
-				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.NOT_IN,["HANK_SILK","HANK_CROSS_REEL","HANK_PLAIN_REEL"]));
+				condList = [];
+				condList.add(EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.NOT_IN, ["COTTON", "SILK"]));
+				List prodCategoryIds = delegator.findList("ProductCategory", EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
+				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,prodCategoryIds));
 			}
 		}
 	}
