@@ -1348,6 +1348,7 @@ under the License.
         <alias entity-alias="PA" name="countryGeoId"/>
         <alias entity-alias="PA" name="stateProvinceGeoId"/>
         <alias entity-alias="PA" name="postalCodeGeoId"/>
+        <alias entity-alias="PA" name="districtGeoId"/>
         <view-link entity-alias="PTY" rel-entity-alias="PCM">
             <key-map field-name="partyId"/>
         </view-link>
