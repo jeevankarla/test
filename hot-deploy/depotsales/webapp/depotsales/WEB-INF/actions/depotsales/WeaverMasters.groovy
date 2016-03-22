@@ -101,7 +101,9 @@
 	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("roleTypeIdTo" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-	//condList.add(EntityCondition.makeCondition("roleTypeIdTo" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+
+	//condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, "62690"));
 	
 	if(partyId!=null && partyId!=""){
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,partyId.trim()));
@@ -122,17 +124,23 @@
 	prodsEli = delegator.findListIteratorByCondition(partyRoleAndIde, cond, null,null,null,null);
 	groupNameList = prodsEli.getCompleteList();
 	
-	partyIdsList =  EntityUtil.getFieldListFromEntityListIterator(prodsEli, "partyId", true);
+	partyIdsList =  EntityUtil.getFieldListFromEntityList(groupNameList, "partyId", true);
 	
+
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIdsList));
-	partyLoomDetails = delegator.findList("PartyLoom",EntityCondition.makeCondition(conditionList,EntityOperator.AND),UtilMisc.toSet("partyId","loomTypeId","quantity"),null,null,false);
+	partyLoomDetails = delegator.findList("PartyLoom",null,UtilMisc.toSet("partyId","loomTypeId","quantity"),null,null,false);
 	//Debug.log("PartyLoomDetails = "+PartyLoomDetails);
 	
 	facilityCond=[];
 	facilityCond.add(EntityCondition.makeCondition("ownerPartyId" ,EntityOperator.IN, partyIdsList));
 	faccond = EntityCondition.makeCondition(facilityCond, EntityOperator.AND);
-	DepotFacilityList = delegator.findList("Facility", faccond , UtilMisc.toSet("ownerPartyId","openedDate"), null, null, false );
+	DepotFacilityList = delegator.findList("Facility", null , UtilMisc.toSet("ownerPartyId","openedDate"), null, null, false );
+	
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIdsList));
+	conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
+	postalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyId","address1","address2","city","postalCode", "stateProvinceGeoId", "districtGeoId", "countryGeoId"),null,null,false);
 	
 	
 	finalList =[];
@@ -179,7 +187,8 @@
 		*/
 		
 		facilityDepot = EntityUtil.getFirst(EntityUtil.filterByCondition(DepotFacilityList, EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachPartyId)));
-      	
+      		//Debug.log("facilityDepot ================================="+facilityDepot );
+
         String Depot="NO";
        	String DAO="";
        	if(UtilValidate.isNotEmpty(facilityDepot)){
@@ -206,21 +215,51 @@
 		
 		tempMap.put("storeName",branchId);
 		
-		weaverMap = [:];
-        weaverMap.putAll(tempMap);
-        
-		finalList.add(weaverMap);
 		
+		// Postal Address
+       	partyPostalAddress = EntityUtil.filterByCondition(postalAddress, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
+
+       	if(UtilValidate.isNotEmpty(partyPostalAddress)){
+           	activePostalAddress = EntityUtil.getFirst(partyPostalAddress);
+           	
+           	fullAddress = "";
 		
-		
+			if(customer.get("address1")){
+				fullAddress = fullAddress + activePostalAddress.get("address1") + ", ";
+			}
+			if(customer.get("address2")){
+				fullAddress = fullAddress + activePostalAddress.get("address2") + ", ";
+			}
+			if(customer.get("city")){
+				fullAddress = fullAddress + activePostalAddress.get("city")+ "-";
+			}
+			if(customer.get("postalCode")){
+				fullAddress = fullAddress + activePostalAddress.get("postalCode");
+			}
+           	
+           	
+           	tempMap.put("fullAddress",fullAddress);
+			tempMap.put("stateProvinceGeoId",customer["stateProvinceGeoId"]);
+			tempMap.put("districtGeoId",customer["districtGeoId"]);
+           	
+        }
+
 		// Get Party Loom
 		
-       	partyLoomDetailsList = EntityUtil.filterByCondition(partyLoomDetails, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
-        
+		partyLoomDetailsList = EntityUtil.filterByCondition(partyLoomDetails, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
+        //Debug.log("facilityDepot ================================="+facilityDepot );
+
        	if(UtilValidate.isNotEmpty(partyLoomDetailsList)){
            	tempMap.put("loomType",(EntityUtil.getFirst(partyLoomDetailsList)).get("loomTypeId"));
            	tempMap.put("qty",(EntityUtil.getFirst(partyLoomDetailsList)).get("quantity"));
         }
+        
+		weaverMap = [:];
+        weaverMap.putAll(tempMap);
+        //Debug.log("weaverMap================================="+weaverMap);
+
+		finalList.add(weaverMap);
+
         
 		if(partyLoomDetailsList.size() > 1){
 			for(int i=1; i<partyLoomDetailsList.size(); i++){
