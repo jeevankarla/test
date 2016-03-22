@@ -579,6 +579,17 @@ function populateData(){
         				 </td>
 					</tr>
 					<tr>
+					    <td class="label"><b>Quotation No. :</b></td>
+					    <td>
+					    	<#if orderId?exists && orderInfo.get("quotationNo")?exists>
+					    		<input type="text" name="quotationNo" id="quotationNo" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("quotationNo")?if_exists}"/>
+					    	<#else>
+						      	<input type="text" name="quotationNo" id="quotationNo" size="18" maxlength="60" autocomplete="off"/>
+					      	</#if>
+					      
+        				 </td>
+					</tr>
+					<tr>
 					    <td class="label"><b>Estimated Delivery Date :</b></td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("estimatedDeliveryDate")?exists>

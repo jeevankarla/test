@@ -65,13 +65,15 @@ under the License.
 			   <fo:table-column column-width="100pt"/>               
 				   <fo:table-body>
 				       <fo:table-row>
-				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >PO NO   &#160;: ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
+				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >PO NO   &#160;  : ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >PO DATED</fo:block></fo:table-cell>       		
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  > :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
-						   <fo:table-cell><fo:block text-align="left" font-size="11pt">&#160;</fo:block></fo:table-cell>
+				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  ><#if allDetailsMap.get("refNo")?has_content> Reference NO   &#160;: ${allDetailsMap.get("refNo")?if_exists}</#if></fo:block></fo:table-cell>
+   				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always"><#if allDetailsMap.get("quotationNo")?has_content>QUOTATION NO:${allDetailsMap.get("quotationNo")?if_exists}</#if></fo:block></fo:table-cell>       			
                        </fo:table-row>
 			       </fo:table-body>
 			  </fo:table>

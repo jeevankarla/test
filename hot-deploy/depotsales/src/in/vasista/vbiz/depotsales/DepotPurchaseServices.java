@@ -911,6 +911,8 @@ public class DepotPurchaseServices{
 		String billFromVendorPartyId = (String) request.getParameter("billToPartyId");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderId = (String) request.getParameter("orderId");
+		String refNo = (String) request.getParameter("refNo");
+		String quotationNo = (String) request.getParameter("quotationNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		String effectiveDateStr = (String) request.getParameter("orderDate");
 		String partyIdTo = (String) request.getParameter("shipToPartyId");
@@ -1024,6 +1026,8 @@ public class DepotPurchaseServices{
 				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 				processOrderContext.put("productStoreId", productStoreId);
 				processOrderContext.put("PONumber", orderId);
+				processOrderContext.put("refNo", refNo);
+				processOrderContext.put("quotationNo", quotationNo);
 				processOrderContext.put("orderName", orderName);
 				//processOrderContext.put("fileNo", fileNo);
 				//processOrderContext.put("refNo", refNo);
@@ -1164,6 +1168,7 @@ public class DepotPurchaseServices{
         Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
 		String orderName = (String)context.get("orderName");
 		String fileNo = (String)context.get("fileNo");
+		String quotationNo = (String)context.get("quotationNo");
 		String refNo = (String)context.get("refNo");
 		String orderId = "";		
 	  	String currencyUomId = "INR";
@@ -1234,7 +1239,9 @@ public class DepotPurchaseServices{
 			if(UtilValidate.isNotEmpty(thruDate)){
 				cart.setOrderAttribute("VALID_THRU",thruDate);
 			}
-			
+			if(UtilValidate.isNotEmpty(quotationNo)){
+				cart.setOrderAttribute("QUOTATION_NUMBER",quotationNo);
+			}
 		} catch (Exception e) {
 			
 			Debug.logError(e, "Error in setting cart parameters", module);

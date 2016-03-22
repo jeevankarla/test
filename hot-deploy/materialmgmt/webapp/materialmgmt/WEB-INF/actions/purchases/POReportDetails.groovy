@@ -292,6 +292,11 @@ if(referNumber){
 	refNo=referNumber.get("attrValue");
 	allDetailsMap.put("refNo",refNo);
 }
+quotationNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"QUOTATION_NUMBER"],false);
+if(quotationNumber){
+	quotationNo=quotationNumber.get("attrValue");
+	allDetailsMap.put("quotationNo",quotationNo);
+}
 
 //OrderHeaderNote
 orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId),EntityCondition.makeCondition("internalNote",EntityOperator.EQUALS,"N")],EntityOperator.AND)  , null, null, null, false );
