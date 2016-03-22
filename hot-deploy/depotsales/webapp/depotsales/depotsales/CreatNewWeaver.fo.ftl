@@ -47,7 +47,8 @@ function datepick()	{
 			      $('#daoDate').hide();
 			      $('#salutationlabel').hide();
 			      $('#salutation').hide();
-
+				  $('#USER_ADHNUMBER').hide();
+			      $('#ADHLABEL').hide();
       	      $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -163,6 +164,8 @@ function datepick()	{
 				 $('#midNamelabel').show();
 				 $("#lastName").show();
 				 $('#lastNamelabel').show();
+			      $('#USER_ADHNUMBER').show();
+			      $('#ADHLABEL').show();	      
 				  $('#daoDatelabel').hide();
 			      $('#daoDate').hide();
 			      $('#Depotlabel').hide();
@@ -179,6 +182,8 @@ function datepick()	{
 				  $('#midNamelabel').hide();
 				  $("#lastName").hide();
 				  $('#lastNamelabel').hide();
+			      $('#USER_ADHNUMBER').hide();
+			      $('#ADHLABEL').hide();
 				  $('#Depotlabel').show();
 			      $('#Depot').show();
 			       $('#groupNamelabel').show();
@@ -483,7 +488,7 @@ function datepick()	{
 							        </tr>
 							         <tr>
 							         
-			                        <td class="label"><b>Aadhar Number :</b></td>
+			                        <td class="label" id="ADHLABEL"><FONT COLOR="red">*</font><b>Aadhar Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
 			          				</td>
