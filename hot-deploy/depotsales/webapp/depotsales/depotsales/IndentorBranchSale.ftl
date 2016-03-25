@@ -412,7 +412,7 @@
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
-		            			<div><font color="green">${parameters.schemeCategory?if_exists}</div>
+		            			<div><font color="green"><#if parameters.schemeCategory == "MGPS_10Pecent">MGPS + 10% <#else>${parameters.schemeCategory?if_exists}</#if></div>
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
