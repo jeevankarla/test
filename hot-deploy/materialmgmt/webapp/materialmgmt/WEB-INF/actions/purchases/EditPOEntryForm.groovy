@@ -257,6 +257,12 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);
+		uomId=prodDetail.quantityUomId;
+		unitDetails = delegator.findOne("Uom",["uomId":uomId],false);		
+		if(unitDetails){
+			uomDescription = unitDetails.abbreviation;
+			newObj.put("uomDescription",uomDescription);
+		}
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
 		if(eachItem.bedPercent){
