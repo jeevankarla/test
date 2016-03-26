@@ -931,7 +931,6 @@
        		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
        		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
        		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
-       		data[args.row]['quantity'] = data[currentrow-1]["quantity"];
        		data[args.row]['amount'] = data[currentrow-1]["amount"];
        		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
 		   	var qut=0;
@@ -965,6 +964,7 @@
 							qut = 0;
 						}
 				data[args.row]["quota"] = qut;
+       			data[args.row]['quantity'] =qut;
       		 grid.updateRow(args.row);
       		 }
       		 }

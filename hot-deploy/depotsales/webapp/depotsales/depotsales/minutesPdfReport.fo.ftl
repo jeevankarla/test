@@ -68,10 +68,10 @@ under the License.
 			            <fo:table-column column-width="25%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="17%"/>
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="15%"/>
 			            <#--<fo:table-column column-width="10%"/>-->
 			            
 			            <fo:table-body>
@@ -127,7 +127,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists}/kgs</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> </fo:block>
@@ -136,7 +136,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>
@@ -156,10 +156,10 @@ under the License.
 			            <fo:table-column column-width="10%"/>
 			             <#--<fo:table-column column-width="10%"/>-->
 			            <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="10%"/>
+	                    <fo:table-column column-width="15%"/>
+			            <fo:table-column column-width="12%"/>
+			            <fo:table-column column-width="12%"/>
+			            <fo:table-column column-width="12%"/>
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
@@ -220,7 +220,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists}/kgs</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					                <#assign purchValue = 0>
@@ -229,13 +229,13 @@ under the License.
                                           <#assign purchaeTot =purchaeTot+purchValue>
 					                 </#if>
 					                 <#assign toTunitPrice = toTunitPrice+purchValue>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists}<#else>&#160;</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists?string("#0.00")}<#else>&#160;</#if></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists}<#else>&#160;</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists?string("#0.00")}<#else>&#160;</#if></fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>
@@ -257,13 +257,13 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${toTunitPrice}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${toTunitPrice?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${toTunitPrice} </fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${toTunitPrice?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 						</fo:table-body>
@@ -272,8 +272,8 @@ under the License.
 				<fo:block>${Scheam?if_exists}</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
-				<fo:block>a) Actual Purchase Value: ${purchaeTot}</fo:block>
-				<fo:block>b) Total Sale Value     : ${purchaeTot}</fo:block>
+				<fo:block>a) Actual Purchase Value: ${purchaeTot?string("#0.00")}</fo:block>
+				<fo:block>b) Total Sale Value     : ${purchaeTot?string("#0.00")}</fo:block>
 				<fo:block>c) Difference of the Sale</fo:block>
 				<fo:block>e) Value &amp;actual payment made to Mill:</fo:block>
 				<fo:block>f) 0 days interest on the credit:</fo:block>

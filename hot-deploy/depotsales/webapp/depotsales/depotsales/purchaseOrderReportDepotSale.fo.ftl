@@ -100,10 +100,10 @@ under the License.
               <#--	<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block> -->
 		 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;</fo:block>
 		 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Reference : Your quotation no : against your purchase enquiry no</fo:block>
-         <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("supplierName")?has_content>&#160;&#160;${allDetailsMap.get("supplierName")}  <#else> </#if>        </fo:block>
+      <#--<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("supplierName")?has_content>&#160;&#160;${allDetailsMap.get("supplierName")}  <#else> </#if>        </fo:block>
          <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("address1")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
          <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("address2")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("address2")?if_exists} <#else> </#if>     </fo:block>
-         <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("city")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("city")?if_exists}-${allDetailsMap.get("postalCode")?if_exists}. <#else> </#if>                          </fo:block>
+         <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("city")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("city")?if_exists}-${allDetailsMap.get("postalCode")?if_exists}. <#else> </#if>                          </fo:block> -->
       	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;</fo:block>
       	 <fo:block>
       		<fo:table width="100%" align="right" table-layout="fixed"  font-size="11pt">
@@ -133,8 +133,8 @@ under the License.
             <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="140pt"/>
        	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
+       	    <fo:table-column column-width="90pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-column column-width="110pt"/>
                <fo:table-body text-align="center">
                   <#assign sNo=1>
@@ -147,7 +147,7 @@ under the License.
   				  	   <fo:table-cell ><fo:block text-align="left" font-size="12pt"> ${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("remarks")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
-  			           <fo:table-cell  ><fo:block text-align="right"   font-size="12pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
+  			           <fo:table-cell  ><fo:block text-align="left"   font-size="12pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="12pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				     </fo:table-row>
   				    	<#assign sNo=sNo+1>

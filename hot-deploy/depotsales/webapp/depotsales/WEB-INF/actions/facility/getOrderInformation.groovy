@@ -68,14 +68,14 @@ for (eachItem in orderItems) {
 	orderDetail.put("productId", eachItem.productId);
 	orderDetail.put("prductName", eachItem.itemDescription);
 	orderDetail.put("quantity", eachItem.quantity);
-	orderDetail.put("unitPrice", eachItem.unitPrice);
-	orderDetail.put("itemAmt", (eachItem.quantity)*(eachItem.unitPrice));
+	orderDetail.put("unitPrice", eachItem.unitPrice.setScale(2,0));
+	orderDetail.put("itemAmt", ((eachItem.quantity.setScale(2,0))*(eachItem.unitPrice.setScale(2,0))));
 	orderDetail.put("statusId", eachItem.statusId);
 	orderDetail.put("adjustmentAmount", adjustmentAmount);
 	orderDetail.put("quotaAvbl", quotaAvbl);
 	orderDetail.put("remarks", remarks);
 
-	orderDetail.put("payableAmt", (eachItem.quantity)*(eachItem.unitPrice) + adjustmentAmount);
+	orderDetail.put("payableAmt", (((eachItem.quantity).setScale(2,0))*((eachItem.unitPrice).setScale(2,0)) + adjustmentAmount));
 	orderInformationDetails.add(orderDetail);
 	   
 }
