@@ -23,28 +23,6 @@
 	import org.ofbiz.entity.model.DynamicViewEntity
 	import org.ofbiz.entity.model.ModelKeyMap;
 	
-	
-	
-	
-	
-	//resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
-	
-	
-	/*
-	Map formatMap = [:];
-	List formatList = [];
-	
-		for (eachList in resultCtx.get("productStoreList")) {
-			
-			formatMap = [:];
-			formatMap.put("productStoreName",eachList.get("storeName"));
-			formatMap.put("payToPartyId",eachList.get("payToPartyId"));
-			formatList.addAll(formatMap);
-			
-		}
-	context.formatList = formatList;
-	*/
-	
 	branchId = parameters.branchId;
 	passbookNumber = parameters.passbookNumber;
 	partyId = parameters.partyId;
@@ -88,10 +66,6 @@
     //partyRoleAndIde.addAlias("PPA", "city", null, null, null, Boolean.TRUE, null);
     //partyRoleAndIde.addAlias("PPA", "postalCode", null, null, null, Boolean.TRUE, null);
     //partyRoleAndIde.addAlias("PPA", "stateProvinceGeoId", null, null, null, Boolean.TRUE, null);
-	
-	
-	
-	
 	
 	
 	partyRoleAndIde.addViewLink("PRPD","PID", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
@@ -142,6 +116,17 @@
 	conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
 	postalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyId","address1","address2","city","postalCode", "stateProvinceGeoId", "districtGeoId", "countryGeoId"),null,null,false);
 	
+	conditionList=[];
+	//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIdsList));
+	conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
+	productStoreList = delegator.findList("ProductStore", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productStoreId","payToPartyId","storeName"),null,null,false);
+
+	geoList = delegator.findList("Geo", null ,UtilMisc.toSet("geoId","geoName"),null,null,false);
+	geoNameMap = [:];
+	for(geo in geoList){
+		geoNameMap.put(geo.get("geoId"), geo.get("geoName"));
+	}
+	
 	
 	finalList =[];
 	i=0;
@@ -178,14 +163,6 @@
 		tempMap.put("tinNumber",customer["tinNumber"]);
 		tempMap.put("panId",customer["panId"]);
 		
-		/*
-		tempMap.put("address1",customer["address1"]);
-		tempMap.put("address2",customer["address2"]);
-		tempMap.put("city",customer["city"]);
-		tempMap.put("postalCode",customer["postalCode"]);
-		tempMap.put("stateProvinceGeoId",customer["stateProvinceGeoId"]);
-		*/
-		
 		facilityDepot = EntityUtil.getFirst(EntityUtil.filterByCondition(DepotFacilityList, EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachPartyId)));
       		//Debug.log("facilityDepot ================================="+facilityDepot );
 
@@ -200,54 +177,58 @@
        	tempMap.put("depot",Depot);
        	tempMap.put("daoDate",DAO);
        	
-       	/*
-		if(UtilValidate.isNotEmpty(branchId)){
-			result = EntityUtil.filterByCondition(resultCtx.get("productStoreList"), EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS, branchId));
+       	if(UtilValidate.isNotEmpty(branchId)){
+			result = EntityUtil.filterByCondition(productStoreList, EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS, branchId));
 			if(UtilValidate.isNotEmpty(result[0].get("storeName"))){
 				tempMap.put("storeName",result[0].get("storeName"));
 			}else{
-			  	tempMap.put("storeName","");
+			  	tempMap.put("storeName",branchId);
 			}
 		}else{
 			tempMap.put("storeName","");
 		}
-		*/
-		
-		tempMap.put("storeName",branchId);
 		
 		
 		// Postal Address
        	partyPostalAddress = EntityUtil.filterByCondition(postalAddress, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
-
+	
        	if(UtilValidate.isNotEmpty(partyPostalAddress)){
            	activePostalAddress = EntityUtil.getFirst(partyPostalAddress);
            	
            	fullAddress = "";
 		
-			if(customer.get("address1")){
-				fullAddress = fullAddress + activePostalAddress.get("address1") + ", ";
+			if(activePostalAddress.get("address1")){
+				fullAddress = fullAddress + activePostalAddress.get("address1");
 			}
-			if(customer.get("address2")){
-				fullAddress = fullAddress + activePostalAddress.get("address2") + ", ";
+			if(activePostalAddress.get("address2")){
+				fullAddress = fullAddress + ", " + activePostalAddress.get("address2");
 			}
-			if(customer.get("city")){
-				fullAddress = fullAddress + activePostalAddress.get("city")+ "-";
+			if(activePostalAddress.get("city")){
+				fullAddress = fullAddress + ", " + activePostalAddress.get("city");
 			}
-			if(customer.get("postalCode")){
-				fullAddress = fullAddress + activePostalAddress.get("postalCode");
+			if(activePostalAddress.get("postalCode")){
+				fullAddress = fullAddress + "-" + activePostalAddress.get("postalCode");
 			}
-           	
            	
            	tempMap.put("fullAddress",fullAddress);
-			tempMap.put("stateProvinceGeoId",customer["stateProvinceGeoId"]);
-			tempMap.put("districtGeoId",customer["districtGeoId"]);
+           	
+           	if(activePostalAddress.get("stateProvinceGeoId")){
+           		if(geoNameMap.get(activePostalAddress.get("stateProvinceGeoId"))){
+           			tempMap.put("stateProvinceGeoId",geoNameMap.get(activePostalAddress.get("stateProvinceGeoId")));
+           		}
+           	}
+           	
+           	if(activePostalAddress.get("districtGeoId")){
+           		if(geoNameMap.get(activePostalAddress.get("districtGeoId"))){
+           			tempMap.put("districtGeoId",geoNameMap.get(activePostalAddress.get("districtGeoId")));
+           		}
+           	}
            	
         }
 
 		// Get Party Loom
 		
 		partyLoomDetailsList = EntityUtil.filterByCondition(partyLoomDetails, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
-        //Debug.log("facilityDepot ================================="+facilityDepot );
 
        	if(UtilValidate.isNotEmpty(partyLoomDetailsList)){
            	tempMap.put("loomType",(EntityUtil.getFirst(partyLoomDetailsList)).get("loomTypeId"));
@@ -256,7 +237,6 @@
         
 		weaverMap = [:];
         weaverMap.putAll(tempMap);
-        //Debug.log("weaverMap================================="+weaverMap);
 
 		finalList.add(weaverMap);
 
@@ -282,6 +262,3 @@
 	Debug.log("finalList ==============================="+finalList.size());
 	
 	context.listIt = finalList;
-	
-	
-	
