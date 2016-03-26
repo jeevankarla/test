@@ -1973,6 +1973,7 @@
         
         <field name="loomType" title="Quota Category"><display/></field>
         <field name="qty" title="No of Looms"><display/></field>
+        <field name="ledgerQuota" title="Ledger Quota"><display/></field>
         
         
         

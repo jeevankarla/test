@@ -127,6 +127,13 @@
 		geoNameMap.put(geo.get("geoId"), geo.get("geoName"));
 	}
 	
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS,"TEN_PERCENT_MGPS"));
+	schemeCategories = delegator.findList("SchemeProductCategory", null ,UtilMisc.toSet("productCategoryId","maxQty"),null,null,false);
+	schemeQtyMap = [:];
+	for(category in schemeCategories){
+		schemeQtyMap.put(category.get("productCategoryId"), category.get("maxQty"));
+	}
 	
 	finalList =[];
 	i=0;
@@ -231,8 +238,16 @@
 		partyLoomDetailsList = EntityUtil.filterByCondition(partyLoomDetails, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
 
        	if(UtilValidate.isNotEmpty(partyLoomDetailsList)){
-           	tempMap.put("loomType",(EntityUtil.getFirst(partyLoomDetailsList)).get("loomTypeId"));
-           	tempMap.put("qty",(EntityUtil.getFirst(partyLoomDetailsList)).get("quantity"));
+       	
+       		loomType = (EntityUtil.getFirst(partyLoomDetailsList)).get("loomTypeId");
+       		noOfLooms = (EntityUtil.getFirst(partyLoomDetailsList)).get("quantity");
+       		
+           	tempMap.put("loomType", loomType);
+           	tempMap.put("qty", noOfLooms);
+           	
+           	maxQtyPerLoom = schemeQtyMap.get(loomType);
+           	tempMap.put("ledgerQuota", noOfLooms*maxQtyPerLoom);
+           	
         }
         
 		weaverMap = [:];
@@ -248,6 +263,10 @@
 				tempMap = [:];
 				tempMap.put("loomType",addLoom.get("loomTypeId"));
            		tempMap.put("qty",addLoom.get("quantity"));
+           		
+           		maxQtyPerLoom = schemeQtyMap.get(addLoom.get("loomTypeId"));
+           		tempMap.put("ledgerQuota", (addLoom.get("quantity"))*maxQtyPerLoom);
+           		
            		
            		weaverMap = [:];
         		weaverMap.putAll(tempMap);
