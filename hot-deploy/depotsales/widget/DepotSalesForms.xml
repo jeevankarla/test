@@ -1958,21 +1958,22 @@
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="Party Code"><display/></field>
         <field name="groupName" title="Name"><display/></field>
+        <field name="fullAddress" title="fullAddress"><display/></field>
+        <field name="districtGeoId" title="District"><display/></field>
+        <field name="cluster" title="Cluster"><display/></field>
+        <field name="stateProvinceGeoId" title="State"><display/></field>
+        <field name="storeName" title="Branch"><display/></field>
+        
         <field name="partyClassificationGroupId" title="Agency Type"><display/></field>
+        <field name="depot" title="Depot Status"><display/></field>
+        <field name="daoDate" title="Date Of Depot Allotment"><display/></field>
+        
         <field name="passbookId" title="Passbook No"><display/></field>
         <field name="issueDate" title="Issue Date"><display/></field>
-        <field name="tinNumber" title="tinNumber"><display/></field>
         
-        <field name="depot" title="Depot"><display/></field>
-        <field name="daoDate" title="DOA"><display/></field>
+        <field name="loomType" title="Quota Category"><display/></field>
+        <field name="qty" title="No of Looms"><display/></field>
         
-        <field name="fullAddress" title="fullAddress"><display/></field>
-        <field name="stateProvinceGeoId" title="State"><display/></field>
-        <field name="districtGeoId" title="District"><display/></field>
-        
-        <field name="loomType" title="Loom Type"><display/></field>
-        <field name="qty" title="Qty"><display/></field>
-        <field name="storeName" title="Branch"><display/></field>
         
         
         
