@@ -312,6 +312,24 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
+				    <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ProbationReport.pdf")?exists) && (reportDetailsMap.get("ProbationReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("DepartmentCadreRankingReport.pdf"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="ProbationReport" name="ProbationReport" mothed="post" action="<@ofbizUrl>ProbationReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Probation Report</span></td>
+										<td width="50%"><span class='h3'>
+												Employee Id<@htmlTemplate.lookupField formName="EmployeePersonalProfile" name="employeeId" fieldFormName="LookupEmployeeName"/>
+											</span>
+										</td> 
+										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('ProbationReport', '<@ofbizUrl>ProbationReport.pdf</@ofbizUrl>');" class="buttontext"/>
+						                </td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>			
+				
 				</table>
 			</div>
 		</div>
