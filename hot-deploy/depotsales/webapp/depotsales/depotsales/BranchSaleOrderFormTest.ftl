@@ -603,10 +603,10 @@
 
 	<div class="righthalf">
 		<div class="screenlet">
+			<div class="grid-header" style="width:100%">
+	 			<label>Customer Details</label>
+			</div>
     		<div class="screenlet-body">
-		 		<div class="grid-header" style="width:100%">
-		 			<label>Customer Details</label>
-				</div>
 				 <form  name="partyDetails" id="partyDetails">
 				 	  	<hr class="style17"></hr>
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -721,10 +721,10 @@
 	
 	<div class="bottom">
 		<div class="screenlet" >
+			<div class="grid-header" style="width:100%">
+				<span id="totalAmount"></span>
+			</div>
 		    <div class="screenlet-body">
-		 		<div class="grid-header" style="width:100%">
-					<span id="totalAmount"></span>
-				</div>
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
 					<#assign formAction='processBranchSalesOrder'>			
