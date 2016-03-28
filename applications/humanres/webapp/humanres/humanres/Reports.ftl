@@ -711,6 +711,41 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("BankRequestLetterPdf.pdf")?exists) && (reportDetailsMap.get("BankRequestLetterPdf.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("BankRequestLetterPdf.pdf"))?exists))> 
+						<tr class="alternate-row">
+							<form id="BankRequestLetter" name="BankRequestLetter" mothed="post" action="<@ofbizUrl>BankRequestLetterPdf.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="23%"><span class='h3'>Bank Request Letter</span></td>
+										<td width="30%"><span class='h3'>Bank</span>
+											<select name="finAccountId" class='h4'>
+												<option value='All'>All</option>
+												<#list companyAccList as bank>    
+													<option value='${bank.finAccountId?if_exists}'>${bank.finAccountName?if_exists}</option>
+												</#list> 
+											</select>
+										</td>
+										<td width="30%"><span class='h3'>Period Id
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodList as customTimePeriod>
+													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								      					<#else>
+								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								                  		</option>
+								      				</#if>
+													 
+												</#list>
+											</select></span>
+										</td>
+										<td width="10%"><span class='h4'><input type="submit" value="PDF" onClick="javascript:appendParams('BankRequestLetter', '<@ofbizUrl>BankRequestLetterPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+										 
+										</td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
 					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("MonthlyBankStatement.pdf")?exists) && (reportDetailsMap.get("MonthlyBankStatement.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("MonthlyBankStatement.pdf"))?exists))> 
 						<tr class="alternate-row">
 							<form id="MonthlyBankStatement" name="MonthlyBankStatement" mothed="post" action="<@ofbizUrl>MonthlyBankStatement.pdf</@ofbizUrl>" target="_blank">
