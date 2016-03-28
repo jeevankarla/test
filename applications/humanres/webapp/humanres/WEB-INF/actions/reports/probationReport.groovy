@@ -23,8 +23,6 @@ def sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 partyId=parameters.employeeId;
 
-Debug.log("partyId============"+partyId);
-
 Timestamp effectiveDate = UtilDateTime.nowTimestamp();
 String todayDate = UtilDateTime.toDateString(effectiveDate,"yyyy-MM-dd");
 
@@ -54,7 +52,6 @@ if(UtilValidate.isNotEmpty(parameters.employeeId)){
 }else{
 	employeeList = employeeIdList;
 }
-Debug.log("employeeList=============="+employeeList);
 if(UtilValidate.isNotEmpty(employeeList)){
 	employeeList.each{ employee->
 		Map DetailsMap=FastMap.newInstance();
@@ -144,8 +141,7 @@ if(UtilValidate.isNotEmpty(EmplPayHistoryList)){
 		
 
 FinalMap.put(employee, DetailsMap);
-Debug.log("FinalMap================="+FinalMap);
-		
+
 }
 }
 
