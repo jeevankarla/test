@@ -50,7 +50,7 @@ under the License.
                 <parameter param-name="emplPositionId"/>
             </hyperlink>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+        <field name="partyId" title="Empl Name/Empl Code">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                 <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
@@ -63,7 +63,7 @@ under the License.
     <form name="ListEmplPositionsParty" extends="ListEmplPositions" list-name="ListEmplPositions">
         <actions>
             <entity-and entity-name="EmplPositionAndFulfillment">
-                <field-map field-name="employeePartyId" from-field="parameters.partyId"  title ="Empl Name/Empl Code" />
+                <field-map field-name="employeePartyId" from-field="parameters.partyId" />
             </entity-and>
         </actions>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"/></field>
