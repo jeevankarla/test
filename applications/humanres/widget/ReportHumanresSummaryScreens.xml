@@ -1831,8 +1831,7 @@
 			<set field="parameters.partyId" from-field="parameters.partyId"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>  
 			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />
-			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmpBankAdvise.groovy" /> 
-			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/MonthlyBankStatementpdf.groovy"/>   
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmpBankAdvise.groovy" />    
 		</actions>
 		<widgets>
 			<section>                                                      
