@@ -951,6 +951,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplyPayrollReports"></response>
     </request-map>
+    <request-map uri="PFReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="PFReports"></response>
+    </request-map>
     <request-map uri="CheckListReports">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="CheckListReports"></response>
@@ -2104,6 +2108,12 @@ under the License.
         <response name="success" type="view" value="GSLISReport"/>
         <response name="error" type="view" value="GSLISReport"></response>
     </request-map>
+     <request-map uri="Table9pdf.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="Table9pdf"/>
+        <response name="error" type="view" value="Table9pdf"></response>
+    </request-map>
+    
     <request-map uri="ProfessionalTaxReport.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="ProfessionalTaxReport"/>
@@ -2663,6 +2673,7 @@ under the License.
     <view-map name="AttendanceReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AttendanceReports"></view-map>
     <view-map name="PayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayrollReports"></view-map>
     <view-map name="StatutoryReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#StatutoryReports"></view-map>
+    <view-map name="PFReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PFReports"></view-map>
     <view-map name="SupplyPayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#SupplyPayrollReports"></view-map>
     <view-map name="CheckListReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#CheckListReports"></view-map>
     <view-map name="EditPartyDeduction" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeduction"/>
@@ -2767,6 +2778,7 @@ under the License.
     <view-map name="TaxRates" type="screen" page="component://humanres/widget/HumanresScreens.xml#TaxRates"></view-map>
     <view-map name="OtherInputs" type="screen" page="component://humanres/widget/HumanresScreens.xml#OtherInputs"></view-map>
     <view-map name="Form16Report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Form16Report" content-type="application/pdf" encoding="none"/>
+    <view-map name="Table9pdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Table9pdf" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
     <view-map name="FindHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindHoliday"/>
    	<view-map name="NewHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewHoliday"/>

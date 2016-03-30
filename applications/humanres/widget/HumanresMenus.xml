@@ -957,6 +957,10 @@
         	</condition>
         <link target="StatutoryReports"></link>
         </menu-item>  
+         <menu-item name="PFReports" title="PF Reports">
+          	
+        <link target="PFReports"></link>
+        </menu-item>  
         <menu-item name="SupplyPayrollReports" title="Supplementary Payroll Reports">
           	<condition>
         		<if-has-permission permission="HR" action="_SUPPAYROLL_REPORTS_VIEW"/>

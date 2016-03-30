@@ -1582,6 +1582,55 @@ function setOrgPartyId() {
 		</div>
 	</div>
 </#if>
+
+
+
+
+
+<#if reportFrequencyFlag =="PFReports">
+	<div>
+		<div class="screenlet">
+			<div class="screenlet-title-bar">
+			
+				<h3>Reports</h3>
+			</div>
+			<div class="screenlet-body">
+				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+				<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("Table9pdf.pdf")?exists) && (reportDetailsMap.get("Table9pdf.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("Table9pdf.pdf"))?exists))> 
+				   <tr class="alternate-row">
+                      <form id="Table9pdf" name="PF Report" mothed="post" action="<@ofbizUrl>Table9pdf.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+								    <td width="20%"><span class='h3'>PF Report</span></td>
+								    <td width="32%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											    <#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+												 
+											</#list>
+										</select>
+										</td>	
+									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('Table9pdf', '<@ofbizUrl>Table9pdf.pdf</@ofbizUrl>');" class="buttontext"/>
+								</tr>
+							</table>
+						</form>
+					</tr>
+				 </#if>	
+			    </table>
+			</div>
+		</div>
+	</div>
+</#if>
+
+
+
+
+
 <#if reportFrequencyFlag =="SupplyPayrollReports">
 	<div>
 		<div class="screenlet">
