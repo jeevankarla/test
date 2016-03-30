@@ -42,6 +42,10 @@ under the License.
         <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;BANK STATEMENT FOR OFFICERS AND STAFF</fo:block>
         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
         <fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) OF ${finAccDetails.finAccountName?if_exists} FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                             </fo:block>
+  	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+  	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+  	    <fo:block text-align="right" font-size="14pt" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                                                                  DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>
   	</fo:static-content>  	
     			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">  
      				<#assign emplDetails = companyBankDetails.getValue()>
@@ -50,6 +54,7 @@ under the License.
      					 <#assign netAmt=netAmt+BankAdvicePayRollMap.get(emplId).get("netAmt")?if_exists>
      					 <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(netAmt, "%indRupees-and-paiseRupees", locale)>
      				</#list>
+			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      	<fo:block>
@@ -72,8 +77,8 @@ under the License.
 						</fo:block>	
 						<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 						<fo:block>
-			        	Please Credit the Amounts written against individual names of employes N.H.D.C. Ltd. Which are given in the enclosed list.	
-			        	The total amount of ${netAmt?if_exists?string("#0.00")} (${amountWords} Only) may be debited our Current Account with you.	
+			        	Please credit the Amounts written against individual names of employes N.H.D.C. Ltd. Which are given in the enclosed list.	
+			        	The total amount of ${netAmt?if_exists?string("#0.00")} Rupees  (${amountWords} Only) may be debited our current Account with you.	
 			     	   </fo:block>
 			     	   
     			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
