@@ -117,7 +117,7 @@ under the License.
     </form>
     <form name="HolidayOptions" type="single" target="FindHoliday" 
         odd-row-style="header-row" default-table-style="basic-table">
-       <field name="customTimePeriodId" title="Period Id">
+       <field name="customTimePeriodId" title="Period Id"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
              <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_YEAR"/>
@@ -154,7 +154,7 @@ under the License.
     </form>
     <form name="NewHoliday" type="single" target="CreateHoliday"
         odd-row-style="header-row" default-table-style="basic-table">
-         <field name="customTimePeriodId" title="Period Id">
+         <field name="customTimePeriodId" title="Period Id" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
              <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_YEAR"/>
@@ -172,7 +172,7 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+		<field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="INDSTATE"/>
@@ -180,8 +180,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-		<field name="holidayDate" id-name="holidayDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
-       	<field name="description"  title="Description" required-field="true"><text/></field>
+		<field name="holidayDate" id-name="holidayDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()" required-field="true"><text  size="12"/></field>
+       	<field name="description"  title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
        	
 		 <field name="searchButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

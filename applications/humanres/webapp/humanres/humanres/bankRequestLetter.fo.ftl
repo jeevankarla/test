@@ -40,7 +40,12 @@ under the License.
 		<fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
         <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;(A GOVT. OF INDIA ENTERPRISE)</fo:block> 
         <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;BANK STATEMENT FOR OFFICERS AND STAFF</fo:block>
-        <fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                             </fo:block>
+        <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+        <fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) OF ${finAccDetails.finAccountName?if_exists} FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                             </fo:block>
+  	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+  	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+  	    <fo:block text-align="right" font-size="14pt" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                                                                  DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>
   	</fo:static-content>  	
     			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">  
      				<#assign emplDetails = companyBankDetails.getValue()>
@@ -51,24 +56,29 @@ under the License.
      				</#list>
 			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			      	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      	<fo:block>
 					    TO,
 					    </fo:block>
+					    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 					    <fo:block>
 					    THE BRANCH MANAGER	
 					    </fo:block>
 					    <fo:block>
                         ${finAccDetails.finAccountName?if_exists}	
 	                    </fo:block>
+	                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 	                    <fo:block>
                         SUBJECT:- STATEMENT OF SALARY FOR THE MONTH OF ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()} 	
 						</fo:block>
+						<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 						<fo:block>
 						Dear Sir,
 						</fo:block>	
+						<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 						<fo:block>
-			        	Please Credit the Amounts written against individual names of employes N.H.D.C. Ltd. Which are given in the enclosed list.	
-			        	THE TOTAL AMOUNT OF ${netAmt?if_exists?string("#0.00")} (${amountWords} Only) may be debited our Current Account with you.	
+			        	Please credit the Amounts written against individual names of employes N.H.D.C. Ltd. Which are given in the enclosed list.	
+			        	The total amount of ${netAmt?if_exists?string("#0.00")} Rupees  (${amountWords} Only) may be debited our current Account with you.	
 			     	   </fo:block>
 			     	   
     			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 

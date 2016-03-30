@@ -1157,6 +1157,42 @@
     		</widgets>
     	</section>
     </screen>
+     <screen name="PFReports">
+    	<section>
+    		<actions>  
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
+	    		<set field="titleProperty" value="PFReports"/>
+	            <set field="tabButtonItem" value="PFReports"/>
+				<set field="tabButtonItem2" value="PFReports" /> 
+				<set field="reportFrequencyFlag" value="PFReports"/>  	
+				
+                <entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+    		     <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
+    		    
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
     <screen name="SupplyPayrollReports">
     	<section>
     		<actions>  
