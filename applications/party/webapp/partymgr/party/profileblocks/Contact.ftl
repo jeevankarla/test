@@ -44,7 +44,7 @@ under the License.
 <#else>
             <tr><td colspan="4"><hr /></td></tr>
             <tr>
-              <td class="label align-top">${contactMechMap.contactMechType.get("description",locale)}</td>
+              <td class="label align-top">Current address</td>
               <td>
                 <#list contactMechMap.partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
