@@ -96,6 +96,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("CadrethruDate","CadrethruDate");
 		makeDatePicker("DepartmentCadrefromDate","DepartmentCadrefromDate");
 		makeDatePicker("DepartmentCadrethruDate","DepartmentCadrethruDate");
+		makeDatePicker("NewEmplfromDate","NewEmplfromDate");
+		makeDatePicker("NewEmplthruDate","NewEmplthruDate");
 		makeDatePicker("loanFromDate","loanFromDate");
 		makeDatePicker("loanThruDate","loanThruDate");
 		makeDatePicker("AttMyfromDate","AttMyfromDate");
@@ -312,14 +314,14 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
-				    <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ProbationReport.pdf")?exists) && (reportDetailsMap.get("ProbationReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("DepartmentCadreRankingReport.pdf"))?exists))> 
+				    <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ProbationReport.pdf")?exists) && (reportDetailsMap.get("ProbationReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("ProbationReport.pdf"))?exists))> 
 						<tr class="alternate-row"> 
 							<form id="ProbationReport" name="ProbationReport" mothed="post" action="<@ofbizUrl>ProbationReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="24%"><span class='h3'>Probation Report</span></td>
 										<td width="50%"><span class='h3'>
-												Employee Id<@htmlTemplate.lookupField formName="EmployeePersonalProfile" name="employeeId" fieldFormName="LookupEmployeeName"/>
+												Employee Id<@htmlTemplate.lookupField formName="ProbationReport" name="employeeId" fieldFormName="LookupEmployeeName"/>
 											</span>
 										</td> 
 										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('ProbationReport', '<@ofbizUrl>ProbationReport.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -329,7 +331,24 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>			
-				
+				    <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmplJoiningReport.pdf")?exists) && (reportDetailsMap.get("EmplJoiningReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmplJoiningReport.pdf"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="EmplJoiningReport" name="EmplJoiningReport" mothed="post" action="<@ofbizUrl>EmplJoiningReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>New Employee Joining Report</span></td>
+										<td width="50%"><span class='h3'>
+												From Date<input  type="text" size="18pt" id="NewEmplfromDate"   name="NewEmplfromDate"/>
+												Thru Date<input  type="text" size="18pt" id="NewEmplthruDate"   name="NewEmplthruDate"/>
+											</span>
+										</td>
+										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmplJoiningReport', '<@ofbizUrl>EmplJoiningReport.pdf</@ofbizUrl>');" class="buttontext"/>
+						                </td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>		
 				</table>
 			</div>
 		</div>
