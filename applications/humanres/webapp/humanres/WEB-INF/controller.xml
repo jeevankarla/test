@@ -2074,7 +2074,10 @@ under the License.
        	<security https="true" auth="true"/>
         <response name="success" type="view" value="ProbationReportPDF"/>
     </request-map>
-    
+     <request-map uri="EmplJoiningReport.pdf">
+       	<security https="true" auth="true"/>
+        <response name="success" type="view" value="EmplJoiningReport"/>
+    </request-map>
     <request-map uri="PaySlipEmployeeWise">
        	<security https="true" auth="true"/>
         <response name="success" type="view" value="PaySlipEmployeeWise"/>
@@ -2806,6 +2809,7 @@ under the License.
   	<view-map name="CadreRankingReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CadreRankingReportPDF" content-type="application/pdf" encoding="none"/>
  	<view-map name="CadreRankingReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CadreRankingReportCsv" content-type="text/csv" encoding="none"/>
     <view-map name="ProbationReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ProbationReportPDF" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="EmplJoiningReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmplJoiningReport" content-type="application/pdf" encoding="none"/>
  	<view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>
  	<view-map name="PartyProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfileCsv" content-type="application/pdf" encoding="none"/>
 	<view-map name="PartyProfilePdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfilePdf" content-type="text/pdf" encoding="none"/>

@@ -56,7 +56,8 @@ under the License.
 		<field name="prevEmplThruDate" type="date-time"></field>
 		<field name="referenceName" type="name"></field>		
 		<field name="referenceEmployer" type="name"></field>		
-		<field name="joinDate" type="date-time"></field>		
+		<field name="joinDate" type="date-time"></field>
+		<field name="placeOfJoining" type="name"></field>		
 		<field name="refEmplContactNumber" type="short-varchar"></field>		
 		<field name="previousPfNumber" type="id"></field>
 		<field name="prevPfEmplAddress" type="long-varchar"></field>
