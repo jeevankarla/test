@@ -33,6 +33,7 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
+import java.util.Map.Entry;
 
 purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
 purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
@@ -136,6 +137,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 					state="";
 					city="";
 					postalCode="";
+					districtGeoId="";
 					if(partyPostalAddress.get("address1")){
 					address1=partyPostalAddress.get("address1");
 					}
@@ -151,9 +153,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 					if(partyPostalAddress.get("postalCode")){
 						postalCode=partyPostalAddress.get("postalCode");
 						}
+					if(partyPostalAddress.get("districtGeoId")){
+						districtGeoId=partyPostalAddress.get("districtGeoId");
+						}
 					shipingAdd.put("address1",address1);
 					shipingAdd.put("address2",address2);
 					shipingAdd.put("city",city);
+					shipingAdd.put("districtGeoId",districtGeoId);
 					shipingAdd.put("postalCode",postalCode);
 				}
 			}
@@ -281,8 +287,98 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		context.termExists = "Y";
 	}
 	
-	JSONArray orderItemsJSON = new JSONArray();
-	orderItems.each{ eachItem ->
+
+		
+		Map<String, Object> orderDtlMap = FastMap.newInstance();
+		orderDtlMap.put("orderId", orderId);
+		orderDtlMap.put("userLogin", userLogin);	
+		result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
+		if(ServiceUtil.isError(result)){
+			Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
+			return ServiceUtil.returnError(null, null, null,result);
+		}
+		productSummaryMap=result.get("productSummaryMap");
+		
+		
+		JSONArray orderItemsJSON = new JSONArray();
+		
+			Iterator eachProductIter = productSummaryMap.entrySet().iterator();
+			while(eachProductIter.hasNext()) {
+				Map.Entry entry = (Entry)eachProductIter.next();
+				String productId = (String)entry.getKey();
+				 productSummary=entry.getValue();
+				 
+				 amount=productSummary.get("amount");
+				 quantity=productSummary.get("quantity");
+				 unitPrice=productSummary.get("unitListPrice");
+				 bedPercent=productSummary.get("bedPercent")
+				 cstPercent=productSummary.get("cstPercent")
+				 vatPercent=productSummary.get("vatPercent")
+				 itemSeqList=productSummary.get("itemSeqList");
+				 String orderItemSeqId=itemSeqList.get(0);
+				 if(!amount){
+					 amount = 0;
+				 }
+				 bedTaxPercent = 0;
+				 if(productSummary.get("bedPercent")){
+					 bedCompare = (productSummary.get("bedPercent")).setScale(6);
+					 condList = [];
+					 condList.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "EXCISE_DUTY_PUR"));
+					 condList.add(EntityCondition.makeCondition("componentRate", EntityOperator.EQUALS, bedCompare));
+					 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					 
+					 taxComponent = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+					 taxComponent = EntityUtil.filterByDate(taxComponent, UtilDateTime.nowTimestamp());
+					 
+					 if(taxComponent){
+						 bedTaxPercent = (BigDecimal)(EntityUtil.getFirst(taxComponent)).get("taxRate");
+					 }
+					 
+				 }
+				 
+				 
+				 prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId));
+				 prodDetail = EntityUtil.getFirst(prodDetails);
+				 
+				 remarks="";
+				 cond1 = [];
+				 cond1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+				 cond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,orderItemSeqId));
+				 condExpRmrk = EntityCondition.makeCondition(cond1, EntityOperator.AND);
+				 
+				 RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
+				 
+				 if(RmrkAttr){
+					 remarks=(RmrkAttr.get(0)).get("attrValue");
+				 }
+				 JSONObject newObj = new JSONObject();
+				 newObj.put("remarks",remarks);
+				 newObj.put("cProductId",productId);
+				 newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
+				 newObj.put("quantity",quantity);
+				 newObj.put("unitPrice",unitPrice);
+				 newObj.put("amount", amount);
+				 if(bedPercent){
+					 newObj.put("bedPercent", bedTaxPercent);
+				 }
+				 else{
+					 newObj.put("bedPercent", 0);
+				 }
+				 //newObj.put("bedPercent", eachItem.bedPercent);
+				 newObj.put("cstPercent", cstPercent);
+				 newObj.put("vatPercent", vatPercent);
+				 orderItemsJSON.add(newObj);
+			
+			
+			
+			
+			}
+			
+			
+		
+	
+	
+	/*orderItems.each{ eachItem ->
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
 			amount = 0;
@@ -357,7 +453,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
-	}
+	}*/
 	context.put("orderItemsJSON", orderItemsJSON);
 	
 	JSONArray orderAdjustmentJSON = new JSONArray();

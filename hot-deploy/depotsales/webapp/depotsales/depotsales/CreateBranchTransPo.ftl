@@ -560,9 +560,11 @@ function populateData(){
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
 					    		<#assign billToPartyId=orderInfo.get("billToPartyId")>
-					    		<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="CreateMPO" size="18" maxlength="60" name="billToPartyId"  id="billToPartyId" fieldFormName="LookupPartyName"/>
+					    		    <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : billToPartyId}, true)>
+					    		<b>${partyGroup.groupName?if_exists}</b>
+					    		<input type="hidden" name="billToPartyId" id="billToPartyId" size="18" maxlength="60" autocomplete="off" value="${billToPartyId?if_exists}"/>
 					    	<#else>
-					      		<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
+					    		<input type="text" name="billToPartyId" id="billToPartyId" size="18" maxlength="60" autocomplete="off" />
       		                </#if>
       		                <#--<span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>-->
 					    </td>
@@ -716,7 +718,7 @@ function populateData(){
            </section>-->
            <#-- Working area-->
            
-           <h3>Payment Terms</h3>
+           <#-- <h3>Payment Terms</h3>
 		          <section>
 			          <fieldset>
 			            <table cellpadding="15" cellspacing="15" class='h3'>
@@ -763,8 +765,8 @@ function populateData(){
 						  </tr>
 					  </table>
 					</fieldset>
-                 </section>
-                 <h3>Delivery Terms</h3>
+                 </section>-->
+                 <h3>Delivery Address Details</h3>
 		         <section>
 			          <fieldset>
 			          <#--
@@ -873,6 +875,15 @@ function populateData(){
                             	 </#if>
                             	 </td>
       						</tr>
+      						<tr>
+                    			<td class="label"><FONT COLOR="#045FB4"><b>District  : </b></FONT></td>
+                            	 <#if shipingAdd?has_content && shipingAdd.get("districtGeoId")?has_content>
+                            	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("districtGeoId")?if_exists}">
+                            		<#else>
+                            		     <td><input type="text" name="districtGeoId" id="districtGeoId">
+                            	 </#if>
+                            	 </td>
+      						</tr>
       						
 			           </table>
 			           <table cellpadding="5" cellspacing="5" class='h3'>
@@ -899,7 +910,7 @@ function populateData(){
 						  		</td>
 						  	</tr>
 			           </table>
-			            <table cellpadding="5" cellspacing="5" class='h3'>
+			           <#-- <table cellpadding="5" cellspacing="5" class='h3'>
 						    <tr>
 			          			<td align='left' valign='middle' nowrap="nowrap"></td>
 				                <td>
@@ -919,7 +930,7 @@ function populateData(){
 					         	<#--<td align="center">Term Days</td>
 					          	<td align="center">Term Value</td>
 					          	<td align="center">UOM</td>-->
-					          	<td align="center">Description</td>
+					          	<#--<td align="center">Description</td>
 						    </tr>	
 							    <#if orderId?exists && orderShipTermInfo?has_content>
 						    		<#assign rowCount = 0>
@@ -947,7 +958,7 @@ function populateData(){
 							            			
 							            		</select>
 							            	</td>-->
-							            	<td>
+							            	<#--<td>
 							                	<input type="textarea" name="deliveryTermDescription_o_${rowCount}" value="${eachShipTerm.get("description")?if_exists}" maxlength="255"/>
 							            	</td>
 								    	</tr>
@@ -970,12 +981,12 @@ function populateData(){
 						            			<option value="PERCENT">Percent</option>
 						            		</select>
 						            	</td>-->
-						            	<td>
+						            	<#--><td>
 						                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
 						            	</td>
 								    </tr>
 								 </#if> 
-							</table>
+							</table>-->
           				     </td>
 						        </tr>
 					  </table>

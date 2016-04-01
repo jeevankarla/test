@@ -53,6 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactHelper;
+import java.util.Iterator;
 
 
 
@@ -923,6 +924,7 @@ public class DepotPurchaseServices{
 		String country = (String) request.getParameter("country");
 		String postalCode = (String) request.getParameter("postalCode");
 		String stateProvinceGeoId = (String) request.getParameter("stateProvinceGeoId");
+		String districtGeoId = (String) request.getParameter("districtGeoId");
 		String contactMechId = null;
 
 		Map<String, Object> resultContatMap = FastMap.newInstance();
@@ -1029,7 +1031,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("refNo", refNo);
 				processOrderContext.put("quotationNo", quotationNo);
 				processOrderContext.put("orderName", orderName);
-				//processOrderContext.put("fileNo", fileNo);
+				processOrderContext.put("districtGeoId", districtGeoId);
 				//processOrderContext.put("refNo", refNo);
 				processOrderContext.put("orderDate", orderDate);
 				//processOrderContext.put("fromDate", (String)UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
@@ -1177,6 +1179,7 @@ public class DepotPurchaseServices{
 		String fromDate = (String)context.get("fromDate");
 		String thruDate = (String)context.get("thruDate");
 		String billToPartyId = (String) context.get("billFromVendorPartyId");
+		String districtGeoId = (String) context.get("districtGeoId");
 		if(UtilValidate.isEmpty(billToPartyId)){
 			billToPartyId="Company";
 		}
@@ -1241,6 +1244,9 @@ public class DepotPurchaseServices{
 			}
 			if(UtilValidate.isNotEmpty(quotationNo)){
 				cart.setOrderAttribute("QUOTATION_NUMBER",quotationNo);
+			}
+			if(UtilValidate.isNotEmpty(districtGeoId)){
+				cart.setOrderAttribute("DST_ADDR",districtGeoId);
 			}
 		} catch (Exception e) {
 			
@@ -1829,5 +1835,77 @@ public class DepotPurchaseServices{
             result.put("salesChannelEnumId", salesChannelEnumId);
             return result;
 		}
+  		
+  		public static Map<String, Object> getOrderItemSummary(DispatchContext dctx, Map context) {
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Locale locale = (Locale) context.get("locale");
+			String orderId = (String) context.get("orderId");
+	        List productIdsList = FastList.newInstance();
+    		Map productSummaryMap = FastMap.newInstance();
+			try{
+                List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+                Set orderProductsSet = new HashSet(EntityUtil.getFieldListFromEntityList(items, "productId", true));    		
+                productIdsList = new ArrayList(orderProductsSet);
+               Iterator<String> it = productIdsList.iterator();
+               while (it.hasNext()) {
+                	String productId = (String) it.next();                    
+    				List itemSeqDetail = FastList.newInstance();
+
+                    
+			    	List<GenericValue> headerItems = EntityUtil.filterByCondition(items, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+			    	BigDecimal prdQuantity=BigDecimal.ZERO;
+			    	BigDecimal prdAmount=BigDecimal.ZERO;
+			    	BigDecimal unitListPrice=BigDecimal.ZERO;
+			    	BigDecimal bedPercent=BigDecimal.ZERO;
+
+			    	BigDecimal cstPercent=BigDecimal.ZERO;
+			    	BigDecimal vatPercent=BigDecimal.ZERO;
+			    	
+			    	for (int i = 0; i < headerItems.size(); i++) {						
+						GenericValue eachProductList = (GenericValue)headerItems.get(i);
+						Debug.log("eachProductList=================="+eachProductList);
+						BigDecimal quantity=(BigDecimal)eachProductList.getBigDecimal("quantity");
+						 unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitListPrice");
+						String orderItemSeqId=(String)eachProductList.get("orderItemSeqId");
+						 itemSeqDetail.add(orderItemSeqId);
+						BigDecimal amount=unitListPrice.multiply(quantity);
+						prdQuantity =prdQuantity.add(quantity);
+						prdAmount =prdAmount.add(amount);
+						
+			    	}
+		       		   Map productDetailsMap = FastMap.newInstance();
+
+		       		productDetailsMap.put("unitListPrice",unitListPrice);
+		       		productDetailsMap.put("quantity",prdQuantity);
+		       		productDetailsMap.put("amount",prdAmount);
+		       		productDetailsMap.put("bedPercent",bedPercent);
+		       		productDetailsMap.put("cstPercent",cstPercent);
+		       		productDetailsMap.put("vatPercent",vatPercent);
+		       		productDetailsMap.put("itemSeqList",itemSeqDetail);
+		       		
+		       		
+		       		
+			    	productSummaryMap.put(productId,productDetailsMap);
+               
+			    	//Debug.log("prdQuantity============================================"+prdQuantity);
+			    	//Debug.log("prdAmount============================================"+prdAmount);               
+               
+               }
+		    	//Debug.log("productSummaryMap============================================"+productSummaryMap);
+                //smsContent = smsContent +" For future enquiries quote the P.O number.";
+                //Debug.log("smsContent================================"+smsContent);
+			}catch(GenericEntityException ex){
+				Debug.log("Problem in fetching orderItems");
+			}
+			result.put("productSummaryMap",productSummaryMap);
+			return result;
+  		}	
+  		
+  		
+  		
+  		
 	    
 }
