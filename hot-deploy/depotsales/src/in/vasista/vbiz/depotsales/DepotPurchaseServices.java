@@ -955,11 +955,177 @@ public class DepotPurchaseServices{
 				  		return "error";
 					}
 				}
+				String productId = null;
+				String batchNo = null;
+				String daysToStore = null;
+				String quantityStr = null;
+				String basicPriceStr = null;
+				String vatPriceStr = null;
+				String bedPriceStr = null;
+				String cstPriceStr = null;
+				String unitPriceStr = null;
+				String serTaxPriceStr = null;
+				BigDecimal quantity = BigDecimal.ZERO;
+				BigDecimal basicPrice = BigDecimal.ZERO;
+				BigDecimal cstPrice = BigDecimal.ZERO;
+				BigDecimal unitPrice = BigDecimal.ZERO;
+				BigDecimal vatPrice = BigDecimal.ZERO;
+				BigDecimal bedPrice = BigDecimal.ZERO;
+				BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+				//percentage fields
+				String bedPercentStr = null;
+				String vatPercentStr = null;
+				String cstPercentStr = null;
+				String tcsPercentStr = null;
+				String serviceTaxPercentStr = null;
+				
+				BigDecimal bedPercent=BigDecimal.ZERO;
+				BigDecimal vatPercent=BigDecimal.ZERO;
+				BigDecimal cstPercent=BigDecimal.ZERO;
+				BigDecimal tcsPercent=BigDecimal.ZERO;
+				BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+				
+				
+
+				Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+				int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+				if (rowCount < 1) {
+					Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+					return "error";
+				}
+				List productIds = FastList.newInstance();
+				List indentProductList = FastList.newInstance();
+				for (int i = 0; i < rowCount; i++) {
+				  
+					Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
+					String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+					
+					String productInput= (String) paramMap.get("productId" + thisSuffix);
+					//invoke if only not empty
+					if (UtilValidate.isNotEmpty(productInput)) {
+
+						if (paramMap.containsKey("productId" + thisSuffix)) {
+							productId = (String) paramMap.get("productId" + thisSuffix);
+							productIds.add(productId);
+						} else {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Missing product id");
+							return "error";
+						}
+
+						if (paramMap.containsKey("quantity" + thisSuffix)) {
+							quantityStr = (String) paramMap
+									.get("quantity" + thisSuffix);
+						} else {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Missing product quantity");
+							return "error";
+						}
+						if (quantityStr.equals("")) {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Empty product quantity");
+							return "error";
+						}
+						
+						if (paramMap.containsKey("unitPrice" + thisSuffix)) {
+							unitPriceStr = (String) paramMap.get("unitPrice"
+									+ thisSuffix);
+						}
+
+						if (paramMap.containsKey("basicPrice" + thisSuffix)) {
+							basicPriceStr = (String) paramMap.get("basicPrice"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("vatPrice" + thisSuffix)) {
+							vatPriceStr = (String) paramMap
+									.get("vatPrice" + thisSuffix);
+						}
+						if (paramMap.containsKey("bedPrice" + thisSuffix)) {
+							bedPriceStr = (String) paramMap
+									.get("bedPrice" + thisSuffix);
+						}
+						if (paramMap.containsKey("cstPrice" + thisSuffix)) {
+							cstPriceStr = (String) paramMap
+									.get("cstPrice" + thisSuffix);
+						}
+						
+
+						if (paramMap.containsKey("bedPercent" + thisSuffix)) {
+							bedPercentStr = (String) paramMap.get("bedPercent"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("vatPercent" + thisSuffix)) {
+							vatPercentStr = (String) paramMap.get("vatPercent"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("cstPercent" + thisSuffix)) {
+							cstPercentStr = (String) paramMap.get("cstPercent"
+									+ thisSuffix);
+						}
+						
+						
+
+						try {
+							quantity = new BigDecimal(quantityStr);
+							if (UtilValidate.isNotEmpty(unitPriceStr)) {
+								unitPrice = new BigDecimal(unitPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(basicPriceStr)) {
+								basicPrice = new BigDecimal(basicPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(cstPriceStr)) {
+								cstPrice = new BigDecimal(cstPriceStr);
+							}
+							
+							if (UtilValidate.isNotEmpty(bedPriceStr)) {
+								bedPrice = new BigDecimal(bedPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(vatPriceStr)) {
+								vatPrice = new BigDecimal(vatPriceStr);
+							}
+							
+
+							if (UtilValidate.isNotEmpty(bedPercentStr)) {
+								bedPercent = new BigDecimal(bedPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(vatPercentStr)) {
+								vatPercent = new BigDecimal(vatPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(cstPercentStr)) {
+								cstPercent = new BigDecimal(cstPercentStr);
+							}
+							
+							
+						} catch (Exception e) {
+							Debug.logError(e, "Problems parsing quantity string: "
+									+ quantityStr, module);
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Problems parsing quantity string: " + quantityStr);
+							return "error";
+						}
+
+						productQtyMap.put("productId", productId);
+						productQtyMap.put("quantity", quantity);
+						productQtyMap.put("unitPrice", unitPrice);
+						productQtyMap.put("unitListPrice", unitPrice);
+						productQtyMap.put("basicPrice", basicPrice);
+						productQtyMap.put("bedPrice", bedPrice);
+						productQtyMap.put("cstPrice", cstPrice);
+						productQtyMap.put("vatPrice", vatPrice);
+						productQtyMap.put("bedPercent", bedPercent);
+						productQtyMap.put("vatPercent", vatPercent);
+						productQtyMap.put("cstPercent", cstPercent);
+
+						itemDetail.add(productQtyMap);
+
+					}//end of productQty check
+				}//end row count for loop
+				//Debug.log("indentProductList============================"+indentProductList);
 				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
 				Map orderItemSeq = FastMap.newInstance();
-				for(GenericValue orderItemsValues : orderItems){
+				/*for(GenericValue orderItemsValues : orderItems){
 					String productId = orderItemsValues.getString("productId");
 					BigDecimal quantity=orderItemsValues.getBigDecimal("quantity");
 					BigDecimal unitListPrice=BigDecimal.ZERO;
@@ -978,7 +1144,7 @@ public class DepotPurchaseServices{
 					itemDetail.add(tempMap);
 					String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
 					orderItemSeq.put(productId, orderItemSeqId);
-				}
+				}*/
 			
 				if (UtilValidate.isNotEmpty(orderDateStr)) { 
 					try {
