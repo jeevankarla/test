@@ -308,6 +308,8 @@ under the License.
         <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="2" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="3" periodTypeId="TEN_PERC_PERIOD"/> 
         <SchemeTimePeriod schemeTimePeriodId="APR_16" fromDate="2016-04-01" thruDate="2016-04-30" periodName="SCH_APR_16" periodNum="4" periodTypeId="TEN_PERC_PERIOD"/>  
+        <SchemeTimePeriod schemeTimePeriodId="MAY_16" fromDate="2016-05-01" thruDate="2016-05-31" periodName="SCH_MAY_16" periodNum="5" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="JUN_16" fromDate="2016-06-01" thruDate="2016-06-30" periodName="SCH_JUN_16" periodNum="6" periodTypeId="TEN_PERC_PERIOD"/>  
 
 <!-- shipment document upload content types -->
 
