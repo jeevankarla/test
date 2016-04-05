@@ -116,10 +116,10 @@
 	conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
 	postalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyId","address1","address2","city","postalCode", "stateProvinceGeoId", "districtGeoId", "countryGeoId"),null,null,false);
 	
-	conditionList=[];
+	//conditionList=[];
 	//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIdsList));
-	conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
-	productStoreList = delegator.findList("ProductStore", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productStoreId","payToPartyId","storeName"),null,null,false);
+	//conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS,"POSTAL_ADDRESS"));
+	productStoreList = delegator.findList("ProductStore", null,UtilMisc.toSet("productStoreId","payToPartyId","storeName"),null,null,false);
 
 	geoList = delegator.findList("Geo", null ,UtilMisc.toSet("geoId","geoName"),null,null,false);
 	geoNameMap = [:];
@@ -186,10 +186,12 @@
        	
        	if(UtilValidate.isNotEmpty(branchId)){
 			result = EntityUtil.filterByCondition(productStoreList, EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS, branchId));
-			if(UtilValidate.isNotEmpty(result[0].get("storeName"))){
-				tempMap.put("storeName",result[0].get("storeName"));
-			}else{
-			  	tempMap.put("storeName",branchId);
+			if(UtilValidate.isNotEmpty(result)){
+				if(UtilValidate.isNotEmpty(result[0].get("storeName"))){
+					tempMap.put("storeName",result[0].get("storeName"));
+				}else{
+					  tempMap.put("storeName",branchId);
+				}
 			}
 		}else{
 			tempMap.put("storeName","");
