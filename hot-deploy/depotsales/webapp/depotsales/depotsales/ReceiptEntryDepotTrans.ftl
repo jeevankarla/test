@@ -316,7 +316,7 @@ $( "#deliveryChallanDate" ).datepicker({
 			    	<div align="center">
 			    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>DepotTransMaterialReceipts</@ofbizUrl>');"/>   	
+			    		<input type="button" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:cancelForm();"/>   	
 			    	</div>     
 				</#if>  
 			</div>
@@ -325,6 +325,12 @@ $( "#deliveryChallanDate" ).datepicker({
 </div>
 <script type="application/javascript">
     var partyAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
+   
+   function cancelForm(){
+   jQuery("#indententryinit").attr("action", "/depotsales/control/FindSupplierPO");
+   jQuery("#indententryinit").submit();
+   
+   }
    
 	  function toggleSupplier(el){
 	      $("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){});
