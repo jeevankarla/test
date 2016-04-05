@@ -6119,6 +6119,7 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+	    Debug.log("salesOrderitems ==================="+salesOrderitems);
 	    
 	    Map shipProdQtyMap = FastMap.newInstance();
 	    
@@ -6135,6 +6136,8 @@ public class DepotSalesServices{
 	    	}
 	    	
 	    }
+	    Debug.log("shipProdQtyMap ==================="+shipProdQtyMap);
+	    
 	    List<GenericValue> toBillItems = FastList.newInstance();
 	    
 	    for(Object productKey : shipProdQtyMap.keySet()){
@@ -6179,16 +6182,18 @@ public class DepotSalesServices{
 	                    billAvail = leftToBill;
 	                } 
 	        		
+	                Debug.log("billAvail ==================="+billAvail);
 	        		// Now that we know unbilled qty's we can prepare billing items
 	                
 	                if (receiptQty != null && receiptQty.compareTo(billAvail) > 0) {
 	                	eachItem.set("quantity", billAvail);
 	                	toBillItems.add(eachItem);
-	                	
+	                	Debug.log("toBillItems ========1111==========="+toBillItems);
 	                	receiptQty = receiptQty.subtract(billAvail).setScale(2, RoundingMode.HALF_UP);
 	                } else {
 	                	eachItem.set("quantity", receiptQty);
 	                	toBillItems.add(eachItem);
+	                	Debug.log("toBillItems =========22222=========="+toBillItems);
 	                	break;
 	                }
 	                
@@ -6196,9 +6201,14 @@ public class DepotSalesServices{
 	    	}
 	    	
 	    }
+	    
+	    Debug.log("toBillItems =========Final=========="+toBillItems);
+	    
+	    
 	    String invoiceId = null;
         // Raise Invoice for the unbilled items
         Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
+        Debug.log("serviceContext =========Final=========="+serviceContext);
         try {
             Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
             invoiceId = (String) servResult.get("invoiceId");
