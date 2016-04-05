@@ -427,7 +427,7 @@
 		if(isNaN(value)){
 			value = 0;
 		}		
-		var formatValue = parseFloat(value).toFixed(4);
+		var formatValue = parseFloat(value).toFixed(2);
         return formatValue;
     }
     
