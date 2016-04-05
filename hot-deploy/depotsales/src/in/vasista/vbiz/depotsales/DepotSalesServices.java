@@ -6161,7 +6161,7 @@ public class DepotSalesServices{
 	                try {
 	                    billed = delegator.findList("OrderItemBillingAndInvoiceAndItem", EntityCondition.makeCondition(itemBillingCond, EntityOperator.AND), null, null, null, false);
 	                } catch (GenericEntityException e) {
-	                    String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingOrderItemOrderItemBilling",UtilMisc.toMap("lookup",lookup), locale);
+	                    String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingOrderItemOrderItemBilling",UtilMisc.toMap("lookup",itemBillingCond), locale);
 	                    Debug.logError(e, errMsg, module);
 	                    return ServiceUtil.returnError(errMsg);
 	                }
