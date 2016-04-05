@@ -297,6 +297,13 @@ if(quotationNumber){
 	quotationNo=quotationNumber.get("attrValue");
 	allDetailsMap.put("quotationNo",quotationNo);
 }
+destAddr="";
+//destination Address
+DstAddr = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"DST_ADDR"],false);
+if(DstAddr){
+	destAddr=DstAddr.get("attrValue");
+	allDetailsMap.put("DstAddr",destAddr);
+}
 
 //OrderHeaderNote
 orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId),EntityCondition.makeCondition("internalNote",EntityOperator.EQUALS,"N")],EntityOperator.AND)  , null, null, null, false );
