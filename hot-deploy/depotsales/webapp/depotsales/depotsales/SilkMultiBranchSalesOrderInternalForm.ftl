@@ -964,12 +964,7 @@
 				
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
+				
 				
 				var udp = data[i]['basicPrice'];
 				var price = parseFloat(data[i]['unitPrice']);
