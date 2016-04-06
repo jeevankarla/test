@@ -1245,6 +1245,43 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="newInvoiceVoucher">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			    <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="titleProperty" value="AccountingInvoice"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/newInvoiceVoucher.groovy"/>
+            </actions>
+            <widgets>
+               <section>
+					<condition>
+						<if-compare operator="equals" value="DIRECT" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://accounting/webapp/accounting/invoice/newInvoiceVoucher.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+				 <section>
+					<condition>
+						<if-compare operator="equals" value="ONBEHALF" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://accounting/webapp/accounting/invoice/newInvoiceVoucherOnbehalf.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="paymentVoucher">
         <section>
             <actions>
