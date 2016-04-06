@@ -476,10 +476,11 @@ resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.t
 		
 			newObj.put("quantity",eachItem.quantity);
 		}
+		orderItemsJSON.add(newObj);
 		if(OrderItemUIJSON.get(eachItem.productId)){
 			JSONObject existsObj = new JSONObject();
 			existsObj=OrderItemUIJSON.get(eachItem.productId);
-			existsObj["quantity"]=existsObj.get("quantity")+eachItem.quantity;
+			//existsObj["quantity"]=existsObj.get("quantity")+eachItem.quantity;
 			//existsObj["baleQuantity"]=existsObj.get("baleQuantity")+baleQty;
 			
 			
@@ -500,7 +501,7 @@ resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.t
 	productIdList.each{ eachprd ->
 	  JSONObject oneObject = OrderItemUIJSON.getJSONObject(eachprd);
 	  // Pulling items from the array
-	  orderItemsJSON.add(oneObject);
+	  //orderItemsJSON.add(oneObject);
 	}
 	
 	

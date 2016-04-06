@@ -591,12 +591,7 @@
 				data[args.row]['uomDescription'] = uomLabel;
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary" || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
-					convValue = prodConversionData['LtrKg'];
-				</#if>
+				
 				var udp = data[args.row]['basicPrice'];
 				var price = 0;
 				if(udp){
