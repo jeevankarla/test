@@ -1,5 +1,6 @@
 package in.vasista.vbiz.depotsales;
 import java.text.DateFormat;
+
 import in.vasista.vbiz.depotsales.DepotPurchaseServices;
 
 import java.math.BigDecimal;
@@ -60,6 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.order.order.OrderReadHelper;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
@@ -6111,6 +6113,21 @@ public class DepotSalesServices{
             return ServiceUtil.returnSuccess();
         }
 	    
+	    GenericValue orderHeader = null;
+	    try {
+	    	orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+	    } catch (GenericEntityException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+	    if (orderHeader == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingNoOrderHeader",locale));
+        }
+	    
+	    OrderReadHelper orh = new OrderReadHelper(orderHeader);
+	    
+	    
 	    List<GenericValue> salesOrderitems = null;
 	    try {
 	    	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("orderItemSeqId"), null, false);
@@ -6119,7 +6136,6 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-	    Debug.log("salesOrderitems ==================="+salesOrderitems);
 	    
 	    Map shipProdQtyMap = FastMap.newInstance();
 	    
@@ -6149,51 +6165,19 @@ public class DepotSalesServices{
 	        	
 		    	for(int i=0; i<salesOrderProdItems.size(); i++){
 	        		GenericValue eachItem = (GenericValue) salesOrderProdItems.get(i);
-	        		BigDecimal itemQty = (BigDecimal) eachItem.get("quantity");
-	        		BigDecimal billAvail = itemQty;
 	        		
-	        		String orderItemSeqId = (String) eachItem.get("orderItemSeqId");
-	        		
-	        		// Lets check each item for receipt and make sure it hasn't already been billed
-	        		List<EntityCondition> itemBillingCond = FastList.newInstance();
-	        		itemBillingCond.add(EntityCondition.makeCondition("orderId", orderId));
-	        		itemBillingCond.add(EntityCondition.makeCondition("orderItemSeqId", orderItemSeqId));
-	        		itemBillingCond.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	                
-	                List<GenericValue> billed = null;
-	                try {
-	                    billed = delegator.findList("OrderItemBillingAndInvoiceAndItem", EntityCondition.makeCondition(itemBillingCond, EntityOperator.AND), null, null, null, false);
-	                } catch (GenericEntityException e) {
-	                    String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingOrderItemOrderItemBilling",UtilMisc.toMap("lookup",itemBillingCond), locale);
-	                    Debug.logError(e, errMsg, module);
-	                    return ServiceUtil.returnError(errMsg);
-	                }
-
-	                // add up the already billed total
-	                if (billed.size() > 0) {
-	                    BigDecimal billedQuantity = BigDecimal.ZERO;
-	                    for (GenericValue oib : billed) {
-	                        BigDecimal qty = oib.getBigDecimal("quantity");
-	                        if (qty != null) {
-	                            billedQuantity = billedQuantity.add(qty).setScale(2, RoundingMode.HALF_UP);
-	                        }
-	                    }
-	                    BigDecimal leftToBill = itemQty.subtract(billedQuantity).setScale(2, RoundingMode.HALF_UP);
-	                    billAvail = leftToBill;
-	                } 
-	        		
-	                Debug.log("billAvail ==================="+billAvail);
+	        		BigDecimal itemQty = OrderReadHelper.getOrderItemQuantity(eachItem);
+	        		BigDecimal billedQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(eachItem);
+	        		BigDecimal billAvail = itemQty.subtract(billedQuantity);
 	        		// Now that we know unbilled qty's we can prepare billing items
 	                
 	                if (receiptQty != null && receiptQty.compareTo(billAvail) > 0) {
-	                	eachItem.set("quantity", billAvail);
+	                	eachItem.set("quantity", billedQuantity.add(billAvail));
 	                	toBillItems.add(eachItem);
-	                	Debug.log("toBillItems ========1111==========="+toBillItems);
 	                	receiptQty = receiptQty.subtract(billAvail).setScale(2, RoundingMode.HALF_UP);
 	                } else {
-	                	eachItem.set("quantity", receiptQty);
+	                	eachItem.set("quantity", billedQuantity.add(receiptQty));
 	                	toBillItems.add(eachItem);
-	                	Debug.log("toBillItems =========22222=========="+toBillItems);
 	                	break;
 	                }
 	                
@@ -6203,12 +6187,9 @@ public class DepotSalesServices{
 	    }
 	    
 	    Debug.log("toBillItems =========Final=========="+toBillItems);
-	    
-	    
 	    String invoiceId = null;
         // Raise Invoice for the unbilled items
         Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
-        Debug.log("serviceContext =========Final=========="+serviceContext);
         try {
             Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
             invoiceId = (String) servResult.get("invoiceId");
