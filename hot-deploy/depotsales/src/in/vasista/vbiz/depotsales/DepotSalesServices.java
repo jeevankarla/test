@@ -6172,8 +6172,15 @@ public class DepotSalesServices{
 	        		// Now that we know unbilled qty's we can prepare billing items
 	                
 	                if (receiptQty != null && receiptQty.compareTo(billAvail) > 0) {
-	                	eachItem.set("quantity", billedQuantity.add(billAvail));
-	                	toBillItems.add(eachItem);
+	                	
+	                	if(i == (salesOrderProdItems.size()-1) ){
+	                		eachItem.set("quantity", billedQuantity.add(receiptQty));
+		                	toBillItems.add(eachItem);
+	                	}
+	                	else{
+	                		eachItem.set("quantity", billedQuantity.add(billAvail));
+		                	toBillItems.add(eachItem);
+	                	}
 	                	receiptQty = receiptQty.subtract(billAvail).setScale(2, RoundingMode.HALF_UP);
 	                } else {
 	                	eachItem.set("quantity", billedQuantity.add(receiptQty));
