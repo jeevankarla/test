@@ -27,9 +27,8 @@
 	 	if(Bal <0){
 	 	Bal=0;
 	 	}
-	 	
+	 	Bal=Bal.toFixed(2);
 	 	}
-	 	
 		 $('#bal').html("<h4>"+Bal+"</h4>");
 	 }
 	 
@@ -213,8 +212,12 @@
 	{
       var amount = $("#amount").val();
       var balance = $("#balance").val();
-       if(parseInt(amount) > parseInt(balance)){
+       if(parseFloat(amount) > parseFloat(balance)){
 	      alert("Please Enter Amount Less Than The balance Total.");
+	        $("#amount").val(balance);
+	   }
+	   else if(parseFloat(amount)<0){
+	      alert("Please Enter Amount Greater Than The 0.");
 	        $("#amount").val(balance);
 	   }
 	}
@@ -364,11 +367,12 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	                   </#list>
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' onblur='javascript:amountCheck();'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'>"+balance+"</td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Balance :</td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Total :</td><td align='left' width='60%'>"+balance+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></td></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
+						"<tr class='h3'><td id='checkNoLabel' align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
@@ -377,7 +381,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 				 		
                 		
 					message +=	"</table></form></body></html>";
-		var title = "Dues vamsi Payment : "+partyName +" [ "+partyId+" ]";
+		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
 	}
 
@@ -453,39 +457,27 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
   
      
       var paymentType =  $("#paymentTypeId").val()
+      $("#inFavourOf").parent().parent().hide();
+      $("#comments").parent().parent().hide();
+      $("#issuingAuthority").parent().parent().hide();
+      $("#paymentRefNum").parent().parent().hide();
      
      
-     if(paymentType == 'CASH_PAYOUT'){
+     if(paymentType == 'CHEQUE'){
      
-     $("#inFavourOf").parent().parent().hide();
-     
-     $("#comments").parent().parent().hide();
-     
-     $("#issuingAuthority").parent().parent().hide();
-     
-     $("#paymentRefNum").parent().parent().hide();
-     
-     
-                       
+     $("#inFavourOf").parent().parent().show();
+     $("#comments").parent().parent().show();
+     $("#issuingAuthority").parent().parent().show();
+     $("#paymentRefNum").parent().parent().show(); 
+     $("#checkNoLabel").html("Cheque No :"); 
+                   
     }
    else if(paymentType == 'FT_PAYIN'){
-   
-       $("#inFavourOf").parent().parent().hide();
-     
-     $("#paymentRefNum").parent().parent().hide();
-   
+      $("#issuingAuthority").parent().parent().show();
     }
-    else{
-    
-      $("#inFavourOf").parent().parent().show();
-     
-     $("#comments").parent().parent().show();
-     
-     $("#issuingAuthority").parent().parent().show();
-     
-     $("#paymentRefNum").parent().parent().show();
-    
-    
+    else if('CASH_PAYIN'){
+      $("#paymentRefNum").parent().parent().show(); 
+       $("#checkNoLabel").html("Receipt No :"); 
     }
   }
 	
