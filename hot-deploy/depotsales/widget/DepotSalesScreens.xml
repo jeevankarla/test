@@ -2481,9 +2481,9 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="titleProperty" value="PageTitleInvoiceOverview" />
-				<set field="tabButtonItem" value="accountPayable" />
-				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
-				<set field="tabButtonItem2" value="invoiceOverview" />
+				<set field="tabButtonItem" value="invoiceOverView" />
+				<!-- <set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+				<set field="tabButtonItem2" value="invoiceOverview" /> -->
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
 				<set field="invoiceId" from-field="parameters.invoiceId" />
 				<set field="catflag" value="Ap" global="true" />
@@ -2551,7 +2551,7 @@
 				<set field="requestUri" value="${parameters.targetRequestUri}" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="BranchTransactionsCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
@@ -2567,8 +2567,8 @@
 						<!-- <include-menu name="InvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
 						<!-- <include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" 
 							/> -->
-						<include-menu name="CreateAPInvoiceSubTabBar"
-							location="component://accounting/widget/AccountingMenus.xml" />
+						<!-- <include-menu name="CreateAPInvoiceSubTabBar"
+							location="component://accounting/widget/AccountingMenus.xml" /> -->
 						<container style="h1">
 							<label>For: ${invoice.description} [${invoice.invoiceId}]</label>
 						</container>
@@ -5949,6 +5949,117 @@
                                 <container>
                                     <label style="h3">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PaymentOverview">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AP Payment Overview"/>
+                <set field="tabButtonItem" value="paymentOverView"/>
+                <set field="labelTitleProperty" value="Payment"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-field="payment"/>
+                <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
+                <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+                <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
+                <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
+                <service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
+			    <set field="AcctgTransAndEntries" type="List" from-field="AcctgTransAndEntries.AcctgTransAndEntries"/>
+               <!--  <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
+                    <condition-expr field-name="paymentId" from-field="paymentId"/>
+                    <order-by field-name="acctgTransId"/>
+                    <order-by field-name="acctgTransEntrySeqId"/>
+                </entity-condition> -->
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+               <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+               <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTAPP_EDIT"/>
+                </service>
+               <set field="hasPaymentAppEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+               <set field="hasPaymentStatusCancelPermission" from-field="permResult.hasPermission"/>
+               <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentAttributeInfo.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                     <platform-specific>
+                               <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatusCancel.ftl"/></html>
+              				</platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
+                            </condition>
+                            <widgets>
+                             <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
+                            </platform-specific>
+                                <container style="lefthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
+                                        <link target="editPayment" text="ad${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="paymentId"/>
+                                        </link>
+                                        <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="righthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
+                                        <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="paymentId"/>
+                                        </link>
+                                        <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="finAccountTransId"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
+                                                <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                            </screenlet>
+                                        </widgets>
+                                    </section>
+                                </container>
+                                <container style="clear"/>
+                                <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <container style="lefthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
+                                        <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="righthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
+                                        <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="finAccountTransId"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
+                                                    <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                                </screenlet>
+                                            </widgets>
+                                        </section>
+                                </container>
+                                <container style="clear"/>
+                                <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
                             </fail-widgets>
                         </section>
                     </decorator-section>

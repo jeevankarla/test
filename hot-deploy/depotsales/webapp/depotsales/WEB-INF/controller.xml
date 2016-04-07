@@ -546,6 +546,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="APInvoiceOverview"/>
     </request-map>
+    <request-map uri="paymentOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PaymentOverview"/>
+    </request-map>
      <request-map uri="SetAPInvoiceStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="setInvoiceStatus"/>
@@ -1690,6 +1694,7 @@
    	
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
+    <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
