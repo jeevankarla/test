@@ -434,7 +434,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#else>
                 	<td align="center"></td>
               </#if>
-              <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
+              <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
             <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>
