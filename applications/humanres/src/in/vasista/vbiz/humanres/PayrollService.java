@@ -26,7 +26,9 @@ import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import java.util.HashSet;
+
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.accounting.util.formula.Evaluator;
 import org.ofbiz.base.util.Debug;
@@ -4586,6 +4588,178 @@ public class PayrollService {
       			}
 	      	 return "success";
 	    }
+	 
+	 public static String updatePayrollAttendance(HttpServletRequest request, HttpServletResponse response) {
+	  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	    Locale locale = UtilHttp.getLocale(request);
+	  	    String result = "";
+	  	    HttpSession session = request.getSession();
+		    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");	
+		    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		    List<Map>emplPayrollAttendanceList =FastList.newInstance();
+		    String hrTimePeriodId= "";
+		    String deptId= "";
+	  	    
+		    for (int i = 0; i < rowCount; i++) {
+	  	    	Map<String  ,Object> employeeWiseMap = FastMap.newInstance();
+	  	    	
+	  	    	String partyIdTo= "";
+	  		    String attendanceTimePeriod= "";
+	  		    String calenderDays = "";
+	  		    String lossOfPayDays = "";
+	  		    String payableDays = "";
+	  		    String attendedHoliDays = "";
+	  		    
+	  			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  	    	if (paramMap.containsKey("partyId" + thisSuffix)) {
+	  	    		partyIdTo = (String) paramMap.get("partyId" + thisSuffix);
+	  	  		}
+	  	    	else {
+	  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing Party id");
+	  	  			return "error";			  
+	  			}
+	  	    	if (paramMap.containsKey("customTimePeriodId" + thisSuffix)) {
+	  	    		attendanceTimePeriod = (String) paramMap.get("customTimePeriodId" + thisSuffix);
+	  	  		}else {
+	  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing customTimePeriodId");
+	  	  			return "error";			  
+	  			}
+	  	    	if (paramMap.containsKey("timePeriodId" + thisSuffix)) {
+	  	    		hrTimePeriodId = (String) paramMap.get("timePeriodId" + thisSuffix);
+	  	  		}else {
+	  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing timePeriodId");
+	  	  			return "error";			  
+	  			}
+	  	    	if (paramMap.containsKey("deptId" + thisSuffix)) {
+	  	    		deptId = (String) paramMap.get("deptId" + thisSuffix);
+	  	  		}else {
+	  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing deptId");
+	  	  			return "error";			  
+	  			}
+	  	    	if (paramMap.containsKey("noOfCalenderDays" + thisSuffix)) {
+	  	    		calenderDays = (String) paramMap.get("noOfCalenderDays" + thisSuffix);
+	  	  		}
+	  	    	if (paramMap.containsKey("lossOfPayDays" + thisSuffix)) {
+	  	    		lossOfPayDays = (String) paramMap.get("lossOfPayDays" + thisSuffix);
+	  	  		}
+	  	    	if (paramMap.containsKey("noOfPayableDays" + thisSuffix)) {
+	  	    		payableDays = (String) paramMap.get("noOfPayableDays" + thisSuffix);
+	  	  		}
+	  	    	if (paramMap.containsKey("noOfAttendedHoliDays" + thisSuffix)) {
+	  	    		attendedHoliDays = (String) paramMap.get("noOfAttendedHoliDays" + thisSuffix);
+	  	  		}
+	  	    	
+	  	    	
+	  	    	employeeWiseMap.put("partyId", partyIdTo);
+	  	    	employeeWiseMap.put("attendanceTimePeriod", attendanceTimePeriod);
+	  	    	employeeWiseMap.put("hrTimePeriodId", hrTimePeriodId);
+	  	    	employeeWiseMap.put("calenderDays", calenderDays);
+	  	    	employeeWiseMap.put("lossOfPayDays", lossOfPayDays);
+	  	    	employeeWiseMap.put("payableDays", payableDays);
+	  	    	employeeWiseMap.put("attendedHoliDays", attendedHoliDays);
+	  	    	emplPayrollAttendanceList.add(employeeWiseMap);
+	  	    }
+	  	    
+		    try {
+		    	List periodBillingList = FastList.newInstance();
+		    	List conditionList = FastList.newInstance();
+		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+		        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,hrTimePeriodId));
+		    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PAYROLL_BILL"));
+		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		    	try {
+		    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+		    			    		
+		    	}catch (GenericEntityException e) {
+		    		 Debug.logError(e, module);             
+				} 
+		        if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+	 			request.setAttribute("_ERROR_MESSAGE_", "Edit not permitted as payroll for the period has been generated");
+					return "error";
+		        }
+		    	
+			    List payrollAttnDetails = FastList.newInstance();
+			    for(int i=0; i< emplPayrollAttendanceList.size() ; i++){
+		    		Map emplPayrollAttendanceMap = emplPayrollAttendanceList.get(i);
+		
+		    		Map<String  ,Object> attendanceDetailsMap = FastMap.newInstance();
+		    		attendanceDetailsMap.put("partyId", emplPayrollAttendanceMap.get("partyId"));
+		    		attendanceDetailsMap.put("attendanceTimePeriod", emplPayrollAttendanceMap.get("attendanceTimePeriod"));
+		    		attendanceDetailsMap.put("calenderDays", emplPayrollAttendanceMap.get("calenderDays"));
+		    		attendanceDetailsMap.put("lossOfPayDays", emplPayrollAttendanceMap.get("lossOfPayDays"));
+		    		attendanceDetailsMap.put("payableDays", emplPayrollAttendanceMap.get("payableDays"));
+		    		attendanceDetailsMap.put("attendedHoliDays", emplPayrollAttendanceMap.get("attendedHoliDays"));
+		    		payrollAttnDetails.add(attendanceDetailsMap);
+		    		
+		    	    BigDecimal noOfCalenderDays=BigDecimal.ZERO;
+		    	    BigDecimal noOfAttendedDays = BigDecimal.ZERO;
+		    	    BigDecimal noOfLossOfPayDays = BigDecimal.ZERO;
+		    	    BigDecimal noOfPayableDays = BigDecimal.ZERO;
+		    	    BigDecimal noOfAttendedHoliDays = BigDecimal.ZERO;
+		    		
+		    	    String employeeId = (String)emplPayrollAttendanceMap.get("partyId");
+		    	    String timePeriodId = (String)emplPayrollAttendanceMap.get("attendanceTimePeriod");
+		    	    String noCalenderDays = (String)emplPayrollAttendanceMap.get("calenderDays");
+		    	    String noLossOfPayDays=(String)emplPayrollAttendanceMap.get("lossOfPayDays");
+		    	    String noPayableDays=(String)emplPayrollAttendanceMap.get("payableDays");
+		    	    String noAttendedHoliDays=(String)emplPayrollAttendanceMap.get("attendedHoliDays");
+		    	    
+		    	    if(!(noCalenderDays).equals("NaN")){
+		    	    	noOfCalenderDays = new BigDecimal(noCalenderDays);
+		    	    }
+		    	    if(!(noLossOfPayDays).equals("NaN")){
+		    	    	noOfLossOfPayDays = new BigDecimal(noLossOfPayDays);
+		    	    }
+		    	    if(!(noPayableDays).equals("NaN")){
+		    	    	noOfPayableDays = new BigDecimal(noPayableDays);
+		    	    }
+		    	    if(!(noAttendedHoliDays).equals("NaN")){
+		    	    	noOfAttendedHoliDays = new BigDecimal(noAttendedHoliDays);
+		    	    }
+			    	    
+					GenericValue payrollAttendanceDetails = delegator.findOne("PayrollAttendance",UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",timePeriodId),false);
+					if(UtilValidate.isEmpty(payrollAttendanceDetails)){
+						GenericValue newEntity = delegator.makeValue("PayrollAttendance");
+						newEntity.put("partyId",employeeId);
+						newEntity.put("customTimePeriodId",timePeriodId);
+		  			  	if(!noOfCalenderDays.equals(BigDecimal.ZERO)){
+		  			  		newEntity.put("noOfCalenderDays",noOfCalenderDays);
+		  			  	}
+		  			  	if(!noOfLossOfPayDays.equals(BigDecimal.ZERO)){
+		  			  		newEntity.put("lossOfPayDays",noOfLossOfPayDays);
+		  			  	}
+		  			  	if(!noOfPayableDays.equals(BigDecimal.ZERO)){
+					  		newEntity.put("noOfPayableDays",noOfPayableDays);
+					  	}
+		  			  	if(!noOfAttendedHoliDays.equals(BigDecimal.ZERO)){
+					  		newEntity.put("noOfAttendedHoliDays",noOfAttendedHoliDays);
+					  	}
+		  			  	newEntity.create();
+					}else{
+						if(!noOfCalenderDays.equals(BigDecimal.ZERO)){
+							payrollAttendanceDetails.put("noOfCalenderDays",noOfCalenderDays);
+		  			  	}
+		  			  	if(!noOfLossOfPayDays.equals(BigDecimal.ZERO)){
+		  			  		payrollAttendanceDetails.put("lossOfPayDays",noOfLossOfPayDays);
+		  			  	}
+		  			  	if(!noOfPayableDays.equals(BigDecimal.ZERO)){
+		  			  		payrollAttendanceDetails.put("noOfPayableDays",noOfPayableDays);
+					  	}
+		  			  	if(!noOfAttendedHoliDays.equals(BigDecimal.ZERO)){
+		  			  		payrollAttendanceDetails.put("noOfAttendedHoliDays",noOfAttendedHoliDays);
+					  	}
+		  			  	payrollAttendanceDetails.store();
+			    	}
+					request.setAttribute("_EVENT_MESSAGE_", "Successfully Updated..");
+			    }
+		    }catch (Exception e) {
+	  	    	Debug.logError(e, module);
+	  			return "Error";
+	  		}
+	  	    return "success";
+	  	}
 	 
 	 public static String updatePayrollAttendanceShiftWise(HttpServletRequest request, HttpServletResponse response) {
 	    	Delegator delegator = (Delegator) request.getAttribute("delegator");

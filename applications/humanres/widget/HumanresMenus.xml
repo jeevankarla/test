@@ -226,11 +226,6 @@
         	<link target="EditHolidays"></link>
         </menu-item> -->
         <menu-item name="EditPayrollAttendance" title="Edit Payroll Attendance">
-        	<condition>
-                 <and>
-                    <if-has-permission permission="HR"  action="_PAYATTNDNCEVIEW"/>
-	             </and> 
-            </condition> 
         	<link target="EditPayrollAtten"/>
         </menu-item>
         <menu-item name="EditShiftDays" title="Edit ShiftDays">

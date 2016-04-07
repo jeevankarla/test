@@ -116,40 +116,25 @@ function comparer(a, b) {
 	var recentChnage;
 	var type;
 	type="${parameters.type?if_exists}";
+	var data = ${StringUtil.wrapString(payrollJson)!'[]'};
 	var benefitTypeId;
 	benefitTypeId="${parameters.benefitTypeId?if_exists}";	
 	function setUpItemList() {
 			//recentChnage = recentChnage;
-			
 			var grid;		
-			var data;
 			<#if payrollJson?has_content>
 			 	data = ${StringUtil.wrapString(payrollJson)!'[]'};
-			 	<#else>
+			 <#else>
 			 	 data =[];
 			</#if>
 			var columns = [		
-					{id:"id", name:"Employee Id", field:"id", width:200, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"noOfAttendedDays", name:"WKD", field:"noOfAttendedDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfAttendedHoliDays", name:"OFFS", field:"noOfAttendedHoliDays", width:60, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"casualLeaveDays", name:"CL", field:"casualLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"earnedLeaveDays", name:"EL", field:"earnedLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfHalfPayDays", name:"HPL", field:"noOfHalfPayDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"commutedLeaveDays", name:"CHPL", field:"commutedLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"disabilityLeaveDays", name:"DBL", field:"disabilityLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"extraOrdinaryLeaveDays", name:"EOL", field:"extraOrdinaryLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfNightAllowanceDays", name:"NIGHT ALW", field:"noOfNightAllowanceDays", width:85, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"coldOrBoiledAllowanceDays", name:"CB ALW", field:"coldOrBoiledAllowanceDays", width:63, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfRiskAllowanceDays", name:"RSK ALW", field:"noOfRiskAllowanceDays", width:75, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"heavyTankerAllowanceDays", name:"HTKR", field:"heavyTankerAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"trTankerAllowanceDays", name:"TTKR", field:"trTankerAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"operatingAllowanceDays", name:"OPER", field:"operatingAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"inChargeAllowanceDays", name:"I/C", field:"inChargeAllowanceDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"lossOfPayDays", name:"ABS DAYS", field:"lossOfPayDays", width:75, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfPayableDays", name:"TDAYS", field:"noOfPayableDays", width:60, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-			];
+					{id:"id", name:"Employee Id", field:"id", width:300, minWidth:150, cssClass:"cell-title", sortable:true},
+					{id:"noOfCalenderDays", name:"Calender Days", field:"noOfCalenderDays", width:120, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"noOfPayableDays", name:"Payable Days", field:"noOfPayableDays", width:120, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"lossOfPayDays", name:"Loss Of Pay Days", field:"lossOfPayDays", width:120, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+				];
 	
-			columns.push({id:"button", name:"SAVE", field:"button", width:50, minWidth:70, cssClass:"cell-title",
+			columns.push({id:"button", name:"SAVE", field:"button", width:60, minWidth:70, cssClass:"cell-title",
 			 			formatter: function (row, cell, id, def, datactx) { 
 			 				if (dataView2.getItem(row).title != "New") {
         						return '<a href="#" class="button" onclick="editClickHandler('+row+')">Save</a>'; 
@@ -221,7 +206,6 @@ function comparer(a, b) {
 					      	$(grid.getCellNode(cell.row , 2)).click();
 					      	 grid.getEditController().commitCurrentEdit();
 					      }
-					     
 				}
 				
 				if (e.which == 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
@@ -240,50 +224,92 @@ function comparer(a, b) {
 				if(isNaN(weeklyOff)){
 					weeklyOff=0;
 				}
-				var physicalPresence = parseInt(data[args.row]["noOfAttendedDays"]);
+				var physicalPresence = parseFloat(data[args.row]["noOfAttendedDays"]);
 				if(isNaN(physicalPresence)){
 					physicalPresence=0;
 				}
-				var casualLeaves = parseInt(data[args.row]["casualLeaveDays"]);
+				var casualLeaves = parseFloat(data[args.row]["casualLeaveDays"]);
 				if(isNaN(casualLeaves)){
 					casualLeaves=0;
 				}
-				var earnedLeaves = parseInt(data[args.row]["earnedLeaveDays"]);
+				var earnedLeaves = parseFloat(data[args.row]["earnedLeaveDays"]);
 				if(isNaN(earnedLeaves)){
 					earnedLeaves=0;
 				}
-				var halfpayLeaves = parseInt(data[args.row]["noOfHalfPayDays"]);
+				var halfpayLeaves = parseFloat(data[args.row]["noOfHalfPayDays"]);
 				if(isNaN(halfpayLeaves)){
 					halfpayLeaves=0;
 				}else{
 					halfpayLeaves=halfpayLeaves/2;
 				}
-				var commutedLeaves = parseInt(data[args.row]["commutedLeaveDays"]);
+				var commutedLeaves = parseFloat(data[args.row]["commutedLeaveDays"]);
 				if(isNaN(commutedLeaves)){
 					commutedLeaves=0;
 				}
-				var disabilityLeaves = parseInt(data[args.row]["disabilityLeaveDays"]);
+				var disabilityLeaves = parseFloat(data[args.row]["disabilityLeaveDays"]);
 				if(isNaN(disabilityLeaves)){
 					disabilityLeaves=0;
+				}
+				var noOfPayableDays = parseFloat(data[args.row]["noOfPayableDays"]);
+				if(isNaN(noOfPayableDays)){
+					noOfPayableDays=0;
 				}
 				var days = physicalPresence+weeklyOff+casualLeaves+earnedLeaves+commutedLeaves+halfpayLeaves+disabilityLeaves;
 				if(isNaN(days)){
 					days = 0;
 				}		
-				var noOfCalenderDays = parseInt(data[args.row]["noOfCalenderDays"]);
+				var noOfCalenderDays = parseFloat(data[args.row]["noOfCalenderDays"]);
 				var cell = grid.getCellFromEvent(e);
 				if(days > noOfCalenderDays){
 					alert("Payable Days exceeds CalenderDays");
 					$(grid.getCellNode(cell.row +1, 2)).click();
 					return false;
 				}
-				data[args.row]["noOfPayableDays"] = days;				
+				//data[args.row]["noOfPayableDays"] = days;				
 				grid.updateRow(args.row);				
 				jQuery("#noOfPayableDays").html(days);			
-		});		
+			});		
 			
 			
-	         
+			grid.onCellChange.subscribe(function(e,args) {
+			  	if (args.cell == 2) {
+			  		var noOfCalenderDays = parseFloat(data[args.row]["noOfCalenderDays"]);
+					if(isNaN(noOfCalenderDays)){
+						noOfCalenderDays=0;
+					}
+			  		var noOfPayableDays = parseFloat(data[args.row]["noOfPayableDays"]);
+					if(isNaN(noOfPayableDays)){
+						noOfPayableDays=0;
+					}
+			  		if( noOfCalenderDays >= noOfPayableDays){
+			  			var lossOfPayDays = noOfCalenderDays-noOfPayableDays;
+			  			data[args.row]["lossOfPayDays"] = lossOfPayDays;
+			  			data[args.row]["noOfPayableDays"] = noOfPayableDays;
+			  			grid.updateRow(args.row);
+			  		}
+			  		//jQuery("#excessAmount").html(amount);
+			  	}
+			  	
+			  	if (args.cell == 3) {
+						  var lossOfPayDays = parseFloat(data[args.row]["lossOfPayDays"]);
+						  if(isNaN(lossOfPayDays)){
+						     lossOfPayDays=0;
+						   }
+						  var noOfCalenderDays = parseFloat(data[args.row]["noOfCalenderDays"]);
+						  if(isNaN(noOfCalenderDays)){
+							 noOfCalenderDays=0;
+						   }
+						  if( noOfCalenderDays >= lossOfPayDays){ 
+						  var noOfPayableDays = noOfCalenderDays-lossOfPayDays;
+						  data[args.row]["lossOfPayDays"] = lossOfPayDays;						  
+						  data[args.row]["noOfPayableDays"] = noOfPayableDays;
+						  grid.updateRow(args.row);
+						  }	
+			  	}
+			  	
+		  	});
+			
+			
 			// initialize the model after all the events have been hooked up
 			dataView2.beginUpdate();
 			dataView2.setItems(data);
@@ -296,6 +322,85 @@ function comparer(a, b) {
 		  	setEmplsCount();
 	});
 	
+	function processInputEntry(formName, action) {
+	jQuery("#changeSave").attr( "disabled", "disabled");
+	processInputEntryInternal(formName, action);
+}
+function processInputEntryInternal(formName, action) {
+	if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
+		return false;		
+	}
+	var formId = "#" + formName;
+	var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
+	jQuery(formId).append(jQuery(inputRowSubmit));	
+	
+	for (var rowCount=0; rowCount < data.length; ++rowCount){
+		var partyId = (data[rowCount]["partyId"]);
+		var deptId = (data[rowCount]["deptId"]);
+		var timePeriodId = (data[rowCount]["timePeriodId"]);
+		var customTimePeriodId = (data[rowCount]["customTimePeriodId"]);
+		var noOfCalenderDays = parseFloat(data[rowCount]["noOfCalenderDays"]);
+		var lossOfPayDays = parseFloat(data[rowCount]["lossOfPayDays"]);
+		var noOfPayableDays = parseFloat(data[rowCount]["noOfPayableDays"]);
+		var noOfAttendedHoliDays = parseFloat(data[rowCount]["noOfAttendedHoliDays"]);
+		
+		var partyId = jQuery("<input>").attr("type", "hidden").attr("name", "partyId_o_" + rowCount).val(partyId);
+		var deptId = jQuery("<input>").attr("type", "hidden").attr("name", "deptId_o_" + rowCount).val(deptId);
+		var timePeriodId = jQuery("<input>").attr("type", "hidden").attr("name", "timePeriodId_o_" + rowCount).val(timePeriodId);
+		var customTimePeriodId = jQuery("<input>").attr("type", "hidden").attr("name", "customTimePeriodId_o_" + rowCount).val(customTimePeriodId);
+		var noOfCalenderDays = jQuery("<input>").attr("type", "hidden").attr("name", "noOfCalenderDays_o_" + rowCount).val(noOfCalenderDays);
+		var lossOfPayDays = jQuery("<input>").attr("type", "hidden").attr("name", "lossOfPayDays_o_" + rowCount).val(lossOfPayDays);
+		var noOfPayableDays = jQuery("<input>").attr("type", "hidden").attr("name", "noOfPayableDays_o_" + rowCount).val(noOfPayableDays);
+		var noOfAttendedHoliDays = jQuery("<input>").attr("type", "hidden").attr("name", "noOfAttendedHoliDays_o_" + rowCount).val(noOfAttendedHoliDays);
+		jQuery(formId).append(jQuery(partyId));
+		jQuery(formId).append(jQuery(deptId));
+		jQuery(formId).append(jQuery(timePeriodId));
+		jQuery(formId).append(jQuery(customTimePeriodId));
+		jQuery(formId).append(jQuery(noOfCalenderDays));
+		jQuery(formId).append(jQuery(lossOfPayDays));
+		jQuery(formId).append(jQuery(noOfPayableDays));
+		jQuery(formId).append(jQuery(noOfAttendedHoliDays));
+
+	}
+		
+		// lets make the ajaxform submit
+		$('div#updateEntryMsg')
+    		  .html('<img src="/images/ajax-loader64.gif">');
+		var dataString = $(formId).serializeArray();	
+		$.ajax({
+             type: "POST",
+             url: action,
+             data: dataString,
+             dataType: 'json',
+             
+             success: function(result) { 
+             	//$(formId+' input').remove()            	
+	               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
+	            	    $('div#updateEntryMsg').html();
+	            	    $('div#updateEntryMsg').removeClass("messageStr");            	 
+	            	    $('div#updateEntryMsg').addClass("errorMessage");
+	            	    $('div#updateEntryMsg').html('<label>'+ result["_ERROR_MESSAGE_"]+'</label>');
+	            	     
+	               }else{
+	               		$("div#updateEntryMsg").fadeIn();               	         	   
+	            	    $('div#updateEntryMsg').html(); 
+	            	    $('div#updateEntryMsg').removeClass("errorMessage");           	 
+	            	    $('div#updateEntryMsg').addClass("messageStr");
+	            	    $('div#updateEntryMsg').html('<label><h3>succesfully updated.</h3></label>'); 
+	            	    $('div#updateEntryMsg').delay(10000).fadeOut('slow');  
+	            	    $($('.grid-canvas').children()[row]).css('background-color','#FAAC58'); 
+	            	    
+	               }
+               
+               },
+             error: function() {
+            	 	//alert("record not updated");
+            	 }
+           });
+			
+	}
+
+
 function editClickHandler(row) {
 		updatePayrollAttendanceInternal('updatePayrollAttendance', '<@ofbizUrl>EditPayrollAttendance</@ofbizUrl>', row);
 		getEmplDetails(row);
@@ -392,21 +497,22 @@ function updatePayrollAttendanceInternal(formName, action, row) {
 </script>
 	
 <div id="wrapper" style="width: 95%; height:100%">
-  <form method="post" name="updatePayrollAttendance" id="updatePayrollAttendance"> 
- </form>
-</div>
- <div name ="updateEntryMsg" id="updateEntryMsg">      
-    </div>
+	<form method="post" action="<@ofbizUrl>updatePayrollAttendance</@ofbizUrl>" name="updatePayrollAttendance" id="updatePayrollAttendance"></form>
+<div name ="updateEntryMsg" id="updateEntryMsg"></div>
 <div id="div2" style="float: left;width: 100%;align:right; border: #F97103 solid 0.1em;">
-  
     <div>    	
  		<div class="grid-header" style="width:100%">
 			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  <font size="15" color="#22047F"><b>Total Employees :<b/></font><font size="15" color="red"><b><span id="totalEmpls"></span></b></font><font size="15" color="#22047F"><b>Completed Employees :<b/></font><font size="15" color="red"><b><span id="enteredEmpls"></span></b></font><font size="15" color="#22047F"><b>Remaining Employees :<b/></font><font size="15" color="red"><b><span id="remainingEmpls"></span></b></font>  
 		</div>    
-		<div id="itemGrid2" style="width:100%;height:350px;">
-			
-		</div>
-				
+		<div id="itemGrid2" style="width:100%;height:350px;"></div>
     </div>
 </div>
+<div align="left">
+ 	<table width="60%" border="0" cellspacing="0" cellpadding="0">  
+    	<tr><td></td><td></td></tr>
+    	<tr><td></td><td></td></tr>
+    	<tr><td> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processInputEntry('updatePayrollAttendance','<@ofbizUrl>updatePayrollAttendance</@ofbizUrl>');" /></td>
+ 	</table>
+</div>
+</form>
 </div>
