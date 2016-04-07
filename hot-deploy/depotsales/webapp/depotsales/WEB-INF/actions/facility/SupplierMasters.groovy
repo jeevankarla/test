@@ -40,13 +40,35 @@
 		
 		supplierMap = [:];
 		supplierMap.put("partyId", supplierId);
-		supplierMap.put("name", supplierDetails.groupName);
-		supplierMap.put("paAddress1", supplierDetails.paAddress1);
-		supplierMap.put("paAddress2", supplierDetails.paAddress2);
-		supplierMap.put("postCode", supplierDetails.paPostalCode);
-		supplierMap.put("state", supplierDetails.paStateProvinceGeoId);
-		supplierMap.put("country", supplierDetails.paCountryGeoId);
-		supplierMap.put("contactNo", supplierDetails.tnContactNumber);
+		
+		
+		if(supplierDetails.groupName){
+			supplierMap.put("name", supplierDetails.groupName);
+		}
+		
+		if(supplierDetails.paAddress1){
+			supplierMap.put("paAddress1", supplierDetails.paAddress1);
+		}
+		
+		if(supplierDetails.paAddress2){
+			supplierMap.put("paAddress2", supplierDetails.paAddress2);
+		}
+		
+		if(supplierDetails.paPostalCode){
+			supplierMap.put("postCode", supplierDetails.paPostalCode);
+		}
+		
+		if(supplierDetails.paStateProvinceGeoId){
+			supplierMap.put("state", supplierDetails.paStateProvinceGeoId);
+		}
+		
+		if(supplierDetails.paCountryGeoId){
+			supplierMap.put("country", supplierDetails.paCountryGeoId);
+		}
+		
+		if(supplierDetails.tnContactNumber){
+			supplierMap.put("contactNo", supplierDetails.tnContactNumber);
+		}
 		
 		tempSupMap = [:];
 		tempSupMap.putAll(supplierMap);
