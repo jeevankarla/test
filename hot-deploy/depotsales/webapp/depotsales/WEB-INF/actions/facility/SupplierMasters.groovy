@@ -24,6 +24,13 @@
 	import org.ofbiz.entity.model.ModelKeyMap;
 	
 	
+	geoList = delegator.findList("Geo", null ,UtilMisc.toSet("geoId","geoName"),null,null,false);
+	geoNameMap = [:];
+	for(geo in geoList){
+		geoNameMap.put(geo.get("geoId"), geo.get("geoName"));
+	}
+	
+	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_SUPPLIER"));
 	
@@ -59,11 +66,15 @@
 		}
 		
 		if(supplierDetails.paStateProvinceGeoId){
-			supplierMap.put("state", supplierDetails.paStateProvinceGeoId);
+			if(geoNameMap.get(supplierDetails.paStateProvinceGeoId)){
+				supplierMap.put("state",geoNameMap.get(supplierDetails.paStateProvinceGeoId));
+			}
 		}
 		
 		if(supplierDetails.paCountryGeoId){
-			supplierMap.put("country", supplierDetails.paCountryGeoId);
+			if(geoNameMap.get(supplierDetails.paCountryGeoId)){
+				supplierMap.put("country",geoNameMap.get(supplierDetails.paCountryGeoId));
+			}
 		}
 		
 		if(supplierDetails.tnContactNumber){
