@@ -68,9 +68,17 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 public class DepotSalesServices{
 
    public static final String module = DepotSalesServices.class.getName();
-   
+   private static int decimals;
+   private static int rounding;
     public static final String resource = "AccountingUiLabels";
+    
+    static {
+        decimals = 2;// UtilNumber.getBigDecimalScale("order.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 
+        // set zero to the proper scale
+        //if (decimals != -1) ZERO = ZERO.setScale(decimals);
+    }  
     public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
   		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -4273,9 +4281,22 @@ public class DepotSalesServices{
 				return "error";
 			}
 	   	}
-		Debug.log("categoryName===================="+categoryName);
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-		String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");
+		String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");		
+		
+		// SPECIAL CONDITIONS FOR LINEN, HAVE TO CALCULATE BOTH UOMS TO SHOW IN ITS NAME		
+		String leaCount = "";
+		String nmCount = "";
+		if(productCategoryId.equals("LINEN")){
+			if( (paramMap.get("UOM")).equals("NM")){
+				nmCount = (String) paramMap.get("COUNT");
+				leaCount = ((new BigDecimal(nmCount)).divide(new BigDecimal("0.6"))).setScale(0,rounding).toString();
+			}
+			if((paramMap.get("UOM")).equals("LEA")){
+				leaCount = (String) paramMap.get("COUNT");
+				nmCount = ((new BigDecimal(leaCount)).multiply(new BigDecimal("0.6"))).setScale(0,rounding).toString();
+			}
+		}	
 		
 		// Product Name Creation
 		String productName = "";
@@ -4283,7 +4304,6 @@ public class DepotSalesServices{
 			String attribute = (String) ((GenericValue) productCategoryAttributeTypesList.get(i)).get("attrTypeId");
 			String attrValue = (String) paramMap.get(attribute);
 			if(UtilValidate.isEmpty(attrValue) || (attrValue.equals("N"))){
-				Debug.log("attrValue========org============"+attrValue);
 				continue;
 			}
 			if(attribute.equals("PACKING")){
@@ -4294,6 +4314,15 @@ public class DepotSalesServices{
 				continue;
 			}
 			
+			if(productCategoryId.equals("LINEN")){
+				if( attribute.equals("COUNT") ){
+					productName = productName + leaCount + "LEA" +"/"+ nmCount + "NM" + " ";
+					continue;
+				}
+				if( attribute.equals("UOM") ){
+					continue;
+				}
+			}			
 			
 			productName = productName + attrValue;
 			if(attribute.equals("PLY")){
