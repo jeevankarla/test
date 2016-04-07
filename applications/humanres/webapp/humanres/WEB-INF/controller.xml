@@ -983,6 +983,12 @@ under the License.
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>
    </request-map>
+      <request-map uri="updatePayrollAttendance">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updatePayrollAttendance"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+   </request-map>
    <request-map uri="EditPayrollAttendanceShiftWise">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updatePayrollAttendanceShiftWise"/>

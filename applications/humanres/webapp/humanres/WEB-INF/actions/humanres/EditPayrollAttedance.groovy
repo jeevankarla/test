@@ -17,10 +17,12 @@ import java.util.Calendar;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import java.sql.Timestamp;
+import java.math.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
+import java.math.BigDecimal;
 import in.vasista.vbiz.humanres.PayrollService;
 import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.HumanresService;
@@ -80,7 +82,7 @@ customTimePeriodId=lastClosePeriod.get("customTimePeriodId");
 GenericValue attnCustomTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
 attnTimePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("fromDate")));
 attnTimePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("thruDate")));
-totalDays= UtilDateTime.getIntervalInDays(attnTimePeriodStart,attnTimePeriodEnd);
+totalDays= UtilDateTime.getIntervalInDays(timePeriodStart,timePeriodEnd);
 totalDays=totalDays+1;
 conList=[];
 conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
@@ -98,17 +100,17 @@ conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , e
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
 EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 List<GenericValue> payrollAttendanceList = delegator.findList("PayrollAttendance", condition, null, ["partyId"], null, false);
-if(UtilValidate.isNotEmpty(employementList)){
-	employementList.each{employement ->
-		partyId=employement.get("partyIdTo");
+if(UtilValidate.isNotEmpty(employementIds)){
+	employementIds.each{employee ->
+		partyId=employee;
 		emplPayrollAttendanceList = EntityUtil.filterByAnd(payrollAttendanceList,UtilMisc.toMap("partyId",partyId));
 		tempFinalMap=[:];
 		tempFinalMap["timePeriodId"]="";
 		tempFinalMap.put("customTimePeriodId",customTimePeriodId);
 		tempFinalMap.put("timePeriodId",timePeriodId);
 		tempFinalMap.put("Dates",dates);
-		tempFinalMap.put("deptId", deptId);
-		tempFinalMap["noOfPayableDays"]="";
+		tempFinalMap.put("deptId", parameters.partyId);
+		tempFinalMap["noOfPayableDays"]=totalDays;
 		if(!"leaveEncash".equals(screenFlag)){
 			tempFinalMap["noOfAttendedDays"]="";
 			tempFinalMap["noOfCalenderDays"]=totalDays;
@@ -132,7 +134,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 			tempFinalMap["inChargeAllowanceDays"]="";
 			tempFinalMap["noOfHalfPayDays"]="";
 		}else{
-			tempFinalMap["noOfCalenderDays"]=30;
+			tempFinalMap["noOfCalenderDays"]=totalDays;
 			tempFinalMap["screenFlag"]=screenFlag;
 		}
 		
@@ -142,12 +144,12 @@ if(UtilValidate.isNotEmpty(employementList)){
 			customTimePeriodId=payrollAttendance.get("customTimePeriodId");
 			if("leaveEncash".equals(screenFlag)){
 				customTimePeriodId=timePeriodId
-				noOfCalenderDays=30;
+				noOfCalenderDays=totalDays;
 				tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
 				tempFinalMap["screenFlag"]=screenFlag;
 			}
 			
-			noOfPayableDays="";
+			BigDecimal noOfPayableDays;
 			if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfPayableDays")) && payrollAttendance.get("noOfPayableDays")!=0)
 			noOfPayableDays=payrollAttendance.get("noOfPayableDays");
 			tempFinalMap.put("noOfPayableDays",noOfPayableDays);
@@ -157,10 +159,10 @@ if(UtilValidate.isNotEmpty(employementList)){
 				noOfAttendedDays=payrollAttendance.get("noOfAttendedDays");
 				tempFinalMap.put("noOfAttendedDays",noOfAttendedDays);
 				
-				noOfCalenderDays=totalDays;
+				BigDecimal noOfCalenderDays=totalDays;
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfCalenderDays")) && payrollAttendance.get("noOfCalenderDays")!=0)
 				noOfCalenderDays=payrollAttendance.get("noOfCalenderDays");
-				tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
+				tempFinalMap.put("noOfCalenderDays",totalDays);
 				
 				casualLeaveDays="";
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("casualLeaveDays")) && payrollAttendance.get("casualLeaveDays")!=0)
@@ -208,9 +210,25 @@ if(UtilValidate.isNotEmpty(employementList)){
 				tempFinalMap.put("noOfCompoffAvailed",noOfCompoffAvailed);
 				
 				lossOfPayDays="";
-				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays")) && payrollAttendance.get("lossOfPayDays")!=0)
-				lossOfPayDays=payrollAttendance.get("lossOfPayDays");
-				tempFinalMap.put("lossOfPayDays",lossOfPayDays);
+				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays")) && payrollAttendance.get("lossOfPayDays")!=0){
+					lossOfPayDays=payrollAttendance.get("lossOfPayDays");
+					float payableDays = 0;
+					float calenderDays = 0;
+					if(UtilValidate.isNotEmpty(noOfPayableDays)){
+						payableDays = noOfPayableDays.floatValue();
+					}else{
+						noOfPayableDays = BigDecimal.ZERO;
+						payableDays = noOfPayableDays.floatValue();
+					}
+					if(UtilValidate.isNotEmpty(noOfCalenderDays)){
+						calenderDays = noOfCalenderDays.floatValue();
+					}else{
+						noOfCalenderDays = BigDecimal.ZERO;
+						calenderDays = noOfCalenderDays.floatValue();
+					}
+					payDays = calenderDays - payableDays; 
+					tempFinalMap.put("lossOfPayDays",payDays);
+				}
 				
 				noOfArrearDays="";
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfArrearDays")) && payrollAttendance.get("noOfArrearDays")!=0)
