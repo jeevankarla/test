@@ -99,7 +99,7 @@ under the License.
 		</#if>
               <#--	<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block> -->
 		 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;</fo:block>
-		<#-- <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Reference : Your quotation no : against your purchase enquiry no</fo:block>-->
+		 <#--<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Reference : Your quotation no : against your purchase enquiry no</fo:block>-->
       <#--<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("supplierName")?has_content>&#160;&#160;${allDetailsMap.get("supplierName")}  <#else> </#if>        </fo:block>
          <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("address1")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
          <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("address2")?has_content>&#160;&#160;&#160;     ${allDetailsMap.get("address2")?if_exists} <#else> </#if>     </fo:block>
@@ -310,12 +310,44 @@ under the License.
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
 								  </fo:table-cell>
 							 </#if>
+							 
 							  </fo:table-row>
+							   
 						</fo:table-body>
 					      </fo:table>
 					   </fo:block>
 				   </fo:table-cell>
                </fo:table-row>
+                <fo:table-row>
+                	<fo:table-cell border-style="solid">
+                        <fo:block text-align="left" font-size="11pt" font-weight="bold" >&#160;</fo:block>
+                        <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
+                        <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
+                    </fo:table-cell>
+					<fo:table-cell border-style="solid">
+                        <fo:block>
+					    <fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline"  >Destination Address:</fo:inline></fo:block>
+					       <fo:table width="80%" align="right" table-layout="fixed"  font-size="11pt" >
+      					   <fo:table-column column-width="100%"/>	             
+				           	  <fo:table-body>
+							  <fo:table-row>
+							  <#if allDetailsMap.get("DstAddr")?has_content>
+								  <fo:table-cell>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
+	                               </fo:table-cell>
+								  <#else>
+								  <fo:table-cell>
+								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
+								  </fo:table-cell>
+							 </#if>
+							 
+							</fo:table-row>
+						</fo:table-body>
+					   </fo:table>
+					  </fo:block>
+				   </fo:table-cell>
+				</fo:table-row>							  
+							 
 	      </fo:table-body>
 	    </fo:table>
 	 </fo:block>
