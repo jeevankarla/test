@@ -187,7 +187,7 @@
 				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
 				<set field="orderId" from-field="parameters.orderId" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
-				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="parameters.isFormSubmitted" value="YES" />
 				<set field="defaultEffectiveDateTime" value="${supplyDate}"
 					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
 				<set field="defaultEffectiveDate"
