@@ -1298,8 +1298,23 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>     
-	        
-	        
+	     <menu-item name="invoiceOverView" title="Invoice OverView">
+	        	<condition>
+	        		<not>
+						<if-empty  field="parameters.invoiceId"/>
+					</not>
+	        	</condition>
+	        	<link target="APInvoiceOverview"> <parameter param-name="invoiceId" from-field="parameters.invoiceId" /> </link>
+        	</menu-item> 
+        	  
+	        <menu-item name="paymentOverView" title="Payment OverView">
+	        	<condition>
+	        		<not>
+						<if-empty  field="parameters.paymentId"/>
+					</not>
+	        	</condition>
+	        	<link target="paymentOverview"> <parameter param-name="paymentId" from-field="parameters.paymentId" /> </link>
+        	</menu-item>
 	        
 	        
        
