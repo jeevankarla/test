@@ -965,6 +965,9 @@
 						}
 				data[args.row]["quota"] = qut;
        			data[args.row]['quantity'] =qut;
+       			utprice=data[currentrow-1]["unitPrice"];
+       			amount=qut*utprice;
+       			data[args.row]['amount'] = amount;
       		 grid.updateRow(args.row);
       		 }
       		 }
@@ -977,10 +980,10 @@
 				var uomLabel = uomLabelMap[uomId];
 				item['uomDescription'] = uomLabel;     		 		
 	      		grid.invalidateRow(data.length);
-	      		grid.updateRow(args.row);
+	      		grid.updateRow(args.row+1);
 	      		grid.updateRowCount();
 	      		grid.render();
-	      		$(grid.getCellNode(args.row, 1)).click();
+	      		$(grid.getCellNode(args.row+1, 1)).click();
 			}
 			
 		});

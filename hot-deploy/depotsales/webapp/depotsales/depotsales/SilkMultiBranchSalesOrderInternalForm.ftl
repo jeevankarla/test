@@ -737,7 +737,6 @@
        		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
        		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
        		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
-       		data[args.row]['amount'] = data[currentrow-1]["amount"];
        		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
 		   	var qut=0;
 		   	if(data[args.row]['customerId'] != "undefined"){
@@ -771,6 +770,9 @@
 						}
 				data[args.row]["quota"] = qut;
        			data[args.row]['quantity'] =qut;
+       			utprice=data[currentrow-1]["unitPrice"];
+       			amount=qut*utprice;
+       			data[args.row]['amount'] = amount;
       		 grid.updateRow(args.row);
       		 }
       		 }
@@ -782,10 +784,10 @@
 				var uomLabel = uomLabelMap[uomId];
 				item['uomDescription'] = uomLabel;     		 		
 	      		grid.invalidateRow(data.length);
-	      		grid.updateRow(args.row);
+	      		grid.updateRow(args.row+1);
 	      		grid.updateRowCount();
 	      		grid.render();
-	      		$(grid.getCellNode(args.row, 1)).click();
+	      		$(grid.getCellNode(args.row+1, 1)).click();
 			}
 			
 		});
