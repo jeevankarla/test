@@ -37,7 +37,7 @@ under the License.
     <fo:page-sequence master-reference="main">
         <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
          
-           <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : ${scheme}</fo:block> 
+           <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block> 
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
    		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">S-13/36, SRI RAM MARKET</fo:block>
            <fo:block text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">VARANASI-221002</fo:block>
