@@ -78,7 +78,7 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 orderList=[];
 condList = [];
 if(UtilValidate.isNotEmpty(searchOrderId)){
-	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId+"%"));
 }
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
