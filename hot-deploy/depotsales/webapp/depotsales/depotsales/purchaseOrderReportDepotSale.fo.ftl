@@ -326,7 +326,7 @@ under the License.
                     </fo:table-cell>
 					<fo:table-cell border-style="solid">
                         <fo:block>
-					    <fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline"  >Delivery Destination Address:</fo:inline></fo:block>
+					    <fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline"  >Delivery Destination:</fo:inline></fo:block>
 					       <fo:table width="80%" align="right" table-layout="fixed"  font-size="11pt" >
       					   <fo:table-column column-width="100%"/>	             
 				           	  <fo:table-body>
