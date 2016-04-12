@@ -191,7 +191,7 @@
 		POorder="";
 		if(OrderAss){
 			POorder=OrderAss.get("orderId");
-			context.orderId =POorder;
+			//context.orderId =POorder;
 			isgeneratedPO="Y";
 		}
 		
