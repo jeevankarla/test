@@ -142,7 +142,7 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
-			var customerId = parseFloat(data[rowCount]["customerId"]);
+			var customerId = data[rowCount]["customerId"];
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
 			var yarnUOM = data[rowCount]["cottonUom"];
 			var bundleWeight = data[rowCount]["bundleWeight"];
