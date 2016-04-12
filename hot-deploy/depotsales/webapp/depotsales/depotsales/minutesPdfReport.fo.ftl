@@ -280,16 +280,16 @@ under the License.
 				<fo:block>g) Percentage of Trading Contribution: 0%</fo:block>
 			    <fo:block>	
 			        <fo:table border-style="solid">
-             		    <fo:table-column column-width="50%"/>
-			            <fo:table-column column-width="50%"/>	
+             		    <fo:table-column column-width="100%"/>
+			           <#-- <fo:table-column column-width="50%"/>	-->
 			            <fo:table-body> 
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Sales Terms</fo:block>
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					            <#--><fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold"                                                                                  >Purchase Terms</fo:block>
-					            </fo:table-cell>
+					            </fo:table-cell>-->
 							</fo:table-row>			
 				            <fo:table-row>
 					             <fo:table-cell border-style="solid">
@@ -304,7 +304,7 @@ under the License.
 	                                <fo:block>9. Any other specific information ...................</fo:block>
 	                               <fo:block>10. Local Taxes as applicable.</fo:block>
 					           </fo:table-cell>
-                               <fo:table-cell border-style="solid">
+                               <#--<fo:table-cell border-style="solid">
 									<fo:block>1. Yarn will be received with self certification subject to testing of the yarn at Textile committee /our QC department.If the test results are differed to our specifications, the material will be rejected at the cost of the supplier.</fo:block>
 									<fo:block>2. Delivery Schedule: <fo:inline font-weight="bold">Immediately</fo:inline>.</fo:block>
 									<fo:block>3. Mode of Despatch: Material should be depatched through reliable transporters only.</fo:block>
@@ -317,7 +317,7 @@ under the License.
 	                                <fo:block>10. Supply should be completed as mentioned above from the date of receipt of purchase order.</fo:block>
 	                                <fo:block>11. Puchase Order number and date must appear on all your invoices / correspondences. </fo:block>
 	                                <fo:block font-weight="bold">12. For having accepted the purchase order and terms &amp; conditions contained therein you have to return the second copy of the this purchse Order duly your seal &amp; signature immediately after receipt of the same.</fo:block>
-					          </fo:table-cell>     
+					          </fo:table-cell>-->     
 	                     </fo:table-row>
 					</fo:table-body>
 			   </fo:table>
