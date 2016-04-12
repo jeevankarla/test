@@ -318,6 +318,7 @@ def forOnbeHalf(){
 			partyId = "";
 			productId = "";
 			itemDescription = "";
+			passNo = "";
 			quantity = 0;
 			unitPrice = 0;
 			quotaQty = 0;
