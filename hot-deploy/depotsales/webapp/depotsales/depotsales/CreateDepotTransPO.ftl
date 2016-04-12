@@ -127,7 +127,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 onFinishing: function (event, currentIndex)
                 {	
                     var facilityId = $("#facilityId").val(); 
-            	    if( (facilityId).length < 1 ) {
+            	    if( (facilityId).length < 1 || facilityId == 'selected') {
 				    	$('#facilityId').css('background', 'yellow'); 
 				       	setTimeout(function () {
 				           	$('#facilityId').css('background', 'white').focus(); 

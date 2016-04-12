@@ -41,7 +41,7 @@ under the License.
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
    		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">S-13/36, SRI RAM MARKET</fo:block>
            <fo:block text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">VARANASI-221002</fo:block>
-           <fo:block text-align="center" font-size="12pt" font-weight="bold" text-decoration="underline"  white-space-collapse="false">E-MAIL:nhdccitdvns@yahoo.in</fo:block>
+           <fo:block text-align="center" font-size="12pt" font-weight="bold" text-decoration="underline"  white-space-collapse="false">E-MAIL:nhdcltdvns@yahoo.in</fo:block>
            <fo:block text-align="center" font-size="13pt" font-weight="bold"  white-space-collapse="false">Weaver Details</fo:block>
            
        			

@@ -79,12 +79,17 @@ orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondit
 }
 
 actualOrderId = "";
+destination = "";
+
 
 if(UtilValidate.isNotEmpty(orderAttrForPo)){
 	
 	orderAttrForPo.each{ eachAttr ->
 		if(eachAttr.attrName == "PO_NUMBER"){
 			actualOrderId =  eachAttr.attrValue;
+		}
+		if(eachAttr.attrName == "DST_ADDR"){
+			destination =  eachAttr.attrValue;
 		}
 	}
 }
@@ -99,7 +104,6 @@ soceity = "";
 poDate = "";
 scheme = "";
 supplier = "";
-destination = "";
 onbehalf = "";
 finalDetails = [];
 if(actualOrderId){
@@ -129,9 +133,6 @@ OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 		orderAttr.each{ eachAttr ->
 			if(eachAttr.attrName == "SCHEME_CAT"){
 				scheme =  eachAttr.attrValue;
-			}
-			if(eachAttr.attrName == "DST_ADDR"){
-				destination =  eachAttr.attrValue;
 			}
 		}
 	   }
@@ -181,9 +182,6 @@ if(onbehalf == true){
 	context.schemeDeductionAmt = schemeDeductionAmt;
 	
 	
-	
-	int i = 1;
-	
 	if(invoiceItemList){
 	for (eachInvoiceList in invoiceItemList) {
 		 tempMap = [:];
@@ -207,6 +205,7 @@ if(onbehalf == true){
 		  tempMap.put("baleQty", 0);
 		  tempMap.put("unit", "");
 		  tempMap.put("quantity", eachInvoiceList.quantity);
+		  tempMap.put("amount", eachInvoiceList.amount);
 		  String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 		  
 		  if(UtilValidate.isNotEmpty(schemeAmt))
@@ -215,11 +214,20 @@ if(onbehalf == true){
 		    tempMap.put("schemeQty", 0);
 			
 			tempMap.put("rateKg", eachInvoiceList.unitPrice);
-			tempMap.put("amount", eachInvoiceList.amount);
+			
+			  qyt = 0;
+			  ratePer = 0;
+			  
+			  if(UtilValidate.isNotEmpty(eachInvoiceList.quantity))
+			  qty = eachInvoiceList.quantity;
+			  
+			  if(UtilValidate.isNotEmpty(eachInvoiceList.quantity))
+			  ratePer = eachInvoiceList.amount;
+			
+			tempMap.put("ToTamount", qty*ratePer);
 		  
 			finalDetails.add(tempMap);
 		  
-		  i++;
 	   }
 	 }
 	

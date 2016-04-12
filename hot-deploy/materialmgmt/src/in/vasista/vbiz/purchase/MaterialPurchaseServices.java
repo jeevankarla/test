@@ -149,7 +149,7 @@ public class MaterialPurchaseServices {
 		  	}
         }
         
-	  	/*if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
+	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
 	  			supplierInvoiceDate = new java.sql.Timestamp(dateSdf.parse(supplierInvoiceDateStr).getTime());
@@ -159,7 +159,7 @@ public class MaterialPurchaseServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	}
-	  	}*/
+	  	}
 	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
 	  /*	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
 	  		try {
