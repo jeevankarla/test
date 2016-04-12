@@ -216,7 +216,7 @@
 	      alert("Please Enter Amount Less Than The balance Total.");
 	        $("#amount").val(balance);
 	   }
-	   else if(parseFloat(amount)<0){
+	   else if(parseFloat(amount)<=0){
 	      alert("Please Enter Amount Greater Than The 0.");
 	        $("#amount").val(balance);
 	   }
@@ -308,11 +308,11 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	                   </#list> 
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+balance+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Cheque No:</font></td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
