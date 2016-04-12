@@ -876,7 +876,7 @@ function populateData(){
                             	 </td>
       						</tr>
       						<tr>
-                    			<td class="label"><FONT COLOR="#045FB4"><b>District  : </b></FONT></td>
+                    			<td class="label"><FONT COLOR="#045FB4"><b>Destination  : </b></FONT></td>
                             	 <#if shipingAdd?has_content && shipingAdd.get("districtGeoId")?has_content>
                             	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("districtGeoId")?if_exists}">
                             		<#else>
