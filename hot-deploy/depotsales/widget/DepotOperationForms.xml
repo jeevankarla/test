@@ -167,7 +167,7 @@
     </form> -->
     
      <form name="FindSalesIndentPayment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        <field name="salesChannelEnumId" ><hidden value="MATERIAL_PUR_CHANNEL"/></field>  
+        <field name="salesChannelEnumId" ><hidden value="DEPOT_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
            <drop-down no-current-selected-key="SALES_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
@@ -177,7 +177,7 @@
         </field> -->
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
+             <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
         </field>
