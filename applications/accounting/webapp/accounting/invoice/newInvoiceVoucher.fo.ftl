@@ -41,7 +41,7 @@ under the License.
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
    		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">S-13/36, SRI RAM MARKET</fo:block>
            <fo:block text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">VARANASI-221002</fo:block>
-           <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">E-MAIL:nhdccitdvns@yahoo.in</fo:block>
+           <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">E-MAIL:nhdcltdvns@yahoo.in</fo:block>
            
         </fo:static-content>
         
@@ -145,7 +145,7 @@ under the License.
 				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}<#else>0.00</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("unit")?has_content>${invoiceDetail.get("unit?if_exists")?if_exists}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="12pt" >KG</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				
@@ -161,13 +161,13 @@ under the License.
 				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("rateKg")?has_content>${invoiceDetail.get("rateKg")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<#if invoiceDetail.get("amount")?has_content>
-				<#assign totAmount = totAmount+invoiceDetail.get("amount")>
+				<#if invoiceDetail.get("ToTamount")?has_content>
+				<#assign totAmount = totAmount+invoiceDetail.get("ToTamount")>
 				</#if>
-				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="right"  font-size="12pt" ><#if invoiceDetail.get("ToTamount")?has_content>${invoiceDetail.get("ToTamount")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				</fo:table-row>
 		   
