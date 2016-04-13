@@ -134,11 +134,17 @@ OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 			if(eachAttr.attrName == "SCHEME_CAT"){
 				scheme =  eachAttr.attrValue;
 			}
+			
 		}
 	   }
+	
+
 		
 	}
 	
+
+
+
 
 for (eachRole in OrderRoleList) {
 	
@@ -183,7 +189,10 @@ if(onbehalf == true){
 	
 	
 	if(invoiceItemList){
-	for (eachInvoiceList in invoiceItemList) {
+	
+		int i=1;
+		
+		for (eachInvoiceList in invoiceItemList) {
 		 tempMap = [:];
 		 tempMap.put("productId", eachInvoiceList.productId);
 		 tempMap.put("prodDescription", eachInvoiceList.description);
@@ -202,11 +211,31 @@ if(onbehalf == true){
 	      }
 	    }*/
 		 
+		 String seq = String.format("%05d", i);
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
+		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 OrderItemAttributeList1 = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
+		 
+		 Debug.log("cond=========="+cond);
+		 
+		 
+		 String schemeAmt = "";
+		 if(OrderItemAttributeList1){
+		 OrderItemAttributeList1.each{ eachAttr ->
+			if(eachAttr.attrName == "quotaQty"){
+				schemeAmt =  eachAttr.attrValue;
+			}
+		 }
+	   }
+		 
 		  tempMap.put("baleQty", 0);
 		  tempMap.put("unit", "");
 		  tempMap.put("quantity", eachInvoiceList.quantity);
 		  tempMap.put("amount", eachInvoiceList.amount);
-		  String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
+		  //String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 		  
 		  if(UtilValidate.isNotEmpty(schemeAmt))
 		    tempMap.put("schemeQty", Double.valueOf(schemeAmt));
@@ -227,13 +256,14 @@ if(onbehalf == true){
 			tempMap.put("ToTamount", qty*ratePer);
 		  
 			finalDetails.add(tempMap);
-		  
+		  i++;
 	   }
 	 }
 	
 	context.finalDetails = finalDetails;
 	
 }
+Debug.log("finalDetails=========="+finalDetails);
 
 
 

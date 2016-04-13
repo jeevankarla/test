@@ -2204,14 +2204,16 @@ public class DepotSalesServices{
 						// Have to get these details from schemes. Temporarily hard coding it.
 						BigDecimal schemePercent = new BigDecimal("10");
 						BigDecimal percentModifier = schemePercent.movePointLeft(2);
-						item.setOrderItemAttribute("quotaQty",quota.toString());
+						
 						
 						BigDecimal discountAmount = BigDecimal.ZERO;
 						if(quantity.compareTo(quota)>0){
 							discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
+							item.setOrderItemAttribute("quotaQty",quota.toString());
 						}
 						else{
 							discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
+							item.setOrderItemAttribute("quotaQty",quantity.toString());
 						}
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
 				                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
