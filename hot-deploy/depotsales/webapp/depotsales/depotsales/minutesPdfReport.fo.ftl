@@ -121,10 +121,10 @@ under the License.
 					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
@@ -213,11 +213,11 @@ under the License.
 					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
