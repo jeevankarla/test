@@ -2071,6 +2071,37 @@ public class DepotPurchaseServices{
   		}	
   		
   		
+  		public static Map<String, Object> getBoHeader(DispatchContext dctx, Map context) {
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Locale locale = (Locale) context.get("locale");
+			String branchId = (String) context.get("branchId");
+	        List productIdsList = FastList.newInstance();
+    		Map boHeaderMap = FastMap.newInstance();
+			List<GenericValue> tenantConfigCheck = FastList.newInstance();
+			try{
+				List condList=FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.LIKE,"%"+branchId+"%"));
+				condList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS, "COMPANY_HEADER"));
+				condList.add(EntityCondition.makeCondition("propertyValue", EntityOperator.EQUALS, "Y"));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				tenantConfigCheck = delegator.findList("TenantConfiguration",cond, null , null, null, false);
+				if (UtilValidate.isNotEmpty(tenantConfigCheck)) {
+					for (int i = 0; i < tenantConfigCheck.size(); i++) {						
+						GenericValue eachProductList = (GenericValue)tenantConfigCheck.get(i);					
+						String header=(String)eachProductList.get("description");
+						boHeaderMap.put("header"+i,header);
+			    	}
+				}
+			}catch(GenericEntityException ex){
+				Debug.log("Problem in fetching orderItems");
+			}
+			result.put("boHeaderMap",boHeaderMap);
+			return result;
+  		}	
+  			
   		
   		
 	    

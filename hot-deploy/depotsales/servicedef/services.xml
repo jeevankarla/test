@@ -249,5 +249,10 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="productSummaryMap" type="Map" mode="OUT" optional="true"/>        
     </service>
+    <service name="getBoHeader" engine="java" location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="getBoHeader">
+        <description> Products summary to Order</description>
+        <attribute name="branchId" type="String" mode="IN" optional="false"/>
+        <attribute name="boHeaderMap" type="Map" mode="OUT" optional="true"/>        
+    </service>
 </services>
 
