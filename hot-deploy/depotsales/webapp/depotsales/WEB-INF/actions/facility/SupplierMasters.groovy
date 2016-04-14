@@ -33,9 +33,13 @@
 	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_SUPPLIER"));
-	
 	//fieldToSelect = UtilMisc.toSet("partyId", "groupName", "paAddress1", "paAddress2", "paPostalCode", "paCountryGeoId", "paStateProvinceGeoId", "tnContactNumber");
 	List supplierPartyDetails = delegator.findList("PartyRoleAndContactMechDetail",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
+	
+	condList = [];
+	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.IN, UtilMisc.toList("CST_NUMBER","PAN_NUMBER","TAN_NUMBER")));
+	//fieldToSelect = UtilMisc.toSet("partyId", "groupName", "paAddress1", "paAddress2", "paPostalCode", "paCountryGeoId", "paStateProvinceGeoId", "tnContactNumber");
+	List partyIdentificationList = delegator.findList("PartyIdentification",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	
 	List supplierIds = EntityUtil.getFieldListFromEntityList(supplierPartyDetails, "partyId", true);
 	
@@ -45,24 +49,68 @@
 		suppList = EntityUtil.filterByCondition(supplierPartyDetails, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
 		supplierDetails = suppList.get(0);
 		
+		suppPostalAddress = null;
+		suppPostalAddressList = EntityUtil.filterByCondition(suppList, EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
+		if(UtilValidate.isNotEmpty(suppPostalAddressList)){
+			suppPostalAddress = suppPostalAddressList.get(0);
+		}
+		
+		
+		suppIdentificationList = EntityUtil.filterByCondition(partyIdentificationList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
+		
+		cstNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+		tinNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TAN_NUMBER"));
+		panNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+		
+		cstDetail = null;
+		tinDetail = null;
+		panDetail = null;
+		if(UtilValidate.isNotEmpty(cstNoList)){
+			cstDetail = cstNoList.get(0);
+		}
+		if(UtilValidate.isNotEmpty(tinNoList)){
+			tinDetail = tinNoList.get(0);
+		}
+		if(UtilValidate.isNotEmpty(panNoList)){
+			panDetail = panNoList.get(0);
+		}
+		 
+		
+		
 		supplierMap = [:];
 		supplierMap.put("partyId", supplierId);
 		
+		
+		if(cstDetail && cstDetail.idValue){
+			supplierMap.put("cstNo", cstDetail.idValue);
+		}
+		
+		if(tinDetail && tinDetail.idValue){
+			supplierMap.put("tinNo", tinDetail.idValue);
+		}
+		
+		if(panDetail && panDetail.idValue){
+			supplierMap.put("panNo", panDetail.idValue);
+		}
 		
 		if(supplierDetails.groupName){
 			supplierMap.put("name", supplierDetails.groupName);
 		}
 		
-		if(supplierDetails.paAddress1){
-			supplierMap.put("paAddress1", supplierDetails.paAddress1);
+		if(suppPostalAddress && suppPostalAddress.paAddress1){
+			supplierMap.put("paAddress1", suppPostalAddress.paAddress1);
 		}
 		
-		if(supplierDetails.paAddress2){
-			supplierMap.put("paAddress2", supplierDetails.paAddress2);
+		if(suppPostalAddress && suppPostalAddress.paAddress2){
+			supplierMap.put("paAddress2", suppPostalAddress.paAddress2);
 		}
 		
-		if(supplierDetails.paPostalCode){
-			supplierMap.put("postCode", supplierDetails.paPostalCode);
+		if(suppPostalAddress && suppPostalAddress.paCity){
+			supplierMap.put("city", suppPostalAddress.paCity);
+		}
+		
+		if(suppPostalAddress && suppPostalAddress.paPostalCode){
+			supplierMap.put("postCode", suppPostalAddress.paPostalCode);
 		}
 		
 		if(supplierDetails.paStateProvinceGeoId){
@@ -81,13 +129,17 @@
 			supplierMap.put("contactNo", supplierDetails.tnContactNumber);
 		}
 		
+		
+		
+		
+		
+		
 		tempSupMap = [:];
 		tempSupMap.putAll(supplierMap);
 		
 		supplierMastersList.add(tempSupMap);
 		
 	}
-	Debug.log("supplierMastersList ============== "+supplierMastersList);
 	context.supplierMastersList=supplierMastersList;
 	
 	
