@@ -629,7 +629,8 @@ function populateData(){
         				 </td>
 					</tr>-->
 			        <tr>
-			            <td class="label"><b> Description :</b></td>
+			        <td><input class="h3" type="hidden" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" /></td>
+			           <#-- <td class="label"><b> Description :</b></td>
 			            <td>
 			            	<#if orderId?exists && orderInfo.get("orderName")?exists>
 					    		<input type="text" name="orderName" id="orderName" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderName")?if_exists}"/>
@@ -637,7 +638,7 @@ function populateData(){
 					    		<input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
 					    	</#if>
         				   
-          				</td>
+          				</td>-->
 			        </tr>
                   </table>
                 </fieldset>  
