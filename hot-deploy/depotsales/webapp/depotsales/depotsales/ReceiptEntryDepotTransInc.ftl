@@ -433,6 +433,7 @@
 				if(isNaN(balanceQty)){
 					balanceQty = 0;
 				}
+				
 				if(isNaN(quantity)){
 					quantity = 0;
 				}
@@ -441,6 +442,11 @@
 				//balqty=0;
 				//}
 					data[args.row]["balance"]=balqty;
+				if(balanceQty <= 0){
+					alert("product order completed");
+					data[args.row]["balance"]=0;
+					data[args.row]["quantity"]=0;
+				}
 				grid.updateRow(args.row);
 			}
 			
