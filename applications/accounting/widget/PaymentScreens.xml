@@ -1259,16 +1259,16 @@ under the License.
             </actions>
             <widgets>
                <section>
-					<condition>
+					<!-- <condition>
 						<if-compare operator="equals" value="DIRECT" field="reportTypeFlag" />
-					</condition>
+					</condition> -->
 					<widgets>
 						<platform-specific>
                 			<html><html-template location="component://accounting/webapp/accounting/invoice/newInvoiceVoucher.fo.ftl"/></html>
 	            		</platform-specific>
 					</widgets>
 				</section>
-				 <section>
+				<!--  <section>
 					<condition>
 						<if-compare operator="equals" value="ONBEHALF" field="reportTypeFlag" />
 					</condition>
@@ -1277,7 +1277,7 @@ under the License.
                 			<html><html-template location="component://accounting/webapp/accounting/invoice/newInvoiceVoucherOnbehalf.fo.ftl"/></html>
 	            		</platform-specific>
 					</widgets>
-				</section>
+				</section> -->
             </widgets>
         </section>
     </screen>
