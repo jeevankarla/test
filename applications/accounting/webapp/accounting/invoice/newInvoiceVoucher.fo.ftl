@@ -141,7 +141,7 @@ under the License.
 		   
 		     <fo:table-row white-space-collapse="false">
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="right"  font-size="12pt" >${sr}</fo:block>
+				<fo:block text-align="center"  font-size="12pt" >${sr}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="left"  font-size="12pt" >${invoiceDetail.get("prodDescription")}</fo:block>
@@ -213,7 +213,7 @@ under the License.
 	</fo:block>
 	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	
-	<fo:block text-align="left"   font-weight="bold"   font-size="12pt" >Supplier Information :</fo:block>
+	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="12pt" >Supplier Information :                          TAXES AND CHARGES OTHER DETAILS:</fo:block>
 	
 	 <fo:block>     
     <fo:table width="100%"   align="right" table-layout="fixed"  font-size="12pt"> 
@@ -453,7 +453,7 @@ under the License.
 				<fo:block text-align="right"  font-size="12pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="12pt" >TOTAl</fo:block>
+				<fo:block text-align="center"  font-size="12pt" >TOTAL</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="12pt" ></fo:block>
