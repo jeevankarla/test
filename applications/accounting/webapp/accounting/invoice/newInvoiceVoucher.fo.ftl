@@ -317,10 +317,11 @@ under the License.
 				<fo:block text-align="left"  font-weight="bold"  font-size="12pt" >Name of Depot Operating Agency(DOA):${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)}</fo:block>
 				<fo:block text-align="left"    font-size="12pt" >DOA Order Number               :</fo:block>
 				<fo:block text-align="left"    font-size="12pt" >DOA Order Date                 : <#if supplier?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="left"    font-size="12pt" >NHDC Indent No.                : ${indentNo?if_exists}</fo:block>
 				<fo:block text-align="left"    font-size="12pt" >NHDC Indent Date               : <#if supplier?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="left"    font-size="12pt" >NHDC Sale Inv No.              : ${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="left"    font-size="12pt" >NHDC Sale Inv Date             : <#if supplier?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
+				<fo:block text-align="left"    font-size="12pt" >NHDC Indent No.                : ${indentNo?if_exists}</fo:block>
+				<fo:block text-align="left"    font-size="12pt" >NHDC Sale Inv No.              : ${invoiceId?if_exists}</fo:block>
+				
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="left"     font-size="12pt" >Supplier Name         : <#if supplier?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</#if></fo:block>
