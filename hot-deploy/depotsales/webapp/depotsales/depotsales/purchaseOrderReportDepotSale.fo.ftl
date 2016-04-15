@@ -92,10 +92,10 @@ under the License.
       	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block>
          <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${supppartyName}</fo:block>        
          <#if suppAdd?has_content>
-        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${suppAdd.address1?if_exists}</fo:block>
-        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.address2?if_exists} </fo:block> 
-	  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.city?if_exists} </fo:block> 
-	    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.postalCode?if_exists}</fo:block> 
+        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${suppAdd.address1?if_exists}</fo:block>
+        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.address2?if_exists} </fo:block> 
+	  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.city?if_exists} </fo:block> 
+	    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.postalCode?if_exists}</fo:block> 
 		</#if>
               <#--	<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block> -->
 		 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;</fo:block>
@@ -299,11 +299,11 @@ under the License.
 							  <fo:table-row>
 							  <#if shipingAdd?has_content>
 								  <fo:table-cell>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
-								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
-								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
+								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
+								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
 								  </fo:table-cell>
 								  <#else>
 								  <fo:table-cell>
