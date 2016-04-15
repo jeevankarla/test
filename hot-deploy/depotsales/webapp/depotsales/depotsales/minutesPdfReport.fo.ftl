@@ -55,7 +55,7 @@ under the License.
 			            </fo:table-body>
 			        </fo:table>
         		</fo:block> 
-        		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MMM/yyyy")?if_exists}</fo:block>
+        		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Minute of Purchase and Sales Committee meeting for the purchase of following item(s).</fo:block>
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
@@ -297,7 +297,7 @@ under the License.
 				                    <fo:block>2. Payment will be made by user agency within BACK TO BACK/ ON CREDIT days / immediately failing which interest  11 per annum will be charged for the total number of days payment delayed.</fo:block>
 	                                <fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>
 	                                <fo:block>4. Total supply including this transaction to the agency will Rs</fo:block>
-	                                <fo:block>5. Payment dues with interest from the party: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MMM/yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
+	                                <fo:block>5. Payment dues with interest from the party: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
 	                                <fo:block>6. Payment Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice} </fo:inline></fo:block>
 	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
 	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
