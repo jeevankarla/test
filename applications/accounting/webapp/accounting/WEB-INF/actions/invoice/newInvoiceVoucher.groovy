@@ -44,23 +44,26 @@ shipmentDate = "";
 lrNumber = "";
 supplierInvoiceId = "";
 supplierInvoiceDate = "";
+carrierName = "";
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 orderId = shipmentList.get("primaryOrderId");
-shipmentDate = shipmentList.get("shipmentDate");
+deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 lrNumber = shipmentList.get("lrNumber");
 supplierInvoiceId = shipmentList.get("supplierInvoiceId");
+carrierName = shipmentList.get("carrierName");
 if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate"))){
 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
 }
 
-context.shipmentDate = shipmentDate;
+context.deliveryChallanDate = deliveryChallanDate;
 context.poNumber = orderId;
 context.supplierInvoiceId = supplierInvoiceId;
 context.supplierInvoiceDate = supplierInvoiceDate;
 context.lrNumber = lrNumber;
+context.carrierName = carrierName;
 
 
 
@@ -125,8 +128,6 @@ expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 
 
-
-
 	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId), null, null, null, false);
 	
 	if(UtilValidate.isNotEmpty(orderAttr)){
@@ -137,14 +138,9 @@ OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 			
 		}
 	   }
-	
-
-		
 	}
-	
 
-
-
+onbehalf = "";
 
 for (eachRole in OrderRoleList) {
 	
@@ -156,22 +152,26 @@ for (eachRole in OrderRoleList) {
 	     onbehalf = true;
 }
 
+
+
 context.poDate = poDate;
 context.indentDate = indentDate;
 context.scheme = scheme;
 context.supplier = supplier;
 context.destination = destination;
 context.soceity = soceity;
+context.onbehalf = onbehalf;
 
-if(onbehalf == true){
-   forOnbeHalf()
-}else{
-   context.reportTypeFlag = "DIRECT";
+
+//if(onbehalf == true){
+  // forOnbeHalf()
+//}else{
+  // context.reportTypeFlag = "DIRECT";
 	
 	SchemeQtyMap = [:];
 	SchemeAmtMap = [:];
 	
-	schemeDeductionAmt = 0;
+	double schemeDeductionAmt = 0;
 	
 	for (eachInvoiceList in invoiceAdjItemList) {
 		if(UtilValidate.isNotEmpty(eachInvoiceList.parentInvoiceItemSeqId) && UtilValidate.isNotEmpty(eachInvoiceList.quantity))
@@ -185,18 +185,31 @@ if(onbehalf == true){
 		}
 	}
 	
-	context.schemeDeductionAmt = schemeDeductionAmt;
+	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 	
-	
+	double grandTotal = 0;
 	if(invoiceItemList){
 	
-		int i=1;
 		
-		for (eachInvoiceList in invoiceItemList) {
-		 tempMap = [:];
+		List productIds = EntityUtil.getFieldListFromEntityList(invoiceItemList, "productId", true);
+		
+		
+		
+		for(eachProd in productIds)
+		{
+
+			eachInvoiceItemList = EntityUtil.filterByCondition(invoiceItemList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
+			
+			tempMap = [:];
+			double schemeAmt = 0;
+			double quantity = 0;
+			double amount = 0;
+		for (eachInvoiceList in eachInvoiceItemList) {
+	   
 		 tempMap.put("productId", eachInvoiceList.productId);
 		 tempMap.put("prodDescription", eachInvoiceList.description);
-		 
+		 tempMap.put("rateKg", eachInvoiceList.unitPrice);
+		 tempMap.put("amount", eachInvoiceList.amount);
 		 /*String seq = String.format("%05d", i);
 		 
 		 
@@ -211,7 +224,18 @@ if(onbehalf == true){
 	      }
 	    }*/
 		 
-		 String seq = String.format("%05d", i);
+		 
+		// String seq = String.format("%05d", i);
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+		 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachInvoiceList.invoiceItemSeqId));
+		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 OrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+		
+		 String seq = OrderItemBilling[0].get("orderItemSeqId");
+		 
+		 
 		 
 		 conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
@@ -219,51 +243,48 @@ if(onbehalf == true){
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemAttributeList1 = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
 		 
-		 Debug.log("cond=========="+cond);
 		 
-		 
-		 String schemeAmt = "";
 		 if(OrderItemAttributeList1){
 		 OrderItemAttributeList1.each{ eachAttr ->
 			if(eachAttr.attrName == "quotaQty"){
-				schemeAmt =  eachAttr.attrValue;
+				schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
 			}
 		 }
 	   }
 		 
-		  tempMap.put("baleQty", 0);
-		  tempMap.put("unit", "");
-		  tempMap.put("quantity", eachInvoiceList.quantity);
-		  tempMap.put("amount", eachInvoiceList.amount);
-		  //String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
-		  
-		  if(UtilValidate.isNotEmpty(schemeAmt))
-		    tempMap.put("schemeQty", Double.valueOf(schemeAmt));
-		  else
-		    tempMap.put("schemeQty", 0);
-			
-			tempMap.put("rateKg", eachInvoiceList.unitPrice);
-			
-			  qyt = 0;
-			  ratePer = 0;
-			  
-			  if(UtilValidate.isNotEmpty(eachInvoiceList.quantity))
-			  qty = eachInvoiceList.quantity;
-			  
-			  if(UtilValidate.isNotEmpty(eachInvoiceList.quantity))
-			  ratePer = eachInvoiceList.amount;
-			
-			tempMap.put("ToTamount", qty*ratePer);
-		  
-			finalDetails.add(tempMap);
-		  i++;
-	   }
-	 }
+		 
+		 quantity = quantity+eachInvoiceList.quantity;
+		 amount = eachInvoiceList.amount;
+		 
 	
+	   }
+		
+		tempMap.put("baleQty", 0);
+		tempMap.put("unit", "");
+		tempMap.put("quantity", quantity);
+		
+		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
+		
+		if(UtilValidate.isNotEmpty(schemeAmt))
+		  tempMap.put("schemeQty", Double.valueOf(schemeAmt));
+		else
+		  tempMap.put("schemeQty", 0);
+		  
+		  
+		  tempMap.put("ToTamount", quantity*amount);
+		
+		  grandTotal = grandTotal+(quantity*amount);
+		  
+		  
+		finalDetails.add(tempMap);
+		}		
+		
+	 }
+		
+	context.grandTotal = Math.round(grandTotal);
 	context.finalDetails = finalDetails;
 	
-}
-Debug.log("finalDetails=========="+finalDetails);
+//}
 
 
 
@@ -322,11 +343,11 @@ context.finalAddresList = finalAddresList;
 //============================on beHalf================
 
 
-def forOnbeHalf(){
+//def forOnbeHalf(){
 	OrderItemAttributeList = [];
 	finaOnbehalflDetails = [];
 	
-	context.reportTypeFlag = "ONBEHALF";
+	//context.reportTypeFlag = "ONBEHALF";
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
@@ -371,11 +392,14 @@ def forOnbeHalf(){
 					}
 					if(eachAttr.attrName == "quotaQty"){
 						quotaQty =  eachAttr.attrValue;
+						
 					}
 				}
 			   }
+			
 			   tempMap.put("partyId", partyId);
-			   tempMap.put("quotaQty", Double.valueOf(quotaQty));
+			   
+			   
 			   tempMap.put("passNo", passNo);
 			   
 			eachOrderItemList = EntityUtil.filterByCondition(OrderItemList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachSeq));
@@ -387,6 +411,7 @@ def forOnbeHalf(){
 				quantity = eachOrderItemList[0].get("quantity");
 				tempMap.put("quantity", quantity);
 				unitPrice = eachOrderItemList[0].get("unitPrice");
+				tempMap.put("quotaQty", Double.valueOf(quotaQty)*unitPrice);
 				amount = quantity*unitPrice;
 				tempMap.put("amount", amount);
 			}
@@ -396,11 +421,6 @@ def forOnbeHalf(){
 	}
 	context.finaOnbehalflDetails = finaOnbehalflDetails;
 	
-}
+//}
 
-
-
-
-
-
-
+	
