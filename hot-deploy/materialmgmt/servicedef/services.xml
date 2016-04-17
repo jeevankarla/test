@@ -121,11 +121,20 @@
         <attribute name="groupName" mode="IN" type="String" optional="false"/>
         <attribute name="USER_PANID" mode="IN" type="String" optional="true"/>
         <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
-        <attribute name="USER_TINNUMBER" mode="IN" type="String" optional="true"/> 
-        <attribute name="USER_CSTNUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_TINNUM" mode="IN" type="String" optional="true"/> 
+        <attribute name="USER_CSTNUM" mode="IN" type="String" optional="true"/>
+        <attribute name="ADR_NUMBER" mode="IN" type="String" optional="true"/>
         <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="AltemailAddress" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="suppRole" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="sourceSeco" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="accName" mode="IN" type="String" optional="true"/>
+        <attribute name="accBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="IfscCode" mode="IN" type="String" optional="true"/>
+        
     </service>
      <service name="createWeaver" engine="java" auth="true" invoke="createWeaver" 
         location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
@@ -145,7 +154,7 @@
         <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
         <attribute name="USER_TINNUMBER" mode="IN" type="String" optional="true"/> 
         <attribute name="USER_CSTNUMBER" mode="IN" type="String" optional="true"/>
-        <attribute name="USER_ADHNUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="ADR_NUMBER" mode="IN" type="String" optional="true"/>
         <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="partyClassificationTypeId" mode="IN" type="String" optional="false"></attribute>

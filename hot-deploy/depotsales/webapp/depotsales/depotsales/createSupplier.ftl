@@ -67,12 +67,16 @@
 					    }
                 		return true;
                 	}
-                },
-                onFinishing: function (event, currentIndex)
-                {	
-	                	 var address1 = $("#address1").val();
+                	if(currentIndex == 1 && newIndex == 2){
+                	
+                	
+                	 var address1 = $("#address1").val();
 	                	 var city = $("#city").val();
 	                	 var email = $("#emailAddress").val();
+	                	 var Altemail = $("#AltemailAddress").val();
+	                	 
+	                	 
+	                	 
 	                	  if( (address1).length < 1 ) {
 						    	$('#address1').css('background', 'yellow'); 
 						       	setTimeout(function () {
@@ -95,6 +99,23 @@
 						       	}, 800);
 						    	return false;
 						    }
+						    if((Altemail).length!=0&&!validateEmail(Altemail)){
+						    	alert("Invalid Alternative Email Id");
+						    	$('#Altemail').css('background', 'yellow'); 
+						       	setTimeout(function () {
+						           	$('#Altemail').css('background', 'white').focus(); 
+						       	}, 800);
+						    	return false;
+						    }
+                	
+                	
+                	return true;
+                	}
+                },
+                onFinishing: function (event, currentIndex)
+                {	
+	                	
+						    
                     return true;
                 },
                 onFinished: function (event, currentIndex)
@@ -113,6 +134,25 @@
         <section>
           <fieldset>
 	            <table cellpadding="2" cellspacing="1">
+	            
+	                      <tr>
+				        <td class="label"></td>
+          				
+          				 <td>
+						    <select name="suppRole" id="suppRole" >
+				              <#assign suppRoles = delegator.findByAnd("PartyClassificationGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyClassificationTypeId", "SUPPLIER_ROLE"))>
+	                            
+	                             <#list suppRoles as eachRole>
+	                            <option value="${eachRole.partyClassificationGroupId}" >${eachRole.description}</option>
+	                          </#list>
+	                            
+	                            
+				            </select>
+				            <td>
+          				
+				        </tr>
+						<tr>
+	            
 	                    <tr>
 				        <td class="label"><b> group Name*</b></td>
 				        <td>
@@ -167,7 +207,7 @@
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Personal Details</div></td>
 					               </tr>
 									<tr>
-									    <td class="label"><b> Address1</b></td>
+									    <td class="label"><FONT COLOR="red">*</font><b>Address1</b></td>
 									    <td>
 									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -179,7 +219,7 @@
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> City</b></td>
+									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
 									    <td>
 									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -194,6 +234,12 @@
 									    <td class="label"><b> E-mail Address</b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b>Alternative E-mail Address</b></td>
+									    <td>
+									      	<input type="text" name="AltemailAddress" id="AltemailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
@@ -224,5 +270,71 @@
 		                 </table>
                     </fieldset>  
                </section>
+  
+                 <h3>BANK AND IDENTIFICATION DETAILS</h3>
+            <section>
+            	<fieldset>
+				    <table cellpadding="2" cellspacing="1">
+		       			           <tr>
+		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bank Details</div></td>
+					               </tr>
+									<tr>
+									    <td class="label"><b> Account No :</b></td>
+									    <td>
+									      	<input type="text" name="accNo" id="accNo" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> Account Name :</b></td>
+									    <td>
+									      	<input type="text" name="accName" id="accName" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b>Account Branch :</b></td>
+									    <td>
+									      	<input type="text" name="accBranch" id="accBranch" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> Ifsc Code :</b></td>
+									    <td>
+									      	<input type="text" name="IfscCode" id="IfscCode" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>
+									
+							      <#--   <tr>
+							        <td class="label"><b>Pan Number :</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
+			          				</td>
+							        </tr>-->
+							        <tr>
+							         <td class="label"><b>Tin Number :</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUM" id="USER_TINNUM" onblur="javascript:partyIdentificationVal();" />
+			          				</td>
+							        </tr>
+							        <tr>
+							         
+			                        <td class="label"><b>Cst Number :</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUM" id="USER_CSTNUM"  />
+			          				</td>
+							        </tr>
+							        							        
+							         <tr>
+			                        <td class="label" id="ADHLABEL"><b>Aadhar Number :</b></td>
+							        <td>
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="ADR_NUMBER" id="ADR_NUMBER"  />
+			          				</td>
+							        </tr>
+									
+					        </tr>
+		                 </table>
+                    </fieldset>  
+               </section>
+               
+               
                 </form>
 			

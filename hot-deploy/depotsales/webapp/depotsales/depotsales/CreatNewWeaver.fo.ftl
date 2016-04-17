@@ -132,7 +132,7 @@ function datepick()	{
                 },
                 onFinishing: function (event, currentIndex)
                 {	
-	                	 var passBook=$('#passBook').val();
+	                <#--	 var passBook=$('#passBook').val();
 			                	if( (passBook).length < 1 ) {
 								    	$('#passBook').css('background', 'red'); 
 								    	 jQuery('#passBook').after("<div class='PSBLabel'><font color='red'>Please Enter PassBook.</font></div>");
@@ -141,7 +141,7 @@ function datepick()	{
 								        $('.PSBLabel').remove();
 								       	}, 800);
 								    	return false;
-							    	}
+							    	}-->
                     return true;
                 },
                 onFinished: function (event, currentIndex)
@@ -306,12 +306,12 @@ function datepick()	{
         		 			<input class="h3" type="text" size="18" maxlength="100" name="lastName" id="lastName"  />
           				</td>
 				        </tr>
-				        <tr>
+				       <#-- <tr>
 						 <td class="label"><b> Weaver Code :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="weaverCode" id="weaverCode"  />
           				</td>
-				        </tr>
+				        </tr>-->
 				         <#--<tr>
 				         <td class="label"><b>Service Tax Number</b></td>
 				        <td>
@@ -506,7 +506,7 @@ function datepick()	{
 		       			       <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Loom Details</div></td>
 					      </tr>
 					       <tr>
-						 <td class="label"><b><FONT COLOR="red">*</font> PassBook :</b></td>
+						 <td class="label"><b> PassBook :</b></td>
 				        <td>
         		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  />
           				</td>

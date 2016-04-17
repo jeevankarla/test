@@ -67,6 +67,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList;
 import org.ofbiz.entity.util.EntityFindOptions;
 
+
 public class MaterialPurchaseServices {
 
 	public static final String module = MaterialPurchaseServices.class.getName();
@@ -3636,17 +3637,26 @@ public class MaterialPurchaseServices {
         String groupName = (String) context.get("groupName");
         String panId = (String) context.get("USER_PANID");
         String serviceTax = (String) context.get("USER_SERVICETAXNUM");
-        String tinNumber= (String) context.get("USER_TINNUMBER");
-        String cstNumber = (String) context.get("USER_CSTNUMBER");
+        String tinNumber= (String) context.get("USER_TINNUM");
+        String cstNumber = (String) context.get("USER_CSTNUM");
+        String adharNum = (String) context.get("ADR_NUMBER");
         String address1 = (String) context.get("address1");
         String address2 = (String) context.get("address2");
         String city = (String) context.get("city");
         String postalCode = (String) context.get("postalCode");
 		String email = (String) context.get("emailAddress");
+		String AltemailAddress = (String) context.get("AltemailAddress");
 		String mobileNumber = (String) context.get("mobileNumber");
 		String contactNumber =(String)context.get("contactNumber");
 		String countryCode = (String) context.get("countryCode");
 		String roleTypeId = (String) context.get("roleTypeId");
+		String accName= (String) context.get("accName");
+        String accNo= (String) context.get("accNo");
+        String accBranch= (String) context.get("accBranch");
+        String IfscCode= (String) context.get("IfscCode");
+		String suppRole = (String) context.get("suppRole");
+
+
 		Map<String, Object> outMap = FastMap.newInstance();
 		
 		try {
@@ -3722,6 +3732,31 @@ public class MaterialPurchaseServices {
     	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
     	            }
     			}
+    			
+    			if (UtilValidate.isNotEmpty(AltemailAddress)){
+    	            input.clear();
+    	            input = UtilMisc.toMap("userLogin", userLogin, "emailAddress", AltemailAddress, "partyId",partyId,"verified","Y", "fromDate",UtilDateTime.nowTimestamp(),"contactMechPurposeTypeId", "PRIMARY_EMAIL");
+    	            outMap = dispatcher.runSync("createPartyEmailAddress", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    			}
+    			
+    			
+    			if(UtilValidate.isNotEmpty(suppRole)){
+	    			try{
+						GenericValue PartyClassification = delegator.makeValue("PartyClassification");
+	    				PartyClassification.set("partyId", partyId);
+		    			PartyClassification.set("partyClassificationGroupId", suppRole);
+		                PartyClassification.set("fromDate", UtilDateTime.nowTimestamp());
+						delegator.create(PartyClassification);
+					}catch (Exception e) {
+						Debug.logError(e, module);
+						return ServiceUtil.returnError("Error while creating  PartyClassification" + e);	
+					}
+    			}
+				
 	            if(UtilValidate.isNotEmpty(panId)){
 	            	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
 	       	    }
@@ -3733,6 +3768,9 @@ public class MaterialPurchaseServices {
 	         	}
 	            if(UtilValidate.isNotEmpty(cstNumber)){
 	             	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+	        	}
+	            if(UtilValidate.isNotEmpty(adharNum)){
+	             	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","ADR_NUMBER","idValue",adharNum,"partyId",partyId,"userLogin", context.get("userLogin")));
 	        	}
             }
         } catch (GenericServiceException e) {
