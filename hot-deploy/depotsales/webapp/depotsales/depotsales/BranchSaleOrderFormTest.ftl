@@ -211,14 +211,21 @@
 		       	  				  
 								});		       	  				   
 		       	  				  var tableElement;
+		       	  				  var totLooms = 0;
+		       	  				  
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
+		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
 		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				   totLooms = totLooms+parseInt(obj[item.loomType]);
+		       	  				   
 		       	  				   });
+		       	  				  
+		       	  				   
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
@@ -245,6 +252,7 @@
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
+		       	  				   	$("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -692,6 +700,9 @@
 				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
 				       			</tr>
 				       			</#if>
+				       			<tr>
+				       				<td width="25%"><font color="green">Total Looms     : </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+				       			</tr>
 				       		</table>
 			       		</td>
 			       		<td width="40%">

@@ -684,8 +684,8 @@
     <request-map uri="createSupplier">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
-        <response name="success" type="request-redirect" value="viewprofile"/>
-        <response name="error" type="view" value="EditVendor"/>
+        <response name="success" type="request-redirect" value="FindSupplier"/>
+        <response name="error" type="view" value="FindSupplier"/>
     </request-map>
     <request-map uri="viewprofile">
         <security https="true" auth="true"/>
