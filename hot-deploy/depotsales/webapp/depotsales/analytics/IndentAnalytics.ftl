@@ -55,18 +55,14 @@ $(document).ready(function(){
 	$( "#fromDate" ).datepicker({
 			dateFormat:'MM d, yy',
 			changeMonth: true,
-			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {					
 				date = $(this).datepicker('getDate');
-	        	var maxDate = new Date(date.getTime());
-	        	maxDate.setDate(maxDate.getDate() + 31);
 				$( "#thruDate" ).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
 			}
 		});
 		$( "#thruDate" ).datepicker({
 			dateFormat:'MM d, yy',
 			changeMonth: true,
-			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
 				$( "#fromDate" ).datepicker( "option", "maxDate", selectedDate );
 			}
