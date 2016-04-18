@@ -124,12 +124,14 @@ under the License.
         jQuery(formId).submit();
     }
     
-    function cancelIceCreamOrder(orderId, salesChannel){
+    function cancelIceCreamOrder(orderId, salesChannel,partyId){
 		var formId = "#" + "orderCancelForm";
 		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
+var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 		jQuery(formId).append(jQuery(param1));
 		jQuery(formId).append(jQuery(param2));
+		jQuery(formId).append(jQuery(param3));
         jQuery(formId).submit();
     }
    function approveDraftPO(orderId, statusId){
@@ -361,7 +363,7 @@ under the License.
 					<td></td>
 				</#if> -->  
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
+        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>

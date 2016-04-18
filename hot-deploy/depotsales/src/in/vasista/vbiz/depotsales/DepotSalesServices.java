@@ -2076,25 +2076,12 @@ public class DepotSalesServices{
 			// Get first productCategoriesList. We got productCategoryId here
 			
 			if(schemeCategory.equals("MGPS_10Pecent")){
-				String periodTypeId="TEN_PERC_PERIOD";
-				List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
-				Map<String, Object> resultMap = ServiceUtil.returnSuccess();
-				try {
-				resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",nowTimeStamp,"thruDate",nowTimeStamp,"userLogin", userLogin));  
-				} catch (Exception e) {
-					Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
-					return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
-				}
-				if (ServiceUtil.isError(resultMap)) {
-		        	Debug.logError("Error getting Scheme Time Period", module);	
-		            return ServiceUtil.returnError("Error getting Scheme Time Period");
-					}
-				schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
+				
 				String schemeId="TEN_PERCENT_MGPS";
 				String productCategoryId=(String)productCategoriesList.get(0);
 				
 				Map partyBalanceHistoryContext = FastMap.newInstance();
-				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quantity",quantity,"userLogin", userLogin);
+				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", nowTimeStamp,"quantity",quantity,"userLogin", userLogin);
 				
 				if(UtilValidate.isNotEmpty(customerId)){
 					partyBalanceHistoryContext.put("partyId",customerId);
@@ -5319,19 +5306,38 @@ public class DepotSalesServices{
 		 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		 LocalDispatcher dispatcher = dctx.getDispatcher();
 		 String periodTypeId = (String) context.get("periodTypeId");
+		 String orderBy = (String) context.get("orderBy");
 	     Timestamp fromDate = (Timestamp) context.get("fromDate");
 	     Timestamp thruDate = (Timestamp) context.get("thruDate");
 	     List<GenericValue> schemeTimePeriodList =FastList.newInstance();
+	     List<GenericValue> yearSchemeTimePeriodList =FastList.newInstance();
+	     String parentPeriodId=null;
 		 List conditionList = FastList.newInstance();
 		 Map<String, Object> result = ServiceUtil.returnSuccess();
 		 String schemeTimePeriodId = "";
 		try{
+			 conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"TEN_PERC_SCH_YEAR"));
+			 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())),EntityOperator.OR,EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime()))));
+			 conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
+			 EntityCondition schemeyearCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			 yearSchemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeyearCondition, null, null, null,false); 
+			 
+			if(UtilValidate.isNotEmpty(yearSchemeTimePeriodList) && yearSchemeTimePeriodList.size()>0){
+				 GenericValue yearSchemeTimePeriod=yearSchemeTimePeriodList.get(0);
+
+				 parentPeriodId=(String)yearSchemeTimePeriod.get("schemeTimePeriodId");
+				
+			 }else{
+				 return ServiceUtil.returnError("There no active Year scheme Time Periods"); 
+			 }
+			  conditionList.clear();
+			  conditionList.add(EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS,parentPeriodId));
 			  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,periodTypeId));
 			  conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())),EntityOperator.OR,EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime()))));
 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
 			  EntityCondition schemeCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			  schemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeCondition, null, null, null,false); 
-			 if(UtilValidate.isNotEmpty(schemeTimePeriodList)){
+			  schemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeCondition, null, UtilMisc.toList(orderBy+"periodNum", orderBy+"fromDate"), null,false); 
+			  if(UtilValidate.isNotEmpty(schemeTimePeriodList)){
 				 List<GenericValue> resultSchemeTimePeriodList =FastList.newInstance();
 				 for (GenericValue schemeTimePeriodObj : schemeTimePeriodList) {
 					 resultSchemeTimePeriodList.add((GenericValue)schemeTimePeriodObj);
@@ -5349,15 +5355,231 @@ public class DepotSalesServices{
 	  		return ServiceUtil.returnError("Error in getting scheme time period");
 		}
 		return result;
-	}	
+	}		
 
-	public static Map<String, Object> createPartyQuotaBalanceHistory(DispatchContext dctx, Map context) {
+	public static Map<String, Object> cancelIndentOrder(DispatchContext dctx, Map context) {	
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String orderId = (String) context.get("orderId");
+		String partyId = (String) context.get("partyId");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");	
+		String schemeCategory="MGPS_10Pecent";
+		try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				} 
+				
+				List condsList = FastList.newInstance();
+				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+				try{
+				List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderItemAndAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+				
+				if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
+					List schemeCategoryIds = FastList.newInstance();
+				  	try{
+				  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+				  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+				   	}catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductCategory ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+					}	 	
+					for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
+						
+						condsList.clear();
+						condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					  	condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+					  	condsList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
+					  	BigDecimal quota =BigDecimal.ZERO;
+					  	try {
+							List<GenericValue> OrderItemAttributeList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("attrValue"), null, null, true);
+							if(UtilValidate.isEmpty(OrderItemAttributeList) || OrderItemAttributeList.size()==0){
+								continue;
+							}
+							GenericValue OrderItemAttribute=OrderItemAttributeList.get(0);
+							quota = new BigDecimal((String)OrderItemAttribute.get("attrValue"));
+						} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+						}
+					  	Map partyBalanceHistoryContext = FastMap.newInstance();
+						partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
+					  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+					}
+				}
+				}catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive ProductCategory ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+				}
+			}
+			  			
+		}catch (GenericServiceException e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling order");
+		}
+		result.put("salesChannelEnumId", salesChannelEnumId);
+		return result;
+	}
+	
+	
+	public static Map<String, Object> cancelPartyQuotaBalanceHistory(DispatchContext dctx, Map context){	
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue orderItemAndAdjustment=(GenericValue)context.get("orderItemAndAdjustment");
+		List schemeCategoryIds=(List) context.get("schemeCategoryIds");
+		String schemeCategory=(String) context.get("schemeCategory");
+		Timestamp fromDate = (Timestamp) orderItemAndAdjustment.get("orderDate");
+		Timestamp thruDate = (Timestamp) orderItemAndAdjustment.get("orderDate");
+		String productId=(String) orderItemAndAdjustment.get("productId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String partyId=(String) context.get("partyId");
+		BigDecimal quota=(BigDecimal) context.get("quota");
+		List condsList = FastList.newInstance();
+		if(schemeCategory.equals("MGPS_10Pecent")){
+			String periodTypeId="TEN_PERC_PERIOD";
+			
+			List productCategoriesList = FastList.newInstance();
+			condsList.clear();
+		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+		  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDate));
+		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, thruDate)));
+			try {
+				List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+				productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+			}
+			List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
+			Map<String, Object> resultMap = ServiceUtil.returnSuccess();
+			try {
+			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",fromDate,"thruDate",thruDate,"orderBy","-","userLogin", userLogin));  
+			} catch (Exception e) {
+				Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
+				return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
+			}
+			if (ServiceUtil.isError(resultMap)) {
+	        	Debug.logError("Error getting Scheme Time Period", module);	
+	            return ServiceUtil.returnError("Error getting Scheme Time Period");
+				}
+			schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
+			String schemeId="TEN_PERCENT_MGPS";
+			String productCategoryId=(String)productCategoriesList.get(0);
+			
+			Map partyBalanceHistoryContext = FastMap.newInstance();
+			partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quota",quota,"userLogin", userLogin);
+				
+			try { 	
+				Map<String, Object> resultMapquota = dispatcher.runSync("cancelQuota", partyBalanceHistoryContext);
+				quota=(BigDecimal)resultMapquota.get("quota");
+			} catch (Exception e) {
+				Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+				return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+			}
+		}
+		return result;
+	}
+	
+	
+	public static Map<String, Object> cancelQuota(DispatchContext dctx, Map context) {
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		String productCategoryId =(String) context.get("productCategoryId");
 		String schemeId=(String) context.get("schemeId");
 		String partyId=(String) context.get("partyId");
+		BigDecimal quota = (BigDecimal)context.get("quota");
+		String schemeTimePeriodId=null;
 		List<GenericValue> schemeTimePeriodIdList=(List<GenericValue>) context.get("schemeTimePeriodIdList");
+		try{
+		List condsList = FastList.newInstance();
+		condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId));
+		List<GenericValue> schemeProductCategoryList =  delegator.findList("SchemeProductCategory",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+		GenericValue schemeProductCategory=schemeProductCategoryList.get(0);
+		if(UtilValidate.isNotEmpty(schemeProductCategory)){
+			BigDecimal periodTime = (BigDecimal)schemeProductCategory.get("periodTime");	
+			if(UtilValidate.isEmpty(periodTime)){
+				periodTime=BigDecimal.ONE;
+			}
+			if(UtilValidate.isNotEmpty(periodTime) && periodTime.compareTo(BigDecimal.ZERO)>0){
+			//if periodTime is exist
+				List schemeTimePeriodIds = EntityUtil.getFieldListFromEntityList(schemeTimePeriodIdList, "schemeTimePeriodId", true);
+				condsList.clear();
+				condsList.add(EntityCondition.makeCondition("schemeTimePeriodId", EntityOperator.IN,schemeTimePeriodIds));
+				condsList.add(EntityCondition.makeCondition("usedQuota", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+				condsList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+				schemeTimePeriodIdList =  delegator.findList("PartyQuotaBalanceHistoryAndTimePeriod",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, UtilMisc.toList("-periodNum"), null, true);   
+
+				//test
+				
+			  for(int i=0;i< periodTime.intValueExact();i++){
+					  if(i==schemeTimePeriodIdList.size()){
+						  break;
+					  }
+				  schemeTimePeriodId=(String)((GenericValue)schemeTimePeriodIdList.get(i)).get("schemeTimePeriodId");
+				  Map<String, Object> resultPartyQuotaBalanceHistoryMap = getPartyQuotaBalanceHistory(dctx,UtilMisc.toMap("productCategoryId",productCategoryId,"partyId",partyId,"schemeTimePeriodId",schemeTimePeriodId));	
+					GenericValue partyQuotaBalanceHistory=(GenericValue)resultPartyQuotaBalanceHistoryMap.get("partyQuotaBalanceHistory");
+					
+					//if partyQuotaBalanceHistory is exist
+					if(UtilValidate.isNotEmpty(partyQuotaBalanceHistory)){
+						//getting balancequota
+						BigDecimal quotaEligibility=(BigDecimal)partyQuotaBalanceHistory.get("quotaEligibility");
+						BigDecimal usedQuota=(BigDecimal)partyQuotaBalanceHistory.get("usedQuota");
+						//if quota>0
+						if(quota.compareTo(BigDecimal.ZERO)>0){
+							if(usedQuota.compareTo(BigDecimal.ZERO)==0){
+								continue;
+							}
+							//if quota>quotaEligibility
+							if(quota.compareTo(usedQuota)>=0){
+								quota=quota.subtract(usedQuota);
+								partyQuotaBalanceHistory.set("balancequota",(BigDecimal)partyQuotaBalanceHistory.get("quotaEligibility"));
+								partyQuotaBalanceHistory.set("usedQuota",BigDecimal.ZERO);
+								partyQuotaBalanceHistory.store();
+							}//if quotaEligibility > quota
+						    else{
+						    	BigDecimal totalUsedQuota=((BigDecimal)partyQuotaBalanceHistory.get("usedQuota")).subtract(quota);
+						    	BigDecimal totalBalanceQuota=((BigDecimal)partyQuotaBalanceHistory.get("balancequota")).add(quota);
+						    	partyQuotaBalanceHistory.set("usedQuota",totalUsedQuota);
+						    	partyQuotaBalanceHistory.set("balancequota",totalBalanceQuota);
+								partyQuotaBalanceHistory.store();
+								quota=BigDecimal.ZERO;
+						     }
+							
+						}//if quota == 0
+						else{ break; }
+			  }
+		
+			}
+		}
+
+		
+			
+		}
+	}catch (GenericEntityException e) {
+		Debug.logError(e, "Failed to retrive ProductCategory ", module);
+		return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+	}
+		return result;
+
+	}
+	public static Map<String, Object> createPartyQuotaBalanceHistory(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String productCategoryId =(String) context.get("productCategoryId");
+		String schemeId=(String) context.get("schemeId");
+		String partyId=(String) context.get("partyId");
+		Timestamp dateTimeStamp=(Timestamp) context.get("dateTimeStamp");
 		BigDecimal quota = BigDecimal.ZERO;
 		BigDecimal quantity=(BigDecimal)context.get("quantity");
 		BigDecimal remainingQty=quantity;
@@ -5366,6 +5588,23 @@ public class DepotSalesServices{
 		String schemeTimePeriodId=null;
 		BigDecimal partyLooms = BigDecimal.ZERO;
 		try{
+			
+			String periodTypeId="TEN_PERC_PERIOD";
+			List<GenericValue>  schemeTimePeriodIdList =  FastList.newInstance();
+			Map<String, Object> resultMap = ServiceUtil.returnSuccess();
+			try {
+			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",dateTimeStamp,"thruDate",dateTimeStamp,"orderBy","","userLogin", userLogin));  
+			} catch (Exception e) {
+				Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
+				return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
+			}
+			if (ServiceUtil.isError(resultMap)) {
+	        	Debug.logError("Error getting Scheme Time Period", module);	
+	            return ServiceUtil.returnError("Error getting Scheme Time Period");
+				}
+			schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
+			
+			
 			List condsList = FastList.newInstance();
 			condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,productCategoryId));
 			List<GenericValue> schemeProductCategoryList =  delegator.findList("SchemeProductCategory",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
@@ -5390,16 +5629,19 @@ public class DepotSalesServices{
 					}
 			//get PartyLoom ends 
 			
-			if(UtilValidate.isNotEmpty(schemeProductCategory)){
+			if(UtilValidate.isNotEmpty(schemeProductCategory) && partyLooms.compareTo(BigDecimal.ZERO)>0){
 				BigDecimal periodTime = (BigDecimal)schemeProductCategory.get("periodTime");	
-				if(UtilValidate.isNotEmpty(periodTime) && periodTime.compareTo(BigDecimal.ZERO)>0){
+				if(UtilValidate.isNotEmpty(periodTime) && periodTime.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(schemeTimePeriodIdList) &&  schemeTimePeriodIdList.size()>0 ){
 				//if periodTime is exist
 					//periodTime does not match with scheme time period count
-					if(periodTime.intValueExact()>schemeTimePeriodIdList.size()){
-						return ServiceUtil.returnError("schemeTimePeriod count does not match with SchemeProductCategory periodTime. ");
-					}
+//					if(periodTime.intValueExact()>schemeTimePeriodIdList.size()){
+//						return ServiceUtil.returnError("schemeTimePeriod count does not match with SchemeProductCategory periodTime. ");
+//					}
 					
 				  for(int i=0;i< periodTime.intValueExact();i++){
+					  if(i==schemeTimePeriodIdList.size()){
+						  break;
+					  }
 					schemeTimePeriodId=(String)((GenericValue)schemeTimePeriodIdList.get(i)).get("schemeTimePeriodId");
 					Map<String, Object> resultPartyQuotaBalanceHistoryMap = getPartyQuotaBalanceHistory(dctx,UtilMisc.toMap("productCategoryId",productCategoryId,"partyId",partyId,"schemeTimePeriodId",schemeTimePeriodId));	
 					GenericValue partyQuotaBalanceHistory=(GenericValue)resultPartyQuotaBalanceHistoryMap.get("partyQuotaBalanceHistory");

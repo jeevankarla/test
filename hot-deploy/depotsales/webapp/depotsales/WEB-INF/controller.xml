@@ -134,7 +134,7 @@
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelICPOrder"/>
+        <event type="service" path="" invoke="cancelIndentOrder"/>
         <response name="success" type="view" value="processOrdersBranchSales"/>   
        <response name="failed" type="view" value="processOrdersBranchSales"/>  
     </request-map>

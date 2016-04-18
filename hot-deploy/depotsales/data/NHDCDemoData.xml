@@ -301,15 +301,49 @@ under the License.
 		
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="NF" sequenceId="02" attrCode="NF"/>
 		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="S" sequenceId="01" attrCode="S"/>
+
+<PeriodType description="Ten Percent Scheme Year" periodLength="1" periodTypeId="TEN_PERC_SCH_YEAR" uomId="TF_yr"/>
+
+
+		<SchemeTimePeriod fromDate="2015-04-01" thruDate="2016-03-31" isClosed="N" periodNum="01" periodTypeId="TEN_PERC_SCH_YEAR" schemeTimePeriodId="TPSY0001"/>
+		<SchemeTimePeriod fromDate="2016-04-01" thruDate="2017-03-31" isClosed="N" periodNum="02" periodTypeId="TEN_PERC_SCH_YEAR" schemeTimePeriodId="TPSY0002"/>
 		
 		<PeriodType description="Ten Percent Scheme Period" periodTypeId="TEN_PERC_PERIOD"/> 
     	
-		<SchemeTimePeriod schemeTimePeriodId="JAN_16" fromDate="2016-01-01" thruDate="2016-01-31" periodName="SCH_JAN_16" periodNum="1" periodTypeId="TEN_PERC_PERIOD"/> 
-        <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="2" periodTypeId="TEN_PERC_PERIOD"/> 
-        <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="3" periodTypeId="TEN_PERC_PERIOD"/> 
-        <SchemeTimePeriod schemeTimePeriodId="APR_16" fromDate="2016-04-01" thruDate="2016-04-30" periodName="SCH_APR_16" periodNum="4" periodTypeId="TEN_PERC_PERIOD"/>  
-        <SchemeTimePeriod schemeTimePeriodId="MAY_16" fromDate="2016-05-01" thruDate="2016-05-31" periodName="SCH_MAY_16" periodNum="5" periodTypeId="TEN_PERC_PERIOD"/> 
-        <SchemeTimePeriod schemeTimePeriodId="JUN_16" fromDate="2016-06-01" thruDate="2016-06-30" periodName="SCH_JUN_16" periodNum="6" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="JAN_16" fromDate="2016-01-01" parentPeriodId="TPSY0001" thruDate="2016-01-31" periodName="SCH_JAN_16" periodNum="10" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2016-02-01" parentPeriodId="TPSY0001" thruDate="2016-02-29" periodName="SCH_FEB_16" periodNum="11" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2016-03-01" parentPeriodId="TPSY0001" thruDate="2016-03-31" periodName="SCH_MAR_16" periodNum="12" periodTypeId="TEN_PERC_PERIOD"/> 
+        
+        
+        
+        <SchemeTimePeriod schemeTimePeriodId="APR_16" fromDate="2016-04-01" parentPeriodId="TPSY0002" thruDate="2016-04-30" periodName="SCH_APR_16" periodNum="01" periodTypeId="TEN_PERC_PERIOD"/>  
+        <SchemeTimePeriod schemeTimePeriodId="MAY_16" fromDate="2016-05-01" parentPeriodId="TPSY0002" thruDate="2016-05-31" periodName="SCH_MAY_16" periodNum="02" periodTypeId="TEN_PERC_PERIOD"/> 
+        <SchemeTimePeriod schemeTimePeriodId="JUN_16" fromDate="2016-06-01" parentPeriodId="TPSY0002" thruDate="2016-06-30" periodName="SCH_JUN_16" periodNum="03" periodTypeId="TEN_PERC_PERIOD"/>  
+	
+		<SchemeTimePeriod schemeTimePeriodId="JUL_16" fromDate="2016-07-01" parentPeriodId="TPSY0002" thruDate="2016-07-31" periodName="SCH_JUL_16" periodNum="04" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="AUG_16" fromDate="2016-08-01" parentPeriodId="TPSY0002" thruDate="2016-08-31" periodName="SCH_AUG_16" periodNum="05" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="SEP_16" fromDate="2016-09-01" parentPeriodId="TPSY0002" thruDate="2016-09-30" periodName="SCH_SEP_16" periodNum="06" periodTypeId="TEN_PERC_PERIOD"/>  
+		
+		<SchemeTimePeriod schemeTimePeriodId="OCT_16" fromDate="2016-10-01" parentPeriodId="TPSY0002" thruDate="2016-10-31" periodName="SCH_OCT_16" periodNum="07" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="NOV_16" fromDate="2016-11-01" parentPeriodId="TPSY0002" thruDate="2016-11-30" periodName="SCH_NOV_16" periodNum="08" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="DEC_16" fromDate="2016-12-01" parentPeriodId="TPSY0002" thruDate="2016-12-31" periodName="SCH_DEC_16" periodNum="09" periodTypeId="TEN_PERC_PERIOD"/>  
+		
+		<SchemeTimePeriod schemeTimePeriodId="JAN_16" fromDate="2017-01-01" parentPeriodId="TPSY0002" thruDate="2017-01-31" periodName="SCH_JAN_17" periodNum="10" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="FEB_16" fromDate="2017-02-01" parentPeriodId="TPSY0002" thruDate="2017-02-28" periodName="SCH_FEB_17" periodNum="11" periodTypeId="TEN_PERC_PERIOD"/>  
+		<SchemeTimePeriod schemeTimePeriodId="MAR_16" fromDate="2017-03-01" parentPeriodId="TPSY0002" thruDate="2017-03-31" periodName="SCH_MAR_17" periodNum="12" periodTypeId="TEN_PERC_PERIOD"/>  
+		
+	   
+		<PeriodType description="Depot Reimbursement for every 2 months" periodLength="2" periodTypeId="DEPOT_REIMB_PERIOD" uomId="TF_mon"/>
+		<PeriodType description="Depot Reimbursement Year" periodLength="1" periodTypeId="DEPOT_REIMB_YEAR" uomId="TF_yr"/>
+
+
+		<SchemeTimePeriod fromDate="2015-04-01" thruDate="2016-03-31" isClosed="N" periodNum="01" periodTypeId="DEPOT_REIMB_YEAR" schemeTimePeriodId="DRY0001"/>
+		<SchemeTimePeriod fromDate="2016-04-01" thruDate="2017-03-31" isClosed="N" periodNum="02" periodTypeId="DEPOT_REIMB_YEAR" schemeTimePeriodId="DRY0002"/>
+
+		<SchemeTimePeriod fromDate="2016-02-01" thruDate="2016-03-31" parentPeriodId="DRY0001" isClosed="N" periodNum="06" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10000"/>
+		<SchemeTimePeriod fromDate="2015-12-01" thruDate="2016-01-31" parentPeriodId="DRY0001" isClosed="N" periodNum="05" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10001"/>
+		<SchemeTimePeriod fromDate="2016-04-01" thruDate="2016-05-31" parentPeriodId="DRY0002" isClosed="N" periodNum="01" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10002"/>
+	
 
 <!-- shipment document upload content types -->
 
