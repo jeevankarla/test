@@ -37,7 +37,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChannelWiseDepoSalesChartInternal"/>
     </request-map> 
-    
+
+     <request-map uri="IndentAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentAnalytics"/>
+    </request-map>
+    <request-map uri="IndentAnalyticsInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentAnalyticsInternal"/>
+    </request-map> 
+        
      <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
     <request-map uri="processDepotSalesOrder">
@@ -1622,7 +1631,9 @@
     
     <view-map name="ChannelWiseDepoSalesChart" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChart"/>
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
-    
+    <view-map name="IndentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalytics"/>
+	<view-map name="IndentAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsInternal"/>
+	
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
     <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     

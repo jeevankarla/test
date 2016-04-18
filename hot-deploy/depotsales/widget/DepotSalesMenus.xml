@@ -249,7 +249,15 @@
             </condition>  
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        
+            <menu-item name="indentAnalytics" title="Indent Analytics">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>  
+        	<link target="IndentAnalytics"/>
+        </menu-item>      
        <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>
