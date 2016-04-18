@@ -310,4 +310,15 @@
             <key-map field-name="productId"/>
         </relation>
     </view-entity>
+<view-entity entity-name="PartyQuotaBalanceHistoryAndTimePeriod"
+        package-name="org.ofbiz.product.category"
+        title="PartyQuotaBalance And SchemeTimePeriod View Entity">
+        <member-entity entity-alias="PQBH" entity-name="PartyQuotaBalanceHistory"/>
+        <member-entity entity-alias="STP" entity-name="SchemeTimePeriod"/>
+        <alias-all entity-alias="PQBH"/>
+        <alias-all entity-alias="STP"/>
+        <view-link entity-alias="PQBH" rel-entity-alias="STP">
+            <key-map field-name="schemeTimePeriodId"/>
+        </view-link>
+    </view-entity>
 </entitymodel>
