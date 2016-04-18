@@ -5819,7 +5819,7 @@ public class DepotSalesServices{
 		Map<String, Object> resultMap = ServiceUtil.returnSuccess();
 		try {
 			
-		resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"userLogin", userLogin));   
+		resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"orderBy","","userLogin", userLogin));   
 		} catch (Exception e) {
 			Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
 			return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
