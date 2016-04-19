@@ -257,7 +257,6 @@ conditionList=[];
 				return ServiceUtil.returnError(null, null, null,result);
 			}
 			productSummaryMap=result.get("productSummaryMap");
-			Debug.log("productSummaryMap==================="+productSummaryMap);
 			Iterator eachProductIter = productSummaryMap.entrySet().iterator();
 			while(eachProductIter.hasNext()) {
 				Map.Entry entry = (Entry)eachProductIter.next();
@@ -277,10 +276,8 @@ conditionList=[];
 				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);	
 				 AttrName="";		 				 				 
 				 orderItemAttr.each{ eachAttr ->
-					 Debug.log("eachAttr============================"+eachAttr);
 					 AttrName=eachAttr.attrValue;
 					 remarkMap.put(eachAttr.orderItemSeqId, eachAttr.attrValue);
-					 Debug.log("remarkMap============================"+remarkMap);
 				 }
 				  tempMap = [:];
 				  productName = ""
@@ -311,13 +308,6 @@ conditionList=[];
 				  }else{
 					  tempMap.put("productName", productName);
 				  }
-				 
-				  
-				  
-				 
-				  
-				 
-				  
 				   double annum = 0;
 				  if(UtilValidate.isNotEmpty(quantity)&& UtilValidate.isNotEmpty(unitPrice)){
 				  
@@ -334,22 +324,10 @@ conditionList=[];
 				  
 				  totannum = totannum+annum;
 				  totQuantity = totQuantity+quantity;
-				  orderedHindiItemList.add(tempMap);
-				  
-				  
+				  orderedHindiItemList.add(tempMap);				  				  
 				  SrNo = SrNo+1;
-				  
-			 
-				 
-				 Debug.log("tempMap========================="+tempMap);
-				 
-				 
-				 OrderItems.add(tempMap);
-				 
-				 
+				 OrderItems.add(tempMap);				 				 
 			}
-			
-
 	context.OrderItemList = OrderItems;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
