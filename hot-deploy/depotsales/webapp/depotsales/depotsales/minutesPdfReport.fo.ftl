@@ -61,6 +61,7 @@ under the License.
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold"><#if supplierPartyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, false)}<#else>&#160;</#if></fo:inline></fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">towards the requirement of user agency M/s : <fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>  
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">vide their indent No: ${orderId} dated:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} ref.no. Meeting held on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>  
         		<fo:block  text-align="left" font-size="12pt" font-weight="bold">PRICE FIXATION CHART :</fo:block>
         		<fo:block>
              		<fo:table border-style="solid">
@@ -121,10 +122,10 @@ under the License.
 					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderList.get("remarks")?if_exists}</fo:block>
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
@@ -136,7 +137,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>
@@ -213,11 +214,11 @@ under the License.
 					            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${remarkMap.get(orderList.orderItemSeqId)?if_exists}</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderList.get("remarks")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
@@ -232,7 +233,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists?string("#0.00")}<#else>&#160;</#if></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"><#if purchValue!=0>${purchValue?if_exists?string("#0.00")}<#else>&#160;</#if></fo:block>
@@ -324,7 +325,7 @@ under the License.
 		  </fo:block>
 	<fo:block>.</fo:block>
     <#assign size = paymentRefNumList.size()>
-	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1>${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
+	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  ${totAmt} received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
 	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
     <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block> 
     <fo:block text-align="center"><fo:inline text-decoration="underline">Supdt(C)/AM(C)/DM(C)                  Supdt(F&amp;A)/A.M.(F&amp;A)Dy.M(F&amp;A)/Manager(F&amp;A)                             Mgr(C)/Sr.Mgr(C)/Ch.Mg r(C)</fo:inline></fo:block>  			
