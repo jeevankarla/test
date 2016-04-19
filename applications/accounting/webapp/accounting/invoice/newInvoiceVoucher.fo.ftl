@@ -38,7 +38,7 @@ under the License.
         <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
          
          				<fo:block text-align="left"    font-size="10pt" >T.I.N No     : 09152300064</fo:block>
-         				<fo:block text-align="left"    font-size="10pt" >C.I.N No     : 683925 w.e.f 12.06.1985</fo:block>
+         				<fo:block text-align="left"  white-space-collapse="false"  font-size="10pt" >C.S.T No : 683925 w.e.f 12.06.1985                                            C.I.N No : U17299UP1983GOI005974 </fo:block>
          				<fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          
            <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block> 
@@ -228,12 +228,20 @@ under the License.
 				<fo:block text-align="left"    font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
+				<#if scheme == "MGPS_10Pecent">
 				<fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block>
+				<#else>
+				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
+				</#if>
 				<fo:block text-align="center"    font-size="12pt" >&#160;</fo:block>
 				<fo:block text-align="center"    font-size="12pt" >TOTAL VALUE (RS.)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
+				<#if scheme == "MGPS_10Pecent">
 				<fo:block text-align="right"    font-size="12pt" >(-)${schemeDeductionAmt?string("#0.00")}</fo:block>
+				<#else>
+				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
+				</#if>
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
 				<fo:block text-align="right"    font-size="12pt" >   ${(grandTotal-schemeDeductionAmt)?string("#0.00")}</fo:block>
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
@@ -286,7 +294,7 @@ under the License.
       		
               <fo:block text-align="left" font-weight="bold"    font-size="12pt" >TERMS &amp; CONDITIONS:</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National handloom </fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development corporation Limited'payable at INTEREST will be charged @ 13.00% per annum on</fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development corporation Limited payable at <fo:inline font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdFrom, true)}</fo:inline> INTEREST will be charged @ 13.00% per annum on</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >&#160; overdue Amount.</fo:block>
 			   
 			   
@@ -300,8 +308,8 @@ under the License.
       		
       		<fo:block>     
     <fo:table width="100%"   align="right" table-layout="fixed"  font-size="12pt"> 
-	<fo:table-column column-width="60%"/>
-	<fo:table-column column-width="40%"/>
+	<fo:table-column column-width="57%"/>
+	<fo:table-column column-width="43%"/>
 
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
@@ -327,8 +335,8 @@ under the License.
 				<fo:block text-align="left"     font-size="12pt" >Supplier Name         : <#if supplier?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</#if></fo:block>
 				<fo:block text-align="left"     font-size="12pt" >NHDC PO Date          : <#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="left"     font-size="12pt" >NHDC PO Number        : ${poNumber?if_exists}</fo:block>
-				<fo:block text-align="left"      font-size="12pt" >NHDC Sale Inv No.     : ${supplierInvoiceId?if_exists}</fo:block>
-				<fo:block text-align="left"      font-size="12pt" >NHDC Sale Inv Date.   : <#if supplierInvoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
+				<fo:block text-align="left"      font-size="12pt" >NHDC Supplier Invoice     : ${supplierInvoiceId?if_exists}</fo:block>
+				<fo:block text-align="left"      font-size="12pt" >NHDC Supplier Invoice Date:<#if supplierInvoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
 				<fo:block text-align="left"      font-size="12pt" >LR Number             : ${lrNumber?if_exists}</fo:block>
 				<fo:block text-align="left"      font-size="12pt" >LR Date               : <#if deliveryChallanDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deliveryChallanDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="left"      font-size="12pt" >Freight               : </fo:block>
