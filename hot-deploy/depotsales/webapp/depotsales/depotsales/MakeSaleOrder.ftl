@@ -87,13 +87,48 @@
 	}
 	function autoCompletePartyId(){
 	
-	      $("#partyId").autocomplete({ source: billToPartyIdsList , select: function( event, ui ) {
-				$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
-			} });	
+	      $("#partyId").autocomplete({ 
+	      
+	      		
+	      		source: function( request, response ) {
+        			$.ajax({
+          					url: "LookupEmpanelledPartyName",
+          					dataType: "html",
+          					data: {
+            					ajaxLookup: "Y",
+            					term : request.term
+          					},
+          					success: function( data ) {
+          						var dom = $(data);
+        						dom.filter('script').each(function(){
+            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
+        						});
+            					response($.map(autocomp, function(v,i){
+            						$('span#partyTooltip').html('<label>'+v.label+'</label>');
+    								return {
+                						label: v.label,
+                						value: v.value
+               						};
+								}));
+          					}
+        			});
+        			
+      			}
+	      		
+	      		
+	      		
+	      		//source: billToPartyIdsList , select: function( event, ui ) {
+				//$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+				//}
+				
+				
+		  });	
 	 }
 	function showTotalAmount(quantityStr, unitCostStr, quantityOnHandTotal){
 		var quantity = quantityStr.value;
 		var unitCost = unitCostStr.value;
+		unitCost = unitCost.replace(/[^0-9\.]/g, '');
+		createSaleIndent.unitCost.value=unitCost;
 		var qtyOnHand = quantityOnHandTotal.value;
 		if(qtyOnHand-quantity < 0 ){
 			alert("Indenting Quantity Cannot Exceed Inventory.!");
@@ -102,8 +137,8 @@
 			document.createSaleIndent.quantity.focus();
 		}
 		else{
-		var indentAmt = quantity*unitCost;
-	    createSaleIndent.indentAmount.value=indentAmt;
+			var indentAmt = quantity*unitCost;
+	    	createSaleIndent.indentAmount.value=indentAmt;
 	    }
 	}
 	 
