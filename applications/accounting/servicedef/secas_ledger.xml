@@ -28,11 +28,11 @@ under the License.
     </eca>
 
     <!-- create the accounting transactions for a sales shipment issuance every time the inventory is issued to the shipment -->
-    <eca service="createItemIssuance" event="commit">
+    <!-- <eca service="createItemIssuance" event="commit">
         <condition field-name="orderId" operator="is-not-empty"/>
         <condition field-name="inventoryItemId" operator="is-not-empty"/>
         <action service="createAcctgTransForSalesShipmentIssuance" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- create an accounting transactions every time an issuance to sales shipment is canceled -->
     <eca service="cancelOrderItemIssuanceFromSalesShipment" event="commit">
