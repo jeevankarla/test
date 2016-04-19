@@ -294,14 +294,14 @@ under the License.
 							</fo:table-row>			
 				            <fo:table-row>
 					             <fo:table-cell border-style="solid">
-									<fo:block>1. Goods will be despatched on freight to-pay basis to: <fo:inline font-weight="bold">${partyName}</fo:inline> </fo:block>
+									<fo:block>1. Goods will be dispatched on freight to-pay basis to: <fo:inline font-weight="bold">${partyName}</fo:inline> </fo:block>
 				                    <fo:block>2. Payment will be made by user agency within BACK TO BACK/ ON CREDIT days / immediately failing which interest  11 per annum will be charged for the total number of days payment delayed.</fo:block>
 	                                <fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>
 	                                <fo:block>4. Total supply including this transaction to the agency will Rs</fo:block>
 	                                <fo:block>5. Payment dues with interest from the party: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
 	                                <fo:block>6. Payment Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice} </fo:inline></fo:block>
-	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
-	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
+	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of dispatch ........</fo:block>
+	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of dispatch </fo:block>
 	                                <fo:block>9. Any other specific information ...................</fo:block>
 	                               <fo:block>10. Local Taxes as applicable.</fo:block>
 					           </fo:table-cell>
@@ -325,7 +325,7 @@ under the License.
 		  </fo:block>
 	<fo:block>.</fo:block>
     <#assign size = paymentRefNumList.size()>
-	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  ${totAmt} received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
+	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  ${totAmt?string("#0.000")} received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
 	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
     <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block> 
     <fo:block text-align="center"><fo:inline text-decoration="underline">Supdt(C)/AM(C)/DM(C)                  Supdt(F&amp;A)/A.M.(F&amp;A)Dy.M(F&amp;A)/Manager(F&amp;A)                             Mgr(C)/Sr.Mgr(C)/Ch.Mg r(C)</fo:inline></fo:block>  			
