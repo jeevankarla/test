@@ -37,6 +37,8 @@ context.partyId = partyId;
 invoiceDate = invoiceList.get("invoiceDate");
 context.invoiceDate = invoiceDate;
 shipmentId = invoiceList.get("shipmentId");
+partyIdFrom = invoiceList.partyIdFrom;
+context.partyIdFrom = partyIdFrom;
 
 poNumber = "";
 orderId  = "";
