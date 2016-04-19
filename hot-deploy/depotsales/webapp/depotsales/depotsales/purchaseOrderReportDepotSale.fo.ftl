@@ -48,9 +48,12 @@ under the License.
 					<fo:table-column column-width="200pt"/>               
 					    <fo:table-body>
                               <fo:table-row>
-				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Tin No : 09152300064</fo:block></fo:table-cell> 
+				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Tin No &#160;  : 09152300064</fo:block></fo:table-cell> 
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email: nhdcltdvns@yahoo.in </fo:block></fo:table-cell>       			
+                               </fo:table-row>
+                               <fo:table-row>
+				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">C.S.T.No : 683925 w.e.f 12.06.1985</fo:block></fo:table-cell> 
                                </fo:table-row>
 			         </fo:table-body>
 			    </fo:table>
@@ -92,10 +95,10 @@ under the License.
       	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block>
          <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${supppartyName}</fo:block>        
          <#if suppAdd?has_content>
-        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${suppAdd.address1?if_exists}</fo:block>
-        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.address2?if_exists} </fo:block> 
-	  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.city?if_exists} </fo:block> 
-	    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${suppAdd.postalCode?if_exists}</fo:block> 
+        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${suppAdd.address1?if_exists}</fo:block>
+        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.address2?if_exists} </fo:block> 
+	  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.city?if_exists} </fo:block> 
+	    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${suppAdd.postalCode?if_exists}</fo:block> 
 		</#if>
               <#--	<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block> -->
 		 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;</fo:block>
@@ -127,6 +130,7 @@ under the License.
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteRef")?has_content>QUOTE REF NO     :${allDetailsMap.get("quoteRef")?if_exists}</#if>       </fo:block>
          <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
       	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM             REMARKS       QUANTITY       BASIC RATE    AMOUNT</fo:block>
+      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;                                            (Kgs)           (Rs)        (Rs)     </fo:block>
       	 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
     	 <fo:block>
             <fo:table text-align="center" >
@@ -146,7 +150,7 @@ under the License.
                 	   <fo:table-cell ><fo:block text-align="center"  font-size="12pt" >${sNo} </fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left" font-size="9pt"> ${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("remarks")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists?string("##0.000")}</fo:block></fo:table-cell>     
   			           <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"  font-size="12pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				     </fo:table-row>
@@ -157,8 +161,9 @@ under the License.
            </fo:table>
        </fo:block>
        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>
+       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TAXES AND OTHER CHARGES DETAILS : &#160;0.00  </fo:block> 
        <#if allDetailsMap.get("total")?has_content> 
-       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; SUB TOTAL  : &#160;${allDetailsMap.get("total")?if_exists?string("##0.00")}  </fo:block> </#if>
+       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TOTAL VALUE  : &#160;${allDetailsMap.get("total")?if_exists?string("##0.00")}  </fo:block> </#if>
 	   <#if parentMap?has_content>
 	      <#assign parent=parentMap.entrySet()>
 	      <#list parent as parentList>
@@ -281,7 +286,7 @@ under the License.
 			<fo:table-body>	
 			    <fo:table-row>
 					<fo:table-cell><fo:block text-align="left" font-size="11pt">2</fo:block></fo:table-cell>
-					<fo:table-cell><fo:block text-align="left" font-size="11pt">DESPATCH INSTRUCTIONS:</fo:block></fo:table-cell>
+					<fo:table-cell><fo:block text-align="left" font-size="11pt">DISPATCH INSTRUCTIONS:</fo:block></fo:table-cell>
                 </fo:table-row>		                 
 	            <fo:table-row border-style="solid">
                     <fo:table-cell border-style="solid">
@@ -299,11 +304,11 @@ under the License.
 							  <fo:table-row>
 							  <#if shipingAdd?has_content>
 								  <fo:table-cell>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
-								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
-								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
+								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
+								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
 								  </fo:table-cell>
 								  <#else>
 								  <fo:table-cell>
@@ -358,7 +363,7 @@ under the License.
 			<fo:table-body>
                <fo:table-row>
 				  <fo:table-cell><fo:block text-align="left" font-size="11pt">3</fo:block></fo:table-cell>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Despatch Goods Through Registered Common Carriers Only</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Dispatch Goods Through Registered Common Carriers Only</fo:block></fo:table-cell>
                </fo:table-row>
 	        </fo:table-body>
 	   </fo:table>
