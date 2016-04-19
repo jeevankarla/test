@@ -17,6 +17,8 @@ import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import org.ofbiz.service.ServiceUtil;
+import java.util.Map.Entry;
 
 
 rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
@@ -25,6 +27,11 @@ rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 dctx = dispatcher.getDispatchContext();
 
 context.partyName = parameters.partyName;
+consList=[];
+consList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
+condEXr = EntityCondition.makeCondition(consList, EntityOperator.AND);
+orderItemAttr = delegator.findList("OrderItemAttribute", condEXr, null, null, null, false);
 
 
  orderHeaderList = delegator.findOne("OrderHeader", [orderId : parameters.orderId], false);
@@ -87,7 +94,7 @@ PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
  }
 
 balanceAmt = 0;
-
+context.totAmt=totAmt;
 balanceAmt = grandTOt-totAmt;
 context.balanceAmt = balanceAmt;
 
@@ -118,7 +125,8 @@ conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItemList = delegator.findList("OrderItem", condition, null, null, null, false);
-
+			productIds = EntityUtil.getFieldListFromEntityList(OrderItemList, "productId", true);
+			products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
@@ -239,9 +247,88 @@ conditionList=[];
 			totalsMap.put("totannum", totannumStr);
 			
 			totalsList.add(totalsMap);
-			
-			
-	context.OrderItemList = OrderItemList;
+			OrderItems=[];
+			Map<String, Object> orderDtlMap = FastMap.newInstance();
+			orderDtlMap.put("orderId", parameters.orderId);
+			orderDtlMap.put("userLogin", userLogin);
+			result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
+				return ServiceUtil.returnError(null, null, null,result);
+			}
+			productSummaryMap=result.get("productSummaryMap");
+			Iterator eachProductIter = productSummaryMap.entrySet().iterator();
+			while(eachProductIter.hasNext()) {
+				Map.Entry entry = (Entry)eachProductIter.next();
+				String productId = (String)entry.getKey();
+				 productSummary=entry.getValue();
+				 quantity=productSummary.get("quantity");
+				 unitPrice=productSummary.get("unitListPrice");
+				 bedPercent=productSummary.get("bedPercent")
+				 cstPercent=productSummary.get("cstPercent")
+				 vatPercent=productSummary.get("vatPercent")
+				 itemSeqList=productSummary.get("itemSeqList");				
+				 conditionList1=[];
+				 conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));		 
+				 conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));		 
+				 condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
+				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);	
+				 AttrName="";		 				 				 
+				 orderItemAttr.each{ eachAttr ->
+					 AttrName=eachAttr.attrValue;
+					 remarkMap.put(eachAttr.orderItemSeqId, eachAttr.attrValue);
+				 }
+				  tempMap = [:];
+				  productName = ""
+				  prod=delegator.findOne("Product",[productId:productId],false);
+				  tempMap.put("productId", productId);
+				  tempMap.put("remarks", AttrName);
+				  tempMap.put("quantity", quantity);
+				  
+				  /*changeDatetime = eachOrderItem.changeDatetime;
+				  context.changeDatetime = changeDatetime;*/
+				  
+				  unitPrice=productSummary.get("unitListPrice");
+				  context.unitPrice = unitPrice;
+				  tempMap.put("unitPrice", unitPrice);
+				  
+				  String srNoStr = SrNo;
+				  char firSrno = srNoStr.charAt(0);
+				  srNoStr = String.valueOf(firSrno)+srNoStr;
+				  tempMap.put("SrNo", srNoStr);
+				  
+				  if(UtilValidate.isNotEmpty(prod)){
+					  productName = prod.get("productName");
+					  String productNameStr = productName;
+					  char firstProChr = productNameStr.charAt(0);
+					  productNameStr = String.valueOf(firstProChr)+productNameStr;
+					  tempMap.put("productName", productNameStr);
+					  
+				  }else{
+					  tempMap.put("productName", productName);
+				  }
+				   double annum = 0;
+				  if(UtilValidate.isNotEmpty(quantity)&& UtilValidate.isNotEmpty(unitPrice)){
+				  
+					  annum = (double) (unitPrice*quantity);
+					 
+					  String anumtr = String.valueOf(Math.round(annum));
+					  char firstAnnuChr = anumtr.charAt(0);
+					  anumtr = String.valueOf(firstAnnuChr)+anumtr;
+					  
+					   tempMap.put("annum", anumtr);
+				  }else{
+				  tempMap.put("annum", 0);
+				  }
+				  
+				  totannum = totannum+annum;
+				  totQuantity = totQuantity+quantity;
+				  orderedHindiItemList.add(tempMap);				  				  
+				  SrNo = SrNo+1;
+				 OrderItems.add(tempMap);				 				 
+			}
+	context.OrderItemList = OrderItems;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
 		
