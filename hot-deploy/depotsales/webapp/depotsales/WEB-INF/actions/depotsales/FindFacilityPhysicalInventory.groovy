@@ -67,11 +67,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	if(facilityId){
 		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	}
-	if (shipmentIdsList) {
-		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
-	}
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
 	shipmentReceiptCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-  shipmentReceiptList=delegator.findList("ShipmentReceiptAndItem", shipmentReceiptCondition, null, ['receiptId'], null, false);
+  	shipmentReceiptList=delegator.findList("ShipmentReceiptAndItem", shipmentReceiptCondition, null, ['receiptId'], null, false);
 	
 	inventoryItemIdsList= EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "inventoryItemId", true);
 //inventoryItemFind
