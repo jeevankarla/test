@@ -3945,8 +3945,11 @@ public class DepotSalesServices{
         GenericValue userLogin = (GenericValue) context.get("userLogin");
        
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
-        String partyId = (String) userLogin.get("partyId");
         
+        String partyId = (String) context.get("partyId");
+        if(UtilValidate.isEmpty(partyId)){
+        	partyId = (String) userLogin.get("partyId");
+        }
         List productStoreList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(partyId)){
         	
@@ -3959,7 +3962,6 @@ public class DepotSalesServices{
   			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
-			
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
 			List orgsList = FastList.newInstance();
 			try{
