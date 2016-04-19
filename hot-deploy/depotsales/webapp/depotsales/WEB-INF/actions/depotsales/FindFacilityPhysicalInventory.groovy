@@ -34,7 +34,7 @@ facilityId = parameters.facilityId;
 //find shipmentIds by filter criteria
 conditionList =[];
 if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
-	//conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MATERIAL_SHIPMENT"));
+	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "DEPOT_SHIPMENT"));
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,parameters.partyId));
 	}
