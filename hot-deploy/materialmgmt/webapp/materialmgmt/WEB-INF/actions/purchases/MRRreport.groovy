@@ -70,9 +70,11 @@ invoiceDate=invoiceDetails.get("supplierInvoiceDate");
 dcNo=invoiceDetails.get("deliveryChallanNumber");
 dcDate=invoiceDetails.get("deliveryChallanDate");
 description=invoiceDetails.get("description");
+carrierName = invoiceDetails.get("carrierName");
 shipmentMap.put("invoiceNo",invoiceNo);
 shipmentMap.put("invoiceDate",invoiceDate);
 shipmentMap.put("dcNo",dcNo);
+shipmentMap.put("carrierName",carrierName);
 shipmentMap.put("dcDate",dcDate);
 shipmentMap.put("description",description);
 ////get PartyId from Role for Dept
