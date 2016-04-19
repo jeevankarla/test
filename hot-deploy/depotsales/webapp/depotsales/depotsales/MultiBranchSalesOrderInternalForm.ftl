@@ -139,7 +139,7 @@
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
-			var prodId = productId.toUpperCase();
+				var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var customerId = data[rowCount]["customerId"];
@@ -182,27 +182,13 @@
    			 }
    			</#if>
 		}
-		for (var rowCount=0; rowCount < data2.length; ++rowCount)
-		{ 
-			var ordetAdjTypeId = data2[rowCount]["orderAdjTypeId"];
-			var adjAmt = parseFloat(data2[rowCount]["adjAmount"]);
-	 		if (!isNaN(adjAmt)) {	 		
-				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjTypeId_o_" + rowCount).val(ordetAdjTypeId);
-				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjAmt_o_" + rowCount).val(adjAmt);
-				jQuery(formId).append(jQuery(inputInv));				
-				jQuery(formId).append(jQuery(inputAmt));
-			}
-		}
+		
 		var dataString = $("#indententryinit").serializeArray();
-		$.each(dataString , function(i, fd) {
-   			if(fd.name === "routeId"){
-   				var route = jQuery("<input>").attr("type", "hidden").attr("name", "routeId").val(fd.value);
-   				jQuery(formId).append(jQuery(route));
-   			 }
-		});
+		
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
 			var suplierPartyId = $("#suplierPartyId").val();
+			
 			var societyPartyId="";
 			 	societyPartyId = $("#societyPartyId").val();
 			var billingType = $("#billingType").val();
@@ -248,34 +234,17 @@
 	}
 	var enableSubmit = true;
 	<#assign editClickHandlerAction =''>	
-	<#--<#if changeFlag?exists && changeFlag=='supplDeliverySchedule'>
-		 <#assign editClickHandlerAction='processSupplDeleverySchdule'>
-	<#elseif changeFlag?exists && changeFlag=='ByProdGatePass'>
-	      <#assign editClickHandlerAction='processSupplDeleverySchdule'>
-	<#else>
-		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
-	</#if>-->
-	<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "EditDepotSales">
-		function editClickHandlerEvent(row){
-			showUDPPriceToolTip(data[row], row, userDefPriceObj);
-			 <#--updateUDPLabel();-->
-			
-			
-		}
-	</#if>
 	
 	function editClickHandler(row) {
 		if(enableSubmit){						
 			enableSubmit = false;
 			processChangeIndentInternal('indententry', '<@ofbizUrl>${editClickHandlerAction}</@ofbizUrl>', row);		
 		}
-		
 	}
 	
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
 		processIndentEntryInternal(formName, action);
-		
 	}
 	
     function productFormatter(row, cell, value, columnDef, dataContext) {   
@@ -323,41 +292,6 @@
         return formatValue;
     }
 	
-	 function adustmentFormatter(row, cell, value, columnDef, dataContext) {
-        return orderAdjLabelJSON[value];
-    }
-	function orderAdjFormatter(value,item) {
-      
-      	var valueId = orderAdjLabelIdMap[value];
-    	var currItemCnt = 1;
-	  	for (var rowCount=0; rowCount < data2.length; ++rowCount)
-	  	{ 
-			if (data2[rowCount]['orderAdjTypeId'] != null && data2[rowCount]['orderAdjTypeId'] != undefined && valueId == data2[rowCount]['orderAdjTypeId']) {
-				++currItemCnt;
-			}
-	  	}
-	  	
-	  	var invalidItemCheck = 0;
-	  	for (var rowCount=0; rowCount < availableAdjTags.length; ++rowCount)
-	  	{  
-			if (valueId == availableAdjTags[rowCount]["value"]) {
-				invalidItemCheck = 1;
-			}
-	  	}
-      	if (currItemCnt > 1) {
-        	return {valid: false, msg: "Duplicate Item " + value};      				
-      	}
-      	if(invalidItemCheck == 0){
-      		return {valid: false, msg: "Invalid Item " + value};
-      	}
-      
-      	if (item != null && item != undefined ) {
-      		item['invoiceItemTypeId'] = invoiceAdjLabelIdMap[value];
-	  	}      
-      	return {valid: true, msg: null};
-    }
-	
-	
 	function quantityValidator(value ,item) {
 		var quarterVal = value*4;
 		var floorValue = Math.floor(quarterVal);
@@ -368,6 +302,7 @@
 		}
       return {valid: true, msg: null};
     }
+    
 	var mainGrid;		
 	function setupGrid1() {
 		
@@ -375,7 +310,7 @@
 			{id:"customerName", name:"Customer", field:"customerName", width:350, minWidth:350, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
 			<#--{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:100, minWidth:100, cssClass:"readOnlyColumnClass",focusable :false},-->
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true, editor:TextCellEditor},
 			<#--{id:"productFeature", name:"Feature", field:"productFeature", width:80, minWidth:80, cssClass:"cell-title", availableTags: featureAvailableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
@@ -389,48 +324,12 @@
 			<#--
 			{id:"productFeature", name:"Count", field:"productFeature", width:70, minWidth:70, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "INR,PERCENT,asdf"},
 			-->	
-			<#--
-			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary" || changeFlag == "ICPTransferSale">
-				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
-				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-				<#if changeFlag?exists && changeFlag != "ICPTransferSale">
-					{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
-				</#if>
-			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "InterUnitTransferSale"  || changeFlag == "EditDepotSales">
-		       <#if changeFlag?exists && changeFlag == "EditDepotSales">
-					{id:"prevQuantity", name:"Prev-Qty(Pkt)", field:"prevQuantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false , formatter: rateFormatter},
-				<#else>
-					{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
-				</#if>
-				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-				
-			</#if>
-			-->
 			
-			<#--
-			<#if changeFlag?exists && changeFlag != "EditDepotSales">
-			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right"},
-			{id:"ltrPrice", name:"Ltr/Kg Price", field:"ltrPrice", width:80, minWidth:80, sortable:false, formatter: rateFormatter, align:"right"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, sortable:false, formatter: rateFormatter},
-			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, sortable:false, focusable :false}
-			<#else>
-			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, sortable:false, formatter: rateFormatter , align:"right"},
-			{id:"ltrPrice", name:"Ltr/Kg Price", field:"ltrPrice", width:80, minWidth:80, sortable:false, formatter: rateFormatter , align:"right"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, sortable:false, formatter: rateFormatter}
-			</#if>
-			-->
+			
+			
 		];
-		<#--
-		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "EditDepotSales">
-			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title", focusable :false,
- 				formatter: function (row, cell, id, def, datactx) { 
-						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
- 				}
- 			});
- 		</#if>
- 		-->
 		
-			var options = {
+		var options = {
 			editable: true,		
 			forceFitColumns: false,			
 			enableCellNavigation: true,
@@ -453,11 +352,7 @@
 		}
          grid.onKeyDown.subscribe(function(e) {
 			var cellNav = 0;
-			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
-				cellNav = 3;
-			<#else>
-				cellNav = 2;
-			</#if>
+			
 			var cell = grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				grid.getEditController().commitCurrentEdit();	
@@ -543,224 +438,7 @@
 	    });
         grid.onCellChange.subscribe(function(e,args) {
          
-       
-        if (args.cell == 1 ) {
-			 var prod = data[args.row]["cProductId"];
-			 var qut=0;
-	   		 var dataString = {"partyId": args.item['customerId'],
-					   			"schemeCategory":$("#schemeCategory").val()
-							  };
-		   		
-   			 $.ajax({
-	             type: "POST",
-	             url: "getPartyQuotaList",
-	             data: dataString,
-	             dataType: 'json',
-	             async: false,
-	         success: function(result) {
-	               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-	            	   alert(result["_ERROR_MESSAGE_"]);
-	               }else{  
-	                productsQuotaList=result['productQuotaJSON'];
-	                //alert(JSON.stringify(productsQuotaList));
-	                if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
-	                qut=productsQuotaList[prod];
-	                }
-               }
-               
-             } ,
-             error: function() {
-            	 	alert(result["_ERROR_MESSAGE_"]);
-            	 }
-            }); 
-           				
-		if(isNaN(qut)){
-					qut = 0;
-				}
-				data[args.row]["quota"] = qut;
-				grid.updateRow(args.row);		
-
-				
-			}
-        
-        	if (args.cell == 4) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var uomId = productUOMMap[prod];
-				var uomLabel = uomLabelMap[uomId];
-				data[args.row]['uomDescription'] = uomLabel;
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary" || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var udp = data[args.row]['basicPrice'];
-				var price = 0;
-				if(udp){
-					var basic_price = data[args.row]['basicPrice'];
-					var vat_price = data[args.row]['vatPrice'];
-					var cst_price = data[args.row]['cstPrice'];
-					var bed_price = data[args.row]['bedPrice'];
-					var serviceTax_price = data[args.row]['serviceTaxPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
-					price = totalPrice;
-				}
-				else{
-					price = parseFloat(priceTags[prod]);
-				}
-				var literPrice = parseFloat(priceTags[prod]);
-				var crVal = 0;
-				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
-						data[args.row]["crQuantity"] = crVal;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
-						data[args.row]["ltrQuantity"] = crVal;
-					</#if>
-					
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
-				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["quota"] = quota;
-				grid.updateRow(args.row);
-				var totalAmount = 0;
-				var totalCrates = 0;
-				for (i = 0; i < data.length; i++) {
-					//totalAmount += data[i]["amount"];
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						totalCrates += data[i]["crQuantity"];
-					</#if>
-					totalAmount += data[i]["amount"];
-				}
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-				var dispText = "";
-				if(amt > 0 ){
-					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-				}
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					if(totalCrates > 0 ){
-						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
-					}
-					else{
-						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
-					}
-				</#if>
-				jQuery("#totalAmount").html(dispText);
-			}
-			
-			if (args.cell == 1 || args.cell == 3) {
-				var prod = data[args.row]["cProductId"];
-				
-				var calcQty = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					calcQty = parseFloat(data[args.row]["crQuantity"]);
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
-				</#if>
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var udp = data[args.row]['basicPrice'];
-				var price = 0;
-				if(udp){
-					var basic_price = data[args.row]['basicPrice'];
-					var vat_price = data[args.row]['vatPrice'];
-					var cst_price = data[args.row]['cstPrice'];
-					var bed_price = data[args.row]['bedPrice'];
-					var serviceTax_price = data[args.row]['serviceTaxPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
-					price = totalPrice;
-				}
-				else{
-					price = parseFloat(priceTags[prod]);
-				}
-				var literPrice = parseFloat(priceTags[prod]);
-				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-				}
-				
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(calculateQty)){
-					calculateQty = 0;
-				}
-				var roundedAmount;
-					roundedAmount = Math.round(calculateQty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
-				grid.updateRow(args.row);
-				var totalAmount = 0;
-				var totalCrates = 0;
-				for (i = 0; i < data.length; i++) {
-					totalAmount += data[i]["amount"];
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						totalCrates += data[i]["crQuantity"];
-					</#if>
-				}
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-				var dispText = "";
-				if(amt > 0 ){
-					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-				}
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					if(totalCrates > 0 ){
-						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
-					}
-					else{
-						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
-					}
-				</#if>
-				jQuery("#totalAmount").html(dispText);
-			}
+       		
 			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
@@ -797,16 +475,7 @@
 				//jQuery("#totalAmount").html(dispText);
 			}
 			if (args.cell == 6) {
-				if(!(data[args.row]["quota"])){
-					var prod = data[args.row]["cProductId"];
-					quota = parseFloat(productQuotaJSON[prod]);
-					if(isNaN(quota)){
-						quota = 0;
-					}
-					data[args.row]["quota"] = quota;
-				
-				}
-				
+			
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
 				var price = 0;
@@ -850,12 +519,6 @@
 				}
 				data[args.row]["amount"] = roundedAmount;
 				
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				<#--data[args.row]["quota"] = quota;-->
-				
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
@@ -865,10 +528,10 @@
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 				var dispText = "";
 				if(amt > 0 ){
-					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					dispText = "<b>  [Indent Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					dispText = "<b>  [Indent Amt: Rs 0 ]</b>";
 				}
 				
 				jQuery("#totalAmount").html(dispText);
@@ -895,12 +558,6 @@
 				}
 				data[args.row]["unitPrice"] = roundedAmount;
 				
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				<#-->data[args.row]["quota"] = quota; -->
-				
 				grid.updateRow(args.row);
 				
 				var totalAmount = 0;
@@ -910,10 +567,10 @@
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 				var dispText = "";
 				if(amt > 0 ){
-					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					dispText = "<b>  [Indent Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					dispText = "<b>  [Indent Amt: Rs 0 ]</b>";
 				}
 				
 				jQuery("#totalAmount").html(dispText);
@@ -924,61 +581,73 @@
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-				if (args.cell == 1 ) {
-       		var currentrow=args.row;
-       		if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
-       		var prod=data[currentrow-1]["cProductId"];
-       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
-       		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
-       		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
-       		data[args.row]['amount'] = data[currentrow-1]["amount"];
-       		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
-		   	var qut=0;
-		   	if(data[args.row]['customerId'] != "undefined"){
-		   	var dataString = {"partyId": data[args.row]['customerId'],
-						   		"schemeCategory":$("#schemeCategory").val()
-						 		};
-		     $.ajax({
-		             type: "POST",
-		             url: "getPartyQuotaList",
-		             data: dataString ,
-		             dataType: 'json',
-		             async: false,
-		         success: function(result) {
-		               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-		            	   alert(result["_ERROR_MESSAGE_"]);
-		               }else{  
-		                productsQuotaList=result['productQuotaJSON'];
-		               // alert(JSON.stringify(productsQuotaList));
-		                if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
-		                qut=productsQuotaList[prod];
-		                }
-		               }
-		               
-		             } ,
-		             error: function() {
-		            	 	alert(result["_ERROR_MESSAGE_"]);
-		            	 }
-		            }); 				
-				if(isNaN(qut)){
-							qut = 0;
-						}
-				data[args.row]["quota"] = qut;
-       			data[args.row]['quantity'] =qut;
-       			utprice=data[currentrow-1]["unitPrice"];
-       			amount=qut*utprice;
-       			data[args.row]['amount'] = amount;
-      		 grid.updateRow(args.row);
-      		 }
-      		 }
-       		}
-		
-				if (args.cell == 8 && data[args.row] != null) {
-        		var item = data[args.row];   
-				var prod = data[args.row]["cProductId"];
-				var uomId = productUOMMap[prod];
-				var uomLabel = uomLabelMap[uomId];
-				item['uomDescription'] = uomLabel;     		 		
+			if (args.cell == 1 ) {
+   				var currentrow=args.row;
+   				if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
+		       		var prod=data[currentrow-1]["cProductId"];
+		       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
+		       		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
+		       		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
+		       		//data[args.row]['amount'] = data[currentrow-1]["amount"];
+		       		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
+				   	
+	       			utprice=data[currentrow-1]["unitPrice"];
+	       			amount=qut*utprice;
+	       			data[args.row]['amount'] = amount;
+	      		 	grid.updateRow(args.row);
+				   	
+  		 		}
+   			}
+   			
+   			if (args.cell == 2 ) {
+   				var currentrow=args.row;
+   				if(data[currentrow] != undefined && data[currentrow]["cProductId"] != undefined){
+		       		var prod=data[currentrow]["cProductId"];
+				   	var qut=0;
+				   	if(data[args.row]['customerId'] != "undefined"){
+				   		var dataString = {"partyId": data[args.row]['customerId'],
+								   		"schemeCategory":$("#schemeCategory").val()
+								 		};
+					     $.ajax({
+					             type: "POST",
+					             url: "getPartyQuotaList",
+					             data: dataString ,
+					             dataType: 'json',
+					             async: false,
+					         	success: function(result) {
+					               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+					            	   alert(result["_ERROR_MESSAGE_"]);
+					               }else{  
+					                	productsQuotaList=result['productQuotaJSON'];
+					                	if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
+					                		qut=productsQuotaList[prod];
+					                	}
+					                	if(isNaN(qut)){
+											qut = 0;
+										}
+					                	data[args.row]["quota"] = qut;
+						       			data[args.row]['quantity'] =qut;
+						       			utprice=data[currentrow]["unitPrice"];
+						       			amount=qut*utprice;
+						       			data[args.row]['amount'] = amount;
+						      		 	grid.updateRow(args.row);
+						      		 	data[args.row]["remarks"].gotoCell();
+					               }
+					               //grid.setActiveCell();
+					               //grid.setActiveCell(); 
+					             } ,
+					             error: function() {
+				            	 	alert(result["_ERROR_MESSAGE_"]);
+				            	 }
+				            	
+					        }); 				
+							
+							
+			      	 }
+  		 		}
+   			}
+       			
+			if (args.cell == 9 && data[args.row] != null) {
 	      		grid.invalidateRow(data.length);
 	      		grid.updateRow(args.row+1);
 	      		grid.updateRowCount();
@@ -1002,145 +671,12 @@
         }
 
     });
-    updateInlineTotalAmount();
+    	updateInlineTotalAmount();
 		updateProductTotalAmount();
 		
 		mainGrid = grid;
 	}
 	
-	//adding new Grid for adjustments
-		function setupGrid2() {
-    
-        withAdjColumns = [
-			{id:"orderAdjTypeId", name:"Adjustment Type", field:"orderAdjTypeId", width:205, minWidth:205, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: orderAdjFormatter,formatter: adustmentFormatter,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-		];
-		
-		var options2 = {
-			editable: true,		
-			forceFitColumns: false,			
-			enableCellNavigation: true,
-			enableAddRow: true,
-			asyncEditorLoading: false,			
-			autoEdit: true,
-            secondaryHeaderRowHeight: 25
-		};
-			  
-		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
-        grid2.setSelectionModel(new Slick.CellSelectionModel()); 
-     
-		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid2, options2);
-        if (data2.length > 0) {			
-			$(grid2.getCellNode(0, 1)).click();
-		}else{
-			$(grid2.getCellNode(0,0)).click();
-		}
-        
-        grid2.onKeyDown.subscribe(function(e) {
-			var cellNav = 2;
-			
-			var cell = grid2.getCellFromEvent(e);		
-			if(e.which == $.ui.keyCode.UP && cell.row == 0){
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row+1, 0)).click();
-				e.stopPropagation();
-			}
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data2.length && cell.cell == cellNav){
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(0, 2)).click();
-				e.stopPropagation();
-			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data2.length-1) && cell.cell == cellNav){
-				grid2.getEditController().commitCurrentEdit();
-				grid2.gotoCell(data2.length, 0, true);
-				$(grid2.getCellNode(data2.length, 0)).edit();
-				
-				e.stopPropagation();
-			}
-			
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
-				&& cell.row == data2.length && cell.cell == cellNav){
-  				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row, 0)).click();
-				e.stopPropagation();
-			
-			}else if (e.which == $.ui.keyCode.RIGHT &&
-				cell && (cell.cell == cellNav) && 
-				cell.row != data2.length) {
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row+1, 0)).click();
-				e.stopPropagation();	
-			}
-			else if (e.which == $.ui.keyCode.LEFT &&
-				cell && (cell.cell == 0) && 
-				cell.row != data2.length) {
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row, cellNav)).click();
-				e.stopPropagation();	
-			}else if (e.which == $.ui.keyCode.ENTER) {
-        		grid2.getEditController().commitCurrentEdit();
-				if(cell.cell == 1 || cell.cell == 2){
-					jQuery("#changeSave").click();
-				}
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }else if (e.keyCode == 27) {
-            //here ESC to Save grid2
-        		if (cell && cell.cell == 0) {
-        			$(grid2.getCellNode(cell.row - 1, cellNav)).click();
-        			return false;
-        		}  
-        		grid2.getEditController().commitCurrentEdit();
-				   
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }
-            
-            else {
-            	return false;
-            }
-        });
-         
-                
-    	grid2.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;   
-      		var itemLabel = item['orderAdjTypeId'];
-      		item['orderAdjTypeId'] = orderAdjLabelIdMap[itemLabel];
-      		//showUDPPriceToolTip();     		 		
-      		grid2.invalidateRow(data2.length);
-      		data2.push(item);
-      		grid2.updateRowCount();
-      		grid2.render();
-    	});
-        
-        grid2.onCellChange.subscribe(function(e,args) {
-        alert("on second cell change")
-        		if (args.cell == 1) {
-        		updateProductTotalAmount();
-        		}
-		}); 
-		
-		grid2.onActiveCellChanged.subscribe(function(e,args) {
-        	if (args.cell == 1 && data2[args.row] != null) {
-				var itemType = data2[args.row]["orderAdjTypeId"];
-			}
-			
-		});
-		
-		grid2.onValidationError.subscribe(function(e, args) {
-	        var validationResult = args.validationResults;
-	        var activeCellNode = args.cellNode;
-	        var editor = args.editor;
-	        var errorMessage = validationResult.msg;
-	        var valid_result = validationResult.valid;
-	        
-	        if (!valid_result) {
-	           $(activeCellNode).attr("tittle", errorMessage);
-	            }else {
-	           $(activeCellNode).attr("tittle", "");
-	        }
-
-    	});
-    }
 	
 	
 	//onLoad  inline row update Total Amount
@@ -1149,31 +685,11 @@
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
 				var prod = data[i]["cProductId"];
-				var uomLabel='';
-				var literPrice = parseFloat(priceTags[prod]);
-				if(data[i]["orderId"]){
-					 literPrice = data[i]["ltrPrice"];
-				}
-				var uomId = productUOMMap[prod];
-				if(uomId != 'undefined' || uomId != null ){
-				 uomLabel = uomLabelMap[uomId];
-				}
-				data[i]["uomDescription"] = uomLabel;
 				
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				
-				var udp = data[i]['basicPrice'];
 				var price = parseFloat(data[i]['unitPrice']);
 				if(!price){
-					//price = 0;
 					price = parseFloat(priceTags[prod]);
 				}
-				/*
-				else{
-					price = parseFloat(priceTags[prod]);
-				}*/
-				
 				if(isNaN(price) || isNaN(qty)){
 					data[i]["amount"] = 0;
 					data[i]["unitPrice"] = 0;
@@ -1182,72 +698,35 @@
 					data[i]["unitPrice"] = price;
 					data[i]["amount"] = Math.round((qty*price) * 100)/100;
 				}
-				if(productQtyInc!="" && typeof productQtyInc != "undefined" && productQtyInc[prod]!=""&& typeof productQtyInc[prod] != "undefined" && parseFloat(productQtyInc[prod]) != 0){
-					data[i]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
-				}
-				var crVal = 0;
-				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
-						data[i]["crQuantity"] = crVal;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*10000)/10000);
-						data[i]["ltrQuantity"] = crVal;
-					</#if>
-				}
+				
 				grid.updateRow(i);
 			}
 			
 		}
 	//update total amount
 	function updateProductTotalAmount() {
-			<#--updateUDPLabel();-->
-			var totalAmount = 0;
-			var totalCrates = 0;
-			for (i = 0; i < data.length; i++) {
-				totalAmount += data[i]["amount"];
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					totalCrates += data[i]["crQuantity"];
-				</#if>
-			}
-			// update AdustmentValues
-			for (i = 0; i < data2.length; i++) {
-			   if(!isNaN(data2[i]["adjAmount"])){
-				totalAmount += data2[i]["adjAmount"];
-			   }
-			}
-			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			var dispText = "";
-			if(amt > 0 ){
-				dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-			}
-			else{
-				dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-			}
-			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-				if(totalCrates > 0 ){
-					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
-				}
-				else{
-					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
-				}
-			</#if>
-			
-			jQuery("#totalAmount").html(dispText);
+		var totalAmount = 0;
+		for (i = 0; i < data.length; i++) {
+			totalAmount += data[i]["amount"];
 		}
+		
+		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+		var dispText = "";
+		if(amt > 0 ){
+			dispText = "<b>  [Indent Amt: Rs " +  amt + "]</b>";
+		}
+		else{
+			dispText = "<b>  [Indent Amt: Rs 0 ]</b>";
+		}
+		jQuery("#totalAmount").html(dispText);
+	}
 	
 	jQuery(function(){
-	     // only setupGrid when BoothId exists
-	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
-	    // alert("====partyId==="+partyId);
-		 if(boothId || partyId){
+		 if(partyId){
 		 	setupGrid1();
-		 	//setupGrid2();
 	     }
 	    
-			//  alert("=After==Setup==partyId==="+partyId+"==boothId=="+boothId);	
         jQuery(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
             .mouseover(function(e) {
@@ -1276,117 +755,12 @@
 	});
 	
 	
-// to show special related fields in form			
+	// to show special related fields in form			
 	
 	$(document).ready(function(){
-		$('#boothId').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-		});
-		     $(function() {
-				$( "#indententryinit" ).validate();
-			});	
-			$("#boothId").autocomplete({ disabled: false });	
-		
-   			 $('#boothId').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-		});
-		
-				
-		  $('#contactNumber').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#name').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#address1').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#address2').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			
-			
-			$('#pinNumber').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});		  		
-   		// lets get address and phone number for SO Depo
-   		/* $('#boothId').keyup(function (e) {	
-	    			getSoFacilityDetails();  			
-		});   */			 
-		
-		
+	     $(function() {
+			$( "#indententryinit" ).validate();
+		});	
 	});	
 	 
-	
-	function getSoFacilityDetails(){
-		jQuery("#name").val('');jQuery("#address2").val('');				
-		//jQuery("#routeId").val('');
-		jQuery("#address1").val('');
-		jQuery("#address2").val('');
-		jQuery("#contactNumber").val('');
-		jQuery("#pinNumber").val('');					
-		var action = "getBoothOwnerContactInfo";
-               //var dataString = $('#boothId').val();        
-               $.ajax({
-             type: "POST",
-             url: action,
-             data: {facilityId : jQuery("#boothId").val()},
-             dataType: 'json',
-             success: function(result) {
-             
-               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-            	 //  alert(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
-               }else{   
-            	   var contactInfo = result["contactInfo"]; 
-            	  	if(typeof(contactInfo)!= "undefined"){ 	   
-            	   populateContactDetails(contactInfo); 
-            	   }           	   
-               }
-               
-             } 
-               }); 			
-	
-	}
-	
-	function populateContactDetails(contactInfo){
-		jQuery("#name").val(contactInfo["name"]);		
-		jQuery("#address1").val(contactInfo["address1"]);		
-		jQuery("#address2").val(contactInfo["address2"]);		
-		jQuery("#contactNumber").val(contactInfo["contactNumber"]); 
-		jQuery("#pinNumber").val(contactInfo["postalCode"]);
-	}
-	
-	<#--function updateUDPLabel() {
-		for(var i=0;i<data.length;i++){
-			var udpPrice = data[i]["basicPrice"];
-			if(udpPrice && udpPrice>0){
-				data[i]["button"] = "Update";
-			}
-			grid.updateRow(index);
-		}
-		grid.setData(data);
-		grid.render();    
-		
-	}-->
 </script>			

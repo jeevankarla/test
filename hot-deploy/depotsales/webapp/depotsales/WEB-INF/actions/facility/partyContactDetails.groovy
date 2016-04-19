@@ -93,8 +93,7 @@ String DAO="";
 if(UtilValidate.isNotEmpty(facilityDepo)){
    Depo="YES";
 	   if(UtilValidate.isNotEmpty(facilityDepo.openedDate)){
-	   DAO=UtilDateTime.toDateString(facilityDepo.openedDate,"dd-MM-yyyy");
-	   Debug.log("DAO=====IN=============="+DAO);
+	   	  DAO=UtilDateTime.toDateString(facilityDepo.openedDate,"dd-MM-yyyy");
 	   }
    }
 AllLoomDetails = delegator.findList("LoomType",null,null,null,null,false);
@@ -123,7 +122,6 @@ PartyClassificationDetails = EntityUtil.getFirst(delegator.findList("PartyClassi
 partyType="";
 
 if(PartyClassificationDetails){
-	Debug.log("PartyClassificationDetails==================="+PartyClassificationDetails);
 	PartyClassificationDetails.each{ eachPartyClassificationDetails ->
 		partyClassificationGroupId=PartyClassificationDetails.get("partyClassificationGroupId");
 		if(partyClassificationGroupId){
@@ -172,18 +170,15 @@ if(partyIdentification){
 	psbNo = partyIdentification.get("idValue");
 	if(UtilValidate.isNotEmpty(partyIdentification.get("issueDate"))){
 		issueDate=UtilDateTime.toDateString(partyIdentification.issueDate,"dd-MM-yyyy");
-		Debug.log("issueDate=====IN=============="+issueDate);
-		}
+	}
 }
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId));
-	//Debug.log("resultCtx ================"+resultCtx);
 	
 	productStoreIds=[];
 	productStoreDetails = resultCtx.get("productStoreList");
 	//productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
 	productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
-	//Debug.log("productStoreIds ================"+productStoreIds);
 	
 	if(productStoreIds.size() == 1){
 		partyJSON.put("productStoreId",productStoreIds.get(0));

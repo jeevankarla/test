@@ -289,32 +289,6 @@
 	}
 	//Debug.log("==prodList==="+prodList);
 	
-	/*
-	exprList.clear();
-	exprList.add(EntityCondition.makeCondition("productFeatureTypeId", EntityOperator.EQUALS, "COUNT"));
-	EntityCondition prodFeatureCond = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-			  
-	productFeature =delegator.findList("ProductFeature", prodFeatureCond, null, null, null, false);
-	
-	JSONArray featuresJSON = new JSONArray();
-	JSONObject featuresLabelJSON = new JSONObject();
-	JSONObject featuresLabelIdJSON=new JSONObject();
-	productFeature.each{eachFeature ->
-		JSONObject newObj = new JSONObject();
-		newObj.put("value",eachFeature.featureId);
-		newObj.put("label",eachFeature.description +" [ " +eachFeature.productFeatureTypeId+"]");
-		featuresJSON.add(newObj);
-		featuresLabelJSON.put(eachFeature.productFeatureTypeId, eachFeature.description);
-		featuresLabelIdJSON.put(eachFeature.description +" [ " +eachFeature.productFeatureTypeId+"]", eachFeature.productFeatureTypeId);
-		
-	}
-	
-	context.featuresJSON = featuresJSON;
-	context.featuresLabelJSON = featuresLabelJSON;
-	context.featuresLabelIdJSON = featuresLabelIdJSON;*/
-	
-	
-	
 	Map inputProductRate = FastMap.newInstance();
 	inputProductRate.put("facilityId",boothId);
 	inputProductRate.put("partyId",partyId);
@@ -350,28 +324,6 @@
 	prodPriceMap=[:];
 	prodPriceMap = (Map)priceResultMap.get("priceMap");
 	
-	/*conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", prodList, "userLogin", userLogin));
-	conversionMap = conversionResult.get("productConversionDetails");
-	if(conversionMap){
-		Iterator prodConvIter = conversionMap.entrySet().iterator();
-		JSONObject conversionJSON = new JSONObject();
-		while (prodConvIter.hasNext()) {
-			Map.Entry entry = prodConvIter.next();
-			productId = entry.getKey();
-			convDetail = entry.getValue();
-			
-			Iterator detailIter = convDetail.entrySet().iterator();
-			JSONObject conversionDetailJSON = new JSONObject();
-			while (detailIter.hasNext()) {
-				Map.Entry entry1 = detailIter.next();
-				attrName = entry1.getKey();
-				attrValue = entry1.getValue();
-				conversionDetailJSON.put(attrName,attrValue);
-			}
-			conversionJSON.put(productId, conversionDetailJSON);
-		}
-		context.conversionJSON = conversionJSON;
-	}*/
 	JSONObject productUOMJSON = new JSONObject();
 	JSONObject uomLabelJSON=new JSONObject();
 	
@@ -485,49 +437,5 @@ if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory
 	  context.productQuotaJSON = productQuotaJSON;
 	
 	  
-//individual customer json
-	  JSONArray indcustomerJson = new JSONArray();
-	  JSONObject indcustomerPsbNumJson = new JSONObject();
-	  
-	 // JSONArray indcustomerPsbNumJson = new JSONArray();
-	  JSONObject indcustomerLabelPsbNumJson = new JSONObject();
-	  
-/*	  
-	  condList=[];
-	 	  condList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS,"INDIVIDUAL_WEAVERS"));
-	  EntityCondition cond=EntityCondition.makeCondition(condList,EntityOperator.AND);
-	  List partyClassification=delegator.findList("PartyClassification",cond,null,null,null,false);
-	  if(partyClassification){
-	  partyIds=EntityUtil.getFieldListFromEntityList(partyClassification, "partyId", false)
-	 // Debug.log("partyIds======================"+partyIds);
-	  
-	 if(partyIds){
-			partyIds.each{ eachParty ->
-				JSONObject newObj = new JSONObject();
-				JSONObject newPsbObj = new JSONObject();
-				//JSONObject newPsbLabelObj = new JSONObject();
-				
-				newObj.put("value",eachParty);
-				partyName=PartyHelper.getPartyName(delegator, eachParty, false);
-				psbNo="";
-				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", eachParty, "partyIdentificationTypeId", "PSB_NUMER"), false);
-				if(partyIdentification){
-					psbNo = partyIdentification.get("idValue");
-				}
-				
-				newObj.put("label",partyName+"["+psbNo+"]");
-				indcustomerPsbNumJson.put(eachParty,psbNo);
-				indcustomerLabelPsbNumJson.put(partyName+"["+psbNo+"]",eachParty);
-				indcustomerJson.add(newObj);
-				//indcustomerPsbNumJson.add(newPsbObj);
-				//indcustomerLabelPsbNumJson.add(newPsbLabelObj);
-			}
-	 	}
-	  }
-*/	  
-	  //Debug.log("indcustomerJson====================="+indcustomerJson);
-	  //Debug.log("indcustomerLabelPsbNumJson====================="+indcustomerLabelPsbNumJson);
-	  context.indcustomerJson=indcustomerJson;
-	  context.indcustomerPsbNumJson=indcustomerPsbNumJson;
-	  context.indcustomerLabelPsbNumJson=indcustomerLabelPsbNumJson;
+
 	
