@@ -265,7 +265,7 @@
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
 			       	  					$('#suplierPartyId').focus();
-	    								$('#productStoreId').autocomplete('close');
+	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
 		       	  				   
