@@ -572,12 +572,14 @@
 				if(!(data[args.row]["quota"])){
 					data[args.row]["quota"] = quota;
 				}
-				
-				if(qty > quota){
-					data[args.row]["warning"] = 'Quantity exeeds the quota limit.';
-				}
-				else{
-					data[args.row]["warning"] = '';
+				var schemeCategory = $("#schemeCategory").val();
+				if(schemeCategory == "MGPS_10Pecent"){
+					if(qty > quota){
+						data[args.row]["warning"] = 'Quantity exeeds the quota limit.';
+					}
+					else{
+						data[args.row]["warning"] = '';
+					}
 				}
 				grid.updateRow(args.row);
 			}
