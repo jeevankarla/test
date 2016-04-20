@@ -38,14 +38,11 @@ $(document).ready(function () {
                     { name: 'branch', type: 'string' },
                     { name: 'ReportsTo', type: 'string' },                                    
                     { name: 'ro', type: 'string' },
-                    { name: 'avgTAT', type: 'string' },                    
+                    { name: 'avgTAT', type: 'string' }, 
+                    { name: 'totalRevenue', type: 'string' },                                       
                     { name: 'totalIndents', type: 'string' },
-                    { name: 'created', type: 'string' },
-                    { name: 'ordersPlaced', type: 'string' },
-                    { name: 'dispatched', type: 'string' },
-                    { name: 'docsReceived', type: 'string' },
-                    { name: 'docsEndorsed', type: 'string' },
-                    { name: 'accepted', type: 'string' },                    
+                    { name: 'inProcess', type: 'string' },
+                    { name: 'completed', type: 'string' },                    
                 ],
                 hierarchy:
                 {
@@ -79,16 +76,13 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'10%', align: 'center', dataField: 'ro', cellclassname:'smallfont'},
-                  { text: 'Branch', width:'10%', align: 'center', dataField: 'branch',cellsalign: 'center', cellclassname:'smallfont'},
+                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellclassname:'smallfont'},
+                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'center', cellclassname:'smallfont'},
                   { text: 'Avg TAT (days)', width:'10%', align: 'center', dataField: 'avgTAT', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Total Indents', width:'10%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Created', width:'10%', align: 'center', dataField: 'created', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Orders Placed', width:'10%', align: 'center', dataField: 'ordersPlaced', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Dispatched', width:'10%', align: 'center',  dataField: 'dispatched', cellsalign: 'right', cellclassname:'smallfont' },
-                  { text: 'Docs Received',  width:'10%', align: 'center', dataField: 'docsReceived', cellsalign: 'right', cellclassname:'smallfont' },
-                  { text: 'Docs Endorsed',  width:'10%', align: 'center', dataField: 'docsEndorsed', cellsalign: 'right', cellclassname:'smallfont' },
-                  { text: 'Accepted',  width:'10%', align: 'center', dataField: 'accepted', cellsalign: 'right', cellclassname:'smallfont' },                 
+                  { text: 'Total Revenue (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellclassname:'smallfont'},
+                  { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellclassname:'smallfont'},
+                  { text: 'In Process', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellclassname:'smallfont'},
+                  { text: 'Completed', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellclassname:'smallfont' },
                 ],
               
                
