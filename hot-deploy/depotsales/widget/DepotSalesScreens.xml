@@ -6142,4 +6142,123 @@
             </widgets>
         </section>
     </screen>
+    
+	<screen name="SalelistMaterialShipmentReceipt">
+		<section>
+			<actions>
+			<entity-condition list="orderAssoc" entity-name="OrderAssoc">
+				<condition-expr field-name="toOrderId" from-field="parameters.orderId"/>
+			</entity-condition>
+			<set field="parameters.orderId" value="${orderAssoc[0].orderId}"/>
+			</actions>
+			<widgets>
+			<include-screen name="listMaterialShipmentReceipt"/>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ViewIndentRequest">
+		<section>
+			<actions>
+				<set field="titleProperty"
+					value="Sales Indent OverView - IndentId - ${parameters.orderId}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="IndentOverView" />
+				<set field="parameters.localDispatcherName" value="depotsales" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/OrderShippingInfo.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/geoAutoCompleter.js"
+					global="true" />
+					<set field="parameters.isSalesIndent"  value="Y"/>
+					
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchageOrderView.groovy" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SalesOrderOverView.groovy" />
+					
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BranchTransactionsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+						<decorator-section name="body">
+						<include-menu name="FindDepotTransIndentSubTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<container style="lefthalf">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl" />
+										</html>
+									</platform-specific>
+									
+									<screenlet title="Order Attributes">
+										<include-screen name="orderAttributes" />
+									</screenlet>
+									<include-screen name="orderAssoc" />
+								</container>
+								<container style="righthalf">
+								<!--<screenlet title="Indent  Status" navigation-form-name="ViewRequest">
+								
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/indentStatus.ftl" />
+										</html>
+									</platform-specific>
+								 </screenlet>-->
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Receipts For Order">
+										<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" 
+											name="listMaterialShipmentReceipt"/> -->
+											
+										<include-screen name="SalelistMaterialShipmentReceipt" />
+									</screenlet>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/salesIndentPaymentInfo.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Invoices For Order">
+										<include-form
+											location="component://depotsales/widget/DepotSalesForms.xml"
+											name="invoiceDetailList" />
+									</screenlet>
+									<!-- <screenlet title="Content">
+										<include-screen name="POcontent" />
+									</screenlet> -->
+									<!-- <platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl" />
+										</html>
+									</platform-specific> -->
+									<screenlet title="Supply Products Till Date">
+										<include-screen name="supplyProductsTillDate" />
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
 </screens>
