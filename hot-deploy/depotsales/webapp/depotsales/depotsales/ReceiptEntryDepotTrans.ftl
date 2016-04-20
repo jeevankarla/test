@@ -53,6 +53,14 @@ $( "#deliveryChallanDate" ).datepicker({
 		});
 		*/
 	//});
+	
+	var transporterJSON = ${StringUtil.wrapString(transporterJSON)!'[]'};
+	
+	
+		$(document).ready(function(){
+             $("#carrierName").autocomplete({ source: transporterJSON }).keydown(function(e){});     
+		});
+		
 		
 </script>
 
@@ -325,12 +333,18 @@ $( "#deliveryChallanDate" ).datepicker({
 </div>
 <script type="application/javascript">
     var partyAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
+    
+  
    
    function cancelForm(){
    jQuery("#indententryinit").attr("action", "/depotsales/control/FindSupplierPO");
    jQuery("#indententryinit").submit();
    
    }
+   
+   
+ 
+   
    
 	  function toggleSupplier(el){
 	      $("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){});
