@@ -260,6 +260,8 @@
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var partyType=contactDetails["partyType"];
+		       	  				   
+		       	  				   <#--
 			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
 			       	  					$('#productStoreId').focus().val(prodStoreId);
@@ -267,7 +269,7 @@
 			       	  					$('#suplierPartyId').focus();
 	    								$('#productStoreId').autocomplete('close');
 			       	  			   }
-			       	  				
+			       	  				-->
 		       	  				   
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];
