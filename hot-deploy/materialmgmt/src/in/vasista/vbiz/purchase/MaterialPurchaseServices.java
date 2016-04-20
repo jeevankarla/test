@@ -101,6 +101,7 @@ public class MaterialPurchaseServices {
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    String remarks = (String) request.getParameter("remarks");
 	    String hideQCflow = (String) request.getParameter("hideQCflow");
+	    String freightCharges = (String) request.getParameter("freightCharges");
 	    String allowedGraterthanTheOrdered = (String) request.getParameter("allowedGraterthanTheOrdered");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -291,6 +292,8 @@ public class MaterialPurchaseServices {
 	        newEntity.put("description",remarks);
 	        newEntity.put("deliveryChallanDate",deliveryChallanDate);
 	        newEntity.put("primaryOrderId",orderId);
+	        if(UtilValidate.isNotEmpty(freightCharges))
+            newEntity.set("estimatedShipCost", new BigDecimal(freightCharges));
 	        newEntity.set("createdDate", nowTimeStamp);
 	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -4446,36 +4449,198 @@ catch(Exception e){
 		return result;
 	}
 		
+	public static Map<String, Object>  createTransporter(DispatchContext dctx, Map<String, ? extends Object> context)  {
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String) context.get("partyId");
+        Locale locale = (Locale) context.get("locale");
+        String contactMechId ="";
+        String groupName = (String) context.get("groupName");
+        List<String> productStoreList = (List) context.get("productStoreId");
+        String panId = (String) context.get("USER_PANID");
+        String serviceTax = (String) context.get("USER_SERVICETAXNUM");
+        String tinNumber= (String) context.get("USER_TINNUM");
+        String cstNumber = (String) context.get("USER_CSTNUM");
+        String adharNum = (String) context.get("ADR_NUMBER");
+        String address1 = (String) context.get("address1");
+        String address2 = (String) context.get("address2");
+        String city = (String) context.get("city");
+        String postalCode = (String) context.get("postalCode");
+		String email = (String) context.get("emailAddress");
+		String AltemailAddress = (String) context.get("AltemailAddress");
+		String mobileNumber = (String) context.get("mobileNumber");
+		String contactNumber =(String)context.get("contactNumber");
+		String countryCode = (String) context.get("countryCode");
+		String roleTypeId = (String) context.get("roleTypeId");
+		String accName= (String) context.get("accName");
+        String accNo= (String) context.get("accNo");
+        String accBranch= (String) context.get("accBranch");
+        String IfscCode= (String) context.get("IfscCode");
+		String suppRole = (String) context.get("suppRole");
+		String personalDetail = (String) context.get("personalDetailsId");
+
 		
+	/*	JSONObject personalDetailMap = null;
+        if (UtilValidate.isNotEmpty(personalDetail)) {
+        	personalDetailMap = new JSONObject();
+            // Transform JSON String to Object
+        	personalDetailMap = (JSONObject) JSONSerializer.toJSON(personalDetail);
+        }*/
 		
+		Map<String, Object> outMap = FastMap.newInstance();
 		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		try {
+			result=dispatcher.runSync("createPartyGroup", UtilMisc.toMap("groupName",groupName,"userLogin", context.get("userLogin")));
+			if (ServiceUtil.isError(result)) {
+  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+  		  		Debug.logError(errMsg , module);
+  		  	}
+            partyId = (String) result.get("partyId");
+            if(UtilValidate.isNotEmpty(partyId)){
+            	String defaultRoleType = "TRANSPORT_CONTRACTOR";
+            	Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "partyId", partyId, "roleTypeId", defaultRoleType);
+            	Map<String, Object>  resultMap = dispatcher.runSync("createPartyRole", input);
+     			if (ServiceUtil.isError(resultMap)) {
+     				Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+                     return resultMap;
+                }
+     			/*input.clear();
+            	input = UtilMisc.toMap("userLogin", userLogin, "partyId", partyId, "roleTypeId", roleTypeId);
+            	resultMap = dispatcher.runSync("createPartyRole", input);
+     			if (ServiceUtil.isError(resultMap)) {
+     				Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+                     return resultMap;
+                }*/
+     			
+     			List conditionList = FastList.newInstance();
+     			List<GenericValue> ProductStoreList = FastList.newInstance();
+     			try {
+				conditionList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreList));
+				ProductStoreList = delegator.findList("ProductStore", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("payToPartyId"), null, null, false);
+     			}catch (Exception e) {
+     	            Debug.logWarning(e.getMessage(), module);
+     	            Debug.logError(e, "Error creating Group For Vendor",module);
+     				return ServiceUtil.returnError("Error creating Group For Vendor :"+groupName);
+     	        }
+				List<String> branchIds = EntityUtil.getFieldListFromEntityList(ProductStoreList, "payToPartyId", true);
+
+     			for (String eachBranch : branchIds) {
+     				
+     				Map inMap = FastMap.newInstance();
+ 	                inMap.put("userLogin", userLogin);
+ 	                inMap.put("partyId", partyId);
+ 	                inMap.put("partyIdFrom", eachBranch);
+ 	                inMap.put("partyIdTo", partyId);
+ 	                inMap.put("roleTypeIdTo","TRANSPORT_CONTRACTOR");
+ 	                inMap.put("roleTypeIdFrom","ORGANIZATION_UNIT");
+ 	                inMap.put("partyRelationshipTypeId","BRANCH_TRANSPORTER");
+ 	                outMap = dispatcher.runSync("createPartyRelationship", inMap);
+ 	                if(ServiceUtil.isError(outMap)){
+ 	               	 	Debug.logError("failed service create party relationship:"+ServiceUtil.getErrorMessage(outMap), module);
+ 	                }
+     				
+				}
+     			
+     			if (UtilValidate.isNotEmpty(address1)){
+     				input.clear();
+    				input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", postalCode);
+    				resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
+    				if (ServiceUtil.isError(resultMap)) {
+    					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+    	                return resultMap;
+    	            }
+    				contactMechId = (String) resultMap.get("contactMechId");
+     				input.clear();
+    				input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyId, "contactMechPurposeTypeId", "BILLING_LOCATION");
+    				resultMap =  dispatcher.runSync("createPartyContactMechPurpose", input);
+    				if (ServiceUtil.isError(resultMap)) {
+    				    Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+    	                return resultMap;
+    	            }
+    			 }
+    			// create phone number
+    			if (UtilValidate.isNotEmpty(mobileNumber)){
+    				if (UtilValidate.isEmpty(countryCode)){
+    					countryCode	="91";
+    				}
+    	            input.clear();
+    	            input = UtilMisc.toMap("userLogin", userLogin, "contactNumber", mobileNumber,"countryCode",countryCode, "partyId",partyId, "contactMechPurposeTypeId", "PRIMARY_PHONE");
+    	            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    			}
+                // create landLine number
+    			if (UtilValidate.isNotEmpty(contactNumber)){
+    	            input.clear();
+    	            input = UtilMisc.toMap("userLogin", userLogin, "contactNumber", contactNumber, "partyId",partyId, "contactMechPurposeTypeId", "PHONE_HOME");
+    	            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    			}
+                // Create Party Email
+    			if (UtilValidate.isNotEmpty(email)){
+    	            input.clear();
+    	            input = UtilMisc.toMap("userLogin", userLogin, "emailAddress", email, "partyId",partyId,"verified","Y", "fromDate",UtilDateTime.nowTimestamp(),"contactMechPurposeTypeId", "PRIMARY_EMAIL");
+    	            outMap = dispatcher.runSync("createPartyEmailAddress", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    			}
+    			
+    			if (UtilValidate.isNotEmpty(AltemailAddress)){
+    	            input.clear();
+    	            input = UtilMisc.toMap("userLogin", userLogin, "emailAddress", AltemailAddress, "partyId",partyId,"verified","Y", "fromDate",UtilDateTime.nowTimestamp(),"contactMechPurposeTypeId", "PRIMARY_EMAIL");
+    	            outMap = dispatcher.runSync("createPartyEmailAddress", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    			}
+     			//===============================================================
+    			if(UtilValidate.isNotEmpty(suppRole)){
+	    			try{
+						GenericValue PartyClassification = delegator.makeValue("PartyClassification");
+	    				PartyClassification.set("partyId", partyId);
+		    			PartyClassification.set("partyClassificationGroupId", suppRole);
+		                PartyClassification.set("fromDate", UtilDateTime.nowTimestamp());
+						delegator.create(PartyClassification);
+					}catch (Exception e) {
+						Debug.logError(e, module);
+						return ServiceUtil.returnError("Error while creating  PartyClassification" + e);	
+					}
+    			}
+    			
+	            if(UtilValidate.isNotEmpty(panId)){
+	            	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
+	       	    }
+	            if(UtilValidate.isNotEmpty(serviceTax)){
+	           	     dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","SERVICETAX_NUMBER","idValue",serviceTax,"partyId",partyId,"userLogin", context.get("userLogin")));
+	      	    }
+	            if(UtilValidate.isNotEmpty(tinNumber)){
+	              	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","TIN_NUMBER","idValue",tinNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+	         	}
+	            if(UtilValidate.isNotEmpty(cstNumber)){
+	             	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
+	        	}
+	            if(UtilValidate.isNotEmpty(adharNum)){
+	             	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","ADR_NUMBER","idValue",adharNum,"partyId",partyId,"userLogin", context.get("userLogin")));
+	        	}
+            }
+        } catch (GenericServiceException e) {
+            Debug.logWarning(e.getMessage(), module);
+            Debug.logError(e, "Error creating Group For Vendor",module);
+			return ServiceUtil.returnError("Error creating Group For Vendor :"+groupName);
+        }
+		result.put("partyId", partyId);
+		return result;
+	}
 	
 	
 	

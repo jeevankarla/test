@@ -5892,6 +5892,32 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CreateNewTransporter">
+        <section>
+            <actions>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="Transpoter"/>
+                <set field="headerItem" value="find"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+                <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+          					<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreateTransporter.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="Vendor">
         <section>
             <actions>
