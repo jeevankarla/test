@@ -267,6 +267,15 @@ $( "#deliveryChallanDate" ).datepicker({
 					            </td>
 				       	  </#if>
 					  	</tr>
+					  	  <tr><td><br/></td></tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
+                           <td>&nbsp;</td>
+                          <td valign='middle'>
+                                  <input class="h3" type="text" name="freightCharges" id="freightCharges" />
+                              </td>
+                          </tr>
 					  	<tr><td><br/></td></tr>
 						<tr>
 				          <td>&nbsp;</td>

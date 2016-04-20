@@ -272,8 +272,8 @@ under the License.
 					</fo:table-row>
 					<fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left"    font-size="12pt" >Destination       :${destination?if_exists}</fo:block>
-						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :   </fo:block>
+						<fo:block text-align="left"    font-size="12pt" >Destination       :${estimatedShipCost?if_exists}</fo:block>
+						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :${estimatedShipCost?if_exists}   </fo:block>
 						<fo:block text-align="left"    font-size="12pt" >Due Date          :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
 						<fo:table-cell border-style-left="hidden">

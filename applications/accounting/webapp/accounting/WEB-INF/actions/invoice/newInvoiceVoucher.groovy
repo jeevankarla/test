@@ -47,6 +47,7 @@ lrNumber = "";
 supplierInvoiceId = "";
 supplierInvoiceDate = "";
 carrierName = "";
+estimatedShipCost = "";
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
@@ -55,6 +56,7 @@ deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 lrNumber = shipmentList.get("lrNumber");
 supplierInvoiceId = shipmentList.get("supplierInvoiceId");
 carrierName = shipmentList.get("carrierName");
+estimatedShipCost = shipmentList.get("estimatedShipCost");
 if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate"))){
 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
@@ -66,6 +68,7 @@ context.supplierInvoiceId = supplierInvoiceId;
 context.supplierInvoiceDate = supplierInvoiceDate;
 context.lrNumber = lrNumber;
 context.carrierName = carrierName;
+context.estimatedShipCost = estimatedShipCost;
 
 
 

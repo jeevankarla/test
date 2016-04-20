@@ -349,4 +349,22 @@ under the License.
 
  <ContentType contentTypeId="INVOICE_DOCUMENT" createdStamp="2016-03-09 14:44:50.0" createdTxStamp="2016-03-09 14:44:50.0" description="Invoice Document" lastUpdatedStamp="2016-03-09 14:44:50.0" lastUpdatedTxStamp="2016-03-09 14:44:50.0"/>
  <ContentType contentTypeId="LR_DOCUMENT" createdStamp="2016-03-09 14:44:50.0" createdTxStamp="2016-03-09 14:44:50.0" description="LR Document" lastUpdatedStamp="2016-03-09 14:44:50.0" lastUpdatedTxStamp="2016-03-09 14:44:50.0"/>
+
+
+<!-- For Suppliers Roles  -->
+    
+	<PartyClassificationType createdStamp="2016-04-18 11:48:41.0" createdTxStamp="2016-04-18 11:48:41.0" lastUpdatedStamp="2016-04-18 11:48:41.0" lastUpdatedTxStamp="2016-04-18 11:48:41.0" partyClassificationTypeId="SUPPLIER_ROLE"/>
+	<PartyClassificationGroup createdStamp="2016-04-18 11:48:41.0" createdTxStamp="2016-04-18 11:48:41.0" description="Corporate" lastUpdatedStamp="2016-04-18 11:48:41.0" lastUpdatedTxStamp="2016-04-18 11:48:41.0" partyClassificationGroupId="CORPORATE_SUPPLIER" partyClassificationTypeId="SUPPLIER_ROLE"/>
+	<PartyClassificationGroup createdStamp="2016-04-18 11:48:41.0" createdTxStamp="2016-04-18 11:48:41.0" description="NTC" lastUpdatedStamp="2016-04-18 11:48:41.0" lastUpdatedTxStamp="2016-04-18 11:48:41.0" partyClassificationGroupId="NTC_SUPPLIER" partyClassificationTypeId="SUPPLIER_ROLE"/>
+	<PartyClassificationGroup createdStamp="2016-04-18 11:48:41.0" createdTxStamp="2016-04-18 11:48:41.0" description="Private" lastUpdatedStamp="2016-04-18 11:48:41.0" lastUpdatedTxStamp="2016-04-18 11:48:41.0" partyClassificationGroupId="PRIVATE_SUPPLIER" partyClassificationTypeId="SUPPLIER_ROLE"/>
+	<PartyClassificationGroup createdStamp="2016-04-18 11:48:41.0" createdTxStamp="2016-04-18 11:48:41.0" description="SSI" lastUpdatedStamp="2016-04-18 11:48:41.0" lastUpdatedTxStamp="2016-04-18 11:48:41.0" partyClassificationGroupId="SSI_SUPPLIER" partyClassificationTypeId="SUPPLIER_ROLE"/>
+    
+<!-- Transporter Data -->
+
+     <PartyRelationshipType createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" hasTable="N" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0" partyRelationshipName="Branch Supplier" partyRelationshipTypeId="BRANCH_TRANSPORTER"/> 
+     <RoleType createdStamp="2015-12-13 14:53:21.0" createdTxStamp="2015-12-13 14:53:21.0" description="Empannelled Contractor" lastUpdatedStamp="2016-04-18 19:11:46.0" lastUpdatedTxStamp="2016-04-18 19:11:46.0" roleTypeId="TRANSPORT_CONTRACTOR"/> 
+
+
+
+
 </entity-engine-xml>

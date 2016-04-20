@@ -182,6 +182,41 @@
         <attribute name="WOOLYARN_40SNMABOVE" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="BigDecimal" optional="true"/>        
      </service>
+         
+     <service name="createTransporter" engine="java" auth="true" invoke="createTransporter" 
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>Create Party Froup  And Identification</description>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+           <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+        <attribute name="partyId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="groupName" mode="IN" type="String" optional="false"/>
+        <attribute name="productStoreId" mode="IN" type="List" optional="false"/>
+        <attribute name="USER_PANID" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_TINNUM" mode="IN" type="String" optional="true"/> 
+        <attribute name="USER_CSTNUM" mode="IN" type="String" optional="true"/>
+        <attribute name="ADR_NUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="AltemailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="suppRole" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="sourceSeco" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="accName" mode="IN" type="String" optional="true"/>
+        <attribute name="accBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="IfscCode" mode="IN" type="String" optional="true"/>
+        <attribute name="personalDetailsId" mode="IN" type="String" optional="true"/>
+        
+    </service>
+     
      <service name="getEmailForIndentIssuance" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForIndentIssuance.groovy" invoke="" transaction-timeout="12000">
         <description>Get DeptEmail Details  For Indent Issuance</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>  

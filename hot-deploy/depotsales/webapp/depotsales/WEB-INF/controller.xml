@@ -690,6 +690,24 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewSupplier"/>
     </request-map> 
+    
+     <request-map uri="FindTransporter">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindTransporter"/>
+    </request-map>
+   
+    <request-map uri="CreateNewTransporter">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewTransporter"/>
+    </request-map>
+    
+     <request-map uri="createTransporter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTransporter"/>
+        <response name="success" type="request-redirect" value="CreateNewTransporter"/>
+        <response name="error" type="view" value="CreateNewTransporter"/>
+    </request-map>
+    
     <request-map uri="createSupplier">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
@@ -1701,8 +1719,8 @@
    	
    	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
    	
-   	
-   	
+   	 <view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
+   	 <view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
