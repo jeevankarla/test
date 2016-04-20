@@ -541,16 +541,26 @@ if (orderItems) {
    paymentDetailsList=[];
    paymentIds=[];
    finalMap=[:];
+   if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
+	   exprCondList=[];
+	   exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+	   exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	   EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+	   OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+	   if(OrderAss){
+		   orderId=OrderAss.orderId;
+	   }
+   }
    orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
    ShipmentList = delegator.findList("Shipment", orderCondition, UtilMisc.toSet("shipmentId"), null, null, false);
    if(UtilValidate.isNotEmpty(ShipmentList)){
 	   ShipmentList.each{shipment->
-		   invoiceCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipment.shipmentId),EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE")],EntityOperator.AND);
+		   invoiceCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipment.shipmentId)],EntityOperator.AND);
 		   invoicesList = delegator.findList("Invoice",invoiceCondition,UtilMisc.toSet("invoiceId"),null,null,false);
 		   invoiceIds = EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true);
 		  if(UtilValidate.isNotEmpty(invoiceIds)){
 			   ivoCond=EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
-			   invoiceList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate","createdByUserLogin"),null,null,false);		   
+			   invoiceList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate","createdByUserLogin","invoiceTypeId"),null,null,false);		   
 			   invoiceList.each{invoiceData->
 				   invoiceDetailList.add(invoiceData);
 			   }

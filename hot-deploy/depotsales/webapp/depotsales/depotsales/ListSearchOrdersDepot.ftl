@@ -246,7 +246,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 								</#if>
 				</#if>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-      		<td><input type="button" name="viewOrder" id="viewOrder" value="${eachOrder.orderId?if_exists}" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}','${parameters.salesChannelEnumId}');"/></td>
+      		<td><a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank">${eachOrder.orderId?if_exists}</a></td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
               	<td>${eachOrder.partyName?if_exists}   [${eachOrder.partyId?if_exists}]</td>
               	<td>${supplierPartyName?if_exists}  [${supplierPartyId?if_exists}]</td>

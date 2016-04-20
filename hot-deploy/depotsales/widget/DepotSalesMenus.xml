@@ -1128,6 +1128,26 @@
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
       </menu> 
+       <menu name="FindDepotTransIndentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        
+           <!--<menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
+            	<link target="ProcessOrdersSuppliersDepotTrans">
+            	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+    	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	</link>
+            </menu-item>
+             <menu-item name="FindDepotTransPurchaseShipment" title="Find Purchase Shipment">
+            	<link target="FindDepotTransPurchaseShipment"/>
+        </menu-item>-->
+        <menu-item name="IndentOverView" title="Indent OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="ViewIndentRequest"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu> 
       <menu name="InventorySalesSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
     	<menu-item name="makeInventorySales" title="Inventory Sales">
 	    	<link target="DepotSalesInventorySales">
