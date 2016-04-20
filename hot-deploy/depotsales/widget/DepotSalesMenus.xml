@@ -376,7 +376,7 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
-       "FindDepotTransPOSubTabBar"
+       
        <menu name="IndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
@@ -1105,7 +1105,7 @@
             </link>
         </menu-item> -->
          
-    </menu>
+    </menu> 
     <menu name="FindDepotTransPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindDepotTransPO" title="Find Purchase Order">
         	<link target="FindDepotTransPO"/>
