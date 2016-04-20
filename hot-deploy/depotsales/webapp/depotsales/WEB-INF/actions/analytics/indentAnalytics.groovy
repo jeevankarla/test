@@ -45,15 +45,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
 }
  dctx = dispatcher.getDispatchContext();
  conditionList = [];
- /*
- productStoreFacilityMap = [:];
-		
-		psfList = delegator.findList("ProductStoreFacility", null , UtilMisc.toSet("productStoreId", "facilityId"), null, null, false );
- 		for (int k=0; k < psfList.size(); k++) {
- 		psf = psfList.get(k);
-			productStoreFacilityMap.put(psf.productStoreId, psf.facilityId); 		
- 		}
- */
  conditionList.clear();
  partyIdNameMap = [:];
  branchROMap = [:]; 
@@ -118,39 +109,75 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
  salesOrderList = delegator.findList("OrderHeaderAndRoles", condition, UtilMisc.toSet("orderId","statusId","partyId","grandTotal"), null, null, false);
  
  //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
- 
- SortedMap DataMap = new TreeMap();
+ salesOrderIds = EntityUtil.getFieldListFromEntityList(salesOrderList, "orderId", true);
 
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, salesOrderIds));
+ conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+ poOrderAssocList = delegator.findList("OrderAssoc", condition, UtilMisc.toSet("orderId", "toOrderId"), null, null, false);
+ poOrderAssocIdsList = EntityUtil.getFieldListFromEntityList(poOrderAssocList, "orderId", true);
+ 
+ conditionList.clear(); 
+ conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, poOrderAssocIdsList)); 
+ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+ poOrderList = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId","statusId", "externalId"), null, null, false);
+ salesOrderPOMap = [:]
+ Debug.log("===poOrderList=="+poOrderList+"==condition=="+condition);	 
+ 	if(poOrderList){
+		 poOrderList.each{eachItem ->
+	 		salesOrderPOMap.put(eachItem.getAt("externalId"), eachItem);
+		 }
+	 }
+	  
+ SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
 		 	partyId = eachItem.getAt("partyId");
-		 	roId = branchROMap.get(partyId);		 	
+		 	completed = 0;
+		 	if (salesOrderPOMap.containsKey(eachItem.getAt("orderId"))) {
+		 		purchaseOrder = salesOrderPOMap.get(eachItem.getAt("orderId"));
+		 		if (purchaseOrder.get("statusId") == "ORDER_COMPLETED") {
+		 			completed = 1;
+		 		}
+		 	}
+		 	roId = branchROMap.get(partyId);	
+		 	grandTotal = eachItem.getAt("grandTotal");	 	
 		 	if (DataMap.containsKey(partyId)) {
 		 		branchDetails = DataMap.get(partyId);
 		 		totIndents = branchDetails.get("totIndents");
 		 		branchDetails.putAt("totIndents", ++totIndents);
+		 		branchDetails.putAt("completed", completed + branchDetails.get("completed"));		 		
+		 		branchDetails.putAt("totRevenue", grandTotal + branchDetails.get("totRevenue"));		 		
 		 	}
 		 	else {
 		 		branchDetails = [:];
 		 		branchDetails.putAt("totIndents", 1);
+		 		branchDetails.putAt("totRevenue", grandTotal);
+		 		branchDetails.putAt("completed", completed);		 		
 		 		DataMap.putAt(partyId, branchDetails);		 	
 		 	}
 		 	if (DataMap.containsKey(roId)) {
 		 		roDetails = DataMap.get(roId);
 		 		totIndents = roDetails.get("totIndents");
 		 		roDetails.putAt("totIndents", ++totIndents);
+		 		roDetails.putAt("completed", completed + roDetails.get("completed"));		 				 		
+		 		roDetails.putAt("totRevenue", grandTotal + roDetails.get("totRevenue"));		 				 		
 		 	}
 		 	else {
 		 		roDetails = [:];
 		 		roDetails.putAt("totIndents", 1);
+		 		roDetails.putAt("totRevenue", grandTotal);	
+		 		roDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(roId, roDetails);	 	
 		 	}		 	
 		 }
 	 }
+	
+
+
  Debug.log("===DataMap=="+DataMap);
-	 
-
-
+ 
 	 for(Map.Entry entry : DataMap.entrySet()){
 	 		JSONObject newObj = new JSONObject();
 	 		partyId = entry.getKey();
@@ -162,30 +189,25 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 				newObj.put("ReportsTo", partyIdNameMap.get(roId));
 				newObj.put("ro","");
 				newObj.put("avgTAT","");			
-				newObj.put("totalIndents", entryValue.get("totIndents"));
-				newObj.put("created","");
-				newObj.put("ordersPlaced", "");
-				newObj.put("dispatched", "");
-				newObj.put("docsReceived", "");
-				newObj.put("docsEndorsed", "");
-				newObj.put("accepted", "");	 		
+				newObj.put("totalRevenue", entryValue.get("totRevenue"));
+				newObj.put("totalIndents", entryValue.get("totIndents"));				
+				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
+				newObj.put("completed", entryValue.get("completed"));		
 	 		}
 	 		else {
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", null);
 				newObj.put("ro", partyIdNameMap.get(partyId));
-				newObj.put("avgTAT","");			
+				newObj.put("avgTAT","");	
+				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
 				newObj.put("totalIndents", entryValue.get("totIndents"));
-				newObj.put("created","");
-				newObj.put("ordersPlaced", "");
-				newObj.put("dispatched", "");
-				newObj.put("docsReceived", "");
-				newObj.put("docsEndorsed", "");
-				newObj.put("accepted", "");			 		
+				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
+				newObj.put("completed", entryValue.get("completed"));	 		
 	 		}
 	 		dataList.add(newObj);			
 	 }		
+				
 				
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();
