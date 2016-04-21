@@ -321,4 +321,40 @@
             <key-map field-name="schemeTimePeriodId"/>
         </view-link>
     </view-entity>
+     <entity entity-name="ShipmentReimbursement"
+            package-name="org.ofbiz.product.promo"
+            title="Shipment Reimbursement">
+        <field name="claimId" type="id-ne"></field> 
+        <field name="shipmentId" type="id-ne"></field> 
+        <field name="receiptNo" type="id-ne"></field>   
+       	<field name="receiptAmount" type="fixed-point"></field>
+       	<field name="receiptDate" type="date-time"></field>
+      	<field name="description" type="description"></field> 
+      	<prim-key field="claimId"/>
+      	<relation type="one" fk-name="SHPMNT_ID" rel-entity-name="Shipment">
+        	<key-map field-name="shipmentId"/>
+      	</relation>
+    </entity>
+    
+     <entity entity-name="DepotReimbursementReceipt"
+            package-name="org.ofbiz.product.promo"
+            title="Depot Reimbursement">
+        <field name="claimId" type="id-ne"></field> 
+        <field name="facilityId" type="id-ne"></field> 
+        <field name="partyId" type="id-ne"></field> 
+         <field name="schemeTimePeriodId" type="id-ne"></field> 
+         <field name="claimType" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+       	<field name="thruDate" type="date-time"></field>
+       	<field name="receiptAmount" type="fixed-point"></field>
+      	<field name="description" type="description"></field> 
+      	<field name="statusId" type="id"></field>
+      	<prim-key field="claimId"/>
+      	<relation type="one" fk-name="FACILITY_ID" rel-entity-name="Facility">
+        	<key-map field-name="facilityId"/>
+      	</relation>
+      	<relation type="one" fk-name="SCHME_TIME_PERIOD_ID" rel-entity-name="SchemeTimePeriod">
+        	<key-map field-name="schemeTimePeriodId"/>
+      	</relation>
+    </entity>
 </entitymodel>

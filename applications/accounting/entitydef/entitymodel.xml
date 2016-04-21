@@ -5170,6 +5170,7 @@
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
+       <field name="schemeTimePeriodId" type="id"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="periodBillingId"/>
       <relation type="one" fk-name="PBILLING_TYPE" rel-entity-name="Enumeration">
@@ -5192,7 +5193,10 @@
       </relation>
       <relation type="one" fk-name="PBILLING_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
-      </relation>      
+      </relation> 
+       <relation type="one" fk-name="PBILLING_STP" rel-entity-name="SchemeTimePeriod">
+		<key-map field-name="schemeTimePeriodId" />
+	  </relation>       
     </entity>	
     <entity entity-name="FacilityCommission"
             package-name="org.ofbiz.accounting.invoice"
@@ -5464,5 +5468,20 @@
 			<key-map field-name="finAccountId"/>
 		</relation>
 	</entity>
-	
+		<view-entity entity-name="PeriodBillingAndSchemeTimePeriod"
+		package-name="org.ofbiz.accounting.invoice"
+		title="PeriodBilling and SchemeTimePeriod entity">
+		<member-entity entity-alias="PB" entity-name="PeriodBilling" />
+		<member-entity entity-alias="STP" entity-name="SchemeTimePeriod" />
+		<alias-all entity-alias="PB">	
+			<exclude field="createdDate" />
+			<exclude field="createdByUserLogin" />
+			<exclude field="lastModifiedDate" />
+			<exclude field="lastModifiedByUserLogin" />
+		</alias-all>	
+		<alias-all entity-alias="STP" />
+		<view-link entity-alias="PB" rel-entity-alias="STP">
+			<key-map field-name="schemeTimePeriodId" />
+		</view-link>
+	</view-entity>
 </entitymodel>

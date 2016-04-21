@@ -286,5 +286,39 @@
         <!-- <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/> -->
         <attribute name="cfcList" mode="OUT" type="List" optional="true"/>
     </service>
+      <service name="payReambursement" engine="java" auth="false" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processPayShipmentReambursement">
+        <description>create Part yQuota Balance History</description>
+        <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
+        <attribute name="eligibilityAmount" mode="IN" type="String" optional="false"/>
+        <attribute name="payReimbursementList" mode="IN" type="String" optional="false"/>
+    </service>
+    
+    <service name="payDepotReimbursement" engine="java" auth="false" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processPayDepotReimbursement">
+        <description>create Part yQuota Balance History</description>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+         <attribute name="selectedTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="payReimbursementList" mode="IN" type="String" optional="false"/>
+    </service> 
+    <service name="createDepotReimbursementBilling"  engine="java"
+                location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="createDepotReimbursementBilling" auth="true">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="orgPartyId" mode="IN" type="String"></attribute>
+        <attribute name="schemeTimePeriodId" mode="IN" type="String"></attribute>
+        <attribute name="geoId" mode="INOUT" type="String" optional="true"></attribute>
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="basicSalDate" mode="IN" type="String" optional="true"/>
+        <attribute name="daDate" mode="IN" type="String" optional="true"/>
+        <attribute name="bonusDate" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="periodBillingMap" mode="OUT" type="Map"></attribute> -->
+    </service>
+    <service name="cancelDepotReimbursementBilling"  engine="java"
+                location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="cancelDepotReimbursementBilling" auth="true" transaction-timeout="3000">
+        <description>Cancel Depot Reimbursement Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+        <attribute name="schemeTimePeriodId" mode="IN" type="String" optional="false"/>
+    </service>
 </services>
 

@@ -343,6 +343,11 @@ under the License.
 		<SchemeTimePeriod fromDate="2016-02-01" thruDate="2016-03-31" parentPeriodId="DRY0001" isClosed="N" periodNum="06" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10000"/>
 		<SchemeTimePeriod fromDate="2015-12-01" thruDate="2016-01-31" parentPeriodId="DRY0001" isClosed="N" periodNum="05" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10001"/>
 		<SchemeTimePeriod fromDate="2016-04-01" thruDate="2016-05-31" parentPeriodId="DRY0002" isClosed="N" periodNum="01" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10002"/>
+		<SchemeTimePeriod fromDate="2016-06-01" thruDate="2016-07-31" parentPeriodId="DRY0002" isClosed="N" periodNum="02" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10003"/>
+		<SchemeTimePeriod fromDate="2016-08-01" thruDate="2016-09-30" parentPeriodId="DRY0002" isClosed="N" periodNum="03" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10004"/>
+		<SchemeTimePeriod fromDate="2016-10-01" thruDate="2016-11-30" parentPeriodId="DRY0002" isClosed="N" periodNum="04" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10005"/>
+		<SchemeTimePeriod fromDate="2016-12-01" thruDate="2017-01-31" parentPeriodId="DRY0002" isClosed="N" periodNum="05" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10006"/>
+		<SchemeTimePeriod fromDate="2017-02-01" thruDate="2017-03-31" parentPeriodId="DRY0002" isClosed="N" periodNum="06" periodTypeId="DEPOT_REIMB_PERIOD" schemeTimePeriodId="DR10007"/>
 	
 
 <!-- shipment document upload content types -->
