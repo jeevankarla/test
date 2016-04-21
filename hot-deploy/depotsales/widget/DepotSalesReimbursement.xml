@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+
+  <screen name="ShippingReimbursement">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Shipment Reimbursement" />
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="ShippingReimbursement" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="ShippingReimbursement" />
+				<set field="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				<set field="statusId" value="GOODS_RECEIVED" />
+				<set field="noConditionFind" value="Y" />
+				<service service-name="performFind" result-map="result"	result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="Shipment" />
+					<field-map field-name="orderBy" value="-estimatedShipDate" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ShipmentPartyReimbursementView.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="ReimbursementTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/CreateShipmentReambursement.ftl" />
+									</html>
+								</platform-specific>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+										<include-form name="FindShippingReimbursement"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="">
+											<include-form name="listShippingReimbursement"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="DepotReimbursement">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Depot Reimbursement" />
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="DepotReimbursement" />
+				<script
+					location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/DepotReimbursementView.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="ReimbursementTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/CreateDepotReambursement.ftl" />
+									</html>
+								</platform-specific>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+										<include-form name="FindDepotReimbursement"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="">
+											<include-form name="listDepotReimbursement"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FindShipmentReimbursementBilling">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Generate Shipment Reimbursement Bill"/>
+               <set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="FindShipmentReimbursementBilling" />                  
+                <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
+                     <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                     <order-by field-name="partyId"/>
+                </entity-and>
+                <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
+                     <field-map field-name="periodTypeId" value="HR_MONTH"/>
+                     <order-by field-name="-thruDate"/>
+                     <order-by field-name="periodNum"/>
+                </entity-and>
+                <set field="periodBillingId" from-field="${parameters.periodBillingId}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PayRollStatusReport.groovy"/>
+                <set field="statusId" from-field="context.statusId"/> 
+            </actions>            
+            <widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					   <include-menu name="ReimbursementTabBar" 	location="component://depotsales/widget/DepotSalesMenus.xml" />                                                 					   					
+                    	<section>
+                    	  <widgets>
+                    	     <container style="button-bar">
+									<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/generatePayrollForm.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showPayrollGenerateForm();" text="Generate Payroll" style="buttontext create"  link-type="anchor"/>
+							</container> 
+           					<!-- <screenlet title="create">
+            			           <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="createPayrollBilling"/>
+            			 	</screenlet> -->
+            			 	<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/payrollStatus.ftl"></html-template></html></platform-specific>
+            			 	<screenlet title="List Payroll Billing">
+            				<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListPayrollBilling"/>
+            			</screenlet>
+                  </widgets>
+               </section>
+               </decorator-section>         
+               </decorator-screen>    
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindDepotReimbursementBilling">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Generate Depot Reimbursement Bill"/>
+               <set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="FindDepotReimbursementBilling" />                  
+                <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
+                     <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                     <order-by field-name="partyId"/>
+                </entity-and>
+                <entity-and list="customTimePeriodList" entity-name="SchemeTimePeriod">
+                     <field-map field-name="parentPeriodId" value="DRY0001"/>
+                     <order-by field-name="-thruDate"/>
+                     <order-by field-name="periodNum"/>
+                </entity-and>
+                <set field="periodBillingId" from-field="${parameters.periodBillingId}"/>
+                <script location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/GenerateDepotReimbursmentBill.groovy"/>
+                <set field="statusId" from-field="context.statusId"/> 
+            </actions>            
+            <widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					   <include-menu name="ReimbursementTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" />                                            					   					
+                    	<section>
+                    	  <widgets>
+                    	     <container style="button-bar">
+									<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/generateDepotReambursementBillForm.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showPayrollGenerateForm();" text="Generate Depot Reimbursement Bill" style="buttontext create"  link-type="anchor"/>
+							</container>
+
+							
+							<include-form name="FindDepotReimbursementBilling"	location="component://depotsales/widget/DepotSalesForms.xml" />
+
+            			 	<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/payrollStatus.ftl"></html-template></html></platform-specific>
+            			 	<screenlet title="List Depot Reimbursement Billing">
+            				<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="ListDepotReimbursementBilling"/>
+            			</screenlet>
+                  </widgets>
+               </section>
+               </decorator-section>         
+               </decorator-screen>    
+            </widgets>
+        </section>
+    </screen>
+</screens>
