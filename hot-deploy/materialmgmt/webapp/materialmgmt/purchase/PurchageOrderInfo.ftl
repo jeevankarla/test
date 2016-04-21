@@ -182,7 +182,7 @@ under the License.
               </td>
             </tr>
             </#if>
-            <#if "SALES_ORDER" == orderHeader.orderTypeId>
+            <#--<#if "SALES_ORDER" == orderHeader.orderTypeId>
             <tr><td colspan="3"><hr /></td></tr>
                 <tr>
                   <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.FormFieldTitle_priority}</td>
@@ -228,7 +228,7 @@ under the License.
                 ${uiLabelMap.CommonYes}
               </td>
             </tr>
-            </#if>
+            </#if>-->
         </table>
     </div>
 </div>
