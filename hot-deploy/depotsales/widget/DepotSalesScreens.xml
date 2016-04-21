@@ -6198,7 +6198,7 @@
 									<platform-specific>
 										<html>
 											<html-template
-												location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl" />
+												location="component://depotsales/webapp/depotsales/depotsales/indentInfo.ftl" />
 										</html>
 									</platform-specific>
 									<platform-specific>

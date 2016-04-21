@@ -527,6 +527,7 @@
       	<field name="productId" title="Code- Name [UOM]">
       		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
       	</field>      
+      	<field name="supplier"> <display></display></field>
   	<field name="supplyTillDate"><display/></field> 
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
       	

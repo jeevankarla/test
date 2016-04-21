@@ -93,7 +93,7 @@ under the License.
                                 <td align="left">${orderItem.quantity}
                                 </td>
                                 <td align="right"  nowrap="nowrap">
-                                    <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
+                                    <@ofbizCurrency amount=Static["java.lang.Math"].round(orderItem.unitPrice) isoCode=currencyUomId/>
                                 </td>
                                  <#assign exciseAmount=0>
                                 <#if orderItem.bedAmount?exists > <#assign exciseAmount=exciseAmount+orderItem.bedAmount >  </#if>
@@ -103,7 +103,7 @@ under the License.
                                     <#if orderItem.statusId != "ITEM_CANCELLED">
                                          <#assign  itemSubTotal=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false)-exciseAmount>
                                          <#assign  orderExTaxTotal=orderExTaxTotal.add(itemSubTotal)>
-                                        <@ofbizCurrency amount=itemSubTotal isoCode=currencyUomId/>
+                                        <@ofbizCurrency amount=Static["java.lang.Math"].round(itemSubTotal) isoCode=currencyUomId/>
                                     <#else>
                                         <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
                                     </#if>
@@ -424,7 +424,7 @@ under the License.
                         <span class="label">${uiLabelMap.OrderItemsSubTotal}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
-                    <@ofbizCurrency amount=orderExTaxTotal isoCode=currencyUomId/>
+                    <@ofbizCurrency amount=Static["java.lang.Math"].round(orderExTaxTotal) isoCode=currencyUomId/>
                     <#-->
                         <@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/> -->
                     </td>
