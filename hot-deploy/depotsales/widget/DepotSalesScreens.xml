@@ -6198,32 +6198,26 @@
 									<platform-specific>
 										<html>
 											<html-template
-												location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl" />
+												location="component://depotsales/webapp/depotsales/depotsales/indentItem.ftl" />
 										</html>
 									</platform-specific>
 									
-									<screenlet title="Order Attributes">
+									<screenlet title="Indent Attributes">
 										<include-screen name="orderAttributes" />
 									</screenlet>
-									<include-screen name="orderAssoc" />
+									<include-screen name="IndentAssoc" />
 								</container>
 								<container style="righthalf">
-								<!--<screenlet title="Indent  Status" navigation-form-name="ViewRequest">
-								
-									<platform-specific>
-										<html>
-											<html-template
-												location="component://depotsales/webapp/depotsales/depotsales/indentStatus.ftl" />
-										</html>
-									</platform-specific>
-								 </screenlet>-->
+									 <screenlet title="Indent Status" navigation-form-name="ViewIndentRequest">
+                        					<include-form name="ViewIndentStatus" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 				   </screenlet>
 									<platform-specific>
 										<html>
 											<html-template
 												location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl" />
 										</html>
 									</platform-specific>
-									<screenlet title="Receipts For Order">
+									<screenlet title="Receipts For Indent">
 										<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" 
 											name="listMaterialShipmentReceipt"/> -->
 											
@@ -6235,7 +6229,7 @@
 												location="component://depotsales/webapp/depotsales/depotsales/salesIndentPaymentInfo.ftl" />
 										</html>
 									</platform-specific>
-									<screenlet title="Invoices For Order">
+									<screenlet title="Invoices For Indent">
 										<include-form
 											location="component://depotsales/widget/DepotSalesForms.xml"
 											name="invoiceDetailList" />
@@ -6260,5 +6254,25 @@
 			</widgets>
 		</section>
 	</screen>
-    
+    	<screen name="IndentAssoc">
+		<section>
+			<actions>
+				<entity-condition list="OrderAssocList"
+					entity-name="OrderAssoc">
+					<condition-list combine="or">
+						<condition-expr field-name="orderId" from-field="parameters.orderId" />
+						<condition-expr field-name="toOrderId" from-field="parameters.orderId" />
+					</condition-list>
+				</entity-condition>
+				<set field="assocId" value="${parameters.orderId}" />
+			</actions>
+			<widgets>
+				<screenlet title="Indent Associations">
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listOrderAssoc" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
 </screens>

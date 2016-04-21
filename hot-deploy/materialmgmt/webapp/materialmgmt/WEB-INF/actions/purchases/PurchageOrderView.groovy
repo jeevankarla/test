@@ -541,7 +541,21 @@ if (orderItems) {
    paymentDetailsList=[];
    paymentIds=[];
    finalMap=[:];
+   statusHistory=[];
    if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
+	   exprCond=[];
+	   exprCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	   EntityCondition condn = EntityCondition.makeCondition(exprCond, EntityOperator.AND);
+	   OrderSta = delegator.findList("OrderStatus", condn, null,null,null, false);
+	   if(OrderSta){
+		   OrderSta.each{ eachstatus ->
+			   tempStatus=[:];
+			   tempStatus.put("statusId", eachstatus.statusId);
+			   tempStatus.put("statusDatetime", eachstatus.statusDatetime);
+			   tempStatus.put("userLogin", eachstatus.statusUserLogin);
+			   statusHistory.add(tempStatus);
+		   }
+	   }
 	   exprCondList=[];
 	   exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 	   exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -552,7 +566,24 @@ if (orderItems) {
 	   }
    }
    orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
-   ShipmentList = delegator.findList("Shipment", orderCondition, UtilMisc.toSet("shipmentId"), null, null, false);
+   ShipmentList = delegator.findList("Shipment", orderCondition, null, null, null, false);
+   if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
+	   if(UtilValidate.isNotEmpty(ShipmentList)){
+		   
+		   ShipmentGen=EntityUtil.getFirst(ShipmentList);
+		   if(ShipmentGen){
+			  tempStatus=[:];
+				   tempStatus.put("statusId", ShipmentGen.statusId);
+				   tempStatus.put("statusDatetime", ShipmentGen.estimatedShipDate);
+				   tempStatus.put("userLogin", ShipmentGen.createdByUserLogin);
+				   statusHistory.add(tempStatus);
+			   
+			   
+			   
+		   }
+	   }
+   }
+  // ShipmentList = EntityUtil.getFieldListFromEntityList(ShipmentList, "shipmentId", true);   
    if(UtilValidate.isNotEmpty(ShipmentList)){
 	   ShipmentList.each{shipment->
 		   invoiceCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipment.shipmentId)],EntityOperator.AND);
@@ -599,6 +630,7 @@ if (orderItems) {
 		   }
 	   }
    }
+   context.statusHistory=statusHistory;
    context.invoiceDetailList=invoiceDetailList;
    context.finalMap=finalMap;
    context.paymentIds=paymentIds;
