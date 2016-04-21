@@ -186,6 +186,15 @@ public class DepotSalesServices{
                        return serviceResult;
                    }
               }
+				Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
+              String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
+              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
+              orderStatus.set("orderId", orderId);
+              orderStatus.set("statusId", "ORDER_APPROVED");
+              orderStatus.set("statusDatetime", nowTimestamp);
+              orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
+			  delegator.createOrStore(orderStatus);
+
   			
   	   }catch(Exception e){
   			Debug.logError(e.toString(), module);
@@ -255,6 +264,15 @@ public class DepotSalesServices{
 		         if (ServiceUtil.isError(approveServiceResult)) {
 		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(approveServiceResult));
 		         } 
+				 Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
+		         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
+	              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
+	              orderStatus.set("orderId", orderId);
+	              orderStatus.set("statusId", "ORDER_APPROVED");
+	              orderStatus.set("statusDatetime", nowTimestamp);
+	              orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
+				  delegator.createOrStore(orderStatus);     
+		         
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
