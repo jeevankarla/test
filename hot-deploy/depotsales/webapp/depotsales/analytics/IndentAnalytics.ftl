@@ -59,7 +59,7 @@ $(document).ready(function(){
 				date = $(this).datepicker('getDate');
 				$( "#thruDate" ).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
 			}
-		});
+		}).datepicker("setDate",new Date(2016, 03, 01)) ;
 		$( "#thruDate" ).datepicker({
 			dateFormat:'MM d, yy',
 			changeMonth: true,
