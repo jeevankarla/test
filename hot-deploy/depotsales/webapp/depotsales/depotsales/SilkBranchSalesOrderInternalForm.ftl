@@ -216,6 +216,7 @@
 			var acctgFlag = $("#disableAcctgFlag").val();
 			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
+			var cfcId = $("#cfcs").val();
 			var schemeCategory = $("#schemeCategory").val();
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
@@ -224,6 +225,8 @@
 			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
+			var cfc = jQuery("<input>").attr("type", "hidden").attr("name", "cfcId").val(cfcId);
+			
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var bilngType = jQuery("<input>").attr("type", "hidden").attr("name", "billingType").val(billingType);
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
@@ -243,6 +246,7 @@
 			jQuery(formId).append(jQuery(promoField));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
+			jQuery(formId).append(jQuery(cfc));
 			jQuery(formId).append(jQuery(orderMessageInPut));
 			jQuery(formId).append(jQuery(disableAcctgFlag));
 			jQuery(formId).append(jQuery(schemeCategoryObj));

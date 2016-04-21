@@ -280,5 +280,11 @@
         <attribute name="schemeTimePeriodIdList" mode="IN" type="List" optional="false"/>
         <attribute name="quota" mode="IN" type="BigDecimal" optional="false"/>
     </service>
+    <service name="getBranchCfcList" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getBranchCfcList" auth="false">
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/> -->
+        <attribute name="cfcList" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>
 

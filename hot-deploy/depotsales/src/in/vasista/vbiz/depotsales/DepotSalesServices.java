@@ -1354,6 +1354,11 @@ public class DepotSalesServices{
 		List invoices = FastList.newInstance(); 
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
+		String cfcId = (String) request.getParameter("cfcId");
+		if(UtilValidate.isNotEmpty(cfcId)){
+			productStoreId = cfcId;
+		}
+		Debug.log("productStoreId ========"+productStoreId);
 		//String productStoreId = "STORE";
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String schemeCategory = (String) request.getParameter("schemeCategory");
@@ -1374,6 +1379,7 @@ public class DepotSalesServices{
 		String shipmentId = "";
 		Map processOrderContext = FastMap.newInstance();
 		String salesChannel = (String)request.getParameter("salesChannel");
+		Debug.log("salesChannel ========"+salesChannel);
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
@@ -2288,9 +2294,22 @@ public class DepotSalesServices{
 				 return ServiceUtil.returnError(" Unable to generate Adjustments:");
 	  		}	
 		}
+		
+		GenericValue orderHeader = null;
+		//update PurposeType
+		try{
+			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			orderHeader.set("purposeTypeId", "BRANCH_SALES");
+			orderHeader.store();
+		}catch (Exception e) {
+			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+			  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
+  	 	}
+		
+		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
-				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				//GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				if(geoTax.equals("CST")){
 					orderHeader.set("isInterState", "N");
 				}else{
@@ -2324,7 +2343,7 @@ public class DepotSalesServices{
 		//store OrderMessage
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
 			try{
-				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				//GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				orderHeader.set("orderMessage", orderMessage.trim());
 				orderHeader.store();
 			}catch (GenericEntityException e) {
@@ -3972,8 +3991,26 @@ public class DepotSalesServices{
    			}
         	
 			if(UtilValidate.isNotEmpty(orgsList)){
-				List condList =FastList.newInstance();
+				
+				// Get all CFC's
+	        	
+	        	List condList =FastList.newInstance();
+	        	
+	   	    	condList.add(EntityCondition.makeCondition("productStoreGroupId", EntityOperator.EQUALS, "CFC"));
+	   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+	   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+	   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+	   	    	List cfcList = FastList.newInstance();
+	   	    	try{
+	   	    		cfcList = delegator.findList("ProductStoreGroupMember", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+	   	    	}catch (GenericEntityException e) {
+	   				// TODO: handle exception
+	   	    		Debug.logError(e, module);
+	   			}
+				
+	   	    	condList.clear();
 	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true)));
+	   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
 	   	    	EntityCondition prodStrCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	   	    	try{
 	   	    		productStoreList = delegator.findList("ProductStore", prodStrCondition, null, null, null, false);
@@ -7540,7 +7577,78 @@ public class DepotSalesServices{
 	 	        return ServiceUtil.returnSuccess();
 	}
 
-	
+	public static Map<String, Object> getBranchCfcList(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        String productStoreId = (String) context.get("productStoreId");
+        
+        // If productStoreId is not empty, fetch only courses related to the productStore
+        List depotsList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(productStoreId)){
+        	List condList =FastList.newInstance();
+   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
+   	    	condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "CFC"));
+   	    	
+   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+   	    	EntityCondition prodStrFacCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+   	    	try{
+   	    		depotsList = delegator.findList("FacilityAndProductStoreFacility", prodStrFacCondition, null, null, null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+   	    }
+        String ownerPartyId = "";
+        List branchCfcList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(depotsList)){
+        	
+        	// Get all CFC's
+        	
+        	List condList =FastList.newInstance();
+        	
+   	    	condList.add(EntityCondition.makeCondition("productStoreGroupId", EntityOperator.EQUALS, "CFC"));
+   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+   	    	List cfcList = FastList.newInstance();
+   	    	try{
+   	    		cfcList = delegator.findList("ProductStoreGroupMember", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+        	
+   	    	Debug.log("cfcList ================"+cfcList);
+   	    	
+        	condList.clear();
+        	
+        	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(depotsList, "facilityId", true)));
+        	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
+   	    	condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "CFC"));
+   	    	
+   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+   	    	try{
+   	    		branchCfcList = delegator.findList("FacilityAndProductStoreFacility", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+        	
+        }
+        Debug.log("branchCfcList ================"+branchCfcList);
+        //result.put("ownerPartyId", ownerPartyId);
+		result.put("cfcList", branchCfcList);
+        return result;
+    }
 	
 	
 }
