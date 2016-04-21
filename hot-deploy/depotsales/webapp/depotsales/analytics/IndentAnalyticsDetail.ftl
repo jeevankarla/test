@@ -76,9 +76,8 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellclassname:'smallfont'},
-                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'center', cellclassname:'smallfont'},
-                  { text: 'Avg TAT (days)', width:'10%', align: 'center', dataField: 'avgTAT', cellsalign: 'right', cellclassname:'smallfont'},
+                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellclassname:'smallfont'},
+                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'center', cellclassname:'smallfont'},
                   { text: 'Total Revenue (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellclassname:'smallfont'},
                   { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellclassname:'smallfont'},
                   { text: 'In Process', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellclassname:'smallfont'},
