@@ -1991,21 +1991,11 @@
         <field name="panNo" title="PAN No"><display/></field>
     </form>
 
- <form name="ViewOrderStatus" type="list"
+ <form name="ViewIndentStatus" type="list" list-name="statusHistory"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-and entity-name="OrderStatus">
-                <field-map field-name="orderId" from-field="parameters.orderId"/>
-                <order-by field-name="orderItemSeqId"/>
-                <order-by field-name="orderItemSeqId"/>
-            </entity-and>
-        </actions>
-        <auto-fields-entity entity-name="OrderStatus" default-field-type="display"/>
-        <field name="orderItemSeqId" title="ItemSeqId"><display/></field>
-        <field name="statusDatetime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"></display></field>
-        <field name="orderId"><hidden/></field>
-        <field name="orderStatusId"><hidden/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusDatetime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"></display></field>
+        <field name="userLogin" title="Entry by"><display/></field>	  
     </form>
   <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
     	<field name="invoiceId" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
