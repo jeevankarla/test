@@ -8,10 +8,11 @@
 		}
 		.form-style-8{
 		    max-width: 650px;
-		    max-height: 150px;
+		    max-height: 185px;
 		    max-right: 10px;
-			margin-bottom: -10px;
-		    padding: 30px;
+		    margin-top: 10px;
+			margin-bottom: -15px;
+		    padding: 15px;
 		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
 		    border-radius: 20px;
 		    border: 1px solid #305A72;
@@ -132,6 +133,17 @@
 				       	
 			  			return false;  
 			  		}
+			  		else if(indententryinit.salesChannel.value.length < 1){
+			  			alert("Sales Channel is Mandatory");
+			  			$('#salesChannel').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#salesChannel').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#salesChannel").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
 					else if(indententryinit.suplierPartyId.value.length < 1){
 			  			alert("Supplier is Mandatory");
 			  			$('#suplierPartyId').css('background', 'red'); 
@@ -168,8 +180,59 @@
 				fillPartyData();
 			});
 			
+			$("#productStoreId").blur(function() {
+				getCfcList();
+			});
+			
 		});
-
+		
+		function getCfcList(){
+			var productStoreId = $('#productStoreId').val();
+		
+			if( productStoreId != undefined && productStoreId != ""){
+				$('.CFC_TD').hide();
+				var dataString="productStoreId=" + productStoreId ;
+	      		$.ajax({
+		             type: "POST",
+		             url: "getCfcListAjax",
+		           	 data: dataString ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {	
+	              		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 		alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				 var cfcList = result["cfcList"];
+							 var optionList = '';   	
+						     if (cfcList) {	
+						     	optionList += "<option value = '' >SELECT CFC</option>"; 
+					        	 for(var i=0 ; i<cfcList.length ; i++){
+									var innerList = cfcList[i];	              			             
+					                optionList += "<option value = " + innerList.productStoreId + " >" + innerList.facilityName + "</option>";          			
+					      		 }
+				      		 }
+	       	  				 
+					      	jQuery("#cfcs").html(optionList);
+					      	 
+					      	 if(cfcList.length > 0){
+					      	 	$('.CFC_TD').show();
+					      	 }
+					      	 else{
+					      	 	$('.CFC_TD').hide();
+					      	 }
+					      	 
+	      				}
+	               
+	          		 } ,
+		         	 error: function() {
+		          	 	alert(result["_ERROR_MESSAGE_"]);
+		         	 }
+	         	 });
+	         }
+	    }
+		
+		
+		
 		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
@@ -237,7 +300,7 @@
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
-			       	  					$('#suplierPartyId').focus();
+			       	  					$('#salesChannel').focus();
 	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
@@ -450,21 +513,83 @@
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				               			${parameters.productStoreId}           
 				            		</div>
 				          		</td>       
+				          		
+				          		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+				          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+						  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
+					          		<td valign='middle'>
+					            		<div><font color="green">
+					               			${parameters.cfcs}           
+					            		</div>
+					          		</td>  
+				          		</#if>
+				          		
+				          		
 				          	<#else>
 				          		<td valign='middle'>
 				          			<input type="text" name="productStoreId" id="productStoreId"/>
 				          			<span class="tooltip" id="branchName"></span>
+				          			<label class='CFC_TD' style='display:none;'><b>CFC:</label>
+				          			<select name="cfcs" id="cfcs" style='display:none;' class='CFC_TD' >
+	          						          					
+			          				</select>
 				          		</td>
 				          	</#if>
 			        	</#if>
+			        	
+			        	<#--
+			        	<td>&nbsp;</td>
+		        		
+		        		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+		        			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+				  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
+			          		<td valign='middle'>
+			            		<div><font color="green">
+			               			${parameters.cfcs}           
+			            		</div>
+			          		</td>       
+			          	<#else>
+			          		<td align='left' valign='middle' nowrap="nowrap" class='CFC_TD' style='display:none;'><div class='h3'>CFC:<font color="red">*</font></div></td>
+			          		<td valign='middle' class='CFC_TD' style='display:none;'>
+			          			<select name="cfcs" id="cfcs" class='h3' style="width:162px">
+	          						          					
+			          			</select>
+				        	</td>
+			          	</#if>
+			        	-->	
+			        	
+			        	
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
+	               	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Sales Channel:</div></td>
+		       			<#if parameters.salesChannel?exists && parameters.salesChannel?has_content>  
+			  	  			<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div><font color="green">${parameters.salesChannel?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="salesChannel" id="salesChannel" class='h3' style="width:162px">
+		          					<option value=""></option>
+		          					<option value="WEB_SALES_CHANNEL">Web Channel</option>
+		          					<option value="WALKIN_SALES_CHANNEL">Walk-In Sales Channel</option>
+		          					<option value="POS_SALES_CHANNEL">POS Channel</option>
+		          					<option value="PHONE_SALES_CHANNEL">Phone Channel</option>
+		          					<option value="FAX_SALES_CHANNEL">Fax Channel</option>
+		          					<option value="EMAIL_SALES_CHANNEL">E-Mail Channel</option>	          					
+		          				</select>
+		          			</td>
+		       			</#if>
+		       		</tr>	
+	               	<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
@@ -506,11 +631,11 @@
 					      	<#if changeFlag?exists && changeFlag=="EditDepotSales">
 							 	<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 							 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-				           		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+				           		<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 						  	</#if>
 					        <#if changeFlag?exists && changeFlag=='DepotSales'>
 					         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-					           	<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+					           	<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 					        <#else>
 					          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 					          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -601,7 +726,7 @@
 		<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
-		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<br>
 	</form>    

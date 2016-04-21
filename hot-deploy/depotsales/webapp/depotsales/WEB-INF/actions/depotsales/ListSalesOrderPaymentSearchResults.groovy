@@ -48,13 +48,7 @@
 	
 	salesChannel = parameters.salesChannelEnumId;
  
-	/*salesChannel = "";
 	
-	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
-		salesChannel = parameters.salesChannelEnumId;
-	}else{
-	salesChannel = "BRANCH_CHANNEL";
-	}*/
 	searchOrderId = parameters.orderId;
 	
 	facilityOrderId = parameters.orderId;
@@ -86,7 +80,7 @@
 	else{
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
 	}
-	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
+	//condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
