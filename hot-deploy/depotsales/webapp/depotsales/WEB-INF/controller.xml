@@ -384,7 +384,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesReports"/>
     </request-map>
-    
+    <request-map uri="ShippingReimbursement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShippingReimbursement"/>
+    </request-map>
+     <request-map uri="DepotReimbursement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotReimbursement"/>
+    </request-map>
     <request-map uri="DepotSalesBookReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DepotSalesBookReportPDF"/>
@@ -820,7 +827,38 @@
          <response name="failed" type="view" value="FindSalesIndentPayment"/>  
       </request-map>
       
-      
+       <request-map uri="payReambursement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="payReambursement"/>
+        <response name="success" type="view" value="ShippingReimbursement"/>
+        <response name="error" type="view" value="ShippingReimbursement"/>
+    </request-map>
+     <request-map uri="payDepotReimbursement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="payDepotReimbursement"/>
+        <response name="success" type="view" value="DepotReimbursement"/>
+        <response name="error" type="view" value="DepotReimbursement"/>
+    </request-map>
+     <request-map uri="FindDepotReimbursementBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindDepotReimbursementBilling"/>
+    </request-map>
+     <request-map uri="FindShipmentReimbursementBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindShipmentReimbursementBilling"/>
+    </request-map>
+    <request-map uri="createDepotReimbursementBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createDepotReimbursementBilling"/>
+        <response name="success" type="view" value="FindDepotReimbursementBilling"/>
+        <response name="error" type="view" value="FindDepotReimbursementBilling"/>
+    </request-map>
+     <request-map uri="cancelDepotReimbursementBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelDepotReimbursementBilling"/>
+        <response name="success" type="view" value="FindDepotReimbursementBilling"/>
+        <response name="error" type="view" value="FindDepotReimbursementBilling"/>
+    </request-map>
       <request-map uri="createCustomPaymentFromPreference">
          <security https="true" auth="true"/>
          <event type="service" path="" invoke="createCustPaymentFromPreference"/>
@@ -1796,4 +1834,8 @@
     <view-map name="EditQuotItems" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditQuotItems"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
+    <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
+    <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
+    <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>
 </site-conf>

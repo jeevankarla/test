@@ -193,6 +193,12 @@
 	        </condition>
 	      	<link target="DepotSalesReports"/>
 	    </menu-item>
+	     <menu-item name="ShippingReimbursement" title="Reimbursement">
+	      	<link target="ShippingReimbursement">
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
+        		<parameter param-name="statusId" value="GOODS_RECEIVED"/>
+        	</link>
+	    </menu-item>
        <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>
@@ -1390,6 +1396,30 @@
             </link>
         </menu-item>
     </menu>
+		
+	<menu name="ReimbursementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="ShippingReimbursement" title="Add Shipping Reimbursement Receipt">
+        	<link target="ShippingReimbursement">
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
+        		<parameter param-name="statusId" value="GOODS_RECEIVED"/>
+        	</link>
+        </menu-item>
+        <menu-item name="DepotReimbursement" title="Add Depot Reimbursement Receipt">
+        	<link target="DepotReimbursement">
+<!--         		<parameter param-name="facilityTypeId" value="DEPOT"/> -->
+        	</link>
+        </menu-item>
+        <menu-item name="FindShipmentReimbursementBilling" title="Generate Shipment Reimbursement Bill">
+        	<link target="FindShipmentReimbursementBilling">
+        	</link>
+        </menu-item>
+        <menu-item name="FindDepotReimbursementBilling" title="Generate Depot Reimbursement Bill">
+        	<link target="FindDepotReimbursementBilling">
+        	</link>
+        </menu-item>
+        
+      </menu>
 	
 	
 	

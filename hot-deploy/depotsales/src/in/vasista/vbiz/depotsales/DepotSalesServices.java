@@ -62,7 +62,8 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.order.order.OrderReadHelper;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 public class DepotSalesServices{
@@ -7667,6 +7668,165 @@ public class DepotSalesServices{
 		result.put("cfcList", branchCfcList);
         return result;
     }
-	
+		 
+	public static Map<String, Object> processPayShipmentReambursement(DispatchContext ctx, Map<String, ? extends Object> context){ 
+				Map<String, Object> result = FastMap.newInstance();
+				Delegator delegator = ctx.getDelegator();
+				Locale locale = (Locale) context.get("locale");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				LocalDispatcher dispatcher = ctx.getDispatcher();
+				String shipmentId = (String)context.get("shipmentId");
+				BigDecimal invoiceEligablityAmount = BigDecimal.ZERO;
+				BigDecimal receiptEligablityAmount = BigDecimal.ZERO;
+				BigDecimal totalReceiptAmount = BigDecimal.ZERO;
+				BigDecimal reimbursementEligibilityPercentage = new BigDecimal(2);
+				
+				try{
+		        String reambursementString=(String)context.get("payReimbursementList");
+		        JSONArray reambursementList =new JSONArray(reambursementString);
+		        List<String> reambursementIds = FastList.newInstance();
+		        for (int i = 0; i < reambursementList.length(); i++) {
+		        	JSONObject reambursementObject =(JSONObject)reambursementList.get(i);
+		        	reambursementIds.add((String)reambursementObject.getString("claimId"));
+		        }
+		        List conditionList = FastList.newInstance();
+		        boolean flag=false;
+		        if(UtilValidate.isNotEmpty(reambursementIds)){
+					conditionList.add(EntityCondition.makeCondition("claimId",EntityOperator.NOT_IN,reambursementIds));
+					flag=true;
+		        }else if(UtilValidate.isEmpty(reambursementList) || reambursementList.length()==0){
+		        	flag=true;
+		        }
+		         if(flag){
+					conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
+					EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        	List<GenericValue> reambursementIdsList = delegator.findList("ShipmentReimbursement", condition, null, null, null, false);
+		        	if(UtilValidate.isNotEmpty(reambursementIdsList)){
+		        		delegator.removeAll(reambursementIdsList);
+		        	}
+		         }
+		        for (int i = 0; i < reambursementList.length(); i++) {
+		        	JSONObject reambursementObject =(JSONObject)reambursementList.get(i);
+		        	String  claimId = (String)reambursementObject.getString("claimId");
+		        	String receiptNo = (String)reambursementObject.getString("receiptNo");
+		        	String description = (String)reambursementObject.getString("description");
+		        	 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		        	 Date date = format.parse((String)reambursementObject.getString("receiptDate"));
+		        	 Timestamp receiptDate = new Timestamp(date.getTime());
+		        	BigDecimal receiptAmount =new BigDecimal((String)reambursementObject.getString("receiptAmount"));
+		        	totalReceiptAmount=totalReceiptAmount.add(receiptAmount);
+		        	
+		        	if(UtilValidate.isEmpty(claimId)){
+		        		GenericValue newItemAttr = delegator.makeValue("ShipmentReimbursement");        	 
+						newItemAttr.set("shipmentId", shipmentId);
+						newItemAttr.set("receiptNo",receiptNo);
+						newItemAttr.set("receiptAmount", receiptAmount);
+						newItemAttr.set("receiptDate",receiptDate);
+						newItemAttr.set("description", description);
+						delegator.createSetNextSeqId(newItemAttr);
+		        	}
+		        }
+		        receiptEligablityAmount=(totalReceiptAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+		        conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
+				conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+//				conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_PAID"));
+				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				List<GenericValue> invoiceAndItemList=delegator.findList("InvoiceAndItem",condition,null,null,null,false);
+				BigDecimal invoiceAmount = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(invoiceAndItemList)){
+					for(int i=0;i<invoiceAndItemList.size();i++){
+						GenericValue invoiceAndItem=invoiceAndItemList.get(i);
+						 BigDecimal  quantity=invoiceAndItem.getBigDecimal("quantity");
+						 BigDecimal amount=invoiceAndItem.getBigDecimal("amount");
+						 invoiceAmount=invoiceAmount.add(quantity.multiply(amount));
+					}
+					
+				}
+				invoiceEligablityAmount=(invoiceAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+				BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
+				GenericValue shipmentObj=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+				shipmentObj.set("claimAmount",finalEligablityAmount);
+				shipmentObj.set("claimStatus","APPLYED");
+				if(finalEligablityAmount.compareTo(BigDecimal.ZERO)>0){
+					shipmentObj.set("claimStatus","");
+				}
+				shipmentObj.store();
+				 }catch(Exception e){
+					 Debug.logError("Order Entry successfully for party : "+e, module);
+				 } 
+			return result;
+	 }
+
+	public static Map<String, Object> processPayDepotReimbursement(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String facilityId = (String)context.get("facilityId");
+		String partyId = (String)context.get("partyId");
+		String schemeTimePeriodId=(String)context.get("selectedTimePeriodId");
+		BigDecimal invoiceEligablityAmount = BigDecimal.ZERO;
+		BigDecimal receiptEligablityAmount = BigDecimal.ZERO;
+		BigDecimal totalReceiptAmount = BigDecimal.ZERO;
+		BigDecimal reimbursementEligibilityPercentage = new BigDecimal(2);
+		
+		try{
+        String reambursementString=(String)context.get("payReimbursementList");
+        JSONArray reambursementList =new JSONArray(reambursementString);
+        List<String> reambursementIds = FastList.newInstance();
+
+        for (int i = 0; i < reambursementList.length(); i++) {
+        	JSONObject reambursementObject =(JSONObject)reambursementList.get(i);
+        	reambursementIds.add((String)reambursementObject.getString("claimId"));
+        }
+        List conditionList = FastList.newInstance();
+        boolean flag=false;
+        if(UtilValidate.isNotEmpty(reambursementIds)){
+			conditionList.add(EntityCondition.makeCondition("claimId",EntityOperator.NOT_IN,reambursementIds));
+			flag=true;
+        }else if(UtilValidate.isEmpty(reambursementList) || reambursementList.length()==0){
+        	flag=true;
+        }
+         if(flag){
+			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
+			conditionList.add(EntityCondition.makeCondition("schemeTimePeriodId",EntityOperator.EQUALS,schemeTimePeriodId));
+			EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        	List<GenericValue> reambursementIdsList = delegator.findList("DepotReimbursementReceipt", condition, null, null, null, false);
+        	if(UtilValidate.isNotEmpty(reambursementIdsList)){
+        		delegator.removeAll(reambursementIdsList);
+        	}
+         }
+         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        for (int i = 0; i < reambursementList.length(); i++) {
+        	JSONObject reambursementObject =(JSONObject)reambursementList.get(i);
+        	String  claimId = (String)reambursementObject.getString("claimId");
+        	String description = (String)reambursementObject.getString("description");
+        	String claimTypeId = (String)reambursementObject.getString("claimType");
+        	BigDecimal receiptAmount =new BigDecimal((String)reambursementObject.getString("receiptAmount"));
+        	totalReceiptAmount=totalReceiptAmount.add(receiptAmount);
+        	if(UtilValidate.isEmpty(claimId)){
+        		GenericValue newItemAttr = delegator.makeValue("DepotReimbursementReceipt");        	 
+				newItemAttr.set("facilityId", facilityId);
+				newItemAttr.set("partyId", partyId);
+				newItemAttr.set("schemeTimePeriodId", schemeTimePeriodId);
+				newItemAttr.set("receiptAmount", receiptAmount);
+				Date fDate = format.parse((String)reambursementObject.getString("fromDate"));
+				Date tDate = format.parse((String)reambursementObject.getString("thruDate"));
+				newItemAttr.set("fromDate", new Timestamp(fDate.getTime()));
+				newItemAttr.set("thruDate", new Timestamp(tDate.getTime()));
+				newItemAttr.set("description", description);
+				newItemAttr.set("claimType", claimTypeId);
+				newItemAttr.set("statusId", "APPLYED");
+				delegator.createSetNextSeqId(newItemAttr);
+        	}
+        }
+        
+		 }catch(Exception e){
+			 Debug.logError("-----------error-------------- : "+e.toString(), module);
+		 } 
+	return result;
+}	
 	
 }
