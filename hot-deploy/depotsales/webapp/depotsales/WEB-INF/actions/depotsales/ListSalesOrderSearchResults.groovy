@@ -36,7 +36,6 @@
 	}*/
 	
 	searchOrderId = parameters.orderId;
-	
 	facilityOrderId = parameters.orderId;
 	facilityDeliveryDate = parameters.estimatedDeliveryDate;
 	productId = parameters.productId;
@@ -438,5 +437,4 @@
 	List basedList = [];
 	basedList.addAll(allValues);
 	context.orderList = basedList.reverse();
-	
-	Debug.log("orderList=============="+orderList);
+	context.orderListSize = orderList.size();
