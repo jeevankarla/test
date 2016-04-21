@@ -88,6 +88,7 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	context.listIt=receiptList;
 }
 orderRolesList = [];
+Supplier="";
 orderRoles = delegator.findList("OrderRole",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , parameters.orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(orderRoles)){
 	orderRoles.each{eachOrderRole->
@@ -95,6 +96,9 @@ if(UtilValidate.isNotEmpty(orderRoles)){
 		tempMap=[:];
 		partyId = eachOrderRole.partyId;
 		roleTypeId = eachOrderRole.roleTypeId;
+		if(roleTypeId.equals("SUPPLIER_AGENT")){
+			Supplier=org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
+		}
 		tempMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 		roleTypes = delegator.findOne("RoleType",["roleTypeId":roleTypeId],false);
 		if(UtilValidate.isNotEmpty(roleTypes)){
@@ -106,4 +110,6 @@ if(UtilValidate.isNotEmpty(orderRoles)){
 	}
 	context.orderRolesList = orderRolesList;
 }
+context.supplier=Supplier;
+
 
