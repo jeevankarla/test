@@ -6,6 +6,7 @@
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="DepotTransMain"/></menu-item>
    		<menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
 		<menu-item name="IndentPortal" title="Indentor Transactions"><link target="processIndentPortalBranchSales"/></menu-item>
+		
 	</menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1094,7 +1095,7 @@
         
 	    <menu-item name="indentIssuance" title="Indent Issuance">
 	    	<link target="DepotSalesIndentIssuance">
-	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
+	    		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
 	    	</link>
     	</menu-item>
     	<menu-item name="findInventoryTransfer" title="Inventory Transfer">
@@ -1162,7 +1163,7 @@
     	</menu-item>
     	<menu-item name="paymentForSales" title="Payment for Sales">
 	    	<link target="FindSalesIndentPayment">
-	    	   <parameter param-name="salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"/>
+	    	   <parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
 	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
 	    	</link>
     	</menu-item>
@@ -1421,6 +1422,40 @@
         
       </menu>
 	
+	
+	<menu name="FindCfcPortalTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
+         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.BranchSalesIndent}">
+			<link target="IndentPortal"></link>
+		 </menu-item>
+		
+		 <menu-item name="IndentReceitGoodsMain" title="${uiLabelMap.ReceiptOfGoods}">
+			<link target="IndentorFindGRNShipments"></link>
+		 </menu-item>
+		
+    </menu>
+      
+      
+     <menu name="CfcPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+              default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem2">
+               
+               <menu-item name="IndentPortalOrderPayment" title="${uiLabelMap.IndentPayment}">
+    			    <link target="IndentPortalOrderPayment">
+    				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+    				<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+    			   </link>
+    		</menu-item>
+              <menu-item name="IndentPortalBranchSales" title="${uiLabelMap.IndentListing}">
+            	 <link target="processIndentPortalBranchSales">
+            		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+            		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	 </link>
+             </menu-item>	
+<!--     	         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.IndentEntry}"> -->
+<!--             		<link target="IndentorBranchSalesOrder"/> -->
+<!--             	 </menu-item> -->
+    			 
+    </menu> 
 	
 	
     
