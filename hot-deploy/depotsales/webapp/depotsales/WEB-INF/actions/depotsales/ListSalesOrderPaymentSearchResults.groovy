@@ -463,5 +463,6 @@
 	
 	context.orderList = basedList.reverse();
 	
+	context.orderListSize = orderList.size();
 	
 	//context.partyOBMap = partyOBMap;
