@@ -1410,10 +1410,10 @@
 <!--         		<parameter param-name="facilityTypeId" value="DEPOT"/> -->
         	</link>
         </menu-item>
-        <menu-item name="FindShipmentReimbursementBilling" title="Generate Shipment Reimbursement Bill">
+      <!--   <menu-item name="FindShipmentReimbursementBilling" title="Generate Shipment Reimbursement Bill">
         	<link target="FindShipmentReimbursementBilling">
         	</link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="FindDepotReimbursementBilling" title="Generate Depot Reimbursement Bill">
         	<link target="FindDepotReimbursementBilling">
         	</link>
