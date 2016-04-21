@@ -598,13 +598,13 @@ public class OrderServices {
         }
 
         // create the order status record
-       /* String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
+       String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
         GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
         orderStatus.set("orderId", orderId);
         orderStatus.set("statusId", orderHeader.getString("statusId"));
         orderStatus.set("statusDatetime", nowTimestamp);
         orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
-        toBeStored.add(orderStatus);*/
+        toBeStored.add(orderStatus);
 
         // before processing orderItems process orderItemGroups so that they'll be in place for the foreign keys and what not
         List<GenericValue> orderItemGroups = UtilGenerics.checkList(context.get("orderItemGroups"));
