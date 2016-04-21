@@ -64,7 +64,7 @@ import javolution.util.FastSet;
 
 public class ReimbursementService {
 	
-				public static final String module = ReambursementService.class.getName();
+				public static final String module = ReimbursementService.class.getName();
 				
 			public static Map<String, Object> createDepotReimbursementBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
 				//GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
