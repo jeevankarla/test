@@ -80,8 +80,6 @@
 	if(UtilValidate.isNotEmpty(parameters.parentRoleTypeId)){
 		parentRoleTypeId=parameters.parentRoleTypeId;
 	}
-	Debug.log("==productCatageoryId==="+productCatageoryId);
-	Debug.log("==changeFlag==="+changeFlag);
 	suppPartyName="";
 	partyId = parameters.partyId;
 	supplierPartyId=parameters.suplierPartyId;
@@ -137,7 +135,6 @@
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,parameters.partyId));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
-	Debug.log("facilityDepo======================"+facilityDepo);
 	String Depo="NO";
 	if(facilityDepo){
 	   Depo="YES";
@@ -146,7 +143,6 @@
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	PartyLoomDetails =  EntityUtil.getFirst(delegator.findList("PartyLoom",condition,null,null,null,false));
-	Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 	custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
 	parameters.custName=custPartyName;
 	loomType="";
@@ -161,7 +157,6 @@
 		conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,PartyLoomDetails.loomTypeId));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		LoomTypeDetails =delegator.findList("LoomType",condition,null,null,null,false);
-		Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 		if(LoomTypeDetails){
 			type=LoomTypeDetails.loomTypeId;
 			/*if(LoomTypeDetails.description){
@@ -271,7 +266,7 @@
 				condList = [];
 				condList.add(EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.NOT_IN, ["COTTON", "SILK"]));
 				List prodCategoryIds = delegator.findList("ProductCategory", EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
-				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,prodCategoryIds));
+				exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,EntityUtil.getFieldListFromEntityList(prodCategoryIds, "productCategoryId", true)));
 			}
 		}
 	}
@@ -279,9 +274,7 @@
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-		Debug.log("exprList =============="+exprList);
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
-	
 	if(UtilValidate.isNotEmpty(productCatageoryId)){
 		
 		
@@ -436,6 +429,4 @@ if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory
 	  }
 	  context.productQuotaJSON = productQuotaJSON;
 	
-	  
-
 	
