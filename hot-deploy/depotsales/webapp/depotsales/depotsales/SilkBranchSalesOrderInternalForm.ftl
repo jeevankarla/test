@@ -384,7 +384,7 @@
 		
 		var columns = [
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Remarks", field:"remarks", width:200, minWidth:200, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"remarks", name:"Specifications", field:"remarks", width:200, minWidth:200, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantity", name:"${uiLabelMap.TotalWeightInKgs}", field:"quantity", width:150, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
