@@ -45,7 +45,7 @@ under the License.
 			                    <fo:table-cell number-columns-spanned="4">
 					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${reportHeader.description?if_exists} Limited</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
 					            <#--	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>-->
@@ -57,7 +57,7 @@ under the License.
         		</fo:block> 
         		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-             	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Minute of Purchase and Sales Committee meeting for the purchase of following item(s).</fo:block>
+             	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Minutes of Purchase and Sales Committee meeting for the purchase of following item(s).</fo:block>
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold"><#if supplierPartyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, false)}<#else>&#160;</#if></fo:inline></fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">towards the requirement of user agency M/s : <fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>  
@@ -100,6 +100,7 @@ under the License.
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Int for 0 Days @ 0.00% per Annum</fo:block>
@@ -109,6 +110,7 @@ under the License.
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="10pt" white-space-collapse="false">Sale Price/Unit</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs)</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 			                     <#assign sr=1>
@@ -273,12 +275,13 @@ under the License.
 				<fo:block>${Scheam?if_exists}</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
-				<fo:block>a) Actual Purchase Value: ${purchaeTot?string("#0.00")}</fo:block>
-				<fo:block>b) Total Sale Value     : ${purchaeTot?string("#0.00")}</fo:block>
+				<fo:block>a) Actual Purchase Value: ${purchaeTot?string("#0.00")} Rs</fo:block>
+				<fo:block>b) Total Sale Value     : ${purchaeTot?string("#0.00")} Rs</fo:block>
 				<fo:block>c) Difference of the Sale</fo:block>
-				<fo:block>e) Value &amp;actual payment made to Mill:</fo:block>
-				<fo:block>f) 0 days interest on the credit:</fo:block>
-				<fo:block>g) Percentage of Trading Contribution: 0%</fo:block>
+				<fo:block> &#160;&#160; Value &amp;actual payment made to Mill:</fo:block>
+				<fo:block>d) 0 days interest on the credit:</fo:block>
+				
+				<fo:block>e) Percentage of Trading Contribution: 0%</fo:block>
 			    <fo:block>	
 			        <fo:table border-style="solid">
              		    <fo:table-column column-width="100%"/>
@@ -325,7 +328,7 @@ under the License.
 		  </fo:block>
 	<fo:block>.</fo:block>
     <#assign size = paymentRefNumList.size()>
-	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  ${totAmt?string("#0.000")} received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
+	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting  ${totAmt?string("#0.000")} Rs received from user agency:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
 	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
     <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block> 
     <fo:block text-align="center"><fo:inline text-decoration="underline">Supdt(C)/AM(C)/DM(C)                  Supdt(F&amp;A)/A.M.(F&amp;A)Dy.M(F&amp;A)/Manager(F&amp;A)                             Mgr(C)/Sr.Mgr(C)/Ch.Mg r(C)</fo:inline></fo:block>  			
