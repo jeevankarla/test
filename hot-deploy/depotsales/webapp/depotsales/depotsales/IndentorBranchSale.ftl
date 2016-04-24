@@ -8,10 +8,11 @@
 		}
 		.form-style-8{
 		    max-width: 650px;
-		    max-height: 150px;
+		    max-height: 185px;
 		    max-right: 10px;
-			margin-bottom: -10px;
-		    padding: 30px;
+		    margin-top: 10px;
+			margin-bottom: -15px;
+		    padding: 15px;
 		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
 		    border-radius: 20px;
 		    border: 1px solid #305A72;
@@ -52,8 +53,7 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-	
-	
+		
 	</style>
 	
 	<script type="text/javascript">
@@ -63,12 +63,11 @@
 		$(document).ready(function(){
 			 $("#societyfield").hide();
 			 	fillPartyData();
-	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
-				minDate: new Date(),
+				//minDate: new Date(),
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
@@ -109,6 +108,54 @@
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
 				} });	
 				if (e.keyCode === 13){
+				
+					// Validation
+					
+					if(indententryinit.partyId.value.length < 1){
+			  			alert("Customer is Mandatory");
+			  			$('#0_lookupId_partyId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#0_lookupId_partyId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#0_lookupId_partyId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+			  		else if(indententryinit.productStoreId.value.length < 1){
+			  			alert("Branch is Mandatory");
+			  			$('#productStoreId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#productStoreId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#productStoreId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+			  		else if(indententryinit.salesChannel.value.length < 1){
+			  			alert("Sales Channel is Mandatory");
+			  			$('#salesChannel').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#salesChannel').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#salesChannel").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+					else if(indententryinit.suplierPartyId.value.length < 1){
+			  			alert("Supplier is Mandatory");
+			  			$('#suplierPartyId').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#suplierPartyId').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#suplierPartyId").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
+				
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -128,11 +175,65 @@
 				showStoreCatalog(productStoreObjOnload);
 			}
 			
+			
 			$("#partyId").blur(function() {
-			fillPartyData();
+				fillPartyData();
 			});
+			
+			$("#productStoreId").blur(function() {
+				getCfcList();
 			});
-		function fillPartyData(partyId){
+			
+		});
+		
+		function getCfcList(){
+			var productStoreId = $('#productStoreId').val();
+		
+			if( productStoreId != undefined && productStoreId != ""){
+				$('.CFC_TD').hide();
+				var dataString="productStoreId=" + productStoreId ;
+	      		$.ajax({
+		             type: "POST",
+		             url: "getCfcListAjax",
+		           	 data: dataString ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {	
+	              		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 		alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				 var cfcList = result["cfcList"];
+							 var optionList = '';   	
+						     if (cfcList) {	
+						     	optionList += "<option value = '' >SELECT CFC</option>"; 
+					        	 for(var i=0 ; i<cfcList.length ; i++){
+									var innerList = cfcList[i];	              			             
+					                optionList += "<option value = " + innerList.productStoreId + " >" + innerList.facilityName + "</option>";          			
+					      		 }
+				      		 }
+	       	  				 
+					      	jQuery("#cfcs").html(optionList);
+					      	 
+					      	 if(cfcList.length > 0){
+					      	 	$('.CFC_TD').show();
+					      	 }
+					      	 else{
+					      	 	$('.CFC_TD').hide();
+					      	 }
+					      	 
+	      				}
+	               
+	          		 } ,
+		         	 error: function() {
+		          	 	alert(result["_ERROR_MESSAGE_"]);
+		         	 }
+	         	 });
+	         }
+	    }
+		
+		
+		
+		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
 				       	  				 if( partyId != undefined && partyId != ""){
@@ -173,17 +274,25 @@
 		       	  				  
 								});		       	  				   
 		       	  				  var tableElement;
+		       	  				  var totLooms = 0;
+		       	  				  
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
+		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
 		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				   totLooms = totLooms+parseInt(obj[item.loomType]);
+		       	  				   
 		       	  				   });
+		       	  				  
+		       	  				   
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
+		       	  				   var issueDate=contactDetails["issueDate"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var partyType=contactDetails["partyType"];
@@ -191,8 +300,8 @@
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
-			       	  					$('#suplierPartyId').focus();
-	    								$('#productStoreId').autocomplete('close');
+			       	  					$('#salesChannel').focus();
+	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
 		       	  				   
@@ -203,8 +312,10 @@
 		       	  				   $("#partyName").html("<h4>"+custName+"</h4>");
 		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
 		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
+		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
+		       	  				   	$("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -322,7 +433,7 @@
 		<#include "SilkBranchSalesOrderInternalForm.ftl"/>
 	<#else>
 		<#include "BranchSalesOrderInternalForm.ftl"/>
-	</#if>             
+	</#if>
 	<#include "EditUDPPriceDepot.ftl"/>
 	<div class="top">
 	
@@ -331,7 +442,7 @@
 		<div class="screenlet" style="width:173%">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
-					<label>Branch sales Entry </label>
+					<label>Branch sale Entry </label>
 				</div>
 		     </div>
       
@@ -341,10 +452,16 @@
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
 	    
+	    
 	    	<form method="post" class="form-style-8" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
+		
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	               	
 	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
 		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
@@ -377,9 +494,8 @@
 			        	</#if>
 						
 	               	</tr>
-	               	
-	               	
 	               	<tr>
+			           	<td>&nbsp;</td>
 						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if productStoreId?exists && productStoreId?has_content>  
@@ -395,20 +511,88 @@
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				               			${parameters.productStoreId}           
 				            		</div>
 				          		</td>       
+				          		
+				          		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+				          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+						  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
+					          		<td valign='middle'>
+					            		<div><font color="green">
+					               			${parameters.cfcs}           
+					            		</div>
+					          		</td>  
+				          		</#if>
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="productStoreId" id="productStoreId"/></td>
-				          		<td><span class="tooltip" id="branchName"></span>
+				          			<input type="text" name="productStoreId" id="productStoreId"/>
+				          			<span class="tooltip" id="branchName"></span>
+				          			
+				          			<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+				          				<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/> 
+					          			<label class='CFC_TD'><b>CFC: <font color="green">  ${parameters.cfcs}   </label>
+					            		
+						          	<#else>
+						          		<label class='CFC_TD' style='display:none;'><b>CFC:</label>
+				          				<select name="cfcs" id="cfcs" style='display:none;' class='CFC_TD' >
+	          						          					
+			          					</select>
+					          		</#if>
 				          		</td>
 				          	</#if>
 			        	</#if>
+			        	
+			        	<#--
+			        	<td>&nbsp;</td>
+		        		
+		        		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+		        			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+				  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
+			          		<td valign='middle'>
+			            		<div><font color="green">
+			               			${parameters.cfcs}           
+			            		</div>
+			          		</td>       
+			          	<#else>
+			          		<td align='left' valign='middle' nowrap="nowrap" class='CFC_TD' style='display:none;'><div class='h3'>CFC:<font color="red">*</font></div></td>
+			          		<td valign='middle' class='CFC_TD' style='display:none;'>
+			          			<select name="cfcs" id="cfcs" class='h3' style="width:162px">
+	          						          					
+			          			</select>
+				        	</td>
+			          	</#if>
+			        	-->	
+			        	
+			        	
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
+	               	
 	               	<tr>
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
+		       	  		<td>&nbsp;</td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Sales Channel:</div></td>
+		       			<#if parameters.salesChannel?exists && parameters.salesChannel?has_content>  
+			  	  			<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div><font color="green">${parameters.salesChannel?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="salesChannel" id="salesChannel" class='h3' style="width:162px">
+		          					<option value=""></option>
+		          					<option value="WEB_SALES_CHANNEL">Web Channel</option>
+		          					<option value="WALKIN_SALES_CHANNEL">Walk-In Sales Channel</option>
+		          					<option value="POS_SALES_CHANNEL">POS Channel</option>
+		          					<option value="PHONE_SALES_CHANNEL">Phone Channel</option>
+		          					<option value="FAX_SALES_CHANNEL">Fax Channel</option>
+		          					<option value="EMAIL_SALES_CHANNEL">E-Mail Channel</option>	          					
+		          				</select>
+		          			</td>
+		       			</#if>
+		       		</tr>	
+	               	<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
@@ -425,6 +609,7 @@
 		       			</#if>
 		       		</tr>	
 					<tr>
+					<td>&nbsp;</td>
 					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
 		       			<#if orderTaxType?exists && orderTaxType?has_content>  
 			  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
@@ -441,6 +626,7 @@
 		       			</#if>
 	               	</tr>	
                     <tr>  
+		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
 			           		<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		          			<input type="hidden" name="isFormSubmitted"  value="YES" />
@@ -448,11 +634,11 @@
 					      	<#if changeFlag?exists && changeFlag=="EditDepotSales">
 							 	<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 							 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-				           		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+				           		<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 						  	</#if>
 					        <#if changeFlag?exists && changeFlag=='DepotSales'>
 					         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-					           	<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+					           	<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 					        <#else>
 					          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 					          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -470,6 +656,7 @@
 			       	  		</#if>
 		       	  </tr>	
                       <tr>
+		       			<td>&nbsp;</td>
 		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
 							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ReceivedDate}:</div></td>
 							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
@@ -484,8 +671,11 @@
 				 				</td>
 							</#if>
 						</#if>
+                       <td>&nbsp;</td>
 	               	</tr>	               	
 	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if suplierPartyId?exists && suplierPartyId?has_content>  
@@ -539,7 +729,7 @@
 		<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
-		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<br>
 	</form>    
@@ -549,16 +739,14 @@
 
 	<div class="righthalf" style="width:46%;height:30px;">
 		<div class="screenlet">
-		    <div class="grid-header" style="width:100%">
-		 			<label>Customer Details</label>
-				</div>
+			<div class="grid-header" style="width:100%">
+	 			<label>Customer Details</label>
+			</div>
     		<div class="screenlet-body">
-		 		
 				 <form  name="partyDetails" id="partyDetails">
-	      				<hr class="style17"></hr>
-				 
+				 	  	<hr class="style17"></hr>
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
+				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
@@ -568,7 +756,7 @@
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
-				 	 	 <#if parameters.address?exists && parameters.address?has_content> 
+				 	 	 	<#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
@@ -583,68 +771,80 @@
 				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>
 						<td width="60%">
-	      				<table width="100%" border="1" border-style="solid">
-		               
-			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
-			       			 <tr>
-			       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			
-			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
-			       			<tr>
-			       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>-->
-			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
-			       			<tr>
-			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
-			       			</tr>
-			       			</#if>
-			       			</table>
-			       			</td>
-			       			<td width="40%">
+		      				<table width="100%" border="1" border-style="solid">
+			               
+				       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+				       			 <tr>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			
+				       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
+				       			<tr>
+				       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>-->
+				       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
+				       			<tr>
+				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			<tr>
+				       				<td width="25%"><font color="green">Total Looms     : </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+				       			</tr>
+				       		</table>
+			       		</td>
+			       		<td width="40%">
 			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
-			       			<tr>
+			       				<tr>
 			       			
-			       			</tr>
+			       				</tr>
 			       			
 			       			</table>
-			       			</td>
-			       			</tr>
+			       		</td>
+			       	</tr>
 			       			
-			       		</table>
-			       		<hr class="style18"></hr>
+			     </table>
+			     <hr class="style18"></hr>
 		       	</form>
 				
 		</div>     
@@ -660,10 +860,10 @@
 	
 	<div class="bottom">
 		<div class="screenlet" >
+			<div class="grid-header" style="width:100%">
+				<span id="totalAmount"></span>
+			</div>
 		    <div class="screenlet-body">
-		 		<div class="grid-header" style="width:100%">
-					<span id="totalAmount"></span>
-				</div>
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
 					<#assign formAction='IndentorprocessBranchSalesOrder'>			
@@ -682,7 +882,7 @@
 						</div>	
 						-->
 				    	<div align="center">
-				    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
+				    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}</@ofbizUrl>');"/>   	
 				    	</div>     
