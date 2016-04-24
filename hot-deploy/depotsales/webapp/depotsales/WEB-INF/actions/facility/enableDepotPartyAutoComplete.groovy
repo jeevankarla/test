@@ -24,6 +24,8 @@
 	dctx = dispatcher.getDispatchContext();
 	
 	userPartyId = userLogin.partyId;
+	
+	// To check if logged in user is Customer
 	partyRoles = delegator.findList("PartyRole", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId), null,null,null, false);
 	userCustomerId = null;
 	if(UtilValidate.isNotEmpty(partyRoles)){
@@ -33,14 +35,25 @@
 			userCustomerId = (EntityUtil.getFirst(customerParty)).get("partyId");
 			userParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", userCustomerId), false);
 			if(userParty){
-			context.party = userParty;
+				context.party = userParty;
 			}else{
-			personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",userCustomerId), false);
-			context.party = personDetails;
+				personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",userCustomerId), false);
+				context.party = personDetails;
 			}
 		}
 	}
 	
+	// To check if logged in user is CFC personnel
+	
+	condList = [];
+	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "CFC_INDENTOR"));
+	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId));
+	productStoreRole = delegator.findList("ProductStoreRole", EntityCondition.makeCondition(condList,EntityOperator.AND), null,null,null, false);
+	if(UtilValidate.isNotEmpty(productStoreRole)){
+		context.cfcs = (EntityUtil.getFirst(productStoreRole)).get("productStoreId");
+		parameters.cfcs = (EntityUtil.getFirst(productStoreRole)).get("productStoreId");
+	}
+		
 	
 	partyDetailsList=[];
 	partyIdsList=[];

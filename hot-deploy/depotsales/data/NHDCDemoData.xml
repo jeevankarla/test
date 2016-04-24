@@ -370,6 +370,13 @@ under the License.
      <RoleType createdStamp="2015-12-13 14:53:21.0" createdTxStamp="2015-12-13 14:53:21.0" description="Empannelled Contractor" lastUpdatedStamp="2016-04-18 19:11:46.0" lastUpdatedTxStamp="2016-04-18 19:11:46.0" roleTypeId="TRANSPORT_CONTRACTOR"/> 
 
 
+<!-- CFC User Portal Data -->
+
+	<RoleType roleTypeId="CFC_INDENTOR" description="Indentor In CFC"/> 
+
+<!-- Sample Not to be pushed -->
+	<ProductStoreRole partyId="15140" productStoreId="LOHATA_CFC" roleTypeId="CFC_INDENTOR" fromDate="2015-04-01 00:00:00.0"/> 
+
 
 
 </entity-engine-xml>

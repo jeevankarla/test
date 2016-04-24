@@ -31,5 +31,22 @@
     	<PortalPagePortlet portalPageId="MYPORTAL_SUPPL_TRANS" portalPortletId="SUPPL_TRANS_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
     	
+    	<!-- CFC User Dashboard -->
+    	
+    	 <SecurityPermission description="Cfc User Dashboard Portal View" permissionId="MYPORTAL_CFC_USER"/>
+          <SecurityGroup description="Cfc User Dashboard Portal View" groupId="MYPORTAL_CFC_USER"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_CFC_USER" permissionId="MYPORTAL_CFC_USER"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_CFC_USER" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_CFC_USER" permissionId="ACCOUNTING_VIEW"/>
+	       <SecurityGroupPermission groupId="MYPORTAL_CFC_USER" permissionId="ACCTG_ATX_CREATE"/>
+	       <SecurityGroupPermission groupId="MYPORTAL_CFC_USER" permissionId="ACCTG_PREF_VIEW"/>
+	   
+	    <PortalPortlet portalPortletId="CFC_USER_PAGE" portletName="CFC Portal Screen" screenName="processCfcPortalBranchSales"
+            screenLocation="component://depotsales/widget/CommonScreens.xml" description="CFC Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_CFC_USER" sequenceNum="0" portalPageName="Cfc Operations" description="The vbiz System cfc user page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_CFC_USER"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_CFC_USER" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_CFC_USER" portalPortletId="CFC_USER_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
     	
     	
