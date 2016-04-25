@@ -186,7 +186,7 @@
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getSchemeTimePeriodId">
         <description>Get Scheme time period</description>
         <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
-<attribute name="orderBy" mode="IN" type="String" optional="false"/>
+        <attribute name="orderBy" mode="IN" type="String" optional="false"/>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="schemeTimePeriodIdList" mode="OUT" type="List" optional="true"/>
@@ -219,8 +219,10 @@
         <description>Get Child Categories and Category Members</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="taxAuthGeoId" type="String" mode="IN" optional="false"/>
-        <attribute name="taxAuthorityRateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthorityRateTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="taxPercentage" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="vatPercent" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="cstPercent" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="taxAuthProdCatList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="createBranchSaleInvoice" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleInvoice">
@@ -245,7 +247,7 @@
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
         <attribute name="invoiceTypeId" type="String" mode="OUT" optional="true"/>
     </service>
-     <service name="getOrderItemSummary" engine="java" location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="getOrderItemSummary">
+    <service name="getOrderItemSummary" engine="java" location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="getOrderItemSummary">
         <description> Products summary to Order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="productSummaryMap" type="Map" mode="OUT" optional="true"/>        
@@ -255,7 +257,7 @@
         <attribute name="branchId" type="String" mode="IN" optional="false"/>
         <attribute name="boHeaderMap" type="Map" mode="OUT" optional="true"/>        
     </service>
- <service name="cancelIndentOrder" engine="java" 
+    <service name="cancelIndentOrder" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelIndentOrder">
         <description>Cancel Indent Orders</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>

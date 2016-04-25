@@ -37,17 +37,17 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChannelWiseDepoSalesChartInternal"/>
     </request-map> 
-
-     <request-map uri="IndentAnalytics">
+    
+    <request-map uri="IndentAnalytics">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalytics"/>
     </request-map>
     <request-map uri="IndentAnalyticsInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalyticsInternal"/>
-    </request-map> 
-        
-     <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
+    </request-map>
+    
+    <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
     <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
@@ -701,9 +701,9 @@
      <request-map uri="CreateNewSupplier">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewSupplier"/>
-    </request-map> 
+    </request-map>
     
-     <request-map uri="FindTransporter">
+    <request-map uri="FindTransporter">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindTransporter"/>
     </request-map>
@@ -713,13 +713,13 @@
         <response name="success" type="view" value="CreateNewTransporter"/>
     </request-map>
     
-     <request-map uri="createTransporter">
+    <request-map uri="createTransporter">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createTransporter"/>
         <response name="success" type="request-redirect" value="CreateNewTransporter"/>
         <response name="error" type="view" value="CreateNewTransporter"/>
     </request-map>
-    
+     
     <request-map uri="createSupplier">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
@@ -827,50 +827,50 @@
          <response name="failed" type="view" value="FindSalesIndentPayment"/>  
       </request-map>
       
-       <request-map uri="payReambursement">
+      <request-map uri="payReambursement">
         <security https="true" auth="true"/>
         <event type="service" invoke="payReambursement"/>
         <response name="success" type="view" value="ShippingReimbursement"/>
         <response name="error" type="view" value="ShippingReimbursement"/>
-    </request-map>
+     </request-map>
      <request-map uri="payDepotReimbursement">
         <security https="true" auth="true"/>
         <event type="service" invoke="payDepotReimbursement"/>
         <response name="success" type="view" value="DepotReimbursement"/>
         <response name="error" type="view" value="DepotReimbursement"/>
-    </request-map>
+     </request-map>
      <request-map uri="FindDepotReimbursementBilling">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepotReimbursementBilling"/>
-    </request-map>
+     </request-map>
      <request-map uri="FindShipmentReimbursementBilling">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindShipmentReimbursementBilling"/>
-    </request-map>
-    <request-map uri="createDepotReimbursementBilling">
+     </request-map>
+     <request-map uri="createDepotReimbursementBilling">
         <security https="true" auth="true"/>
         <event type="service" invoke="createDepotReimbursementBilling"/>
         <response name="success" type="view" value="FindDepotReimbursementBilling"/>
         <response name="error" type="view" value="FindDepotReimbursementBilling"/>
-    </request-map>
+     </request-map>
      <request-map uri="cancelDepotReimbursementBilling">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelDepotReimbursementBilling"/>
         <response name="success" type="view" value="FindDepotReimbursementBilling"/>
         <response name="error" type="view" value="FindDepotReimbursementBilling"/>
-    </request-map>
-      <request-map uri="createCustomPaymentFromPreference">
+     </request-map>
+     <request-map uri="createCustomPaymentFromPreference">
          <security https="true" auth="true"/>
          <event type="service" path="" invoke="createCustPaymentFromPreference"/>
          <response name="success" type="view" value="orderPayment"/>   
         <response name="failed" type="view" value="orderPayment"/>  
      </request-map>
-      <request-map uri="raiseInvoiceForByProdSalesShipment">
+     <request-map uri="raiseInvoiceForByProdSalesShipment">
         <security https="true" auth="true"/>
         <event type="service" invoke="raiseInvoiceForByProdSalesShipment"/>
         <response name="success" type="view" value="FindByProdDepotSalesShipment"/>
         <response name="error" type="view" value="FindByProdDepotSalesShipment"/>
-    </request-map>
+     </request-map>
      <request-map uri="CreateShipmentForByprodSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentForByprodSalesOrder"/>
@@ -1624,7 +1624,19 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ViewIndentRequest"/>
        <response name="error" type="view" value="ViewIndentRequest"/>
-     </request-map>
+    </request-map>
+    <request-map uri="getTaxApplicabilityDetails">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="getTaxApplicabilityDetails"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="calculateTaxesByGeoId">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="calculateTaxesByGeoId"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -1773,8 +1785,8 @@
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
-
-     <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
+    
+    <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
     <view-map name="FindFacilityPhysicalInventoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindFacilityPhysicalInventoryDepot"/>
@@ -1834,7 +1846,7 @@
     <view-map name="EditQuotItems" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditQuotItems"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
-    <view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
+	<view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>

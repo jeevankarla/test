@@ -77,8 +77,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
-    <screen name="IndentAnalytics">
+	<screen name="IndentAnalytics">
         <section>
             <actions>
                	<set field="titleProperty" value="Indent Analytics"/>
@@ -118,8 +117,7 @@
 
             </widgets>
         </section>
-    </screen>	
-	
+    </screen>
 	<screen name="ChannelWiseDepoSalesChart">
 		<section>
 			<actions>
@@ -4638,6 +4636,7 @@
 				<set field="partyId" from-field="parameters.partyId" />
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -4811,7 +4810,6 @@
 				<set field="partyId" from-field="parameters.partyId" />
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
-				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script

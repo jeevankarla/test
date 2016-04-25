@@ -79,7 +79,7 @@ public class DepotSalesServices{
 
         // set zero to the proper scale
         //if (decimals != -1) ZERO = ZERO.setScale(decimals);
-    }  
+    }
     public static Map<String, Object> approveDepotOrder(DispatchContext dctx, Map context) {
   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
   		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -187,7 +187,7 @@ public class DepotSalesServices{
                        return serviceResult;
                    }
               }
-				Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
+              Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
               String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
               GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
               orderStatus.set("orderId", orderId);
@@ -195,8 +195,6 @@ public class DepotSalesServices{
               orderStatus.set("statusDatetime", nowTimestamp);
               orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
 			  delegator.createOrStore(orderStatus);
-
-  			
   	   }catch(Exception e){
   			Debug.logError(e.toString(), module);
   			return ServiceUtil.returnError(e.toString());
@@ -264,8 +262,8 @@ public class DepotSalesServices{
  	  		Map approveServiceResult = dispatcher.runSync("approvePurchaseOrderWithEmail", approvePOParams);
 		         if (ServiceUtil.isError(approveServiceResult)) {
 		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(approveServiceResult));
-		         } 
-				 Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
+		         }
+		         Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
 		         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
 	              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
 	              orderStatus.set("orderId", orderId);
@@ -1377,7 +1375,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
 		}
-		Debug.log("productStoreId ========"+productStoreId);
 		//String productStoreId = "STORE";
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String schemeCategory = (String) request.getParameter("schemeCategory");
@@ -1388,6 +1385,7 @@ public class DepotSalesServices{
 			 
 		}
 		String orderId = (String) request.getParameter("orderId");
+		String partyGeoId = (String) request.getParameter("partyGeoId");
 		String PONumber = (String) request.getParameter("PONumber");
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
 		String orderMessage=(String) request.getParameter("orderMessage");
@@ -1398,7 +1396,6 @@ public class DepotSalesServices{
 		String shipmentId = "";
 		Map processOrderContext = FastMap.newInstance();
 		String salesChannel = (String)request.getParameter("salesChannel");
-		Debug.log("salesChannel ========"+salesChannel);
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
@@ -1414,34 +1411,41 @@ public class DepotSalesServices{
 		String yarnUOMStr = null;
 		String bundleWeightStr = null;
 		String basicPriceStr = null;
-		String vatPriceStr = null;
+		/*String vatPriceStr = null;
 		String bedPriceStr = null;
 		String cstPriceStr = null;
 		String tcsPriceStr = null;
-		String serTaxPriceStr = null;
+		String serTaxPriceStr = null;*/
+		String taxListStr = null;
+		String serviceChgStr = null;
+		String serviceChgAmtStr = null;
+		
 		Timestamp effectiveDate=null;
+		
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal baleQuantity = BigDecimal.ZERO;
 		BigDecimal bundleWeight = BigDecimal.ZERO;
 		String yarnUOM="";
 		BigDecimal basicPrice = BigDecimal.ZERO;
-		BigDecimal cstPrice = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+		/*BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal tcsPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
 		BigDecimal bedPrice = BigDecimal.ZERO;
-		BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+		BigDecimal serviceTaxPrice = BigDecimal.ZERO;*/
 		//percentage fields
-		String bedPercentStr = null;
+		/*String bedPercentStr = null;
 		String vatPercentStr = null;
 		String cstPercentStr = null;
 		String tcsPercentStr = null;
-		String serviceTaxPercentStr = null;
+		String serviceTaxPercentStr = null;*/
 		
-		BigDecimal bedPercent=BigDecimal.ZERO;
+		/*BigDecimal bedPercent=BigDecimal.ZERO;
 		BigDecimal vatPercent=BigDecimal.ZERO;
 		BigDecimal cstPercent=BigDecimal.ZERO;
 		BigDecimal tcsPercent=BigDecimal.ZERO;
-		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+		BigDecimal serviceTaxPercent=BigDecimal.ZERO;*/
 		
 		
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1485,10 +1489,12 @@ public class DepotSalesServices{
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "error";
 		}
+		Debug.log("paramMap ============ "+paramMap);
 		List productIds = FastList.newInstance();
 		List indentProductList = FastList.newInstance();
 		for (int i = 0; i < rowCount; i++) {
 		  
+			List taxRateList = FastList.newInstance();
 			Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 			
@@ -1542,12 +1548,58 @@ public class DepotSalesServices{
 					daysToStore = (String) paramMap.get("daysToStore"
 							+ thisSuffix);
 				}
-
+				if (paramMap.containsKey("serviceCharge" + thisSuffix)) {
+					serviceChgStr = (String) paramMap.get("serviceCharge"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("serviceChargeAmt" + thisSuffix)) {
+					serviceChgAmtStr = (String) paramMap.get("serviceChargeAmt"
+							+ thisSuffix);
+				}
+				
+				
+				
+				if (paramMap.containsKey("taxList" + thisSuffix)) {
+					taxListStr = (String) paramMap.get("taxList"
+							+ thisSuffix);
+					Debug.log("taxListStr ============ "+taxListStr);
+					
+					String[] taxList = taxListStr.split(",");
+					for (int j = 0; j < taxList.length; j++) {
+						String taxType = taxList[j];
+						Map taxRateMap = FastMap.newInstance();
+						taxRateMap.put("orderAdjustmentTypeId",taxType);
+						taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
+						taxRateMap.put("amount",BigDecimal.ZERO);
+						taxRateMap.put("taxAuthGeoId", partyGeoId);
+						Debug.log("taxRateMap ============ "+taxRateMap);
+						
+						if (paramMap.containsKey(taxType + thisSuffix)) {
+							String taxPercentage = (String) paramMap.get(taxType + thisSuffix);
+							if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
+								taxRateMap.put("sourcePercentage",new BigDecimal(taxPercentage));
+							}
+							
+						}
+						if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
+							String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
+							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+								taxRateMap.put("amount",new BigDecimal(taxAmt));
+							}
+						}
+						Map tempTaxMap = FastMap.newInstance();
+						tempTaxMap.putAll(taxRateMap);
+						
+						taxRateList.add(tempTaxMap);
+						Debug.log("taxRateList ======= 1111 ===== "+taxRateList);
+					}
+				}
+				Debug.log("taxRateList ============ "+taxRateList);
 				if (paramMap.containsKey("unitPrice" + thisSuffix)) {
 					basicPriceStr = (String) paramMap.get("unitPrice"
 							+ thisSuffix);
 				}
-				if (paramMap.containsKey("vatPrice" + thisSuffix)) {
+				/*if (paramMap.containsKey("vatPrice" + thisSuffix)) {
 					vatPriceStr = (String) paramMap
 							.get("vatPrice" + thisSuffix);
 				}
@@ -1587,7 +1639,7 @@ public class DepotSalesServices{
 				if (paramMap.containsKey("serviceTaxPercent" + thisSuffix)) {
 					serviceTaxPercentStr = (String) paramMap
 							.get("serviceTaxPercent" + thisSuffix);
-				}
+				}*/
 
 				try {
 					quantity = new BigDecimal(quantityStr);
@@ -1603,7 +1655,13 @@ public class DepotSalesServices{
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
 						basicPrice = new BigDecimal(basicPriceStr);
 					}
-					if (UtilValidate.isNotEmpty(cstPriceStr)) {
+					if (UtilValidate.isNotEmpty(serviceChgStr)) {
+						serviceCharge = new BigDecimal(serviceChgStr);
+					}
+					if (UtilValidate.isNotEmpty(serviceChgAmtStr)) {
+						serviceChargeAmt = new BigDecimal(serviceChgAmtStr);
+					}
+					/*if (UtilValidate.isNotEmpty(cstPriceStr)) {
 						cstPrice = new BigDecimal(cstPriceStr);
 					}
 					if (UtilValidate.isNotEmpty(tcsPriceStr)) {
@@ -1633,7 +1691,7 @@ public class DepotSalesServices{
 					}
 					if (UtilValidate.isNotEmpty(serviceTaxPercentStr)) {
 						serviceTaxPercent = new BigDecimal(serviceTaxPercentStr);
-					}
+					}*/
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing quantity string: "
 							+ quantityStr, module);
@@ -1651,7 +1709,10 @@ public class DepotSalesServices{
 				productQtyMap.put("batchNo", batchNo);
 				productQtyMap.put("daysToStore", daysToStore);
 				productQtyMap.put("basicPrice", basicPrice);
-				productQtyMap.put("bedPrice", bedPrice);
+				productQtyMap.put("taxRateList", taxRateList);
+				productQtyMap.put("serviceCharge", serviceCharge);
+				productQtyMap.put("serviceChargeAmt", serviceChargeAmt);
+				/*productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
 				productQtyMap.put("tcsPrice", tcsPrice);
 				productQtyMap.put("vatPrice", vatPrice);
@@ -1662,7 +1723,7 @@ public class DepotSalesServices{
 				productQtyMap.put("cstPercent", cstPercent);
 				productQtyMap.put("tcsPercent", tcsPercent);
 				productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
-
+*/
 				indentProductList.add(productQtyMap);
 
 			}//end of productQty check
@@ -1809,7 +1870,7 @@ public class DepotSalesServices{
 		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
 	}
-   public static Map<String, Object> processBranchSalesOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
+   	public static Map<String, Object> processBranchSalesOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1822,6 +1883,7 @@ public class DepotSalesServices{
 	  	String salesChannel = (String) context.get("salesChannel");
 	  	List productIds = (List) context.get("productIds");
 	  	String orderTaxType = (String) context.get("orderTaxType");
+	  	String partyGeoId = (String) context.get("partyGeoId");
 	  	String partyId = (String) context.get("partyId");
 	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
@@ -1849,17 +1911,6 @@ public class DepotSalesServices{
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
 			
-		/*	List<Map> prevQtyList = FastList.newInstance();
-			for(GenericValue extItem : extOrderItems){
-				Map prevQtyMap = FastMap.newInstance();
-				prevQtyMap.put("productId", extItem.getString("productId"));
-				prevQtyMap.put("quantity", extItem.getBigDecimal("quantity"));
-				prevQtyList.add(prevQtyMap);
-			}
-			if((UtilValidate.isNotEmpty(prevQtyList) &&  !prevQtyList.equals(productQtyList))){
-				indentNotChanged = false;
-	        }*/
-			
 			try{
 				if(!indentNotChanged){
 					result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
@@ -1880,12 +1931,14 @@ public class DepotSalesServices{
 						List<GenericValue> orderItem = EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prod));
 						if(UtilValidate.isNotEmpty(orderItem) && batchNum != null){
 							String orderItemSeqId = (EntityUtil.getFirst(orderItem)).getString("orderItemSeqId");
+							
 							GenericValue orderItemBatch = delegator.makeValue("OrderItemAttribute");
 							orderItemBatch.set("orderId", orderId);
 							orderItemBatch.set("orderItemSeqId", orderItemSeqId);
 							orderItemBatch.set("attrName", "batchNumber");
 							orderItemBatch.set("attrValue", batchNum);
 							delegator.createOrStore(orderItemBatch);
+							
 						}
 						
 					}
@@ -1905,36 +1958,20 @@ public class DepotSalesServices{
 		GenericValue product =null;
 		String productPriceTypeId = null;
 		String geoTax = "";
-		if(UtilValidate.isNotEmpty(orderTaxType)){
+		
+		/*if(UtilValidate.isNotEmpty(orderTaxType)){
 			if(orderTaxType.equals("INTER")){
 				geoTax = "CST";
 			}else{
 				geoTax = "VAT";
 			}
-		}
+		}*/
+		
 		BigDecimal promoAmt = BigDecimal.ZERO;
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		/*Map schemesMap = FastMap.newInstance();
-		Map schemeCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		schemeCtx.put("partyId", schemePartyId);
-	  	try{
-	  		Map resultCtx = dispatcher.runSync("getPartySchemeEligibility",schemeCtx); 
-	  		schemesMap = (Map) resultCtx.get("schemesMap");
-	  		if (ServiceUtil.isError(resultCtx)) {
-	  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
-	  	 		Debug.logError(errMsg , module);
-	  		}	
-	  	}catch (GenericServiceException e) {
-	  		Debug.logError(e , module);
-	  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
-	  	}*/
-	  	// Handling 10% scheme separately
-	  	/*Map productCategoryQuotasMap = FastMap.newInstance();
-	  	if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
-	  		productCategoryQuotasMap = (Map) schemesMap.get("TEN_PERCENT_MGPS");
-	  	}*/
+		
 	  	// Get Scheme Categories
 	  	List schemeCategoryIds = FastList.newInstance();
 	  	try{
@@ -1944,7 +1981,9 @@ public class DepotSalesServices{
 			Debug.logError(e, "Failed to retrive ProductCategory ", module);
 			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 		}
+	  	
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
+		
 		try {
 			//get inventoryFacility details through productStore.
 			String  inventoryFacilityId="";
@@ -1979,46 +2018,8 @@ public class DepotSalesServices{
 			Debug.logError(e, "Error in setting cart parameters", module);
 			return ServiceUtil.returnError("Error in setting cart parameters");
 		}
-		List<GenericValue> applicableTaxTypes = null;
-		try {
-			applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-		}
 		
-	  	List applTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-	  	if(UtilValidate.isNotEmpty(geoTax)){
-			if(geoTax.equals("VAT")){
-				applTaxTypeList.remove("CST_SALE");
-			}
-			else{
-				applTaxTypeList.remove("VAT_SALE");
-			}
-		}
-	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && (salesChannel.equals("INTUNIT_TR_CHANNEL") || salesChannel.equals("ICP_TRANS_CHANNEL"))){
-	  		isSale = Boolean.FALSE;
-		}
-	  	List<GenericValue> productPriceTaxCalc = FastList.newInstance();
-		List<GenericValue> prodPriceType = null;
-		
-	  	List condsList = FastList.newInstance();
-	  	
-	  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
-	  	condsList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applTaxTypeList));
-	  	condsList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "TAX"));
-		EntityCondition priceCond = EntityCondition.makeCondition(condsList,EntityOperator.AND);
-		
-		try {
-			prodPriceType = delegator.findList("ProductPriceAndType", priceCond, null, null, null, false);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-		}
-		prodPriceType = EntityUtil.filterByDate(prodPriceType, effectiveDate);
-
 		String productId = "";
-		
 		String remarks = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal baleQuantity = BigDecimal.ZERO;
@@ -2026,16 +2027,45 @@ public class DepotSalesServices{
 		String yarnUOM="";
 		String batchNo = "";
 		String daysToStore = "";
+		List<GenericValue> productPriceTaxCalc = FastList.newInstance();
+		
+		//int groupSeqCount = 1;
+		//String groupSequenceId = "";
+		
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			String customerId = "";
 			BigDecimal basicPrice = BigDecimal.ZERO;
-			BigDecimal bedPrice = BigDecimal.ZERO;
+			BigDecimal taxPercent = BigDecimal.ZERO;
+			BigDecimal serviceCharge = BigDecimal.ZERO;
+			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+			
+			/*BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
 			BigDecimal cstPrice = BigDecimal.ZERO;
 			BigDecimal tcsPrice = BigDecimal.ZERO;
-			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+			BigDecimal serviceTaxPrice = BigDecimal.ZERO;*/
+			
+			//groupSequenceId = String.format("%02d", Integer.parseInt(groupSequenceId + groupSeqCount));
+			//cart.addItemGroup("PROD_ASSOC_GRP", groupSequenceId);
+			
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceCharge"))){
+				serviceCharge = (BigDecimal)prodQtyMap.get("serviceCharge");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceChargeAmt"))){
+				serviceChargeAmt = (BigDecimal)prodQtyMap.get("serviceChargeAmt");
+			}
+			Debug.log("serviceCharge ============= "+serviceCharge);
+			Debug.log("serviceChargeAmt ============= "+serviceChargeAmt);
+			
+			Debug.log("prodQtyMap ============= "+prodQtyMap);
+			List taxRateList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxRateList"))){
+				taxRateList = (List)prodQtyMap.get("taxRateList");
+				Debug.log("taxRateList ====== 222 ====== "+taxRateList);
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("customerId"))){
 				customerId = (String)prodQtyMap.get("customerId");
@@ -2066,25 +2096,39 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
 				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
 			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPrice"))){
-				bedPrice = (BigDecimal)prodQtyMap.get("bedPrice");
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
+				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
 			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPrice"))){
-				vatPrice = (BigDecimal)prodQtyMap.get("vatPrice");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPrice"))){
-				cstPrice = (BigDecimal)prodQtyMap.get("cstPrice");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPrice"))){
-				tcsPrice = (BigDecimal)prodQtyMap.get("tcsPrice");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
-				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
-			}						
+					
+			//add percentages
+			BigDecimal vatPercent=BigDecimal.ZERO;
+			BigDecimal cstPercent=BigDecimal.ZERO;
+						
+			BigDecimal taxPercentage = BigDecimal.ZERO;
+			//List taxAuthProdCatList = FastList.newInstance();
 			
+			// Auto Calculate Taxes
+			/*Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+			prodCatTaxCtx.put("productId", productId);
+			prodCatTaxCtx.put("taxAuthGeoId", partyGeoId);
+			prodCatTaxCtx.put("taxAuthorityRateTypeId", orderTaxType);
+		  	try{
+		  		Map resultCtx = dispatcher.runSync("calculateTaxesByGeoId",prodCatTaxCtx);  	
+		  		Debug.log("resultCtx =========="+resultCtx);
+		  		taxPercentage = (BigDecimal) resultCtx.get("taxPercentage");
+		  		Debug.log("taxPercentage =========="+taxPercentage);
+		  		taxAuthProdCatList = (List) resultCtx.get("taxAuthProdCatList");
+		  		Debug.log("taxAuthProdCatList =========="+taxAuthProdCatList);
+		  	}catch (GenericServiceException e) {
+		  		Debug.logError(e , module);
+		  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+		  	}*/
+		  	
+			BigDecimal totalPrice = BigDecimal.ZERO;
+				
 			// Scheme Calculation
 			List productCategoriesList = FastList.newInstance();
-			condsList.clear();
+			List condsList = FastList.newInstance();
 		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
 		  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -2120,154 +2164,108 @@ public class DepotSalesServices{
 					return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
 				}
 			}	
-//			String schemeCategory = null;
-//			if(UtilValidate.isNotEmpty(productCategoriesList)){
-//				schemeCategory = (String)productCategoriesList.get(0);
-//	            if(productCategoryQuotasMap.containsKey(schemeCategory)){
-//	            	quota = (BigDecimal) ((Map) productCategoryQuotasMap.get(schemeCategory)).get("availableQuota");
-//	            }
-//			}
 			
-			//add percentages
-			BigDecimal bedPercent=BigDecimal.ZERO;
-			BigDecimal vatPercent=BigDecimal.ZERO;
-			BigDecimal cstPercent=BigDecimal.ZERO;
-			BigDecimal tcsPercent=BigDecimal.ZERO;
-			BigDecimal serviceTaxPercent=BigDecimal.ZERO;
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
-				bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
-				vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
-				cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPercent"))){
-				tcsPercent = (BigDecimal)prodQtyMap.get("tcsPercent");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPercent"))){
-				serviceTaxPercent = (BigDecimal)prodQtyMap.get("serviceTaxPercent");
-			}
-			Map<String, Object> priceResult;
-			Map<String, Object> priceContext = FastMap.newInstance();
-			priceContext.put("userLogin", userLogin);
-			priceContext.put("productId", productId);	
-			priceContext.put("priceDate", effectiveDate);
-			priceContext.put("geoTax", geoTax);
-			priceContext.put("productStoreId", productStoreId);
-			if(UtilValidate.isNotEmpty(basicPrice) && basicPrice.compareTo(BigDecimal.ZERO)>0){
-				priceContext.put("basicPrice", basicPrice);
-				priceContext.put("bedPrice", bedPrice);
-				priceContext.put("vatPrice", vatPrice);
-				priceContext.put("cstPrice", cstPrice);
-				priceContext.put("tcsPrice", tcsPrice);
-				priceContext.put("serviceTaxPrice", serviceTaxPrice);
-				priceContext.put("bedPercent", bedPercent);
-				priceContext.put("vatPercent", vatPercent);
-				priceContext.put("cstPercent", cstPercent);
-				priceContext.put("tcsPercent", tcsPercent);
-				priceContext.put("serviceTaxPercent", serviceTaxPercent);
-				priceResult = ByProductNetworkServices.calculateUserDefinedProductPrice(delegator, dispatcher, priceContext);
-			}
-			else{
-				priceContext.put("isSale", isSale);
-				priceContext.put("partyId", partyId);
-				priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
-			}
-			
-			if (ServiceUtil.isError(priceResult)) {
-				Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
-				return ServiceUtil.returnError("There was an error while calculating the price");
-			}
-			BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-			List<Map> taxList = (List)priceResult.get("taxList");
-				ShoppingCartItem item = null;
-				try{
-					
-					item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
-				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
-					
-					
-					/*int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, (BigDecimal)priceResult.get("basicPrice"),
-				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));*/
-					
-					//item = cart.findCartItem(itemIndx);
-					item.setListPrice(totalPrice);
-					item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
-					item.setOrderItemAttribute("productId",productId);
-					if(UtilValidate.isNotEmpty(yarnUOM)){
-						item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
-					}
-					if(UtilValidate.isNotEmpty(bundleWeight)){
-						item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
-					}
-					if(UtilValidate.isNotEmpty(customerId)){
-						item.setOrderItemAttribute("WIEVER_CUSTOMER",customerId);
-					}
-					if(UtilValidate.isNotEmpty(remarks)){
-						item.setOrderItemAttribute("REMARKS",remarks.toString());
-					}
-					
-					if(quota.compareTo(BigDecimal.ZERO)>0){
-						
-						// Have to get these details from schemes. Temporarily hard coding it.
-						BigDecimal schemePercent = new BigDecimal("10");
-						BigDecimal percentModifier = schemePercent.movePointLeft(2);
-						
-						
-						BigDecimal discountAmount = BigDecimal.ZERO;
-						if(quantity.compareTo(quota)>0){
-							discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
-							item.setOrderItemAttribute("quotaQty",quota.toString());
-						}
-						else{
-							discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
-							item.setOrderItemAttribute("quotaQty",quantity.toString());
-						}
-						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-				                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
-				                        "description", "10 Percent Subsidy on eligible product categories"));
-						item.addAdjustment(orderAdjustment);
-					}
-					item.setTaxDetails(taxList);
-					cart.addItemToEnd(item);
+			// Populate Shopping Cart With Items.
+			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
+			ShoppingCartItem item = null;
+			try{
+				
+				item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, basicPrice,
+			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
+				
+				item.setOrderItemAttribute("BALE_QTY",baleQuantity.toString());
+				item.setOrderItemAttribute("productId",productId);
+				if(UtilValidate.isNotEmpty(yarnUOM)){
+					item.setOrderItemAttribute("YARN_UOM",yarnUOM.toString());
 				}
-				catch (Exception exc) {
-					Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
-					return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
-		        }
-				List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-				for (Map eachTaxType : taxList) {
-					String taxId = (String)eachTaxType.get("taxType");
-					BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
-					List<GenericValue> productTaxTypesList = EntityUtil.filterByCondition(productTaxes, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, taxId));
-					if(UtilValidate.isNotEmpty(productTaxTypesList)){
-						GenericValue prodTaxType = EntityUtil.getFirst(productTaxTypesList);
-						if(UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO)>0){
-							prodTaxType.set("price", amount);
-						}
-						productPriceTaxCalc.add(prodTaxType);
+				if(UtilValidate.isNotEmpty(bundleWeight)){
+					item.setOrderItemAttribute("BUNDLE_WGHT",bundleWeight.toString());
+				}
+				if(UtilValidate.isNotEmpty(customerId)){
+					item.setOrderItemAttribute("WIEVER_CUSTOMER",customerId);
+				}
+				if(UtilValidate.isNotEmpty(remarks)){
+					item.setOrderItemAttribute("REMARKS",remarks.toString());
+				}
+				
+				if(quota.compareTo(BigDecimal.ZERO)>0){
+					
+					// Have to get these details from schemes. Temporarily hard coding it.
+					BigDecimal schemePercent = new BigDecimal("10");
+					BigDecimal percentModifier = schemePercent.movePointLeft(2);
+					item.setOrderItemAttribute("quotaQty",quota.toString());
+					
+					BigDecimal discountAmount = BigDecimal.ZERO;
+					if(quantity.compareTo(quota)>0){
+						discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
+						item.setOrderItemAttribute("quotaQty",quota.toString());
 					}
 					else{
-						GenericValue productPrice = delegator.makeValue("ProductPrice");        	 
-						productPrice.set("productId", productId);
-						productPrice.set("productPriceTypeId", taxId);
-						productPrice.set("productPricePurposeId", "SALE_PRICE");
-						productPrice.set("productStoreGroupId", "_NA_");
-						productPrice.set("currencyUomId", "INR");
-						productPrice.set("price", amount);
-						productPriceTaxCalc.add(productPrice);
+						discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
+						item.setOrderItemAttribute("quotaQty",quantity.toString());
 					}
+					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+			                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+			                        "description", "10 Percent Subsidy on eligible product categories"));
+					item.addAdjustment(orderAdjustment);
 					
+					totalPrice.add(discountAmount);
 				}
+				
+				// Tax Handling
+				
+				Debug.log("size ====== ====== "+taxRateList.size());
+				for(int i=0; i<taxRateList.size(); i++){
+					Map taxMap = (Map) taxRateList.get(i);
+					if(  ((BigDecimal) taxMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
+						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxMap);
+		 				item.addAdjustment(orderAdjustment);
+						
+		 				totalPrice.add((BigDecimal) taxMap.get("amount"));
+					}
+				}
+				
+				// Service Charge
+				if(serviceCharge.compareTo(BigDecimal.ZERO)>0){
+					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+			                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceCharge,
+			                        "description", "Service Charge"));
+					item.addAdjustment(orderAdjustment);
+					
+					totalPrice.add(serviceCharge);
+				}
+				
+				item.setListPrice(totalPrice);
+				
+				//Debug.log("groupSequenceId =============="+groupSequenceId);
+				//item.setItemGroup(groupSequenceId, cart);
+				
+				//item.setTaxDetails(taxList);
+				cart.addItemToEnd(item);
+				
+				
+				/*if(serviceCharge.compareTo(BigDecimal.ZERO)>0){
+					item = ShoppingCartItem.makeItem(Integer.valueOf(0), "SERVICE_CHARGE", null, quantity, serviceChargeAmt.divide(quantity),
+				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
+					item.setOrderItemAttribute("ServiceChargePercent", serviceCharge.toString());
+					item.setItemGroup(groupSequenceId, cart);
+					cart.addItemToEnd(item);
+				}
+				groupSeqCount++;*/
 			}
+			catch (Exception exc) {
+				Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
+				return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
+	        }
+			
+		}
 		cart.setDefaultCheckoutOptions(dispatcher);
 		//ProductPromoWorker.doPromotions(cart, dispatcher);
+		
 		CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
-		try {
+		/*try {
 			if(isSale || UtilValidate.isNotEmpty(productPriceTaxCalc)){
 				checkout.calcAndAddTax(productPriceTaxCalc);
 			}
@@ -2275,7 +2273,8 @@ public class DepotSalesServices{
 		} catch (Exception e1) {
 		// TODO Auto-generated catch block
 			Debug.logError(e1, "Error in CalcAndAddTax",module);
-		}
+		}*/
+		
 		Map<String, Object> orderCreateResult= FastMap.newInstance();
 		//if orderId empty call createOrder other wise editOrder
 		if(UtilValidate.isEmpty(orderId)){
@@ -2290,7 +2289,6 @@ public class DepotSalesServices{
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			promoAdjCtx.put("orderId", orderId);
 			promoAdjCtx.put("promoAdjAmt", promoAmt);
-		  	 	  	 
 		  	try{
 		  		Map resultCtx = dispatcher.runSync("adjustPromotionAmtForOrder",promoAdjCtx);  		  		 
 		  		if (ServiceUtil.isError(resultCtx)) {
@@ -2302,7 +2300,8 @@ public class DepotSalesServices{
 	             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 	         }
 		}
-		//creating adjustemnts by list
+		
+		//creating adjustments by list
 		if(UtilValidate.isNotEmpty(orderAdjChargesList)){
 			Map inputAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			inputAdjCtx.put("orderId", orderId);
@@ -2329,12 +2328,13 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
 				//GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-				if(geoTax.equals("CST")){
+				if(orderTaxType.equals("CST_SALE")){
 					orderHeader.set("isInterState", "N");
 				}else{
 					orderHeader.set("isInterState", "Y");
 				}
 				orderHeader.store();
+				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
 				for(GenericValue orderItem : orderItems){
 					if(UtilValidate.isNotEmpty(productQtyList)){
@@ -2345,12 +2345,14 @@ public class DepotSalesServices{
 						newItemAttr.set("attrName", "batchNumber");
 						newItemAttr.set("attrValue", (String)batchMap.get("batchNo"));
 						newItemAttr.create();
+						
 						GenericValue newDayStoreAttr = delegator.makeValue("OrderItemAttribute");        	 
 						newDayStoreAttr.set("orderId", orderItem.getString("orderId"));
 						newDayStoreAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
 						newDayStoreAttr.set("attrName", "daysToStore");
 						newDayStoreAttr.set("attrValue", (String)batchMap.get("daysToStore"));
 						newDayStoreAttr.create();
+						
 						productQtyList.remove(0);
 					}
 				}
@@ -2358,6 +2360,7 @@ public class DepotSalesServices{
 				Debug.logError("Error in creating shipmentId for DirectOrder", module);
 				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
 			}
+			
 		}
 		//store OrderMessage
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
@@ -2369,10 +2372,12 @@ public class DepotSalesServices{
 				Debug.logError("Error While Saving Order Message ", module);
 				return ServiceUtil.returnError("Error While Saving Order Message");
 			}
+			
 		}
+		
 		result.put("orderId", orderId);
 		return result;
-  }
+   	}
    
    	public static Map<String, Object> getPartySchemeEligibility(DispatchContext dctx, Map<String, ? extends Object> context) {
 		
@@ -4000,6 +4005,7 @@ public class DepotSalesServices{
   			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+			
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
 			List orgsList = FastList.newInstance();
 			try{
@@ -4329,7 +4335,7 @@ public class DepotSalesServices{
 			}
 	   	}
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-		String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");		
+		String schemeCategoryId = (String) paramMap.get("SCHEME_APPLICABILITY");
 		
 		// SPECIAL CONDITIONS FOR LINEN, HAVE TO CALCULATE BOTH UOMS TO SHOW IN ITS NAME		
 		String leaCount = "";
@@ -4344,7 +4350,7 @@ public class DepotSalesServices{
 				nmCount = ((new BigDecimal(leaCount)).multiply(new BigDecimal("0.6"))).setScale(0,rounding).toString();
 			}
 		}	
-		
+				
 		// Product Name Creation
 		String productName = "";
 		for(int i=0; i<productCategoryAttributeTypesList.size(); i++){
@@ -4369,7 +4375,7 @@ public class DepotSalesServices{
 				if( attribute.equals("UOM") ){
 					continue;
 				}
-			}			
+			}
 			
 			productName = productName + attrValue;
 			if(attribute.equals("PLY")){
@@ -5413,8 +5419,8 @@ public class DepotSalesServices{
 	  		return ServiceUtil.returnError("Error in getting scheme time period");
 		}
 		return result;
-	}		
-
+	}	
+	
 	public static Map<String, Object> cancelIndentOrder(DispatchContext dctx, Map context) {	
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -5545,7 +5551,7 @@ public class DepotSalesServices{
 		}
 		return result;
 	}
-	
+
 	
 	public static Map<String, Object> cancelQuota(DispatchContext dctx, Map context) {
 		
@@ -5877,7 +5883,7 @@ public class DepotSalesServices{
 		Map<String, Object> resultMap = ServiceUtil.returnSuccess();
 		try {
 			
-		resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"orderBy","","userLogin", userLogin));   
+			resultMap=dispatcher.runSync("getSchemeTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"orderBy","","userLogin", userLogin));   
 		} catch (Exception e) {
 			Debug.logError(e, "Failed to get getSchemeTimePeriodId ", module);
 			return ServiceUtil.returnError("Failed to get getSchemeTimePeriodId " + e);
@@ -6276,6 +6282,8 @@ public class DepotSalesServices{
         String supplierGeoId = null;
         String checkForE2Form = "N";
         String taxTypeApplicable = null;
+        String titleTransferEnumId = null;
+        String taxType = null;
         
         List partyContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false, "TAX_CONTACT_MECH");
         if(UtilValidate.isNotEmpty(partyContactMechValueMaps)){
@@ -6299,6 +6307,7 @@ public class DepotSalesServices{
         
         if( (UtilValidate.isNotEmpty(partyGeoId)) && (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
         	if(partyGeoId.equals(branchGeoId)){
+        		taxType = "Intra-State";
         		if(partyGeoId.equals(supplierGeoId)){
             		// Vat is applicable
         			taxTypeApplicable = "VAT_SALE";
@@ -6319,11 +6328,14 @@ public class DepotSalesServices{
         		else{
         			// check for A2 form
         			checkForE2Form = "Y";
-        			taxTypeApplicable = "CST_SALE";
+        			taxTypeApplicable = "VAT_SALE";
+        			titleTransferEnumId = "E2_SALE";
         		}
         	}
         	else{
+        		taxType = "Inter-State";
         		taxTypeApplicable = "CST_SALE";
+        		titleTransferEnumId = "CST_NOCFORM";
         	}
         }
         
@@ -6332,6 +6344,8 @@ public class DepotSalesServices{
         geoIdsMap.put("supplierGeoId", supplierGeoId);
         geoIdsMap.put("branchGeoId", branchGeoId);
         geoIdsMap.put("taxTypeApplicable", taxTypeApplicable);
+        geoIdsMap.put("titleTransferEnumId", titleTransferEnumId);
+        geoIdsMap.put("taxType", taxType);
         geoIdsMap.put("checkForE2Form", checkForE2Form);
         Debug.log("geoIdsMap = ========"+geoIdsMap);
 		result.put("geoIdsMap", geoIdsMap);
@@ -6351,12 +6365,12 @@ public class DepotSalesServices{
         String productId = (String) context.get("productId");
         BigDecimal taxPercentage = BigDecimal.ZERO;
         
-        if( (UtilValidate.isNotEmpty(taxAuthorityRateTypeId)) && (taxAuthorityRateTypeId.equals("CST_SALE")) ){
+        /*if( (UtilValidate.isNotEmpty(taxAuthorityRateTypeId)) && (taxAuthorityRateTypeId.equals("CST_SALE")) ){
         	taxAuthGeoId = "IND";
-        }
+        }*/
         
         List taxCondList= FastList.newInstance();
-		taxCondList.add(EntityCondition.makeCondition("taxAuthGeoId", EntityOperator.EQUALS, taxAuthGeoId));
+		taxCondList.add(EntityCondition.makeCondition("taxAuthGeoId", EntityOperator.IN, UtilMisc.toList(taxAuthGeoId, "IND")));
 		if(UtilValidate.isNotEmpty(taxAuthorityRateTypeId)){
 			taxCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.EQUALS, taxAuthorityRateTypeId));
 		}
@@ -6411,8 +6425,36 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(taxAuthProdCatValue.get("taxPercentage"))){
 			taxPercentage = (BigDecimal) taxAuthProdCatValue.get("taxPercentage");
 		}
+		
+		BigDecimal vatPercent = BigDecimal.ZERO;
+		
+		List vatCondList= FastList.newInstance();
+		vatCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.EQUALS, "VAT_SALE"));
+		vatCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+		List vatTaxes = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(vatCondList, EntityOperator.AND));
+		Debug.log("vatTaxes ============"+vatTaxes);
+		if(UtilValidate.isNotEmpty(vatTaxes)){
+			vatPercent = (BigDecimal)(EntityUtil.getFirst(vatTaxes)).get("taxPercentage");
+		}
+		
+		BigDecimal cstPercent = BigDecimal.ZERO;
+		
+		List cstCondList= FastList.newInstance();
+		cstCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.EQUALS, "CST_SALE"));
+		cstCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+		List cstTaxes = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(cstCondList, EntityOperator.AND));
+		Debug.log("cstTaxes ============"+cstTaxes);
+		if(UtilValidate.isNotEmpty(cstTaxes)){
+			cstPercent = (BigDecimal)(EntityUtil.getFirst(cstTaxes)).get("taxPercentage");
+		}
+		
+		Debug.log("vatPercent ============"+vatPercent);
+		Debug.log("cstPercent ============"+cstPercent);
+		
 		Debug.log("taxPercentage ============"+taxPercentage);
 		Debug.log("taxAuthProdCatList ============"+taxAuthProdCatList);
+		result.put("vatPercent", vatPercent);
+		result.put("cstPercent", cstPercent);
 		result.put("taxPercentage", taxPercentage);
 		result.put("taxAuthProdCatList", taxAuthProdCatList);
         return result;
@@ -7823,10 +7865,11 @@ public class DepotSalesServices{
         	}
         }
         
-		 }catch(Exception e){
-			 Debug.logError("-----------error-------------- : "+e.toString(), module);
-		 } 
-	return result;
-}	
+		}catch(Exception e){
+			Debug.logError("-----------error-------------- : "+e.toString(), module);
+		} 
+		return result;
+	}
+	
 	
 }

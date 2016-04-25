@@ -5,6 +5,10 @@
 
 
 <script type="application/javascript">
+
+
+
+
 /*
 	var boothsData = { "2055" : {"boothDuesList" : [{"supplyDate" : "17/05/2012", "amount" : "Rs15.00"},
 								 					{"supplyDate" : "13/05/2012", "amount" : "Rs217,000.00"}],
@@ -49,6 +53,53 @@
 				render: function(event, api) {
 				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
+					
+					$('input[type=radio][name=applicableTaxType]').change(function() {
+				        if (this.value == 'Intra-State') {
+				           $('.InterState').hide();
+				           $('.IntraState').show();
+				           
+				           $("#NO_E2_FORM").attr('checked', 'checked');
+				           
+				            $('.CST').hide();
+				            $('.VAT').show();
+				        }
+				        else if (this.value == 'Inter-State') {
+				        	$('.IntraState').hide();
+				           	$('.InterState').show();
+				           	
+				           	$("#CST_CFORM").attr('checked', 'checked');
+				           	
+				           	$('.CST').show();
+				            $('.VAT').hide();
+				           
+				        }
+				    });
+				    
+				    $('input[type=radio][name=checkCForm]').change(function() {
+				        if (this.value == 'CST_NOCFORM') {
+				           $('.CST').hide();
+				           $('.VAT').show();
+				        }
+				        else if (this.value == 'CST_CFORM') {
+				           $('.VAT').hide();
+				           $('.CST').show();
+				        }
+				    });
+				    
+				    $('input[type=radio][name=checkE2Form]').change(function() {
+				        if (this.value == 'E2_FORM') {
+				           $('.VAT').hide();
+				           $('.CST').show();
+				        }
+				        else{
+				           $('.VAT').show();
+				           $('.CST').hide();
+				        }
+				    });
+				    
+				    
+					
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
 				hide: function(event, api) { api.destroy(); }
@@ -68,204 +119,195 @@
 	}
 	
 	function showUDPPriceToolTip(gridRow, index) {
+	
 		rowIndex = index;
 		dataRow = gridRow;
 		productName = dataRow["cProductName"];
+		var vatSale = dataRow["DEFAULT_VAT"];
+		var vatSaleAmt = dataRow["DEFAULT_VAT_AMT"];
+		var cstSale = dataRow["DEFAULT_CST"];
+		var cstSaleAmt = dataRow["DEFAULT_CST_AMT"];
+		
+		
+		var taxList = dataRow["taxList"];
+		var totalAmt = dataRow["amount"];
+		var serviceCharge = dataRow["SERVICE_CHARGE"];
+		var serviceChargeAmt = dataRow["SERVICE_CHARGE_AMT"];
 		var message = "";
 		var title = "";
 		var priceExists = "N";
-		if(dataRow){
-			var basicPrice  = 0;
-			var vatPrice  = 0;
-			var bedPrice  = 0;
-			var cstPrice  = 0;
-			var serviceTaxPrice  = 0;
-			if(dataRow["basicPrice"]){
-				basicPrice = dataRow["basicPrice"];
-			}
-			if(dataRow["vatPrice"]){
-				vatPrice = dataRow["vatPrice"];
-			}
-			if(dataRow["bedPrice"]){
-				bedPrice = dataRow["bedPrice"];
-			}
-			if(dataRow["cstPrice"]){
-				cstPrice = dataRow["cstPrice"];
-			}
-			if(dataRow["serviceTaxPrice"]){
-				serviceTaxPrice = dataRow["serviceTaxPrice"];
-			}
-			
-			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || serviceTaxPrice>0){
-				priceExists = "Y";
-			}
-			
-		  // add percentage fileds here
-			var bedPercent=0;
-			var vatPercent=0;
-			var cstPercent=0;
-			var serviceTaxPercent=0;
 		
-		    if(dataRow["bedPercent"]){
-				bedPercent = dataRow["bedPercent"];
+		if(dataRow){
+		
+			message += "<table cellspacing=20 cellpadding=20 id='taxUpdationTable' >" ;
+			message += "<hr class='style17'></hr>";
+			message += "<tr class='h3'><th>Taxes </th></tr>";
+			
+			
+			if($("#orderTaxType").val() == "Inter-State"){
+			
+				message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State'/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
+				message += "<tr class='IntraState' style='display:none;'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' />Transactions Without E2 Form<br> </td> </tr>";
+				message += "<tr class='InterState'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				
 			}
-			if(dataRow["vatPercent"]){
-				vatPercent = dataRow["vatPercent"];
+			if($("#orderTaxType").val() == "Intra-State"){
+			
+				message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
+				message += "<tr class='IntraState'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' checked/>Transactions Without E2 Form<br> </td> </tr>";
+				message += "<tr class='InterState' style='display:none;'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				
 			}
-			if(dataRow["cstPercent"]){
-				cstPercent = dataRow["cstPercent"];
+			
+			message += "</table>";
+			
+			
+			message += "<hr class='style18'></hr>";
+			message += "<table cellspacing=20 cellpadding=20 id='taxTable' >" ;
+			
+			if($("#orderTaxType").val() == "Inter-State"){
+				message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+				message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 			}
-			if(dataRow["serviceTaxPercent"]){
-				serviceTaxPercent = dataRow["serviceTaxPercent"];
+			if($("#orderTaxType").val() == "Intra-State"){
+				message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+				message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 			}
+			
+			message += "<tr class='h3'><td></td></tr>";
+			message += "<tr class='h3'><td></td></tr>";
+			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message += "</table>";
+			message += "<hr class='style18'></hr>";
+			message += "<hr class='style17'></hr>";
+			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
+			
+			Alert(message, title);
 		}
 		
+		<#--
+		if(dataRow){
+			
+			message += "<table cellspacing=20 cellpadding=20 id='taxUpdationTable' >" ;
+			message += "<hr class='style17'></hr>";
+			message += "<tr class='h3'><th>Taxes </th></tr>";
+			for(var i=0;i<taxList.length;i++){
+				
+				var taxType = taxList[i];
+				var taxPercentage = dataRow[taxType];
+				var taxValue = dataRow[taxType + "_AMT"];
+				
+				message += "<tr class='h3'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> AMT: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+			
+			}
+			
+			
+			message += "</table>";
+			message += "<hr class='style18'></hr>";
+			message += "<table cellspacing=20 cellpadding=20 id='serviceChargeUpdationTable' >" ;
+			message += "<hr class='style17'></hr>";
+			message += "<tr class='h3'><th>Service Charges </th></tr>";
+			message += "<tr class='h3'><td align='left'>SERVICE_CHARGE %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='SERVICE_CHARGE' id='SERVICE_CHARGE' value='"+serviceCharge+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> AMT: </td><td><input type='text' name='SERVICE_CHARGE_AMT' id='SERVICE_CHARGE_AMT' value='"+serviceChargeAmt+"' readOnly></td></tr>";
+			message += "<tr class='h3'><td></td></tr>";
+			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message += "</table>";
+			message += "<hr class='style18'></hr>";
+			message += "<hr class='style17'></hr>";
+			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
+			
+			Alert(message, title);
+		}
+		-->
+		
+		<#--
 		message += "<table cellspacing=10 cellpadding=10>" ;
 		if(priceExists == "N"){
-			message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr>";
-			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
+			//message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr>";
+			//message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'></td></tr>";
-			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
+			//message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}else{
-		    message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"' /></td></tr>";
-			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' value='"+bedPercent+"' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
+		    //message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"' /></td></tr>";
+			//message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' value='"+bedPercent+"' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' value='"+vatPercent+"' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"' ></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' value='"+cstPercent+"' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'></td></tr>";
-			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' value='"+serviceTaxPercent+"' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"' /></td></tr>";
-			<#--
+			//message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' value='"+serviceTaxPercent+"' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"' /></td></tr>";
+			
 			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"'/></td></tr>";
-			-->
+			
 			message += "<tr class='h3'><td align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}	
 		title = "<h2><center>User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
 		message += "</table>";
 		Alert(message, title);
-		
+		-->
 	};
 	
 	
-	function getBedAmount(){
-		var bPrice = $('#basicAmount').val();
-		var bedPercent = $('#bedPercent').val();
-			if(isNaN(bedPercent)){
-				bedPercent = 0;
-			}
-		var exciseUnit = bedPercent/100;
-		var bedAmount=bPrice*exciseUnit;
-		$('#bedAmount').val(bedAmount);
-	}
-	function getVatAmount(){
-		var bPrice = $('#basicAmount').val();
-		var vatPercent = $('#vatPercent').val();
-			if(isNaN(vatPercent)){
-				vatPercent = 0;
-			}
-		var percentUnit = vatPercent/100;
-		var vatAmount=bPrice*percentUnit;
-		$('#vatAmount').val(vatAmount);
-	}
-	function getCstAmount(){
-		var bPrice = $('#basicAmount').val();
-		var cstPercent = $('#cstPercent').val();
-			if(isNaN(cstPercent)){
-				cstPercent = 0;
-			}
-		var percentUnit = cstPercent/100;
-		var cstAmount=bPrice*percentUnit;
-		$('#cstAmount').val(cstAmount);
-	}
-	function getServiceTaxAmount(){
-		var bPrice = $('#basicAmount').val();
-		var serviceTaxPercent = $('#serviceTaxPercent').val();
-			if(isNaN(serviceTaxPercent)){
-				serviceTaxPercent = 0;
-			}
-		var percentUnit = serviceTaxPercent/100;
-		var serviceTaxAmount=bPrice*percentUnit;
-		$('#serviceTaxAmount').val(serviceTaxAmount);
-	}
-	
 	function addDataToGrid(){
-		var bPrice = $('#basicAmount').val();
-		var cstPrice = $('#cstAmount').val();
-		var vatPrice = $('#vatAmount').val();
-		var bedPrice = $('#bedAmount').val();
+		var totalTaxAmt = 0;
+		var serviceChargeVal = 0;
+		var totalAmt = dataRow["amount"];
+		$("#taxTable tr :input:visible").each(function () {
+		    var id = this.id;
+		    if(id != 'undefined' && id != null && id.length){
+		    	if (id.indexOf("_AMT") >= 0){
+			    	var taxValue = $('#'+id).val();
+			    	dataRow[id] = taxValue;
+			    }
+			    else{
+			    	var taxPercentage = $('#'+id).val();
+			    	dataRow[id] = taxPercentage;
+			    	totalTaxAmt += (taxPercentage) * (totalAmt/100) ;
+			    }
+		    }
+		}) 
 		
-		var bedPercent = $('#bedPercent').val();
-		var vatPercent = $('#vatPercent').val();
-		var cstPercent = $('#cstPercent').val();
-		var serviceTaxPercent = $('#serviceTaxPercent').val();
+		$("#taxTable tr :input:hidden").each(function () {
+		    var id = this.id;
+		    if(id != 'undefined' && id != null && id.length){
+		    	dataRow[id] = 0;
+		    }
+		}) 
 		
-		var serviceTaxPrice = $('#serviceTaxAmount').val();
-		if(!bPrice){
-			bPrice = 0;
-		}else{
-			bPrice = parseFloat(bPrice);
-		}
-		if(!cstPrice){
-			cstPrice = 0;
-		}else{
-			cstPrice = parseFloat(cstPrice);
-		}
-		if(!cstPercent){
-			cstPercent = 0;
-		}else{
-			cstPercent = parseFloat(cstPercent);
-		}
-		if(!vatPrice){
-			vatPrice = 0;
-		}else{
-			vatPrice = parseFloat(vatPrice);
-		}
-		if(!vatPercent){
-			vatPercent = 0;
-		}else{
-			vatPercent = parseFloat(vatPercent);
-		}
-		if(!bedPrice){
-			bedPrice = 0;
-		}else{
-			bedPrice = parseFloat(bedPrice);
-		}
-		if(!bedPercent){
-			bedPercent = 0;
-		}else{
-			bedPercent = parseFloat(bedPercent);
-		}
-		if(!serviceTaxPrice){
-			serviceTaxPrice = 0;
-		}else{
-			serviceTaxPrice = parseFloat(serviceTaxPrice);
-		}
-		if(!serviceTaxPercent){
-			serviceTaxPercent = 0;
-		}else{
-			serviceTaxPercent = parseFloat(serviceTaxPercent);
-		}
-		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice+serviceTaxPrice;
-		dataRow['basicPrice'] = bPrice;
-		dataRow['cstPrice'] = cstPrice;
-		dataRow['vatPrice'] = vatPrice;
-		dataRow['bedPrice'] = bedPrice;
-		dataRow['serviceTaxPrice'] = serviceTaxPrice;
+		<#--
+		$("#serviceChargeUpdationTable tr :input").each(function () {
+		    var id = this.id;
+		    if(id != 'undefined' && id != null && id.length){
+		    	if (id.indexOf("_AMT") >= 0){
+			    	var taxValue = $('#'+id).val();
+			    	dataRow[id] = taxValue;
+			    }
+			    else{
+			    	var taxPercentage = $('#'+id).val();
+			    	dataRow[id] = taxPercentage;
+			    	serviceChargeVal += (taxPercentage) * (totalAmt/100) ;
+			    }
+		    }
+		}) 
+		-->
 		
-		dataRow['bedPercent'] = bedPercent;
-		dataRow['vatPercent'] = vatPercent;
-		dataRow['cstPercent'] = cstPercent;
-		dataRow['serviceTaxPercent'] = serviceTaxPercent;
 		
-		dataRow['unitPrice'] = totalUnitPrice;
-		var qty = dataRow['quantity'];
+		dataRow["taxAmt"] = totalTaxAmt;
+		dataRow["totPayable"] = totalAmt + totalTaxAmt;
 		
-		dataRow['amount'] = qty*totalUnitPrice;
 		grid.updateRow(rowIndex);
 		grid.render();
-		 updateProductTotalAmount();
+		updateProductTotalAmount();
 		cancelForm();
 	}
 		
+	function adjustAmount(taxPercentItem, totalAmt){
+	 	var percentage = taxPercentItem.value;
+	 	var taxPercItemId = taxPercentItem.id;
+	 	var taxValueItemId = taxPercentItem.id + "_AMT";
+	 	if(percentage != 'undefined' && percentage != null && percentage.length){
+	 		var taxValue = (percentage) * (totalAmt/100) ;
+	 		$('#'+taxValueItemId).val(taxValue);
+	 	}
+	}	
 </script>
