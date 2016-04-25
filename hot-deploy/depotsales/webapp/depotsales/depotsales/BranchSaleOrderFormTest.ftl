@@ -53,7 +53,10 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-		
+		.screenlet .serviceCharge
+		{	
+			float: right;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -63,6 +66,12 @@
 		$(document).ready(function(){
 			 $("#societyfield").hide();
 			 	fillPartyData();
+			 	
+			if(indententryinit.schemeCategory.value.length > 0){
+	  			if ($('#schemeCategory').val() == "General"){
+	  				$("#serviceCharge").html("<b>2% Service Charge is applicable</b>");
+	  			}
+	  		} 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -109,8 +118,9 @@
 				} });	
 				if (e.keyCode === 13){
 				
-					// Validation
+					calculateTaxApplicability();
 					
+					// Validation
 					if(indententryinit.partyId.value.length < 1){
 			  			alert("Customer is Mandatory");
 			  			$('#0_lookupId_partyId').css('background', 'red'); 
@@ -155,7 +165,11 @@
 				       	
 			  			return false;  
 			  		}
-				
+	    			
+	    			if(indententryinit.taxTypeApplicable.value.length < 1){
+			  			$('#taxTypeApplicable').val("VAT_SALE");
+			  		}
+	    			
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -230,9 +244,7 @@
 	         	 });
 	         }
 	    }
-		
-		
-		
+	    
 		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
@@ -280,15 +292,12 @@
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
-		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
-		       	  				   totLooms = totLooms+parseInt(obj[item.loomType]);
-		       	  				   
-		       	  				   });
-		       	  				  
-		       	  				   
+		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				 	totLooms = totLooms+parseInt(obj[item.loomType]);
+		       	  				     
+		       	  				 });
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
@@ -315,7 +324,7 @@
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
-		       	  				   	$("#totLooms").html("<h4>"+totLooms+"</h4>");
+		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -421,10 +430,77 @@
 	  		}
 	  	}
 	  	
-	function formSubmit(selection){
-		 $('#indententryinit').submit();
-			    return false; 
-	}
+	  	function calculateTaxApplicability() {
+			var productStoreId = $("#productStoreId").val();
+			var supplierPartyId = $("#suplierPartyId").val();
+			var partyId = $("#0_lookupId_partyId").val();
+			
+			if( productStoreId != undefined && productStoreId != ""  &&  supplierPartyId != undefined && supplierPartyId != ""  &&    partyId != undefined && partyId != ""  ){
+			
+				$.ajax({
+		             type: "POST",
+		             url: "getTaxApplicabilityDetails",
+		           	 data: {productStoreId : productStoreId, supplierPartyId: supplierPartyId, partyId: partyId } ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {
+			             if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+			       	  		 alert(result["_ERROR_MESSAGE_"]);
+			          	 }
+			          	 else{
+	       	  				 var geoIdsMap =result["geoIdsMap"];
+	       	  				 var checkForE2Form = geoIdsMap["checkForE2Form"];
+	       	  				 var taxTypeApplicable = geoIdsMap["taxTypeApplicable"];
+	       	  				 //alert(taxTypeApplicable);
+	       	  				 //jQuery('#taxTypeValue').html(taxTypeApplicable);
+	       	  				 $('#orderTaxType').val(taxTypeApplicable).change();
+	       	  				 //$('#orderTaxType option[value=CST_SALE]').prop('selected', 'selected').change();
+	       	  				 
+	       	  				 $('#taxTypeApplicable').val(taxTypeApplicable);
+	       	  				 $('#partyGeoId').val(geoIdsMap["partyGeoId"]);
+	       	  				 $('#supplierGeoId').val(geoIdsMap["supplierGeoId"]);
+	       	  				 $('#branchGeoId').val(geoIdsMap["branchGeoId"]);
+	       	  				 
+	       	  				 $('#orderTaxType').val(geoIdsMap["taxType"]);
+	       	  				 
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$('#e2FormCheck').val("Y");
+	       	  				 }
+	       	  				 else{
+	       	  				 	$('#e2FormCheck').val("N");
+	       	  				 }
+	       	  				 
+	       	  				 
+	       	  				 <#--
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$("#E2FormCheck").attr("checked",false);
+	       	  				 	jQuery('#E2FormChecktd').show();
+	       	  				 }
+	       	  				 else{
+	       	  				 	$("#E2FormCheck").attr("checked","checked");
+	       	  				 	jQuery('#E2FormChecktd').hide();
+	       	  				 }
+	       	  				 -->
+	       	  				 
+							         
+			      		 }
+		          	} ,
+		         	error: function() {
+		          		alert(result["_ERROR_MESSAGE_"]);
+		         	}
+		        }); 
+			
+			
+			}
+			
+			
+	    }
+	  	
+	  	
+		function formSubmit(selection){
+			 $('#indententryinit').submit();
+			 return false; 
+		}
 	 
 	</script>
 	
@@ -460,7 +536,18 @@
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
+		       			
 		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
+		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
+			          	</#if>
+		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
+		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
+		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -539,29 +626,6 @@
 				          		</td>
 				          	</#if>
 			        	</#if>
-			        	
-			        	<#--
-			        	<td>&nbsp;</td>
-		        		
-		        		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
-		        			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
-				  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
-			          		<td valign='middle'>
-			            		<div><font color="green">
-			               			${parameters.cfcs}           
-			            		</div>
-			          		</td>       
-			          	<#else>
-			          		<td align='left' valign='middle' nowrap="nowrap" class='CFC_TD' style='display:none;'><div class='h3'>CFC:<font color="red">*</font></div></td>
-			          		<td valign='middle' class='CFC_TD' style='display:none;'>
-			          			<select name="cfcs" id="cfcs" class='h3' style="width:162px">
-	          						          					
-			          			</select>
-				        	</td>
-			          	</#if>
-			        	-->	
-			        	
-			        	
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
 	               	
@@ -605,6 +669,7 @@
 		          			</td>
 		       			</#if>
 		       		</tr>	
+		       		<#--
 					<tr>
 					<td>&nbsp;</td>
 					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
@@ -621,7 +686,8 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-	               	</tr>	
+	               	</tr>
+	               	-->	
                     <tr>  
 		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
@@ -631,11 +697,9 @@
 					      	<#if changeFlag?exists && changeFlag=="EditDepotSales">
 							 	<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 							 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-				           		<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
-						  	</#if>
+				           	</#if>
 					        <#if changeFlag?exists && changeFlag=='DepotSales'>
 					         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-					           	<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 					        <#else>
 					          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 					          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -859,6 +923,7 @@
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
 				<span id="totalAmount"></span>
+				<span id="serviceCharge" class="serviceCharge">Service Charge: </span>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
