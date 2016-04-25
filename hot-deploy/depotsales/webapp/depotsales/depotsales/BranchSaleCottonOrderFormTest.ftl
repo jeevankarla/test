@@ -8,10 +8,11 @@
 		}
 		.form-style-8{
 		    max-width: 650px;
-		    max-height: 150px;
+		    max-height: 185px;
 		    max-right: 10px;
-			margin-bottom: -10px;
-		    padding: 30px;
+		    margin-top: 10px;
+			margin-bottom: -15px;
+		    padding: 15px;
 		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
 		    border-radius: 20px;
 		    border: 1px solid #305A72;
@@ -52,7 +53,10 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-			
+		.screenlet .serviceCharge
+		{	
+			float: right;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -61,7 +65,13 @@
 
 		$(document).ready(function(){
 			 $("#societyfield").hide();
-			fillPartyData();
+			 	fillPartyData();
+			 	
+			if(indententryinit.schemeCategory.value.length > 0){
+	  			if ($('#schemeCategory').val() == "General"){
+	  				$("#serviceCharge").html("<b>2% Service Charge is applicable</b>");
+	  			}
+	  		} 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -108,8 +118,9 @@
 				} });	
 				if (e.keyCode === 13){
 				
-					// Validation
+					calculateTaxApplicability();
 					
+					// Validation
 					if(indententryinit.partyId.value.length < 1){
 			  			alert("Customer is Mandatory");
 			  			$('#0_lookupId_partyId').css('background', 'red'); 
@@ -132,6 +143,17 @@
 				       	
 			  			return false;  
 			  		}
+			  		else if(indententryinit.salesChannel.value.length < 1){
+			  			alert("Sales Channel is Mandatory");
+			  			$('#salesChannel').css('background', 'red'); 
+				       	
+				       	setTimeout(function () {
+				           	$('#salesChannel').css('background', 'white').focus(); 
+				       	}, 800);
+				       	$("#salesChannel").prev().css('color', 'yellow');
+				       	
+			  			return false;  
+			  		}
 					else if(indententryinit.suplierPartyId.value.length < 1){
 			  			alert("Supplier is Mandatory");
 			  			$('#suplierPartyId').css('background', 'red'); 
@@ -143,7 +165,11 @@
 				       	
 			  			return false;  
 			  		}
-				
+	    			
+	    			if(indententryinit.taxTypeApplicable.value.length < 1){
+			  			$('#taxTypeApplicable').val("VAT_SALE");
+			  		}
+	    			
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -168,16 +194,65 @@
 				fillPartyData();
 			});
 			
+			$("#productStoreId").blur(function() {
+				getCfcList();
+			});
+			
 		});
 		
-		function fillPartyData(partyId){
+		function getCfcList(){
+			var productStoreId = $('#productStoreId').val();
+		
+			if( productStoreId != undefined && productStoreId != ""){
+				$('.CFC_TD').hide();
+				var dataString="productStoreId=" + productStoreId ;
+	      		$.ajax({
+		             type: "POST",
+		             url: "getCfcListAjax",
+		           	 data: dataString ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {	
+	              		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 		alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				 var cfcList = result["cfcList"];
+							 var optionList = '';   	
+						     if (cfcList) {	
+						     	optionList += "<option value = '' >SELECT CFC</option>"; 
+					        	 for(var i=0 ; i<cfcList.length ; i++){
+									var innerList = cfcList[i];	              			             
+					                optionList += "<option value = " + innerList.productStoreId + " >" + innerList.facilityName + "</option>";          			
+					      		 }
+				      		 }
+	       	  				 
+					      	jQuery("#cfcs").html(optionList);
+					      	 
+					      	 if(cfcList.length > 0){
+					      	 	$('.CFC_TD').show();
+					      	 }
+					      	 else{
+					      	 	$('.CFC_TD').hide();
+					      	 }
+					      	 
+	      				}
+	               
+	          		 } ,
+		         	 error: function() {
+		          	 	alert(result["_ERROR_MESSAGE_"]);
+		         	 }
+	         	 });
+	         }
+	    }
+	    
+		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
 				       	  				 if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
 				var dataString="partyId=" + partyId ;
 	      	$.ajax({
-	              type: "POST",
+	             type: "POST",
 	             url: "getpartyContactDetails",
 	           	 data: dataString ,
 	           	 dataType: 'json',
@@ -211,14 +286,18 @@
 		       	  				  
 								});		       	  				   
 		       	  				  var tableElement;
+		       	  				  var totLooms = 0;
+		       	  				  
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
-		       	  				   });
+		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				 	totLooms = totLooms+parseInt(obj[item.loomType]);
+		       	  				     
+		       	  				 });
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
@@ -230,7 +309,7 @@
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
-			       	  					$('#suplierPartyId').focus();
+			       	  					$('#salesChannel').focus();
 	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
@@ -245,6 +324,7 @@
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
+		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -350,10 +430,77 @@
 	  		}
 	  	}
 	  	
-	function formSubmit(selection){
-		 $('#indententryinit').submit();
-			    return false; 
-	}
+	  	function calculateTaxApplicability() {
+			var productStoreId = $("#productStoreId").val();
+			var supplierPartyId = $("#suplierPartyId").val();
+			var partyId = $("#0_lookupId_partyId").val();
+			
+			if( productStoreId != undefined && productStoreId != ""  &&  supplierPartyId != undefined && supplierPartyId != ""  &&    partyId != undefined && partyId != ""  ){
+			
+				$.ajax({
+		             type: "POST",
+		             url: "getTaxApplicabilityDetails",
+		           	 data: {productStoreId : productStoreId, supplierPartyId: supplierPartyId, partyId: partyId } ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {
+			             if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+			       	  		 alert(result["_ERROR_MESSAGE_"]);
+			          	 }
+			          	 else{
+	       	  				 var geoIdsMap =result["geoIdsMap"];
+	       	  				 var checkForE2Form = geoIdsMap["checkForE2Form"];
+	       	  				 var taxTypeApplicable = geoIdsMap["taxTypeApplicable"];
+	       	  				 //alert(taxTypeApplicable);
+	       	  				 //jQuery('#taxTypeValue').html(taxTypeApplicable);
+	       	  				 $('#orderTaxType').val(taxTypeApplicable).change();
+	       	  				 //$('#orderTaxType option[value=CST_SALE]').prop('selected', 'selected').change();
+	       	  				 
+	       	  				 $('#taxTypeApplicable').val(taxTypeApplicable);
+	       	  				 $('#partyGeoId').val(geoIdsMap["partyGeoId"]);
+	       	  				 $('#supplierGeoId').val(geoIdsMap["supplierGeoId"]);
+	       	  				 $('#branchGeoId').val(geoIdsMap["branchGeoId"]);
+	       	  				 
+	       	  				 $('#orderTaxType').val(geoIdsMap["taxType"]);
+	       	  				 
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$('#e2FormCheck').val("Y");
+	       	  				 }
+	       	  				 else{
+	       	  				 	$('#e2FormCheck').val("N");
+	       	  				 }
+	       	  				 
+	       	  				 
+	       	  				 <#--
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$("#E2FormCheck").attr("checked",false);
+	       	  				 	jQuery('#E2FormChecktd').show();
+	       	  				 }
+	       	  				 else{
+	       	  				 	$("#E2FormCheck").attr("checked","checked");
+	       	  				 	jQuery('#E2FormChecktd').hide();
+	       	  				 }
+	       	  				 -->
+	       	  				 
+							         
+			      		 }
+		          	} ,
+		         	error: function() {
+		          		alert(result["_ERROR_MESSAGE_"]);
+		         	}
+		        }); 
+			
+			
+			}
+			
+			
+	    }
+	  	
+	  	
+		function formSubmit(selection){
+			 $('#indententryinit').submit();
+			 return false; 
+		}
 	 
 	</script>
 	
@@ -389,7 +536,18 @@
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
+		       			
 		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
+		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
+			          	</#if>
+		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
+		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
+		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -442,21 +600,60 @@
 					  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${parameters.productStoreId?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${parameters.productStoreId}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				               			${parameters.productStoreId}           
 				            		</div>
 				          		</td>       
+				          		
+				          		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
+				          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+						  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
+					          		<td valign='middle'>
+					            		<div><font color="green">
+					               			${parameters.cfcs}           
+					            		</div>
+					          		</td>  
+				          		</#if>
+				          		
+				          		
 				          	<#else>
 				          		<td valign='middle'>
 				          			<input type="text" name="productStoreId" id="productStoreId"/>
 				          			<span class="tooltip" id="branchName"></span>
+				          			<label class='CFC_TD' style='display:none;'><b>CFC:</label>
+				          			<select name="cfcs" id="cfcs" style='display:none;' class='CFC_TD' >
+	          						          					
+			          				</select>
 				          		</td>
 				          	</#if>
 			        	</#if>
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 	               	</tr>
+	               	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
-		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}</div></td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Sales Channel:</div></td>
+		       			<#if parameters.salesChannel?exists && parameters.salesChannel?has_content>  
+			  	  			<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div><font color="green">${parameters.salesChannel?if_exists}</div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="salesChannel" id="salesChannel" class='h3' style="width:162px">
+		          					<option value=""></option>
+		          					<option value="WEB_SALES_CHANNEL">Web Channel</option>
+		          					<option value="WALKIN_SALES_CHANNEL">Walk-In Sales Channel</option>
+		          					<option value="POS_SALES_CHANNEL">POS Channel</option>
+		          					<option value="PHONE_SALES_CHANNEL">Phone Channel</option>
+		          					<option value="FAX_SALES_CHANNEL">Fax Channel</option>
+		          					<option value="EMAIL_SALES_CHANNEL">E-Mail Channel</option>	          					
+		          				</select>
+		          			</td>
+		       			</#if>
+		       		</tr>	
+	               	<tr>
+		       	  		<td>&nbsp;</td>
+		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
 		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
 			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
 		          			<td valign='middle'>
@@ -472,6 +669,7 @@
 		          			</td>
 		       			</#if>
 		       		</tr>	
+		       		<#--
 					<tr>
 					<td>&nbsp;</td>
 					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
@@ -488,7 +686,8 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-	               	</tr>	
+	               	</tr>
+	               	-->	
                     <tr>  
 		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
@@ -498,11 +697,9 @@
 					      	<#if changeFlag?exists && changeFlag=="EditDepotSales">
 							 	<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 							 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-				           		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
-						  	</#if>
+				           	</#if>
 					        <#if changeFlag?exists && changeFlag=='DepotSales'>
 					         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-					           	<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
 					        <#else>
 					          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 					          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -593,28 +790,26 @@
 		<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
-		<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>
+		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<br>
 	</form>    
 		</div>
 		</div>
 	</div>
-	
-	<div class="righthalf" >
-		<div class="screenlet" style="width:71%; margin-left:29%">
+
+	<div class="righthalf">
+		<div class="screenlet" >
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
 					<label>Customer Details</label>
-				</div>
-		     </div>
+			</div>
+		</div>
     		<div class="screenlet-body">
-		 		
 				 <form  name="partyDetails" id="partyDetails">
-	      				  			 	 	<hr class="style17"></hr>
-				 
+				 	  	<hr class="style17"></hr>
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				 	  	<#if parameters.custName?exists && parameters.custName?has_content> 
+				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
@@ -624,7 +819,7 @@
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
-				 	 	 <#if parameters.address?exists && parameters.address?has_content> 
+				 	 	 	<#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
 			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
@@ -639,97 +834,98 @@
 				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>
 						<td width="60%">
-	      				<table width="100%" border="1" border-style="solid">
-		               
-			       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
-			       			 <tr>
-			       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
-				       		<tr>
-				       			<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
-				       		</tr>
-				       		<#else>
-				       		<tr>
-				       			<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
-				       		</tr>
-				       		</#if>
-			       			
-			       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
-			       			<tr>
-			       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>-->
-			       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
-			       			<tr>
-			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
-			       			</tr>
-			       			</#if>
-			       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
-			       			<tr>
-			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
-			       			</tr>
-			       			<#else>
-			       			<tr>
-			       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
-			       			</tr>
-			       			</#if>
-			       			</table>
-			       			</td>
-			       			<td width="40%">
+		      				<table width="100%" border="1" border-style="solid">
+			               
+				       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+				       			 <tr>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			
+				       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
+				       			<tr>
+				       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>-->
+				       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
+				       			<tr>
+				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
+				       			<tr>
+				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+				       			</tr>
+				       			<#else>
+				       			<tr>
+				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+				       			</tr>
+				       			</#if>
+				       			<tr>
+				       				<td width="25%"><font color="green">Total Looms     : </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+				       			</tr>
+				       		</table>
+			       		</td>
+			       		<td width="40%">
 			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
-			       			<tr>
+			       				<tr>
 			       			
-			       			</tr>
+			       				</tr>
 			       			
 			       			</table>
-			       			</td>
-			       			</tr>
+			       		</td>
+			       	</tr>
 			       			
-			       		</table>
-			       						 	 	<hr class="style18"></hr>
-				       	</form>
+			     </table>
+			     <hr class="style18"></hr>
+		       	</form>
 				
 		</div>     
 	</div>
-</div>
+ </div>
+	</div>
 	
+	<div class="full" style="height:250px;">
+	</br> 
 	
 	</div>
-		<div class="full" style="height:250px;">
-			</br> 
-		</div>
 	
 	<div class="bottom">
 		<div class="screenlet" >
-			<div class="screenlet-title-bar">
-         		<div class="grid-header" style="width:100%">
-					<label>Indent Items</label>
-					<span id="totalAmount"></span>
-				</div>
-		     </div>
+			<div class="grid-header" style="width:100%">
+				<span id="totalAmount"></span>
+				<span id="serviceCharge" class="serviceCharge">Service Charge: </span>
+			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
@@ -759,3 +955,4 @@
 			</div>     
 		</div>
 		</div>
+	
