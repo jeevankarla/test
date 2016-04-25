@@ -291,7 +291,7 @@ under the License.
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       
-	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM c/DM c         checked By F &amp; A Section </fo:block>
+	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM ©/DM©/Manager©         checked By F &amp; A Section </fo:block>
       		
               <fo:block text-align="left" font-weight="bold"    font-size="12pt" >TERMS &amp; CONDITIONS:</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National handloom </fo:block>
