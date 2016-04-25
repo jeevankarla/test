@@ -42,7 +42,7 @@ under the License.
          				<fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          
            <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block> 
-           <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+           <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
    		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">S-13/36, SRI RAM MARKET</fo:block>
            <fo:block text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">VARANASI-221002</fo:block>
            <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">E-MAIL:nhdcltdvns@yahoo.in</fo:block>
@@ -67,13 +67,13 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="12pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
-				<fo:block text-align="left"    font-size="11pt" >Your above confirmed indent goods despatched through M/S :${carrierName?if_exists}</fo:block>
-				<fo:block text-align="left"    font-size="11pt" >LR/RRNo :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}  </fo:block>
+				<fo:block text-align="left"    font-size="11pt" >Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists}</fo:block>
+				<fo:block text-align="left"    font-size="11pt" >LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}  </fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;BILL NO                :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;NHDC Indent No         :${indentNo?if_exists}</fo:block>
-				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;NHDC P.O. No           :${poNumber?if_exists}</fo:block>
+				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;NHDC PO No             :${poNumber?if_exists}</fo:block>
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;User Agency Indent No  :</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
@@ -114,6 +114,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Unit</fo:block>
+				<fo:block text-align="center"    font-size="12pt" >(RS)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Quantity</fo:block>
@@ -157,7 +158,7 @@ under the License.
 				<#if invoiceDetail.get("quantity")?has_content>
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
-				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>${0.000}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("schemeQty")?has_content>
@@ -194,7 +195,7 @@ under the License.
 				<fo:block text-align="right"  font-size="12pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="12pt" >${totQuantity?string("#0.00")}</fo:block>
+				<fo:block text-align="center"  font-size="12pt" >${totQuantity?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" >${totSchemeQty?string("#0.00")}</fo:block>
@@ -272,7 +273,7 @@ under the License.
 					</fo:table-row>
 					<fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left"    font-size="12pt" >Destination       :${estimatedShipCost?if_exists}</fo:block>
+						<fo:block text-align="left"    font-size="12pt" >Destination       :${destination?if_exists}</fo:block>
 						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :${estimatedShipCost?if_exists}   </fo:block>
 						<fo:block text-align="left"    font-size="12pt" >Due Date          :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
@@ -290,12 +291,12 @@ under the License.
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       
-	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM@/DM@         checked By F &amp; A Section </fo:block>
+	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM c/DM c         checked By F &amp; A Section </fo:block>
       		
               <fo:block text-align="left" font-weight="bold"    font-size="12pt" >TERMS &amp; CONDITIONS:</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National handloom </fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development corporation Limited payable at <fo:inline font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdFrom, true)}</fo:inline> INTEREST will be charged @ 13.00% per annum on</fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >&#160; overdue Amount.</fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development corporation Limited payable at ____________ </fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >&#160;&#160;INTEREST will be charged @ 13.00% per annum on overdue Amount.</fo:block>
 			   
 			   
 			    <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
