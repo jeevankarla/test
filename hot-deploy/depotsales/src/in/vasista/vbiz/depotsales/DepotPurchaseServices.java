@@ -2034,7 +2034,7 @@ public class DepotPurchaseServices{
 						GenericValue eachProductList = (GenericValue)headerItems.get(i);
 						Debug.log("eachProductList=================="+eachProductList);
 						BigDecimal quantity=(BigDecimal)eachProductList.getBigDecimal("quantity");
-						 unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitListPrice");
+						 unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitPrice");
 						String orderItemSeqId=(String)eachProductList.get("orderItemSeqId");
 						 itemSeqDetail.add(orderItemSeqId);
 						BigDecimal amount=unitListPrice.multiply(quantity);

@@ -426,12 +426,12 @@ resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.t
 		}
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("quota",quota);
-		amount=eachItem.unitListPrice*eachItem.quantity;
+		amount=eachItem.unitPrice*eachItem.quantity;
 		newObj.put("amount", amount);
 		
 		newObj.put("batchNo", batchNo);
 		newObj.put("daysToStore", daysToStore);
-		newObj.put("unitPrice", eachItem.unitListPrice);
+		newObj.put("unitPrice", eachItem.unitPrice);
 		if(changeFlag && changeFlag == "DepotSales" || changeFlag == "EditDepotSales" || changeFlag == "InterUnitTransferSale"){
 			if(eachItem.unitPrice){
 				newObj.put("basicPrice", eachItem.unitPrice);

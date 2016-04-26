@@ -156,10 +156,18 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 					if(partyPostalAddress.get("districtGeoId")){
 						districtGeoId=partyPostalAddress.get("districtGeoId");
 						}
+					String districtName="";
+					if(districtGeoId){
+						districtName = districtGeoId ;
+						GenericValue geo = delegator.findOne("Geo", [geoId:districtGeoId], false);
+						if(UtilValidate.isNotEmpty(geo)&& UtilValidate.isNotEmpty(geo.get("geoName"))){
+							districtName = geo.get("geoName");
+							}
+					}
 					shipingAdd.put("address1",address1);
 					shipingAdd.put("address2",address2);
 					shipingAdd.put("city",city);
-					shipingAdd.put("districtGeoId",districtGeoId);
+					shipingAdd.put("districtGeoId",districtName);
 					shipingAdd.put("postalCode",postalCode);
 				}
 			}

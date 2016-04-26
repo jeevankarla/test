@@ -203,16 +203,17 @@
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
-				
-				for(var i=0;i<taxList.length;i++){
-					var taxType = taxList[i];
-					var taxPercentage = data[rowCount][taxType];
-					var taxValue = data[rowCount][taxType + "_AMT"];
-					
-					var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-					var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
-					jQuery(formId).append(jQuery(inputTaxTypePerc));
-					jQuery(formId).append(jQuery(inputTaxTypeValue));
+				if(taxList != undefined){
+					for(var i=0;i<taxList.length;i++){
+						var taxType = taxList[i];
+						var taxPercentage = data[rowCount][taxType];
+						var taxValue = data[rowCount][taxType + "_AMT"];
+						
+						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						jQuery(formId).append(jQuery(inputTaxTypePerc));
+						jQuery(formId).append(jQuery(inputTaxTypeValue));
+					}
 				}
    			}
 			
@@ -900,7 +901,7 @@
 					convValue = prodConversionData['CRATE'];
 				</#if>
 				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
+					//convValue = prodConversionData['LtrKg'];
 				</#if>
 				
 				var udp = data[i]['basicPrice'];

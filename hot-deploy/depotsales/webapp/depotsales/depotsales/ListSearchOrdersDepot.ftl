@@ -253,7 +253,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
               <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
              
              	<#if (eachOrder.get('statusId') == "ORDER_CREATED") && isgeneratedPO =="N">
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
 				<#else>
 				<td></td>
 				</#if>
