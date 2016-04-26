@@ -38,7 +38,7 @@ under the License.
         <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
 			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
  			<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
- 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} Limited</fo:block>
+ 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
  			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportSubHeader.description?if_exists}</fo:block>
 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             <fo:block>
@@ -70,7 +70,7 @@ under the License.
 				       <fo:table-row>
 				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >PO NO   &#160;  : ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >PO DATED</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >PO DATE</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
@@ -426,7 +426,8 @@ under the License.
          </#if>  
         </fo:block>
 		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;----------------------------------------------------------------------------------------- </fo:block>
-        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;</fo:block>	        
+        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
+        </fo:block>	        
 	</fo:flow>
 			 </fo:page-sequence>
 			 <#else>
