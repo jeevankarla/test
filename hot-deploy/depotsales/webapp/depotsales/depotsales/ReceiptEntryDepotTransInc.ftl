@@ -329,7 +329,7 @@
 			forceFitColumns: false,			
 			enableCellNavigation: true,
 			enableColumnReorder: false,
-			enableAddRow: true,
+			//enableAddRow: true,
 			asyncEditorLoading: false,			
 			autoEdit: true,
             secondaryHeaderRowHeight: 25

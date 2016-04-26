@@ -18,13 +18,17 @@
  // Last Date Of the Month 
  var startDateTo = new Date(currentTime.getFullYear(),currentTime.getMonth() +1,0);
   
- $("#effectiveDate").datetimepicker({
-	dateFormat:'dd:mm:yy',
-	changeMonth: true,
-    minDate: startDateFrom,
+ //$("#effectiveDate").datetimepicker({
+//	dateFormat:'d MM, yy',
+//	changeMonth: true,
+//    minDate: startDateFrom,
    // maxDate: startDateTo
- });	
-
+ //});	
+$( "#effectiveDate" ).datepicker({
+	dateFormat:'d MM, yy',
+	changeMonth: true,
+	 minDate: startDateFrom,
+});	
 $( "#suppInvoiceDate" ).datepicker({
 	dateFormat:'d MM, yy',
 	changeMonth: true,
