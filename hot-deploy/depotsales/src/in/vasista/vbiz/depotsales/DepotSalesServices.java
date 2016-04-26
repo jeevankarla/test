@@ -1906,7 +1906,7 @@ public class DepotSalesServices{
 		List conditionList = FastList.newInstance();
 		if(UtilValidate.isNotEmpty(orderId)){
 			
-			boolean indentNotChanged = false; 
+			boolean indentNotChanged = true; 
 			Map resultCtx = ByProductNetworkServices.getOrderDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
@@ -1953,7 +1953,7 @@ public class DepotSalesServices{
 				  Debug.logError(e1, e1.toString(), module);
 				  return ServiceUtil.returnError("Failed fetching existing order details");
 			}
-			orderId=null;
+			//orderId=null;
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
@@ -2280,6 +2280,8 @@ public class DepotSalesServices{
 		if(UtilValidate.isEmpty(orderId)){
 			orderCreateResult = checkout.createOrder(userLogin);
 		}else{
+			cart.setOrderId(orderId);
+			checkout = new CheckOutHelper(dispatcher, delegator, cart);
 			orderCreateResult = checkout.editOrder(userLogin);
 		}
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
