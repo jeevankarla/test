@@ -164,7 +164,7 @@ under the License.
 				<#if invoiceDetail.get("schemeQty")?has_content>
 				<#assign totSchemeQty = totSchemeQty+invoiceDetail.get("schemeQty")>
 				</#if>
-				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
@@ -198,7 +198,7 @@ under the License.
 				<fo:block text-align="center"  font-size="12pt" >${totQuantity?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="12pt" >${totSchemeQty?string("#0.00")}</fo:block>
+				<fo:block text-align="center"  font-size="12pt" >${totSchemeQty?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" ></fo:block>
@@ -253,7 +253,7 @@ under the License.
        	</fo:table>
 	   </fo:block>
 	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
-	   
+	                <fo:block text-align="left"    font-size="12pt" >Purchase Price (RS):<#if grandTotal?has_content>${grandTotal?string("#0.00")}</#if></fo:block>
 	   				<fo:block text-align="left"    font-size="12pt" >MILL Invo No/Date :${supplierInvoiceId?if_exists} <#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 	   	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	   
@@ -274,7 +274,7 @@ under the License.
 					<fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left"    font-size="12pt" >Destination       :${destination?if_exists}</fo:block>
-						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :${estimatedShipCost?if_exists?string("#0.00")}   </fo:block>
+						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :<#if estimatedShipCost?has_content>${estimatedShipCost?if_exists?string("#0.00")}</#if>   </fo:block>
 						<fo:block text-align="left"    font-size="12pt" >Due Date          :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
 						<fo:table-cell border-style-left="hidden">
@@ -291,11 +291,11 @@ under the License.
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	       
-	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM ©/DM©/Manager©         checked By F &amp; A Section </fo:block>
+	        	<fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >Prepared By              Supdt(Comm)     AM &#169;/DM&#169;/Manager&#169;         checked By F &amp; A Section </fo:block>
       		
               <fo:block text-align="left" font-weight="bold"    font-size="12pt" >TERMS &amp; CONDITIONS:</fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National handloom </fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development corporation Limited payable at ____________ </fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National Handloom </fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development Corporation Limited' payable at ____________ </fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >&#160;&#160;INTEREST will be charged @ 13.00% per annum on overdue Amount.</fo:block>
 			   
 			   
