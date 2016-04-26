@@ -114,7 +114,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Unit</fo:block>
-				<fo:block text-align="center"    font-size="12pt" >(RS)</fo:block>
+				<!-- <fo:block text-align="center"    font-size="12pt" >(RS)</fo:block> -->
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Quantity</fo:block>
@@ -151,7 +151,7 @@ under the License.
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}<#else>0.00</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="12pt" >KG</fo:block>
+				<fo:block text-align="center"  font-size="12pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				
@@ -274,7 +274,7 @@ under the License.
 					<fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left"    font-size="12pt" >Destination       :${destination?if_exists}</fo:block>
-						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :${estimatedShipCost?if_exists}   </fo:block>
+						<fo:block text-align="left"    font-size="12pt" >Freight (RS.)     :${estimatedShipCost?if_exists?string("#0.00")}   </fo:block>
 						<fo:block text-align="left"    font-size="12pt" >Due Date          :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
 						<fo:table-cell border-style-left="hidden">
