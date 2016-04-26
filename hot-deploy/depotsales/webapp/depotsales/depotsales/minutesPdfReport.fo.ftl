@@ -45,11 +45,11 @@ under the License.
 			                    <fo:table-cell number-columns-spanned="4">
 					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${reportHeader.description?if_exists} Limited</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="10pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
 					            <#--	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>-->
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> EMAIL:nhdcltdvns@yahoo.in </fo:block>
+					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> EMAIL:nhdcltdvns@yahoo.in </fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
@@ -121,25 +121,25 @@ under the License.
 					            </fo:table-cell>
 					             <#assign productDetails = delegator.findOne("Product", {"productId" :orderList.productId}, true)>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
+					            	<fo:block text-align="left" font-size="11pt" white-space-collapse="false">${productDetails.get("productName")?if_exists} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderList.get("remarks")?if_exists}</fo:block>
+					            	<fo:block  text-align="center" font-size="11pt" white-space-collapse="false">${orderList.get("remarks")?if_exists}</fo:block>
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> </fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"> </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("unitPrice")?if_exists?string("#0.00")}/kgs</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>

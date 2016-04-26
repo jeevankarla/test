@@ -40,14 +40,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		       
 					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
 					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;&#160;&#160;&#160;                                 &#160;${reportHeader.description?if_exists} </fo:block>
-				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}           ACCOUNTS / PURCHASE / STORES</fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" >&#160;&#160;&#160;&#160;                            &#160;${reportHeader.description?if_exists}</fo:block>
+				  	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                    ${reportSubHeader.description?if_exists}           ACCOUNTS / PURCHASE / STORES</fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;              -----------------------------------------------------------------------------------------------  </fo:block> 
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                          MATERIAL RECEIPT REPORT 	    </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                               MATERIAL RECEIPT REPORT 	    </fo:block> 
 				              	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block>
 				    
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;   M R R NO:${shipmentMap.get("shipmentId")}                  DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                              	    </fo:block> 
-			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;&#160;______________________________________________________________________________________________________________________________________________________________ </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;       M R R NO:${shipmentMap.get("shipmentId")}                           DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                              	    </fo:block> 
+			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;__________________________________________________________________________________________________________________________________________________________________ </fo:block> 
 				 <#--   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")?if_exists}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt"> &#160;  </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > D C NO: ${shipmentMap.get("dcNo")?if_exists}                           D C DATE:<#if (shipmentMap.get("dcDate")?has_content)> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yyyy")?if_exists}   </#if>                          VENDOR NAME: ${shipmentMap.get("partyName")?if_exists}            	    </fo:block> 
@@ -89,7 +89,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${fileNumber?if_exists}   </fo:block>
                        			</fo:table-cell>
                                  <fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; REFERENCE NO.: </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; REFERENCE NO : </fo:block>  
                        			</fo:table-cell>
                                 <fo:table-cell>
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${refNumber?if_exists}   </fo:block>
@@ -97,13 +97,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             </fo:table-row >
                             <fo:table-row >      
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; P O NO           : </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; PO NO            : </fo:block>  
                        			</fo:table-cell>                     
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("ordId")?if_exists}   </fo:block>
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160;P O DATE    :</fo:block> 
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160;PO DATE     :</fo:block> 
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if orderDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}<#else></#if></fo:block>  
@@ -123,13 +123,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 			</fo:table-row>
                 			<fo:table-row >
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; D C NO           : </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; DC NO            : </fo:block>  
                        			</fo:table-cell>                     
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("dcNo")?if_exists}   </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160;D C DATE    :</fo:block> 
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160;DC DATE     :</fo:block> 
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("dcDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yyyy")?if_exists}   </#if> </fo:block>  
@@ -189,13 +189,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 
             	<fo:block>
                  	<fo:table border-style="solid">
-	                    <fo:table-column column-width="30pt"/>
-	                    <fo:table-column column-width="75pt"/>
+	                    <fo:table-column column-width="35pt"/>
+	                    <fo:table-column column-width="90pt"/>
 	                    <fo:table-column column-width="140pt"/>  
 	               	    <fo:table-column column-width="70pt"/>
 	               	    <fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="80pt"/> 		
-	            		<fo:table-column column-width="50pt"/>
+	            		<fo:table-column column-width="60pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="80pt"/>
@@ -233,13 +233,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block  text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT RATE Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT RATE (Rs) </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BOOK FOLIO NO </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">AMOUNT (Rs) </fo:block>   
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">AMOUNT</fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">(Rs) </fo:block>   
+                            		 
                         		</fo:table-cell>
                         	<#--- <fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">VEHICLE NO</fo:block>  
@@ -253,63 +255,63 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    <#list grnList as grnListItem>
 	                    <fo:table-row >
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="center"  font-size="11pt" >
+	                            	 <fo:block  text-align="center"  font-size="12pt" >
                                    ${sNo} </fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
-                                  	<fo:block text-align="center"  font-size="11pt" >
+                                  	<fo:block text-align="center"  font-size="12pt" >
                                    ${grnListItem.get("internalName")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
-                                  	<fo:block text-align="center"  font-size="11pt" >
+                                  	<fo:block text-align="center"  font-size="12pt" >
                                    ${grnListItem.get("description")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                     <fo:block text-align="center" font-size="11pt" >
+                                     <fo:block text-align="center" font-size="12pt" >
                                    ${grnListItem.get("unit")?if_exists} 
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-                                    <fo:block text-align="center" font-size="11pt" >
+                                    <fo:block text-align="center" font-size="12pt" >
                                    ${grnListItem.get("quantity")?if_exists?string("#0.000")}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="11pt">
+	                                    <fo:block text-align="center" font-size="12pt">
 	                               ${grnListItem.get("deliveryChallanQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="11pt">
+	                                    <fo:block text-align="center" font-size="12pt">
                                    ${grnListItem.get("receivedQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                   <fo:block text-align="center" font-size="11pt">
+	                                   <fo:block text-align="center" font-size="12pt">
 	                               <#if (grnListItem.get("quantityRejected")?has_content)>
                                    ${grnListItem.get("quantityRejected")?if_exists}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="11pt">
+	                                    <fo:block text-align="center" font-size="12pt">
 	                               <#if (grnListItem.get("quantityAccepted")?has_content)>
 	                               ${grnListItem.get("quantityAccepted")?if_exists}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="11pt">
+	                                    <fo:block text-align="center" font-size="12pt">
 	                               <#if (grnListItem.get("unitPrice")?has_content)>
                                     ${(grnListItem.get("unitPrice"))?if_exists?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="11pt">
+	                                    <fo:block text-align="left" font-size="12pt">
 	                                      ${grnListItem.get("folioNo")?if_exists}
 
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right" font-size="11pt">
+	                                    <fo:block text-align="right" font-size="12pt">
 	                                  ${grnListItem.get("amount")?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
