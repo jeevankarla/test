@@ -16,14 +16,12 @@
 		font-weight: normal;
 		background: mistyrose;
 	}
-	<#--
 	.readOnlyColumnAndWarningClass {
 		font-weight: bold;
 		color: red;
 		background: white;
 		animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
 	}
-	-->
 	@keyframes blinker {  
 	  from { opacity: 1; }
 	  to { opacity: 0; }
@@ -104,6 +102,8 @@
 	var withAdjColumns;
 	
 	var productQuotaJSON = ${StringUtil.wrapString(productQuotaJSON)!'{}'};
+	var productCategoryJSON = ${StringUtil.wrapString(productCategoryJSON)!'{}'};
+	
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
@@ -331,7 +331,6 @@
     function productFormatter(row, cell, value, columnDef, dataContext) {   
         return productIdLabelMap[value];
     }
-
     function productValidator(value,item) {
       
     	var currProdCnt = 1;
@@ -437,13 +436,13 @@
 			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"button", name:"Edit Tax", field:"button", width:75, minWidth:75, cssClass:"cell-title", focusable :false,
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
-					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit Tax</a>'; 
+					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
-			
+ 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		
 		
@@ -457,7 +456,6 @@
             secondaryHeaderRowHeight: 25
 		};
 		
-
 		grid = new Slick.Grid("#myGrid1", data, columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
@@ -550,13 +548,8 @@
     	grid.onBeforeEditCell.subscribe(function(e,args) {
 	      	
 	      	if (args.cell == 1) {
-				var prod = data[args.row]["cProductId"];
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				data[args.row]["quota"] = quota;
-				grid.updateRow(args.row);
+				var row = args.row;
+				updateCurrentQuota(row);
 			}
 			
 			if ( (args.cell == 2) || (args.cell == 3) || ((args.cell == 4)) ) {
@@ -575,15 +568,8 @@
         	
 			
 			if (args.cell == 3) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				data[args.row]["quota"] = quota;
-				grid.updateRow(args.row);
+				var row = args.row;
+				updateCurrentQuota(row);
 				
 			}
 			
@@ -621,14 +607,9 @@
 				
 			}
 			if (args.cell == 5) {
-				if(!(data[args.row]["quota"])){
-					var prod = data[args.row]["cProductId"];
-					quota = parseFloat(productQuotaJSON[prod]);
-					if(isNaN(quota)){
-						quota = 0;
-					}
-					data[args.row]["quota"] = quota;
-				}
+				var row = args.row;
+				updateCurrentQuota(row);
+				
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
 				var price = 0;
@@ -675,13 +656,6 @@
 				var row = args.row;
 				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
-				if(!(data[args.row]["quota"])){
-					quota = parseFloat(productQuotaJSON[prod]);
-					if(isNaN(quota)){
-						quota = 0;
-					}
-					data[args.row]["quota"] = quota;
-				}
 				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
@@ -708,17 +682,13 @@
 				}
 				data[args.row]["unitPrice"] = roundedAmount;
 				
-				quota = parseFloat(productQuotaJSON[prod]);
-				if(isNaN(quota)){
-					quota = 0;
-				}
-				data[args.row]["quota"] = quota;
+				var row = args.row;
+				updatePayablePrice(row);
 				
 				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
 			}
-
 			
 			
 		}); 
@@ -751,238 +721,12 @@
             }else {
            $(activeCellNode).attr("tittle", "");
         }
-
     });
-    updateInlineTotalAmount();
-		updateProductTotalAmount();
+    	//updateInlineTotalAmount();
+		//updateProductTotalAmount();
 		
 		mainGrid = grid;
 	}
-	
-	//adding new Grid for adjustments
-		function setupGrid2() {
-    
-        withAdjColumns = [
-			{id:"orderAdjTypeId", name:"Adjustment Type", field:"orderAdjTypeId", width:205, minWidth:205, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: orderAdjFormatter,formatter: adustmentFormatter,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-		];
-		
-		var options2 = {
-			editable: true,		
-			forceFitColumns: false,			
-			enableCellNavigation: true,
-			enableAddRow: true,
-			asyncEditorLoading: false,			
-			autoEdit: true,
-            secondaryHeaderRowHeight: 25
-		};
-			  
-		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
-        grid2.setSelectionModel(new Slick.CellSelectionModel()); 
-     
-		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid2, options2);
-        if (data2.length > 0) {			
-			$(grid2.getCellNode(0, 1)).click();
-		}else{
-			$(grid2.getCellNode(0,0)).click();
-		}
-        
-        grid2.onKeyDown.subscribe(function(e) {
-			var cellNav = 2;
-			
-			var cell = grid2.getCellFromEvent(e);		
-			if(e.which == $.ui.keyCode.UP && cell.row == 0){
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row+1, 0)).click();
-				e.stopPropagation();
-			}
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data2.length && cell.cell == cellNav){
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(0, 2)).click();
-				e.stopPropagation();
-			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data2.length-1) && cell.cell == cellNav){
-				grid2.getEditController().commitCurrentEdit();
-				grid2.gotoCell(data2.length, 0, true);
-				$(grid2.getCellNode(data2.length, 0)).edit();
-				
-				e.stopPropagation();
-			}
-			
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
-				&& cell.row == data2.length && cell.cell == cellNav){
-  				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row, 0)).click();
-				e.stopPropagation();
-			
-			}else if (e.which == $.ui.keyCode.RIGHT &&
-				cell && (cell.cell == cellNav) && 
-				cell.row != data2.length) {
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row+1, 0)).click();
-				e.stopPropagation();	
-			}
-			else if (e.which == $.ui.keyCode.LEFT &&
-				cell && (cell.cell == 0) && 
-				cell.row != data2.length) {
-				grid2.getEditController().commitCurrentEdit();	
-				$(grid2.getCellNode(cell.row, cellNav)).click();
-				e.stopPropagation();	
-			}else if (e.which == $.ui.keyCode.ENTER) {
-        		grid2.getEditController().commitCurrentEdit();
-				if(cell.cell == 1 || cell.cell == 2){
-					jQuery("#changeSave").click();
-				}
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }else if (e.keyCode == 27) {
-            //here ESC to Save grid2
-        		if (cell && cell.cell == 0) {
-        			$(grid2.getCellNode(cell.row - 1, cellNav)).click();
-        			return false;
-        		}  
-        		grid2.getEditController().commitCurrentEdit();
-				   
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }
-            
-            else {
-            	return false;
-            }
-        });
-         
-                
-    	grid2.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;   
-      		var itemLabel = item['orderAdjTypeId'];
-      		item['orderAdjTypeId'] = orderAdjLabelIdMap[itemLabel];
-      		//showUDPPriceToolTip();     		 		
-      		grid2.invalidateRow(data2.length);
-      		data2.push(item);
-      		grid2.updateRowCount();
-      		grid2.render();
-    	});
-        
-        grid2.onCellChange.subscribe(function(e,args) {
-        		if (args.cell == 1) {
-        		updateProductTotalAmount();
-        		}
-		}); 
-		
-		grid2.onActiveCellChanged.subscribe(function(e,args) {
-        	if (args.cell == 2 && data2[args.row] != null) {
-				var itemType = data2[args.row]["orderAdjTypeId"];
-			}
-			
-		});
-		
-		grid2.onValidationError.subscribe(function(e, args) {
-	        var validationResult = args.validationResults;
-	        var activeCellNode = args.cellNode;
-	        var editor = args.editor;
-	        var errorMessage = validationResult.msg;
-	        var valid_result = validationResult.valid;
-	        
-	        if (!valid_result) {
-	           $(activeCellNode).attr("tittle", errorMessage);
-	            }else {
-	           $(activeCellNode).attr("tittle", "");
-	        }
-
-    	});
-    }
-	
-	
-	//onLoad  inline row update Total Amount
-	function updateInlineTotalAmount() {
-			
-			for(var i=0;i<data.length;i++){
-				var qty = parseFloat(data[i]["quantity"]);
-				var prod = data[i]["cProductId"];
-				var uomLabel='';
-				var literPrice = parseFloat(priceTags[prod]);
-				if(data[i]["orderId"]){
-					 literPrice = data[i]["ltrPrice"];
-				}
-				var uomId = productUOMMap[prod];
-				if(uomId != 'undefined' || uomId != null ){
-				 uomLabel = uomLabelMap[uomId];
-				}
-				data[i]["uomDescription"] = uomLabel;
-				
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				
-				var udp = data[i]['basicPrice'];
-				var price = parseFloat(data[i]['unitPrice']);
-				if(!price){
-					//price = 0;
-					price = parseFloat(priceTags[prod]);
-				}
-				/*
-				else{
-					price = parseFloat(priceTags[prod]);
-				}*/
-				
-				if(isNaN(price) || isNaN(qty)){
-					data[i]["amount"] = 0;
-					data[i]["unitPrice"] = 0;
-				}
-				else{
-					data[i]["unitPrice"] = price;
-					data[i]["amount"] = Math.round((qty*price) * 100)/100;
-				}
-				if(productQtyInc!="" && typeof productQtyInc != "undefined" && productQtyInc[prod]!=""&& typeof productQtyInc[prod] != "undefined" && parseFloat(productQtyInc[prod]) != 0){
-					data[i]["ltrPrice"] = parseFloat(literPrice/parseFloat(productQtyInc[prod]));
-				}
-				var crVal = 0;
-				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
-						data[i]["crQuantity"] = crVal;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*10000)/10000);
-						data[i]["ltrQuantity"] = crVal;
-					</#if>
-				}
-				grid.updateRow(i);
-			}
-			
-		}
-	//update total amount
-	function updateProductTotalAmount() {
-			<#--updateUDPLabel();-->
-			var totalAmount = 0;
-			for (i = 0; i < data.length; i++) {
-				totalAmount += data[i]["amount"];
-			}
-			
-			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			var dispText = "";
-			if(amt > 0 ){
-				dispText = "<b>  [Indent Amt: Rs " +  amt + "]</b>";
-			}
-			else{
-				dispText = "<b>  [Indent Amt: Rs 0 ]</b>";
-			}
-			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
-				if(totalCrates > 0 ){
-					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
-				}
-				else{
-					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
-				}
-			</#if>
-			
-			jQuery("#totalAmount").html(dispText);
-		}
 		
 	jQuery(function(){
 	     // only setupGrid when BoothId exists
@@ -1011,7 +755,6 @@
             	tabindex++;
         	}
     	});
-
     	var rowCount = jQuery('#myGrid1 .slick-row').length;
 		if (rowCount > 0) {			
 			$(mainGrid.getCellNode(rowCount-1, 0)).click();		   
@@ -1026,9 +769,9 @@
 	
 	$(document).ready(function(){
 	
-		//(function blink() { 
-		//    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
-		//})();
+		(function blink() { 
+		    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
+		})();
 		$('#boothId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
@@ -1129,6 +872,44 @@
 		
 	}
 	
+	function updateCurrentQuota(row){
+		var prod = data[row]["cProductId"];
+		var schemeCategory = $("#schemeCategory").val();
+		productCategory = productCategoryJSON[prod];
+		data[row]["productCategory"] = productCategory;
+		
+		quota = parseFloat(productQuotaJSON[prod]);
+		if(isNaN(quota)){
+			quota = 0;
+		}
+		
+		var usedQuota = 0
+		for(var i=0;i<data.length;i++){
+			var existingCategory = data[i]["productCategory"];
+			if(productCategory == existingCategory){
+				var takenQty = parseFloat(data[i]["quantity"]);
+				if(isNaN(takenQty)){
+					takenQty = 0;
+				}
+				usedQuota += takenQty;
+				
+				var lineQuota = quota - usedQuota;
+				
+				if(lineQuota < 0){
+					data[i]["quota"] = 0;
+					if(schemeCategory == "MGPS_10Pecent"){
+						data[i]["warning"] = 'Quota Exceeded';
+					}
+				}
+				else{
+					data[i]["quota"] = lineQuota;
+					data[i]["warning"] = '';
+				}
+				
+				grid.updateRow(i);
+			}
+		}
+	}
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
          $.ajax({
@@ -1223,4 +1004,4 @@
     	});			
 	}
 	
-</script>			
+</script>		
