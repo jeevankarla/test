@@ -331,7 +331,25 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>			
-				    <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmplJoiningReport.pdf")?exists) && (reportDetailsMap.get("EmplJoiningReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmplJoiningReport.pdf"))?exists))> 
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("QuaterlyProbationReport.pdf")?exists) && (reportDetailsMap.get("QuaterlyProbationReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("QuaterlyProbationReport.pdf"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="QuaterlyProbationReport" name="QuaterlyProbationReport" mothed="post" action="<@ofbizUrl>QuaterlyProbationReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Quaterly Probation Report</span></td>
+										<td width="50%"><span class='h3'>
+												Employee Id<@htmlTemplate.lookupField formName="QuaterlyProbationReport" name="employeeId" fieldFormName="LookupEmployeeName"/>
+											</span>
+										</td> 
+										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('QuaterlyProbationReport', '<@ofbizUrl>QuaterlyProbationReport.pdf</@ofbizUrl>');" class="buttontext"/>
+						                </td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
+					
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmplJoiningReport.pdf")?exists) && (reportDetailsMap.get("EmplJoiningReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmplJoiningReport.pdf"))?exists))> 
 						<tr class="alternate-row"> 
 							<form id="EmplJoiningReport" name="EmplJoiningReport" mothed="post" action="<@ofbizUrl>EmplJoiningReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
