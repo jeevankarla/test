@@ -84,7 +84,12 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 orderAttrForPo = [];
 if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 }
+
+grandTotal = OrderHeaderList.get("grandTotal")
+
+context.grandTotal = grandTotal;
 
 actualOrderId = "";
 destination = "";

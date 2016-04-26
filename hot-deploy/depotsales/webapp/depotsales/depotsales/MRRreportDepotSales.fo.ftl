@@ -278,24 +278,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="12pt">
-	                               ${grnListItem.get("deliveryChallanQty")?if_exists}
+	                               ${grnListItem.get("deliveryChallanQty")?if_exists?string("#0.000")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="12pt">
-                                   ${grnListItem.get("receivedQty")?if_exists}
+                                   ${grnListItem.get("receivedQty")?if_exists?string("#0.000")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                   <fo:block text-align="center" font-size="12pt">
 	                               <#if (grnListItem.get("quantityRejected")?has_content)>
-                                   ${grnListItem.get("quantityRejected")?if_exists}<#else>0</#if>
+                                   ${grnListItem.get("quantityRejected")?if_exists?string("#0.000")}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="12pt">
 	                               <#if (grnListItem.get("quantityAccepted")?has_content)>
-	                               ${grnListItem.get("quantityAccepted")?if_exists}<#else>0</#if>
+	                               ${grnListItem.get("quantityAccepted")?if_exists?string("#0.000")}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
