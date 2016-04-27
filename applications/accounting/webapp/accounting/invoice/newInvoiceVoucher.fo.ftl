@@ -471,7 +471,7 @@ under the License.
 				<fo:block text-align="right"  font-size="12pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="12pt" >${totQuantity}</fo:block>
+				<fo:block text-align="center"  font-size="12pt" >${totQuantity?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" >${totAmount}</fo:block>
