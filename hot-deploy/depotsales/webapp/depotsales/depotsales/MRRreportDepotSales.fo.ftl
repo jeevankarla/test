@@ -371,7 +371,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                    <fo:block text-align="left" font-size="11pt">
 	                                 The materials at Sl No.............. 
 								  	above have been received and taken into 
-									stock , vide ledgerfolio of each item .
+									stock , vide ledger folio of each item .
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                  <fo:table-cell >
