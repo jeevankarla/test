@@ -118,17 +118,18 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Quantity</fo:block>
-				<fo:block text-align="center"     font-size="12pt" >Kgs</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >(Kgs)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Scheme</fo:block>
-				<fo:block text-align="center"     font-size="12pt" >Qty Kgs</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >Qty(Kgs)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="12pt" >Rate/Kg/bundle</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				 <fo:block text-align="center"    font-size="12pt" >Amount(Rs)</fo:block>
+				 <fo:block text-align="center"    font-size="12pt" >Amount</fo:block>
+				 <fo:block text-align="center"    font-size="12pt" >(Rs)</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 			
@@ -379,7 +380,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >Quantity</fo:block>
-				<fo:block text-align="center"     font-size="12pt" >Kgs</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >(Kgs)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="12pt" >value Before</fo:block>
