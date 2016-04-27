@@ -296,7 +296,7 @@ under the License.
               <fo:block text-align="left" font-weight="bold"    font-size="12pt" >TERMS &amp; CONDITIONS:</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * All payment  should be made by crossed cheque/draft in favour of 'National Handloom </fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" >&#160; Development Corporation Limited' payable at ____________ </fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >&#160;&#160;INTEREST will be charged @ 13.00% per annum on overdue Amount.</fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"    font-size="12pt" >* INTEREST will be charged @ 13.00% per annum on overdue Amount.</fo:block>
 			   
 			   
 			    <fo:block text-align="left" white-space-collapse="false"   font-size="12pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
@@ -340,7 +340,6 @@ under the License.
 				<fo:block text-align="left"      font-size="12pt" >NHDC Supplier Invoice Date:<#if supplierInvoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
 				<fo:block text-align="left"      font-size="12pt" >LR Number             : ${lrNumber?if_exists}</fo:block>
 				<fo:block text-align="left"      font-size="12pt" >LR Date               : <#if deliveryChallanDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deliveryChallanDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="left"      font-size="12pt" >Freight               : </fo:block>
 				</fo:table-cell>
 		
 			</fo:table-row>
@@ -436,7 +435,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
-				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#assign totAmount = totAmount+invoiceDetail.get("amount")>
