@@ -537,7 +537,7 @@
 		       	  		
 		       			<td>&nbsp;</td>
 		       			
-		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<input type="hidden" name="billingType" id="billingType" value="onBehalfOf"/>  
 		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
 		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
 		       			 <#else>               
