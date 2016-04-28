@@ -21,7 +21,7 @@ orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orde
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+//conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 
 conditionList = [];
@@ -40,12 +40,33 @@ JSONArray orderInformationDetails = new JSONArray();
 for (eachItem in orderItems) {
 	
 	adjustmentAmount = 0;
+	otherCharges = 0;
 	quotaAvbl = 0;
 	if(UtilValidate.isNotEmpty(orderAdjustments)){
-		orderItemAdj = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		orderItemAdj = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		if(UtilValidate.isNotEmpty(orderItemAdj)){
 			adjustmentAmount = (orderItemAdj.get(0)).get("amount");
 		}
+		
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
+		otherChargesList = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+		
+		for(int i=0; i<otherChargesList.size(); i++){
+			eachAdj = otherChargesList.get(i);
+			if(UtilValidate.isNotEmpty(eachAdj.get("amount"))){
+				otherCharges += eachAdj.get("amount");
+			}
+		}
+		
+		
+		
+		
+		
 	}
 	
 	if(UtilValidate.isNotEmpty(orderAttributes)){
@@ -72,10 +93,11 @@ for (eachItem in orderItems) {
 	orderDetail.put("itemAmt", ((eachItem.quantity.setScale(2,0))*(eachItem.unitPrice.setScale(2,0))));
 	orderDetail.put("statusId", eachItem.statusId);
 	orderDetail.put("adjustmentAmount", adjustmentAmount);
+	orderDetail.put("otherCharges", otherCharges);
 	orderDetail.put("quotaAvbl", quotaAvbl);
 	orderDetail.put("remarks", remarks);
 
-	orderDetail.put("payableAmt", (((eachItem.quantity).setScale(2,0))*((eachItem.unitPrice).setScale(2,0)) + adjustmentAmount));
+	orderDetail.put("payableAmt", (((eachItem.quantity).setScale(2,0))*((eachItem.unitPrice).setScale(2,0)) + adjustmentAmount + otherCharges));
 	orderInformationDetails.add(orderDetail);
 	   
 }
