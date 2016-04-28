@@ -12,6 +12,44 @@ import in.vasista.vbiz.humanres.HumanresService;
 import org.ofbiz.party.party.PartyHelper;
 import groovy.json.*
 
+//get SchemeTimePeriod list start
+timePeriodId=parameters.timePeriodId;
+condList = [];
+condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "DEPOT_REIMB_YEAR"));
+condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate( UtilDateTime.nowTimestamp())));
+condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN,UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp()))));
+depotReimbYearList = delegator.findList("SchemeTimePeriod", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+depotReimbYear = EntityUtil.getFirst(depotReimbYearList);
+if(depotReimbYear) {
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS,depotReimbYear.get("schemeTimePeriodId")));
+	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp())));
+//		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+//		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp()))));
+	List<String> orderBy = UtilMisc.toList("periodNum");
+	 depotReimbPeriodList = delegator.findList("SchemeTimePeriod", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+	List reimbPeriodList = [];
+	for (eachList in depotReimbPeriodList) {
+		
+		depotReimbPeriodMap = [:];
+		timePeriodDate=new SimpleDateFormat("MMM").format(eachList.get("fromDate"))+", "+new SimpleDateFormat("yyyy").format(eachList.get("fromDate"));
+		
+		if(UtilValidate.isNotEmpty(eachList.get("thruDate"))){
+			timePeriodDate=timePeriodDate+" - "+new SimpleDateFormat("MMM").format(eachList.get("thruDate"))+", "+new SimpleDateFormat("yyyy").format(eachList.get("thruDate"));
+		}
+		depotReimbPeriodMap.put("schemeTimePeriodId",eachList.get("schemeTimePeriodId"));
+		depotReimbPeriodMap.put("value",timePeriodDate);
+		reimbPeriodList.addAll(depotReimbPeriodMap);
+		if(UtilValidate.isEmpty(timePeriodId) || timePeriodId.equals(eachList.get("schemeTimePeriodId"))){
+			timePeriodId=eachList.get("schemeTimePeriodId");
+			timePeriodFromDate=eachList.get("fromDate");
+			timePeriodThruDate=eachList.get("thruDate");
+		}
+	}
+	context.reimbPeriodList = reimbPeriodList;
+
+	}
+//get SchemeTimePeriod list end
 
 List finalList=[];
 List conditionList=[];

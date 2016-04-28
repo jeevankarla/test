@@ -129,10 +129,9 @@ public class ReimbursementService {
 				//end
 				if(UtilValidate.isNotEmpty(periodBilling)){
 					periodBillingId = (String) periodBilling.get("periodBillingId");	
-					
-					if(periodBilling.get("statusId")=="GENERATED"){	
+					if(periodBilling.get("statusId").equals("GENERATED")){	
 					//periodBilling already exist.
-				     return ServiceUtil.returnError("PeriodBilling already generated.");
+				     return ServiceUtil.returnError("Depot Reimbursement Bill already generated for this branch.");
 					}
 				}
 				else{
@@ -171,7 +170,7 @@ public class ReimbursementService {
 					runSACOContext.put("schemeTimePeriod", schemeTimePeriod);
 			        runSACOContext.put("ownerPartyIdsList", ownerPartyIdsList);
 			        runSACOContext.put("periodBilling", periodBilling);
-					generateInvoiceBilling(dctx,runSACOContext);
+					generateInvoiceBillingForDepot(dctx,runSACOContext);
 
 					periodBilling.set("statusId","GENERATED");
 					periodBilling.store();
@@ -202,7 +201,7 @@ public class ReimbursementService {
        					Debug.logError("Problems in Depot reambursement Bill generation. ", module);
 			  			return ServiceUtil.returnError("Problems in Depot reambursement Bill generation.");
        				}
-		    	
+					periodBillingMap = ServiceUtil.returnSuccess("Depot reambursement Bill generated successfully !!");
 					
 			    return periodBillingMap;
 		        // Generate invoices for the relavant depots and update periodBillingId in each of those invoices.
@@ -248,7 +247,7 @@ public class ReimbursementService {
 				return result;
 			}		
 
-			public static Map<String, Object> generateInvoiceBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
+			public static Map<String, Object> generateInvoiceBillingForDepot(DispatchContext dctx, Map<String, Object> context) throws Exception{
 				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				TimeZone timeZone = TimeZone.getDefault();
@@ -385,7 +384,91 @@ public class ReimbursementService {
 				return result;
 			}
 			
-			
+			public static Map<String, Object> generateInvoiceBillingForShipment(DispatchContext dctx, Map<String, Object> context) throws Exception{
+				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				TimeZone timeZone = TimeZone.getDefault();
+				Locale locale = Locale.getDefault();
+				Map<String, Object> result = ServiceUtil.returnSuccess();	
+				String periodBillingId = (String) context.get("periodBillingId");
+				GenericValue schemeTimePeriod = (GenericValue) context.get("schemeTimePeriod"); 
+				Timestamp fromDateTime=UtilDateTime.toTimestamp(schemeTimePeriod.getDate("fromDate"));
+				Timestamp thruDateTime=UtilDateTime.toTimestamp(schemeTimePeriod.getDate("thruDate"));
+				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				
+				Timestamp invoiceDate = UtilDateTime.getDayStart(monthBegin);
+				String partyId = (String) context.get("branchId");
+				List<GenericValue> shipmentList = (List) context.get("shipmentList");
+				GenericValue periodBilling =(GenericValue) context.get("periodBilling");
+				for(int i=0;i< shipmentList.size();i++){
+					GenericValue shipment=shipmentList.get(i);
+					BigDecimal  finaEligablityAmount=shipment.getBigDecimal("claimAmount");
+					String climeStatus=shipment.getString("claimStatus");
+					if(UtilValidate.isNotEmpty(finaEligablityAmount) && finaEligablityAmount.compareTo(BigDecimal.ZERO) > 0 && "APPLYED".equals(climeStatus)){
+						 Map<String, Object> createInvoiceContext = FastMap.newInstance();
+						 createInvoiceContext.put("partyId", partyId);
+						 createInvoiceContext.put("partyIdFrom", shipment.getString("partyIdFrom"));
+						 createInvoiceContext.put("invoiceDate", invoiceDate);
+//			   	  		 createInvoiceContext.put("facilityId", ownerParty.getString("facilityId"));
+			   	  		 createInvoiceContext.put("invoiceTypeId", "PURCHASE_INVOICE");
+			   	  		 createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+			   	  		 createInvoiceContext.put("userLogin", userLogin);
+			   	  		 createInvoiceContext.put("periodBillingId",periodBillingId);
+			   	  		 createInvoiceContext.put("referenceNumber",periodBilling.getString("billingTypeId")+"_"+periodBillingId);
+			   		     SimpleDateFormat sd = new SimpleDateFormat("dd/MM/yyyy");	
+			   		     createInvoiceContext.put("description", "Shipment Reimbursement [" + sd.format(UtilDateTime.toCalendar(monthBegin).getTime()) 
+			   		        		+ " - " + sd.format(UtilDateTime.toCalendar(monthEnd).getTime()) + "]");	
+
+			   	  		 String invoiceId = null;
+			   	  	     Map<String, Object> serviceResults;	
+			   	  		 try {
+			   	  			 serviceResults = dispatcher.runSync("createInvoice",createInvoiceContext);	
+			   	  			 if (ServiceUtil.isError(serviceResults)) {
+			   	  				 return ServiceUtil.returnError("There was an error while creating Invoice"+ ServiceUtil.getErrorMessage(serviceResults));
+			   	  			 }
+			   	  			 invoiceId = (String) serviceResults.get("invoiceId");
+			   	  		 } catch (GenericServiceException e) {
+			   	  			 Debug.logError(e, module);
+			   	  			 return ServiceUtil.returnError("Unable to create payroll Invoice record");	
+			   	  		 }
+			   	  		 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+			   	  	 Map inputItemCtx = UtilMisc.toMap("userLogin",userLogin);
+		   	  		 inputItemCtx.put("amount",finaEligablityAmount);
+		   	  		 inputItemCtx.put("invoiceId", invoiceId);
+		   	  		 inputItemCtx.put("invoiceItemTypeId", "PAYROL_DD_GH_DED");
+		   	  		 try {
+		   	  			 serviceResults = dispatcher.runSync("createInvoiceItem", inputItemCtx);
+		   	  			 if (ServiceUtil.isError(serviceResults)) {
+		   	  				 return ServiceUtil.returnError("Unable to create Invoice Item");
+		   	  			 }
+		   	  		 } catch (GenericServiceException e) {
+		   	  			 Debug.logError(e, e.toString(), module);
+		   	  			 return ServiceUtil.returnError(e.toString());
+		   	  		 }
+		   	  		 
+		   	  		 try {
+		   	  			 serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId",	"INVOICE_APPROVED", "userLogin", userLogin));
+		   	  			 if (ServiceUtil.isError(serviceResults)) {
+		   	  				 return ServiceUtil.returnError("Unable to set Invoice Status",null, null, serviceResults);
+		   	  			 }
+		   	  			 serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId","INVOICE_READY", "userLogin", userLogin));
+		   	  			 if (ServiceUtil.isError(serviceResults)) {
+		   	  				 return ServiceUtil.returnError("Unable to set Invoice Status",null, null, serviceResults);
+		   	  			 }
+		   	  		 } catch (GenericServiceException e) {
+		   	  			 Debug.logError(e, e.toString(), module);
+		   	  			 return ServiceUtil.returnError(e.toString());
+		   	  		 }
+					}
+					else{
+						continue;
+					}
+
+				}
+				return result;
+			}
 			
 			
 			public static Map<String ,Object> cancelDepotReimbursementBilling(DispatchContext dctx, Map<String, ? extends Object> context){
@@ -437,7 +520,7 @@ public class ReimbursementService {
 			   		 periodBilling.set("statusId", "COM_CANCELLED");
 			   		 periodBilling.store();
 			   		 
-			   		 Map<String, Object> resultMap = getOwnerPartyIdList(dctx,UtilMisc.<String, Object>toMap("intOrgId", ptyId,"userLogin", userLogin));
+			   		Map<String, Object> resultMap = getOwnerPartyIdList(dctx,UtilMisc.<String, Object>toMap("intOrgId", ptyId,"userLogin", userLogin));
 			   		List<GenericValue> ownerPartyIdsList =(List)resultMap.get("ownerPartyIdsList");
 			   		for(int i=0;i< ownerPartyIdsList.size();i++){
 						GenericValue ownerParty=ownerPartyIdsList.get(i);
@@ -455,8 +538,7 @@ public class ReimbursementService {
 					        	}
 			   			}
 			 		 }
-			 		 Map resultCtx = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", cancelInvoiceIdsList, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
-		      		 
+			 		Map resultCtx = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", cancelInvoiceIdsList, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
 			 		 if (ServiceUtil.isError(resultCtx)) {
 			 			 Debug.logError("There was an error while Cancelling  the Invoices: " + ServiceUtil.getErrorMessage(result), module);	              
 			 			 return ServiceUtil.returnError("There was an error while Cancelling  the Invoices: ");   			 
@@ -474,4 +556,250 @@ public class ReimbursementService {
 			     return result;
 		   	}
 			
+//Shipment Reimbursement starts
+			
+			public static Map<String, Object> createShipmentReimbursementBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
+				Delegator delegator = dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> periodBillingMap = ServiceUtil.returnSuccess();	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String intOrgId = (String) context.get("orgPartyId");
+				String schmeTimePeriodId= (String) context.get("schemeTimePeriodId");
+				List<GenericValue> shipmentList=null;
+				GenericValue periodBilling =null;
+
+				String periodBillingId = null;
+				
+				List<GenericValue> billingParty = FastList.newInstance();
+				
+				String billingTypeId = "SHIPMENT_BILLING";
+				if(UtilValidate.isNotEmpty(context.get("billingTypeId"))){
+					billingTypeId  = (String)context.get("billingTypeId");
+				}
+				List conditionList = FastList.newInstance();
+		        List periodBillingList = FastList.newInstance();
+		        
+//		        String partyId = (String) context.get("partyId");
+
+		       SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");	
+		        Timestamp basicSalTimestamp = UtilDateTime.nowTimestamp();
+
+		        //get SchemeTimeperiod start
+		        GenericValue schemeTimePeriod=null;
+				try {
+					schemeTimePeriod = delegator.findOne("SchemeTimePeriod",UtilMisc.toMap("schemeTimePeriodId", schmeTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					 TransactionUtil.rollback();
+					Debug.logError(e1,"Error While Finding Schemetime Period");
+					return ServiceUtil.returnError("Error While Finding Schemetime Period" + e1);
+				}
+				// Check if Period billing is already generated for the give RO for that time period
+				try {
+					List condList= FastList.newInstance();
+				        condList.add(EntityCondition.makeCondition("schemeTimePeriodId", EntityOperator.EQUALS, schmeTimePeriodId));
+				        condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, intOrgId));
+				        condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, billingTypeId));
+
+						List<GenericValue> periodBillingList1 = delegator.findList("PeriodBilling",EntityCondition.makeCondition(condList, EntityOperator.AND),null, null, null, false);
+						if(UtilValidate.isNotEmpty(periodBillingList1)){
+							
+							periodBilling = EntityUtil.getFirst(periodBillingList1);
+						}
+						//add status also
+					} catch (GenericEntityException e1) {
+						 TransactionUtil.rollback();
+						Debug.logError(e1,"Error While Finding PeriodBilling");
+						return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+					}
+				//end
+				if(UtilValidate.isNotEmpty(periodBilling)){
+					periodBillingId = (String) periodBilling.get("periodBillingId");	
+					if(periodBilling.get("statusId").equals("GENERATED")){	
+						//periodBilling already exist.
+					     return ServiceUtil.returnError("Shipment Reimbursement Bill already generated for this branch.");
+						}
+				   }
+				else{
+			        // Create a period billing record
+			        
+			        GenericValue newEntity = delegator.makeValue("PeriodBilling");
+			        newEntity.set("billingTypeId", billingTypeId);
+			        newEntity.set("schemeTimePeriodId", schmeTimePeriodId);
+			        newEntity.set("statusId", "IN_PROCESS");
+			        newEntity.set("partyId", intOrgId);	
+			        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+			        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+			        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+				    try {     
+				        delegator.createSetNextSeqId(newEntity);
+						periodBillingId = (String) newEntity.get("periodBillingId");	
+						periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+					
+				    } catch (GenericEntityException e) {
+						Debug.logError(e,"Failed To Create New Period_Billing", module);
+						return ServiceUtil.returnError("Problems in service Parol Header");
+					}
+				}
+					
+					  // Get All Depots under that RO.
+					EntityListIterator reambursementIdsList =null;
+			        try {
+			        List condList = FastList.newInstance();
+			        //Get Shipment List for the period
+			        Map<String, Object> resultMap = getShipmentListBySchemeTimePeriod(dctx,UtilMisc.<String, Object>toMap("schemeTimePeriod",schemeTimePeriod,"claimStatus","APPLYED","userLogin", userLogin));
+			        shipmentList =(List)resultMap.get("shipmentList");
+		        	Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
+					runSACOContext.put("branchId", intOrgId);
+					runSACOContext.put("schemeTimePeriod", schemeTimePeriod);
+			        runSACOContext.put("shipmentList", shipmentList);
+			        runSACOContext.put("periodBilling", periodBilling);
+					generateInvoiceBillingForShipment(dctx,runSACOContext);
+					periodBilling.set("statusId","GENERATED");
+					periodBilling.store();
+					for(int i=0;i< shipmentList.size();i++){
+					GenericValue shipmentObj=shipmentList.get(i);
+					BigDecimal  finaEligablityAmount=shipmentObj.getBigDecimal("claimAmount");
+					String climeStatus=shipmentObj.getString("claimStatus");
+					if(UtilValidate.isNotEmpty(finaEligablityAmount) && finaEligablityAmount.compareTo(BigDecimal.ZERO) > 0 && "APPLYED".equals(climeStatus)){
+						String shipmentId=shipmentObj.getString("shipmentId");
+						GenericValue shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+						shipment.set("claimStatus","GENERATED");
+						shipment.store();
+					}
+					
+					
+					}
+		        	
+			        } catch (Exception e) {
+			        	periodBilling.set("statusId","GENERATION_FAIL");
+						periodBilling.store();
+						
+					}
+			        
+					
+					if(ServiceUtil.isError(periodBillingMap)){
+       					Debug.logError("Problems in shipment reambursement Bill generation. ", module);
+			  			return ServiceUtil.returnError("Problems in shipment reambursement Bill generation.");
+       				}
+					periodBillingMap = ServiceUtil.returnSuccess("Shipment reambursement Bill generated successfully !!");
+					
+			    return periodBillingMap;
+		        // Generate invoices for the relavant depots and update periodBillingId in each of those invoices.
+
+			}
+	//get ShipmentList By SchemeTimePeriod		
+			public static Map<String, Object> getShipmentListBySchemeTimePeriod(DispatchContext dctx, Map context) throws GenericEntityException {
+				 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				 LocalDispatcher dispatcher = dctx.getDispatcher();
+				 GenericValue schemeTimePeriod= (GenericValue) context.get("schemeTimePeriod");
+				 Timestamp fromDateTime=UtilDateTime.toTimestamp(schemeTimePeriod.getDate("fromDate"));
+				 Timestamp thruDateTime=UtilDateTime.toTimestamp(schemeTimePeriod.getDate("thruDate"));
+				 String claimStatus= (String) context.get("claimStatus");
+				 Map<String, Object> result = ServiceUtil.returnSuccess();
+				 EntityListIterator reambursementIdsList =null;
+				 List<GenericValue> shipmentList=null;
+			       try {
+			        
+			        List condList = FastList.newInstance();
+			        DynamicViewEntity dynamicView =new DynamicViewEntity();
+			        dynamicView.addMemberEntity("SHPM", "Shipment");
+	                dynamicView.addMemberEntity("PRS", "PartyRelationship");
+	                dynamicView.addAliasAll("SHPM", null, null);
+	                dynamicView.addAliasAll("PRS", null, null);
+	                dynamicView.addViewLink("SHPM","PRS", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyIdTo","partyIdTo"));
+	                condList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.getDayStart(fromDateTime),UtilDateTime.getDayEnd(thruDateTime)))); 
+	                condList.add(EntityCondition.makeCondition("claimStatus", EntityOperator.EQUALS, claimStatus)); 
+	                
+					EntityCondition condition1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+		        	reambursementIdsList = delegator.findListIteratorByCondition(dynamicView, condition1, null, null, null, null);
+		        	shipmentList = reambursementIdsList.getCompleteList();        	
+					result.put("shipmentList",shipmentList);
+
+				}catch(Exception e){
+					Debug.logError(e, module);
+					Debug.logError(e, "Error in getting Shipment List", module);	 		  		  
+			  		return ServiceUtil.returnError("Error in get shipment");
+				}
+			        finally{
+						reambursementIdsList.close();
+					}
+				return result;
+			}
+			
+	public static Map<String ,Object> cancelShipmentReimbursementBilling(DispatchContext dctx, Map<String, ? extends Object> context){
+				 Delegator delegator = dctx.getDelegator();
+			     LocalDispatcher dispatcher = dctx.getDispatcher();       
+			     GenericValue userLogin = (GenericValue) context.get("userLogin");
+			     Map<String, Object> result = ServiceUtil.returnSuccess();
+			     String schemeTimePeriodId = (String)context.get("schemeTimePeriodId");
+			     String periodBillingId = (String)context.get("periodBillingId");	  
+			     List conditionList = FastList.newInstance();
+			     try{
+			   	 GenericValue schemeTimePeriod = delegator.findOne("SchemeTimePeriod", UtilMisc.toMap("schemeTimePeriodId", schemeTimePeriodId), false);
+			   	 Timestamp fromDate = UtilDateTime.toTimestamp(schemeTimePeriod.getDate("fromDate"));
+			   	 Timestamp thruDate = UtilDateTime.toTimestamp(schemeTimePeriod.getDate("thruDate"));
+			   	 Timestamp endThruDate = UtilDateTime.getDayEnd(thruDate);
+			   	 Timestamp dayBeginFromDate = UtilDateTime.getDayStart(fromDate);
+			   	 if(!periodBillingId.equals("allInstitutions")){
+			   		 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+			   	 }
+			   	 conditionList.add(EntityCondition.makeCondition("schemeTimePeriodId", EntityOperator.EQUALS, schemeTimePeriodId));
+			   	 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+			   	 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "SHIPMENT_BILLING"));
+			 		 EntityCondition checkExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			 		 List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", checkExpr, null, null, null, false);
+			 		 if(UtilValidate.isEmpty(periodBillingList)){
+			 			 Debug.logError("No valid period billing exists to cancel for the billingId "+periodBillingId, module);
+			             return ServiceUtil.returnError("No valid period billing exists to cancel for the billingId "+periodBillingId);
+			 		 }
+			 		 List<String> partyIdsList = EntityUtil.getFieldListFromEntityList(periodBillingList, "partyId", true);
+			 		 List cancelInvoiceIdsList = FastList.newInstance();
+			 		 for(String ptyId: partyIdsList){
+			 			 List<GenericValue> periodBillList = EntityUtil.filterByCondition(periodBillingList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, ptyId));
+			 			 String billingId = ((GenericValue)EntityUtil.getFirst(periodBillList)).getString("periodBillingId");
+			 			 String invoiceReferenceNum = "SHIPMENT_BILLING_"+billingId;
+			 			 
+			 			 conditionList.clear();
+			 			 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, ptyId));
+			   		 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			   		 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, billingId));
+			   		 //conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS, invoiceReferenceNum));
+			   		 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   		 
+			   		 List<GenericValue> invoice = delegator.findList("Invoice", invCond, UtilMisc.toSet("invoiceId"), null, null, false);
+			   		 if(UtilValidate.isNotEmpty(invoice)){
+			   			 cancelInvoiceIdsList = EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
+			   		 }
+			   		 GenericValue periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", billingId), false);
+			   		 periodBilling.set("statusId", "COM_CANCELLED");
+			   		 periodBilling.store();
+			   		Map<String, Object> resultMap = getShipmentListBySchemeTimePeriod(dctx,UtilMisc.<String, Object>toMap("schemeTimePeriod",schemeTimePeriod,"claimStatus","GENERATED","userLogin", userLogin));
+			   		List<GenericValue> shipmentList =(List)resultMap.get("shipmentList");
+			   		for(int i=0;i< shipmentList.size();i++){
+						GenericValue shipmentObj=shipmentList.get(i);
+						String climeStatus=shipmentObj.getString("claimStatus");
+						BigDecimal finaEligablityAmount=shipmentObj.getBigDecimal("claimAmount");
+						 if(UtilValidate.isNotEmpty(finaEligablityAmount) && finaEligablityAmount.compareTo(BigDecimal.ZERO)>0){
+								String shipmentId=shipmentObj.getString("shipmentId");
+								GenericValue shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+								shipment.set("claimStatus","APPLYED");
+								shipment.store();
+					   				}
+			   			}
+			 		 }
+			 		 Map resultCtx = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", cancelInvoiceIdsList, "statusId","INVOICE_CANCELLED","userLogin", userLogin)); 
+			 		 if (ServiceUtil.isError(resultCtx)) {
+			 			 Debug.logError("There was an error while Cancelling  the Invoices: " + ServiceUtil.getErrorMessage(result), module);	              
+			 			 return ServiceUtil.returnError("There was an error while Cancelling  the Invoices: ");   			 
+			 		 }
+			   	 
+			     }catch (Exception e) {
+					 Debug.logError(e, "Error cancelling Invoices for period billing", module);		 
+					 return ServiceUtil.returnError("Error cancelling Invoices for period billing");			 
+				 }
+			     
+			     result = ServiceUtil.returnSuccess("Billing cancelled successfully !!");
+			     return result;
+		   	}
 }//end of class

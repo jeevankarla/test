@@ -858,8 +858,20 @@
         <event type="service" invoke="cancelDepotReimbursementBilling"/>
         <response name="success" type="view" value="FindDepotReimbursementBilling"/>
         <response name="error" type="view" value="FindDepotReimbursementBilling"/>
-     </request-map>
-     <request-map uri="createCustomPaymentFromPreference">
+    </request-map>
+     <request-map uri="createShipmentReimbursementBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentReimbursementBilling"/>
+        <response name="success" type="view" value="FindShipmentReimbursementBilling"/>
+        <response name="error" type="view" value="FindShipmentReimbursementBilling"/>
+    </request-map>
+     <request-map uri="cancelShipmentReimbursementBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelShipmentReimbursementBilling"/>
+        <response name="success" type="view" value="FindShipmentReimbursementBilling"/>
+        <response name="error" type="view" value="FindShipmentReimbursementBilling"/>
+    </request-map>
+      <request-map uri="createCustomPaymentFromPreference">
          <security https="true" auth="true"/>
          <event type="service" path="" invoke="createCustPaymentFromPreference"/>
          <response name="success" type="view" value="orderPayment"/>   
@@ -1846,7 +1858,7 @@
     <view-map name="EditQuotItems" type="screen" page="component://depotsales/widget/RequirementScreens.xml#EditQuotItems"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
-	<view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
+    <view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>

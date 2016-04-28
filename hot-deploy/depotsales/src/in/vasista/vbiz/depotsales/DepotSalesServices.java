@@ -7770,7 +7770,7 @@ public class DepotSalesServices{
 						delegator.createSetNextSeqId(newItemAttr);
 		        	}
 		        }
-		        receiptEligablityAmount=(totalReceiptAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+		        receiptEligablityAmount=totalReceiptAmount;
 		        conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
 				conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"PURCHASE_INVOICE"));
@@ -7792,13 +7792,14 @@ public class DepotSalesServices{
 				GenericValue shipmentObj=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
 				shipmentObj.set("claimAmount",finalEligablityAmount);
 				shipmentObj.set("claimStatus","APPLYED");
-				if(finalEligablityAmount.compareTo(BigDecimal.ZERO)>0){
+				if(finalEligablityAmount.compareTo(BigDecimal.ZERO)<=0){
 					shipmentObj.set("claimStatus","");
 				}
 				shipmentObj.store();
 				 }catch(Exception e){
 					 Debug.logError("Order Entry successfully for party : "+e, module);
 				 } 
+				result=ServiceUtil.returnSuccess("Shipment reambursement Receipts added successfully !!");
 			return result;
 	 }
 
@@ -7867,11 +7868,11 @@ public class DepotSalesServices{
         	}
         }
         
-		}catch(Exception e){
-			Debug.logError("-----------error-------------- : "+e.toString(), module);
-		} 
-		return result;
-	}
-	
+		 }catch(Exception e){
+			 Debug.logError("-----------error-------------- : "+e.toString(), module);
+		 } 
+		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
+	return result;
+}	
 	
 }

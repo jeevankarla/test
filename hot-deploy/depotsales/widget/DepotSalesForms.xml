@@ -2009,6 +2009,11 @@
           <field name="createdByUserLogin" title="Entry by"><display/></field>	  
     </form>
 <form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
+	<!-- 	 <field name="timePeriodId" title="Scheme Time Period">
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
+              </drop-down>
+        </field> -->
         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> 
          <field name="statusId"><hidden value="GOODS_RECEIVED"/></field>  
         <field name="estimatedShipDate" title="Shipment Date"><date-find default-option-from="sameDay"  /></field>
@@ -2121,7 +2126,7 @@
             <field name="claimStatus" title="Claim Status"  widget-style="buttontext"> 
           			<display/>
             </field>
-            <field name="SendtoQC"   title="Reimbursement" widget-style="buttontext">
+            <field  use-when="!(&quot;GENERATED&quot;).equals(claimStatus)" name="SendtoQC"   title="Reimbursement" widget-style="buttontext">
              <hyperlink  target-type="plain" description="${receiptAction}"  target="javascript:payReimbursement('${shipmentId}','${invoiceAmount}','${reimbursementEligibilityAmount}');"></hyperlink>
            </field>
             <!-- <field name="vehicleId" title="Vehicle No"><display/></field> -->
@@ -2224,7 +2229,7 @@
 		<actions>		    
 		    <entity-condition entity-name="PeriodBillingAndSchemeTimePeriod" list="periodBillingList">
 		    	<condition-list >
-		    	    <condition-expr field-name="billingTypeId" operator="equals" value="DEPOT_BILLING"/>
+		    	    <condition-expr field-name="billingTypeId" operator="equals" value="SHIPMENT_BILLING"/>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="GENERATION_FAIL"/>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="CANCEL_FAILED"/>
@@ -2251,7 +2256,7 @@
         </field>
        
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
-			<hyperlink target="cancelDepotReimbursementBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+			<hyperlink target="cancelShipmentReimbursementBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="schemeTimePeriodId" from-field="schemeTimePeriodId"/>
 	        </hyperlink>
@@ -2260,7 +2265,64 @@
 	</form>
 
 
+    <form name="FindShipmentReimbursementBilling" title="" type="single" target="FindShipmentReimbursementBilling" header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
+        <field name="timePeriodId" title="Scheme Time Period">
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/>
+              </drop-down>
+        </field>
+
+           <field name="branchId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+     <form name="ListShipmentReimbursementBilling" type="list"
+		list-name="periodBillingList" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<actions>		    
+		    <entity-condition entity-name="PeriodBillingAndSchemeTimePeriod" list="periodBillingList">
+		    	<condition-list >
+		    	    <condition-expr field-name="billingTypeId" operator="equals" value="SHIPMENT_BILLING"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="GENERATION_FAIL"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="CANCEL_FAILED"/>
+	    		    <condition-expr field-name="schemeTimePeriodId"  from-field="parameters.timePeriodId"/>
+		    		<condition-expr field-name="partyId"  from-field="parameters.branchId"/>
+		    	</condition-list>
+		    	<order-by field-name="-thruDate"/>
+		    </entity-condition>
+			<set field="partyId" value="${partyId}"/>
+			<set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+		</actions>
+		<field name="periodBillingId" title="Bill Id">
+			<display description="${periodBillingId}" />
+		</field>
+		<field name="partyId" title="Branch">
+			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
+		</field>
+		<field name="schemeTimePeriodId" title="Payroll Period">
+			<display-entity entity-name="SchemeTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display-entity>
+		</field>
+		<field name="statusId" title = "Status">
+          <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+       
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+			<hyperlink target="cancelShipmentReimbursementBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="schemeTimePeriodId" from-field="schemeTimePeriodId"/>
+	        </hyperlink>
+        </field>
+
+	</form>
 
     
     
