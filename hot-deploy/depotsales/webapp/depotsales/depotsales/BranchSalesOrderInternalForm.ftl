@@ -603,6 +603,9 @@
 				data[args.row]["bundleWeight"] = bundleWeight;
 				data[args.row]["amount"] = Math.round(quantity*unitPrice);
 				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				
 				grid.updateRow(args.row);
 				
 			}
@@ -629,6 +632,10 @@
 					roundedAmount = 0;
 				}
 				data[args.row]["amount"] = roundedAmount;
+				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				
 				grid.updateRow(args.row);
 			}
 			if (args.cell == 6) {
@@ -684,6 +691,8 @@
 				
 				var row = args.row;
 				updatePayablePrice(row);
+				
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				
