@@ -40,6 +40,20 @@ shipmentId = invoiceList.get("shipmentId");
 partyIdFrom = invoiceList.partyIdFrom;
 context.partyIdFrom = partyIdFrom;
 
+
+passNo = "";
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+if(PartyIdentificationList){
+passNo = PartyIdentificationList[0].get("idValue");
+}
+
+
+
+
 poNumber = "";
 orderId  = "";
 shipmentDate = "";
@@ -69,6 +83,7 @@ context.supplierInvoiceDate = supplierInvoiceDate;
 context.lrNumber = lrNumber;
 context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
+context.passNo = passNo;
 
 
 
@@ -386,6 +401,8 @@ context.finalAddresList = finalAddresList;
 			amount = 0;
 			tempMap = [:];
 			
+			Debug.log("OrderItemAttribute============"+OrderItemAttribute);
+			
 			if(UtilValidate.isNotEmpty(OrderItemAttribute)){
 				OrderItemAttribute.each{ eachAttr ->
 					if(eachAttr.attrName == "WIEVER_CUSTOMER"){
@@ -395,7 +412,6 @@ context.finalAddresList = finalAddresList;
 						conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 						cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 						PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
-					
 						if(PartyIdentificationList){
 						passNo = PartyIdentificationList[0].get("idValue");
 						}
