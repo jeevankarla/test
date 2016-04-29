@@ -369,13 +369,13 @@
         	 </menu-item> -->
         	   	 <menu-item name="OrderPayment" title="${uiLabelMap.IndentPayment}">
 			<link target="orderPayment">
-				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+				<parameter param-name="salesChannelEnumId" value="WEB_SALES_CHANNEL" />
 				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
         	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processOrdersBranchSales">
-        		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+        		<parameter param-name="salesChannelEnumId" value="WEB_SALES_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
         	</link>
 	        </menu-item>
@@ -401,7 +401,7 @@
 			 </menu-item>
         	  <menu-item name="processOrdersBranchSales" title="${uiLabelMap.IndentListing}">
         	<link target="processOrdersBranchSales">
-        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="salesChannelEnumId" value="WEB_SALES_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
         	</link>
 	        </menu-item>

@@ -389,7 +389,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 					       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
 					    <#else>
-					       <input type="hidden" name="salesChannel" id="salesChannel" value="MATERIAL_PUR_CHANNEL"/>  
+					       <input type="hidden" name="salesChannel" id="salesChannel" value="WEB_SALES_CHANNEL"/>  
 					    </#if>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("supplierId")?exists>

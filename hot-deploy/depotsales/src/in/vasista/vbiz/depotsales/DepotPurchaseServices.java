@@ -1192,7 +1192,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("shipToPartyId", partyIdTo);
 				processOrderContext.put("billFromVendorPartyId", billFromVendorPartyId);
 				processOrderContext.put("supplyDate", effectiveDate);
-				processOrderContext.put("salesChannel", "MATERIAL_PUR_CHANNEL");
+				processOrderContext.put("salesChannel", "WEB_SALES_CHANNEL");
 				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 				processOrderContext.put("productStoreId", productStoreId);
 				processOrderContext.put("PONumber", orderId);
