@@ -1380,10 +1380,10 @@ public class DepotSalesServices{
 		String schemeCategory = (String) request.getParameter("schemeCategory");
 		String billingType = (String) request.getParameter("billingType");
 		String schemePartyId=partyId;
-		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+		/*if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
 			 partyId = (String) request.getParameter("societyPartyId");
 			 
-		}
+		}*/
 		String orderId = (String) request.getParameter("orderId");
 		String partyGeoId = (String) request.getParameter("partyGeoId");
 		String PONumber = (String) request.getParameter("PONumber");

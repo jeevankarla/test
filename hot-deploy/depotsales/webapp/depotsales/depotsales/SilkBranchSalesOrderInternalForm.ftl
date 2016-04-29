@@ -882,96 +882,98 @@
 	
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         $.ajax({
-        	type: "POST",
-         	url: "calculateTaxesByGeoId",
-       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
-       	 	dataType: 'json',
-       	 	async: true,
-    	 	success: function(result) {
-          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-   	  				alert(result["_ERROR_MESSAGE_"]);
-      			}else{
-   	  				//var taxPercentage =result["taxPercentage"];
-   	  				//alert("taxPercentage = "+taxPercentage);
-   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
-   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
-   	  				
-   	  				var vatPercent =result["vatPercent"];
-   	  				var cstPercent =result["cstPercent"];
-   	  				
-   	  				data[row]["DEFAULT_VAT"] = vatPercent;
-   	  				data[row]["DEFAULT_CST"] = cstPercent;
-   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;;
-   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
-   	  				
-   	  				var totalAmount = 0;
-					for (i = 0; i < data.length; i++) {
-						totalAmount += data[i]["amount"];
-					}
-					var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-   	  				
-   	  				var totalTaxAmt = 0;
-   	  				var taxList = [];
-   	  				taxList.push("VAT_SALE");
-   	  				taxList.push("CST_SALE");
-   	  				
-   	  				if(taxType == "Intra-State"){
-   	  					data[row]["VAT_SALE"] = vatPercent;
-   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
-   	  					totalTaxAmt += (vatPercent) * totalAmt/100;
-   	  					
-   	  					data[row]["CST_SALE"] = cstPercent;
-   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
-   	  					
-   	  				}
-   	  				if(taxType == "Inter-State"){
-   	  					data[row]["CST_SALE"] = cstPercent;
-   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
-   	  					totalTaxAmt += (cstPercent) * totalAmt/100;
-   	  					
-   	  					data[row]["VAT_SALE"] = vatPercent;
-   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
-   	  				}
-   	  				
-   	  				<#--
-   	  				for(var i=0 ; i<taxAuthProdCatList.length ; i++){
-						var taxItem = taxAuthProdCatList[i];
-						
-						totalTaxAmt += (taxItem.taxPercentage) * totalAmt/100;
-						
-						
-						//item['cProductId'] = productLabelIdMap[value];
-						data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
-						data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = (taxItem.taxPercentage) * totalAmt/100;
-						
-						taxList.push(taxItem.taxAuthorityRateTypeId);
-					}
-					-->
-   	  				
-   	  				var serviceChargePercent = 0;
-   	  				var serviceChargeAmt = 0;
-   	  				if( schemeCategory == "General" ){
-   	  					serviceChargePercent = 2;
-   	  					serviceChargeAmt = (serviceChargePercent/100) * totalAmt;
-   	  				}
-   	  				data[row]["SERVICE_CHARGE"] = serviceChargePercent;
-   	  				data[row]["taxList"] = taxList;
-   	  				data[row]["taxAmt"] = totalTaxAmt;
-   	  				data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt + serviceChargeAmt;
-   	  				grid.updateRow(row);
-   	  				
-   	  				updateTotalIndentAmount();
-   	  				//data[row]["remarks"].setActiveCell();
-   	  				return false; 
-  				}
-           
-      		} ,
-     	 	error: function() {
-      	 		alert(result["_ERROR_MESSAGE_"]);
-     	 	}
-    	});			
+         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
+	         $.ajax({
+	        	type: "POST",
+	         	url: "calculateTaxesByGeoId",
+	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
+	       	 	dataType: 'json',
+	       	 	async: true,
+	    	 	success: function(result) {
+	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	   	  				alert(result["_ERROR_MESSAGE_"]);
+	      			}else{
+	   	  				//var taxPercentage =result["taxPercentage"];
+	   	  				//alert("taxPercentage = "+taxPercentage);
+	   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
+	   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
+	   	  				
+	   	  				var vatPercent =result["vatPercent"];
+	   	  				var cstPercent =result["cstPercent"];
+	   	  				
+	   	  				data[row]["DEFAULT_VAT"] = vatPercent;
+	   	  				data[row]["DEFAULT_CST"] = cstPercent;
+	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;;
+	   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
+	   	  				
+	   	  				var totalAmount = 0;
+						for (i = 0; i < data.length; i++) {
+							totalAmount += data[i]["amount"];
+						}
+						var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+	   	  				
+	   	  				var totalTaxAmt = 0;
+	   	  				var taxList = [];
+	   	  				taxList.push("VAT_SALE");
+	   	  				taxList.push("CST_SALE");
+	   	  				
+	   	  				if(taxType == "Intra-State"){
+	   	  					data[row]["VAT_SALE"] = vatPercent;
+	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
+	   	  					totalTaxAmt += (vatPercent) * totalAmt/100;
+	   	  					
+	   	  					data[row]["CST_SALE"] = cstPercent;
+	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
+	   	  					
+	   	  				}
+	   	  				if(taxType == "Inter-State"){
+	   	  					data[row]["CST_SALE"] = cstPercent;
+	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
+	   	  					totalTaxAmt += (cstPercent) * totalAmt/100;
+	   	  					
+	   	  					data[row]["VAT_SALE"] = vatPercent;
+	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
+	   	  				}
+	   	  				
+	   	  				<#--
+	   	  				for(var i=0 ; i<taxAuthProdCatList.length ; i++){
+							var taxItem = taxAuthProdCatList[i];
+							
+							totalTaxAmt += (taxItem.taxPercentage) * totalAmt/100;
+							
+							
+							//item['cProductId'] = productLabelIdMap[value];
+							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
+							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = (taxItem.taxPercentage) * totalAmt/100;
+							
+							taxList.push(taxItem.taxAuthorityRateTypeId);
+						}
+						-->
+	   	  				
+	   	  				var serviceChargePercent = 0;
+	   	  				var serviceChargeAmt = 0;
+	   	  				if( schemeCategory == "General" ){
+	   	  					serviceChargePercent = 2;
+	   	  					serviceChargeAmt = (serviceChargePercent/100) * totalAmt;
+	   	  				}
+	   	  				data[row]["SERVICE_CHARGE"] = serviceChargePercent;
+	   	  				data[row]["taxList"] = taxList;
+	   	  				data[row]["taxAmt"] = totalTaxAmt;
+	   	  				data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt + serviceChargeAmt;
+	   	  				grid.updateRow(row);
+	   	  				
+	   	  				updateTotalIndentAmount();
+	   	  				//data[row]["remarks"].setActiveCell();
+	   	  				return false; 
+	  				}
+	           
+	      		} ,
+	     	 	error: function() {
+	      	 		alert(result["_ERROR_MESSAGE_"]);
+	     	 	}
+	    	});
+	    }				
 	}
 	
 </script>			
