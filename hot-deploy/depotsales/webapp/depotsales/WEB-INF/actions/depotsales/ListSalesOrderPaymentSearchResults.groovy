@@ -81,14 +81,11 @@
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
 	}
 	
-	if(salesChannel == "DEPOT_CHANNEL"){
+	/*if(salesChannel == "DEPOT_CHANNEL"){
 		condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
 	}
-	else{
+	*/
 		condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
-	}
-	
-	
 	
 	
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review

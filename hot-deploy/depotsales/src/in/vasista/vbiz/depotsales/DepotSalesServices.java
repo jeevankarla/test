@@ -750,6 +750,7 @@ public class DepotSalesServices{
 	        cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
+			cart.setPurposeTypeId("DEPOT_SALES");
 			cart.setOrderId(orderId);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);

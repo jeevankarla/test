@@ -25,7 +25,7 @@
 	        	</drop-down>
         </field>
 <!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
-         <field name="purposeTypeId"><hidden value="MATERIAL_PUR_CHANNEL"/></field> 
+         <field name="purposeTypeId"><hidden value="DEPOT_PURCHASE"/></field> 
          <field name="findPoFlag"><hidden value="Y"/></field>  
     	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -167,7 +167,7 @@
     </form> -->
     
      <form name="FindSalesIndentPayment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        <field name="salesChannelEnumId" ><hidden value="DEPOT_CHANNEL"/></field>  
+        <field name="salesChannelEnumId" ><hidden value="WEB_SALES_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
            <drop-down no-current-selected-key="SALES_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">

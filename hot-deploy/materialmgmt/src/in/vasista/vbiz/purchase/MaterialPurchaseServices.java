@@ -1977,7 +1977,7 @@ public class MaterialPurchaseServices {
 			//update PurposeType
 			try{
 			GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-			orderHeaderPurpose.set("purposeTypeId", salesChannel);
+			orderHeaderPurpose.set("purposeTypeId", "DEPOT_PURCHASE");
 			orderHeaderPurpose.store();
 			}catch (Exception e) {
 				  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
