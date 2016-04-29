@@ -53,6 +53,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.party.contact.ContactMechWorker;
+
 import java.util.Iterator;
 
 
@@ -2011,6 +2013,44 @@ public class DepotPurchaseServices{
 			String orderId = (String) context.get("orderId");
 	        List productIdsList = FastList.newInstance();
     		Map productSummaryMap = FastMap.newInstance();
+    		
+    		
+    		String branchId = null;
+    		List<GenericValue> billFromVendors = null; 
+    		try {
+    			billFromVendors = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_FROM_VENDOR"));
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+			
+			if (UtilValidate.isNotEmpty(billFromVendors)) {
+				branchId = (EntityUtil.getFirst(billFromVendors)).getString("partyId");
+			}
+			
+			String supplierId = null;
+    		List<GenericValue> suppliers = null; 
+    		try {
+    			suppliers = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "SUPPLIER"));
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+			
+			if (UtilValidate.isNotEmpty(suppliers)) {
+				supplierId = (EntityUtil.getFirst(suppliers)).getString("partyId");
+			}
+    		
+			String supplierGeoId = null;
+			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplierId, false, "TAX_CONTACT_MECH");
+	        if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+	        	supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+	        }
+	        
+	        String branchGeoId = null;
+	        List branchContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, branchId, false, "TAX_CONTACT_MECH");
+	        if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
+	        	branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+	        }
+    		
 			try{
                 List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
                 Set orderProductsSet = new HashSet(EntityUtil.getFieldListFromEntityList(items, "productId", true));    		
@@ -2019,7 +2059,36 @@ public class DepotPurchaseServices{
                while (it.hasNext()) {
                 	String productId = (String) it.next();                    
     				List itemSeqDetail = FastList.newInstance();
-
+    				
+    				BigDecimal vatPercent = BigDecimal.ZERO;
+					BigDecimal cstPercent = BigDecimal.ZERO;
+    				
+    				if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+    		        	
+    		        	Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+    					prodCatTaxCtx.put("productId", productId);
+    					prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
+    					//prodCatTaxCtx.put("taxAuthorityRateTypeId", orderTaxType);
+    				  	try{
+    				  		Map resultCtx = dispatcher.runSync("calculateTaxesByGeoId",prodCatTaxCtx);  	
+    				  		Debug.log("resultCtx =========="+resultCtx);
+    				  		
+    				  		if(supplierGeoId.equals(branchGeoId)){
+    				  			vatPercent = (BigDecimal) resultCtx.get("vatPercent");
+        				  		Debug.log("vatPercent =========="+vatPercent);
+    				  		}
+    				  		else{
+    				  			cstPercent = (BigDecimal) resultCtx.get("cstPercent");
+        				  		Debug.log("cstPercent =========="+cstPercent);
+    				  		}
+    				  		
+    				  	}catch (GenericServiceException e) {
+    				  		Debug.logError(e , module);
+    				  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+    				  	}
+    		        	
+    		        }
+    				
                     
 			    	List<GenericValue> headerItems = EntityUtil.filterByCondition(items, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 			    	BigDecimal prdQuantity=BigDecimal.ZERO;
@@ -2027,22 +2096,25 @@ public class DepotPurchaseServices{
 			    	BigDecimal unitListPrice=BigDecimal.ZERO;
 			    	BigDecimal bedPercent=BigDecimal.ZERO;
 
-			    	BigDecimal cstPercent=BigDecimal.ZERO;
-			    	BigDecimal vatPercent=BigDecimal.ZERO;
+			    	//BigDecimal cstPercent=BigDecimal.ZERO;
+			    	//BigDecimal vatPercent=BigDecimal.ZERO;
+			    	
+			    	
+			    	
 			    	
 			    	for (int i = 0; i < headerItems.size(); i++) {						
 						GenericValue eachProductList = (GenericValue)headerItems.get(i);
 						Debug.log("eachProductList=================="+eachProductList);
 						BigDecimal quantity=(BigDecimal)eachProductList.getBigDecimal("quantity");
-						 unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitPrice");
+						unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitPrice");
 						String orderItemSeqId=(String)eachProductList.get("orderItemSeqId");
-						 itemSeqDetail.add(orderItemSeqId);
+						itemSeqDetail.add(orderItemSeqId);
 						BigDecimal amount=unitListPrice.multiply(quantity);
 						prdQuantity =prdQuantity.add(quantity);
 						prdAmount =prdAmount.add(amount);
 						
 			    	}
-		       		   Map productDetailsMap = FastMap.newInstance();
+		       		Map productDetailsMap = FastMap.newInstance();
 
 		       		productDetailsMap.put("unitListPrice",unitListPrice);
 		       		productDetailsMap.put("quantity",prdQuantity);
