@@ -2606,9 +2606,12 @@ public class MaterialPurchaseServices {
 				
 				if(amendedQuantity.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("quantity", amendedQuantity);
+					orderItem.set("quantity", amendedQuantity);
 				}
 				if(amendedPrice.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("unitPrice", amendedPrice);
+					orderItem.set("unitPrice", amendedPrice);
+					orderItem.set("unitListPrice", amendedPrice);
 				}
 				
 				orderItemChange.put("effectiveDatetime",effectiveDate);
@@ -2625,6 +2628,7 @@ public class MaterialPurchaseServices {
 					TransactionUtil.rollback();
 			  		return "error";
 		        }
+				orderItem.store();
 		        request.setAttribute("orderId",orderId);
 		        
 		        if(UtilValidate.isNotEmpty(primaryOrderId)){
