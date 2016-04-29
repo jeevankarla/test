@@ -922,8 +922,8 @@
 	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
 	   	  					totalTaxAmt += (vatPercent) * totalAmt/100;
 	   	  					
-	   	  					data[row]["CST_SALE"] = cstPercent;
-	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
+	   	  					data[row]["CST_SALE"] = 0;
+	   	  					data[row]["CST_SALE_AMT"] = 0;
 	   	  					
 	   	  				}
 	   	  				if(taxType == "Inter-State"){
@@ -931,8 +931,8 @@
 	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
 	   	  					totalTaxAmt += (cstPercent) * totalAmt/100;
 	   	  					
-	   	  					data[row]["VAT_SALE"] = vatPercent;
-	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
+	   	  					data[row]["VAT_SALE"] = 0;
+	   	  					data[row]["VAT_SALE_AMT"] = 0;
 	   	  				}
 	   	  				
 	   	  				<#--
