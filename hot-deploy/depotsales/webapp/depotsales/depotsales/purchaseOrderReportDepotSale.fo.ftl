@@ -295,32 +295,15 @@ under the License.
                         <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
                     </fo:table-cell>
                     <fo:table-cell border-style="solid">
-                        <fo:block>
-					    <fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline"  >Agency Address:</fo:inline></fo:block>
-					       <fo:table width="80%" align="right" table-layout="fixed"  font-size="11pt" >
-      					   <fo:table-column column-width="70pt"/>
-      					   <fo:table-column column-width="530pt"/>	             
-				           	  <fo:table-body>
-							  <fo:table-row>
-							  <#if shipingAdd?has_content>
-								  <fo:table-cell>
+                        <#if shipingAdd?has_content>
 	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
+	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${shipingAdd.address2?if_exists} </fo:block> 
 								  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.city?if_exists} </fo:block> 
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" >${shipingAdd.postalCode?if_exists}</fo:block> 
-								  </fo:table-cell>
 								  <#else>
-								  <fo:table-cell>
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
-								  </fo:table-cell>
 							 </#if>
-							 
-							  </fo:table-row>
-							   
-						</fo:table-body>
-					      </fo:table>
-					   </fo:block>
 				   </fo:table-cell>
                </fo:table-row>
                 <fo:table-row>

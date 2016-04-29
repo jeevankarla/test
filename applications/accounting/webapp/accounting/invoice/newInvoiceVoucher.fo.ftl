@@ -64,6 +64,7 @@ under the License.
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
 				<fo:block text-align="left"  font-weight="bold"  font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)}</fo:block>
+				<fo:block text-align="left"  font-size="12pt" >PassBook No : ${passNo?if_exists}</fo:block>
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="12pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
@@ -337,8 +338,12 @@ under the License.
 				<fo:block text-align="left"     font-size="12pt" >Supplier Name         : <#if supplier?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</#if></fo:block>
 				<fo:block text-align="left"     font-size="12pt" >NHDC PO Date          : <#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="left"     font-size="12pt" >NHDC PO Number        : ${poNumber?if_exists}</fo:block>
-				<fo:block text-align="left"      font-size="12pt" >NHDC Supplier Invoice     : ${supplierInvoiceId?if_exists}</fo:block>
-				<fo:block text-align="left"      font-size="12pt" >NHDC Supplier Invoice Date:<#if supplierInvoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
+				<fo:block text-align="left"     font-size="12pt" >NHDC Supplier Invoice : ${supplierInvoiceId?if_exists}</fo:block>
+				<fo:block text-align="left"     font-size="12pt" >NHDC Supplier Invoice</fo:block>
+				<fo:block text-align="left"     font-size="12pt" >Date                  :<#if supplierInvoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
+				
+				 
+				
 				<fo:block text-align="left"      font-size="12pt" >LR Number             : ${lrNumber?if_exists}</fo:block>
 				<fo:block text-align="left"      font-size="12pt" >LR Date               : <#if deliveryChallanDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deliveryChallanDate, "dd-MMM-yyyy")}</#if></fo:block>
 				</fo:table-cell>
