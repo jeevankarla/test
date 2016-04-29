@@ -123,7 +123,7 @@
 					    	"<input type='hidden' value='${orderItem.internalName?if_exists}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
 					    	"<input type='hidden' value='${orderItem.unit?if_exists}' name='unit_o_"+${orderItem.orderItemSeqId?if_exists}+"'/>"+
 
-							"<td align='center' >${orderItem.internalName}(${orderItem.description?if_exists})</td>"+
+							"<td align='center' >${orderItem.internalName}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>${orderItem.quantity?if_exists}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+

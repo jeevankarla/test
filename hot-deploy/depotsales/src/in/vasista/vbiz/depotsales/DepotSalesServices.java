@@ -1942,6 +1942,51 @@ public class DepotSalesServices{
 						}
 						
 					}
+					//cancelling quota for  order 
+					if(schemeCategory.equals("MGPS_10Pecent")){
+						List condsList = FastList.newInstance();
+						condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+						condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+						try{
+						List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderItemAndAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+						
+						if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
+							List schemeCategoryIds = FastList.newInstance();
+						  	try{
+						  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+						  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+						   	}catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive ProductCategory ", module);
+								return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+							}	 	
+							for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
+								
+								condsList.clear();
+								condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+							  	condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+							  	condsList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
+							  	BigDecimal quota =BigDecimal.ZERO;
+							  	try {
+									List<GenericValue> OrderItemAttributeList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("attrValue"), null, null, true);
+									if(UtilValidate.isEmpty(OrderItemAttributeList) || OrderItemAttributeList.size()==0){
+										continue;
+									}
+									GenericValue OrderItemAttribute=OrderItemAttributeList.get(0);
+									quota = new BigDecimal((String)OrderItemAttribute.get("attrValue"));
+								} catch (GenericEntityException e) {
+									Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+									return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+								}
+							  	Map partyBalanceHistoryContext = FastMap.newInstance();
+								partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
+							  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+							}
+						}
+						}catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductCategory ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+						}
+					}
 					
 				}
 				  			
