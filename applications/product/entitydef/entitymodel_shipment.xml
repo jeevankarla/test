@@ -652,6 +652,8 @@ under the License.
       <field name="lrNumber" type="id"></field>
       <field name="routeId" type="id"></field>
       <field name="additionalShippingCharge" type="currency-amount"></field>
+      <field type="fixed-point" name="claimAmount"/>
+	  <field type="id-ne" name="claimStatus"/>
       <field name="addtlShippingChargeDesc" type="long-varchar"></field>
       <field name="description" type="description"></field>
       <field name="createdDate" type="date-time"></field>
