@@ -309,15 +309,6 @@ public class DepotPurchaseServices{
 				prodQtyMap.put("bedPercent", BigDecimal.ZERO);
 				productQtyList.add(prodQtyMap);
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}//end row count for loop
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
