@@ -113,8 +113,8 @@
 			dataMap["vatPercent_o_"+rowCount] = vatPercent;
 			var cstPercent = data[rowCount]["cstPercent"];
 			dataMap["cstPercent_o_"+rowCount] = cstPercent;
-			var bedPercent = data[rowCount]["bedPercent"];
-			dataMap["bedPercent_o_"+rowCount] = bedPercent;
+			//var bedPercent = data[rowCount]["bedPercent"];
+			//dataMap["bedPercent_o_"+rowCount] = bedPercent;
 		}
 		
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
@@ -205,7 +205,7 @@
 			var unitPrice = data[rowCount]["unitPrice"];
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
-			var bedPercent = data[rowCount]["bedPercent"];
+			//var bedPercent = data[rowCount]["bedPercent"];
 			
 		
 	 		if (!isNaN(qty)) {	 		
@@ -222,8 +222,8 @@
 				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_" + rowCount).val(cstPercent);
 				jQuery(formId).append(jQuery(inputCSTPer));
 				
-				var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
-				jQuery(formId).append(jQuery(inputExcisePer));
+				//var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
+				//jQuery(formId).append(jQuery(inputExcisePer));
    			}
 		}
 		
@@ -365,6 +365,7 @@
       	return {valid: true, msg: null};
     }
     //persent Validation
+    <#--
 	function excValidator(value){
 		var invalidValue = 0;
 	  	for (var rowCount=0; rowCount < exclableTags.length; ++rowCount)
@@ -415,6 +416,7 @@
 		
 		return {valid: true, msg: null};
 	}
+	-->
     //quantity validator
 	function quantityFormatter(row, cell, value, columnDef, dataContext) { 
 		if(value == null){
@@ -441,7 +443,7 @@
     			var itemTotal = 0
     			var unitPrice = 0;
     			var qty = 0;
-    			var bedPercent = 0;
+    			//var bedPercent = 0;
     			var vatPercent = 0;
     			var cstPercent = 0;
     			
@@ -452,9 +454,9 @@
 					qty = data[i]["quantity"];
 				}
 				
-				if(!isNaN(data[i]["bedPercent"])){
-					bedPercent = data[i]["bedPercent"];
-			   	}
+				//if(!isNaN(data[i]["bedPercent"])){
+				//	bedPercent = data[i]["bedPercent"];
+			   	//}
 					  
 				if(!isNaN(data[i]["vatPercent"])){
 					vatPercent = data[i]["vatPercent"];
@@ -466,11 +468,10 @@
     			if(!isIncTax){
     			
 					var basicPrice = parseFloat(Math.round( ((qty*unitPrice) * 100) / 100 ));
-					var bedAmt = parseFloat(Math.round(((basicPrice*(bedPercent/100)) * 100) / 100));
-					var basePrice = basicPrice+bedAmt;
+					//var bedAmt = parseFloat(Math.round(((basicPrice*(bedPercent/100)) * 100) / 100));
+					var basePrice = basicPrice;
 					var vatAmt = parseFloat(Math.round(((basePrice*(vatPercent/100)) * 100) / 100));
 					var cstAmt = parseFloat(Math.round(((basePrice*(cstPercent/100)) * 100) / 100));
-					
 					itemTotal = basePrice+vatAmt+cstAmt;
 	    		}
     			else{
@@ -495,8 +496,8 @@
     					taxStrpAmt = baseCstStrpAmt;
     				}
     				
-    				bedAmt = parseFloat(Math.round((taxStrpAmt*(bedPercent/100)) * 100) / 100);
-    				newUnitPrice = taxStrpAmt-bedAmt;
+    				//bedAmt = parseFloat(Math.round((taxStrpAmt*(bedPercent/100)) * 100) / 100);
+    				//newUnitPrice = taxStrpAmt-bedAmt;
     				//data[i]["unitPrice"] = newUnitPrice;
     					
     			}
@@ -538,9 +539,9 @@
 			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
 			{id:"unitPrice", name:"Basic Unit Price in Kgs", field:"unitPrice", width:90, minWidth:90, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
-			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
-			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
-			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", availableTags: cstlableTags, editor: AutoCompleteEditor,validator:cstValidator},
+			<#--{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", editor:FloatCellEditor},-->
+			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
+			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
 			
 		];
             
@@ -647,14 +648,14 @@
     	    var totalValue=0;
         	
         	var isIncTax = $('#incTax').is(':checked');
-        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 3 || args.cell == 5 || args.cell == 6 || args.cell == 7) {
+        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 3 || args.cell == 5 || args.cell == 6) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
-				var uomId = productUOMMap[prod];
-				var uomLabel = uomLabelMap[uomId];
-				data[args.row]['uomDescription'] = uomLabel;     		 		
+				//var uomId = productUOMMap[prod];
+				//var uomLabel = uomLabelMap[uomId];
+				//data[args.row]['uomDescription'] = uomLabel;     		 		
 	      		
-				var bedPercent = parseFloat(data[args.row]["bedPercent"]);
+				//var bedPercent = parseFloat(data[args.row]["bedPercent"]);
 				var vatPercent = parseFloat(data[args.row]["vatPercent"]);
 				var cstPercent = parseFloat(data[args.row]["cstPercent"]);
 				var price = data[args.row]['unitPrice'];
@@ -671,27 +672,32 @@
 				}
 				
 				if(!isIncTax){
-					if(isNaN(bedPercent)){
-						bedPercent = 0;
-					}
-					var amtBED = Math.round((roundedAmount*bedPercent)/100);
-					var entryValue = roundedAmount+amtBED;
+					//if(isNaN(bedPercent)){
+					//	bedPercent = 0;
+					//}
+					//var amtBED = Math.round((roundedAmount*bedPercent)/100);
+					
+					//var entryValue = roundedAmount+amtBED;
+					
+					var entryValue = roundedAmount;
+					
 					if(isNaN(cstPercent)){
 						cstPercent = 0;
 					}
 					var amtCST = Math.round((entryValue*cstPercent)/100);
+					
 					if(isNaN(vatPercent)){
 						vatPercent = 0;
 					}
 					var amtVAT = Math.round((entryValue*vatPercent)/100);
 					
-					roundedAmount = roundedAmount+amtBED+amtCST+amtVAT;
+					roundedAmount = roundedAmount+amtCST+amtVAT;
 				}
 				totalValue=roundedAmount;
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = baseAmount;
 				grid.updateRow(args.row);
-				//updateInvoiceTotalAmount();
+				updateInvoiceTotalAmount();
 			}
 			
 		}); 
@@ -699,18 +705,7 @@
 		
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-        	if (args.cell == 1 && data[args.row] != null) {
-				var prod = data[args.row]["cProductId"];
-			}
-			
-			if (args.cell == 0 && data[args.row] != null) {
-				var prod = data[args.row]["cProductId"];
-				var uomId = productUOMMap[prod];
-				var uomLabel = uomLabelMap[uomId];
-				data[args.row]['uomDescription'] = uomLabel;     		 		
-	      		
-			}
-			
+        	
 		});
 		
 		grid.onValidationError.subscribe(function(e, args) {

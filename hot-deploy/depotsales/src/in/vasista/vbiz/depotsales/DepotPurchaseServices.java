@@ -1458,12 +1458,12 @@ public class DepotPurchaseServices{
 					BigDecimal vatAmount = BigDecimal.ZERO;
 					BigDecimal cstAmount = BigDecimal.ZERO;
 					BigDecimal cstPercent = BigDecimal.ZERO;
-					BigDecimal bedAmount = BigDecimal.ZERO;
+					/*BigDecimal bedAmount = BigDecimal.ZERO;
 					BigDecimal bedPercent = BigDecimal.ZERO;
 					BigDecimal bedcessPercent = BigDecimal.ZERO;
 					BigDecimal bedcessAmount = BigDecimal.ZERO;
 					BigDecimal bedseccessAmount = BigDecimal.ZERO;
-					BigDecimal bedseccessPercent = BigDecimal.ZERO;
+					BigDecimal bedseccessPercent = BigDecimal.ZERO;*/
 					
 					
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
@@ -1490,7 +1490,7 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 						cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
 					}
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
 						bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
@@ -1507,16 +1507,16 @@ public class DepotPurchaseServices{
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessPercent"))){
 						bedseccessPercent = (BigDecimal)prodQtyMap.get("bedseccessPercent");
-					}
+					}*/
 
-					if(bedAmount.compareTo(BigDecimal.ZERO)>0){
+					/*if(bedAmount.compareTo(BigDecimal.ZERO)>0){
 		        		Map taxDetailMap = FastMap.newInstance();
 			    		taxDetailMap.put("taxType", "BED_PUR");
 			    		taxDetailMap.put("amount", bedAmount);
 			    		taxDetailMap.put("percentage", bedPercent);
 			    		taxList.add(taxDetailMap);
-					}
-					if(vatAmount.compareTo(BigDecimal.ZERO)>0){
+					}*/
+					/*if(vatAmount.compareTo(BigDecimal.ZERO)>0){
 		        		Map taxDetailMap = FastMap.newInstance();
 			    		taxDetailMap.put("taxType", "VAT_PUR");
 			    		taxDetailMap.put("amount", vatAmount);
@@ -1529,8 +1529,8 @@ public class DepotPurchaseServices{
 			    		taxDetailMap.put("amount", cstAmount);
 			    		taxDetailMap.put("percentage", cstPercent);
 			    		taxList.add(taxDetailMap);
-					}
-					if(bedcessAmount.compareTo(BigDecimal.ZERO)>0){
+					}*/
+					/*if(bedcessAmount.compareTo(BigDecimal.ZERO)>0){
 		        		Map taxDetailMap = FastMap.newInstance();
 			    		taxDetailMap.put("taxType", "BEDCESS_PUR");
 			    		taxDetailMap.put("amount", bedcessAmount);
@@ -1543,6 +1543,29 @@ public class DepotPurchaseServices{
 			    		taxDetailMap.put("amount", bedseccessAmount);
 			    		taxDetailMap.put("percentage", bedseccessPercent);
 			    		taxList.add(taxDetailMap);
+					}*/
+					if(vatPercent.compareTo(BigDecimal.ZERO)>0){
+		        		
+		        		vatAmount = ((quantity.multiply(unitPrice)).multiply(vatPercent)).divide(new BigDecimal("100"));
+		        		
+		        		Map taxDetailMap = FastMap.newInstance();
+		        		taxDetailMap.put("orderAdjustmentTypeId","VAT_PUR");
+		        		taxDetailMap.put("sourcePercentage",vatPercent);
+		        		taxDetailMap.put("amount",vatAmount);
+						//taxDetailMap.put("taxAuthGeoId", partyGeoId);
+			    		taxList.add(taxDetailMap);
+					}
+					if(cstPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						cstAmount = ((quantity.multiply(unitPrice)).multiply(cstPercent)).divide(new BigDecimal("100"));
+						
+		        		Map taxDetailMap = FastMap.newInstance();
+		        		taxDetailMap.put("orderAdjustmentTypeId","CST_PUR");
+		        		taxDetailMap.put("sourcePercentage",cstPercent);
+		        		taxDetailMap.put("amount",cstAmount);
+		        		taxDetailMap.put("taxAuthGeoId", "IND");
+			    		
+			    		taxList.add(taxDetailMap);
 					}
 					
 					ShoppingCartItem item = null;
@@ -1552,8 +1575,20 @@ public class DepotPurchaseServices{
 					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 					
 						item = cart.findCartItem(itemIndx);
+						
+						//item.setTaxDetails(taxList);
+						
+						for(int i=0; i<taxList.size(); i++){
+							Map taxMap = (Map) taxList.get(i);
+							if(  ((BigDecimal) taxMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
+								GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxMap);
+				 				item.addAdjustment(orderAdjustment);
+								
+				 				unitListPrice.add((BigDecimal) taxMap.get("amount"));
+							}
+						}
+						
 						item.setListPrice(unitListPrice);
-						item.setTaxDetails(taxList);
 		    		
 					}
 					catch (Exception exc) {
