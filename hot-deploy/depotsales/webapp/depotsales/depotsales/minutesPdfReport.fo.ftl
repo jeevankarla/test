@@ -272,7 +272,7 @@ under the License.
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
-				<fo:block>${Scheam?if_exists}</fo:block>
+				<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
 				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>

@@ -255,7 +255,9 @@ under the License.
        	</fo:table>
 	   </fo:block>
 	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
+	   	            <#if scheme != "General">  
 	                <fo:block text-align="left"    font-size="12pt" >Purchase Price (RS):<#if grandTotal?has_content>${grandTotal?string("#0.00")}</#if></fo:block>
+	   				</#if>
 	   				<fo:block text-align="left"    font-size="12pt" >MILL Invo No/Date :${supplierInvoiceId?if_exists} <#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 	   	   	        <fo:block text-align="center"    font-size="12pt" >&#160;&#160;&#160;&#160;</fo:block>
 	   

@@ -100,6 +100,22 @@ context.balanceAmt = balanceAmt;
 
 
 
+
+orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId), null, null, null, false);
+
+scheme = "";
+if(UtilValidate.isNotEmpty(orderAttr)){
+	orderAttr.each{ eachAttr ->
+		if(eachAttr.attrName == "SCHEME_CAT"){
+			scheme =  eachAttr.attrValue;
+		}
+		
+	}
+   }
+
+
+context.scheme = scheme;
+
 condtList.clear();
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
 condtList.add(EntityCondition.makeCondition("orderAdjustmentTypeId" ,EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));//
