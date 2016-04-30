@@ -125,7 +125,12 @@ public class DepotPurchaseServices{
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "success";
 		}
-		
+		List<GenericValue> orderItems=null;
+		try{
+		 orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		}catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
 		List productQtyList = FastList.newInstance();
 		List invoiceAdjChargesList = FastList.newInstance();
 		String applicableTo = "ALL";
@@ -278,8 +283,24 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 			}
-			
+			GenericValue orderItemValue = null;
+
 			if(UtilValidate.isNotEmpty(productId)){
+				try{
+					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));				
+					if(UtilValidate.isNotEmpty(orderItem)){
+						orderItemValue = EntityUtil.getFirst(orderItem);
+						orderItemValue.put("unitPrice", uPrice);
+						orderItemValue.put("unitListPrice", uPrice);
+						orderItemValue.store();
+					}else{
+						continue;
+					}
+				}catch (Exception e) {
+					  Debug.logError(e, "Error While Updating purchase Order ", module);
+					  request.setAttribute("_ERROR_MESSAGE_", "Unable to update Purchase Order :" + orderId+"....! ");
+						return "error";
+				}
 				prodQtyMap.put("productId", productId);
 				prodQtyMap.put("quantity", quantity);
 				prodQtyMap.put("unitPrice", uPrice);
