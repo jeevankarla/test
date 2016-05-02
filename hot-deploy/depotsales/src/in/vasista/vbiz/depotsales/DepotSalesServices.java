@@ -2273,13 +2273,13 @@ public class DepotSalesServices{
 				}
 				
 				// Service Charge
-				if(serviceCharge.compareTo(BigDecimal.ZERO)>0){
+				if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-			                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceCharge,
+			                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceChargeAmt, "sourcePercentage", serviceCharge,
 			                        "description", "Service Charge"));
 					item.addAdjustment(orderAdjustment);
 					
-					totalPrice.add(serviceCharge);
+					totalPrice.add(serviceChargeAmt);
 				}
 				
 				item.setListPrice(totalPrice);
