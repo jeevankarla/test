@@ -123,12 +123,12 @@
 					// Validation
 					if(indententryinit.partyId.value.length < 1){
 			  			alert("Customer is Mandatory");
-			  			$('#0_lookupId_partyId').css('background', 'red'); 
+			  			$('#partyId').css('background', 'red'); 
 				       	
 				       	setTimeout(function () {
-				           	$('#0_lookupId_partyId').css('background', 'white').focus(); 
+				           	$('#partyId').css('background', 'white').focus(); 
 				       	}, 800);
-				       	$("#0_lookupId_partyId").prev().css('color', 'yellow');
+				       	$("#partyId").prev().css('color', 'yellow');
 				       	
 			  			return false;  
 			  		}
@@ -433,7 +433,7 @@
 	  	function calculateTaxApplicability() {
 			var productStoreId = $("#productStoreId").val();
 			var supplierPartyId = $("#suplierPartyId").val();
-			var partyId = $("#0_lookupId_partyId").val();
+			var partyId = $("#partyId").val();
 			
 			if( productStoreId != undefined && productStoreId != ""  &&  supplierPartyId != undefined && supplierPartyId != ""  &&    partyId != undefined && partyId != ""  ){
 			
@@ -501,7 +501,47 @@
 			 $('#indententryinit').submit();
 			 return false; 
 		}
-	 
+	 	
+	 	function autoCompletePartyId(){
+			var productStoreId = $("#productStoreId").val();
+		      $("#partyId").autocomplete({ 
+		      
+		      		
+		      		source: function( request, response ) {
+	        			$.ajax({
+	          					url: "LookupBranchCustomers",
+	          					dataType: "html",
+	          					data: {
+	            					ajaxLookup: "Y",
+	            					term : request.term,
+	            					productStoreId : productStoreId
+	          					},
+	          					success: function( data ) {
+	          						var dom = $(data);
+	        						dom.filter('script').each(function(){
+	            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
+	        						});
+	            					response($.map(autocomp, function(v,i){
+	            						$('span#partyTooltip').html(v.label);
+	    								return {
+	                						label: v.label,
+	                						value: v.value
+	               						};
+									}));
+	          					}
+	        			});
+	        			
+	      			}
+		      		
+		      		
+		      		
+		      		//source: billToPartyIdsList , select: function( event, ui ) {
+					//$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+					//}
+					
+					
+			  });	
+		 }
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -532,56 +572,6 @@
 	    	<form method="post" class="form-style-8" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">
 		
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	               	
-	               	<tr>
-		       	  		
-		       			<td>&nbsp;</td>
-		       			
-		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
-		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
-		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
-		       			 <#else>               
-			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
-			          	</#if>
-		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
-		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
-		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
-		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
-		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
-				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if partyId?exists && partyId?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div ><font color="green">
-				               			${partyId} [ ${partyName?if_exists} ] <#--${partyAddress?if_exists}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-						 	<#if party?exists && party?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
-					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
-				          		<td valign='middle' colspan="2">
-				            		<div ><font color="green">
-				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
-         								<#assign passBookDetails=partyIdentification?if_exists>
-				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] <#--${partyAddress?if_exists} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				       		<#else>               
-				          		<td valign='middle'>
-                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
-				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
-				          		</td>
-				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
-			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
-				          	</#if>
-			        	</#if>
-						
-	               	</tr>
-	               	
 	               	
 	               	<tr>
 			           	<td>&nbsp;</td>
@@ -627,6 +617,56 @@
 				          	</#if>
 			        	</#if>
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
+	               	</tr>
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			
+		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
+		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
+			          	</#if>
+		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
+		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
+		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
+				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if partyId?exists && partyId?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div ><font color="green">
+				               			${partyId} [ ${partyName?if_exists} ] <#--${partyAddress?if_exists}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+						 	<#if party?exists && party?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
+				          		<td valign='middle' colspan="2">
+				            		<div ><font color="green">
+				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
+         								<#assign passBookDetails=partyIdentification?if_exists>
+				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] <#--${partyAddress?if_exists} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				       		<#else>               
+				          		<td valign='middle'>
+                 					<#--<@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
+				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+				          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
+				          		</td>
+				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
+			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
+				          	</#if>
+			        	</#if>
+						
 	               	</tr>
 	               	
 	               	<tr>
