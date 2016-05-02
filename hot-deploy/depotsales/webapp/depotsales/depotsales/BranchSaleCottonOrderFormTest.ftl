@@ -522,7 +522,6 @@
 	            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
 	        						});
 	            					response($.map(autocomp, function(v,i){
-	            						$('span#partyTooltip').html(v.label);
 	    								return {
 	                						label: v.label,
 	                						value: v.value
@@ -531,14 +530,10 @@
 	          					}
 	        			});
 	        			
-	      			}
-		      		
-		      		
-		      		
-		      		//source: billToPartyIdsList , select: function( event, ui ) {
-					//$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
-					//}
-					
+	      			},
+	      			select: function(e, ui) {
+			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+			        }
 					
 			  });	
 		 }
@@ -773,7 +768,40 @@
 							</#if>
 						</#if>
                        <td>&nbsp;</td>
-	               	</tr>	               	
+	               	</tr>	
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if referenceNo?exists && referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${referenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.referenceNo?exists && parameters.referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.referenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="referenceNo" id="referenceNo"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          		</td>
+				          		
+				          	</#if>
+			        	</#if>
+						
+	               	</tr>	 
+	               	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -832,6 +860,8 @@
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
+		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
+		
 		<br>
 	</form>    
 		</div>
