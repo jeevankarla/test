@@ -659,8 +659,8 @@
 				          		</td>       
 				       		<#else>               
 				          		<td valign='middle'>
-                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
-				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+                 					<#-- <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
+				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
 				          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
 				          		</td>
 				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
