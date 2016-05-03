@@ -126,7 +126,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
 		Debug.log("contactMechesDetails======================="+contactMechesDetails);
 		if(contactMechesDetails){
-			contactMec=contactMechesDetails.getLast();
+			contactMec=contactMechesDetails.getFirst();
 			if(contactMec){
 				partyPostalAddress=contactMec.get("postalAddress");
 				Debug.log("partyPostalAddress=========================="+partyPostalAddress);
