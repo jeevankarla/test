@@ -117,7 +117,16 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 			actualOrderId =  eachAttr.attrValue;
 		}
 		if(eachAttr.attrName == "DST_ADDR"){
-			destination =  eachAttr.attrValue;
+			districtGeoId =  eachAttr.attrValue;
+			
+			if(districtGeoId){
+				districtName = districtGeoId ;
+				GenericValue geo = delegator.findOne("Geo", [geoId:districtGeoId], false);
+				if(UtilValidate.isNotEmpty(geo)&& UtilValidate.isNotEmpty(geo.get("geoName"))){
+					destination = geo.get("geoName");
+					}
+			}
+			
 		}
 	}
 }
