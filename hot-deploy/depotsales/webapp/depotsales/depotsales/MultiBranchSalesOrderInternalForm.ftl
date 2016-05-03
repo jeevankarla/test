@@ -506,10 +506,10 @@
 				
 				quantity = 0;
 				if(uom == "Bale"){
-					quantity = Math.round(baleQty*bundleWeight*40);
+					quantity = baleQty*bundleWeight*40;
 				}
 				if(uom == "Half-Bale"){
-					quantity = Math.round(baleQty*bundleWeight*20);
+					quantity = baleQty*bundleWeight*20;
 				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
