@@ -827,6 +827,16 @@
          <response name="failed" type="view" value="FindSalesIndentPayment"/>  
       </request-map>
       
+      <request-map uri="createInvoiceApplyPayment">
+          <security https="true" auth="true"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createInvoiceApplyPayment"/>
+            <response name="success" type="request-redirect" value="DepotSalesInvoice">
+      	<redirect-parameter name="invoiceId"/>
+      	</response>
+         <response name="failed" type="view" value="DepotSalesInvoice"/>  
+      </request-map>
+      
       <request-map uri="payReambursement">
         <security https="true" auth="true"/>
         <event type="service" invoke="payReambursement"/>

@@ -1,3 +1,4 @@
+
 import org.ofbiz.base.util.UtilDateTime;
 
 
@@ -21,11 +22,10 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.entity.GenericValue;
 
-
 //Debug.log("orderList==4546554646===Other====="+orderList);
 
 
-partyIdsList = []as HashSet;
+/*partyIdsList = []as HashSet;
 
 for (eachList in orderList) {
 	
@@ -36,17 +36,17 @@ for (eachList in orderList) {
 //List partyIdsList = ["35564"];
 
 
-JSONObject eachAdvancePaymentOrderMap = new JSONObject();
+
 for (String eachPartyList : partyIdsList) {
 	
 	   
-		  /* condtList = [];
+		   condtList = [];
 		   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
 		   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 		   OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
 		   getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
 		   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
-	     */	  
+	     	  
 	       
 	       
 		   conditonList = [];
@@ -136,9 +136,7 @@ for (String eachPartyList : partyIdsList) {
 }
 
 //Debug.log("eachAdvancePaymentOrderMap============"+eachAdvancePaymentOrderMap);
-
-context.eachAdvancePaymentOrderMap = eachAdvancePaymentOrderMap;
-
+*/
 
 balanceAmountMap = [:];
 
@@ -172,7 +170,7 @@ for (eachOrder in orderList) {
 	  OrderPreferencePaymentApplication = delegator.findList("OrderPreferencePaymentApplication", null, null, null, null ,false);
 	
 	   
-	conditonList.clear();
+	conditonList = [];
 	conditonList.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
 	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	OrderPreferencePaymentApplicationList = EntityUtil.filterByCondition(OrderPreferencePaymentApplication, cond);
@@ -185,7 +183,7 @@ for (eachOrder in orderList) {
 	
 	JSONArray advanceAppliedList = new JSONArray();
 	
-	if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationaAppliedList))
+	/*if(UtilValidate.isNotEmpty(OrderPreferencePaymentApplicationaAppliedList))
 	{	
 
 		advancePaymentVisible.put(eachOrder.orderId, "visible");
@@ -215,7 +213,7 @@ for (eachOrder in orderList) {
 		  advanceAppliedList.add(tempMap);
 		  
 		  paymentPreferenceCancellMap.put(eachOrder.orderId, advanceAppliedList);
-	}
+	}*/
 	
 		
 	appliedAmount = 0;

@@ -55,6 +55,24 @@
        <attribute name="allStatus" type="List" mode="IN" optional="true"/>
        <attribute name="advPaymentIds" type="List" mode="IN" optional="true"/>
     </service>
+    
+    <service name="createInvoiceApplyPayment" engine="java"
+           location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createInvoiceApplyPayment">
+       <description>Creates a payment using the order payment preference</description>
+       <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
+       <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+       <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
+       <attribute name="partyIdTo" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="amount" type="String" mode="IN" optional="false"/>
+       <attribute name="comments" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+       <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+       <attribute name="inFavour" type="String" mode="IN" optional="true"/>
+       <attribute name="advPayments" type="List" mode="IN" optional="true"/>
+       <attribute name="allStatus" type="List" mode="IN" optional="true"/>
+       <attribute name="advPaymentIds" type="List" mode="IN" optional="true"/>
+    </service>
     <service name="createDepotSalesReturnHeader" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createDepotSalesReturnHeader" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>

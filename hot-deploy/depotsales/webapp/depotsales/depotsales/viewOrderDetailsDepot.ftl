@@ -264,7 +264,6 @@
 		Alert(message, title);
 	}
 
-var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrderMap)}	
 
 
    function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
@@ -277,7 +276,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		//finalBal = grandTotal-balance;
 		
 		
-		var paymentList = eachAdvancePaymentOrderMap[partyId];
+		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
 		
 		
@@ -289,7 +288,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 			//message += "<br/><br/>";
 		
 		
-		   if(paymentList[0].paymentId != "NoAdvance"){
+		/*   if(paymentList[0].paymentId != "NoAdvance"){
 			
 			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Balance</td><td align='left' class='h3' width='50%'>Select Balance</td></tr>";          
 	        for (i = 0; i < paymentList.length; i++) {
@@ -300,7 +299,9 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
 		         }
 		       }
-		  }
+		  } */
+		  
+		  
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Retailer Code :</font></td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
@@ -310,7 +311,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+balance+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+grandTotal+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
@@ -337,7 +338,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		//finalBal = grandTotal-balance;
 		
 		
-		var paymentList = eachAdvancePaymentOrderMap[partyId];
+		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
 		
 		grandTotal = grandTotal;
@@ -399,7 +400,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		//finalBal = grandTotal-balance;
 		
 		
-		var paymentList = eachAdvancePaymentOrderMap[partyId];
+		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
 		
 		
@@ -505,7 +506,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	
 	
 	
-	var eachPaymentOrderMap = ${StringUtil.wrapString(eachPaymentOrderMap)}	
+	//var eachPaymentOrderMap = ${StringUtil.wrapString(eachPaymentOrderMap)}	
 
    
 	
@@ -515,7 +516,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	        	
 	  var orderId = orderId;
 	  
-	    var paymentList = eachPaymentOrderMap[orderId];
+	 //   var paymentList = eachPaymentOrderMap[orderId];
 		var message = "";
 		
 		message += "<html><head></head><body><form action='realizeStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
@@ -547,11 +548,8 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	
   function realizeStatusChange(orderId) {
 	        	
-	      
-	        	
 	  var orderId = orderId;
-	  
-	   var paymentList = paymentPreferenceCancellMap[orderId];
+	  // var paymentList = paymentPreferenceCancellMap[orderId];
 		var message = "";
 		
 		message += "<html><head></head><body><form action='preferenceCancel' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
@@ -582,7 +580,7 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 	        	
 	  var orderId = orderId;
 	  
-	   var paymentList = paymentPreferenceCancellMap[orderId];
+	  // var paymentList = paymentPreferenceCancellMap[orderId];
 		var message = "";
 		
 		message += "<html><head></head><body><form action='preferenceCancelDepot' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
@@ -606,25 +604,12 @@ var eachAdvancePaymentOrderMap = ${StringUtil.wrapString(eachAdvancePaymentOrder
 		Alert(message, title); 
     }	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	function IndentorRealizeStatusChange(orderId) {
 	        	
 	            	
 	  var orderId = orderId;
 	  
-	   var paymentList = paymentPreferenceCancellMap[orderId];
+	//   var paymentList = paymentPreferenceCancellMap[orderId];
 		var message = "";
 		
 		message += "<html><head></head><body><form action='IndentorpreferenceCancel' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=25 cellpadding=25 width=500>";
