@@ -136,6 +136,11 @@
 	orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
 	
 	orderDetailsMap=[:];
+	
+	
+	JSONObject eachPaymentOrderMap = new JSONObject();
+	
+	
 	Set partyIdsSet=new HashSet();
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
@@ -170,7 +175,7 @@
 			tempData.put("isCreditInstution", "N");
 		}*/
 		partyIdsSet.add(partyId);
-		orderList.add(tempData);
+		
 		
 		isgeneratedPO="N";
 		// Also check if associated order is cancelled. If cancelled show generate PO button
@@ -205,6 +210,38 @@
 		tempMap.put("supplierPartyName", supplierPartyName);
 		tempMap.put("productStoreId", productStoreId);
 		orderDetailsMap.put(orderId,tempMap);
+		
+		
+			
+		conditonList = [];
+		conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+		double paidAmt = 0;
+		if(OrderPaymentPreference){
+		
+		orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+	 
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+		conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+		
+		
+		for (eachPayment in PaymentList) {
+			paidAmt = paidAmt+eachPayment.get("amount");
+		}
+		
+	  }	
+		tempData.put("paidAmt", paidAmt);
+		grandTOT = eachHeader.getBigDecimal("grandTotal");
+		balance = grandTOT-paidAmt;
+		tempData.put("balance", balance);
+		
+		
+		
+		orderList.add(tempData);
 		
 	}
 	context.orderDetailsMap=orderDetailsMap;
@@ -310,121 +347,17 @@
 	paymentSatusMap = [:];
 	
 	
-	JSONObject eachPaymentOrderMap = new JSONObject();
-	
-	
-	//  eachPaymentOrderMap = [:];
-	
-	for (eachList in orderList) {
-	
-		   condtList = [];
-		   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
-		   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
-		   OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
-		   getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
-		   
-		   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
-		   
-		  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
-		   
-		   orderPreferenceMap.put(eachList.orderId, orderPreferenceIds[0]);
-		   conditonList = [];
-		   conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
-		   conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
-		   cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-		   PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
-		   
-		   
-		   totAmount = 0;
-		   tempMap = [:];
-		   
-		   JSONObject allOrderPayments = new JSONObject();
-		   
-		   
-		 //  allOrderPayments = [:];
-		   
-		   if(UtilValidate.isNotEmpty(PaymentList)){
-		   
-			   JSONArray orderPaymentList = new JSONArray();
-			   
-			     for (eachpayment in PaymentList) {
-					 
-				      totAmount = totAmount+eachpayment.get("amount");
-					 
-					  allOrderPayments.put("paymentPreferenceId",eachpayment.get("paymentPreferenceId"));
-					  allOrderPayments.put("amount",eachpayment.get("amount"));
-					  
-					  orderPaymentPreferenceList = delegator.findOne("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", eachpayment.get("paymentPreferenceId")), false);
-					  
-					  statusId  = orderPaymentPreferenceList.get("statusId");
-					  
-					  allOrderPayments.put("statusId",statusId);
-					  
-					  orderPaymentList.add(allOrderPayments);
-					  
-					  }
-				 
-			      PaymentStatusList = EntityUtil.getFieldListFromEntityList(PaymentList,"statusId", true);
-				  
-				  if(PaymentStatusList.contains("PMNT_CONFIRMED")){
-					  tempMap.put("statusId", "PMNT_CONFIRMED");
-				  }
-				  else{
-					  tempMap.put("statusId", "PMNT_RECEIVED");
-				  }
-				     tempMap.put("amount", totAmount);
-					 
-					 eachPaymentOrderMap.put(eachList.orderId, orderPaymentList);
-			   
-		   }else{
-				   tempMap = [:];
-				   tempMap.put("statusId", "NotReceived");
-				   tempMap.put("amount", 0);
-				   paymentSatusMap.put(eachList.orderId, tempMap);
-				   //allOrderPayments = [:];
-				   
-				   JSONObject allOrderPayments1 = new JSONObject();
-				   
-				   allOrderPayments1.put("paymentPreferenceId","empty");
-				   allOrderPayments1.put("amount",-1);
-				   allOrderPayments1.put("statusId","empty");
-				   
-				   //allOrderPayments.put("NoPreferenceId", "NillAmout");
-				   eachPaymentOrderMap.put(eachList.orderId, allOrderPayments1);
-				   
-		   }
-		   paymentSatusMap.put(eachList.orderId, tempMap);
-		  }
-		  else{
-			  
-			  tempMap = [:];
-			  tempMap.put("statusId", "NotReceived");
-			  tempMap.put("amount", 0);
-			  paymentSatusMap.put(eachList.orderId, tempMap);
-			  
-			 /* allOrderPayments = [:];
-			  allOrderPayments.put("NoPreferenceId", "NillAmout");*/
-			  
-			  JSONObject allOrderPayments2 = new JSONObject();
-			  
-			  allOrderPayments2.put("paymentPreferenceId","empty");
-			  allOrderPayments2.put("amount",-1);
-			  allOrderPayments2.put("statusId","empty");
-			  
-			  eachPaymentOrderMap.put(eachList.orderId, allOrderPayments2);
-		  }
-	}
-	
 	condtList = [];
 	condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
 	cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 	PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
 	
 	
-	allOrderIds = eachPaymentOrderMap.keySet();
+	//allOrderIds = eachPaymentOrderMap.keySet();
 	
 	statusConfirmMap = [:];
 	
+	/*
 	for (eachOrderId in allOrderIds) {
 		preferenceList = eachPaymentOrderMap.get(eachOrderId);
 		statusList = [];
@@ -442,13 +375,15 @@
 		else{
 			statusConfirmMap.put(eachOrderId, "NotVisible");
 		}
-	}
+	}*/
 	
+	paymentPreferenceCancellMap = [:];
 	context.statusConfirmMap = statusConfirmMap;
 	context.eachPaymentOrderMap = eachPaymentOrderMap;
 	context.PaymentMethodType = PaymentMethodType;
 	context.orderPreferenceMap = orderPreferenceMap;
 	context.paymentSatusMap = paymentSatusMap;
+	context.paymentPreferenceCancellMap = paymentPreferenceCancellMap;
 	
 	sortedOrderMap =  [:]as TreeMap;
 	for (eachList in orderList) {

@@ -46,6 +46,14 @@ else {
 }
 //Debug.log("====parameters.purposeTypeIdField===="+parameters.purposeTypeIdField+"=====purposeTypeId="+parameters.purposeTypeId);
 
+
+condtList = [];
+condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
+
+context.PaymentMethodType = PaymentMethodType;
+
 condList.clear();
 parentTypeId=parameters.parentTypeId;
 actionName="createVoucherPayment";

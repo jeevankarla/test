@@ -417,7 +417,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
               
-              
+              <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)/>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
@@ -440,7 +440,21 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <#else>
                <td align="center"></td>
                </#if> -->
-              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+            <#-->  <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>-->
+           
+              	
+           
+               <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+              	  <#if (invoice.parentTypeId == "SALES_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
+              		   <td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntryForInvoListing('${invoice.invoiceId}','${invoicePaymentInfo.amount}','${invoicePaymentInfo.outstandingAmount}','${invoice.partyId}','${invoice.partyIdFrom}','${vendorName}');"/></td>
+               	    <#else>
+                	  <td align="center"></td>
+               	  </#if>
+                <#else>
+                	<td align="center"></td>
+              </#if>
+           
+           
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

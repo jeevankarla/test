@@ -64,6 +64,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 public class DepotSalesServices{
@@ -2877,12 +2878,12 @@ public class DepotSalesServices{
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
-	         GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
+	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
 	        
 	         orderPreferencePaymentApplication.set("orderPaymentPreferenceId", orderPaymentPreferenceId);
 	         orderPreferencePaymentApplication.set("paymentId",paymentId);
 	         orderPreferencePaymentApplication.set("amountApplied", new BigDecimal(amount));
-				delegator.createSetNextSeqId(orderPreferencePaymentApplication);
+				delegator.createSetNextSeqId(orderPreferencePaymentApplication);*/
 	  	
 	  	} catch (Exception e) {
 				 Debug.logError(e, e.toString(), module);
@@ -2972,6 +2973,103 @@ public class DepotSalesServices{
 	  	 return result;
    }
 	
+   	
+   	
+   	public static Map<String, Object> createInvoiceApplyPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    Locale locale = (Locale) context.get("locale");
+		
+	    String paymentDate = (String) context.get("paymentDate");
+	    String invoiceId = (String) context.get("invoiceId");
+	  	String partyIdFrom = (String) context.get("partyIdFrom");
+	  	String partyIdTo = (String) context.get("partyIdTo");
+	  	String paymentMethodTypeId = (String) context.get("paymentTypeId");
+	  	String amount = (String) context.get("amount");
+	  	String comments = (String) context.get("comments");
+	  	String paymentRefNum = (String) context.get("paymentRefNum");
+	  	String issuingAuthority = (String) context.get("issuingAuthority");
+	  	String inFavourOf = (String) context.get("inFavour");
+	  	List advancePayments = (List) context.get("advPayments");
+	  	List allStatus = (List) context.get("allStatus");
+	  	List advPaymentIds = (List) context.get("advPaymentIds");
+	  	
+	  	
+	  	if(UtilValidate.isNotEmpty(amount)){
+	  	Timestamp eventDate = null;
+	      if (UtilValidate.isNotEmpty(paymentDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+				try {
+					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
+			}
+	      
+          Map<String, Object> paymentParams = new HashMap<String, Object>();
+              paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
+              paymentParams.put("paymentMethodTypeId", paymentMethodTypeId);
+             // paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+              paymentParams.put("amount", new BigDecimal(amount));
+              paymentParams.put("statusId", "PMNT_RECEIVED");
+              paymentParams.put("paymentDate", eventDate);
+              paymentParams.put("partyIdFrom", partyIdFrom);
+           //   paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
+              paymentParams.put("partyIdTo", partyIdTo);
+         
+          if (paymentRefNum != null) {
+              paymentParams.put("paymentRefNum", paymentRefNum);
+          }
+          if (issuingAuthority != null) {
+              paymentParams.put("issuingAuthority", issuingAuthority);
+          }
+          if (comments != null) {
+              paymentParams.put("comments", comments);
+          }
+          paymentParams.put("userLogin", userLogin);
+         
+          Map<String, Object> paymentDetailsMap = FastMap.newInstance();
+          String paymentId = "";
+          try{
+             paymentDetailsMap = dispatcher.runSync("createPayment", paymentParams);
+             if (UtilValidate.isNotEmpty(paymentDetailsMap)) {
+        	    paymentId = (String) paymentDetailsMap.get("paymentId");
+        	    GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+ 	  	        paymentAttribute.put("attrValue",inFavourOf);
+ 	  	        paymentAttribute.create();
+               }
+             
+	             Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
+	           	newPayappl.put("invoiceId", invoiceId);
+	           	newPayappl.put("paymentId", paymentId);
+	           	newPayappl.put("amountApplied", new BigDecimal(amount));
+           	
+           	 Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+          	  if (ServiceUtil.isError(paymentApplResult)) {
+                  return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentApplResult), null, null, paymentApplResult);
+              }
+             
+          }catch (Exception e) {
+			 Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Error While Creating Payment");	
+	  	   }
+  	           
+       }
+        if(UtilValidate.isEmpty(amount))
+        {
+        	return ServiceUtil.returnError("Please Enter Amount");
+        }else{
+	  	 result = ServiceUtil.returnSuccess("Successfully Payment Has Been Created For"+invoiceId);
+        }
+	  	 return result;
+   }
+	
+   	
+   	
 	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
    		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
