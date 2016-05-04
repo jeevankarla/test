@@ -8,11 +8,45 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+
+Map formatMap = [:];
+List formatList = [];
+List branchIds = [];
+	for (eachList in resultCtx.get("productStoreList")) {
+		
+		formatMap = [:];
+		formatMap.put("storeName",eachList.get("storeName"));
+		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+		formatList.addAll(formatMap);
+		branchIds.add(eachList.get("payToPartyId"));
+		
+	}
+context.branchList = formatList;
  userPartyId = userLogin.partyId;
  partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "EMPANELLED_SUPPLIER"), false);
  if(partyRole){
     context.partyId = userPartyId;
  }	
+ 
+ // To filter based on suppliers
+ 
+ supplierFilteredOrderIds = [];
+ if(parameters.supplierId){
+	 suppCondList = [];
+	 suppCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	 suppCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.supplierId));
+	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(suppCondList, EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(orderRoleList)){
+		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
+	 }
+ }
+ 
+ 
+ 
+ 
 if(UtilValidate.isEmpty(parameters.productId)){
 	
 	
@@ -21,22 +55,34 @@ if(UtilValidate.isEmpty(parameters.productId)){
 		resultList = [];
 		GenericValue poEntry = null;
 		while ((poEntry=list.next()) != null) {
-			if(parameters.findPoFlag=="Y"){
-				
-			if(parameters.orderTypeId=="PURCHASE_ORDER"){
-			if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
-				resultList.add(poEntry);
-				}
-			}else{
-			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
-				resultList.add(poEntry);
+			
+			if(UtilValidate.isNotEmpty(supplierFilteredOrderIds)){
+				if(!supplierFilteredOrderIds.contains(poEntry.orderId)){
+					continue;
 				}
 			}
-			}else{
-			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
-				resultList.add(poEntry);
+			
+//			if(validOrderIds.contains(poEntry.orderId)){
+				if(parameters.findPoFlag=="Y"){
+					if(parameters.orderTypeId=="PURCHASE_ORDER"){    // For branch sales purchase order
+						if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){
+							resultList.add(poEntry);
+						}
+					}else{
+						if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){
+							resultList.add(poEntry);
+						}
+					}
+				}else{
+					if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){
+						resultList.add(poEntry);
+					}
+					
 				}
-			}
+//			}
+			
+			
+			
 		}
 		sortedOrderMap =  [:]as TreeMap;
 		for (eachList in resultList) {
@@ -57,6 +103,12 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	poListNew=[];
 	GenericValue poEntry = null;
 	while ((poEntry=list.next()) != null) {
+		
+		if(UtilValidate.isNotEmpty(supplierFilteredOrderIds)){
+			if(!supplierFilteredOrderIds.contains(poEntry.orderId)){
+				continue;
+			}
+		}
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poEntry.orderId));
