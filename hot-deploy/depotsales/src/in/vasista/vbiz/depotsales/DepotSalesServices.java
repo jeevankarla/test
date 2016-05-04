@@ -2996,7 +2996,6 @@ public class DepotSalesServices{
 	  	List allStatus = (List) context.get("allStatus");
 	  	List advPaymentIds = (List) context.get("advPaymentIds");
 	  	
-	  	Debug.log("paymentMethodTypeId================="+paymentMethodTypeId);
 	  	
 	  	if(UtilValidate.isNotEmpty(amount)){
 	  	Timestamp eventDate = null;
@@ -3010,8 +3009,6 @@ public class DepotSalesServices{
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
 				}
 			}
-	      
-	       Debug.log("paymentMethodTypeId============"+paymentMethodTypeId);
 	      
           Map<String, Object> paymentParams = new HashMap<String, Object>();
               paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
@@ -3071,14 +3068,6 @@ public class DepotSalesServices{
 	  	 return result;
    }
 	
-   	
-   	
-   	
-   	
-   	
-   	
-   	
-   	
    	
    	
 	public static String processInventorySalesOrder(HttpServletRequest request, HttpServletResponse response) {
