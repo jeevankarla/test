@@ -291,12 +291,17 @@
     </form>
     
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        
-<!--         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> -->
+    <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+       <field name="partyId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="false">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
         <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
-        <field name="partyId" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
         	<drop-down allow-empty="true" > 
@@ -306,7 +311,9 @@
         		<option key="GOODS_RECEIVED" description="Goods Received"  ></option>
         	</drop-down>
         </field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -371,10 +378,10 @@
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
           		</hyperlink>
             </field>
-            <field name="partyId" title="Supplier">
+            <field name="partyIdFrom" title="Supplier">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                    <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
-                        <parameter param-name="partyId" from-field="partyId"/>
+                    <sub-hyperlink description="[${partyIdFrom}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                        <parameter param-name="partyId" from-field="partyIdFrom"/>
                     </sub-hyperlink>
                 </display-entity>
             </field>
