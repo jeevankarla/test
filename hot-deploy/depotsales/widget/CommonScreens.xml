@@ -437,4 +437,63 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ProcessBranchOrders">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="processOrdersBranchSales" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+				<set field="defaultEffectiveDateTime"
+					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+				<set field="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+				<set field="screenFlag" value="depotSales" />
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+					/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
+			    <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />
+					
+			</actions>
+			<widgets>
+				<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="BranchTransactionsTabBar"/>	
+				<section>
+					<widgets>
+					<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                  <decorator-section name="menu-bar">
+                                  	 <container style="button-bar">
+									<link target="SilkBranchSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
+									</link>
+								</container>
+                                  </decorator-section>
+					 		<decorator-section name="search-options">
+                                      <include-form name="FindTankerSalesOrder" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                  </decorator-section>
+                                  <decorator-section name="search-results">
+						<screenlet title="Sales Indents  &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;     Total Indents:     ${orderListSize}" >
+						<platform-specific>
+								<html>
+									<html-template
+										location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
+								</html>
+							</platform-specific>
+							<platform-specific>
+								<html>
+									<html-template
+										location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrdersDepot.ftl" />
+								</html>
+							</platform-specific>
+						</screenlet>
+						</decorator-section>
+						</decorator-screen>
+					</widgets>
+				</section>
+					
+			</widgets>
+		</section>
+	</screen>
 </screens>

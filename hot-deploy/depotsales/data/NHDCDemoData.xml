@@ -223,7 +223,7 @@ under the License.
 	 	 <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="MYPORTALBASE_ADMIN"/> 
 	 	 <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="ACCOUNTING_VIEW"/>
 	   
-	    <PortalPortlet portalPortletId="BRANCH_SALES_PAGE" portletName="Branch Sales Portal Screen" screenName="FacilityTree"
+	    <PortalPortlet portalPortletId="BRANCH_SALES_PAGE" portletName="Branch Sales Portal Screen" screenName="ProcessBranchOrders"
             screenLocation="component://depotsales/widget/CommonScreens.xml" description="Branch Sales Portal Screen"/>
     	    	
     	<PortalPage portalPageId="MYPORTAL_BS_ADMIN" sequenceNum="0" portalPageName="Branch Sales Operations" description="The vbiz System Branch Sales page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_BS_ADMIN"/>
@@ -236,6 +236,9 @@ under the License.
     	<PartyRole partyId="13680" roleTypeId="BRANCH_EMPLOYEE"/>
     	<PartyRelationship partyIdFrom="INT7" partyIdTo="13680" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
     
+    	<RoleType roleTypeId="BRANCH_EMPLOYEE" parentTypeId="" description="Branch Employee"/>
+    	<PartyRole partyId="15230" roleTypeId="BRANCH_EMPLOYEE"/>
+    	<PartyRelationship partyIdFrom="INT7" partyIdTo="15230" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
     
     	<!-- <UserPreference userLoginId="vikram" userPrefTypeId="LANGUAGE_PREFERENCE" userPrefValue="zh_CN"/> --> 
     	
