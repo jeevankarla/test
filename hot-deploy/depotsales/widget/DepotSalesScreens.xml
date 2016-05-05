@@ -5800,6 +5800,40 @@
             </widgets>
         </section>
     </screen>
+     <screen name="FindTransporter">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="Find Supplier"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="Transpoter"/>
+				<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
+                <service service-name="findParty" auto-field-map="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	                      		<link target="CreateNewTransporter"  text="Create Transporter" style="buttontext" ></link>
+	           						<platform-specific>
+                                    <html><html-template location="component://depotsales/webapp/depotsales/depotsales/findTransporter.ftl" />
+                                    </html>
+                                </platform-specific>
+	                      		</widgets>
+	                      		 <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                      	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
      <screen name="CreateNewSupplier">
         <section>
             <actions>
@@ -5812,6 +5846,16 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+                
+                 <entity-condition list="roleTypes"
+					entity-name="RoleType">
+					<condition-list combine="or">
+						<condition-expr field-name="roleTypeId" value="EMPANELLED_SUPPLIER" />
+						<condition-expr field-name="roleTypeId" value="UNEMPALED_SUPPLIER" />
+					</condition-list>
+				</entity-condition>
+                
+                
             </actions>
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -5905,6 +5949,79 @@
                                     <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                       				<include-form name="EditVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                       				<include-form name="createVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="TransPorterviewprofile">
+        <section>
+            <actions>
+              <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+              <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="Transpoter"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ViewProfile.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty field="partyId"/>
+                                    <not><if-empty field="parameters.telno"/></not>
+                                </and>
+                            </condition>
+                            <actions>
+                                <service service-name="findPartyFromTelephone" auto-field-map="true" result-map="telnoMap"/>
+                                <entity-one entity-name="Party" value-field="party">
+                                    <field-map field-name="partyId" from-field="telnoMap.partyId"/>
+                                </entity-one>
+                                <set field="parameters.partyId" from-field="party.partyId"/>
+                            </actions>
+                            <widgets/>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty field="partyId"/>
+                                    <not><if-empty field="parameters.email"/></not>
+                                </and>
+                            </condition>
+                            <actions>
+                                <service service-name="findPartyFromEmailAddress" result-map="emailMap">
+                                    <field-map field-name="address" from-field="parameters.email"/>
+                                </service>
+                                <entity-one entity-name="Party" value-field="party">
+                                    <field-map field-name="partyId" from-field="emailMap.partyId"/>
+                                </entity-one>
+                                <set field="parameters.partyId" from-field="party.partyId"/>
+                            </actions>
+                            <widgets/>
+                        </section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="party"/></not>
+                            </condition>
+                            <widgets>
+                            	 <container>
+                                    <include-screen name="Vendor"/>
+                                    <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                      				<include-form name="EditVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      				<include-form name="createTraVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                 </container>
                             </widgets>
                             <fail-widgets>

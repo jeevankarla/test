@@ -162,7 +162,6 @@
 						<tr>	            
 						
 						    <td class="label"><b> Role Type Id</b></td>
-						    <#assign roleTypes = delegator.findByAnd("RoleType", Static["org.ofbiz.base.util.UtilMisc"].toMap("roleTypeId", "EMPANELLED_SUPPLIER"))>
 						   <td>
 						    <select name="roleTypeId" id="roleTypeId"  onchange="javascript:vendorValidation();" >
 				              <#list roleTypes as roleType>

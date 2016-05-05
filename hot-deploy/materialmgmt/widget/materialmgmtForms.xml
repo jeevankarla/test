@@ -773,6 +773,24 @@
 		<field name="submitButton"  title="Create" separate-column="true">
             <submit button-type="button"/></field>
 	</form>
+		<form name="createTraVendorIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createTraVendorIdentification"
+    	  default-table-style="basic-table hover-bar" separate-columns="true" >
+    	  <actions>
+		</actions>
+		<field name="partyIdentificationTypeId" >
+		<drop-down allow-empty="false">             
+				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+				          <entity-order-by field-name="partyIdentificationTypeId"/>
+				</entity-options>
+			</drop-down>  
+		</field>
+		<field name="partyId"><hidden /></field>
+		<field name="idValue" title="Number"><text size="22"></text></field>
+		<field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
+		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
+		<field name="submitButton"  title="Create" separate-column="true">
+            <submit button-type="button"/></field>
+	</form>	
 	<form name="EditVendor" type="single" target="updateVendor" default-map-name="partyGroup"
         focus-field-name="groupName" header-row-style="header-row" default-table-style="basic-table">
         <field use-when="partyGroup!=null" name="partyId" title="${uiLabelMap.VendorId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>

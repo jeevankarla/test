@@ -698,6 +698,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindSupplier"/>
     </request-map>
+    
+    <request-map uri="findTransporter">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindTransporter"/>
+    </request-map>
+    
      <request-map uri="CreateNewSupplier">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewSupplier"/>
@@ -716,8 +722,8 @@
     <request-map uri="createTransporter">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createTransporter"/>
-        <response name="success" type="request-redirect" value="CreateNewTransporter"/>
-        <response name="error" type="view" value="CreateNewTransporter"/>
+        <response name="success" type="request-redirect" value="FindTransporter"/>
+        <response name="error" type="view" value="FindTransporter"/>
     </request-map>
      
     <request-map uri="createSupplier">
@@ -729,6 +735,10 @@
     <request-map uri="viewprofile">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewprofile"/>
+    </request-map>  
+    <request-map uri="TransPorterviewprofile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransPorterviewprofile"/>
     </request-map>  
     <request-map uri="editVendor">
         <security https="true" auth="true"/>
@@ -746,6 +756,20 @@
         <event type="service" path="" invoke="createPartyIdentification"/>
         <response name="success" type="view"  value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+    
+     <request-map uri="createTraVendorIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyIdentification"/>
+        <response name="success" type="view"  value="TransPorterviewprofile"/>
+        <response name="error" type="view" value="TransPorterviewprofile"/>
+    </request-map>
+    
+    <request-map uri="TransporterCreateVendorIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyIdentification"/>
+        <response name="success" type="view"  value="TransPorterviewprofile"/>
+        <response name="error" type="view" value="TransPorterviewprofile"/>
     </request-map>
     <request-map uri="updateVendorIdentification">
         <security https="true" auth="true"/>
@@ -1671,6 +1695,7 @@
     
     <view-map name="CreateNewSupplier" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewSupplier"/>
     <view-map name="viewprofile" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#viewprofile"/>
+    <view-map name="TransPorterviewprofile" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#TransPorterviewprofile"/>
     <view-map name="EditVendor" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditVendor"/>
     <view-map name="editcontactmech" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#editcontactmech"/>
   
@@ -1688,6 +1713,9 @@
     
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>
     <view-map name="FindSupplier" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSupplier"/>
+    <view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#findTransporter"/>
+    
+    
     
     <view-map name="EditProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProcProducer"/>
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
