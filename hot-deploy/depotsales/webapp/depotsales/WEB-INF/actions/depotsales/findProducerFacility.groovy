@@ -61,6 +61,7 @@ partyRoleAndIde.addViewLink("PRPD","PRS", Boolean.FALSE, ModelKeyMap.makeKeyMapL
 
 condList = [];
 condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS, "PSB_NUMER"));
 
 if(partyId!=null && partyId!=""){
 	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,partyId.trim()));

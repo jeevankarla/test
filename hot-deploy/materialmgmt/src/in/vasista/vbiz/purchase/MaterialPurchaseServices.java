@@ -4347,6 +4347,8 @@ catch(Exception e){
 		  	  }
 		     if(UtilValidate.isNotEmpty(passBook)){
 		        dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"userLogin", context.get("userLogin")));
+		 	  }else{
+			    dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue","_NA_","partyId",partyId,"userLogin", context.get("userLogin")));
 		 	  }
 		     if(UtilValidate.isNotEmpty(adharNumber)){
 	      	     dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","ADR_NUMBER","idValue",adharNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
