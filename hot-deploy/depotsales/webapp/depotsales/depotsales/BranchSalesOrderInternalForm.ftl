@@ -610,6 +610,7 @@
 				
 			}
 			if (args.cell == 5) {
+				var prod = data[args.row]["cProductId"];
 				var row = args.row;
 				updateCurrentQuota(row);
 				
