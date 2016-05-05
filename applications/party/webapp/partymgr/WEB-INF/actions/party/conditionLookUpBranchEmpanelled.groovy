@@ -61,8 +61,9 @@ if(roleTypeId != null){
 	if(partyIdFrom != null){
 		context.entityName="PartyRelationAndIdentificationAndPerson";
 		conditionFields.partyIdFrom=partyIdFrom;
-		conditionFields.partyIdentificationTypeId="PSB_NUMER";
 	}	
+	
+	conditionFields.partyIdentificationTypeId="PSB_NUMER";
 	
 		conditionFields.roleTypeId=roleTypeId;
 		if(partyClassificationGroupId != null){

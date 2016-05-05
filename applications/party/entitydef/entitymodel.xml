@@ -1789,6 +1789,7 @@ under the License.
       <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
       <member-entity entity-alias="RTP" entity-name="PartyRole"></member-entity>
       <alias entity-alias="RTP" name="roleTypeId"></alias>
+      <alias entity-alias="PI" name="partyIdentificationTypeId"></alias>
       <alias entity-alias="PI" name="idValue"></alias>
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
