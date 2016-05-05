@@ -24,6 +24,24 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import org.ofbiz.entity.util.EntityUtil;
 
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+
+Map formatMap = [:];
+List formatList = [];
+List branchIds = [];
+	for (eachList in resultCtx.get("productStoreList")) {
+		
+		formatMap = [:];
+		formatMap.put("storeName",eachList.get("storeName"));
+		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+		formatList.addAll(formatMap);
+		branchIds.add(eachList.get("payToPartyId"));
+		
+	}
+context.branchList = formatList;
+
+
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 if(UtilValidate.isEmpty(parameters.noConditionFind)){
 return "";

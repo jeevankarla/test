@@ -2134,14 +2134,15 @@
 				<set field="titleProperty" value="Find Purchase Order" />
 				<set field="tabButtonItem" value="FindPO" />
 				<set field="tabButtonItem2" value="FindPO" />
-				<set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />
 				<set field="partyId" from-field="parameters.partyId" />
+				<!-- <set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />
 				<set field="roleTypeId" value="BILL_TO_CUSTOMER" />
-				<set field="parameters.findPoFlag" value="Y" />
-				<set field="parameters.orderTypeId" value="PURCHASE_ORDER" />
-				<set field="parameters.roleTypeId" from-field="roleTypeId" />
-				<set field="parameters.noConditionFind" value="N"></set>
 				<set field="parameters.salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"></set>
+				<set field="parameters.findPoFlag" value="Y" />
+				<set field="parameters.orderTypeId" value="PURCHASE_ORDER" /> -->
+				<set field="parameters.roleTypeId" from-field="roleTypeId" />
+				<set field="parameters.noConditionFind" default-value="N" from-field="parameters.noConditionFind"></set>
+				<set field="parameters.hideSearch" default-value="N" from-field="parameters.hideSearch"></set>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="10" />
