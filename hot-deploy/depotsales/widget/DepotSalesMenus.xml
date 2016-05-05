@@ -183,7 +183,7 @@
 		      <!--  <condition>
 		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
 		    </condition> -->
-		           <link target="CreateNewTransporter"/>
+		           <link target="findTransporter"/>
 	   </menu-item>
         <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
 	   		 <condition>
