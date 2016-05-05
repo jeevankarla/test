@@ -2241,6 +2241,17 @@ under the License.
         <key-map field-name="requirementGroupId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="ShipmentAndOrderRole"
+        package-name="org.ofbiz.order.order"
+        title="Shipment And OrderRole">
+        <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+        <member-entity entity-alias="SHP" entity-name="Shipment"/>
+        <alias-all entity-alias="SHP"/>
+        <alias-all entity-alias="ORLE"/>
+        <view-link entity-alias="SHP" rel-entity-alias="ORLE">
+            <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
+        </view-link>
+    </view-entity>
     
 </entitymodel>
 
