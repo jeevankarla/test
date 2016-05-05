@@ -218,6 +218,9 @@
 		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 		OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
 		double paidAmt = 0;
+		
+		paymentIdsOfIndentPayment = [];
+		
 		if(OrderPaymentPreference){
 		
 		orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
@@ -228,12 +231,35 @@
 		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 		PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
 		
+		paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
+		
 		
 		for (eachPayment in PaymentList) {
 			paidAmt = paidAmt+eachPayment.get("amount");
 		}
 		
 	  }	
+		
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+		
+		invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
+		
+		if(invoiceIds){
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
+		
+			for (eachList in PaymentApplicationList) {
+				 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
+    				paidAmt = paidAmt+eachList.amountApplied;
+			}
+		}
+		
+		
 		tempData.put("paidAmt", paidAmt);
 		grandTOT = eachHeader.getBigDecimal("grandTotal");
 		balance = grandTOT-paidAmt;
