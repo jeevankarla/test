@@ -115,12 +115,12 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
-        <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
+        <field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
         </field>
+        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
@@ -1342,12 +1342,12 @@
               </entity-options>
            </drop-down>
         </field> -->
-        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
-        <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
+        <field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
         </field>
+        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         

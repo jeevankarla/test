@@ -238,7 +238,7 @@ under the License.
     
     	<RoleType roleTypeId="BRANCH_EMPLOYEE" parentTypeId="" description="Branch Employee"/>
     	<PartyRole partyId="15230" roleTypeId="BRANCH_EMPLOYEE"/>
-    	<PartyRelationship partyIdFrom="INT7" partyIdTo="15230" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
+    	<PartyRelationship partyIdFrom="INT10" partyIdTo="15230" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
     
     	<!-- <UserPreference userLoginId="vikram" userPrefTypeId="LANGUAGE_PREFERENCE" userPrefValue="zh_CN"/> --> 
     	

@@ -44,7 +44,7 @@
 		}
 	context.formatList = formatList;
 	
-	branchId = parameters.branchId;
+	branchId = parameters.partyIdFrom;
 	
 	salesChannel = parameters.salesChannelEnumId;
  

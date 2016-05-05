@@ -551,11 +551,11 @@ under the License.
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER" />
-                <entity-one value-field="productStore" entity-name="ProductStore">
+                <!-- <entity-one value-field="productStore" entity-name="ProductStore">
 					<field-map field-name="productStoreId" from-field="parameters.productStoreId" />
-					<!-- <select-field field-name="propertyValue" /> -->
+					<select-field field-name="propertyValue" />
 				</entity-one>
-                <set field="parameters.partyIdFrom" value="${productStore.payToPartyId}" />
+                <set field="parameters.partyIdFrom" value="${productStore.payToPartyId}" /> -->
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->
                 <set field="entityName" value="PartyRelationAndIdentificationAndPerson"/>
