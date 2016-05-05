@@ -488,7 +488,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <include-menu name="BranchSalesIndentTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
@@ -1049,7 +1049,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu name="ReceiptTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -1492,7 +1492,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu name="ReceiptTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -2162,7 +2162,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
 							name="FindPOSubTabBar" />
@@ -2297,7 +2297,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
 						<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
@@ -2421,7 +2421,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
 						<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
@@ -2602,7 +2602,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -2833,7 +2833,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<container>
 							<label style="h1">Party Financial History</label>
@@ -3577,7 +3577,7 @@
     			</actions>
     			<widgets>
     				<decorator-screen name="BranchTransactionsCommonDecorator"
-    					location="${parameters.mainDecoratorLocation}">
+    					location="component://depotsales/widget/CommonScreens.xml">
     					<decorator-section name="body">
     						<!-- <include-menu name="BranchSalesIndentTabBar"
     							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
@@ -4526,7 +4526,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -4703,7 +4703,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -4878,7 +4878,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -5047,7 +5047,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<include-menu name="BranchSalesEntryIndentTabBar"
@@ -5219,7 +5219,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -5396,7 +5396,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -5574,7 +5574,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
 						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
@@ -5746,7 +5746,7 @@
 				</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 					<decorator-section name="body">
 					<include-menu name="BranchSalesIndentWithPoTabBar"
     							location="component://depotsales/widget/DepotSalesMenus.xml" />
@@ -6091,7 +6091,7 @@
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentAttributeInfo.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="BranchTransactionsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="BranchTransactionsCommonDecorator" location="component://depotsales/widget/CommonScreens.xml">
                     <decorator-section name="body">
                      <platform-specific>
                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatusCancel.ftl"/></html>
@@ -6207,7 +6207,7 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+					location="component://depotsales/widget/CommonScreens.xml">
 						<decorator-section name="body">
 						<include-menu name="FindDepotTransIndentSubTabBar"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
