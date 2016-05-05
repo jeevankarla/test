@@ -53,7 +53,10 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-		
+		.screenlet .serviceCharge
+		{	
+			float: right;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -63,6 +66,12 @@
 		$(document).ready(function(){
 			 $("#societyfield").hide();
 			 	fillPartyData();
+			 	
+			if(indententryinit.schemeCategory.value.length > 0){
+	  			if ($('#schemeCategory').val() == "General"){
+	  				$("#serviceCharge").html("<b>2% Service Charge is applicable</b>");
+	  			}
+	  		} 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -109,16 +118,17 @@
 				} });	
 				if (e.keyCode === 13){
 				
-					// Validation
+					calculateTaxApplicability();
 					
+					// Validation
 					if(indententryinit.partyId.value.length < 1){
 			  			alert("Customer is Mandatory");
-			  			$('#0_lookupId_partyId').css('background', 'red'); 
+			  			$('#partyId').css('background', 'red'); 
 				       	
 				       	setTimeout(function () {
-				           	$('#0_lookupId_partyId').css('background', 'white').focus(); 
+				           	$('#partyId').css('background', 'white').focus(); 
 				       	}, 800);
-				       	$("#0_lookupId_partyId").prev().css('color', 'yellow');
+				       	$("#partyId").prev().css('color', 'yellow');
 				       	
 			  			return false;  
 			  		}
@@ -155,7 +165,11 @@
 				       	
 			  			return false;  
 			  		}
-				
+	    			
+	    			if(indententryinit.taxTypeApplicable.value.length < 1){
+			  			$('#taxTypeApplicable').val("VAT_SALE");
+			  		}
+	    			
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -230,9 +244,7 @@
 	         	 });
 	         }
 	    }
-		
-		
-		
+	    
 		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
 		
@@ -280,15 +292,12 @@
 		       	  				   //tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
 		       	  				   
-		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
-		       	  				   totLooms = totLooms+parseInt(obj[item.loomType]);
-		       	  				   
-		       	  				   });
-		       	  				  
-		       	  				   
+		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				 	totLooms = totLooms+parseInt(obj[item.loomType]);
+		       	  				     
+		       	  				 });
 		       	  				  		       	  				   
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
@@ -315,7 +324,7 @@
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
-		       	  				   	$("#totLooms").html("<h4>"+totLooms+"</h4>");
+		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				   
 	       	  				   }
@@ -421,10 +430,114 @@
 	  		}
 	  	}
 	  	
-	function formSubmit(selection){
-		 $('#indententryinit').submit();
-			    return false; 
-	}
+	  	function calculateTaxApplicability() {
+			var productStoreId = $("#productStoreId").val();
+			var supplierPartyId = $("#suplierPartyId").val();
+			var partyId = $("#partyId").val();
+			
+			if( productStoreId != undefined && productStoreId != ""  &&  supplierPartyId != undefined && supplierPartyId != ""  &&    partyId != undefined && partyId != ""  ){
+			
+				$.ajax({
+		             type: "POST",
+		             url: "getTaxApplicabilityDetails",
+		           	 data: {productStoreId : productStoreId, supplierPartyId: supplierPartyId, partyId: partyId } ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {
+			             if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+			       	  		 alert(result["_ERROR_MESSAGE_"]);
+			          	 }
+			          	 else{
+	       	  				 var geoIdsMap =result["geoIdsMap"];
+	       	  				 var checkForE2Form = geoIdsMap["checkForE2Form"];
+	       	  				 var taxTypeApplicable = geoIdsMap["taxTypeApplicable"];
+	       	  				 //alert(taxTypeApplicable);
+	       	  				 //jQuery('#taxTypeValue').html(taxTypeApplicable);
+	       	  				 $('#orderTaxType').val(taxTypeApplicable).change();
+	       	  				 //$('#orderTaxType option[value=CST_SALE]').prop('selected', 'selected').change();
+	       	  				 
+	       	  				 $('#taxTypeApplicable').val(taxTypeApplicable);
+	       	  				 $('#partyGeoId').val(geoIdsMap["partyGeoId"]);
+	       	  				 $('#supplierGeoId').val(geoIdsMap["supplierGeoId"]);
+	       	  				 $('#branchGeoId').val(geoIdsMap["branchGeoId"]);
+	       	  				 
+	       	  				 $('#orderTaxType').val(geoIdsMap["taxType"]);
+	       	  				 
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$('#e2FormCheck').val("Y");
+	       	  				 }
+	       	  				 else{
+	       	  				 	$('#e2FormCheck').val("N");
+	       	  				 }
+	       	  				 
+	       	  				 
+	       	  				 <#--
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$("#E2FormCheck").attr("checked",false);
+	       	  				 	jQuery('#E2FormChecktd').show();
+	       	  				 }
+	       	  				 else{
+	       	  				 	$("#E2FormCheck").attr("checked","checked");
+	       	  				 	jQuery('#E2FormChecktd').hide();
+	       	  				 }
+	       	  				 -->
+	       	  				 
+							         
+			      		 }
+		          	} ,
+		         	error: function() {
+		          		alert(result["_ERROR_MESSAGE_"]);
+		         	}
+		        }); 
+			
+			
+			}
+			
+			
+	    }
+	  	
+	  	
+		function formSubmit(selection){
+			 $('#indententryinit').submit();
+			 return false; 
+		}
+		
+		function autoCompletePartyId(){
+			var productStoreId = $("#productStoreId").val();
+		      $("#partyId").autocomplete({ 
+		      
+		      		
+		      		source: function( request, response ) {
+	        			$.ajax({
+	          					url: "LookupBranchCustomers",
+	          					dataType: "html",
+	          					data: {
+	            					ajaxLookup: "Y",
+	            					term : request.term,
+	            					productStoreId : productStoreId
+	          					},
+	          					success: function( data ) {
+	          						var dom = $(data);
+	        						dom.filter('script').each(function(){
+	            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
+	        						});
+	            					response($.map(autocomp, function(v,i){
+	    								return {
+	                						label: v.label,
+	                						value: v.value
+	               						};
+									}));
+									
+	          					}
+	        			});
+	        			
+	      			},
+	      			select: function(e, ui) {
+			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+			        }
+					
+			  });	
+		 }
 	 
 	</script>
 	
@@ -458,43 +571,6 @@
 	      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	               	
 	               	<tr>
-		       	  		
-		       			<td>&nbsp;</td>
-		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
-		       			
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
-				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if partyId?exists && partyId?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
-				          		<td valign='middle'>
-				            		<div ><font color="green">
-				               			${partyId} [ ${partyName?if_exists} ] <#--${partyAddress?if_exists}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				          	</#if>
-				    	<#else>
-						 	<#if party?exists && party?has_content>  
-					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
-					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
-				          		<td valign='middle' colspan="2">
-				            		<div ><font color="green">
-				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
-         								<#assign passBookDetails=partyIdentification?if_exists>
-				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] <#--${partyAddress?if_exists} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-				            		</div>
-				          		</td>       
-				       		<#else>               
-				          		<td valign='middle'>
-                 					 <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
-				          			<#--<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
-				          		</td>
-				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
-			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
-				          	</#if>
-			        	</#if>
-						
-	               	</tr>
-	               	<tr>
 			           	<td>&nbsp;</td>
 						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -524,6 +600,8 @@
 					            		</div>
 					          		</td>  
 				          		</#if>
+				          		
+				          		
 				          	<#else>
 				          		<td valign='middle'>
 				          			<input type="text" name="productStoreId" id="productStoreId"/>
@@ -542,30 +620,57 @@
 				          		</td>
 				          	</#if>
 			        	</#if>
-			        	
-			        	<#--
-			        	<td>&nbsp;</td>
-		        		
-		        		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
-		        			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
-				  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
-			          		<td valign='middle'>
-			            		<div><font color="green">
-			               			${parameters.cfcs}           
-			            		</div>
-			          		</td>       
-			          	<#else>
-			          		<td align='left' valign='middle' nowrap="nowrap" class='CFC_TD' style='display:none;'><div class='h3'>CFC:<font color="red">*</font></div></td>
-			          		<td valign='middle' class='CFC_TD' style='display:none;'>
-			          			<select name="cfcs" id="cfcs" class='h3' style="width:162px">
-	          						          					
-			          			</select>
-				        	</td>
-			          	</#if>
-			        	-->	
-			        	
-			        	
 		       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
+	               	</tr>
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			
+		       			<input type="hidden" name="billingType" id="billingType" value="Direct"/>  
+		       			<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
+		       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
+			          	</#if>
+		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
+		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
+		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
+		       			
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
+				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if partyId?exists && partyId?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div ><font color="green">
+				               			${partyId} [ ${partyName?if_exists} ] <#--${partyAddress?if_exists}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+						 	<#if party?exists && party?has_content>  
+					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
+				          		<td valign='middle' colspan="2">
+				            		<div ><font color="green">
+				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
+         								<#assign passBookDetails=partyIdentification?if_exists>
+				               			${party.groupName?if_exists} ${party.firstName?if_exists}${party.lastName?if_exists} [ ${passBookDetails.idValue?if_exists}] <#--${partyAddress?if_exists} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+				            		</div>
+				          		</td>       
+				       		<#else>               
+				          		<td valign='middle'>
+                 					<#-- <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
+				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+				          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
+				          		</td>
+				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
+			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
+				          	</#if>
+			        	</#if>
+						
 	               	</tr>
 	               	
 	               	<tr>
@@ -608,6 +713,7 @@
 		          			</td>
 		       			</#if>
 		       		</tr>	
+		       		<#--
 					<tr>
 					<td>&nbsp;</td>
 					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
@@ -624,7 +730,8 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-	               	</tr>	
+	               	</tr>
+	               	-->	
                     <tr>  
 		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
@@ -634,11 +741,9 @@
 					      	<#if changeFlag?exists && changeFlag=="EditDepotSales">
 							 	<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
 							 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-				           		<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
-						  	</#if>
+				           	</#if>
 					        <#if changeFlag?exists && changeFlag=='DepotSales'>
 					         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="BRANCH_SHIPMENT"/> 
-					           	<#--<input type="hidden" name="salesChannel" id="salesChannel" value="BRANCH_CHANNEL"/>-->
 					        <#else>
 					          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 					          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -672,6 +777,37 @@
 							</#if>
 						</#if>
                        <td>&nbsp;</td>
+	               	</tr>
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if referenceNo?exists && referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${referenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.referenceNo?exists && parameters.referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.referenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="referenceNo" id="referenceNo"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          		</td>
+				          		
+				          	</#if>
+			        	</#if>
+						
 	               	</tr>	               	
 	               	<tr>
 		       	  		
@@ -730,6 +866,7 @@
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
+		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<br>
 	</form>    
@@ -862,6 +999,7 @@
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
 				<span id="totalAmount"></span>
+				<span id="serviceCharge" class="serviceCharge">Service Charge: </span>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
