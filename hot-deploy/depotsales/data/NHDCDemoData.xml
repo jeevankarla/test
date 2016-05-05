@@ -383,5 +383,6 @@ under the License.
 	
 		<Product autoCreateKeywords="Y" brandName="Service Charges" description="Service Charges" inShippingBox="N" internalName="Service Charges" primaryProductCategoryId="SERVICE_CHARGES" productId="SERVICE_CHARGE" productName="Service Charges" productTypeId="SERVICE"/>
 	
-	
+	<Enumeration description="Shipment Reimbursement for every 2 months" enumId="SHIPMENT_BILLING"/>
+	<Enumeration description="Depot Reimbursement for every 2 months" enumId="DEPOT_BILLING"/>
 </entity-engine-xml>

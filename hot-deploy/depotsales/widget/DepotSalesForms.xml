@@ -663,14 +663,28 @@
       </field>  -->
     </form>
     <form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>  
-        <field name="orderTypeId">
+       <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+         <field name="ChannalType"><hidden value="MATERIAL_PUR_CHANNEL"/></field>
+          <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+           <field name="salesChannelEnumId"><hidden value="MATERIAL_PUR_CHANNEL"/></field>
+            <field name="findPoFlag"><hidden value="Y"/></field>
+             <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
+		<field name="partyId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="false">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
+       
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field> 
+        <field name="orderTypeId" ><hidden value="PURCHASE_ORDER"/></field> 
+        <!-- <field name="orderTypeId">
            <drop-down no-current-selected-key="PURCHASE_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
                  <entity-constraint name="parentTypeId" operator="like" value="%PURCHASE%"/>
               </entity-options>
            </drop-down>
-        </field>
+        </field> -->
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field title="Entry Date" name="entryDate"><date-find/></field>
@@ -688,8 +702,8 @@
 <!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
          <field name="purposeTypeId"><hidden value="BRANCH_PURCHASE"/></field> 
          <field name="findPoFlag"><hidden value="Y"/></field>  
-    	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="supplierId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+        <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
      <form name="listPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
@@ -710,7 +724,14 @@
       			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER" />
       			</condition-list>
       		</entity-condition>
+      		<entity-condition entity-name="OrderRole" list="orderRoleSuppList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="BILL_FROM_VENDOR" />
+      			</condition-list>
+      		</entity-condition>
       		<set field="customerId" value="${orderRoleList[0].partyId}"/>
+      		<set field="supplierId" value="${orderRoleSuppList[0].partyId}"/>
       		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
@@ -734,8 +755,9 @@
       			<parameter param-name="orderId"/>
       		</hyperlink>
       	</field>
-      	<field name="customerId"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, customerId, false);} - [${customerId}]"></display></field>
-<!--       	<field name="orderItemSeqId"><display></display></field> -->
+      	<field name="customerId" title="Customer"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, customerId, false);} - [${customerId}]"></display></field>
+		<field name="supplierId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);} - [${supplierId}]"></display></field>
+        <field name="partyId" title="Branch"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
@@ -802,6 +824,16 @@
 			<option key="BANK" description="Bank Voucher" ></option>
 			</drop-down>
 		</field> -->
+		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
+              <drop-down allow-empty="false">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
+		<field name="partyIdTo" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
+              <drop-down allow-empty="false">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
@@ -820,8 +852,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
+       <!--  <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
+       <!--  <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>   -->     
         <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
         <field name="invoiceDate"><date-find type="timestamp"/></field>
         <field name="dueDate"><hidden/></field>
