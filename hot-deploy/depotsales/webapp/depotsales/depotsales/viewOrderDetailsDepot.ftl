@@ -348,7 +348,7 @@
 		message += "<html><head></head><body><form action='createOrderPaymentDepot' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
 		
-		
+		/*
 		   if(paymentList[0].paymentId != "NoAdvance"){
 			
 			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Balance</td><td align='left' class='h3' width='50%'>Select Balance</td></tr>";          
@@ -361,6 +361,8 @@
 		         }
 		       }
 		  }
+		   */
+		  
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
