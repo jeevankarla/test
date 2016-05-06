@@ -62,18 +62,24 @@
 	
 	Map formatMap = [:];
 	List formatList = [];
+	List productStoreList = resultCtx.get("productStoreList");
+	context.productStoreList = productStoreList;
 	
-		for (eachList in resultCtx.get("productStoreList")) {
-			
-			formatMap = [:];
-			formatMap.put("productStoreName",eachList.get("storeName"));
-			formatMap.put("payToPartyId",eachList.get("payToPartyId"));
-			formatList.addAll(formatMap);
-			
-		}
+	for (eachList in productStoreList) {
+		formatMap = [:];
+		formatMap.put("productStoreName",eachList.get("storeName"));
+		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+		formatList.addAll(formatMap);
+	}
 	context.formatList = formatList;
 	
-	branchId = parameters.partyIdFrom;
+	branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true); 
+	if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+		branchList.clear();
+		branchList.add(parameters.partyIdFrom)
+	}
+	
+	//branchId = parameters.partyIdFrom;
 	
 	orderList=[];
 	condList = [];
@@ -127,8 +133,8 @@
 	custCondList.clear();
 	custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 	// query based on branch
-	if(UtilValidate.isNotEmpty(branchId)){
-		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId));
+	if(UtilValidate.isNotEmpty(branchList)){
+		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
 	}
 	custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 	billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
@@ -222,28 +228,6 @@
 		
 	}
 	context.orderDetailsMap=orderDetailsMap;
-	
-	//obDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(UtilDateTime.nowTimestamp()), 1));
-	
-	/*partyOBMap=[:];
-	partyIdsSet.each{partyId->
-		arPartyOB  =BigDecimal.ZERO;
-		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate:obDate, partyId:partyId]));
-		if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
-			arPartyOB=arOpeningBalanceRes.get("openingBalance");
-		}
-		//Debug.log("===============arPartyOB="+arPartyOB);
-		if(arPartyOB<0){
-			partyOBMap.put(partyId, arPartyOB *(-1));
-		}else{
-			partyOBMap.put(partyId, BigDecimal.ZERO);
-		}
-	}*/
-	//Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
-	
-	/*	context.orderList = finalFilteredList;
-	 context.partyOBMap = partyOBMap;
-	 */
 	
 	//all suppliers shipping address Json
 	JSONObject supplierAddrJSON = new JSONObject();
