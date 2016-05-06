@@ -471,8 +471,8 @@
     				<set field="targetRequest" value="FindSalesIndentPayment" />
     				<script
     					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListDepotSalesOrderPaymentSearchResults.groovy" />
-    			    <script
-    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListDepotSalesOrderAdvancePayments.groovy" />
+    			   <!--  <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListDepotSalesOrderAdvancePayments.groovy" /> -->
     	
     			</actions>
     			<widgets>
