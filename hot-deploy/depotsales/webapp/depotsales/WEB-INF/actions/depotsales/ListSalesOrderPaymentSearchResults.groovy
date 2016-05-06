@@ -33,18 +33,24 @@
 	
 	Map formatMap = [:];
 	List formatList = [];
+	List productStoreList = resultCtx.get("productStoreList");
+	context.productStoreList = productStoreList;
 	
-		for (eachList in resultCtx.get("productStoreList")) {
-			
-			formatMap = [:];
-			formatMap.put("productStoreName",eachList.get("storeName"));
-			formatMap.put("payToPartyId",eachList.get("payToPartyId"));
-			formatList.addAll(formatMap);
-			
-		}
+	for (eachList in productStoreList) {
+		formatMap = [:];
+		formatMap.put("productStoreName",eachList.get("storeName"));
+		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+		formatList.addAll(formatMap);
+	}
 	context.formatList = formatList;
 	
-	branchId = parameters.partyIdFrom;
+	branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true); 
+	if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+		branchList.clear();
+		branchList.add(parameters.partyIdFrom)
+	}
+	
+	//branchId = parameters.partyIdFrom;
 	
 	salesChannel = parameters.salesChannelEnumId;
  
@@ -126,8 +132,8 @@
 	custCondList.clear();
 	custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 	// query based on branch
-	if(UtilValidate.isNotEmpty(branchId)){
-		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId));
+	if(UtilValidate.isNotEmpty(branchList)){
+		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
 	}
 	custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 	billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
