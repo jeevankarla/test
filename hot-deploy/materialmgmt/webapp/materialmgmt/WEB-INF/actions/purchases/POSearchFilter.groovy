@@ -26,7 +26,7 @@ List branchIds = [];
 	}
 context.branchList = formatList;
  userPartyId = userLogin.partyId;
- partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "EMPANELLED_SUPPLIER"), false);
+ partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "SUPPLIER"), false);
  if(partyRole){
     context.partyId = userPartyId;
  }	

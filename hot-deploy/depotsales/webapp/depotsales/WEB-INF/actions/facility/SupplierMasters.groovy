@@ -32,7 +32,7 @@
 	
 	
 	condList = [];
-	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_SUPPLIER"));
+	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "SUPPLIER"));
 	//fieldToSelect = UtilMisc.toSet("partyId", "groupName", "paAddress1", "paAddress2", "paPostalCode", "paCountryGeoId", "paStateProvinceGeoId", "tnContactNumber");
 	List supplierPartyDetails = delegator.findList("PartyRoleAndContactMechDetail",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	

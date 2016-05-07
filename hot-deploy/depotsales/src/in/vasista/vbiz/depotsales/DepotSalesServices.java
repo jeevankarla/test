@@ -4140,6 +4140,21 @@ public class DepotSalesServices{
         	partyId = (String) userLogin.get("partyId");
         }
         List productStoreList = FastList.newInstance();
+
+        // Get all CFC's
+        List cfcList = FastList.newInstance();
+        List condList =FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("productStoreGroupId", EntityOperator.EQUALS, "CFC"));
+    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+    	try{
+    		cfcList = delegator.findList("ProductStoreGroupMember", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+    	}catch (GenericEntityException e) {
+			// TODO: handle exception
+    		Debug.logError(e, module);
+		}
+        
         if(UtilValidate.isNotEmpty(partyId)){
         	
         	List conditionList = FastList.newInstance();
@@ -4163,22 +4178,6 @@ public class DepotSalesServices{
         	
 			if(UtilValidate.isNotEmpty(orgsList)){
 				
-				// Get all CFC's
-	        	
-	        	List condList =FastList.newInstance();
-	        	
-	   	    	condList.add(EntityCondition.makeCondition("productStoreGroupId", EntityOperator.EQUALS, "CFC"));
-	   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
-	   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
-	   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
-	   	    	List cfcList = FastList.newInstance();
-	   	    	try{
-	   	    		cfcList = delegator.findList("ProductStoreGroupMember", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-	   	    	}catch (GenericEntityException e) {
-	   				// TODO: handle exception
-	   	    		Debug.logError(e, module);
-	   			}
-				
 	   	    	condList.clear();
 	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true)));
 	   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
@@ -4195,7 +4194,11 @@ public class DepotSalesServices{
         
         if(UtilValidate.isEmpty(productStoreList)){
         	try{
-   	    		productStoreList = delegator.findList("ProductStore", null, null, null, null, false);
+        		condList.clear();
+        		if(UtilValidate.isNotEmpty(cfcList)){
+        			condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
+        		}
+   	    		productStoreList = delegator.findList("ProductStore", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
    	    	}catch (GenericEntityException e) {
    				// TODO: handle exception
    	    		Debug.logError(e, module);

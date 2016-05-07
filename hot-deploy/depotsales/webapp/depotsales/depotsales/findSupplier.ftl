@@ -83,7 +83,7 @@ under the License.
            <tr>
                <td class="label">${uiLabelMap.RoleType}</td>
 	            <td>
-	             <#assign roleType = delegator.findByAnd("RoleType", {"roleTypeId" : "EMPANELLED_SUPPLIER"})/>
+	             <#assign roleType = delegator.findByAnd("RoleType", {"roleTypeId" : "SUPPLIER"})/>
 	              <select name="roleTypeId" id="roleTypeId">
 	                <#if roleType?has_content>
 		                <#list roleType as type>
