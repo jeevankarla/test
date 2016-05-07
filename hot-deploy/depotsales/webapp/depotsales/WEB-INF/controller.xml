@@ -112,8 +112,12 @@
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
     </request-map> 
-    
-    
+        <request-map uri="getSocietyListAjax">
+       <security https="true" auth="false"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getSocietyList.groovy"/> 
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map> 
     <request-map uri="indentPrintReport.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="IndentPrintReportPDF"/>

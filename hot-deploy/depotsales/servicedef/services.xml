@@ -306,6 +306,19 @@
         <!-- <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/> -->
         <attribute name="cfcList" mode="OUT" type="List" optional="true"/>
     </service>
+    <service name="getBranchSocietyPartyList" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getBranchSocietyPartyList" auth="false">
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/> -->
+        <attribute name="societyList" mode="OUT" type="List" optional="true"/>
+        <attribute name="partyList" mode="OUT" type="List" optional="true"/>
+    </service>
+    <service name="getRoBranchList" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getRoBranchList" auth="false">
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="ownerPartyId" mode="OUT" type="String" optional="true"/> -->
+        <attribute name="partyList" mode="OUT" type="List" optional="true"/>
+    </service>
       <service name="payReambursement" engine="java" auth="false" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processPayShipmentReambursement">
         <description>create Part yQuota Balance History</description>

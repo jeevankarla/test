@@ -73,31 +73,33 @@
 	partyRoleAndIde.addViewLink("PRPD","PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
 	//partyRoleAndIde.addViewLink("PRPD","PPA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
 	
+	List formatList = [];
+	if(parameters.branchId){
+		resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",parameters.branchId));
+		Map formatMap = [:];
+		
+		partyList=[];
+		if(resultCtx && resultCtx.get("partyList")){
+			partyList=resultCtx.get("partyList")
+			partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);			
+			formatList=(List)partyIdToList;
+		}
+	}
+		Debug.log("formatList======================="+formatList);
 	condList = [];
 	condList.add(EntityCondition.makeCondition("roleTypeIdTo" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-
+	if(formatList){
+		
+		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.IN,formatList));
+	}
 	//condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, "62690"));
-	
-	if(partyId!=null && partyId!=""){
-		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,partyId.trim()));
-	}
-	if(groupName!=null && groupName!=""){
-		group1=EntityCondition.makeCondition(EntityCondition.makeCondition("firstName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%") ,EntityOperator.OR,EntityCondition.makeCondition("lastName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%"));
-		group2=EntityCondition.makeCondition(EntityCondition.makeCondition("middleName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%") ,EntityOperator.OR,EntityCondition.makeCondition("groupName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%"));
-		condList.add(EntityCondition.makeCondition(group1 ,EntityOperator.OR,group2));
-	}
-	if(branchId!=null && branchId!=""){
-		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,branchId.trim()));
-	}
-	if(passbookNumber!=null && passbookNumber!=""){
-		condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.EQUALS,passbookNumber.trim()));
-	}
 	
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	prodsEli = delegator.findListIteratorByCondition(partyRoleAndIde, cond, null,null,null,null);
 	groupNameList = prodsEli.getCompleteList();
 	
+	//Debug.log("groupNameList ===== "+groupNameList);	
 	partyIdsList =  EntityUtil.getFieldListFromEntityList(groupNameList, "partyId", true);
 	
 
