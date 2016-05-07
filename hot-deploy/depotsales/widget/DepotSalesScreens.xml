@@ -482,8 +482,8 @@
 					/> -->
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
-			    <script
-    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />
+			 <!--  <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" /> -->  
 					
 			</actions>
 			<widgets>
@@ -3560,6 +3560,14 @@
     				<set field="tabButtonItem" value="OrderPayment" />
     				<set field="tabButtonItem2" value="OrderPayment" />
     				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+    				<set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
+                    <set field="viewSize" value="50" type="Integer"/>
+                    <set field="nextFlag" type="String" default-value="Y"/>
+                    <set field="prevFlag" type="String" default-value="N"/>
+                      <service service-name="performFind" result-map="result">
+                       <field-map field-name="inputFields" from-field="parameters"/>
+                       <field-map field-name="entityName" value="OrderHeader"/>
+                    </service>
     				<set field="defaultEffectiveDateTime"
     					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
     				<set field="defaultEffectiveDate"
