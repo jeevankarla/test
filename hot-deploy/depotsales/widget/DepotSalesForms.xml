@@ -407,12 +407,14 @@
 	            <hyperlink target="updateShipment" description="Docs Received">
 	                 <parameter param-name="shipmentId"/>
 	                 <parameter param-name="statusId" value="DOCUMENTS_RECEIVED"/>
+	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
 	            </hyperlink>
 	        </field>
 	        <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_RECEIVED&quot;)" >
 	            <hyperlink target="updateShipment" description="Docs Endorsed">
 	                 <parameter param-name="shipmentId"/>
 	                 <parameter param-name="statusId" value="DOCUMENTS_ENDORSED"/>
+	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
 	            </hyperlink>
 	        </field>
 	        <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
@@ -832,7 +834,7 @@
 			</drop-down>
 		</field> -->
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
-              <drop-down allow-empty="false">
+              <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
