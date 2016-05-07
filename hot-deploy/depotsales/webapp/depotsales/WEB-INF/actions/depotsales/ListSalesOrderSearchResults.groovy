@@ -226,6 +226,62 @@
 		tempMap.put("productStoreId", productStoreId);
 		orderDetailsMap.put(orderId,tempMap);
 		
+		conditonList = [];
+		conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+		double paidAmt = 0;
+		
+		paymentIdsOfIndentPayment = [];
+		
+		if(OrderPaymentPreference){
+		
+		orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+	 
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+		conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+		
+		paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
+		
+		
+		for (eachPayment in PaymentList) {
+			paidAmt = paidAmt+eachPayment.get("amount");
+		}
+		
+	  }
+		
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+		
+		invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
+		
+		if(invoiceIds){
+		conditonList.clear();
+		conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
+		cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+		PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
+		
+			for (eachList in PaymentApplicationList) {
+				 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
+					paidAmt = paidAmt+eachList.amountApplied;
+			}
+		}
+		
+		
+		tempData.put("paidAmt", paidAmt);
+		grandTOT = eachHeader.getBigDecimal("grandTotal");
+		balance = grandTOT-paidAmt;
+		tempData.put("balance", balance);
+
+		
+		
+		
+		
 	}
 	context.orderDetailsMap=orderDetailsMap;
 	
@@ -313,7 +369,7 @@
 	
   //  eachPaymentOrderMap = [:];
 	
-	for (eachList in orderList) {
+	/*for (eachList in orderList) {
 		
 		condtList = [];
 		condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
@@ -388,8 +444,8 @@
 		   tempMap.put("amount", 0);
 		   paymentSatusMap.put(eachList.orderId, tempMap);
 		   
-		  /* allOrderPayments = [:];
-		   allOrderPayments.put("NoPreferenceId", "NillAmout");*/
+		   allOrderPayments = [:];
+		   allOrderPayments.put("NoPreferenceId", "NillAmout");
 		   
 		   JSONObject allOrderPayments2 = new JSONObject();
 		   
@@ -400,7 +456,7 @@
 		   eachPaymentOrderMap.put(eachList.orderId, allOrderPayments2);
 	   }
  
-	}
+	}*/
 	
 	condtList = [];
 	condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
