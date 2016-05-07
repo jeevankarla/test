@@ -17,6 +17,7 @@ import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import java.util.Map.Entry;
 
@@ -41,6 +42,46 @@ orderItemAttr = delegator.findList("OrderItemAttribute", condEXr, null, null, nu
  context.orderDate = orderDate;
  
 grandTOt = orderHeaderList.get("grandTotal");
+productStoreId = orderHeaderList.get("productStoreId");
+branchId="";
+if (productStoreId) {
+	productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
+	branchId=productStore.payToPartyId;	
+}
+//get Report Header
+branchContext=[:];
+branchContext.put("branchId",branchId);
+BOAddress="";
+BOEmail="";
+
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+			
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+		
+		
+	}
+	
+	
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 
 
 context.orderId = parameters.orderId;

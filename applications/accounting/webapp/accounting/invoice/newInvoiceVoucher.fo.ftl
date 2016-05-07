@@ -43,9 +43,8 @@ under the License.
          
            <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block> 
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
-   		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">S-13/36, SRI RAM MARKET</fo:block>
-           <fo:block text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">VARANASI-221002</fo:block>
-           <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">E-MAIL:nhdcltdvns@yahoo.in</fo:block>
+   		   <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
+           <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>
            
         </fo:static-content>
                  				
@@ -231,20 +230,20 @@ under the License.
 				<fo:block text-align="left"    font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
+				<#--><#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
 				<fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block>
 				<#else>
 				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
-				</#if>
+				</#if>-->
 				<fo:block text-align="center"    font-size="12pt" >&#160;</fo:block>
 				<fo:block text-align="center"    font-size="12pt" >TOTAL VALUE (RS.)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
+				<#--><#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
 				<fo:block text-align="right"    font-size="12pt" >(-)${schemeDeductionAmt?string("#0.00")}</fo:block>
 				<#else>
 				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
-				</#if>
+				</#if>-->
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
 				<fo:block text-align="right"    font-size="12pt" >   ${(grandTotal-schemeDeductionAmt)?string("#0.00")}</fo:block>
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
