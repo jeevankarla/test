@@ -205,23 +205,22 @@ under the License.
      <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>${uiLabelMap.PartyCode}</td>
-          <td>${uiLabelMap.CommonCustomerName}</td>
-          <td>${uiLabelMap.IndentNo}</td>
-          <td>${uiLabelMap.IndentDate}</td>
-          <td>${uiLabelMap.GrandTotal}</td>
-         <td>${uiLabelMap.CommonView}</td>
+          <td>Party Code</td>
+          <td>Party Name</td>
+          <td>Indent Id</td>
+          <td>Indent Date</td>
+          <td>Grand Total</td>
+         <td>View Indent</td>
           <#-- <td>Print Indent</td>
           <td>Edit Batch</td>
           <td>Approve</td>
           <td>DC Report</td>-->
-           <td>${uiLabelMap.IndentPayment}</td>
+           <td>Indent Payment</td>
           <#-- <td>Payment</td> -->
-           <td>${uiLabelMap.Status}</td>
-           <td>${uiLabelMap.AdvancePayments}</td>
-           <td>${uiLabelMap.ReceivedAmount}</td>
-          <#-- <td>${uiLabelMap.AdvancePayments}</td>
-             <td>Indent Status</td>-->
+           <td>Payment Status</td>
+          <#--> <td>Advance Payments</td> -->
+             <td>Received Amount</td>
+            <#-- <td>Indent Status</td>-->
         <#--  <td>Edit</td>
           <td>Generate PO</td> -->
           <#--<td>Party Balance</td>
@@ -265,22 +264,26 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
-
-                 <#assign balance = 0>
-                 <#assign balance = (balanceAmountMap.get(eachOrder.orderId)).get("balance")>
-                
-                
-                
-                 <#if (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
-              	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentorIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${balance}');"/></td>
-              	 <#else>
-              	 <td></td>
-              	 </#if>
-              	
+					<#if (eachOrder.orderTotal) != (eachOrder.paidAmt)>
+              	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${eachOrder.balance}');"/></td>
+                   <#else>
+                     <td></td>
+                   </#if>
+           
+                <#if (eachOrder.orderTotal) == (eachOrder.balance)>
+                <td>Payment Realized</td>
+                <#elseif (eachOrder.balance) == 0 >
+                <td>Payment Not Received</td>
+                <#elseif (eachOrder.orderTotal) != (eachOrder.balance)>
+                <td>Payment Received</td>
+                </#if>
+           
+                 <td>${eachOrder.paidAmt?if_exists}</td>
+           
+              
+           
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
-              
-              
               	<#else>
               	<td></td>
               	</#if> -->
@@ -293,26 +296,26 @@ under the License.
               	<td>Payment Not Received</td>
               	</#if>  -->
                 
-                <#if (eachOrder.orderTotal) == (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
+               
+                <#-->
+                <#if (eachOrder.orderTotal) == (eachPaymentOrderMap.get(eachOrder.orderId)).get("totAmount")>
                 <td>Payment Realized</td>
-                <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")==-1>
+                <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("totAmount")==-1>
                 <td>Payment Not Received</td>
-                <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")>
+                <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("totAmount")>
                 <td>Payment Received</td>
                 </#if>
                 
                 <#if (advancePaymentVisible.get(eachOrder.orderId)) != "notVisible">
-                <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: IndentorRealizeStatusChange('${eachOrder.orderId}');"/></td>
+                <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
                 <#else>
                 <td></td>
-                </#if>
+                </#if> 
+                       
                 
-                <#if (balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")!=-1>
-              	<td>${(balanceAmountMap.get(eachOrder.orderId)).get("receivedAMT")}</td>
-              	 <#else>
-              	 <td></td>
-              	 </#if>
-              	  <td>
+                
+              	   
+              	  <td>-->
               	  <#--<td><a class="buttontext" href="<@ofbizUrl>realizeStatus?userLogin=${userLogin}&&paymentPreferenceId=10000</@ofbizUrl>">Payment Received</a></td>
               	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	 

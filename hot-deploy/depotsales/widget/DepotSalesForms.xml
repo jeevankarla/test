@@ -294,7 +294,7 @@
     <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="hideSearch"><hidden value="Y"/></field>
        <field name="partyId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="false">
+              <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
@@ -678,7 +678,7 @@
             <field name="findPoFlag"><hidden value="Y"/></field>
              <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
 		<field name="partyId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="false">
+              <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
@@ -837,7 +837,7 @@
               </drop-down>
         </field>
 		<field name="partyIdTo" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
-              <drop-down allow-empty="false">
+              <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
