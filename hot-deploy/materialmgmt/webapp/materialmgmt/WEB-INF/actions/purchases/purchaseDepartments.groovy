@@ -36,8 +36,29 @@ import javolution.util.FastList;
 import org.ofbiz.entity.util.EntityTypeUtil;
 //import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
+import org.ofbiz.party.party.PartyHelper;
 
 
+Map formatMap = [:];
+List formatList = [];
+	
+	List<GenericValue> partyClassificationList = null;
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"), UtilMisc.toSet("partyId"), null, null,false);
+	//Debug.log("partyClassificationList========================"+partyClassificationList);
+	
+	if(partyClassificationList){
+		for (eachList in partyClassificationList) {
+			//Debug.log("eachList========================"+eachList.get("partyId"));
+			formatMap = [:];
+			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+			formatMap.put("productStoreName",partyName);
+			formatMap.put("payToPartyId",eachList.get("partyId"));
+			formatList.addAll(formatMap);
+		}
+	}
+
+	context.formatList = formatList;
+	
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);
