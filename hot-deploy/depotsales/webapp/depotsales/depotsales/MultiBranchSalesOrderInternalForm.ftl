@@ -361,7 +361,7 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
@@ -379,6 +379,35 @@
 			
 			
 		];
+		hid_columns = [
+			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
+			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
+			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
+
+		
+		];
+
+
+var data_view = new Slick.Data.DataView();
+grid = new Slick.Grid("#myGrid1", data, hid_columns,options);
+var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
+		
+		
 		
 		var options = {
 			editable: true,		
@@ -391,7 +420,7 @@
 		};
 		
 
-		grid = new Slick.Grid("#myGrid1", data, columns, options);
+		grid = new Slick.Grid("#myGrid1", data,hid_columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 		
@@ -486,7 +515,7 @@
 	    });
         grid.onCellChange.subscribe(function(e,args) {
         	
-        	if (args.cell == 5) {
+        	if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var uom = data[args.row]["cottonUom"];
@@ -510,6 +539,49 @@
 				}
 				if(uom == "Half-Bale"){
 					quantity = baleQty*bundleWeight*20;
+				}
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+				}
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["baleQuantity"] = baleQty;
+				data[args.row]["cottonUom"] = uom;
+				data[args.row]["bundleWeight"] = bundleWeight;
+				data[args.row]["amount"] = Math.round(quantity*unitPrice);
+				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				grid.updateRow(args.row);			
+				updateTotalIndentAmount();
+				
+			}
+			if (args.cell == 5) {
+				var prod = data[args.row]["cProductId"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var uom = data[args.row]["cottonUom"];
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
+				
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				if(isNaN(unitPrice)){
+					unitPrice = 0;
+				}				
+				quantity = 0;
+				if(uom == "Bale"){
+					quantity = baleQty*bundleWeight*40;
+				}
+				if(uom == "Half-Bale"){
+					quantity = baleQty*bundleWeight*20;
+				}
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
 				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
@@ -551,11 +623,10 @@
 				var row = args.row;
 				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
-				grid.updateRow(args.row);
+				//grid.updateRow(args.row);
 				
-				updateTotalIndentAmount();
-			}
-			if (args.cell == 7) {
+				//updateTotalIndentAmount();
+			
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -586,7 +657,7 @@
 
 			}
 			
-			if (args.cell == 8) {
+			if (args.cell == 7) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['amount'];
