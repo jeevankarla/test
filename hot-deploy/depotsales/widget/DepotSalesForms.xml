@@ -1359,7 +1359,12 @@
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
-        
+         <field name="indentDateSort">
+	        	<drop-down allow-empty="false">
+	        		<option key="-orderDate" description="Descending"/>
+	        		<option key="orderDate" description="Ascending"/>
+	        	</drop-down>
+        </field>
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->

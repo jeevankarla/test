@@ -17,6 +17,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
+<input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
+<input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
+<input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
+<input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
+<input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
+
+
 <script type="text/javascript">
 //<![CDATA[
 	
@@ -145,13 +154,146 @@ under the License.
           
        -->
        
+      
        
-       
-        
 //]]>
+
+
+
+var orderId = $("#paramOrderId").val();
+var paramFacilityId = $("#paramFacilityId").val();
+var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
+var paramStatusId = $("#paramStatusId").val();
+var paramBranch = $("#paramBranch").val();
+var indentDateSort = $("#indentDateSort").val();
+
+
+
+var orderData;
+var domOrderIds = "";
+var low = 0, high = 20;
+$(document).ready(function() {
+   $(window).scroll(function() {
+    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
+          
+           low = high;
+           high = high + 20;
+           recursively_ajax();           
+    	}
+});
+
+
+	recursively_ajax();
+
+});
+
+  function recursively_ajax(){
+    
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"low":low,"high":high};
+	
+     
+    jQuery.ajax({
+                url: 'getPaymentDetails',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						orderData = result["orderList"];
+                        if(orderData.length != 0)
+                        drawTable(orderData);   
+                        else
+                         alert("No Orders Found");        
+               		}
+               	}							
+		});
+}
+	
+
+
+
+function drawTable(data) {
+
+    for (var i = 0; i < data.length; i++) {
+    
+        if(!domOrderIds.includes(data[i].orderId+" "))
+         {
+            drawRow(data[i]);
+         domOrderIds = domOrderIds + data[i].orderId +" ";
+         }
+         
+         
+         
+    }
+}
+
+var totIndents = 0;
+
+function drawRow(rowData) {
+    var row = $("<tr />")
+    $("#coreTable").append(row); 
+    row.append($("<td>" + rowData.partyId + "</td>"));
+    row.append($("<td>" + rowData.partyName + "</td>"));
+    row.append($("<td>" + rowData.orderId + "</td>"));
+    
+    var indDateSplit = (rowData.orderDate).split("-");
+    
+    var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
+    
+    row.append($("<td>" + indentDate + "</td>"));
+    row.append($("<td>" + rowData.orderTotal + "</td>"));
+
+    //For Indent View
+    
+    var orderParam = '\'' + rowData.orderId + '\'';
+    var orderCustomMethod = "javascript:fetchOrderInformation("+ orderParam + ")";
+    var viewButton ='<input type=button name="viewOrder" id=viewOrder value="view Order" onclick="'+orderCustomMethod+'">';
+    
+    row.append($("<td>" +  viewButton  +"</td>"));
+   
+   //For indent Payment
+   
+   if(rowData.orderTotal != rowData.paidAmt)
+   {
+    var partyName = "'" + rowData.partyName + "'";
+    var methodParam = '\'' + rowData.orderId + '\',\'' + rowData.partyId+'\','+partyName+','+rowData.orderTotal+','+rowData.balance;
+    var customMethod = "javascript:showPaymentEntryForIndentPayment("+ methodParam + ")";
+    var inputbox ='<input type=button name="Payment" id=Payment value="Indent Payment" onclick="'+customMethod+'">';
+    row.append($("<td>" +  inputbox  +"</td>"));
+    }else{
+    row.append($("<td></td>"));
+    }
+    
+    if(rowData.orderTotal != rowData.balance)
+    {
+     row.append($("<td>Payment Realized</td>"));
+    }else if(rowData.balance == 0){
+     row.append($("<td>Payment Not Received</td>"));
+    }else{
+     row.append($("<td>Payment Received</td>"));
+    }
+    row.append($("<td>" + rowData.paidAmt + "</td>"));
+    
+    totIndents = totIndents+1;
+    
+    $("#totIndents").html("<h10>"+totIndents+"</h10>");
+    
+}
+
+
+
+    
+  
+</script>
+
+
+
 </script>
 <#include "viewOrderDetailsDepot.ftl"/>
 
+<#-->
 <form name="orderEditForm" id="orderEditForm" method="post" 
 	
 	<#if screenFlag?exists && screenFlag=="depotSales">
@@ -187,22 +329,60 @@ under the License.
 	</#if>
 </form>
 
-<#if orderList?has_content>
+-->
+
+<#include "viewOrderDetailsDepot.ftl"/>
+
+<#-->
+<form name="orderEditForm" id="orderEditForm" method="post" 
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="editDepotOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="editIUSTransferOrder"
+	</#if>>
+</form>
+<form name="orderCancelForm" id="orderCancelForm" method="post" 
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="cancelDepotOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="cancelIUSTransferOrder"
+	</#if>>
+</form>
+<form name="realizeStatus" id="realizeStatus" method="post" action="realizeStatus"> 
+</form>
+<form name="orderApproveForm" id="orderApproveForm" method="post" 
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="approveDepotSalesOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="approveIUSTransferOrder"
+	</#if>> 
+</form>
+
+<form name="processOrdersForm" id="processOrdersForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="createShipmentAndInvoiceForDepotSalesOrders"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="createShipAndInvForIUSTransferOrders"
+	</#if>
+</form>
+-->
+ 
+ 
+ 
+ 
+ <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
+  
+    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: red" ></label> </div>
+  
+ 
+   
   
   <form name="listOrders" id="listOrders"   method="post" >
-    <div align="right" width="100%">
-    	
-    	<#if screenFlag?exists && screenFlag=="depotSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
-    	</#if>
-    		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
-    </div>
-	<br/>
-
-
-     <table class="basic-table hover-bar" cellspacing="0">
+   
+     <table id="coreTable" class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
           <td>Party Code</td>
@@ -231,113 +411,8 @@ under the License.
       </thead>
       <tbody>
       <#assign alt_row = false>
-      <#list orderList as eachOrder>
-      		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-      			<input type="hidden" name="paymentPreferenceId" value="${eachOrder.partyId}">
-      			<input type="hidden" name="partyId" value="${eachOrder.partyId}">
-            	<td>${eachOrder.partyId?if_exists}</td>
-              	<td>${eachOrder.partyName?if_exists}</td>
-              	<td>${eachOrder.orderId?if_exists}</td>
-              	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
-                <td>${eachOrder.orderTotal?if_exists}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>
-              <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
-              	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
-              	<#assign partyOb=0>
-              	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
-              	<#assign partyOb=partyOBMap.get(eachOrder.partyId)>
-              	</#if>
-              	<#assign orderTotal=0>
-              	<#if eachOrder.orderTotal?exists>
-              	<#assign orderTotal=eachOrder.orderTotal>
-              	</#if>
-              	<#assign isCreditInstution="N">
-              	<#if eachOrder.isCreditInstution?exists>
-              	<#assign isCreditInstution=eachOrder.isCreditInstution>
-              	</#if>
-              	
-              	<#--<#if (eachOrder.get('statusId') == "ORDER_CREATED") ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
-              	<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-              		<td></td>
-              	<#else>
-              		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                	<td>${statusItem.description?default(eachOrder.statusId)}</td>
-              		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
-              	</#if>-->
-					<#if (eachOrder.orderTotal) != (eachOrder.paidAmt)>
-              	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForIndentPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${eachOrder.balance}');"/></td>
-                   <#else>
-                     <td></td>
-                   </#if>
-           
-                <#if (eachOrder.orderTotal) == (eachOrder.balance)>
-                <td>Payment Realized</td>
-                <#elseif (eachOrder.balance) == 0 >
-                <td>Payment Not Received</td>
-                <#elseif (eachOrder.orderTotal) != (eachOrder.balance)>
-                <td>Payment Received</td>
-                </#if>
-           
-                 <td>${eachOrder.paidAmt?if_exists}</td>
-           
-              
-           
-            <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
-              	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>
-              	<#else>
-              	<td></td>
-              	</#if> -->
-               
-              <#--  <#if ((statusConfirmMap.get(eachOrder.orderId))=="visible") >
-                 <td><input type="button" name="realize" id="realize" value="Payment Received" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
-              	<#elseif (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED" && ((eachOrder.orderTotal) == (paymentSatusMap.get(eachOrder.orderId).get("amount")))>
-              	<td>Payment Realized</td>
-              	<#else>
-              	<td>Payment Not Received</td>
-              	</#if>  -->
-                
-                               <#-->
-                <#if (eachOrder.orderTotal) == (eachPaymentOrderMap.get(eachOrder.orderId)).get("totAmount")>
-                <td>Payment Realized</td>
-                <#elseif (balanceAmountMap.get(eachOrder.orderId)).get("totAmount")==-1>
-                <td>Payment Not Received</td>
-                <#elseif (eachOrder.orderTotal) != (balanceAmountMap.get(eachOrder.orderId)).get("totAmount")>
-                <td>Payment Received</td>
-                </#if>
-                
-                <#if (advancePaymentVisible.get(eachOrder.orderId)) != "notVisible">
-                <td><input type="button" name="realize" id="realize" value="Advance Payments" onclick="javascript: realizeStatusChange('${eachOrder.orderId}');"/></td>
-                <#else>
-                <td></td>
-                </#if> 
-                       
-                
-                
-              	   
-              	  <td>-->
-              	  <#--<td><a class="buttontext" href="<@ofbizUrl>realizeStatus?userLogin=${userLogin}&&paymentPreferenceId=10000</@ofbizUrl>">Payment Received</a></td>
-              	 <#if orderPreferenceMap.get(eachOrder.orderId)?exists>
-              	 
-              	<#else>
-              	<td></td>
-              	  </#if>-->
-              	
-              	<#--	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
-				<td><input type="button" name="POOrder" id="POOrder" value="Po Order" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}','${eachOrder.orderDate?if_exists}');"/></td>-->
-              	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-        		<#--<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>-->
-              	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
-             <#-- 	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
-              		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
-              	</#if>-->
-              	
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
-        </#list>
+      <#assign alt_row = !alt_row>
       </tbody>
     </table>
   </form>
-<#else>
-  <h3>No Orders Found</h3>
-</#if>
+  </div>
