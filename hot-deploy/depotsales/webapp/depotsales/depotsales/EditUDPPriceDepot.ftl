@@ -19,6 +19,7 @@
 	var productName;			 
 	var dataRow;
 	var rowIndex;
+	var vatSurchargeList;
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -123,12 +124,11 @@
 		rowIndex = index;
 		dataRow = gridRow;
 		productName = dataRow["cProductName"];
-		var vatSale = dataRow["DEFAULT_VAT"];
-		var vatSaleAmt = dataRow["DEFAULT_VAT_AMT"];
-		var cstSale = dataRow["DEFAULT_CST"];
-		var cstSaleAmt = dataRow["DEFAULT_CST_AMT"];
-		
-		
+		var vatSale = dataRow["VAT_SALE"];
+		var vatSaleAmt = dataRow["VAT_SALE_AMT"];
+		var cstSale = dataRow["CST_SALE"];
+		var cstSaleAmt = dataRow["CST_SALE_AMT"];
+		vatSurchargeList = dataRow["vatSurchargeList"];
 		var taxList = dataRow["taxList"];
 		var totalAmt = dataRow["amount"];
 		var serviceCharge = dataRow["SERVICE_CHARGE"];
@@ -168,10 +168,25 @@
 			if($("#orderTaxType").val() == "Inter-State"){
 				message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 				message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+				
+				for(var i=0;i<vatSurchargeList.length;i++){
+					var taxType = vatSurchargeList[i];
+					var taxPercentage = dataRow[taxType];
+					var taxValue = dataRow[taxType + "_AMT"];
+					
+					message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+				}
 			}
 			if($("#orderTaxType").val() == "Intra-State"){
 				message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 				message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+				for(var i=0;i<vatSurchargeList.length;i++){
+					var taxType = vatSurchargeList[i];
+					var taxPercentage = dataRow[taxType];
+					var taxValue = dataRow[taxType + "_AMT"];
+					
+					message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+				}
 			}
 			
 			message += "<tr class='h3'><td></td></tr>";
@@ -258,11 +273,12 @@
 		    	if (id.indexOf("_AMT") >= 0){
 			    	var taxValue = $('#'+id).val();
 			    	dataRow[id] = taxValue;
+			    	totalTaxAmt = totalTaxAmt+taxValue/100*100 ;
 			    }
 			    else{
 			    	var taxPercentage = $('#'+id).val();
 			    	dataRow[id] = taxPercentage;
-			    	totalTaxAmt += (taxPercentage) * (totalAmt/100) ;
+			    	
 			    }
 		    }
 		}) 
@@ -308,6 +324,28 @@
 	 	if(percentage != 'undefined' && percentage != null && percentage.length){
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
+	 		if(taxPercItemId == "VAT_SALE"){
+		 		if(vatSurchargeList != 'undefined' && vatSurchargeList != null && vatSurchargeList.length){
+		 			for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = $('#'+taxType).val();
+						var surchargeValue = taxPercentage * taxValue/100;
+						$('#'+taxType + '_AMT').val(surchargeValue);
+					}
+			 	}
+		 	}
 	 	}
 	}	
+	function adjustSurcharge(taxPercentItem, amtField){
+	 	var percentage = taxPercentItem.value;
+	 	var taxPercItemId = taxPercentItem.id;
+	 	var taxValueItemId = taxPercentItem.id + "_AMT";
+	 	
+	 	var amtId = amtField.id;
+	 	var taxAmt = $('#'+amtId).val();
+	 	if(taxAmt != 'undefined' && taxAmt != null){
+	 		var taxValue = (percentage) * (taxAmt/100) ;
+	 		$('#'+taxValueItemId).val(taxValue);
+	 	}
+	}
 </script>
