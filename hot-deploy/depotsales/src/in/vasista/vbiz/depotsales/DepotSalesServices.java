@@ -294,7 +294,7 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String orderId = (String) request.getParameter("orderId");
-		String PONumber = (String) request.getParameter("PONumber");
+		String PONumber = (String) request.getParameter("referenceNo");
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
 		String orderMessage=(String) request.getParameter("orderMessage");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
@@ -6586,6 +6586,25 @@ public class DepotSalesServices{
 			vatPercent = (BigDecimal)(EntityUtil.getFirst(vatTaxes)).get("taxPercentage");
 		}
 		
+		List vatSurchargeList = FastList.newInstance();
+		vatCondList.clear();
+		vatCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "VAT_SALE"));
+		try {
+			List vatSurcharges = delegator.findList("TaxAuthorityRateType", EntityCondition.makeCondition(vatCondList, EntityOperator.AND), null, null, null, false);
+			Debug.log("vatSurcharges ============"+vatSurcharges);
+			
+			if(UtilValidate.isNotEmpty(vatSurcharges)){
+				vatCondList.clear();
+				vatCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(vatSurcharges, "taxAuthorityRateTypeId", true)));
+				vatCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+				vatSurchargeList = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(vatCondList, EntityOperator.AND));
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive TaxAuthorityRateType ", module);
+			return ServiceUtil.returnError("Failed to retrive TaxAuthorityRateType " + e);
+		}
+				
+				
 		BigDecimal cstPercent = BigDecimal.ZERO;
 		
 		List cstCondList= FastList.newInstance();
@@ -6597,12 +6616,34 @@ public class DepotSalesServices{
 			cstPercent = (BigDecimal)(EntityUtil.getFirst(cstTaxes)).get("taxPercentage");
 		}
 		
+		List cstSurchargeList = FastList.newInstance();
+		cstCondList.clear();
+		cstCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "CST_SALE"));
+		try {
+			List cstSurcharges = delegator.findList("TaxAuthorityRateType", EntityCondition.makeCondition(cstCondList, EntityOperator.AND), null, null, null, false);
+			Debug.log("cstSurcharges ============"+cstSurcharges);
+			if(UtilValidate.isNotEmpty(cstSurchargeList)){
+				cstCondList.clear();
+				cstCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(cstSurcharges, "taxAuthorityRateTypeId", true)));
+				cstCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+				cstSurchargeList = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(cstCondList, EntityOperator.AND));
+			}
+		
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive TaxAuthorityRateType ", module);
+			return ServiceUtil.returnError("Failed to retrive TaxAuthorityRateType " + e);
+		}
+		
+		
+		
 		Debug.log("vatPercent ============"+vatPercent);
 		Debug.log("cstPercent ============"+cstPercent);
 		
 		Debug.log("taxPercentage ============"+taxPercentage);
 		Debug.log("taxAuthProdCatList ============"+taxAuthProdCatList);
 		result.put("vatPercent", vatPercent);
+		result.put("vatSurcharges", vatSurchargeList);
+		result.put("cstSurcharges", cstSurchargeList);
 		result.put("cstPercent", cstPercent);
 		result.put("taxPercentage", taxPercentage);
 		result.put("taxAuthProdCatList", taxAuthProdCatList);

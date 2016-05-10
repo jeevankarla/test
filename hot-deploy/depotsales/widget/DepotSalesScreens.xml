@@ -4653,6 +4653,7 @@
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
@@ -4828,6 +4829,7 @@
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
@@ -5344,6 +5346,7 @@
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -5521,6 +5524,7 @@
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -5699,6 +5703,7 @@
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script

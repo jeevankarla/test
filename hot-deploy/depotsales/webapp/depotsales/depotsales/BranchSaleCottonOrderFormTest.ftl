@@ -501,8 +501,8 @@
 			 $('#indententryinit').submit();
 			 return false; 
 		}
-	 	
-	 	function autoCompletePartyId(){
+		
+		function autoCompletePartyId(){
 			var productStoreId = $("#productStoreId").val();
 		      $("#partyId").autocomplete({ 
 		      
@@ -527,6 +527,7 @@
 	                						value: v.value
 	               						};
 									}));
+									
 	          					}
 	        			});
 	        			
@@ -537,6 +538,7 @@
 					
 			  });	
 		 }
+	 
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -624,9 +626,14 @@
 		       			 <#else>               
 			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.branchGeoId?exists && parameters.branchGeoId?has_content>  
+		       				<input type="hidden" name="branchGeoId" id="branchGeoId" value="${branchGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
 		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
-		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			
@@ -653,7 +660,7 @@
 				          		</td>       
 				       		<#else>               
 				          		<td valign='middle'>
-                 					<#--<@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
+                 					<#-- <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
 				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
 				          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
 				          		</td>
@@ -663,6 +670,7 @@
 			        	</#if>
 						
 	               	</tr>
+	               	
 	               	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
@@ -767,8 +775,7 @@
 							</#if>
 						</#if>
                        <td>&nbsp;</td>
-	               	</tr>	
-	               	
+	               	</tr>
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -799,8 +806,7 @@
 				          	</#if>
 			        	</#if>
 						
-	               	</tr>	 
-	               	               	
+	               	</tr>	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -858,8 +864,9 @@
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
-		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
+		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
+		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
 		
 		<br>
 	</form>    
@@ -981,9 +988,10 @@
 				
 		</div>     
 	</div>
- </div>
-	</div>
+</div>
 	
+	
+	</div>
 	<div class="full" style="height:250px;">
 	</br> 
 	

@@ -242,6 +242,8 @@
         <attribute name="vatPercent" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="cstPercent" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="taxAuthProdCatList" type="List" mode="OUT" optional="true"/>
+        <attribute name="vatSurcharges" type="List" mode="OUT" optional="true"/>
+        <attribute name="cstSurcharges" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="createBranchSaleInvoice" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleInvoice">
         <description>Issue Products to Order</description>
