@@ -4768,8 +4768,13 @@
 	<entity entity-name="TaxAuthorityRateType" package-name="org.ofbiz.accounting.tax"
 		default-resource-name="AccountingEntityLabels" title="Tax Authority Rate Type Entity">
 		<field name="taxAuthorityRateTypeId" type="id-ne"></field>
+		<field name="parentTypeId" type="id-ne"></field>
 		<field name="description" type="description"></field>
+		<field name="isSurcharge" type="indicator"></field>
 		<prim-key field="taxAuthorityRateTypeId" />
+		<relation type="one" fk-name="RATE_PRNT" rel-entity-name="TaxAuthorityRateType">
+			<key-map field-name="parentTypeId" rel-field-name="taxAuthorityRateTypeId"/>
+		</relation>
 	</entity>
 	
 	<entity entity-name="OrderTaxType" package-name="org.ofbiz.accounting.tax"
