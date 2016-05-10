@@ -98,6 +98,7 @@ public class MaterialPurchaseServices {
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) request.getParameter("supplierId");
 	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
+	    String lrDateStr = (String) request.getParameter("lrDate");
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    String remarks = (String) request.getParameter("remarks");
 	    String hideQCflow = (String) request.getParameter("hideQCflow");
@@ -162,6 +163,19 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	}
 	  	}
+	  	Timestamp lrDateTimeStamp = null;
+	  	if(UtilValidate.isNotEmpty(lrDateStr)){
+	  		try {
+	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
+	  			lrDateTimeStamp = new java.sql.Timestamp(dateSdf.parse(lrDateStr).getTime());
+	  			
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + lrDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + lrDateStr, module);
+		  	}
+	  	}
+	  	
 	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
 	  /*	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
 	  		try {
@@ -288,6 +302,7 @@ public class MaterialPurchaseServices {
 	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
+	        newEntity.put("estimatedReadyDate",lrDateTimeStamp);
 	        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
 	        newEntity.put("description",remarks);
 	        newEntity.put("deliveryChallanDate",deliveryChallanDate);
@@ -749,6 +764,10 @@ public class MaterialPurchaseServices {
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrNo", lrNumber);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("estimatedReadyDate", lrDateStr);
+		
+		
+		
 		Debug.log("shipmentMessageToWeaver =============="+shipmentMessageToWeaver);
 		
 		
