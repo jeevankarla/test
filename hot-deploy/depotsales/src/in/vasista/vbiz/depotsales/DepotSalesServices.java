@@ -294,7 +294,7 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String orderId = (String) request.getParameter("orderId");
-		String PONumber = (String) request.getParameter("referenceNo");
+		String PONumber = (String) request.getParameter("PONumber");
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
 		String orderMessage=(String) request.getParameter("orderMessage");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
@@ -1373,6 +1373,8 @@ public class DepotSalesServices{
 		List invoices = FastList.newInstance(); 
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
+		String referenceNo = (String) request.getParameter("referenceNo");
+		Debug.log("referenceNo ===="+referenceNo);
 		String cfcId = (String) request.getParameter("cfcId");
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
@@ -1787,6 +1789,7 @@ public class DepotSalesServices{
 		processOrderContext.put("orderId", orderId);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
+		processOrderContext.put("referenceNo", referenceNo);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);
@@ -1890,7 +1893,7 @@ public class DepotSalesServices{
 	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
 	  	String orderId = (String) context.get("orderId");
-	  	String PONumber = (String) context.get("PONumber");
+	  	String referenceNo = (String) context.get("referenceNo");
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
 	  	String orderMessage = (String) context.get("orderMessage");
 	  	String disableAcctgFlag = (String) context.get("disableAcctgFlag");
@@ -2043,7 +2046,7 @@ public class DepotSalesServices{
 			if("Y".equals(disableAcctgFlag)){
 				cart.setIsEnableAcctg("N");
 			}
-	        cart.setExternalId(PONumber);
+	        cart.setExternalId(referenceNo);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			//cart.setOrderId(orderId);

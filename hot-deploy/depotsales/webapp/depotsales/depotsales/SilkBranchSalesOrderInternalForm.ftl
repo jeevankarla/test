@@ -914,6 +914,9 @@
 	   	  				var totalTaxAmt = 0;
 	   	  				var vatSurchargeList = [];
 	   	  				var taxList = [];
+	   	  				vatSurchargeList.push("VAT_SURCHARGE");
+	   	  				taxList.push("VAT_SURCHARGE");
+	   	  				
 	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
 	   	  					var taxItem = vatSurcharges[i];
 							var surchargeAmt = 0;
@@ -921,11 +924,11 @@
 							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
 							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
 							
-							vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
+							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
 							
 							totalTaxAmt += surchargeAmt;
 							
-							taxList.push(taxItem.taxAuthorityRateTypeId);
+							//taxList.push(taxItem.taxAuthorityRateTypeId);
 	   	  				}
 	   	  				
 	   	  				var totalAmount = 0;

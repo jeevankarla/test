@@ -456,9 +456,14 @@
 		       			 <#else>               
 			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.branchGeoId?exists && parameters.branchGeoId?has_content>  
+		       				<input type="hidden" name="branchGeoId" id="branchGeoId" value="${branchGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
 		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
-		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			
@@ -646,7 +651,40 @@
 							</#if>
 						</#if>
                        <td>&nbsp;</td>
-	               	</tr>	               	
+	               	</tr>	
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if referenceNo?exists && referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${referenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.referenceNo?exists && parameters.referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.referenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="referenceNo" id="referenceNo"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          		</td>
+				          		
+				          	</#if>
+			        	</#if>
+						
+	               	</tr>
+	               	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -704,7 +742,9 @@
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
+		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
+		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
 		<br>
 	</form>    
 		</div>

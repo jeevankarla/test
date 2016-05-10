@@ -551,7 +551,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				data[args.row]["amount"] = Math.round(quantity*unitPrice);
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				grid.updateRow(args.row);			
 				updateTotalIndentAmount();
 				
@@ -590,7 +590,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				data[args.row]["amount"] = Math.round(quantity*unitPrice);
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				
 				grid.updateRow(args.row);
@@ -621,7 +621,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				//grid.updateRow(args.row);
 				
@@ -649,7 +649,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				
@@ -680,7 +680,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				data[args.row]["unitPrice"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				
@@ -740,7 +740,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 						      		 	//data[args.row]["remarks"].gotoCell();
 						      		 	
 						      		 	var row = args.row;
-										getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
+										getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				   	
 					               }
 					             } ,
@@ -922,8 +922,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-        
-      	 if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	  
+         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
 	         $.ajax({
 	        	type: "POST",
 	         	url: "calculateTaxesByGeoId",
@@ -939,13 +938,38 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
 	   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
 	   	  				
+	   	  				var vatSurcharges =result["vatSurcharges"];
+	   	  				var cstSurcharges =result["cstSurcharges"];
 	   	  				var vatPercent =result["vatPercent"];
 	   	  				var cstPercent =result["cstPercent"];
 	   	  				
 	   	  				data[row]["DEFAULT_VAT"] = vatPercent;
 	   	  				data[row]["DEFAULT_CST"] = cstPercent;
-	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;;
+	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;
 	   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
+	   	  				
+	   	  				data[row]["VAT_SURCHARGE"] = 0;
+						data[row]["VAT_SURCHARGE_AMT"] = 0;
+	   	  				
+	   	  				var totalTaxAmt = 0;
+	   	  				var vatSurchargeList = [];
+	   	  				var taxList = [];
+	   	  				vatSurchargeList.push("VAT_SURCHARGE");
+	   	  				taxList.push("VAT_SURCHARGE");
+	   	  				
+	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
+	   	  					var taxItem = vatSurcharges[i];
+							var surchargeAmt = 0;
+							surchargeAmt = (taxItem.taxPercentage) * ( (vatPercent) * totalAmt/100)/100;
+							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
+							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
+							
+							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
+							
+							totalTaxAmt += surchargeAmt;
+							
+							//taxList.push(taxItem.taxAuthorityRateTypeId);
+	   	  				}
 	   	  				
 	   	  				var totalAmount = 0;
 						for (i = 0; i < data.length; i++) {
@@ -953,8 +977,8 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 						}
 						var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 	   	  				
-	   	  				var totalTaxAmt = 0;
-	   	  				var taxList = [];
+	   	  				
+	   	  				//var taxList = [];
 	   	  				taxList.push("VAT_SALE");
 	   	  				taxList.push("CST_SALE");
 	   	  				
@@ -999,6 +1023,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	   	  				}
 	   	  				data[row]["SERVICE_CHARGE"] = serviceChargePercent;
 	   	  				data[row]["taxList"] = taxList;
+	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
 	   	  				data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
 	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt + serviceChargeAmt;
@@ -1013,8 +1038,8 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	     	 	error: function() {
 	      	 		alert(result["_ERROR_MESSAGE_"]);
 	     	 	}
-	    	});		
-    	}	
+	    	});
+	    }	
 	}
 	
 </script>			
