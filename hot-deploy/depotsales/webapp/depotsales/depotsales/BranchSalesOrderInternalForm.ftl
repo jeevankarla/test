@@ -426,7 +426,7 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Bale,Half-Bale"},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
@@ -444,9 +444,36 @@
  			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
+		hid_columns = [
+			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
+			{id:"amount", name:"Amt(Rs)", field:"amount", width:75, minWidth:75, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
+			<#--{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false},-->
+			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
+ 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}		
+		];
+
+
+		var data_view = new Slick.Data.DataView();
+		grid = new Slick.Grid("#myGrid1", data, hid_columns,options);
+		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		
 		
-			var options = {
+		
+		var options = {
 			editable: true,		
 			forceFitColumns: false,			
 			enableCellNavigation: true,
@@ -456,9 +483,11 @@
             secondaryHeaderRowHeight: 25
 		};
 		
-		grid = new Slick.Grid("#myGrid1", data, columns, options);
+
+		grid = new Slick.Grid("#myGrid1", data,hid_columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
+
 		
 		// wire up model events to drive the grid
         if (data.length > 0) {			
@@ -569,6 +598,44 @@
 			
 			if (args.cell == 3) {
 				var row = args.row;
+				var prod = data[args.row]["cProductId"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var uom = data[args.row]["cottonUom"];
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
+				
+				
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				if(isNaN(unitPrice)){
+					unitPrice = 0;
+				}
+				
+				quantity = 0;
+				if(uom == "Bale"){
+					quantity = baleQty*bundleWeight*40;
+				}
+				if(uom == "Half-Bale"){
+					quantity = baleQty*bundleWeight*20;
+				}
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+				}
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["baleQuantity"] = baleQty;
+				data[args.row]["cottonUom"] = uom;
+				data[args.row]["bundleWeight"] = bundleWeight;
+				data[args.row]["amount"] = Math.round(quantity*unitPrice);
+				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				grid.updateRow(args.row);
+			
 				updateCurrentQuota(row);
 				
 			}
@@ -597,6 +664,10 @@
 				if(uom == "Half-Bale"){
 					quantity = baleQty*bundleWeight*20;
 				}
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
 				data[args.row]["cottonUom"] = uom;
@@ -607,9 +678,7 @@
 				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
-				
-			}
-			if (args.cell == 5) {
+			
 				var row = args.row;
 				updateCurrentQuota(row);
 				
@@ -638,7 +707,7 @@
 				
 				grid.updateRow(args.row);
 			}
-			if (args.cell == 6) {
+			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
@@ -667,7 +736,7 @@
 				
 				updateTotalIndentAmount();
 			}
-			if (args.cell == 7) {
+			if (args.cell == 6) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['amount'];
