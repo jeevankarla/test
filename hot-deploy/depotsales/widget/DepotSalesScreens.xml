@@ -5833,7 +5833,7 @@
 	                      		<widgets>
 	                      		<link target="CreateNewTransporter"  text="Create Transporter" style="buttontext" ></link>
 	           						<platform-specific>
-                                    <html><html-template location="component://depotsales/webapp/depotsales/depotsales/findTransporter.ftl" />
+                                    <html><html-template location="component://depotsales/webapp/depotsales/depotsales/findTransPorter.ftl" />
                                     </html>
                                 </platform-specific>
 	                      		</widgets>

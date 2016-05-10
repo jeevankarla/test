@@ -282,7 +282,8 @@ under the License.
  	<fo:block>
       	<fo:table width="100%" align="right" table-layout="fixed"  font-size="11pt" border-style="solid">
       	<fo:table-column column-width="30pt"/>
-        <fo:table-column column-width="600pt"/>               
+        <fo:table-column column-width="300pt"/> 
+        <fo:table-column column-width="300pt"/>               
 			<fo:table-body>	
 			    <fo:table-row>
 					<fo:table-cell><fo:block text-align="left" font-size="11pt">2</fo:block></fo:table-cell>
@@ -294,7 +295,7 @@ under the License.
                         <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
                         <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell border-style="solid">
+                    <fo:table-cell  border-style-right="hidden">
                         <#if shipingAdd?has_content>
 	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${shipingAdd.name?if_exists}</fo:block>
 	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${shipingAdd.address1?if_exists}</fo:block>
@@ -305,6 +306,10 @@ under the License.
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
 							 </#if>
 				   </fo:table-cell>
+				    <fo:table-cell  border-style-left="hidden">
+                        <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
+                        <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
+                    </fo:table-cell>
                </fo:table-row>
                 <fo:table-row>
                 	<fo:table-cell border-style="solid">

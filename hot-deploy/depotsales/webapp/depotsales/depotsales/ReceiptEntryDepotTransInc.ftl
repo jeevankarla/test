@@ -192,6 +192,8 @@
 		
         var lrNUm = $("#lrNumber").val();
         var lrNumber = jQuery("<input>").attr("type", "hidden").attr("name", "lrNumber").val(lrNUm);
+        var lrDate = $("#lrDate").val();
+        var lrDate = jQuery("<input>").attr("type", "hidden").attr("name", "lrDate").val(lrDate);
         var freightCharges = $("#freightCharges").val();
         var freightChar = jQuery("<input>").attr("type", "hidden").attr("name", "freightCharges").val(freightCharges);
         var carrier = $("#carrierName").val();
@@ -210,6 +212,7 @@
 		jQuery(formId).append(jQuery(hideQCflag));
 		jQuery(formId).append(jQuery(flag));
 		jQuery(formId).append(jQuery(lrNumber));
+		jQuery(formId).append(jQuery(lrDate));
 		jQuery(formId).append(jQuery(freightChar));
 		jQuery(formId).append(jQuery(carrierName));
 		

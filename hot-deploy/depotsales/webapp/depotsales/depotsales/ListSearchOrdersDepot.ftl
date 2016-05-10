@@ -267,17 +267,17 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 	                <#if (eachOrder.get('statusId') == "ORDER_CREATED")>          
 	                       <#assign statusId ="APPROVE_LEVEL1">
 	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="Commercial Head" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
 	                </#if>
 	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL1")>          
 	                       <#assign statusId ="APPROVE_LEVEL2">
 	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value=" Account Head " onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
 	                </#if>
 	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL2")>          
 	                       <#assign statusId ="APPROVE_LEVEL3">
 	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="${StatusItem.description}" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
+	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value=" Regional Head " onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
 	                </#if>
 	                <#if eachOrder.get('statusId') == "APPROVE_LEVEL3" || eachOrder.get('statusId') == "ORDER_APPROVED">      
                              <td>P&S Approved</td>
@@ -363,7 +363,9 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 					<td></td>
 				</#if> -->  
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId}');"/></td>
+              	
+              	
+        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript:cancelOrderCaution('${eachOrder.orderId?if_exists}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>

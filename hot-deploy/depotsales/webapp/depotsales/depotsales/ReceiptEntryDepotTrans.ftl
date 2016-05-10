@@ -38,7 +38,15 @@ $( "#deliveryChallanDate" ).datepicker({
 	dateFormat:'d MM, yy',
 	changeMonth: true,
 	
-});			
+});
+$( "#lrDate" ).datepicker({
+	dateFormat:'d MM, yy',
+	changeMonth: true,
+	
+});
+
+
+			
 	$('#ui-datepicker-div').css('clip', 'auto');	
 	  }
 	
@@ -239,6 +247,23 @@ $( "#deliveryChallanDate" ).datepicker({
 					            </td>
 				       	  </#if>
 					  	</tr>
+					  	<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>LR Date: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.lrDate)?exists && (parameters.lrDate)?has_content> 
+				                 <input type="hidden" name="lrDate" id="lrDate" value="${parameters.lrDate}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.lrDate}         
+					            	</div>
+					          	</td>
+				             <#else> 
+				              <td valign='middle'>
+		          				<input class="h3" type="text" name="lrDate" readonly  id="lrDate" onmouseover="datetimepick()" value="${defaultEffectiveDate}" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
 					  	<tr>
 							<td>&nbsp;</td>
 					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Carrier/Courier Name: </div></td>
