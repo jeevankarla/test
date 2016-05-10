@@ -678,9 +678,7 @@
 				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
-				
-			}
-			if (args.cell == 5) {
+
 				var prod = data[args.row]["cProductId"];
 				var row = args.row;
 				updateCurrentQuota(row);
