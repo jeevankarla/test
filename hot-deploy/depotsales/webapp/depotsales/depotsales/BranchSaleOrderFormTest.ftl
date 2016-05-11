@@ -1000,8 +1000,8 @@
 	<div class="bottom">
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
-				<span style="float:left; margin-left:-300px;" id="serviceCharge" class="serviceCharge"></span>
-				<a style="float:left; margin-left:-80px;" href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>
+				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
+				<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>
 				<span style="float:right; margin-left: -5px;" id="totalAmount"></span>
 			</div>
 		    <div class="screenlet-body">
