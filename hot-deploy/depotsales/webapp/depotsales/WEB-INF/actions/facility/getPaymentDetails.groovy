@@ -127,9 +127,7 @@ orderHeader = result.getPartialList(Integer.valueOf(parameters.low),Integer.valu
 
 orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
-
 result.close();
-
 /*
 forTotalresult = null;
 forTotalresult = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields, "userLogin", userLogin));
@@ -309,18 +307,11 @@ orderHeader.each{ eachHeader ->
 	grandTOT = eachHeader.getBigDecimal("grandTotal");
 	balance = grandTOT-paidAmt;
 	tempData.put("balance", balance);
-	//tempData.put("totIndents", totIndents);
 	
 	orderList.add(tempData);
 	
 }
 
-result.close();
-
-condtList = [];
-condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
-cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
-PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
 
 
 /*sortedOrderMap =  [:]as TreeMap;

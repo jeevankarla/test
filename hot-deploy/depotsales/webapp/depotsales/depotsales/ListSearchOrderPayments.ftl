@@ -27,136 +27,6 @@ under the License.
 
 
 <script type="text/javascript">
-//<![CDATA[
-	
-	
-	function toggleOrderId(master) {
-        var orders = jQuery("#listOrders :checkbox[name='orderId']");
-        jQuery.each(orders, function() {
-            this.checked = master.checked;
-        });
-    }
-    
-    function datepick()
-	{		
-		$( "#shipDate" ).datepicker({
-			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
-			numberOfMonths: 1});
-		$('#ui-datepicker-div').css('clip', 'auto');
-		
-	}
-    function realizestatus(orderId){
-		var formId = "#" + "realizeStatus";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "paymentPreferenceId").val(orderId);
-		jQuery(formId).append(jQuery(param1));
-        jQuery(formId).submit();
-    }
-    function processOrders(current){
-    	jQuery(current).attr( "disabled", "disabled");
-    	var orders = jQuery("#listOrders :checkbox[name='orderId']");
-        var index = 0;
-        var shipDate = $("#shipDate").val();
-        //alert("==shipDate==="+shipDate);
-        var vehicleId = $("#vehicleId").val();
-        var carrierName = $("#carrierName").val();
-        var lrNumber = $("#lrNumber").val();
-        var modeOfDespatch = $("#modeOfDespatch").val();
-        var shipmentTypeId = $("#shipmentTypeId").val();
-         var orderStatusId = $("#orderStatusId").val();
-        jQuery.each(orders, function() {
-            if (jQuery(this).is(':checked')) {
-            	var domObj = $(this).parent().parent();
-            	var orderObj = $(domObj).find("[name='orderId']");
-            	var orderId = $(orderObj).val();
-            	var appendStr = "<input type=hidden name=orderId_o_"+index+" value="+orderId+" />";
-                $("#processOrdersForm").append(appendStr);
-            }
-            index = index+1;
-        });
-        var appStr = "";
-        if(shipDate != "undefined" && shipDate != null){
-    		appStr += "<input type=hidden name=shipDate value='"+ shipDate +"' />";
-    	}
-    	appStr += "<input type=hidden name=vehicleId value='"+ vehicleId +"' />";
-    	appStr += "<input type=hidden name=carrierName value='"+ carrierName +"' />";
-    	appStr += "<input type=hidden name=lrNumber value='"+ lrNumber +"' />";
-    	appStr += "<input type=hidden name=modeOfDespatch value='"+ modeOfDespatch +"' />";
-    	appStr += "<input type=hidden name=shipmentTypeId value='"+ shipmentTypeId +"' />";
-    	appStr += "<input type=hidden name=orderStatusId value='"+ orderStatusId +"' />";
-    	$("#processOrdersForm").append(appStr);
-    	var salesChannel = '${parameters.salesChannelEnumId?if_exists}';
-    	var splStr = "<input type=hidden name=salesChannelEnumId value='"+ salesChannel +"' />";
-        $("#processOrdersForm").append(splStr);
-    	jQuery('#processOrdersForm').submit();
-        
-    }
-    function getDCReport(orderId){
-		var formId = "#" + "dcForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		jQuery(formId).append(jQuery(param1));
-        jQuery(formId).submit();
-    }
-    /*
-    function approveIceCreamOrder(orderId, salesChannel){
-		var formId = "#" + "orderApproveForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-        jQuery(formId).submit();
-    } */
-    function approveDepotOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "orderApproveForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
-    }
- function editDepotOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "orderEditForm"
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
-    }
-    
-    function cancelIceCreamOrder(orderId, salesChannel){
-		var formId = "#" + "orderCancelForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-        jQuery(formId).submit();
-    }
-       
-       <#--
-     function realizestatus(orderId, salesChannel){
-		var formId = "#" + "listOrders";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		
-		
-		alert(param1);
-		alert(param2);
-		
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-        jQuery(formId).submit();
-    }
-          
-       -->
-       
-      
-       
-//]]>
 
 
 
@@ -178,10 +48,12 @@ $(document).ready(function() {
           
            low = high;
            high = high + 20;
+                     
            recursively_ajax();           
     	}
 });
 
+   
 
 	recursively_ajax();
 
@@ -191,6 +63,7 @@ $(document).ready(function() {
     
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"low":low,"high":high};
 	
+	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
      
     jQuery.ajax({
                 url: 'getPaymentDetails',
@@ -202,16 +75,26 @@ $(document).ready(function() {
 					    alert("Error in order Items");
 					}else{
 						orderData = result["orderList"];
-                        if(orderData.length != 0)
+                        if(orderData.length != 0){
+                        $('div#orderSpinn').html("");
+                        $('div#blink').hide();
                         drawTable(orderData);   
-                        else
-                         alert("No Orders Found");        
+                       }else{
+                        $('div#orderSpinn').html("");
+                         setInterval(blinker, 1000);
+                        
+                         }        
                		}
                	}							
 		});
 }
 	
 
+function blinker() {
+    $('div#blink').show();
+    $('.blink_me').fadeOut(500);
+    $('.blink_me').fadeIn(500);
+} 
 
 
 function drawTable(data) {
@@ -283,7 +166,6 @@ function drawRow(rowData) {
 }
 
 
-
     
   
 </script>
@@ -292,93 +174,13 @@ function drawRow(rowData) {
 
 </script>
 <#include "viewOrderDetailsDepot.ftl"/>
-
-<#-->
-<form name="orderEditForm" id="orderEditForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="editDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="editIUSTransferOrder"
-	</#if>>
-</form>
-<form name="orderCancelForm" id="orderCancelForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="cancelDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="cancelIUSTransferOrder"
-	</#if>>
-</form>
-<form name="realizeStatus" id="realizeStatus" method="post" action="realizeStatus"> 
-</form>
-<form name="orderApproveForm" id="orderApproveForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="approveDepotSalesOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="approveIUSTransferOrder"
-	</#if>> 
-</form>
-
-<form name="processOrdersForm" id="processOrdersForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="createShipmentAndInvoiceForDepotSalesOrders"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="createShipAndInvForIUSTransferOrders"
-	</#if>
-</form>
-
--->
-
-<#include "viewOrderDetailsDepot.ftl"/>
-
-<#-->
-<form name="orderEditForm" id="orderEditForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="editDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="editIUSTransferOrder"
-	</#if>>
-</form>
-<form name="orderCancelForm" id="orderCancelForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="cancelDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="cancelIUSTransferOrder"
-	</#if>>
-</form>
-<form name="realizeStatus" id="realizeStatus" method="post" action="realizeStatus"> 
-</form>
-<form name="orderApproveForm" id="orderApproveForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="approveDepotSalesOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="approveIUSTransferOrder"
-	</#if>> 
-</form>
-
-<form name="processOrdersForm" id="processOrdersForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="createShipmentAndInvoiceForDepotSalesOrders"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="createShipAndInvForIUSTransferOrders"
-	</#if>
-</form>
--->
- 
- 
  
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
   
-    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: red" ></label> </div>
+    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label> </div>
   
- 
-   
+      
   
   <form name="listOrders" id="listOrders"   method="post" >
    
@@ -415,4 +217,6 @@ function drawRow(rowData) {
       </tbody>
     </table>
   </form>
-  </div>
+        <div align='center' name ='displayMsg' id='orderSpinn'/></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
+  

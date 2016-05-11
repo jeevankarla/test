@@ -39,7 +39,11 @@ orderItemAttr = delegator.findList("OrderItemAttribute", condEXr, null, null, nu
  
  orderDate = orderHeaderList.get("orderDate");
  
+ externalOrderId = orderHeaderList.get("externalId");
+ 
  context.orderDate = orderDate;
+ context.externalOrderId = externalOrderId;
+ 
  
 grandTOt = orderHeaderList.get("grandTotal");
 productStoreId = orderHeaderList.get("productStoreId");
