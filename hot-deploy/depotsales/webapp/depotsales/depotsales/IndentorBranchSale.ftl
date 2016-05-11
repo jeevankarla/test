@@ -606,7 +606,6 @@
 				          		<td valign='middle'>
 				          			<input type="text" name="productStoreId" id="productStoreId"/>
 				          			<span class="tooltip" id="branchName"></span>
-				          			
 				          			<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
 				          				<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/> 
 					          			<label class='CFC_TD'><b>CFC: <font color="green">  ${parameters.cfcs}   </label>
@@ -633,9 +632,14 @@
 		       			 <#else>               
 			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.branchGeoId?exists && parameters.branchGeoId?has_content>  
+		       				<input type="hidden" name="branchGeoId" id="branchGeoId" value="${branchGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
 		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
-		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			
@@ -672,6 +676,7 @@
 			        	</#if>
 						
 	               	</tr>
+	               	
 	               	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
@@ -867,6 +872,8 @@
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
+		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
+		
 		<br>
 	</form>    
 		</div>
@@ -1003,7 +1010,7 @@
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
-					<#assign formAction='IndentorprocessBranchSalesOrder'>			
+					<#assign formAction='processBranchSalesOrder'>			
 					
 					
 					<#if booth?exists || party?exists || partyId?exists >
@@ -1021,7 +1028,7 @@
 				    	<div align="center">
 				    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 				    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${frmAction}</@ofbizUrl>');"/>   	
+				    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processOrdersBranchSales</@ofbizUrl>');"/>   	
 				    	</div>     
 					</#if>
 					

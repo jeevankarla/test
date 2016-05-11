@@ -309,11 +309,12 @@
 		
 		
 		dataRow["taxAmt"] = totalTaxAmt;
-		dataRow["totPayable"] = totalAmt + totalTaxAmt;
+		dataRow["totPayable"] = totalAmt + dataRow["SERVICE_CHARGE_AMT"] + totalTaxAmt;
 		
 		grid.updateRow(rowIndex);
 		grid.render();
-		updateProductTotalAmount();
+		//updateProductTotalAmount();
+		updateTotalIndentAmount();
 		cancelForm();
 	}
 		
@@ -348,4 +349,32 @@
 	 		$('#'+taxValueItemId).val(taxValue);
 	 	}
 	}
+	
+	function changeServiceChargePercent() {
+		
+		var serviceChargePercent = $('#serviceChargePercent').val();
+		var message = "";
+		var title = "";
+		message += "<table cellspacing=20 cellpadding=20 id='serviceChgUpdationTable' >" ;
+		message += "<hr class='style17'></hr>";
+		message += "<tr class='h3'><th>Service Charge </th></tr>";
+		message += "<tr class='h3'><td align='left'>Service Charge %: </td><td><input type='text' name='serviceChgPercent' id='serviceChgPercent' value='"+serviceChargePercent+"'/></td></tr>";
+			
+		message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return updateServiceChargeAndGrid();' class='smallSubmit'>Add</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		
+		message += "</table>";
+		title = "<h2><center>Service Charge <center></h2>";
+		
+		Alert(message, title);
+		
+	};
+	
+	function updateServiceChargeAndGrid(){
+		 $('#serviceChargePercent').val($('#serviceChgPercent').val());
+		 //updateProductTotalAmount();
+		 $("#serviceCharge").html("<b>"+$('#serviceChgPercent').val()+"% Service Charge is applicable</b>");
+		 updateServiceChargeAmounts();
+		 cancelForm();
+	}
+	
 </script>

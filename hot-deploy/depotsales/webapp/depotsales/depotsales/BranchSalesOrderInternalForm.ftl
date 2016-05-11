@@ -990,6 +990,34 @@
 		}
 	}
 	
+	function addServiceCharge(row){
+		var serviceChargePercent = $("#serviceChargePercent").val();
+		var serviceChargeAmt = 0;
+		
+		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
+	 		serviceChargeAmt = (serviceChargePercent/100) * data[row]["amount"];
+	 	}
+		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
+		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+		
+		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
+	}
+	
+	function updateServiceChargeAmounts(){
+		var serviceChargePercent = $("#serviceChargePercent").val();
+		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
+			for (i = 0; i < data.length; i++) {
+				var basicAmt = data[i]["amount"];
+				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
+				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
+				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
+				grid.updateRow(i);
+			}
+		}
+		updateTotalIndentAmount();
+	}
+	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
          if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
 	         $.ajax({
@@ -1084,18 +1112,12 @@
 						}
 						-->
 	   	  				
-	   	  				var serviceChargePercent = 0;
-	   	  				var serviceChargeAmt = 0;
-	   	  				if( schemeCategory == "General" ){
-	   	  					serviceChargePercent = 2;
-	   	  					serviceChargeAmt = (serviceChargePercent/100) * totalAmt;
-	   	  				}
-	   	  				data[row]["SERVICE_CHARGE"] = serviceChargePercent;
 	   	  				data[row]["taxList"] = taxList;
 	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
-	   	  				data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt + serviceChargeAmt;
+	   	  				
+	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
+	   	  				addServiceCharge(row);
 	   	  				grid.updateRow(row);
 	   	  				
 	   	  				updateTotalIndentAmount();

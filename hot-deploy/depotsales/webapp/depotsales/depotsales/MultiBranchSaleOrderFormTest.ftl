@@ -53,10 +53,6 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-		.screenlet .serviceCharge
-		{	
-			float: right;
-		}
 	</style>
 	
 	<script type="text/javascript">
@@ -65,11 +61,15 @@
 
 		$(document).ready(function(){
 			fillPartyData();
+			$("#editServChgButton").hide();
 			if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
-	  				$("#serviceCharge").html("<b>2% Service Charge is applicable</b>");
+	  				$("#editServChgButton").show();
+	  				$('#serviceChargePercent').val(2);
+	  				var scPerc = $('#serviceChargePercent').val();
+	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
-	  		} 	
+	  		} 		
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -456,11 +456,18 @@
 		       			 <#else>               
 			          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.branchGeoId?exists && parameters.branchGeoId?has_content>  
+		       				<input type="hidden" name="branchGeoId" id="branchGeoId" value="${branchGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
 		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
-		       			<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
+		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/> 
+		       			
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -646,7 +653,40 @@
 							</#if>
 						</#if>
                        <td>&nbsp;</td>
-	               	</tr>	               	
+	               	</tr>	
+	               	
+	               	<tr>
+		       	  		
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if referenceNo?exists && referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${referenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.referenceNo?exists && parameters.referenceNo?has_content>  
+					  	  		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.referenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="referenceNo" id="referenceNo"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          		</td>
+				          		
+				          	</#if>
+			        	</#if>
+						
+	               	</tr>
+	               	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -704,7 +744,10 @@
 		<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
+		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
+		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
+		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
 		<br>
 	</form>    
 		</div>
@@ -835,8 +878,9 @@
 	<div class="bottom">
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
-				<span id="totalAmount"></span>
-				<span id="serviceCharge" class="serviceCharge">Service Charge: </span>
+				<span style="float:left;" id="serviceCharge" class="serviceCharge"></span>
+				<a style="float:left; " href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>
+				<span style="float:right; " id="totalAmount"></span>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>

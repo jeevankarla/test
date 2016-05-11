@@ -507,7 +507,7 @@
 				grid.updateRow(args.row);
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
 			}
@@ -537,7 +537,7 @@
 				grid.updateRow(args.row);
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
 			}
@@ -566,7 +566,7 @@
 				grid.updateRow(args.row);
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
 			}
@@ -626,7 +626,7 @@
 						      		 	
 						      		 	
 						      		 	var row = args.row;
-										getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
+										getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				   	
 						      		 	
 					               }
@@ -862,12 +862,36 @@
 		}
 	}
 	
+	function addServiceCharge(row){
+		var serviceChargePercent = $("#serviceChargePercent").val();
+		var serviceChargeAmt = 0;
+		
+		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
+	 		serviceChargeAmt = (serviceChargePercent/100) * data[row]["amount"];
+	 	}
+		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
+		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+		
+		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
+	}
 	
+	function updateServiceChargeAmounts(){
+		var serviceChargePercent = $("#serviceChargePercent").val();
+		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
+			for (i = 0; i < data.length; i++) {
+				var basicAmt = data[i]["amount"];
+				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
+				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
+				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
+				grid.updateRow(i);
+			}
+		}
+		updateTotalIndentAmount();
+	}
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-	
-		if( taxAuthGeoId != undefined && taxAuthGeoId != ""){
-	
+         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
 	         $.ajax({
 	        	type: "POST",
 	         	url: "calculateTaxesByGeoId",
@@ -883,13 +907,38 @@
 	   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
 	   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
 	   	  				
+	   	  				var vatSurcharges =result["vatSurcharges"];
+	   	  				var cstSurcharges =result["cstSurcharges"];
 	   	  				var vatPercent =result["vatPercent"];
 	   	  				var cstPercent =result["cstPercent"];
 	   	  				
 	   	  				data[row]["DEFAULT_VAT"] = vatPercent;
 	   	  				data[row]["DEFAULT_CST"] = cstPercent;
-	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;;
+	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;
 	   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
+	   	  				
+	   	  				data[row]["VAT_SURCHARGE"] = 0;
+						data[row]["VAT_SURCHARGE_AMT"] = 0;
+	   	  				
+	   	  				var totalTaxAmt = 0;
+	   	  				var vatSurchargeList = [];
+	   	  				var taxList = [];
+	   	  				vatSurchargeList.push("VAT_SURCHARGE");
+	   	  				taxList.push("VAT_SURCHARGE");
+	   	  				
+	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
+	   	  					var taxItem = vatSurcharges[i];
+							var surchargeAmt = 0;
+							surchargeAmt = (taxItem.taxPercentage) * ( (vatPercent) * totalAmt/100)/100;
+							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
+							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
+							
+							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
+							
+							totalTaxAmt += surchargeAmt;
+							
+							//taxList.push(taxItem.taxAuthorityRateTypeId);
+	   	  				}
 	   	  				
 	   	  				var totalAmount = 0;
 						for (i = 0; i < data.length; i++) {
@@ -897,8 +946,8 @@
 						}
 						var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 	   	  				
-	   	  				var totalTaxAmt = 0;
-	   	  				var taxList = [];
+	   	  				
+	   	  				//var taxList = [];
 	   	  				taxList.push("VAT_SALE");
 	   	  				taxList.push("CST_SALE");
 	   	  				
@@ -935,17 +984,12 @@
 						}
 						-->
 	   	  				
-	   	  				var serviceChargePercent = 0;
-	   	  				var serviceChargeAmt = 0;
-	   	  				if( schemeCategory == "General" ){
-	   	  					serviceChargePercent = 2;
-	   	  					serviceChargeAmt = (serviceChargePercent/100) * totalAmt;
-	   	  				}
-	   	  				data[row]["SERVICE_CHARGE"] = serviceChargePercent;
 	   	  				data[row]["taxList"] = taxList;
+	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
-	   	  				data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt + serviceChargeAmt;
+	   	  				
+	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
+	   	  				addServiceCharge(row);
 	   	  				grid.updateRow(row);
 	   	  				
 	   	  				updateTotalIndentAmount();
@@ -957,8 +1001,8 @@
 	     	 	error: function() {
 	      	 		alert(result["_ERROR_MESSAGE_"]);
 	     	 	}
-	    	});	
-    	}		
+	    	});
+	    }	
 	}
 	
 </script>			
