@@ -74,7 +74,7 @@ under the License.
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;BILL NO                :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;NHDC Indent No         :${indentNo?if_exists}</fo:block>
 				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;NHDC PO No             :${poNumber?if_exists}</fo:block>
-				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;User Agency Indent No  :</fo:block>
+				<fo:block text-align="rght"    font-size="12pt" >&#160;&#160;&#160;&#160;User Agency Indent No  :${externalOrderId?if_exists}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="12pt" >DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>

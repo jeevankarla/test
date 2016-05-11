@@ -51,9 +51,6 @@ if(PartyIdentificationList){
 passNo = PartyIdentificationList[0].get("idValue");
 }
 
-
-
-
 poNumber = "";
 orderId  = "";
 shipmentDate = "";
@@ -186,6 +183,8 @@ OrderHeader = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId","
 
 indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 indentDate = indentDetails[0].get("orderDate");
+
+externalOrderId = indentDetails[0].get("externalId");
 PODetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 poDate = PODetails[0].get("orderDate");
 
@@ -221,6 +220,8 @@ for (eachRole in OrderRoleList) {
 	     onbehalf = true;
 }
 
+Debug.log("externalOrderId==========="+externalOrderId);
+
 
 
 context.poDate = poDate;
@@ -230,6 +231,8 @@ context.supplier = supplier;
 context.destination = destination;
 context.soceity = soceity;
 context.onbehalf = onbehalf;
+context.externalOrderId = externalOrderId;
+
 
 
 //if(onbehalf == true){
