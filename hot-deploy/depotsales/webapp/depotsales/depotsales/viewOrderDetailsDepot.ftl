@@ -559,11 +559,13 @@
 	};
 	
     
-    function cancelOrderCaution(orderId,salesChannelEnumId,partyId) {
+    function cancelOrderCaution(orderId,partyId) {
 		var message = "";
 		
 		var orderId = orderId;
-		message += "<html><head></head><body><form action='createCustomPaymentFromPreference' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
+		var partyId = partyId;
+		
+		message += "<html><head></head><body><form action='cancelDepotOrder' id='cancelDepotOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
@@ -583,6 +585,9 @@
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyId' value='"+partyId+"'/></td></tr>";
 			
             message +="<tr class='h3'><td align='center' class='h3'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td>  </tr>";				 		
                 		
