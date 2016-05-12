@@ -348,9 +348,9 @@
 				invalidProdCheck = 1;
 			}
 	  	}
-      	if (currProdCnt > 1) {
-        	return {valid: false, msg: "Duplicate Product " + value};      				
-      	}
+      	//if (currProdCnt > 1) {
+        	//return {valid: false, msg: "Duplicate Product " + value};      				
+      	//}
       	if(invalidProdCheck == 0){
       		return {valid: false, msg: "Invalid Product " + value};
       	}
