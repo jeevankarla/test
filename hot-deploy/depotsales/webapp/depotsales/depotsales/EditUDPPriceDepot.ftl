@@ -413,7 +413,7 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 				    message +=  "<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitAddress();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
                 		
 					message +=	"</table></body></html>";
-		var title = "Party : "+partyName+" [ "+partyId+" ]";
+		var title = "Party :  [ "+partyId+" ]";
 		Alert(message, title);
 		 
 		 
