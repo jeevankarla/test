@@ -365,7 +365,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
               	
               	
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript:cancelOrderCaution('${eachOrder.orderId?if_exists}');"/></td>
+        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript:cancelOrderCaution('${eachOrder.orderId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
               		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
