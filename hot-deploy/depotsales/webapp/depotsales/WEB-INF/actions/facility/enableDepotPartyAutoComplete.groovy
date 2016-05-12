@@ -228,3 +228,33 @@
 		}
 	}
 	context.depotsJSON=depotsJSON;
+	
+	
+	dctx = dispatcher.getDispatchContext();
+	
+	List<GenericValue> countries= org.ofbiz.common.CommonWorkers.getCountryList(delegator);
+	JSONArray countryListJSON = new JSONArray();
+	countries.each{ eachCountry ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachCountry.geoId);
+			newObj.put("label",eachCountry.geoName);
+			countryListJSON.add(newObj);
+	}
+	context.countryListJSON = countryListJSON;
+	
+	
+	// preparing state List Json
+	
+	
+	dctx = dispatcher.getDispatchContext();
+	
+	List<GenericValue> statesList = org.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator, "IND");
+	JSONArray stateListJSON = new JSONArray();
+	statesList.each{ eachState ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachState.geoCode);
+			newObj.put("label",eachState.geoName);
+			stateListJSON.add(newObj);
+	}
+	context.stateListJSON = stateListJSON;
+

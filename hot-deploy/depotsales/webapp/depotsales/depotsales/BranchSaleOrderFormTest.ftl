@@ -54,6 +54,23 @@
 			  border-radius: 20px; 
 		}
 		
+		
+		
+#popup{
+    position: fixed;
+    background: white;
+    display: none;
+    top: 300px;
+    right: 30px;
+    left: 680px;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    color: black;
+} 
+		
 	</style>
 	
 	<script type="text/javascript">
@@ -61,6 +78,16 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
+		
+		    $("#open_popup").click(function(){
+             $("#popup").css("display", "block");
+            });
+
+           $("#close_popup").click(function(){
+             $("#popup").css("display", "none");
+           }); 
+		
+		
 			 $("#societyfield").hide();
 			 	fillPartyData();
 			 	$("#editServChgButton").hide();
@@ -247,6 +274,8 @@
 	    
 		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
+					
+					
 		
 				       	  				 if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
@@ -636,7 +665,8 @@
 		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
-		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/> 
+		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/>
+		       			<input type="hidden" name="contactMechId" id="contactMechId"/>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -869,6 +899,7 @@
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
 		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
+		<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
 		
 		<br>
 	</form>    
@@ -884,15 +915,19 @@
     		<div class="screenlet-body">
 				 <form  name="partyDetails" id="partyDetails">
 				 	  	<hr class="style17"></hr>
+				 	  	
+				 	  	
+				 	  	
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       			
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green"><b>   PartyName       : </b></font></td><td width="70%"> <label  align="left" id="partyName"style="color: blue" ></label></td> 
 			       			</tr>
 			       			</#if>
 				 	 	 	<#if parameters.address?exists && parameters.address?has_content> 
@@ -901,11 +936,22 @@
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	</table>	
-				 	 	
+				 	 	 
+						    <div id="popup">
+						        <h1>Address</h1>
+						        <table id ="addressTable"><tbody></tbody></table>
+						        <a href="#" id="close_popup">Close</a>
+						    </div>
+						    
+						    <input type="button" id="open_popup" class="buttontext" value="View Destination Address"  />
+						    
+						    <input type="button" class="buttontext" value="Edit Destination Address" onclick="javascript:manualAddress();" />
+				 	 	 
+				 	 	 
 				 	 	<hr class="style18"></hr>
 				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>

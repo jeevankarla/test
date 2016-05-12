@@ -52,7 +52,8 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
+				populateData();
+				   $('div#forAddress').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 					
 					$('input[type=radio][name=applicableTaxType]').change(function() {
@@ -376,5 +377,226 @@
 		 updateServiceChargeAmounts();
 		 cancelForm();
 	}
+
+
+var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
+var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
+	
+
+       var CountryOptionList;
+	   var CountryOptions;
+	   var StateOptionList;
+	   var StateOptions;
+
+       var addressMap = {};
+	
+	 function manualAddress(){
+		 
+		 var message = "";
+		 
+		 
+		var partyId =  $('#partyId').val();
+		
+		var partyName =  $('#partynameDetail').val();
+		
+		
+		message += "<html><head></head><body><table cellspacing=20 cellpadding=20 width=550>";
+			//message += "<br/><br/>";
+		
+			        message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Retailer Code :</font></td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>";
+		            message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address1:<font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='storeValues();' required/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address2: </td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='storeValues();' /></td></tr>";
+	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId' onchange='storeValues();'/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: </td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onchange='storeValues();' required/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();' /></td></tr>";
+				    message +=  "<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitAddress();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+                		
+					message +=	"</table></body></html>";
+		var title = "Party : "+partyName+" [ "+partyId+" ]";
+		Alert(message, title);
+		 
+		 
+		 }
+		
+		 
+	
+	   function storeValues(){
+	   
+	     
+	     
+	     var partyId = $("#partyId").val();
+	     var address1 = $("#address1").val();
+	     var address2 = $("#address2").val();
+	     var city = $("#city").val();
+	     var postalCode = $("#postalCode").val();
+	     var countryCode = $("#countryCode").val();
+	     var stateProvinceGeoId = $("#stateProvinceGeoId").val();
+	     var country = $("#country").val();
+	     
+	     
+          	     
+	     addressMap['partyId'] = partyId;
+	     addressMap['address1'] = address1;
+	     addressMap['address2'] = address2;
+	     addressMap['city'] = city;
+	     addressMap['postalCode'] = postalCode;
+	     addressMap['countryCode'] = countryCode;
+	     addressMap['stateProvinceGeoId'] = stateProvinceGeoId;
+	     addressMap['country'] = country;
+	   
+	   }
+	
+	
+	var orderData;
+	var contactctMechId;
+	function submitAddress() {
+	
+	 var count = Object.keys(addressMap).length;
+	 
+	 var partyId = addressMap.partyId;
+	 var city = addressMap.city;
+	 var address1 = addressMap.address1;
+	 var address2 = addressMap.address2;
+	 var country = addressMap.country;
+	 var postalCode = addressMap.postalCode;
+	 var state = addressMap.stateProvinceGeoId;
+	 
+	 if(count != 0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && partyId.length != 0){
+	    showSpinner();
+		jQuery.ajax({
+                url: 'storePartyPostalAddress',
+                type: 'POST',
+                data: addressMap,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						orderData = result["orderList"];
+					    if(orderData.length != 0) 
+					    {
+					     contactctMechId = orderData.contactMechId;
+					     $("#contactMechId").val(contactctMechId);
+					     
+					     $('#addressTable tbody').remove();
+					     
+					    var row = $("<tr />")
+                        $("#addressTable").append(row); 
+                        row.append($("<td>Adress1 :</td>"));
+                        row.append($("<td>" + address1 + "</td>"));
+					    
+					     var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>Adress2 :</td>"));
+                        row.append($("<td>" + address2 + "</td>"));
+                        
+                          var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>Country :</td>"));
+                        row.append($("<td>India</td>"));
+                        
+                         var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>State :</td>"));
+                        row.append($("<td>" + state + "</td>"));
+                        
+                        var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>City :</td>"));
+                        row.append($("<td>" + city + "</td>"));
+                        
+                         var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>PostalCode :</td>"));
+                        row.append($("<td>" + postalCode + "</td>"));
+                        
+					     
+					    cancelShowSpinner();
+					   }
+               		}
+               	}							
+		});
+		
+		}
+		else{
+		  alert("Please Fill The Values");
+		}
+	}
+	
+	
+	function showSpinner() {
+		var message = "hello";
+		var title = "";
+		message += "<div align='center' name ='displayMsg' id='forAddress'/><button onclick='return cancelForm();' class='submit'/>";
+		Alert(message, title);
+		
+	};
+	function cancelShowSpinner(){
+		$('button').click();
+		return false;
+	}
+	
+	
+	
+	
+ var stateListJSON;
+ function setServiceName(selection) {
+ var country=selection.value;
+  jQuery.ajax({
+                url: 'getCountryStateList',
+                type: 'POST',
+                async: true,
+                data: {countryGeoId:country} ,
+ 				success: function(result){
+ 				stateListJSON = result["stateListJSON"];
+ 				if (stateListJSON) {	
+                     var optionList;	       				        	
+			        	for(var i=0 ; i<stateListJSON.length ; i++){
+							var innerList=stateListJSON[i];	              			             
+			                optionList += "<option value = " + innerList['value'] + " >" + innerList['label'] + "</option>";          			
+			      		}//end of main list for loop
+	  			}else{
+			                optionList += "<option value = " + "_NA_" + " >" + "_NA_" + "</option>";          			
+
+					 }
+ 					 jQuery("[name='stateProvinceGeoId']").html(optionList);
+
+            }    
+                   });
+                   
+                  storeValues(); 
+ 
+}
+ 	
+ 	
+
+
+function populateData(){
+	 CountryOptionList += "<option value = IND selected>India  </option>";          			
+
+ 		if(CountryJsonMap != undefined && CountryJsonMap != ""){
+				$.each(CountryJsonMap, function(key, item){
+			         CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+
+				});
+	 	   }
+		  CountryOptions = CountryOptionList;
+ 			jQuery("[name='country']").html(CountryOptions);
+ 					 
+ 		if(StateJsonMap != undefined && StateJsonMap != ""){
+			$.each(StateJsonMap, function(key, item){
+			                StateOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+			});
+	 	   }
+		 
+		 StateOptions = StateOptionList;
+ 		 jQuery("[name='stateProvinceGeoId']").html(StateOptions);
+} 	
+	
+	
+	
+		
+	
 	
 </script>
