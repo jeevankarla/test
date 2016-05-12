@@ -361,9 +361,10 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -384,9 +385,9 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -515,7 +516,55 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	    });
         grid.onCellChange.subscribe(function(e,args) {
         	
-        	if (args.cell == 4) {
+        	if (args.cell == 3) {
+   				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['KgunitPrice'];
+				var uom = data[args.row]["cottonUom"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+				var kgUnitPrice;
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle"){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				kgUnitPrice=price/bundleWeight;				
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+				data[args.row]["unitPrice"] = kgUnitPrice;
+				data[args.row]["amount"] = roundedAmount;
+				
+				var row = args.row;
+				
+				grid.updateRow(args.row);
+				
+				updateTotalIndentAmount();
+        	
+        	}
+			
+			if (args.cell == 4) {
+				var row = args.row;
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var uom = data[args.row]["cottonUom"];
@@ -540,6 +589,10 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				if(uom == "Half-Bale"){
 					quantity = baleQty*bundleWeight*20;
 				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
+				}
+				
 				if(uom == "KGs"){				
 					quantity = baleQty;
 					bundleWeight=0;
@@ -554,6 +607,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				grid.updateRow(args.row);			
 				updateTotalIndentAmount();
+				updateCurrentQuota(row);
 				
 			}
 			if (args.cell == 5) {
@@ -562,7 +616,6 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				var uom = data[args.row]["cottonUom"];
 				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
 				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				
 				if(isNaN(baleQty)){
 					baleQty = 1;
 				}
@@ -583,6 +636,9 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 					quantity = baleQty;
 					bundleWeight=0;
 				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
+				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
 				data[args.row]["cottonUom"] = uom;
@@ -594,40 +650,9 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				
 				
 				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-				
-			}
-			if (args.cell == 6) {
 				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				//grid.updateRow(args.row);
-				
-				//updateTotalIndentAmount();
-			
-				var prod = data[args.row]["cProductId"];
+				updateCurrentQuota(row);				
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
 				var price = 0;
@@ -642,7 +667,16 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 					qty = 0;
 				}
 				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle" ){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
@@ -652,9 +686,58 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
+			}
+			if (args.cell == 6) {
+				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['KgunitPrice'];
+				var uom = data[args.row]["cottonUom"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+				var kgUnitPrice;
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle"){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+				kgUnitPrice=price/bundleWeight;
+				
+				}
+				if(uom == "KGs" ){
+				kgUnitPrice=price;
+				}
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+				data[args.row]["unitPrice"] = kgUnitPrice;
+				data[args.row]["amount"] = roundedAmount;
+				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				
+				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
-
 			}
 			
 			if (args.cell == 7) {

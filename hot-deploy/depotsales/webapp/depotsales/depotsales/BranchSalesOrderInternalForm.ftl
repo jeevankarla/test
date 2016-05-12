@@ -426,10 +426,11 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt(Rs)", field:"amount", width:75, minWidth:75, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			<#--{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false},-->
@@ -448,9 +449,9 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale"},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt(Rs)", field:"amount", width:75, minWidth:75, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			<#--{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false},-->
@@ -594,7 +595,54 @@
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-        	
+        	if (args.cell == 2) {
+   				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var udp = data[args.row]['KgunitPrice'];
+				var uom = data[args.row]["cottonUom"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var price = 0;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+				var kgUnitPrice;
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle"){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				kgUnitPrice=price/bundleWeight;				
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+				data[args.row]["unitPrice"] = kgUnitPrice;
+				data[args.row]["amount"] = roundedAmount;
+				
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				
+				grid.updateRow(args.row);
+				
+				updateTotalIndentAmount();
+        	       	
+        	   	
+        	}
 			
 			if (args.cell == 3) {
 				var row = args.row;
@@ -622,6 +670,10 @@
 				if(uom == "Half-Bale"){
 					quantity = baleQty*bundleWeight*20;
 				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
+				}
+				
 				if(uom == "KGs"){				
 					quantity = baleQty;
 					bundleWeight=0;
@@ -668,6 +720,9 @@
 					quantity = baleQty;
 					bundleWeight=0;
 				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
+				}
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["baleQuantity"] = baleQty;
 				data[args.row]["cottonUom"] = uom;
@@ -697,7 +752,16 @@
 					qty = 0;
 				}
 				var roundedAmount;
-				roundedAmount = Math.round(qty*price);
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle" ){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
@@ -711,7 +775,10 @@
 			if (args.cell == 5) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
+				var udp = data[args.row]['KgunitPrice'];
+				var uom = data[args.row]["cottonUom"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
 				var price = 0;
 				if(udp){
 					var totalPrice = udp;
@@ -724,10 +791,30 @@
 					qty = 0;
 				}
 				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
+				var kgUnitPrice;
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle"){				
+					roundedAmount = Math.round(baleQty*price);
+				}
+				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+				kgUnitPrice=price/bundleWeight;
+				
+				}
+				if(uom == "KGs" ){
+				kgUnitPrice=price;
+				}
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
@@ -753,7 +840,15 @@
 					qty = 0;
 				}				
 				var roundedAmount;
-					roundedAmount = price/qty;
+				if(uom == "Bale"){
+					roundedAmount = Math.round(baleQty*price*40);
+				}
+				if(uom == "Half-Bale"){
+					roundedAmount = Math.round(baleQty*price*20);
+				}
+				if(uom == "KGs" ||uom == "Bundle"){				
+					roundedAmount = Math.round(baleQty*price);
+				}
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
