@@ -1375,6 +1375,7 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String referenceNo = (String) request.getParameter("referenceNo");
 		Debug.log("referenceNo ===="+referenceNo);
+		String contactMechId = (String) request.getParameter("contactMechId");
 		String cfcId = (String) request.getParameter("cfcId");
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
@@ -1782,6 +1783,7 @@ public class DepotSalesServices{
 		processOrderContext.put("schemePartyId", schemePartyId);
 		processOrderContext.put("supplierPartyId", supplierPartyId);
 		processOrderContext.put("billToCustomer", billToCustomer);
+		processOrderContext.put("contactMechId", contactMechId);
 		processOrderContext.put("productIds", productIds);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
@@ -1890,6 +1892,7 @@ public class DepotSalesServices{
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyGeoId = (String) context.get("partyGeoId");
 	  	String partyId = (String) context.get("partyId");
+	  	String contactMechId = (String) context.get("contactMechId");
 	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
 	  	String orderId = (String) context.get("orderId");
@@ -2047,6 +2050,8 @@ public class DepotSalesServices{
 				cart.setIsEnableAcctg("N");
 			}
 	        cart.setExternalId(referenceNo);
+	        if(UtilValidate.isNotEmpty(contactMechId))
+				cart.setOrderAttribute("SHIPPING_PREF",contactMechId);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			//cart.setOrderId(orderId);
@@ -5635,7 +5640,6 @@ public class DepotSalesServices{
 			}
 			  			
 		}catch (GenericServiceException e) {
-			  Debug.logError(e, e.toString(), module);
 			  return ServiceUtil.returnError("Problem cancelling order");
 		}
 		result.put("salesChannelEnumId", salesChannelEnumId);

@@ -4655,6 +4655,7 @@
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
+				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -4831,6 +4832,8 @@
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
+				<set field="contactMechId" from-field="parameters.contactMechId" />
+				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
