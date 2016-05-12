@@ -408,8 +408,8 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address2: </td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='storeValues();' /></td></tr>";
 	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId' onchange='storeValues();'/></td></tr>";
-	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: </td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onchange='storeValues();' required/></td></tr>";
-	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();' /></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: <font color=red>*</font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onchange='storeValues();' required/></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: <font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();' /></td></tr>";
 				    message +=  "<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitAddress();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
                 		
 					message +=	"</table></body></html>";
@@ -432,6 +432,9 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	     var postalCode = $("#postalCode").val();
 	     var countryCode = $("#countryCode").val();
 	     var stateProvinceGeoId = $("#stateProvinceGeoId").val();
+	     var stateName = $("#stateProvinceGeoId").find('option:selected').text();
+	     var countryName = $("#country").find('option:selected').text();
+	     
 	     var country = $("#country").val();
 	     
 	     
@@ -443,7 +446,9 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	     addressMap['postalCode'] = postalCode;
 	     addressMap['countryCode'] = countryCode;
 	     addressMap['stateProvinceGeoId'] = stateProvinceGeoId;
+	     addressMap['stateName'] = stateName;
 	     addressMap['country'] = country;
+	     addressMap['countryName'] = countryName;
 	   
 	   }
 	
@@ -458,9 +463,9 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	 var city = addressMap.city;
 	 var address1 = addressMap.address1;
 	 var address2 = addressMap.address2;
-	 var country = addressMap.country;
+	 var countryName = addressMap.countryName;
 	 var postalCode = addressMap.postalCode;
-	 var state = addressMap.stateProvinceGeoId;
+	 var stateName = addressMap.stateName;
 	 
 	 if(count != 0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && partyId.length != 0){
 	    showSpinner();
@@ -494,21 +499,21 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
                           var row = $("<tr />") 
 					     $("#addressTable").append(row); 
                         row.append($("<td>Country :</td>"));
-                        row.append($("<td>India</td>"));
+                        row.append($("<td>" + countryName + "</td>"));
                         
                          var row = $("<tr />") 
 					     $("#addressTable").append(row); 
-                        row.append($("<td>State :</td>"));
-                        row.append($("<td>" + state + "</td>"));
+                        row.append($("<td>State   :</td>"));
+                        row.append($("<td>" + stateName + "</td>"));
                         
                         var row = $("<tr />") 
 					     $("#addressTable").append(row); 
-                        row.append($("<td>City :</td>"));
+                        row.append($("<td>City    :</td>"));
                         row.append($("<td>" + city + "</td>"));
                         
                          var row = $("<tr />") 
 					     $("#addressTable").append(row); 
-                        row.append($("<td>PostalCode :</td>"));
+                        row.append($("<td>PostalCode:</td>"));
                         row.append($("<td>" + postalCode + "</td>"));
                         
 					     
