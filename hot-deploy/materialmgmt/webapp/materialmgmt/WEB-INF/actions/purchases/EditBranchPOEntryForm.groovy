@@ -77,6 +77,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	thruDate = "";
 	fromDate = "";
 	quotationNo = "";
+	indentShipmentAddress = "";
 	orderAttr.each{ eachAttr ->
 		if(eachAttr.attrName == "FILE_NUMBER"){
 			fileNo =  eachAttr.attrValue;
@@ -91,8 +92,12 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			fromDate = eachAttr.attrValue;
 		}
 		if(eachAttr.attrName == "VALID_THRU"){
-			thruDate = eachAttr.attrValue;
+			indentShipmentAddress = eachAttr.attrValue;
 		}
+		if(eachAttr.attrName == "SHIPPING_PREF"){
+			indentShipmentAddress = eachAttr.attrValue;
+		}
+
 	}
 	orderInfoDetail.putAt("fileNo", fileNo);
 	orderInfoDetail.putAt("refNo", refNo);
@@ -120,12 +125,55 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SHIP_TO_CUSTOMER")],EntityOperator.AND);
 		shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
 		shipToParty=EntityUtil.getFirst(shipToPartyRole);
-		Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
 		shipingAdd=[:];
 		if(shipToParty.partyId){
 		contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
-		Debug.log("contactMechesDetails======================="+contactMechesDetails);
-		if(contactMechesDetails){
+		
+		if(indentShipmentAddress){
+		
+		conditionListAddress = [];
+		conditionListAddress.add(EntityCondition.makeCondition("contactMechId", EntityOperator.EQUALS, indentShipmentAddress));
+		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+		listAddressList = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+		
+		listAddress = EntityUtil.getFirst(listAddressList);
+		JSONObject tempMap = new JSONObject();
+		if(listAddress){
+			
+			if(listAddress.address1)
+			  shipingAdd.put("address1",listAddress.address1);
+			else
+			  shipingAdd.put("address1","");
+			  
+		   if(listAddress.address2)
+			  shipingAdd.put("address2",listAddress.address2);
+			else
+			  shipingAdd.put("address2","");
+			  
+			  if(listAddress.country)
+			  shipingAdd.put("country",listAddress.country);
+			else
+			  shipingAdd.put("country","");
+			  
+			  if(listAddress.state)
+			  shipingAdd.put("state",listAddress.state);
+			else
+			  shipingAdd.put("state","");
+			  
+			  if(listAddress.city)
+			  shipingAdd.put("city",listAddress.city);
+			else
+			  shipingAdd.put("city","");
+			  
+			  if(listAddress.postalCode)
+			  shipingAdd.put("postalCode",listAddress.postalCode);
+			else
+			  shipingAdd.put("postalCode","");
+		   
+		  }
+			  
+		}else if(contactMechesDetails){
 			contactMec=contactMechesDetails.getFirst();
 			if(contactMec){
 				partyPostalAddress=contactMec.get("postalAddress");
