@@ -50,7 +50,7 @@ country = parameters.country;
 
 input = [:];
 
-input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId",stateProvinceGeoId, "postalCode", postalCode, "contactMechId", "");
+input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId",stateProvinceGeoId, "postalCode", postalCode, "contactMechId", "","contactMechPurposeTypeId","SHIPPING_LOCATION");
 resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
 
 
