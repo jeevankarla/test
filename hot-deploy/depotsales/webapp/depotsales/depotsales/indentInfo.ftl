@@ -33,10 +33,10 @@ under the License.
          <#if "CPC_ORDER" == orderHeader.orderTypeId>
             <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderViewDepotSales?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
           </#if>
-         	<#--<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
-          		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend PO</a></li>
+         	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
+          		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend Indent</a></li>
         	</#if>
-        	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
+        	<#--<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareSuspendPOForm('${orderId}')">Suspend PO</a></li>
         	</#if>-->
          </ul>
@@ -232,4 +232,4 @@ under the License.
         </table>
     </div>
 </div>
-<#--<#include "POAmend.ftl"/>-->
+<#include "IndentAmend.ftl"/>
