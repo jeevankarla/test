@@ -78,6 +78,8 @@
 	}
 	
 </style>			
+
+<#include "EditUDPPriceDepot.ftl"/>			
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -259,6 +261,7 @@
 			var productStoreId = $("#productStoreId").val();
 			var cfcId = $("#cfcs").val();
 			var schemeCategory = $("#schemeCategory").val();
+			var contactMechId = $("#contactMechId").val();
 			
 			
 			
@@ -277,6 +280,7 @@
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
+			var contactMechId = jQuery("<input>").attr("type", "hidden").attr("name", "belowContactMechId").val(contactMechId);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -296,6 +300,7 @@
 			jQuery(formId).append(jQuery(disableAcctgFlag));
 			jQuery(formId).append(jQuery(schemeCategoryObj));
 			jQuery(formId).append(jQuery(partyGeo));
+			jQuery(formId).append(jQuery(contactMechId));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	

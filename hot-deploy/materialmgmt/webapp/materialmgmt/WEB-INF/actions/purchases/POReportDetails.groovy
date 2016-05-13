@@ -341,6 +341,8 @@ if(DstAddr){
 	allDetailsMap.put("DstAddr",destAddr);
 }
 
+
+
 //OrderHeaderNote
 orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId),EntityCondition.makeCondition("internalNote",EntityOperator.EQUALS,"N")],EntityOperator.AND)  , null, null, null, false );
 if(orderheadDetails){
@@ -366,7 +368,6 @@ context.bedPercents=bedPercents;
 //to get product details
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 
-Debug.log("orderDetails================="+orderDetails);
 
 vatpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "vatPercent", true);
 cstpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "cstPercent", true);
@@ -385,6 +386,13 @@ toOrderId=orderAssc.toOrderId;
 
 
 
+indentShipmentAddress = "";
+
+indectAdd = delegator.findOne("OrderAttribute",["orderId":toOrderId[0],"attrName":"SHIPPING_PREF"],false);
+
+if(indectAdd){
+	indentShipmentAddress=indectAdd.get("attrValue");
+}
 
 if(UtilValidate.isNotEmpty(orderDetails)){
 	orderDetails.each{orderitems->
@@ -741,7 +749,51 @@ if(shipToParty && shipToParty.partyId){
 
 contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
 //Debug.log("contactMechesDetails======================="+contactMechesDetails);
-if(contactMechesDetails){
+
+
+if(indentShipmentAddress){
+	
+	conditionListAddress = [];
+	conditionListAddress.add(EntityCondition.makeCondition("contactMechId", EntityOperator.EQUALS, indentShipmentAddress));
+	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+	listAddressList = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+	
+	listAddress = EntityUtil.getFirst(listAddressList);
+	if(listAddress){
+		
+		if(listAddress.address1)
+		  shipingAdd.put("address1",listAddress.address1);
+		else
+		  shipingAdd.put("address1","");
+		  
+	   if(listAddress.address2)
+		  shipingAdd.put("address2",listAddress.address2);
+		else
+		  shipingAdd.put("address2","");
+		  
+		  if(listAddress.country)
+		  shipingAdd.put("country",listAddress.country);
+		else
+		  shipingAdd.put("country","");
+		  
+		  if(listAddress.state)
+		  shipingAdd.put("state",listAddress.state);
+		else
+		  shipingAdd.put("state","");
+		  
+		  if(listAddress.city)
+		  shipingAdd.put("city",listAddress.city);
+		else
+		  shipingAdd.put("city","");
+		  
+		  if(listAddress.postalCode)
+		  shipingAdd.put("postalCode",listAddress.postalCode);
+		else
+		  shipingAdd.put("postalCode","");
+	   
+	  }
+  }else if(contactMechesDetails){
 	contactMec=contactMechesDetails.getLast();
 	if(contactMec){
 		partyPostalAddress=contactMec.get("postalAddress");
