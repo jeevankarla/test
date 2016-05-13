@@ -1709,6 +1709,12 @@
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="CustomerMastersCSV"/>
     </request-map>
+         <request-map uri="amendIndentItemEvent">
+       <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="amendPOItemEvent" global-transaction="true"/>
+       <response name="success" type="view" value="ViewIndentRequest"/>
+       <response name="error" type="view" value="ViewIndentRequest"/>
+     </request-map>
     <request-map uri="ViewIndentRequest">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ViewIndentRequest"/>
