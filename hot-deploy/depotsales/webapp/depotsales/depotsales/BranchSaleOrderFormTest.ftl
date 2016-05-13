@@ -80,6 +80,9 @@
 		$(document).ready(function(){
 		
 		    $("#open_popup").click(function(){
+               	    
+		       getShipmentAddress();
+		    
              $("#popup").css("display", "block");
             });
 
@@ -567,6 +570,71 @@
 					
 			  });	
 		 }
+
+
+var orderAddres;
+
+      function getShipmentAddress(){
+         
+        var contactMechId = $("#contactMechId").val();
+         var partyId = $("#partyId").val();
+	 
+	      if(contactMechId.length != 0){
+		
+		   var dataJson = {"partyId": partyId,"contactMechId":contactMechId};
+		
+			jQuery.ajax({
+                url: 'getShipmentAddress',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						OrderAddress = result["OrderAddress"];
+						
+						 $('#addressTable tbody').remove();
+						
+					    var row = $("<tr />")
+                        $("#addressTable").append(row); 
+                        row.append($("<td>Adress1 :</td>"));
+                        row.append($("<td>" + OrderAddress.address1 + "</td>"));
+					    
+					     var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>Adress2 :</td>"));
+                        row.append($("<td>" + OrderAddress.address2 + "</td>"));
+                        
+                          var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>Country :</td>"));
+                        row.append($("<td> India </td>"));
+                        
+                         var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>State   :</td>"));
+                        row.append($("<td>" + OrderAddress.state + "</td>"));
+                        
+                        var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>City    :</td>"));
+                        row.append($("<td>" + OrderAddress.city + "</td>"));
+                        
+                         var row = $("<tr />") 
+					     $("#addressTable").append(row); 
+                        row.append($("<td>PostalCode:</td>"));
+                        row.append($("<td>" + OrderAddress.postalCode + "</td>"));
+						
+                 	}	
+                 	
+                 }							
+		      });
+		
+		    }
+      
+      }
+
 	 
 	</script>
 	
@@ -666,7 +734,11 @@
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
 		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/>
-		       			<input type="hidden" name="contactMechId" id="contactMechId"/>
+		       			<#if parameters.contactMechId?exists && parameters.contactMechId?has_content>  
+		       				<input type="hidden" name="contactMechId" id="contactMechId" value="${contactMechId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="contactMechId" id="contactMechId"/>
+			          	</#if>
 		       			
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -941,7 +1013,7 @@
 			       			</#if>
 				 	 	</table>	
 				 	 	 
-						    <div id="popup">
+						    <div id="popup" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
 						        <h1>Address</h1>
 						        <table id ="addressTable"><tbody></tbody></table>
 						        <a href="#" id="close_popup">Close</a>

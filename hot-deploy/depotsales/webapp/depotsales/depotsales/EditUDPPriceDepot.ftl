@@ -483,41 +483,7 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 					    {
 					     contactctMechId = orderData.contactMechId;
 					     $("#contactMechId").val(contactctMechId);
-					     
-					     $('#addressTable tbody').remove();
-					     
-					    var row = $("<tr />")
-                        $("#addressTable").append(row); 
-                        row.append($("<td>Adress1 :</td>"));
-                        row.append($("<td>" + address1 + "</td>"));
-					    
-					     var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>Adress2 :</td>"));
-                        row.append($("<td>" + address2 + "</td>"));
-                        
-                          var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>Country :</td>"));
-                        row.append($("<td>" + countryName + "</td>"));
-                        
-                         var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>State   :</td>"));
-                        row.append($("<td>" + stateName + "</td>"));
-                        
-                        var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>City    :</td>"));
-                        row.append($("<td>" + city + "</td>"));
-                        
-                         var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>PostalCode:</td>"));
-                        row.append($("<td>" + postalCode + "</td>"));
-                        
-					     
-					    cancelShowSpinner();
+					     cancelShowSpinner();
 					   }
                		}
                	}							

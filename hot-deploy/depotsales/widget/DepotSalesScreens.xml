@@ -4530,6 +4530,9 @@
 				<set field="defaultEffectiveDate"
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />					
+				
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"

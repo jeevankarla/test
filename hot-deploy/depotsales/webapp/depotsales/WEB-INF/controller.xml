@@ -107,6 +107,13 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
+     <request-map uri="getShipmentAddress">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getShipmentAddress.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
      <request-map uri="storePartyPostalAddress">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="storePartyPostalAddress.groovy"/> 
