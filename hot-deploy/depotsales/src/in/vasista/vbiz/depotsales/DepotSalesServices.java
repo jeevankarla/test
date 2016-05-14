@@ -1377,6 +1377,7 @@ public class DepotSalesServices{
 		Debug.log("referenceNo ===="+referenceNo);
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
+		String transporterId = (String) request.getParameter("transporterId");
 		
 		
 		String cfcId = (String) request.getParameter("cfcId");
@@ -1788,6 +1789,7 @@ public class DepotSalesServices{
 		processOrderContext.put("billToCustomer", billToCustomer);
 		processOrderContext.put("contactMechId", contactMechId);
 		processOrderContext.put("belowContactMechId", belowContactMechId);
+		processOrderContext.put("transporterId", transporterId);
 		processOrderContext.put("productIds", productIds);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
@@ -1898,6 +1900,7 @@ public class DepotSalesServices{
 	  	String partyId = (String) context.get("partyId");
 	  	String contactMechId = (String) context.get("contactMechId");
 	  	String belowContactMechId = (String) context.get("belowContactMechId");
+	  	String transporterId = (String) context.get("transporterId");
 	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
 	  	String orderId = (String) context.get("orderId");
@@ -2059,6 +2062,9 @@ public class DepotSalesServices{
 			  cart.setOrderAttribute("SHIPPING_PREF",belowContactMechId);
 	        else if(UtilValidate.isNotEmpty(belowContactMechId))
 	          cart.setOrderAttribute("SHIPPING_PREF",belowContactMechId);
+	        
+	        if(UtilValidate.isNotEmpty(transporterId))
+				  cart.setOrderAttribute("TRANSPORTER_PREF",transporterId);
 	        
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);

@@ -38,11 +38,24 @@ for (eachRole in OrderRoleList) {
 	 branchId = eachRole.get("partyId");
 }
 
+if(parameters.prodStoreId){
+prodStoreId = parameters.prodStoreId;
+
+productStore = delegator.findOne("ProductStore",UtilMisc.toMap("productStoreId", prodStoreId), false);
+
+branchId = productStore.payToPartyId;
+}
+
+Debug.log("branchId=============="+branchId);
+
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , branchId));
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , "INT7"));
 conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS ,"BRANCH_TRANSPORTER"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 supplierList = delegator.findList("PartyRelationship", condition, null, null, null, false);
+
+Debug.log("branchId=============="+branchId);
+
 
 if(supplierList){
 	supplierList.each{ supplier ->
@@ -65,4 +78,10 @@ if(supplierList){
 }
 
 
+Debug.log("transporterJSON================"+transporterJSON);
+
 context.transporterJSON=transporterJSON;
+
+request.setAttribute("transporterJSON", transporterJSON);
+
+return "sucess";
