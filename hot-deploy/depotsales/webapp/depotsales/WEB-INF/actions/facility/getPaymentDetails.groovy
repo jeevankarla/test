@@ -223,16 +223,16 @@ orderHeader.each{ eachHeader ->
 	
 	isgeneratedPO="N";
 	// Also check if associated order is cancelled. If cancelled show generate PO button
-	exprCondList=[];
+	/*exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 	OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 	if(OrderAss){
 		isgeneratedPO="Y";
-	}
+	}*/
 	
-	exprList=[];
+	/*exprList=[];
 	exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
 	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
@@ -243,18 +243,17 @@ orderHeader.each{ eachHeader ->
 	if(supplierDetails){
 		supplierPartyId=supplierDetails.get("partyId");
 	}
-	productStoreId=eachHeader.productStoreId;
+*/	productStoreId=eachHeader.productStoreId;
 	tempMap=[:];
-	tempMap.put("supplierPartyId", supplierPartyId);
-	tempMap.put("isgeneratedPO", isgeneratedPO);
-	supplierPartyName="";
+//	tempMap.put("supplierPartyId", supplierPartyId);
+	//tempMap.put("isgeneratedPO", isgeneratedPO);
+	/*supplierPartyName="";
 	if(supplierPartyId){
 		supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
 	}
 	tempMap.put("supplierPartyName", supplierPartyName);
 	tempMap.put("productStoreId", productStoreId);
-	orderDetailsMap.put(orderId,tempMap);
-	
+*/	orderDetailsMap.put(orderId,tempMap);
 	
 		
 	conditonList = [];

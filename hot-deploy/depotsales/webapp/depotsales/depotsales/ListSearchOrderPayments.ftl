@@ -163,11 +163,13 @@ function drawRow(rowData) {
     totIndents = totIndents+1;
     
     $("#totIndents").html("<h10>"+totIndents+"</h10>");
-    
+
 }
 
 
-    
+
+  
+  
   
 </script>
 
@@ -181,7 +183,6 @@ function drawRow(rowData) {
   
     <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label> </div>
   
-      
   
   <form name="listOrders" id="listOrders"   method="post" >
    
