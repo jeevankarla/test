@@ -117,6 +117,7 @@ var totIndents = 0;
 function drawRow(rowData) {
     var row = $("<tr />")
     $("#coreTable").append(row); 
+    $("#coreTable tr:even").css("background-color", "#F4F4F8");
     row.append($("<td>" + rowData.partyId + "</td>"));
     row.append($("<td>" + rowData.partyName + "</td>"));
     row.append($("<td>" + rowData.orderId + "</td>"));
