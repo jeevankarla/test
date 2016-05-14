@@ -127,11 +127,18 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		shipToParty=EntityUtil.getFirst(shipToPartyRole);
 		shipingAdd=[:];
 		if(shipToParty.partyId){
-		contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
+		//contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
+		
+		conditionListAddress = [];
+		conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, shipToParty.partyId));
+		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+	
 		
 		if(indentShipmentAddress){
 		
-		conditionListAddress = [];
+		conditionListAddress.clear();
 		conditionListAddress.add(EntityCondition.makeCondition("contactMechId", EntityOperator.EQUALS, indentShipmentAddress));
 		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
 		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
@@ -139,6 +146,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		
 		listAddress = EntityUtil.getFirst(listAddressList);
 		JSONObject tempMap = new JSONObject();
+		
 		if(listAddress){
 			
 			if(listAddress.address1)
@@ -176,7 +184,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		}else if(contactMechesDetails){
 			contactMec=contactMechesDetails.getFirst();
 			if(contactMec){
-				partyPostalAddress=contactMec.get("postalAddress");
+				partyPostalAddress=contactMec;
 				Debug.log("partyPostalAddress=========================="+partyPostalAddress);
 			//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
 				if(partyPostalAddress){
@@ -221,7 +229,6 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			}
 		}
 		}
-		Debug.log("shipingAdd========================="+shipingAdd);
 		
 		context.shipingAdd=shipingAdd;
 		
