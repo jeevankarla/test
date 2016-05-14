@@ -158,16 +158,10 @@
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
-			var bundleUnitPrice = data[rowCount]["KgunitPrice"];
-			
-			var remarks = data[rowCount]["remarks"];
-			
+			var bundleUnitPrice = data[rowCount]["KgunitPrice"];			
+			var remarks = data[rowCount]["remarks"];		
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
-			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
-			alert(bundleUnitPrice);
-			
-			
+			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];			
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
@@ -191,8 +185,7 @@
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
-				jQuery(formId).append(jQuery(inputbundleUnitPrice));
-				
+				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
