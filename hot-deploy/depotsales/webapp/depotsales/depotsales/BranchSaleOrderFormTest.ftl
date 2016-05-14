@@ -1081,6 +1081,8 @@ var orderAddres;
 					   
 					   <td>
 					    <#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
+					    
+					    <input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
 					    <#else>
 					    <input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
 						</#if>
