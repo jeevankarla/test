@@ -390,9 +390,9 @@
 											transprotersList = result["transporterJSON"];
 										    if(transprotersList.length != 0) 
 										    {
-										     var transporterJSON = ${StringUtil.wrapString(transporterJSON)!'[]'};
+										     var transporterJSON = ${StringUtil.wrapString(transprotersList)!'[]'};
 												$(document).ready(function(){
-										             $("#transporterId").autocomplete({ source: transporterJSON }).keydown(function(e){});     
+										             $("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
 												});
 										   }
 					               		}
