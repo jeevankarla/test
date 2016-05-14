@@ -379,6 +379,52 @@
 	}
 
 
+
+
+  function getPreviousShipAddress(partyId){
+  
+ 
+		   var dataJson = {"partyId": partyId};
+		
+			jQuery.ajax({
+                url: 'getShipmentAddress',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						OrderAddress = result["OrderAddress"];
+						
+		                  $("#partyId").val();
+					      $("#address1").val(OrderAddress.address1);
+					      $("#address2").val(OrderAddress.address2);
+					      $("#city").val(OrderAddress.city);
+					      $("#postalCode").val(OrderAddress.postalCode);
+					      $("#stateProvinceGeoId").val(OrderAddress.stateProvinceGeoId);
+					      $("#country").val(OrderAddress.country);
+					    // var countryCode = $("#countryCode").val(OrderAddress.address1);
+					    // var stateName = $("#stateProvinceGeoId").find('option:selected').text();
+					    // var countryName = $("#country").find('option:selected').text();
+					     
+						 					
+                 	}	
+                 	
+                 }							
+		      });
+		
+  
+  
+  }
+
+
+
+
+
+
+
+
 var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
 var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	
@@ -397,7 +443,8 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 		 
 		var partyId =  $('#partyId').val();
 		
-		var partyName =  $('#partynameDetail').val();
+		 if(partyId)
+		 getPreviousShipAddress(partyId);
 		
 		
 		message += "<html><head></head><body><table cellspacing=20 cellpadding=20 width=550>";

@@ -38,15 +38,22 @@ contactMechId = parameters.contactMechId;
 Debug.log("contactMechId==============="+contactMechId);
 
 
+
 conditionListAddress = [];
+if(contactMechId)
 conditionListAddress.add(EntityCondition.makeCondition("contactMechId", EntityOperator.EQUALS, contactMechId));
+if(partyId)
+conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
 conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
-listAddressList = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
 
+ List<String> contactMechOrder = UtilMisc.toList("-contactMechId");
 
+listAddressList = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, contactMechOrder, null, false);
 
 listAddress = EntityUtil.getFirst(listAddressList);
+
+
 
 JSONObject tempMap = new JSONObject();
 
@@ -85,6 +92,8 @@ if(listAddress){
 	  OrderAddress.add(tempMap);
 	  
 }
+
+Debug.log("tempMap==============="+tempMap);
 
 
 request.setAttribute("OrderAddress", tempMap);
