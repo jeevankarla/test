@@ -158,12 +158,14 @@
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
+			var bundleUnitPrice = data[rowCount]["KgunitPrice"];
+			
 			var remarks = data[rowCount]["remarks"];
 			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
-			
+			alert(bundleUnitPrice);
 			
 			
 			
@@ -177,6 +179,7 @@
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
@@ -188,6 +191,8 @@
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
+				jQuery(formId).append(jQuery(inputbundleUnitPrice));
+				
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
