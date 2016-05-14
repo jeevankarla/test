@@ -31,6 +31,25 @@ expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 
 
+exprCondList=[];
+exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+
+carrierName = "";
+
+if(UtilValidate.isNotEmpty(OrderAss)){
+	salesOrder = OrderAss.get("toOrderId");
+	indentTransporter = delegator.findOne("OrderAttribute", [orderId : salesOrder, attrName : "TRANSPORTER_PREF"], false);
+	 if(UtilValidate.isNotEmpty(indentTransporter)){
+		 carrierName = indentTransporter.attrValue;
+	 }
+}
+
+ 
+if(!carrierName){
+
 branchId = "";
 
 for (eachRole in OrderRoleList) {
@@ -75,10 +94,15 @@ if(supplierList){
 	}
 }
 
-
+ 
 
 context.transporterJSON=transporterJSON;
 
 request.setAttribute("transporterJSON", transporterJSON);
 
 return "sucess";
+
+}else{
+
+ context.carrierName = carrierName;
+}
