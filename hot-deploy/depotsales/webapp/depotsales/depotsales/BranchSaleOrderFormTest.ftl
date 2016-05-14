@@ -90,6 +90,8 @@
              $("#popup").css("display", "none");
            }); 
 		
+	
+		
 		
 			 $("#societyfield").hide();
 			 	fillPartyData();
@@ -199,6 +201,11 @@
 	    			if(indententryinit.taxTypeApplicable.value.length < 1){
 			  			$('#taxTypeApplicable').val("VAT_SALE");
 			  		}
+	    			
+	    			var transporterId = $("#transporterId").val();
+			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+		
+	    			jQuery(indententryinit).append(jQuery(transporte));
 	    			
 	    			$('#indententryinit').submit();
 	    			return false;   
@@ -336,6 +343,10 @@
 		       	  				   var issueDate=contactDetails["issueDate"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
+		       	  				   
+		       	  				  
+		       	  				   
+		       	  				   
 		       	  				   var partyType=contactDetails["partyType"];
 			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
@@ -345,7 +356,7 @@
 	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
-		       	  				   
+		       	  				  
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];
 		       	  				 // $("#postalCode").html("<h4>"+postalCode+"</h4>");
@@ -358,6 +369,46 @@
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
 		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
+		       	  				  
+		       	  				  
+		       	  				  
+					    var transprotersList;
+						 
+						 if(prodStoreId != undefined && prodStoreId !=""){
+						 
+						  var dataJson = {"prodStoreId":prodStoreId};
+						 
+							jQuery.ajax({
+					                url: 'getTransportersList',
+					                type: 'POST',
+					                data: dataJson,
+					                dataType: 'json',
+					               success: function(result){
+										if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+										    alert("Error in order Items");
+										}else{
+											transprotersList = result["transporterJSON"];
+										    if(transprotersList.length != 0) 
+										    {
+										     var transporterJSON = ${StringUtil.wrapString(transporterJSON)!'[]'};
+												$(document).ready(function(){
+										             $("#transporterId").autocomplete({ source: transporterJSON }).keydown(function(e){});     
+												});
+										   }
+					               		}
+					               	}							
+							});
+							
+							}
+							       	  				  
+							       	  				  
+		       	  				  
+		       	  				  
+		       	  				  
+		       	  				  
+		       	  				  
+		       	  				  
+		       	  				  
 		       	  				   
 	       	  				   }
 	      			}
@@ -739,7 +790,8 @@ var orderAddres;
 		       			 <#else>               
 			          		<input type="hidden" name="contactMechId" id="contactMechId"/>
 			          	</#if>
-		       			
+			          	
+			          	
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
@@ -1019,10 +1071,22 @@ var orderAddres;
 						        <a href="#" id="close_popup">Close</a>
 						    </div>
 						    
-						    <input type="button" id="open_popup" class="buttontext" value="View Destination Address"  />
-						    
-						    <input type="button" class="buttontext" value="Edit Destination Address" onclick="javascript:manualAddress();" />
-				 	 	 
+					    <table width="100%">
+					    <tr>
+					    
+					   <td> <input type="button" id="open_popup" class="buttontext" value="View Destination Address"  /> </td>    
+					    
+					    
+					   <td> <input type="button" class="buttontext" value="Edit Destination Address" onclick="javascript:manualAddress();" /> </td>
+					   
+					   <td>
+					    <#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
+					    <#else>
+					    <input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
+						</#if>
+						</td>		 	 	   
+				 	 	 </tr>
+				 	 	 </table>
 				 	 	 
 				 	 	<hr class="style18"></hr>
 				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
