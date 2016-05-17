@@ -158,6 +158,7 @@
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var customerId = data[rowCount]["customerId"];
+			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
 			var yarnUOM = data[rowCount]["cottonUom"];
 			var bundleWeight = data[rowCount]["bundleWeight"];
@@ -165,7 +166,7 @@
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			var bundleUnitPrice = data[rowCount]["KgunitPrice"];			
+			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
@@ -178,18 +179,19 @@
 			</#if>
 	 		if (!isNaN(prodId)) {	 		
 				var inputcustomerId = jQuery("<input>").attr("type", "hidden").attr("name", "customerId_o_" + rowCount).val(customerId); 			
+				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
-				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
 				jQuery(formId).append(jQuery(inputRemarks));
+				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputcustomerId));				
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -197,7 +199,7 @@
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
-				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
+				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
 				
@@ -376,12 +378,13 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
+			{id:"orderItemSeqId", name:"orderItemSeqId", field:"orderItemSeqId", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:FloatCellEditor},
 			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 			
 			
 		];
-		hid_columns = [
+		hiddencolumns = [
 			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
@@ -390,24 +393,13 @@
 			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
- 				formatter: function (row, cell, id, def, datactx) { 
-					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
- 				}
- 			},
-			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
-
-		
+				
 		];
 
 
-var data_view = new Slick.Data.DataView();
-grid = new Slick.Grid("#myGrid1", data, hid_columns,options);
-var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
+		var data_view = new Slick.Data.DataView();
+		grid = new Slick.Grid("#myGrid1", data, hiddencolumns,options);
+		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		
 		
 		
@@ -422,7 +414,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		};
 		
 
-		grid = new Slick.Grid("#myGrid1", data,hid_columns, options);
+		grid = new Slick.Grid("#myGrid1", data,hiddencolumns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 		
@@ -874,10 +866,10 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
-		 if(boothId || partyId){
+		 
 		 	setupGrid1();
 		 	//setupGrid2();
-	     }
+	    
 	    
 			//  alert("=After==Setup==partyId==="+partyId+"==boothId=="+boothId);	
         jQuery(".grid-header .ui-icon")

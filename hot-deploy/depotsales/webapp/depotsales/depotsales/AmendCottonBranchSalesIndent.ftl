@@ -16,14 +16,12 @@
 		font-weight: normal;
 		background: mistyrose;
 	}
-	
 	.readOnlyColumnAndWarningClass {
 		font-weight: bold;
 		color: red;
 		background: white;
 		animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
 	}
-	
 	@keyframes blinker {  
 	  from { opacity: 1; }
 	  to { opacity: 0; }
@@ -116,10 +114,7 @@
 	data2=${StringUtil.wrapString(data2JSON)!'[]'};
 	var userDefPriceObj = ${StringUtil.wrapString(userDefPriceObj)!'[]'};
     var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
-	var availableIndCustTags = ${StringUtil.wrapString(indcustomerJson)!'{}'};
-    var partyPsbNumber = ${StringUtil.wrapString(indcustomerPsbNumJson)!'{}'};
-    var indcustomerLabelPsbNumMap = ${StringUtil.wrapString(indcustomerLabelPsbNumJson)!'{}'};
-    var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
+	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
 	var branchAutoJson = ${StringUtil.wrapString(branchJSON)!'[]'};	
 	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
@@ -157,28 +152,24 @@
 				var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
-			var customerId = data[rowCount]["customerId"];
+			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
 			var yarnUOM = data[rowCount]["cottonUom"];
 			var bundleWeight = data[rowCount]["bundleWeight"];
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
-			var remarks = data[rowCount]["remarks"];
 			var bundleUnitPrice = data[rowCount]["KgunitPrice"];			
+			var remarks = data[rowCount]["remarks"];		
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
-			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
-			
-			
-			
+			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];			
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
 	 		if (!isNaN(prodId)) {	 		
-				var inputcustomerId = jQuery("<input>").attr("type", "hidden").attr("name", "customerId_o_" + rowCount).val(customerId); 			
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
+				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
@@ -190,14 +181,15 @@
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
 				jQuery(formId).append(jQuery(inputRemarks));
+				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
-				jQuery(formId).append(jQuery(inputcustomerId));				
 				jQuery(formId).append(jQuery(inputBaleQty));
 				jQuery(formId).append(jQuery(inputYarnUOM));
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
 				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
+				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
 				
@@ -212,26 +204,33 @@
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
-				if(taxList != undefined){
-					for(var i=0;i<taxList.length;i++){
-						var taxType = taxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
-						
-						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
-						jQuery(formId).append(jQuery(inputTaxTypePerc));
-						jQuery(formId).append(jQuery(inputTaxTypeValue));
-					}
-				}
+				
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
    			 }
    			</#if>
 		}
-		
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
+		{ 
+			var ordetAdjTypeId = data2[rowCount]["orderAdjTypeId"];
+			var adjAmt = parseFloat(data2[rowCount]["adjAmount"]);
+	 		if (!isNaN(adjAmt)) {	 		
+				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjTypeId_o_" + rowCount).val(ordetAdjTypeId);
+				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjAmt_o_" + rowCount).val(adjAmt);
+				jQuery(formId).append(jQuery(inputInv));				
+				jQuery(formId).append(jQuery(inputAmt));
+			}
+		}
 		var dataString = $("#indententryinit").serializeArray();
+		$.each(dataString , function(i, fd) {
+   			if(fd.name === "routeId"){
+   				var route = jQuery("<input>").attr("type", "hidden").attr("name", "routeId").val(fd.value);
+   				jQuery(formId).append(jQuery(route));
+   			 }
+		});
+		
+		//calculateTaxApplicability();
 		
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
@@ -247,8 +246,11 @@
 			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
 			var cfcId = $("#cfcs").val();
-			var orderMessage = $("#orderMessage").val();
 			var schemeCategory = $("#schemeCategory").val();
+			
+			
+			
+			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
 			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
@@ -289,10 +291,27 @@
 	}
 	var enableSubmit = true;
 	<#assign editClickHandlerAction =''>	
+	<#--<#if changeFlag?exists && changeFlag=='supplDeliverySchedule'>
+		 <#assign editClickHandlerAction='processSupplDeleverySchdule'>
+	<#elseif changeFlag?exists && changeFlag=='ByProdGatePass'>
+	      <#assign editClickHandlerAction='processSupplDeleverySchdule'>
+	<#else>
+		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
+	</#if>-->
+		function editClickHandlerEvent(row){
+			showUDPPriceToolTip(data[row], row, userDefPriceObj);
+			
+		}
 	
-	function editClickHandlerEvent(row){
-		showUDPPriceToolTip(data[row], row, userDefPriceObj);
+	<#--
+	function editClickHandler(row) {
+		if(enableSubmit){						
+			enableSubmit = false;
+			processChangeIndentInternal('indententry', '<@ofbizUrl>${editClickHandlerAction}</@ofbizUrl>', row);		
+		}
+		
 	}
+	-->
 	
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
@@ -303,13 +322,12 @@
     function productFormatter(row, cell, value, columnDef, dataContext) {   
         return productIdLabelMap[value];
     }
-
     function productValidator(value,item) {
       
     	var currProdCnt = 1;
 	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
 	  	{ 
-			if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined ) {
+			if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
 				++currProdCnt;
 			}
 	  	}
@@ -321,6 +339,9 @@
 				invalidProdCheck = 1;
 			}
 	  	}
+      	//if (currProdCnt > 1) {
+        	//return {valid: false, msg: "Duplicate Product " + value};      				
+      	//}
       	if(invalidProdCheck == 0){
       		return {valid: false, msg: "Invalid Product " + value};
       	}
@@ -344,6 +365,41 @@
         return formatValue;
     }
 	
+	 function adustmentFormatter(row, cell, value, columnDef, dataContext) {
+        return orderAdjLabelJSON[value];
+    }
+	function orderAdjFormatter(value,item) {
+      
+      	var valueId = orderAdjLabelIdMap[value];
+    	var currItemCnt = 1;
+	  	for (var rowCount=0; rowCount < data2.length; ++rowCount)
+	  	{ 
+			if (data2[rowCount]['orderAdjTypeId'] != null && data2[rowCount]['orderAdjTypeId'] != undefined && valueId == data2[rowCount]['orderAdjTypeId']) {
+				++currItemCnt;
+			}
+	  	}
+	  	
+	  	var invalidItemCheck = 0;
+	  	for (var rowCount=0; rowCount < availableAdjTags.length; ++rowCount)
+	  	{  
+			if (valueId == availableAdjTags[rowCount]["value"]) {
+				invalidItemCheck = 1;
+			}
+	  	}
+      	if (currItemCnt > 1) {
+        	return {valid: false, msg: "Duplicate Item " + value};      				
+      	}
+      	if(invalidItemCheck == 0){
+      		return {valid: false, msg: "Invalid Item " + value};
+      	}
+      
+      	if (item != null && item != undefined ) {
+      		item['invoiceItemTypeId'] = invoiceAdjLabelIdMap[value];
+	  	}      
+      	return {valid: true, msg: null};
+    }
+	
+	
 	function quantityValidator(value ,item) {
 		var quarterVal = value*4;
 		var floorValue = Math.floor(quarterVal);
@@ -356,58 +412,46 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-		
 		var columns = [
-			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
-			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
-			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
-			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
+			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
+			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
+			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
-			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
-			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
+			{id:"amount", name:"Amt(Rs)", field:"amount", width:75, minWidth:75, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
+			<#--{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false},-->
+			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:65, minWidth:65, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
-			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"orderItemSeqId", name:"orderItemSeqId", field:"orderItemSeqId", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:FloatCellEditor},
+ 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
-			
-			
 		];
-		hid_columns = [
-			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
-			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
-			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
-			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+		hiddencolumns = [
+			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"readOnlyColumnClass", sortable:false ,toolTip:""},
+			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
+			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice}", field:"KgunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
-			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
- 				formatter: function (row, cell, id, def, datactx) { 
-					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
- 				}
- 			},
-			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
-
-		
+			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
+			{id:"amount", name:"Amt(Rs)", field:"amount", width:75, minWidth:75, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
+			<#--{id:"warning", name:"Warning", field:"warning", width:230, minWidth:230, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false},-->
 		];
 
 
-var data_view = new Slick.Data.DataView();
-grid = new Slick.Grid("#myGrid1", data, hid_columns,options);
-var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
+		var data_view = new Slick.Data.DataView();
+		grid = new Slick.Grid("#myGrid1", data, hiddencolumns,options);
+		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		
 		
 		
@@ -422,9 +466,10 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		};
 		
 
-		grid = new Slick.Grid("#myGrid1", data,hid_columns, options);
+		grid = new Slick.Grid("#myGrid1", data,hiddencolumns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
+
 		
 		// wire up model events to drive the grid
         if (data.length > 0) {			
@@ -434,6 +479,11 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		}
          grid.onKeyDown.subscribe(function(e) {
 			var cellNav = 0;
+			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+				cellNav = 3;
+			<#else>
+				cellNav = 2;
+			</#if>
 			var cell = grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				grid.getEditController().commitCurrentEdit();	
@@ -497,14 +547,9 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
         
                 
     	grid.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;  
-      		var custId= item['customerName'];
-      		var splited = (((custId.split("["))[1]).split("]"))[0];
+      		var item = args.item;   
       		var productLabel = item['cProductName']; 
       		item['productNameStr'] = productLabel;
-      		var custmerID=indcustomerLabelPsbNumMap[custId];
-      		item['customerId'] = splited;
-      		item['psbNumber'] = partyPsbNumber[custmerID];
       		item['cProductId'] = productLabelIdMap[productLabel];  
       		grid.invalidateRow(data.length);
       		data.push(item);
@@ -513,11 +558,25 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
 	      	
+	      	if (args.cell == 1) {
+				var row = args.row;
+				updateCurrentQuota(row);
+			}
+			
+			if ( (args.cell == 2) || (args.cell == 3) || ((args.cell == 4)) ) {
+	      		var productName = data[args.row]["productNameStr"];
+      			<#if changeFlag?exists && changeFlag != "EditDepotSales">
+      				if (productName.toLowerCase().indexOf("cotton") <= 0){
+      					grid.updateRow(args.row);
+      					return false;
+      				}
+      			</#if>
+      		}
+	      	
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-        	
-        	if (args.cell == 3) {
+        	if (args.cell == 2 || args.cell == 3 || args.cell == 4 || args.cell == 5) {
    				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['KgunitPrice'];
@@ -525,6 +584,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
 				var price = 0;
+				quantity = 0;
 				if(udp){
 					var totalPrice = udp;
 					price = totalPrice;
@@ -534,17 +594,26 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				}
 				if(isNaN(qty)){
 					qty = 0;
+					quantity = qty;
+					
 				}
 				var roundedAmount;
 				var kgUnitPrice;
 				if(uom == "Bale"){
 					roundedAmount = Math.round(baleQty*price*40);
+					quantity = baleQty*bundleWeight*40;
+					
 				}
 				if(uom == "Half-Bale"){
 					roundedAmount = Math.round(baleQty*price*20);
+					quantity = baleQty*bundleWeight*20;
+					
 				}
 				if(uom == "KGs" ||uom == "Bundle"){				
 					roundedAmount = Math.round(baleQty*price);
+				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
 				}
 				kgUnitPrice=price/bundleWeight;				
 				if(isNaN(roundedAmount)){
@@ -552,300 +621,50 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				}
 				if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
+				}
+					if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
 				}	
+				alert(kgUnitPrice);
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				
+				
+				data[args.row]["quantity"] = quantity;
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
-        	
+        	       	
+        	   	
         	}
 			
-			if (args.cell == 4) {
-				var row = args.row;
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				
-				
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}
-				
-				quantity = 0;
-				if(uom == "Bale"){
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "Bundle"){
-					quantity = baleQty*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*unitPrice);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				grid.updateRow(args.row);			
-				updateTotalIndentAmount();
-				updateCurrentQuota(row);
-				
-			}
-			if (args.cell == 5) {
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}				
-				quantity = 0;
-				if(uom == "Bale"){
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				if(uom == "Bundle"){
-					quantity = baleQty*bundleWeight;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*unitPrice);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				
-				grid.updateRow(args.row);
-				var prod = data[args.row]["cProductId"];
-				var row = args.row;
-				updateCurrentQuota(row);				
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*price*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*price*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle" ){				
-					roundedAmount = Math.round(baleQty*price);
-				}
-				
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-			}
-			if (args.cell == 6) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['KgunitPrice'];
-				var uom = data[args.row]["cottonUom"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-				var kgUnitPrice;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*price*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*price*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle"){				
-					roundedAmount = Math.round(baleQty*price);
-				}
-				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				kgUnitPrice=price/bundleWeight;
-				
-				}
-				if(uom == "KGs" ){
-				kgUnitPrice=price;
-				}
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-				}	
-				data[args.row]["unitPrice"] = kgUnitPrice;
-				data[args.row]["amount"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-			}
-			
-			if (args.cell == 7) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['amount'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}				
-				var roundedAmount;
-					roundedAmount = price/qty;
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["unitPrice"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-			}
+					
 			
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-			if (args.cell == 1 ) {
-   				var currentrow=args.row;
-   				if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
-		       		var prod=data[currentrow-1]["cProductId"];
-		       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
-		       		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
-		       		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
-		       		//data[args.row]['amount'] = data[currentrow-1]["amount"];
-		       		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
-				   	
-	      		 	grid.updateRow(args.row);
-				   	
-  		 		}
-   			}
-   			
-   			if (args.cell == 2 ) {
-   				var currentrow=args.row;
-   				if(data[currentrow] != undefined && data[currentrow]["cProductId"] != undefined){
-		       		var prod=data[currentrow]["cProductId"];
-				   	var qut=0;
-				   	if(data[args.row]['customerId'] != "undefined"){
-				   		var dataString = {"partyId": data[args.row]['customerId'],
-								   		"schemeCategory":$("#schemeCategory").val()
-								 		};
-					     $.ajax({
-					             type: "POST",
-					             url: "getPartyQuotaList",
-					             data: dataString ,
-					             dataType: 'json',
-					             async: false,
-					         	success: function(result) {
-					               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-					            	   alert(result["_ERROR_MESSAGE_"]);
-					               }else{  
-					                	productsQuotaList=result['productQuotaJSON'];
-					                	if(productsQuotaList[prod] != "undefined" && productsQuotaList[prod] != null){
-					                		qut=productsQuotaList[prod];
-					                	}
-					                	if(isNaN(qut)){
-											qut = 0;
-										}
-					                	data[args.row]["quota"] = qut;
-						       			data[args.row]['quantity'] =qut;
-						       			utprice=data[currentrow]["unitPrice"];
-						       			amount=qut*utprice;
-						       			data[args.row]['amount'] = amount;
-						      		 	grid.updateRow(args.row);
-						      		 	//data[args.row]["remarks"].gotoCell();
-						      		 	
-						      		 	var row = args.row;
-										getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				   	
-					               }
-					             } ,
-					             error: function() {
-				            	 	alert(result["_ERROR_MESSAGE_"]);
-				            	 }
-				            	
-					        }); 				
-							
-							
-			      	 }
-  		 		}
-   			}
-			
-			
-			if (args.cell == 12 && data[args.row] != null) {
-        		grid.invalidateRow(data.length);
-	      		grid.updateRow(args.row+1);
+				if (args.cell == 2 && data[args.row] != null) {
+        		var item = data[args.row];   
+				var prod = data[args.row]["cProductId"];
+				var uomId = productUOMMap[prod];
+				var uomLabel = uomLabelMap[uomId];
+				item['uomDescription'] = uomLabel;     		 		
+	      		grid.invalidateRow(data.length);
+	      		grid.updateRow(args.row);
 	      		grid.updateRowCount();
 	      		grid.render();
-	      		$(grid.getCellNode(args.row+1, 1)).click();
+	      		$(grid.getCellNode(args.row, 2)).click();
 			}
 			
 		});
@@ -862,7 +681,6 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
             }else {
            $(activeCellNode).attr("tittle", "");
         }
-
     });
     	//updateInlineTotalAmount();
 		//updateProductTotalAmount();
@@ -871,13 +689,10 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	}
 		
 	jQuery(function(){
-	     // only setupGrid when BoothId exists
-	     var boothId=$('[name=boothId]').val();
-	     var partyId=$('[name=partyId]').val();
-		 if(boothId || partyId){
+	    
 		 	setupGrid1();
 		 	//setupGrid2();
-	     }
+	     
 	    
 			//  alert("=After==Setup==partyId==="+partyId+"==boothId=="+boothId);	
         jQuery(".grid-header .ui-icon")
@@ -897,7 +712,6 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
             	tabindex++;
         	}
     	});
-
     	var rowCount = jQuery('#myGrid1 .slick-row').length;
 		if (rowCount > 0) {			
 			$(mainGrid.getCellNode(rowCount-1, 0)).click();		   
@@ -911,12 +725,63 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 // to show special related fields in form			
 	
 	$(document).ready(function(){
+	
 		(function blink() { 
 		    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
 		})();
-		$(function() {
-			$( "#indententryinit" ).validate();
-		});	
+		$('#boothId').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+		});
+		     $(function() {
+				$( "#indententryinit" ).validate();
+			});	
+			$("#boothId").autocomplete({ disabled: false });	
+		
+   			 $('#boothId').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+		});
+		
+				
+		  $('#contactNumber').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+			});
+			$('#name').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+			});
+			$('#address1').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+			});
+			$('#address2').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+			});
+			
+			
+			$('#pinNumber').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#indententryinit').submit();
+	    			return false;   
+	  			}
+			});		  		
+   				 
+		
 		
 	});	
 	 
@@ -1002,7 +867,6 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 			}
 		}
 	}
-	
 	
 	function addServiceCharge(row){
 		var serviceChargePercent = $("#serviceChargePercent").val();
@@ -1144,7 +1008,7 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 	      	 		alert(result["_ERROR_MESSAGE_"]);
 	     	 	}
 	    	});
-	    }
+	    }	
 	}
 	
-</script>			
+</script>		
