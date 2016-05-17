@@ -1242,7 +1242,7 @@
          	<field name="loomTypeId" title="Weaver Type"><display></display></field>
          	<field name="loomTypeId" title="Weaver Type"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}"/></field>
          	<field name="quantity" title="Number Of Weavers"><display></display></field>
-         	<field name="quotaPerLoom" title="quota Per Loom"><display description="${SchemeCatQty[0].maxQty}"></display></field>
+         	<field name="quotaPerLoom" title="quota Per Loom"><display description="${(SchemeCatQty[0].maxQty)*(quotaPerLoom)}"></display></field>
         </form>
         
         <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
