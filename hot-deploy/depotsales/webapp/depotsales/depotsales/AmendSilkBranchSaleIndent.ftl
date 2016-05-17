@@ -145,7 +145,8 @@
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
-		
+		var orderId = $("#orderId").val();			
+		alert(orderId);
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
@@ -162,35 +163,24 @@
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			var serviceCharge = data[rowCount]["taxAmt"];
-			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
-			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
-			var checkE2Form = data[rowCount]["checkE2Form"];
-			var applicableTaxType = data[rowCount]["applicableTaxType"];
 			var checkCForm = data[rowCount]["checkCForm"];
 			
-			$("#orderTaxType").val(applicableTaxType);
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(prodId)) {	 		
+	 		if (!isNaN(prodId)) {
+				var inputOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId_o_" + rowCount).val(orderId);
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
-				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "amendedQuantity_o_" + rowCount).val(qty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
-				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "amendedPrice_o_" + rowCount).val(unitPrice);
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
-				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
-				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
-				
-				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
-				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
-				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
-				
+							
+				jQuery(formId).append(jQuery(inputOrder));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -200,99 +190,19 @@
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
 				
-				jQuery(formId).append(jQuery(inputServChgAmt));
-				jQuery(formId).append(jQuery(inputServChg));
 				
-				jQuery(formId).append(jQuery(inputCheckE2Form));
-				jQuery(formId).append(jQuery(inputApplicableTaxType));
-				jQuery(formId).append(jQuery(inputCheckCForm));
-				
-				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
-					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
-					jQuery(formId).append(jQuery(batchNum));
-					var days = jQuery("<input>").attr("type", "hidden").attr("name", "daysToStore_o_" + rowCount).val(days);
-					jQuery(formId).append(jQuery(days));
-				</#if>
-				var taxList = [];
-				taxList = data[rowCount]["taxList"]
-				
-				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
-				jQuery(formId).append(jQuery(taxListItem));	
-				if(taxList != undefined){
-					for(var i=0;i<taxList.length;i++){
-						var taxType = taxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
-						
-						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
-						jQuery(formId).append(jQuery(inputTaxTypePerc));
-						jQuery(formId).append(jQuery(inputTaxTypeValue));
-					}
-				}
-				
-				var taxList = [];
-				taxList = data[rowCount]["taxList"]
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
    			 }
    			</#if>
 		}
-		for (var rowCount=0; rowCount < data2.length; ++rowCount)
-		{ 
-			var ordetAdjTypeId = data2[rowCount]["orderAdjTypeId"];
-			var adjAmt = parseFloat(data2[rowCount]["adjAmount"]);
-	 		if (!isNaN(adjAmt)) {	 		
-				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjTypeId_o_" + rowCount).val(ordetAdjTypeId);
-				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjAmt_o_" + rowCount).val(adjAmt);
-				jQuery(formId).append(jQuery(inputInv));				
-				jQuery(formId).append(jQuery(inputAmt));
-			}
-		}
-		var dataString = $("#indententryinit").serializeArray();
-		$.each(dataString , function(i, fd) {
-   			if(fd.name === "routeId"){
-   				var route = jQuery("<input>").attr("type", "hidden").attr("name", "routeId").val(fd.value);
-   				jQuery(formId).append(jQuery(route));
-   			 }
-		});
-		
-		//calculateTaxApplicability();
 		
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
-			var partyId = $("#partyId").val();
-			var suplierPartyId = $("#suplierPartyId").val();
-			var societyPartyId="";
-			 	societyPartyId = $("#societyPartyId").val();
-			 	
-			var partyGeoId = $("#partyGeoId").val(); 	
-			var billingType = $("#billingType").val();
-			var orderTaxType= $("#orderTaxType").val();
-			var poNumber = $("#PONumber").val();
-			var acctgFlag = $("#disableAcctgFlag").val();
-			var promoAdj = $("#promotionAdj").val();
-			var productStoreId = $("#productStoreId").val();
-			var cfcId = $("#cfcs").val();
-			var schemeCategory = $("#schemeCategory").val();
+			var partyId = $("#partyId").val();			
 			
 			
-			
-			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
-			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
-			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
-			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
-			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
-			var cfc = jQuery("<input>").attr("type", "hidden").attr("name", "cfcId").val(cfcId);
-			
-			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
-			var bilngType = jQuery("<input>").attr("type", "hidden").attr("name", "billingType").val(billingType);
-			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
-			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
-			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
-			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -300,18 +210,7 @@
 			</#if>
 			
 			jQuery(formId).append(jQuery(party));
-			jQuery(formId).append(jQuery(suplierParty));
-			jQuery(formId).append(jQuery(societyParty));
-			jQuery(formId).append(jQuery(bilngType));
-			jQuery(formId).append(jQuery(POField));
-			jQuery(formId).append(jQuery(promoField));
-			jQuery(formId).append(jQuery(tax));
-			jQuery(formId).append(jQuery(productStore));
-			jQuery(formId).append(jQuery(cfc));
-			jQuery(formId).append(jQuery(orderMessageInPut));
-			jQuery(formId).append(jQuery(disableAcctgFlag));
-			jQuery(formId).append(jQuery(schemeCategoryObj));
-			jQuery(formId).append(jQuery(partyGeo));
+			
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -319,27 +218,11 @@
 	}
 	var enableSubmit = true;
 	<#assign editClickHandlerAction =''>	
-	<#--<#if changeFlag?exists && changeFlag=='supplDeliverySchedule'>
-		 <#assign editClickHandlerAction='processSupplDeleverySchdule'>
-	<#elseif changeFlag?exists && changeFlag=='ByProdGatePass'>
-	      <#assign editClickHandlerAction='processSupplDeleverySchdule'>
-	<#else>
-		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
-	</#if>-->
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row, userDefPriceObj);
 			
 		}
 	
-	<#--
-	function editClickHandler(row) {
-		if(enableSubmit){						
-			enableSubmit = false;
-			processChangeIndentInternal('indententry', '<@ofbizUrl>${editClickHandlerAction}</@ofbizUrl>', row);		
-		}
-		
-	}
-	-->
 	
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
@@ -397,37 +280,6 @@
 	 function adustmentFormatter(row, cell, value, columnDef, dataContext) {
         return orderAdjLabelJSON[value];
     }
-	function orderAdjFormatter(value,item) {
-      
-      	var valueId = orderAdjLabelIdMap[value];
-    	var currItemCnt = 1;
-	  	for (var rowCount=0; rowCount < data2.length; ++rowCount)
-	  	{ 
-			if (data2[rowCount]['orderAdjTypeId'] != null && data2[rowCount]['orderAdjTypeId'] != undefined && valueId == data2[rowCount]['orderAdjTypeId']) {
-				++currItemCnt;
-			}
-	  	}
-	  	
-	  	var invalidItemCheck = 0;
-	  	for (var rowCount=0; rowCount < availableAdjTags.length; ++rowCount)
-	  	{  
-			if (valueId == availableAdjTags[rowCount]["value"]) {
-				invalidItemCheck = 1;
-			}
-	  	}
-      	if (currItemCnt > 1) {
-        	return {valid: false, msg: "Duplicate Item " + value};      				
-      	}
-      	if(invalidItemCheck == 0){
-      		return {valid: false, msg: "Invalid Item " + value};
-      	}
-      
-      	if (item != null && item != undefined ) {
-      		item['invoiceItemTypeId'] = invoiceAdjLabelIdMap[value];
-	  	}      
-      	return {valid: true, msg: null};
-    }
-	
 	
 	function quantityValidator(value ,item) {
 		var quarterVal = value*4;
@@ -462,7 +314,7 @@
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		var hiddencolumns = [
-			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"readOnlyColumnClass", sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantity", name:"${uiLabelMap.TotalWeightInKgs}", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
@@ -571,16 +423,7 @@
       		grid.updateRowCount();
       		grid.render();
     	});
-    	grid.onBeforeEditCell.subscribe(function(e,args) {
-	      	
-	      	if (args.cell == 1) {
-				var row = args.row;
-				updateCurrentQuota(row);
-				
-			}
-	      	
-	      	
-	    });
+    	
         grid.onCellChange.subscribe(function(e,args) {
         	
 			
@@ -606,15 +449,12 @@
 				}
 				data[args.row]["amount"] = roundedAmount;
 				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
+				var row = args.row;				
 				grid.updateRow(args.row);
 				updateTotalIndentAmount();
 			}
 			if (args.cell == 2) {
 				var row = args.row;
-				updateCurrentQuota(row);
 			}
 			if (args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
@@ -640,7 +480,6 @@
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				updateTotalIndentAmount();
@@ -673,7 +512,6 @@
 				data[args.row]["unitPrice"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				grid.updateRow(args.row);
 				
@@ -764,72 +602,16 @@
 		(function blink() { 
 		    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
 		})();
-		$('#boothId').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-		});
-		     $(function() {
+	   $(function() {
 				$( "#indententryinit" ).validate();
 			});	
-			$("#boothId").autocomplete({ disabled: false });	
-		
-   			 $('#boothId').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-		});
-		
-				
-		  $('#contactNumber').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#name').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#address1').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			$('#address2').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});
-			
-			
-			$('#pinNumber').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-			});		  		
-   				 
-		
-		
+
 	});	
 	 
 	
 	
 	
-	function populateContactDetails(contactInfo){
-		jQuery("#name").val(contactInfo["name"]);		
-		jQuery("#address1").val(contactInfo["address1"]);		
-		jQuery("#address2").val(contactInfo["address2"]);		
-		jQuery("#contactNumber").val(contactInfo["contactNumber"]); 
-		jQuery("#pinNumber").val(contactInfo["postalCode"]);
-	}
+
 	
 	function updatePayablePrice(row){
 		var amount = data[row]['amount'];
@@ -863,218 +645,5 @@
 		jQuery("#totalAmount").html(dispText);
 		
 	}
-	
-	function updateCurrentQuota(row){
-		var prod = data[row]["cProductId"];
-		var schemeCategory = $("#schemeCategory").val();
-		productCategory = productCategoryJSON[prod];
-		data[row]["productCategory"] = productCategory;
 		
-		quota = parseFloat(productQuotaJSON[prod]);
-		if(isNaN(quota)){
-			quota = 0;
-		}
-		
-		var usedQuota = 0
-		for(var i=0;i<data.length;i++){
-			var existingCategory = data[i]["productCategory"];
-			if(productCategory == existingCategory){
-				var takenQty = parseFloat(data[i]["quantity"]);
-				if(isNaN(takenQty)){
-					takenQty = 0;
-				}
-				usedQuota += takenQty;
-				
-				var lineQuota = quota - usedQuota;
-				
-				if(lineQuota < 0){
-					data[i]["quota"] = 0;
-					if(schemeCategory == "MGPS_10Pecent"){
-						data[i]["warning"] = 'Quota Exceeded';
-					}
-				}
-				else{
-					data[i]["quota"] = lineQuota;
-					data[i]["warning"] = '';
-				}
-				
-				grid.updateRow(i);
-			}
-		}
-	}
-	
-	function addServiceCharge(row){
-		var serviceChargePercent = $("#serviceChargePercent").val();
-		var serviceChargeAmt = 0;
-		
-		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
-	 		serviceChargeAmt = (serviceChargePercent/100) * data[row]["amount"];
-	 	}
-		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
-		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-		
-		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
-	}
-	
-	function updateServiceChargeAmounts(){
-		var serviceChargePercent = $("#serviceChargePercent").val();
-		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
-			for (i = 0; i < data.length; i++) {
-				var basicAmt = data[i]["amount"];
-				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
-				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
-				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
-				grid.updateRow(i);
-			}
-		}
-		updateTotalIndentAmount();
-	}
-	
-	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
-	         $.ajax({
-	        	type: "POST",
-	         	url: "calculateTaxesByGeoId",
-	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
-	       	 	dataType: 'json',
-	       	 	async: true,
-	    	 	success: function(result) {
-	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-	   	  				alert(result["_ERROR_MESSAGE_"]);
-	      			}else{
-	   	  				//var taxPercentage =result["taxPercentage"];
-	   	  				//alert("taxPercentage = "+taxPercentage);
-	   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
-	   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
-	   	  				
-	   	  				var vatSurcharges =result["vatSurcharges"];
-	   	  				var cstSurcharges =result["cstSurcharges"];
-	   	  				var vatPercent =result["vatPercent"];
-	   	  				var cstPercent =result["cstPercent"];
-	   	  				
-	   	  				data[row]["DEFAULT_VAT"] = vatPercent;
-	   	  				data[row]["DEFAULT_CST"] = cstPercent;
-	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;
-	   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
-	   	  				
-	   	  				data[row]["VAT_SURCHARGE"] = 0;
-						data[row]["VAT_SURCHARGE_AMT"] = 0;
-	   	  				
-	   	  				var totalTaxAmt = 0;
-	   	  				var vatSurchargeList = [];
-	   	  				var taxList = [];
-	   	  				vatSurchargeList.push("VAT_SURCHARGE");
-	   	  				taxList.push("VAT_SURCHARGE");
-	   	  				
-	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
-	   	  					var taxItem = vatSurcharges[i];
-							var surchargeAmt = 0;
-							surchargeAmt = (taxItem.taxPercentage) * ( (vatPercent) * totalAmt/100)/100;
-							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
-							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
-							
-							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
-							
-							totalTaxAmt += surchargeAmt;
-							
-							//taxList.push(taxItem.taxAuthorityRateTypeId);
-	   	  				}
-	   	  				
-	   	  				var totalAmount = 0;
-						for (i = 0; i < data.length; i++) {
-							totalAmount += data[i]["amount"];
-						}
-						var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-	   	  				
-	   	  				
-	   	  				//var taxList = [];
-	   	  				taxList.push("VAT_SALE");
-	   	  				taxList.push("CST_SALE");
-	   	  				if(taxType == "Intra-State"){
-	   	  					data[row]["VAT_SALE"] = vatPercent;
-	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
-	   	  					totalTaxAmt += (vatPercent) * totalAmt/100;
-	   	  					
-	   	  					data[row]["CST_SALE"] = 0;
-	   	  					data[row]["CST_SALE_AMT"] = 0;
-	   	  					
-	   	  				}
-	   	  				if(taxType == "Inter-State"){
-	   	  					data[row]["CST_SALE"] = cstPercent;
-	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
-	   	  					totalTaxAmt += (cstPercent) * totalAmt/100;
-	   	  					
-	   	  					data[row]["VAT_SALE"] = 0;
-	   	  					data[row]["VAT_SALE_AMT"] = 0;
-	   	  				}
-	   	  				
-	   	  				<#--
-	   	  				for(var i=0 ; i<taxAuthProdCatList.length ; i++){
-							var taxItem = taxAuthProdCatList[i];
-							
-							totalTaxAmt += (taxItem.taxPercentage) * totalAmt/100;
-							
-							
-							//item['cProductId'] = productLabelIdMap[value];
-							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
-							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = (taxItem.taxPercentage) * totalAmt/100;
-							
-							taxList.push(taxItem.taxAuthorityRateTypeId);
-						}
-						-->
-	   	  				
-	   	  				data[row]["taxList"] = taxList;
-	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
-	   	  				data[row]["taxAmt"] = totalTaxAmt;
-	   	  				
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
-	   	  				addServiceCharge(row);
-	   	  				grid.updateRow(row);
-	   	  				
-	   	  				updateTotalIndentAmount();
-	   	  				//data[row]["remarks"].setActiveCell();
-	   	  				return false; 
-	  				}
-	           
-	      		} ,
-	     	 	error: function() {
-	      	 		alert(result["_ERROR_MESSAGE_"]);
-	     	 	}
-	    	});
-	    }	
-	    else{
-	    	data[row]["VAT_SURCHARGE"] = 0;
-			data[row]["VAT_SURCHARGE_AMT"] = 0;
-			
-			data[row]["CST_SALE"] = 0;
-	   	  	data[row]["CST_SALE_AMT"] = 0;
-	   	  	
-	   	  	data[row]["VAT_SALE"] = 0;
-	   	  	data[row]["VAT_SALE_AMT"] = 0;
-	   	  	
-	   	  	data[row]["totPayable"] = totalAmt;
-	   	  	
-			var taxList = [];
-			taxList.push("VAT_SALE");
-	   	  	taxList.push("CST_SALE");
-	   	  	taxList.push("VAT_SURCHARGE");
-	   	  	
-	   	  	var vatSurchargeList = [];		
-			vatSurchargeList.push("VAT_SURCHARGE");
-			
-			data[row]["taxList"] = taxList;
-			data[row]["vatSurchargeList"] = vatSurchargeList;
-			data[row]["taxAmt"] = 0;
-	   	  		
-	   	  		
-	   	  	$("#orderTaxType").val("Intra-State");
-	   	  				
-			addServiceCharge(row);
-	   	  	grid.updateRow(row);
-	   	  	
-	   	  	updateTotalIndentAmount();
-	    }			
-	}
-	
 </script>			
