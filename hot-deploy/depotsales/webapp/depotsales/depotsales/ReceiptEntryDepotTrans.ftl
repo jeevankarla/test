@@ -84,7 +84,7 @@ $( "#lrDate" ).datepicker({
 		<div class="screenlet">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
-					<label>Dispatch Header </label>
+					<label><font color="green">Dispatch Header </font></label>
 				</div>
 		     </div>
       
@@ -353,7 +353,13 @@ $( "#lrDate" ).datepicker({
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Dispatch Items Entry</label>
+		 		 <#if orderId?exists && orderId?has_content>
+		 		           <#assign OrderHeaderDetails = delegator.findOne("OrderHeader", {"orderId" :orderId}, true)>
+		 		
+		 			<label><font color="green">Dispatch Items Entry   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Order Value:</font> &#160;&#160;<font color="blue">${OrderHeaderDetails.grandTotal?if_exists?string("##0.00")}</font></label>
+		 			<#else>
+		 			<label>Dispatch Items Entry   </label>
+		 			</#if>
 				</div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  

@@ -1233,11 +1233,16 @@
       	
       <form name="CattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
        		 list-name="LoomDetails" >
+       		 <row-actions>
+					<entity-condition entity-name="SchemeProductCategory" list="SchemeCatQty">
+					<condition-expr field-name="productCategoryId" from-field="loomTypeId"/>
+					</entity-condition>
+			</row-actions>
        		<field name="partyId"><hidden/></field>     
          	<field name="loomTypeId" title="Weaver Type"><display></display></field>
          	<field name="loomTypeId" title="Weaver Type"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}"/></field>
          	<field name="quantity" title="Number Of Weavers"><display></display></field>
-         	<field name="quotaPerLoom" title="quota Per Loom"><display></display></field>
+         	<field name="quotaPerLoom" title="quota Per Loom"><display description="${SchemeCatQty[0].maxQty}"></display></field>
         </form>
         
         <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
