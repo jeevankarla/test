@@ -90,6 +90,13 @@
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
     </service>
     
+     <service name="editPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="editPartyLooms" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="numberOfCattle" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="createIssuanceForDepotOrder" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createIssuanceForDepotOrder">
         <description>Issue Products to Order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>

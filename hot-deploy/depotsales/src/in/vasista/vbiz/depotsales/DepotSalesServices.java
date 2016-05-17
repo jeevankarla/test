@@ -8320,13 +8320,7 @@ public class DepotSalesServices{
 		  	 			return ServiceUtil.returnError(" Error While getting getMaterialItemValuationDetails !"+errMsg);
 					}
 					List<Map> itemDetails = (List)result.get("itemDetail");
-									
-					
-					
 			  	}
-	  	 		
-	  	 		
-	  	 		
 				
 			}catch(Exception e){
 				try {
@@ -8351,5 +8345,56 @@ public class DepotSalesServices{
 		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
 	return result;
 }
+
+	
+
+	public static Map<String, Object> editPartyLooms(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String partyId = (String)context.get("partyId");
+		String numberOfCattle = (String)context.get("numberOfCattle");
+		String loomTypeId = (String)context.get("loomTypeId");
+		
+		Debug.log("partyId=========================="+partyId);
+		Debug.log("numberOfCattle=========================="+numberOfCattle);
+		Debug.log("loomTypeId=========================="+loomTypeId);
+		
+		try{
+		
+		List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+		conditionList.add(EntityCondition.makeCondition("loomTypeId",EntityOperator.EQUALS,loomTypeId));
+		EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		List<GenericValue> PartyLoomList = delegator.findList("PartyLoom", condition, null, null, null, false);
+		  
+
+		Timestamp nowTimestamp =UtilDateTime.nowTimestamp();
+		
+		if(UtilValidate.isNotEmpty(PartyLoomList)){
+			GenericValue partyLoom = EntityUtil.getFirst(PartyLoomList);
+
+			partyLoom.set("quantity", new BigDecimal(numberOfCattle));
+			partyLoom.store();
+		}else{
+				
+				GenericValue newPartyLoom = delegator.makeValue("PartyLoom");        	 
+				newPartyLoom.set("partyId", partyId);
+				newPartyLoom.set("loomTypeId", loomTypeId);
+				newPartyLoom.set("fromDate", nowTimestamp);
+				newPartyLoom.set("quantity", new BigDecimal(numberOfCattle));
+				newPartyLoom.create();
+				
+			}
+		}catch(Exception e) {
+				// TODO: handle exception
+	    		Debug.logError(e, module);
+			}	
+		
+	return result;
+}
+
 	
 }

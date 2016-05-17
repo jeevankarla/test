@@ -558,8 +558,8 @@ under the License.
     <request-map uri="updatePartyIdentification">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyIdentification"/>
-        <response name="success" type="view" value="viewidentifications"/>
-        <response name="error" type="view" value="viewidentifications"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
 
     <request-map uri="createPartyRelationshipType">

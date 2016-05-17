@@ -820,6 +820,13 @@
         <response name="error" type="view" value="TransPorterviewprofile"/>
     </request-map>
     
+     <request-map uri="editPartyLooms">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="editPartyLooms"/>
+        <response name="success" type="view"  value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
     <request-map uri="TransporterCreateVendorIdentification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyIdentification"/>
@@ -829,8 +836,8 @@
     <request-map uri="updateVendorIdentification">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyIdentification"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
     
    <request-map uri="editcontactmech">
