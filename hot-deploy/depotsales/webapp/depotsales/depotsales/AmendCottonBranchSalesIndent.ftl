@@ -626,7 +626,6 @@
 					quantity = baleQty;
 					bundleWeight=0;
 				}	
-				alert(kgUnitPrice);
 				if(isNaN(baleQty)){
 					baleQty = 1;
 				}

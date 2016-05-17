@@ -6439,4 +6439,112 @@
 			</widgets>
 		</section>
 	</screen>
+	      <screen name="orderAmend">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Indent Amend" />
+    				<set field="tabButtonItem" value="orderAmend" />
+    				<set field="tabButtonItem2" value="orderAmend" />
+    				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+    				<set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
+                    <set field="viewSize" value="50" type="Integer"/>
+                    <set field="nextFlag" type="String" default-value="Y"/>
+                    <set field="prevFlag" type="String" default-value="N"/>
+                    <set field="statusId" value="ORDER_APPROVED"></set>
+                      <service service-name="performFind" result-map="result">
+                       <field-map field-name="inputFields" from-field="parameters"/>
+                       <field-map field-name="entityName" value="OrderHeader"/>
+                    </service>
+    				<set field="defaultEffectiveDateTime"
+    					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+    				<set field="defaultEffectiveDate"
+    					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+    				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+    				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+    				<set field="screenFlag" value="depotSales" />
+    				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+    					/> -->
+    				<script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderPaymentParam.groovy" />
+    			  <!--   <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />  -->
+    			</actions>
+    			<widgets>
+    				<decorator-screen name="BranchTransactionsCommonDecorator"
+    					location="component://depotsales/widget/CommonScreens.xml">
+    					<decorator-section name="body">
+    						<!-- <include-menu name="BranchSalesIndentTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+    						<section>
+    							<widgets>
+    							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                        <decorator-section name="menu-bar">
+                                        	
+                                        </decorator-section>
+                                        
+    							 		<decorator-section name="search-options">
+											 <platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/SearchOrders.ftl" />
+    										</html>
+    									</platform-specific> 
+    									</decorator-section>
+                                        <decorator-section name="search-results">
+    							<!-- 	<screenlet title="Sale Indents &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;     Total Indents:     ${orderListSize}">   -->
+    								
+    									<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/ListSearchAmendOrders.ftl" />
+    										</html>
+    									</platform-specific>
+    							<!-- 	</screenlet>  -->
+    								</decorator-section>
+    								</decorator-screen>
+    							</widgets>
+    						</section>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+    	</screen>
+     	 <screen name="amendOrder">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Indent Amend" />
+    				<set field="tabButtonItem" value="orderAmend" />
+    				<set field="tabButtonItem2" value="SalesOrderAmend" />
+    				<set field="parameters.salesChannelEnumId" value="BRANCH_CHANNEL"/>
+    				<service service-name="performFind" result-map="result">
+                       <field-map field-name="inputFields" from-field="parameters"/>
+                       <field-map field-name="entityName" value="OrderItem"/>
+                    </service>
+                    <set field="parameters.isFormSubmitted" value="YES" />
+                    
+      				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+    				<script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/amendOrderItems.groovy" />
+       							       			
+       			</actions>
+    			<widgets>
+    				<decorator-screen name="BranchTransactionsCommonDecorator"
+    					location="component://depotsales/widget/CommonScreens.xml">
+    					<decorator-section name="body">
+    						<section>
+    							<widgets>    								
+                                      <platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/AmendOrders.ftl" />
+    										</html>
+    								 </platform-specific> 
+    							</widgets>
+    						</section>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+    	</screen> 
 </screens>
+ 
