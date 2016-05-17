@@ -106,7 +106,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
+    <request-map uri="getAmendOrderDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/" invoke="getAmendOrderDetails.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>  
      <request-map uri="getShipmentAddress">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getShipmentAddress.groovy"/> 
@@ -865,7 +870,16 @@
 	        <response name="success" type="view" value="orderPayment"/>   
 	       <response name="failed" type="view" value="orderPayment"/>  
 	    </request-map>
-	    
+	     <request-map uri="orderAmend">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="orderAmend"/>   
+	       <response name="failed" type="view" value="orderAmend"/>  
+	    </request-map>
+	     <request-map uri="amendOrder">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="amendOrder"/>   
+	       <response name="failed" type="view" value="amendOrder"/>  
+	    </request-map>
 	    <request-map uri="IndentPortalOrderPayment">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="IndentPortalOrderPayment"/>   
@@ -1758,6 +1772,9 @@
     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
+    <view-map name="orderAmend" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderAmend"/>
+    <view-map name="amendOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#amendOrder"/>
+  
     <view-map name="IndentPortalOrderPayment" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentPortalOrderPayment"/>
     
     <view-map name="FindProcProducer" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindProcProducer"/>

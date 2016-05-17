@@ -141,9 +141,7 @@
 			return {valid:true, msg:null};
 	}
 	
-	function processIndentEntryInternal(formName, action) {
-		alert("hai");
-		
+	function processIndentEntryInternal(formName, action) {		
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
