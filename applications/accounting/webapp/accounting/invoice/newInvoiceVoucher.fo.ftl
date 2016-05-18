@@ -91,11 +91,12 @@ under the License.
     <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed"  font-size="12pt"> 
 	<fo:table-column column-width="5%"/>
 	<fo:table-column column-width="17%"/>
-	<fo:table-column column-width="13%"/>
 	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="15%"/>
 	<fo:table-column column-width="10%"/>
-	<fo:table-column column-width="15%"/>
+	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="12%"/>
 	<fo:table-column column-width="15%"/>
 
 
@@ -109,7 +110,8 @@ under the License.
 				<fo:block text-align="center"    font-size="12pt" >/denier etc</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"     font-size="12pt" >Bale/Bag No.</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >Bale/</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >Bag No.</fo:block>
 				<fo:block text-align="center"     font-size="12pt" >Box/marketing</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
@@ -125,7 +127,12 @@ under the License.
 				<fo:block text-align="center"     font-size="12pt" >Qty(Kgs)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				 <fo:block text-align="center"    font-size="12pt" >Rate/Kg/bundle</fo:block>
+				<fo:block text-align="center"    font-size="12pt" >MGPS</fo:block>
+				<fo:block text-align="center"     font-size="12pt" >Qty(Kgs)</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				 <fo:block text-align="center"    font-size="12pt" >Rate/</fo:block>
+				 <fo:block text-align="center"    font-size="12pt" >Kg/bundle</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="12pt" >Amount</fo:block>
@@ -139,6 +146,13 @@ under the License.
 		     <#assign totQuantity = 0>
 		      <#assign totSchemeQty = 0>
 		      <#assign totAmount = 0>
+		      <#assign tempScheamQty = 0>
+		      <#assign tempTotAmount = 0>
+		      <#assign mgpsAndTotalDeductions = 0>
+		      
+		      
+		      <#assign i = 0>
+		      
 		    <#list finalDetails as invoiceDetail>
 		   
 		     <fo:table-row white-space-collapse="false">
@@ -147,12 +161,57 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="left"  font-size="12pt" >${invoiceDetail.get("prodDescription")}</fo:block>
+				
+				<#assign tempTotAmount = tempTotAmount+invoiceDetail.get("ToTamount")>
+				
+				<#assign tempScheamQty = tempScheamQty+invoiceDetail.get("schemeQty")>
+					
+				
+                 <#if invoiceItemLevelAdjustments?has_content>		
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each>  
+				        
+				        <#if each.invoiceItemTypeId == "INVOICE_ITM_ADJ">
+				        
+				         <#assign mgpsAndTotalDeductions = mgpsAndTotalDeductions+each.amount>
+				        
+				        </#if>
+				        
+				        <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				        
+				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+			
+				       <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.description}</fo:block>
+				       
+				       </#if>
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
+				 
+				 
+				 <#if i== finalDetails.size()-1>
+				
+				<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				
+				<fo:block text-align="left" font-weight="bold"  font-size="14pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${tempTotAmount?if_exists}</fo:block>
+                				
+				</#if>
+				
+				
 				</fo:table-cell>
+				
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}<#else>0.00</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" ></fo:block>
+				
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				
@@ -160,6 +219,35 @@ under the License.
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>${0.000}</#if></fo:block>
+				
+				
+                
+				
+                 <#if invoiceItemLevelAdjustments?has_content>		
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each>  
+				        
+				         <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				
+				          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				        
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.quantity}</fo:block>
+				         </#if>
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
+				 
+				 				
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("schemeQty")?has_content>
@@ -167,6 +255,11 @@ under the License.
 				</#if>
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
+				
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="center"  font-size="12pt" >${invoiceDetail.get("quantity")-invoiceDetail.get("schemeQty")}</fo:block>
+				</fo:table-cell>
+				
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
@@ -175,9 +268,35 @@ under the License.
 				<#assign totAmount = totAmount+invoiceDetail.get("ToTamount")>
 				</#if>
 				<fo:block text-align="center"  font-size="12pt" >${invoiceDetail.get("ToTamount")?string("#0.00")}</fo:block>
+				
+                 
+				 <#if invoiceItemLevelAdjustments?has_content>		
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each> 
+				        <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+						<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				        
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.amount}</fo:block>
+				         </#if>
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
+				 
 				</fo:table-cell>
 				</fo:table-row>
-		   
+
+    
+              <#assign i = i+1>
 		      <#assign sr = sr+1> 
 		   
 		   </#list>
@@ -188,6 +307,9 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="12pt" >TOTAL</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="right"  font-size="12pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="12pt" ></fo:block>
@@ -229,27 +351,43 @@ under the License.
 				<fo:table-cell >
 				<fo:block text-align="left"    font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</fo:block>
 				</fo:table-cell>
+			</fo:table-row>
+
+             <#assign remainingAdjustMents = 0>
+            <#list invoiceRemainigAdjItemList as eachList>
+			<fo:table-row white-space-collapse="false">
+			 <fo:table-cell >
+				<fo:block text-align="left"    font-size="12pt" ></fo:block>
+				</fo:table-cell>
 				<fo:table-cell >
-				<#--><#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
-				<fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if></fo:block>
-				<#else>
-				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
-				</#if>-->
+				<fo:block text-align="left"    font-size="12pt" >${eachList.description}</fo:block>
+				</fo:table-cell>
+				<fo:table-cell >
+				<#assign remainingAdjustMents = remainingAdjustMents+eachList.amount>
+				<fo:block text-align="left"    font-size="12pt" ><#if eachList.amount?has_content>${eachList.amount?string("#0.00")}</#if></fo:block>
+				</fo:table-cell>
+			</fo:table-row>
+			</#list>
+			
+			<fo:table-row white-space-collapse="false">
+			 <fo:table-cell >
+				<fo:block text-align="left"    font-size="12pt" ></fo:block>
+				</fo:table-cell>
+				<fo:table-cell >
 				<fo:block text-align="center"    font-size="12pt" >&#160;</fo:block>
 				<fo:block text-align="center"    font-size="12pt" >TOTAL VALUE (RS.)</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#--><#if scheme == "MGPS_10Pecent" && schemeDeductionAmt !=0>
-				<fo:block text-align="right"    font-size="12pt" >(-)${schemeDeductionAmt?string("#0.00")}</fo:block>
-				<#else>
-				<fo:block text-align="right"    font-size="12pt" >&#160;</fo:block>
-				</#if>-->
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
-				<fo:block text-align="right"    font-size="12pt" >   ${(grandTotal-schemeDeductionAmt)?string("#0.00")}</fo:block>
+				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
+				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
+  				<fo:block text-align="right"    font-size="12pt" >   ${finalTOtal?string("#0.00")}</fo:block>
 				<fo:block text-align="right"    font-size="12pt" >--------------</fo:block>
 				</fo:table-cell>
-				
 			</fo:table-row>
+			
+			
+			
 	       </fo:table-body>
        	</fo:table>
 	   </fo:block>
