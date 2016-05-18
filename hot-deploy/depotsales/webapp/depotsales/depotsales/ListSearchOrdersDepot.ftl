@@ -301,7 +301,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
               	</#if>
               	
               <#-->	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 && (eachOrder.get('statusId') != "ORDER_APPROVED")>-->
-              	<#if (eachOrder.orderTotal) == (eachOrder.paidAmt) && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
+              	<#if (eachOrder.orderTotal) <= (eachOrder.paidAmt) && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
                      <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
               		       <td><input type="button" name="approveOrder" id="approveOrder" value="    BO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
                      <#else>

@@ -212,14 +212,20 @@
 	{
       var amount = $("#amount").val();
       var balance = $("#balance").val();
-       if(parseFloat(amount) > parseFloat(balance)){
-	      alert("Please Enter Amount Less Than The balance Total.");
-	        $("#amount").val(balance);
-	   }
-	   else if(parseFloat(amount)<=0){
+       
+       var bal = parseFloat(balance)-parseFloat(amount);
+	   
+	    if(parseFloat(amount)<=0){
 	      alert("Please Enter Amount Greater Than The 0.");
 	        $("#amount").val(balance);
+	   }else{
+	        if(bal >= 0)
+	        $("#bal").html(bal);
+	        else
+	         $("#bal").html(0);
+	   
 	   }
+	   
 	}
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
@@ -309,8 +315,8 @@
 	                   </#list> 
 					    "</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount'   onblur='javascript:amountCheck()' /></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><span  align='left' id='bal'>"+balance+"</span></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+grandTotal+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
