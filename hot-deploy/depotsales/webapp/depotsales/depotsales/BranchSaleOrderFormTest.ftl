@@ -1067,10 +1067,10 @@ var orderAddres;
 					    <table width="100%">
 					    <tr>
 					    
-					   <td> <input type="button" id="open_popup" class="buttontext" value="View Destination Address"  /> </td>    
+					   <td> <input type="button" id="open_popup" class="buttontext" value="View Delivery Address"  /> </td>    
 					    
 					    
-					   <td> <input type="button" class="buttontext" value="Edit Destination Address" onclick="javascript:manualAddress();" /> </td>
+					   <td> <input type="button" class="buttontext" value="Edit Delivery Address" onclick="javascript:manualAddress();" /> </td>
 					   
 					   <td>
 					    <#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  

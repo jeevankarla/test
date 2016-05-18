@@ -440,7 +440,7 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} (In Kgs)", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		hid_columns = [
@@ -461,7 +461,7 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable}", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} (In Kgs)", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}		
 		];
 

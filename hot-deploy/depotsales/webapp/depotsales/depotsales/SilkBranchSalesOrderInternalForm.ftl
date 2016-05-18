@@ -449,7 +449,7 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"Quota", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		
