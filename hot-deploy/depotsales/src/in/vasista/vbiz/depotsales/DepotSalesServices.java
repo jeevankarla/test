@@ -8662,9 +8662,8 @@ public class DepotSalesServices{
 									}
 					
 								outstandingQuotaAvailable = (allocatedQuotaAdvances.subtract(totalQuotaUsedUp)).subtract(quotaAdvanceUsed);
-								
+								outstandingQuotaAvailable=outstandingQuotaAvailable.setScale(0, BigDecimal.ROUND_DOWN);
 							}
-							
 							Map productCategoryQuotaMap = FastMap.newInstance();
 							productCategoryQuotaMap.put("productCategoryId", productCategoryId);
 							productCategoryQuotaMap.put("quotaPerMonth", allocatedQuotaPerMonth);
