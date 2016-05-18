@@ -585,12 +585,15 @@ var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 				
 				quantity = 0;
 				if(uom == "Bale"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight*40;
 				}
 				if(uom == "Half-Bale"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight*20;
 				}
 				if(uom == "Bundle"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight;
 				}
 				
