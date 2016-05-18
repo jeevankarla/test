@@ -357,4 +357,17 @@
         	<key-map field-name="schemeTimePeriodId"/>
       	</relation>
     </entity>
+    <view-entity entity-name="OrderItemAndOrderItemAttribute"
+        package-name="org.ofbiz.order.order"
+        title="Order Item And Order Item Attribute">
+        <member-entity entity-alias="OI" entity-name="OrderItem"/>
+        <member-entity entity-alias="OIA" entity-name="OrderItemAttribute"/>
+        <alias-all entity-alias="OI"/>
+        <alias-all entity-alias="OIA"/>
+        <view-link entity-alias="OI" rel-entity-alias="OIA">
+            <key-map field-name="orderId"/>
+            <key-map field-name="orderItemSeqId"/>
+            
+        </view-link>
+    </view-entity>
 </entitymodel>

@@ -205,6 +205,7 @@
     <service name="getPartyAvailableQuotaBalanceHistory" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyAvailableQuotaBalanceHistory" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
     </service>
     <service name="getSchemeTimePeriodId" engine="java" auth="true" 
@@ -379,6 +380,24 @@
         <description>Cancel Shipment Reimbursement Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
         <attribute name="schemeTimePeriodId" mode="IN" type="String" optional="false"/>
+    </service>
+     <service name="getPartyQuotaAnalytics" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyQuotaAnalytics" >
+        <description>get Party Quota Analytics</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="categoryId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="branchId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="quotaMap" type="Map" mode="OUT" optional="true"/>
+    </service>
+     <service name="getUsedQuotaFromOrders"  engine="java"
+                location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getUsedQuotaFromOrders" auth="true">
+        <description>get Party Used Quota</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="productCategoryId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="productIds" mode="IN" type="List" optional="true"></attribute>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="usedQuota" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
 </services>
 

@@ -270,7 +270,16 @@
             	</or>            
             </condition>  
         	<link target="ChannelWiseDepoSalesChart"/>
-        </menu-item>   
+        </menu-item> 
+        <menu-item name="quotaAnalytics" title="Quota Analytics">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>  
+        	<link target="QuotaAnalytics"/>
+        </menu-item>  
        <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>

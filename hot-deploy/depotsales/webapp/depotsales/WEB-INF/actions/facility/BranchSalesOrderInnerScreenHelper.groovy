@@ -22,7 +22,6 @@
 	import org.ofbiz.party.contact.ContactMechWorker;
 	
 	
-	
 	if(parameters.boothId){
 		parameters.boothId = parameters.boothId.toUpperCase();
 	}
@@ -387,7 +386,7 @@
 	
 	productCategoryQuotasMap = [:];
 	if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
-		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",effectiveDate));
 		productCategoryQuotasMap = resultCtx.get("schemesMap");
 	}	
 	
