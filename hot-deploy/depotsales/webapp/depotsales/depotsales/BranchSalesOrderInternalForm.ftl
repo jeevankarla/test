@@ -577,6 +577,7 @@
 	      	
 	      	if (args.cell == 1) {
 				var row = args.row;
+				
 				updateCurrentQuota(row);
 			}
 			
@@ -593,6 +594,7 @@
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
+      
         	if (args.cell == 2) {
    				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
@@ -649,7 +651,7 @@
 				var uom = data[args.row]["cottonUom"];
 				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
 				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				
+			
 				
 				if(isNaN(baleQty)){
 					baleQty = 1;
@@ -663,12 +665,15 @@
 				
 				quantity = 0;
 				if(uom == "Bale"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight*40;
 				}
 				if(uom == "Half-Bale"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight*20;
 				}
 				if(uom == "Bundle"){
+					bundleWeight=4.54;
 					quantity = baleQty*bundleWeight;
 				}
 				
