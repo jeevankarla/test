@@ -179,7 +179,7 @@ if(actualOrderId){
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, [orderId,actualOrderId]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-OrderHeader = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId","orderDate"), null, null, false);
+OrderHeader = delegator.findList("OrderHeader", cond, null, null, null, false);
 
 indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 indentDate = indentDetails[0].get("orderDate");
