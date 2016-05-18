@@ -106,6 +106,9 @@ if(orderId){
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		newObj.put("orderItemSeqId",eachItem.orderItemSeqId);
 		newObj.put("orderedQty",eachItem.quantity);
+		newObj.put("unitPrice",eachItem.unitPrice);
+		disptchQty=eachItem.quantity-receivedQty
+		newObj.put("ItemValue",eachItem.unitPrice*disptchQty);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("quantity",eachItem.quantity-receivedQty);
 		newObj.put("balance",0);
