@@ -323,7 +323,9 @@
 					<#--{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator}, -->
 					{id:"quantity", name:"Dispatch Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-					{id:"balance", name:"BalanceQty(Kgs)", field:"balance", width:150, minWidth:150, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
+					{id:"balance", name:"BalanceQty(Kgs)", field:"balance", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
+					{id:"unitPrice", name:"unitPrice(Kgs)", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
+					{id:"ItemValue", name:"Item Amount(Rs)", field:"ItemValue", width:100, minWidth:100, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
 				];
 		</#if>
 		
