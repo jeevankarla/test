@@ -201,7 +201,7 @@
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
-				
+				if(taxList != undefined){
 				for(var i=0;i<taxList.length;i++){
 					var taxType = taxList[i];
 					var taxPercentage = data[rowCount][taxType];
@@ -211,6 +211,7 @@
 					var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
 					jQuery(formId).append(jQuery(inputTaxTypePerc));
 					jQuery(formId).append(jQuery(inputTaxTypeValue));
+				}
 				}
    			}
 			
