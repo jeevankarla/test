@@ -3,6 +3,8 @@
 <script type="text/javascript">
 	
 $(document).ready(function(){
+		
+
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'yy-mm-dd',
 			changeMonth: true,
@@ -27,7 +29,8 @@ $(document).ready(function(){
 	    			return false;   
 			}
 		});
-		
+		//prepareApplicableOptions();
+    	//setupGrid2();
 	});
 </script>
 <#assign changeRowTitle = "Changes">                
@@ -43,30 +46,41 @@ $(document).ready(function(){
 	     </div>
 	      
 	    <div class="screenlet-body">
-	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit">  
-	      <table width="100%"  border="0" cellspacing="0" cellpadding="0">  
+	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
+	      <table width="60%"  border="0" cellspacing="0" cellpadding="0">  
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Invoice Date :</div></td>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
 	          <#if effectiveDate?exists && effectiveDate?has_content>  
 		  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
 	          	<td valign='middle'>
-	            	<div class='tabletext h2'>${effectiveDate}         
+	            	<div class='tabletext h3'>${effectiveDate}         
 	            	</div>
 	          	</td>       
 	       	  <#else> 
 	          	  	<td valign='middle'>          
-	            		<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+	            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 	            	</td>
 	       	  </#if>
 	        </tr>
+	        <tr>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Shipment Date:</div></td>
+				<#if shipmentDate?exists && shipmentDate?has_content>  
+		  	  		<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
+	          		<td valign='middle'>
+	            		<div class='tabletext h3'>
+	            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
+	            		</div>
+	          		</td>       
+	          	</#if>
+	        </tr> 
 	        <tr><td><br/></td></tr>
 	        <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Supplier:</div></td>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
 				<#if partyId?exists && partyId?has_content>  
 		  	  		  <#--  <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  -->
 	          		<td valign='middle'>
-	            		<div class='tabletext h2'>
+	            		<div class='tabletext h3'>
 	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : partyId}, true) />
 	               			${partyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
 	            		</div>
@@ -74,58 +88,37 @@ $(document).ready(function(){
 	          	</#if>
 	        </tr>
 	         <#-- Showing BillToParty: -->
-	         <tr><td><br/></td></tr> <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>BillToParty:</div></td>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>BillToParty:</div></td>
 				<#if billToPartyId?exists && billToPartyId?has_content>  
 		  	  	  <#--	<input type="hidden" name="partyId" id="partyId" value="${billToPartyId?if_exists}"/>  -->
 	          		<td valign='middle'>
-	            		<div class='tabletext h2'>
+	            		<div class='tabletext h3'>
 	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : billToPartyId}, true) />
 	               			${billToPartyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
 	            		</div>
 	          		</td>       
 	          	</#if>
 	        </tr>
-	         <tr><td><br/></td></tr>
-	        <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Shipment Date:</div></td>
-				<#if shipmentDate?exists && shipmentDate?has_content>  
-		  	  		<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h2'>
-	            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
-	            		</div>
-	          		</td>       
-	          	</#if>
-	        </tr> 
 	        <tr><td><br/></td></tr>
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle No:</div></td>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No:</div></td>
 				<#if vehicleId?exists && vehicleId?has_content>  
 		  	  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>  
 	          		<td valign='middle'>
-	            		<div class='tabletext h2'>${vehicleId?if_exists}</div> 
+	            		<div class='tabletext h3'>${vehicleId?if_exists}</div> 
 	          		</td>       
 	          	</#if>
 	        </tr> 
-	       <tr><td><br/></td></tr>
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Purchase Order No:</div></td>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Purchase Order No:</div></td>
 				<#if orderId?exists && orderId?has_content>  
 		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>  
 	          		<td valign='middle'>
-	            		<div class='tabletext h2'>${orderId?if_exists}</div> 
+	            		<div class='tabletext h3'>${orderId?if_exists}</div> 
 	          		</td>       
 	          	</#if>
 	        </tr>
-	        <tr><td><br/></td></tr>
-	        <#--<tr>  
-	   			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
-		      	<td valign='middle' align='left'> 
-		         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
-		         	<span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span>
-	    		</td>
-	    	</tr> -->               
+	                  
 	      </table>
 	      <div id="sOFieldsDiv" >
 	      </div> 
@@ -157,23 +150,36 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
+				<div class="lefthalf" >
 				<div class="screenlet-title-bar">
-					<div class="grid-header" style="width:27%">
-						<label>Other Charges</label><span id="totalAmount"></span>
+					<div class="grid-header" style="width:100%">
+						<label>Discounts</label><span id="totalAmount"></span>
 					</div>
-					<div id="myGrid2" style="width:27%;height:150px;">
-						<div class="grid-header" style="width:27%">
+					<div id="myGrid3" style="width:100%;height:150px;">
+						<div class="grid-header" style="width:100%">
 						</div>
 					</div>
+				</div>
+				</div>
+				<div class="righthalf">
+				<div class="screenlet-title-bar">
+					<div class="grid-header" style="width:100%">
+						<label>Additional Charges</label><span id="totalAmount"></span>
+					</div>
+					<div id="myGrid2" style="width:100%;height:150px;">
+						<div class="grid-header" style="width:100%">
+						</div>
+					</div>
+				</div>
 				</div>
 				<#assign formAction ='processPurchaseInvoice'>	
 				<#if partyId?exists>
 			    	<div align="center">
-			    		<h2>
+			    		<h3>
 			    		<input type="submit" style="padding:.4em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepot</@ofbizUrl>');"/>
-			    		</h2>   	
+			    		</h3>   	
 			    	</div>     
 				</#if>  	
 			</div>
