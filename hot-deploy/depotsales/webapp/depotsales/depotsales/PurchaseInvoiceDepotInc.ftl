@@ -5,32 +5,25 @@
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/examples/examples.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <style type="text/css">
-	.cell-title {
-		font-weight: normal;
-	}
-	.cell-effort-driven {
-		text-align: center;
-	}
-	.readOnlyColumnClass {
-		font-weight: normal;
-		background: mistyrose;
-	}
-	
-	.righthalf {
-	    float: right;
-	    height: 1%;
-	    margin: 0 0 1% 1%;
-	    right: 0;
-	    width: 69%;
-	}
-	
-	.lefthalf {
-	    float: left;
-	    height: 1%;
-	    left: 0;
-	    margin: 0% 1% 1% 0%;
-	    width: 29%;
-	}	
+
+	<style type="text/css">
+	 	.labelFontCSS {
+	    	font-size: 13px;
+		}
+		.form-style-8{
+		    max-width: 650px;
+		    max-height: 185px;
+		    max-right: 10px;
+		    margin-top: 10px;
+			margin-bottom: -15px;
+		    padding: 15px;
+		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+		    border-radius: 20px;
+		    border: 1px solid #305A72;
+		}
+		
+	</style>
+
 </style>			
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
@@ -52,18 +45,31 @@
 <script type="application/javascript">
 	var dataView;
 	var dataView2;
+	var dataView3;
 	var grid;
 	var grid2;
+	var grid3;
 	var withOutBedcolumns;
 	var withAdjColumns;
 	var withBedcolumns;
 	var data2 = [];
+	var data3 = [];
+	
+	var dropDownOption = "ALL";
+	var prodDropDownOption = "ALL";
+	
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
+	
 	var availableAdjTags = ${StringUtil.wrapString(invoiceAdjItemsJSON)!'[]'};
 	var invoiceAdjLabelJSON = ${StringUtil.wrapString(invoiceAdjLabelJSON)!'{}'};
 	var invoiceAdjLabelIdMap = ${StringUtil.wrapString(invoiceAdjLabelIdJSON)!'{}'};
+	
+	var availableDiscountTags = ${StringUtil.wrapString(discountItemsJSON)!'[]'};
+	var discountLabelJSON = ${StringUtil.wrapString(discountLabelJSON)!'{}'};
+	var discountLabelIdMap = ${StringUtil.wrapString(discountLabelIdJSON)!'{}'};
+	
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	//var data = ${StringUtil.wrapString(dataJSON)!'[]'};
@@ -88,6 +94,13 @@
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
+		
+			//dropDownOption = "ALL";
+			var product = data[rowCount]["cProductName"];
+    			dropDownOption += ","+product;
+			
+			prodDropDownOption += ","+product; 
+			
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -151,11 +164,40 @@
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{ 
 			var invItemTypeId = data2[rowCount]["invoiceItemTypeId"];
+			
+			var applicableToLabel = data2[rowCount]["applicableTo"];
+			var applicableTo = "ALL";
+			if(applicableToLabel && applicableToLabel != "ALL"){
+				applicableTo = productLabelIdMap["["+applicableToLabel+"]"];
+			}
+			
 			var adjAmt = parseFloat(data2[rowCount]["adjAmount"]);
 	 		if (!isNaN(adjAmt)) {	 		
 				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemTypeId_o_" + rowCount).val(invItemTypeId);
+				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTo_o_" + rowCount).val(applicableTo);
 				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjAmt_o_" + rowCount).val(adjAmt);
-				jQuery(formId).append(jQuery(inputInv));				
+				jQuery(formId).append(jQuery(inputInv));
+				jQuery(formId).append(jQuery(inputApplicable));				
+				jQuery(formId).append(jQuery(inputAmt));
+			}
+		}
+		
+		for (var rowCount=0; rowCount < data3.length; ++rowCount)
+		{ 
+			var invItemTypeId = data3[rowCount]["invoiceItemTypeId"];
+			var applicableToLabel = data3[rowCount]["applicableTo"];
+			var adjAmt = parseFloat(data3[rowCount]["adjAmount"]);
+			
+			if(applicableToLabel && applicableToLabel != "ALL"){
+				applicableTo = productLabelIdMap["["+applicableToLabel+"]"];
+			}
+			
+	 		if (!isNaN(adjAmt)) {	 		
+				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemTypeDiscId_o_" + rowCount).val(invItemTypeId);
+				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableToDisc_o_" + rowCount).val(applicableTo);
+				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjDiscAmt_o_" + rowCount).val(adjAmt);
+				jQuery(formId).append(jQuery(inputInv));	
+				jQuery(formId).append(jQuery(inputApplicable));			
 				jQuery(formId).append(jQuery(inputAmt));
 			}
 		}
@@ -244,6 +286,67 @@
 	  	}      
       	return {valid: true, msg: null};
     }
+    
+    function discountItemFormatter(row, cell, value, columnDef, dataContext) {
+        if(value != undefined){
+			if(discountLabelJSON[value]){
+				return discountLabelJSON[value];
+			}
+			else{
+				var adjTermId = discountLabelIdMap[value]; 
+				data3[row]['invoiceItemTypeId'] = adjTermId;
+				return discountLabelJSON[adjTermId]; 
+			}
+		}
+        
+    }
+    
+    function discountTypeValidator(value,item) {
+      
+      	var valueId = discountLabelIdMap[value];
+    	var currItemCnt = 1;
+	  	for (var rowCount=0; rowCount < data3.length; ++rowCount)
+	  	{ 
+			if (data3[rowCount]['invoiceItemTypeId'] != null && data3[rowCount]['invoiceItemTypeId'] != undefined && valueId == data3[rowCount]['invoiceItemTypeId']) {
+				++currItemCnt;
+			}
+	  	}
+	  	
+	  	var invalidItemCheck = 0;
+	  	for (var rowCount=0; rowCount < availableDiscountTags.length; ++rowCount)
+	  	{  
+			if (valueId == availableDiscountTags[rowCount]["value"]) {
+				invalidItemCheck = 1;
+			}
+	  	}
+      	if (currItemCnt > 1) {
+        	return {valid: false, msg: "Duplicate Item " + value};      				
+      	}
+      	if(invalidItemCheck == 0){
+      		return {valid: false, msg: "Invalid Item " + value};
+      	}
+      
+      	if (item != null && item != undefined ) {
+      		item['invoiceItemTypeId'] = discountLabelIdMap[value];
+	  	}      
+      	return {valid: true, msg: null};
+    }
+	
+	function displayChargesGrid(){
+		$("#titleScreen").show();
+		prepareApplicableOptions();
+		setupGrid2();
+	}
+	function prepareApplicableOptions(){
+		if(data){
+			dropDownOption = "ALL";
+			for (i = 0; i < data.length; i++) {
+    			var product = data[i]["cProductName"];
+    			dropDownOption += ","+product;
+    			prodDropDownOption += ","+product;
+    		}
+		}
+	}
 	
     function productValidator(value,item) {
       
@@ -305,15 +408,17 @@
 	function setupGrid1() {
     
              withOutBedcolumns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"readOnlyColumnClass", focusable :false, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:400, minWidth:400, cssClass:"readOnlyColumnClass", focusable :false, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter, focusable :false},
 			{id:"UPrice", name:"Unit Price", field:"UPrice", width:130, minWidth:130, cssClass:"readOnlyColumnClass", sortable:false, align:"right", toolTip:"UD Price", focusable :false},
 			{id:"amount", name:"Total Basic Amount", field:"amount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter},
-			<#--{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Price"},
-			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},
+			{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
+			<#--{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},-->
 			
-			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
-			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
+			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
+			{id:"SurChgPercent", name:"SUR(%)", field:"SurChgPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"}
+			
+			<#--{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
 			
 		];
 		  
@@ -593,6 +698,21 @@
 				
 		   }
 		}
+		
+		// update Discount Values
+		for (i = 0; i < data3.length; i++) {
+		   if(!isNaN(data3[i]["adjAmount"])){
+		   		var termType = data3[i]["invoiceItemTypeId"];
+		   		if(termType == "COGS_DISC" || termType == "COGS_DISC_ATR"){
+		   			totalAmount -= data3[i]["adjAmount"];
+		   		}
+		   		else{
+		   			totalAmount += data3[i]["adjAmount"];
+		   		}
+				
+		   }
+		}
+		
 		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 	
 		if(amt > 0 ){
@@ -609,8 +729,10 @@
 	function setupGrid2() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:205, minWidth:205, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
+			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:415, minWidth:415, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+		
 		];
 		
 		var options2 = {
@@ -737,6 +859,144 @@
     	});
     }
 	    
+	    
+	// Discounts
+	
+	function setupGrid3() {
+    
+        withAdjColumns = [
+			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:415, minWidth:415, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+		];
+		
+		var options3 = {
+			editable: true,		
+			forceFitColumns: false,			
+			enableCellNavigation: true,
+			enableAddRow: true,
+			asyncEditorLoading: false,			
+			autoEdit: true,
+            secondaryHeaderRowHeight: 25
+		};
+			  
+		grid3 = new Slick.Grid("#myGrid3", data3, withAdjColumns, options3);
+        grid3.setSelectionModel(new Slick.CellSelectionModel()); 
+     
+		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid3, options3);
+        if (data3.length > 0) {			
+			$(grid3.getCellNode(0, 1)).click();
+		}else{
+			$(grid3.getCellNode(0,0)).click();
+		}
+        
+        grid3.onKeyDown.subscribe(function(e) {
+			var cellNav = 2;
+			
+			var cell = grid3.getCellFromEvent(e);		
+			if(e.which == $.ui.keyCode.UP && cell.row == 0){
+				grid3.getEditController().commitCurrentEdit();	
+				$(grid3.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();
+			}
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data3.length && cell.cell == cellNav){
+				grid3.getEditController().commitCurrentEdit();	
+				$(grid3.getCellNode(0, 2)).click();
+				e.stopPropagation();
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data3.length-1) && cell.cell == cellNav){
+				grid3.getEditController().commitCurrentEdit();
+				grid3.gotoCell(data3.length, 0, true);
+				$(grid3.getCellNode(data3.length, 0)).edit();
+				
+				e.stopPropagation();
+			}
+			
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
+				&& cell.row == data3.length && cell.cell == cellNav){
+  				grid3.getEditController().commitCurrentEdit();	
+				$(grid3.getCellNode(cell.row, 0)).click();
+				e.stopPropagation();
+			
+			}else if (e.which == $.ui.keyCode.RIGHT &&
+				cell && (cell.cell == cellNav) && 
+				cell.row != data3.length) {
+				grid3.getEditController().commitCurrentEdit();	
+				$(grid3.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();	
+			}
+			else if (e.which == $.ui.keyCode.LEFT &&
+				cell && (cell.cell == 0) && 
+				cell.row != data3.length) {
+				grid3.getEditController().commitCurrentEdit();	
+				$(grid3.getCellNode(cell.row, cellNav)).click();
+				e.stopPropagation();	
+			}else if (e.which == $.ui.keyCode.ENTER) {
+        		grid3.getEditController().commitCurrentEdit();
+				if(cell.cell == 1 || cell.cell == 2){
+					jQuery("#changeSave").click();
+				}
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }else if (e.keyCode == 27) {
+            //here ESC to Save grid3
+        		if (cell && cell.cell == 0) {
+        			$(grid3.getCellNode(cell.row - 1, cellNav)).click();
+        			return false;
+        		}  
+        		grid3.getEditController().commitCurrentEdit();
+				   
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }
+            
+            else {
+            	return false;
+            }
+        });
+         
+                
+    	grid3.onAddNewRow.subscribe(function (e, args) {
+      		var item = args.item;   
+      		var itemLabel = item['invoiceItemTypeId'];
+      		item['invoiceItemTypeId'] = discountLabelIdMap[itemLabel];     		 		
+      		grid3.invalidateRow(data3.length);
+      		data3.push(item);
+      		grid3.updateRowCount();
+      		grid3.render();
+    	});
+        
+        grid3.onCellChange.subscribe(function(e,args) {
+        		if (args.cell == 1) {
+        			updateInvoiceTotalAmount();
+        		}
+		}); 
+		
+		grid3.onActiveCellChanged.subscribe(function(e,args) {
+        	if (args.cell == 1 && data3[args.row] != null) {
+				var itemType = data3[args.row]["invoiceItemTypeId"];
+			}
+			
+		});
+		
+		grid3.onValidationError.subscribe(function(e, args) {
+	        var validationResult = args.validationResults;
+	        var activeCellNode = args.cellNode;
+	        var editor = args.editor;
+	        var errorMessage = validationResult.msg;
+	        var valid_result = validationResult.valid;
+	        
+	        if (!valid_result) {
+	           $(activeCellNode).attr("tittle", errorMessage);
+	            }else {
+	           $(activeCellNode).attr("tittle", "");
+	        }
+
+    	});
+    }
+	    
+	    
+	    
+	    
 	//update ExciseElementValues
     function updateGridColumnsValues(){
 		for (i = 0; i < data.length; i++) {
@@ -767,6 +1027,7 @@
 		    gridShowCall();
 		 	setupGrid1();
 		 	setupGrid2();
+		 	setupGrid3();
 		 	updateInvoiceTotalAmount();
 		 }else{ 
 	        gridHideCall();
@@ -804,6 +1065,10 @@
 	   $(function() {
 			$( "#indententryinit" ).validate();
 		});	
+		
+		prepareApplicableOptions();
+		setupGrid2();
+		setupGrid3();
 	});	
 	 
 	function gridHideCall() {
