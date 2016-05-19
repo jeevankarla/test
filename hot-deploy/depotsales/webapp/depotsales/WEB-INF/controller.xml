@@ -46,6 +46,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalyticsInternal"/>
     </request-map>
+    <request-map uri="QuotaAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuotaAnalytics"/>
+    </request-map>
+    <request-map uri="QuotaAnalyticsInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuotaAnalyticsInternal"/>
+    </request-map>
     
     <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
@@ -1841,7 +1849,8 @@
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     <view-map name="IndentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalytics"/>
 	<view-map name="IndentAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsInternal"/>
-	
+	<view-map name="QuotaAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaAnalytics"/>
+	<view-map name="QuotaAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaAnalyticsInternal"/>
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
     <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     
