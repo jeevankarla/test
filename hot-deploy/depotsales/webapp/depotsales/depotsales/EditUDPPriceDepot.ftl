@@ -52,8 +52,7 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-				populateData();
-				   $('div#forAddress').html('<img src="/images/ajax-loader64.gif">');
+				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 					
 					$('input[type=radio][name=applicableTaxType]').change(function() {
@@ -129,7 +128,9 @@
 		var vatSaleAmt = dataRow["VAT_SALE_AMT"];
 		var cstSale = dataRow["CST_SALE"];
 		var cstSaleAmt = dataRow["CST_SALE_AMT"];
-		vatSurchargeList = dataRow["vatSurchargeList"];
+		if(dataRow["vatSurchargeList"] != 'undefined' || dataRow["vatSurchargeList"] != null){
+			vatSurchargeList = dataRow["vatSurchargeList"];
+		}
 		var taxList = dataRow["taxList"];
 		var totalAmt = dataRow["amount"];
 		var serviceCharge = dataRow["SERVICE_CHARGE"];
@@ -137,7 +138,13 @@
 		var message = "";
 		var title = "";
 		var priceExists = "N";
+		var applicableTaxType = dataRow["applicableTaxType"];
+		var checkE2Form = dataRow["checkE2Form"];
+		var checkCForm = dataRow["checkCForm"];
 		
+		if(applicableTaxType != 'undefined' && applicableTaxType != null && applicableTaxType != ""){	
+			$("#orderTaxType").val(applicableTaxType);
+		}
 		if(dataRow){
 		
 			message += "<table cellspacing=20 cellpadding=20 id='taxUpdationTable' >" ;
@@ -147,16 +154,80 @@
 			
 			if($("#orderTaxType").val() == "Inter-State"){
 			
-				message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State'/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
-				message += "<tr class='IntraState' style='display:none;'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' />Transactions Without E2 Form<br> </td> </tr>";
-				message += "<tr class='InterState'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				if(applicableTaxType == "Intra-State"){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State'/>Inter State<br> </td>  </tr>";
+				}
+				if(applicableTaxType == "Inter-State"){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
+				}
+				if(applicableTaxType == 'undefined' || applicableTaxType == null || applicableTaxType == ""){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State'/>Inter State<br> </td>  </tr>";
+				}
+				
+				
+				
+				if(checkE2Form == "E2_FORM"){
+					message += "<tr class='IntraState' style='display:none;'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' checked/>Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' />Transactions Without E2 Form<br> </td> </tr>";
+				}
+				if(checkE2Form == "NO_E2_FORM"){
+					message += "<tr class='IntraState' style='display:none;'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' checked/>Transactions Without E2 Form<br> </td> </tr>";
+				}
+				if(checkE2Form == 'undefined' || checkE2Form == null){
+					message += "<tr class='IntraState' style='display:none;'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' />Transactions Without E2 Form<br> </td> </tr>";
+				}
+				
+				
+				if(checkCForm == "CST_CFORM"){
+					message += "<tr class='InterState'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				}
+				if(checkCForm == "CST_NOCFORM"){
+					message += "<tr class='InterState'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' />Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM' checked/>Transactions Without C Form<br> </td></tr>";
+				}
+				if(checkCForm == 'undefined' || checkCForm == null){
+					message += "<tr class='InterState'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				}
+				
+				
 				
 			}
 			if($("#orderTaxType").val() == "Intra-State"){
-			
-				message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
-				message += "<tr class='IntraState'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' checked/>Transactions Without E2 Form<br> </td> </tr>";
-				message += "<tr class='InterState' style='display:none;'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				
+				if(applicableTaxType == "Intra-State"){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
+				}
+				if(applicableTaxType == "Inter-State"){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
+				}
+				if(applicableTaxType == 'undefined' || applicableTaxType == null || applicableTaxType == ""){
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
+				}
+				
+				
+				if(checkE2Form == "E2_FORM"){
+					message += "<tr class='IntraState'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' checked/>Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' />Transactions Without E2 Form<br> </td> </tr>";
+				}
+				if(checkE2Form == "NO_E2_FORM"){
+					message += "<tr class='IntraState'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' checked/>Transactions Without E2 Form<br> </td> </tr>";
+				}
+				if(checkE2Form == 'undefined' || checkE2Form == null){
+					message += "<tr class='IntraState'><td><input type='radio' name='checkE2Form' id='E2_FORM' value='E2_FORM' />Transactions With E2 Form<br> </td> <td></td> <td><input type='radio' name='checkE2Form' id='NO_E2_FORM' value='NO_E2_FORM' checked/>Transactions Without E2 Form<br> </td> </tr>";
+				}
+				
+				
+				if(checkCForm == "CST_CFORM"){
+					message += "<tr class='InterState' style='display:none;'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				}
+				if(checkCForm == "CST_NOCFORM"){
+					message += "<tr class='InterState' style='display:none;'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' />Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM' checked/>Transactions Without C Form<br> </td></tr>";
+				}
+				if(checkCForm == 'undefined' || checkCForm == null){
+					message += "<tr class='InterState' style='display:none;'><td><input type='radio' name='checkCForm'  id='CST_CFORM' value='CST_CFORM' checked/>Transactions With C Form<br> </td> <td></td> <td><input type='radio' name='checkCForm' id='CST_NOCFORM' value='CST_NOCFORM'/>Transactions Without C Form<br> </td></tr>";
+				}
+				
+				
+				
+				
+				
 				
 			}
 			
@@ -167,27 +238,85 @@
 			message += "<table cellspacing=20 cellpadding=20 id='taxTable' >" ;
 			
 			if($("#orderTaxType").val() == "Inter-State"){
-				message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
-				message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 				
-				for(var i=0;i<vatSurchargeList.length;i++){
-					var taxType = vatSurchargeList[i];
-					var taxPercentage = dataRow[taxType];
-					var taxValue = dataRow[taxType + "_AMT"];
+				if(checkCForm == "CST_CFORM"){
+					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 					
-					message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
 				}
+				if(checkCForm == "CST_NOCFORM"){
+					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+				}
+				if(checkCForm == 'undefined' || checkCForm == null){
+					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+				}
+				
+				
 			}
 			if($("#orderTaxType").val() == "Intra-State"){
-				message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
-				message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
-				for(var i=0;i<vatSurchargeList.length;i++){
-					var taxType = vatSurchargeList[i];
-					var taxPercentage = dataRow[taxType];
-					var taxValue = dataRow[taxType + "_AMT"];
-					
-					message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+			
+			
+				if(checkE2Form == "E2_FORM"){
+					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
 				}
+				
+				if(checkE2Form == "NO_E2_FORM"){
+					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+				}
+				
+				if(checkE2Form == 'undefined' || checkE2Form == null){
+					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+				}
+				
 			}
 			
 			message += "<tr class='h3'><td></td></tr>";
@@ -199,70 +328,11 @@
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
 			Alert(message, title);
+			
+			
 		}
 		
-		<#--
-		if(dataRow){
-			
-			message += "<table cellspacing=20 cellpadding=20 id='taxUpdationTable' >" ;
-			message += "<hr class='style17'></hr>";
-			message += "<tr class='h3'><th>Taxes </th></tr>";
-			for(var i=0;i<taxList.length;i++){
-				
-				var taxType = taxList[i];
-				var taxPercentage = dataRow[taxType];
-				var taxValue = dataRow[taxType + "_AMT"];
-				
-				message += "<tr class='h3'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> AMT: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
-			
-			}
-			
-			
-			message += "</table>";
-			message += "<hr class='style18'></hr>";
-			message += "<table cellspacing=20 cellpadding=20 id='serviceChargeUpdationTable' >" ;
-			message += "<hr class='style17'></hr>";
-			message += "<tr class='h3'><th>Service Charges </th></tr>";
-			message += "<tr class='h3'><td align='left'>SERVICE_CHARGE %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='SERVICE_CHARGE' id='SERVICE_CHARGE' value='"+serviceCharge+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> AMT: </td><td><input type='text' name='SERVICE_CHARGE_AMT' id='SERVICE_CHARGE_AMT' value='"+serviceChargeAmt+"' readOnly></td></tr>";
-			message += "<tr class='h3'><td></td></tr>";
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-			message += "</table>";
-			message += "<hr class='style18'></hr>";
-			message += "<hr class='style17'></hr>";
-			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
-			
-			Alert(message, title);
-		}
-		-->
-		
-		<#--
-		message += "<table cellspacing=10 cellpadding=10>" ;
-		if(priceExists == "N"){
-			//message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr>";
-			//message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
-			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
-			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'></td></tr>";
-			//message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		}else{
-		    //message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"' /></td></tr>";
-			//message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' value='"+bedPercent+"' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
-			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' value='"+vatPercent+"' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"' ></td></tr>";
-			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' value='"+cstPercent+"' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'></td></tr>";
-			//message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' value='"+serviceTaxPercent+"' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"' /></td></tr>";
-			
-			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
-			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
-			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"'/></td></tr>";
-			
-			message += "<tr class='h3'><td align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		}	
-		title = "<h2><center>User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
-		message += "</table>";
-		Alert(message, title);
-		-->
 	};
-	
 	
 	function addDataToGrid(){
 		var totalTaxAmt = 0;
@@ -312,9 +382,22 @@
 		dataRow["taxAmt"] = totalTaxAmt;
 		dataRow["totPayable"] = totalAmt + dataRow["SERVICE_CHARGE_AMT"] + totalTaxAmt;
 		
+		var taxApplicabilityList = [];
+		$('#taxUpdationTable input:radio:checked:visible').each(function () {
+		  	taxApplicabilityList.push(this.value)
+		  	dataRow[this.name] = this.value;
+		  	if(this.name == "applicableTaxType"){
+		  		if(this.value == "Intra-State"){
+		  			$("#orderTaxType").val("Intra-State");
+		  		}
+		  		else{
+		  			$("#orderTaxType").val("Inter-State");
+		  		}
+		  	}
+		});
+		dataRow["taxApplicabilityList"] = taxApplicabilityList;
 		grid.updateRow(rowIndex);
 		grid.render();
-		//updateProductTotalAmount();
 		updateTotalIndentAmount();
 		cancelForm();
 	}
@@ -377,11 +460,8 @@
 		 updateServiceChargeAmounts();
 		 cancelForm();
 	}
-
-
-
-
-  function getPreviousShipAddress(partyId){
+	
+	function getPreviousShipAddress(partyId){
   
  
 		   var dataJson = {"partyId": partyId};
@@ -500,19 +580,19 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	   }
 	
 	
-	var orderData;
-	var contactctMechId;
-	function submitAddress() {
+	 var orderData;
+	 var contactctMechId;
+	 function submitAddress() {
 	
-	 var count = Object.keys(addressMap).length;
+	 	var count = Object.keys(addressMap).length;
 	 
-	 var partyId = addressMap.partyId;
-	 var city = addressMap.city;
-	 var address1 = addressMap.address1;
-	 var address2 = addressMap.address2;
-	 var countryName = addressMap.countryName;
-	 var postalCode = addressMap.postalCode;
-	 var stateName = addressMap.stateName;
+	 	var partyId = addressMap.partyId;
+	 	var city = addressMap.city;
+	 	var address1 = addressMap.address1;
+	 	var address2 = addressMap.address2;
+		var countryName = addressMap.countryName;
+	 	var postalCode = addressMap.postalCode;
+	 	var stateName = addressMap.stateName;
 	 
 	 if(count != 0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && partyId.length != 0){
 	    showSpinner();
@@ -558,63 +638,56 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	
 	
 	
- var stateListJSON;
- function setServiceName(selection) {
- var country=selection.value;
-  jQuery.ajax({
-                url: 'getCountryStateList',
-                type: 'POST',
-                async: true,
-                data: {countryGeoId:country} ,
+ 	var stateListJSON;
+ 	function setServiceName(selection) {
+ 		var country=selection.value;
+  		jQuery.ajax({
+            url: 'getCountryStateList',
+            type: 'POST',
+            async: true,
+            data: {countryGeoId:country} ,
  				success: function(result){
  				stateListJSON = result["stateListJSON"];
  				if (stateListJSON) {	
-                     var optionList;	       				        	
-			        	for(var i=0 ; i<stateListJSON.length ; i++){
-							var innerList=stateListJSON[i];	              			             
-			                optionList += "<option value = " + innerList['value'] + " >" + innerList['label'] + "</option>";          			
-			      		}//end of main list for loop
+                    var optionList;	       				        	
+			        for(var i=0 ; i<stateListJSON.length ; i++){
+						var innerList=stateListJSON[i];	              			             
+			            optionList += "<option value = " + innerList['value'] + " >" + innerList['label'] + "</option>";          			
+			      	}//end of main list for loop
 	  			}else{
-			                optionList += "<option value = " + "_NA_" + " >" + "_NA_" + "</option>";          			
+			        optionList += "<option value = " + "_NA_" + " >" + "_NA_" + "</option>";          			
 
-					 }
- 					 jQuery("[name='stateProvinceGeoId']").html(optionList);
+				}
+ 				jQuery("[name='stateProvinceGeoId']").html(optionList);
 
             }    
-                   });
-                   
-                  storeValues(); 
+        });
+        storeValues(); 
  
-}
+	}
  	
  	
 
 
-function populateData(){
-	 CountryOptionList += "<option value = IND selected>India  </option>";          			
+	function populateData(){
+		CountryOptionList += "<option value = IND selected>India  </option>";          			
 
  		if(CountryJsonMap != undefined && CountryJsonMap != ""){
-				$.each(CountryJsonMap, function(key, item){
-			         CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
-
-				});
-	 	   }
-		  CountryOptions = CountryOptionList;
- 			jQuery("[name='country']").html(CountryOptions);
+			$.each(CountryJsonMap, function(key, item){
+			    CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+			});
+	 	}
+		CountryOptions = CountryOptionList;
+ 		jQuery("[name='country']").html(CountryOptions);
  					 
  		if(StateJsonMap != undefined && StateJsonMap != ""){
 			$.each(StateJsonMap, function(key, item){
 			                StateOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
 			});
-	 	   }
+	 	}
 		 
-		 StateOptions = StateOptionList;
- 		 jQuery("[name='stateProvinceGeoId']").html(StateOptions);
-} 	
-	
-	
-	
-		
-	
+		StateOptions = StateOptionList;
+ 		jQuery("[name='stateProvinceGeoId']").html(StateOptions);
+	} 	
 	
 </script>
