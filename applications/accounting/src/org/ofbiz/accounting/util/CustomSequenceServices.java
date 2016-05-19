@@ -204,7 +204,7 @@ public class CustomSequenceServices {
 			        	 
 			   GenericValue orderType = delegator.findOne("OrderType",UtilMisc.toMap("orderTypeId",orderHeader.getString("orderTypeId")) , false);
 			   if((orderHeader.getString("orderTypeId").equals("SALES_ORDER") ) || (orderType.getString("parentTypeId").equals("") )) {
-				   tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","DEPOT_SALES_ORDER", "propertyName","enableDepotSalesOrderSequence"), false);
+				   tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","DEPOT_SALE_SEQUENCE", "propertyName","enableDepotSalesOrderSequence"), false);
 				   if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
 					   enableSequence = Boolean.TRUE;
 		       		}
@@ -258,11 +258,22 @@ public class CustomSequenceServices {
 			   				orderHeaderSequence.put("orderHeaderSequenceTypeId",orderHeaderSequenceTypeId );
 			   				orderHeaderSequence.put("orderId", orderId);
 			   				orderHeaderSequence.put("finYearId", finYearId);
+			   				List<GenericValue> orderRoles = FastList.newInstance();
+			   				List<EntityExpr> exprs = FastList.newInstance();
+			   				if(UtilValidate.isNotEmpty(orderId)){
+			   					exprs.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			   					exprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			   				    EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+			   					orderRoles = delegator.findList("OrderRole", condition, null,null, null, false);	
+					            String partyId = EntityUtil.getFirst(orderRoles).getString("partyId");
+					            orderHeaderSequence.put("partyId", partyId);
+			   				}		
 			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
 							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 				            delegator.create(orderHeaderSequence);
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
-				            orderHeaderSequence.put("orderNo", sequenceId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+				            //orderHeaderSequence.put("orderNo", sequenceId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+				            orderHeaderSequence.put("orderNo", sequenceId);
 				            delegator.createOrStore(orderHeaderSequence);
 				            result.put("sequenceId", sequenceId) ;
 			       			//}

@@ -33,7 +33,7 @@ under the License.
         <action service="balanceOrderItemsWithNegativeReservations" mode="sync"/>
     </eca>
     -->
-    <eca service="storeOrder" event="return">
+     <eca service="storeOrder" event="commit">
         <condition field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
         <condition field-name="salesChannelEnumId" operator="equals" value="MATERIAL_PUR_CHANNEL"/>
         <action service="setUnitPriceAsLastPrice" mode="sync"/>
