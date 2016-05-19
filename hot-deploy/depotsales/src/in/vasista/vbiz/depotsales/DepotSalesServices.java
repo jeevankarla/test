@@ -8607,10 +8607,9 @@ public class DepotSalesServices{
 					    		endCalendar.setTime(UtilDateTime.toSqlDate(effectiveDate));
 								
 					    		int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-					    		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+					    		int diffMonth = (diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH))+1;
 								
 					    		//Check Quota Advances taken for current month
-					    		
 					    		
 								for(int k=0; k<diffMonth; k++){
 									monthIterStartDate = UtilDateTime.getMonthStart(periodMonthStart);
@@ -8618,7 +8617,7 @@ public class DepotSalesServices{
 									if((k+1)==diffMonth){
 										monthIterEndDate=effectiveDate;
 									}
-
+							
 									BigDecimal totalQuotaUsedUp = BigDecimal.ZERO;
 									try {
 										Map<String, Object> usedQuotaResultMap=dispatcher.runSync("getUsedQuotaFromOrders", UtilMisc.toMap("partyId",partyId,"fromDate",monthIterStartDate,"thruDate",monthIterEndDate,"productIds",productIdsList,"userLogin", userLogin));  
@@ -8632,16 +8631,17 @@ public class DepotSalesServices{
 									
 									if((allocatedQuotaPerMonth).compareTo(totalQuotaUsedUp)>0){
 										quotaAdvanceUsed = BigDecimal.ZERO;
+										outstandingQuotaAvailable = allocatedQuotaPerMonth.subtract(totalQuotaUsedUp);
 									}
 									else{
 										quotaAdvanceUsed = totalQuotaUsedUp.subtract(allocatedQuotaPerMonth);
-										
+										outstandingQuotaAvailable =quotaAdvanceUsed;
 									}
 									
 									periodMonthStart = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(monthIterEndDate, 1));
 									
 								}
-								
+
 							}
 //							// Current month quota operations
 //							if(quotaAdvanceUsed.compareTo(allocatedQuotaPerMonth)>=0){
@@ -8662,8 +8662,9 @@ public class DepotSalesServices{
 									}
 					
 								outstandingQuotaAvailable = (allocatedQuotaAdvances.subtract(totalQuotaUsedUp)).subtract(quotaAdvanceUsed);
-								outstandingQuotaAvailable=outstandingQuotaAvailable.setScale(0, BigDecimal.ROUND_DOWN);
+								
 							}
+							outstandingQuotaAvailable=outstandingQuotaAvailable.setScale(0, BigDecimal.ROUND_DOWN);
 							Map productCategoryQuotaMap = FastMap.newInstance();
 							productCategoryQuotaMap.put("productCategoryId", productCategoryId);
 							productCategoryQuotaMap.put("quotaPerMonth", allocatedQuotaPerMonth);
