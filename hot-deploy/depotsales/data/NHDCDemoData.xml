@@ -394,5 +394,69 @@ under the License.
 	<TaxAuthorityRateType taxAuthorityRateTypeId="CST_SALE" description="Vat Sale"/> 
 	<TaxAuthorityRateType taxAuthorityRateTypeId="VAT_SURCHARGE" parentTypeId="VAT_SALE" description="Surcharge On VAT"/> 
 	
+<!-- 	RO classification Data -->
+	
+	<PartyClassificationType partyClassificationTypeId="COMPANY" parentTypeId="" description="Company"/>
+    <PartyClassificationType partyClassificationTypeId="REGIONAL_OFFICE" parentTypeId="COMPANY" description="Regional Office"/>
+    <PartyClassificationType partyClassificationTypeId="BRANCH_OFFICE" parentTypeId="REGIONAL_OFFICE" description="Branch office"/>
+	
+	<PartyClassificationGroup partyClassificationGroupId="COMPANY" partyClassificationTypeId="COMPANY" description="Company"/>
+    <PartyClassificationGroup partyClassificationGroupId="REGIONAL_OFFICE" partyClassificationTypeId="REGIONAL_OFFICE" description="Regional Office"/>
+    <PartyClassificationGroup partyClassificationGroupId="BRANCH_OFFICE" partyClassificationTypeId="BRANCH_OFFICE" description="Branch office"/>
+	
+	<PartyClassification partyId="Company" partyClassificationGroupId="COMPANY" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT1" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT2" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT3" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT4" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT5" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT6" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT26" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT28" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT47" partyClassificationGroupId="REGIONAL_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT7" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT8" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT9" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT10" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT11" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT12" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT50" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT51" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT52" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT13" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT14" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT15" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT16" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT17" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT18" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT19" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT20" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT21" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT22" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT23" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT24" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT25" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT27" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT29" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT30" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT31" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT32" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT34" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT35" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT36" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT37" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT38" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT39" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT40" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT41" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT42" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT44" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT45" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT46" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT49" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT53" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+    <PartyClassification partyId="INT54" partyClassificationGroupId="BRANCH_OFFICE" fromDate="2015-01-01 00:00:00.0"/>
+<!-- 	End RO classification Data -->
+	
 	
 </entity-engine-xml>
