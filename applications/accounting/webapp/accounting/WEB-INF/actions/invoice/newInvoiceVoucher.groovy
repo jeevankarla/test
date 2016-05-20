@@ -94,28 +94,44 @@ invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
+
+
+
 Debug.log("invoiceAdjItemList==========="+invoiceAdjItemList.size());
+
+
 invoiceItemLevelAdjustments = [:];
+
 int i=0;
 for (eachList in invoiceItemList) {
+	
+	
 //	Debug.log("eachList.invoiceId==========="+eachList.invoiceId);
 	
 //	Debug.log("eachList.invoiceId==========="+eachList.invoiceItemSeqId);
+	
+	 
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachList.invoiceId));
 	conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachList.invoiceItemSeqId));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
+	
 	// Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
+	
 	 itemAdjustList = [];
+	  
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
+		
 		  tempMap = [:];
+		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
 		  tempMap.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
 		  tempMap.put("description", eachItem.description);
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
+		  
 		  itemAdjustList.add(tempMap);
 	}
 	 }
@@ -128,8 +144,20 @@ for (eachList in invoiceItemList) {
 	i++;
 	
 }
+
+
+Debug.log("invoiceItemLevelAdjustments================"+invoiceItemLevelAdjustments);
+
+
+Debug.log("invoiceRemainigAdjItemList================"+invoiceRemainigAdjItemList);
+
+
 context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
+
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
+
+
+
 orderAttrForPo = [];
 if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
@@ -292,7 +320,19 @@ context.externalOrderId = externalOrderId;
 		SchemeAmtMap.put(eachInvoiceList.parentInvoiceItemSeqId, eachInvoiceList.amount);
 		schemeDeductionAmt = schemeDeductionAmt+Math.abs(eachInvoiceList.amount);
 		}
+		
+		
+		
+		
+		
+		
+		
 	}*/
+	
+	
+	
+	
+	
 	
 	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 	
@@ -399,6 +439,7 @@ context.externalOrderId = externalOrderId;
 		finalDetails.add(tempMap);
 		}		
 	 }
+	
 	context.grandTotal = Math.round(grandTotal);
 	context.finalDetails = finalDetails;
 	
