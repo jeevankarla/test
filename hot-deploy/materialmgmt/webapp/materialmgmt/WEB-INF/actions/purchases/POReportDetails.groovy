@@ -31,6 +31,7 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.order.order.*;
 import java.math.RoundingMode;
 import org.ofbiz.party.contact.ContactMechWorker;
+import java.util.Map.Entry;
 
 rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
@@ -48,7 +49,10 @@ context.partyName = partyName;
 partyId = parameters.partyId;
 context.partyId = partyId;
 
-
+condtAdjList = [];
+condtAdjList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+cond2 = EntityCondition.makeCondition(condtAdjList, EntityOperator.AND);
+OrderHeaderList = delegator.findList("OrderItemAndAdjustment", cond2, null, null, null ,false);
 condtList = [];
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
@@ -378,14 +382,28 @@ exprCondList=[];
 exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 
-orderAssc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false);
+orderAssc = EntityUtil.getFirst(delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false));
 
 
 
 toOrderId=orderAssc.toOrderId;
-
-
-
+Map<String, Object> orderDtlMap = FastMap.newInstance();
+orderDtlMap.put("orderId", toOrderId);
+orderDtlMap.put("userLogin", userLogin);
+result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
+if(ServiceUtil.isError(result)){
+	Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
+	return ServiceUtil.returnError(null, null, null,result);
+}
+productSummaryMap=result.get("productSummaryMap");
+productWiseMap=[:];
+Iterator eachProductIter = productSummaryMap.entrySet().iterator();
+while(eachProductIter.hasNext()) {
+	Map.Entry entry = (Entry)eachProductIter.next();
+	String productId = (String)entry.getKey();
+	 productSummary=(Map)entry.getValue();
+	 productWiseMap.put(productId,productSummary);
+}
 indentShipmentAddress = "";
 
 indectAdd = delegator.findOne("OrderAttribute",["orderId":toOrderId[0],"attrName":"SHIPPING_PREF"],false);
@@ -413,11 +431,12 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 			}
 		}}
 		remarks="";
+		baleQty="";
+		unit="";
 		if(toOrderId){
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
 			
-			conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
 			
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -426,14 +445,34 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 			if(orderItemAttr){
 				orderItemAttr.each{ attr ->
 				//Debug.log("remark=================="+attr.attrValue);
-				
-				if(attr.attrValue){
-					remarks=attr.attrValue;
+					/*if(eachAttr.attrName == "quotaQty"){
+						schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
+					}*/
+					
+					if(attr.attrValue == "REMARKS"){
+					 remarks=attr.attrValue;
 					}
 				}
 			}
 		}
+		bundleQuantityList=productWiseMap.get(orderitems.productId);
+		bundleWeight=bundleQuantityList.bundleQuantity;
+		unit=bundleQuantityList.Unit;
+		bundleUnitListPrice=bundleQuantityList.bundleUnitListPrice
+		baleqty=0;
+		if(bundleWeight && bundleWeight!="0"){
+			if("Bale".equals(unit)){
+				baleqty=bundleWeight/40;
+			}else if("Half-Bale".equals(unit)){
+				baleqty=bundleWeight/20;
+			}else{
+				baleqty=bundleWeight;
+			}						
+		}
 		orderDetailsMap["remarks"]=remarks;
+		orderDetailsMap["Unit"]=unit;
+		orderDetailsMap["baleqty"]=baleqty;
+		orderDetailsMap["bundleUnitListPrice"]=bundleUnitListPrice;		
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
