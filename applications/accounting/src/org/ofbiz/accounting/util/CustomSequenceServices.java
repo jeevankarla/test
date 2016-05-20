@@ -279,7 +279,7 @@ public class CustomSequenceServices {
 							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 				            delegator.create(orderHeaderSequence);
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
-				            orderHeaderSequence.put("orderNo", roSequnce+"/"+boSequnce+"/"+"YARN"+"/"+"D"+"/"+"FY"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+				            orderHeaderSequence.put("orderNo", "IN"+"/"+roSequnce+"/"+boSequnce+"/"+"Y"+"/"+"D"+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
 				            //orderHeaderSequence.put("orderNo", sequenceId);
 				            delegator.createOrStore(orderHeaderSequence);
 				            result.put("sequenceId", sequenceId) ;
