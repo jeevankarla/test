@@ -272,13 +272,16 @@
 		       	  			var cottonLooms=0;
 		       	  			var WoolLooms=0;
 		       	  			var obj ={};
+		       	  			var objQuota ={};
+
 		       	  			// alert(JSON.stringify(LoomDetails));
 		       	  			$.each(LoomList, function(key, item){
 		       	  				 obj [item.loomType]=0;
+		       	  				 objQuota[item.loomType]=0;
 		       	  				 for(var i=0 ; i<LoomDetails.length ; i++){
 			       	  				if(LoomDetails[i].loomType==item.loomType){
 			       	  				 	obj [item.loomType] = LoomDetails[i].loomQty;
-          									  
+          								 objQuota [item.loomType] = LoomDetails[i].loomQuota; 	  
 			       	  				}			       	  				 	
 		       	  				 }
 		       	  			});		       	  				   
@@ -286,12 +289,13 @@
 		       	  			var totLooms = 0;
 		       	  				  
 		       	  			tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
-		       	  			//tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td>';
-		       	  			tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td></tr>';
+		       	  			tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td>';
+						tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td></tr>';
 		       	  				   
 		       	  			$.each(LoomList, function(key, item){
 		       	  				 tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
-		       	  				 tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td></tr>';
+		       	  				 tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td></tr>';
 		       	  				 totLooms = totLooms+parseInt(obj[item.loomType]);
 		       	  				     
 		       	  			});
