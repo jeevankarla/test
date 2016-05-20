@@ -762,14 +762,14 @@ public class InvoiceServices {
             }
 
             // Should all be in place now. Depending on the ProductStore.autoApproveInvoice setting, set status to INVOICE_READY (unless it's a purchase invoice, which we set to INVOICE_IN_PROCESS)
-            String autoApproveInvoice = productStore != null ? productStore.getString("autoApproveInvoice") : "Y";
+            /*String autoApproveInvoice = productStore != null ? productStore.getString("autoApproveInvoice") : "Y";
             if (!"N".equals(autoApproveInvoice)) {
                 String nextStatusId = "PURCHASE_INVOICE".equals(invoiceType) ? "INVOICE_IN_PROCESS" : "INVOICE_READY";
                 Map<String, Object> setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
                 if (ServiceUtil.isError(setInvoiceStatusResult)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, setInvoiceStatusResult);
                 }
-            }
+            }*/
 
             Map<String, Object> resp = ServiceUtil.returnSuccess();
             resp.put("invoiceId", invoiceId);
