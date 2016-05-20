@@ -53,24 +53,20 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-		
-		
-		
-#popup{
-    position: fixed;
-    background: white;
-    display: none;
-    top: 300px;
-    right: 30px;
-    left: 680px;
-    width: 200px;
-    height: 200px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    padding: 10px;
-    color: black;
-} 
-		
+		#popup{
+    		position: fixed;
+    		background: white;
+    		display: none;
+    		top: 300px;
+    		right: 30px;
+    		left: 680px;
+    		width: 200px;
+    		height: 200px;
+   			border: 1px solid #000;
+    		border-radius: 5px;
+    		padding: 10px;
+    		color: black;
+		} 
 	</style>
 	
 	<script type="text/javascript">
@@ -78,21 +74,15 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
-		
-		    $("#open_popup").click(function(){
-               	    
-		       getShipmentAddress();
+			 $("#open_popup").click(function(){
+               	getShipmentAddress();
 		    
-             $("#popup").css("display", "block");
-            });
-
-           $("#close_popup").click(function(){
-             $("#popup").css("display", "none");
-           }); 
-		
-	
-		
-		
+             	$("#popup").css("display", "block");
+             });
+			 $("#close_popup").click(function(){
+             	$("#popup").css("display", "none");
+           	 });
+           
 			 $("#societyfield").hide();
 			 	fillPartyData();
 			 	$("#editServChgButton").hide();
@@ -204,9 +194,8 @@
 	    			
 	    			var transporterId = $("#transporterId").val();
 			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
-		
-	    			jQuery(indententryinit).append(jQuery(transporte));
-	    			
+					jQuery(indententryinit).append(jQuery(transporte));
+					
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -234,6 +223,8 @@
 			$("#productStoreId").blur(function() {
 				getCfcList();
 			});
+			
+			calculateTaxApplicability();
 			
 		});
 		
@@ -284,8 +275,6 @@
 	    
 		function fillPartyData(){
 					var partyId = $('[name=partyId]').val();
-					
-					
 		
 				       	  				 if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
@@ -343,10 +332,6 @@
 		       	  				   var issueDate=contactDetails["issueDate"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
-		       	  				   
-		       	  				  
-		       	  				   
-		       	  				   
 		       	  				   var partyType=contactDetails["partyType"];
 			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
 			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
@@ -356,7 +341,7 @@
 	    								//$('#productStoreId').autocomplete('close');
 			       	  			   }
 			       	  				
-		       	  				  
+		       	  				   
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];
 		       	  				 // $("#postalCode").html("<h4>"+postalCode+"</h4>");
@@ -369,50 +354,45 @@
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
 		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
-		       	  				  
-		       	  				  
-		       	  				  
-					    var transprotersList;
+		       	  				    
+		       	  				    var transprotersList;
 						 
-						 if(prodStoreId != undefined && prodStoreId !=""){
+						 			if(prodStoreId != undefined && prodStoreId !=""){
 						 
-						  var dataJson = {"prodStoreId":prodStoreId};
+						  				var dataJson = {"prodStoreId":prodStoreId};
 						 
-							jQuery.ajax({
-					                url: 'getTransportersList',
-					                type: 'POST',
-					                data: dataJson,
-					                dataType: 'json',
-					               success: function(result){
-										if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-										    alert("Error in order Items");
-										}else{
-											transprotersList = result["transporterJSON"];
-										    if(transprotersList.length != 0) 
-										    {
-										     var transporterJSON = ${StringUtil.wrapString(transprotersList)!'[]'};
-												$(document).ready(function(){
-										             $("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
-												});
-										   }
-					               		}
-					               	}							
-							});
+										jQuery.ajax({
+					                		url: 'getTransportersList',
+					                		type: 'POST',
+					                		data: dataJson,
+					                		dataType: 'json',
+					               			success: function(result){
+												if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+										    		alert("Error in order Items");
+												}else{
+													transprotersList = result["transporterJSON"];
+										    		if(transprotersList.length != 0){
+										     			var transporterJSON = ${StringUtil.wrapString(transprotersList)!'[]'};
+														$(document).ready(function(){
+										             	$("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
+													});
+										   		}
+					               			}
+					               		}							
+									});
 							
-							}
-							
-							
-							       	  				  
-	       	  				   }
+								}
+							  
+	       	  				}
 	      			}
 	               
 	          	} ,
-	         	 error: function() {
+	         	error: function() {
 	          	 	alert(result["_ERROR_MESSAGE_"]);
-	         	 }
-	         	 });
-	         	 }
-	        }
+	         	}
+	         });
+	       }
+	    }
 		
 		
 		
@@ -614,72 +594,71 @@
 					
 			  });	
 		 }
+	 	
+	 	
+	 	var orderAddres;
 
-
-var orderAddres;
-
-      function getShipmentAddress(){
+      	function getShipmentAddress(){
          
-        var contactMechId = $("#contactMechId").val();
-         var partyId = $("#partyId").val();
+        	var contactMechId = $("#contactMechId").val();
+         	var partyId = $("#partyId").val();
 	 
-	      if(contactMechId.length != 0){
+	      	if(contactMechId.length != 0){
 		
-		   var dataJson = {"partyId": partyId,"contactMechId":contactMechId};
-		
-			jQuery.ajax({
-                url: 'getShipmentAddress',
-                type: 'POST',
-                data: dataJson,
-                dataType: 'json',
-               success: function(result){
-					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-					    alert("Error in order Items");
-					}else{
-						OrderAddress = result["OrderAddress"];
+		   		var dataJson = {"partyId": partyId,"contactMechId":contactMechId};
+				jQuery.ajax({
+                	url: 'getShipmentAddress',
+                	type: 'POST',
+                	data: dataJson,
+                	dataType: 'json',
+               		success: function(result){
+						if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    	alert("Error in order Items");
+						}else{
+							OrderAddress = result["OrderAddress"];
 						
-						 $('#addressTable tbody').remove();
+						 	$('#addressTable tbody').remove();
 						
-					    var row = $("<tr />")
-                        $("#addressTable").append(row); 
-                        row.append($("<td>Adress1 :</td>"));
-                        row.append($("<td>" + OrderAddress.address1 + "</td>"));
+					    	var row = $("<tr />")
+                        	$("#addressTable").append(row); 
+                        	row.append($("<td>Adress1 :</td>"));
+                        	row.append($("<td>" + OrderAddress.address1 + "</td>"));
 					    
-					     var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>Adress2 :</td>"));
-                        row.append($("<td>" + OrderAddress.address2 + "</td>"));
+					     	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>Adress2 :</td>"));
+                        	row.append($("<td>" + OrderAddress.address2 + "</td>"));
                         
-                          var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>Country :</td>"));
-                        row.append($("<td> India </td>"));
+                          	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>Country :</td>"));
+                        	row.append($("<td> India </td>"));
                         
-                         var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>State   :</td>"));
-                        row.append($("<td>" + OrderAddress.state + "</td>"));
+                         	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>State   :</td>"));
+                        	row.append($("<td>" + OrderAddress.state + "</td>"));
                         
-                        var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>City    :</td>"));
-                        row.append($("<td>" + OrderAddress.city + "</td>"));
+                       		var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>City    :</td>"));
+                        	row.append($("<td>" + OrderAddress.city + "</td>"));
                         
-                         var row = $("<tr />") 
-					     $("#addressTable").append(row); 
-                        row.append($("<td>PostalCode:</td>"));
-                        row.append($("<td>" + OrderAddress.postalCode + "</td>"));
+                         	var row = $("<tr />") 
+					    	$("#addressTable").append(row); 
+                        	row.append($("<td>PostalCode:</td>"));
+                        	row.append($("<td>" + OrderAddress.postalCode + "</td>"));
 						
-                 	}	
+                 		}	
                  	
-                 }							
-		      });
+                 	}							
+		      	});
 		
 		    }
       
-      }
-
-	 
+      	}
+	 	
+	 	
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -772,18 +751,22 @@ var orderAddres;
 		       			 <#else>               
 			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.supplierGeoId?exists && parameters.supplierGeoId?has_content>  
+		       				<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${supplierGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
-		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<#--<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>-->  
 		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
-		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/>
+		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/> 
 		       			<#if parameters.contactMechId?exists && parameters.contactMechId?has_content>  
 		       				<input type="hidden" name="contactMechId" id="contactMechId" value="${contactMechId?if_exists}"/>
 		       			 <#else>               
 			          		<input type="hidden" name="contactMechId" id="contactMechId"/>
 			          	</#if>
-			          	
 			          	
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -1015,6 +998,7 @@ var orderAddres;
 		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
+		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${parameters.supplierGeoId?if_exists}"/>
 		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
 		<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
 		
@@ -1032,9 +1016,6 @@ var orderAddres;
     		<div class="screenlet-body">
 				 <form  name="partyDetails" id="partyDetails">
 				 	  	<hr class="style17"></hr>
-				 	  	
-				 	  	
-				 	  	
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
@@ -1057,34 +1038,30 @@ var orderAddres;
 			       			</tr>
 			       			</#if>
 				 	 	</table>	
-				 	 	 
-						    <div id="popup" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
-						        <h1>Address</h1>
-						        <table id ="addressTable"><tbody></tbody></table>
-						        <a href="#" id="close_popup">Close</a>
-						    </div>
+				 	 	
+				 	 	<div id="popup" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
+						     <h1>Address</h1>
+						     <table id ="addressTable"><tbody></tbody></table>
+						     <a href="#" id="close_popup">Close</a>
+						</div>
 						    
 					    <table width="100%">
-					    <tr>
+					    	<tr>
 					    
-					   <td> <input type="button" id="open_popup" class="buttontext" value="View Delivery Address"  /> </td>    
-					    
-					    
-					   <td> <input type="button" class="buttontext" value="Edit Delivery Address" onclick="javascript:manualAddress();" /> </td>
-					   
-					   <td>
-					    <#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
-					    
-					    <input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
-					    <#else>
-					    <input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
-						</#if>
-						</td>		 	 	   
-				 	 	 </tr>
-				 	 	 </table>
+					   			<td> <input type="button" id="open_popup" class="buttontext" value="View Delivery Address"  /> </td>    
+					    		<td> <input type="button" class="buttontext" value="Edit Delivery Address" onclick="javascript:manualAddress();" /> </td>
+					   			<td>
+					    			<#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
+					    				<input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
+					    			<#else>
+					    				<input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
+									</#if>
+								</td>		 	 	   
+				 	 	 	</tr>
+				 	 	</table>
 				 	 	 
 				 	 	<hr class="style18"></hr>
-				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
+				 	  	<table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>
 						<td width="60%">
 		      				<table width="100%" border="1" border-style="solid">

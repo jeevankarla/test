@@ -1384,7 +1384,6 @@ public class DepotSalesServices{
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
 		String transporterId = (String) request.getParameter("transporterId");
 		
-		
 		String cfcId = (String) request.getParameter("cfcId");
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
@@ -1462,6 +1461,9 @@ public class DepotSalesServices{
 		BigDecimal tcsPercent=BigDecimal.ZERO;
 		BigDecimal serviceTaxPercent=BigDecimal.ZERO;*/
 		
+		String applicableTaxType = null;
+		String checkE2Form = null;
+		String checkCForm = null;
 		
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
@@ -1572,12 +1574,22 @@ public class DepotSalesServices{
 							+ thisSuffix);
 				}
 				
-				
+				if (paramMap.containsKey("applicableTaxType" + thisSuffix)) {
+					applicableTaxType = (String) paramMap.get("applicableTaxType"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("checkE2Form" + thisSuffix)) {
+					checkE2Form = (String) paramMap.get("checkE2Form"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("checkCForm" + thisSuffix)) {
+					checkCForm = (String) paramMap.get("checkCForm"
+							+ thisSuffix);
+				}
 				
 				if (paramMap.containsKey("taxList" + thisSuffix)) {
 					taxListStr = (String) paramMap.get("taxList"
 							+ thisSuffix);
-					Debug.log("taxListStr ============ "+taxListStr);
 					
 					String[] taxList = taxListStr.split(",");
 					for (int j = 0; j < taxList.length; j++) {
@@ -1587,7 +1599,6 @@ public class DepotSalesServices{
 						taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
 						taxRateMap.put("amount",BigDecimal.ZERO);
 						taxRateMap.put("taxAuthGeoId", partyGeoId);
-						Debug.log("taxRateMap ============ "+taxRateMap);
 						
 						if (paramMap.containsKey(taxType + thisSuffix)) {
 							String taxPercentage = (String) paramMap.get(taxType + thisSuffix);
@@ -1606,10 +1617,8 @@ public class DepotSalesServices{
 						tempTaxMap.putAll(taxRateMap);
 						
 						taxRateList.add(tempTaxMap);
-						Debug.log("taxRateList ======= 1111 ===== "+taxRateList);
 					}
 				}
-				Debug.log("taxRateList ============ "+taxRateList);
 				if (paramMap.containsKey("unitPrice" + thisSuffix)) {
 					basicPriceStr = (String) paramMap.get("unitPrice"
 							+ thisSuffix);
@@ -1732,6 +1741,11 @@ public class DepotSalesServices{
 				productQtyMap.put("taxRateList", taxRateList);
 				productQtyMap.put("serviceCharge", serviceCharge);
 				productQtyMap.put("serviceChargeAmt", serviceChargeAmt);
+				
+				productQtyMap.put("applicableTaxType", applicableTaxType);
+				productQtyMap.put("checkE2Form", checkE2Form);
+				productQtyMap.put("checkCForm", checkCForm);
+				
 				/*productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
 				productQtyMap.put("tcsPrice", tcsPrice);
@@ -1902,7 +1916,6 @@ public class DepotSalesServices{
 	    String schemeCategory = (String) context.get("schemeCategory");
 	    List<Map> productQtyList = (List) context.get("productQtyList");
 	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
-	    Debug.log(supplyDate+"________________________________%%%");
 	    Locale locale = (Locale) context.get("locale");
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
@@ -2120,6 +2133,10 @@ public class DepotSalesServices{
 			BigDecimal serviceCharge = BigDecimal.ZERO;
 			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 			String bundleUnitPrice="";
+			
+			String applicableTaxType = "";
+			String checkE2Form = "";
+			String checkCForm = "";
 			/*BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
 			BigDecimal cstPrice = BigDecimal.ZERO;
@@ -2136,17 +2153,12 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceChargeAmt"))){
 				serviceChargeAmt = (BigDecimal)prodQtyMap.get("serviceChargeAmt");
 			}
-			Debug.log("serviceCharge ============= "+serviceCharge);
-			Debug.log("serviceChargeAmt ============= "+serviceChargeAmt);
-			
-			Debug.log("prodQtyMap ============= "+prodQtyMap);
 			List taxRateList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxRateList"))){
 				taxRateList = (List)prodQtyMap.get("taxRateList");
-				Debug.log("taxRateList ====== 222 ====== "+taxRateList);
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("customerId"))){
 				customerId = (String)prodQtyMap.get("customerId");
@@ -2166,6 +2178,16 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
 				yarnUOM = (String)prodQtyMap.get("yarnUOM");
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("applicableTaxType"))){
+				applicableTaxType = (String)prodQtyMap.get("applicableTaxType");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkE2Form"))){
+				checkE2Form = (String)prodQtyMap.get("checkE2Form");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkCForm"))){
+				checkCForm = (String)prodQtyMap.get("checkCForm");
+			}
+			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
 				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 			}
@@ -2183,6 +2205,7 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
 				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
 			}
+			
 					
 			//add percentages
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -2274,6 +2297,15 @@ public class DepotSalesServices{
 				}
 				if(UtilValidate.isNotEmpty(bundleUnitPrice)){
 					item.setOrderItemAttribute("BANDLE_UNITPRICE",bundleUnitPrice.toString());
+				}
+				if(UtilValidate.isNotEmpty(applicableTaxType)){
+					item.setOrderItemAttribute("applicableTaxType",applicableTaxType);
+				}
+				if(UtilValidate.isNotEmpty(checkE2Form)){
+					item.setOrderItemAttribute("checkE2Form",checkE2Form);
+				}
+				if(UtilValidate.isNotEmpty(checkCForm)){
+					item.setOrderItemAttribute("checkCForm",checkCForm);
 				}
 				
 				
@@ -2398,7 +2430,6 @@ public class DepotSalesServices{
 				Debug.logError("Error in creating shipmentId for DirectOrder", module);
 				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
 			}
-			
 		}
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
 			orderId = (String) orderCreateResult.get("orderId");
@@ -5701,6 +5732,7 @@ public class DepotSalesServices{
 			}
 			  			
 		}catch (GenericServiceException e) {
+			  Debug.logError(e, e.toString(), module);
 			  return ServiceUtil.returnError("Problem cancelling order");
 		}
 		result.put("salesChannelEnumId", salesChannelEnumId);
@@ -6733,6 +6765,7 @@ public class DepotSalesServices{
 	    String shipmentId = (String) context.get("shipmentId");
 	    String orderId = (String) context.get("orderId");
 	    String billToPartyId = (String) context.get("billToPartyId");
+	    String purchaseInvoiceId = (String) context.get("purchaseInvoiceId");
 	    
 	    List<GenericValue> items = null;
 	    try {
@@ -6746,6 +6779,18 @@ public class DepotSalesServices{
             Debug.logInfo("No items issued for shipments", module);
             return ServiceUtil.returnSuccess();
         }
+	    
+	    List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+		List<GenericValue> invoiceItemList =null;
+		try{
+	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
 	    
 	    GenericValue orderHeader = null;
 	    try {
@@ -6848,6 +6893,52 @@ public class DepotSalesServices{
 			Debug.logError("Error in updating shipment in invoice", module);
 			return ServiceUtil.returnError("Error in updating shipment in invoice");
 		}
+        
+        // Indentify the adjustments applied to purchase invoice and apply them to the sales invoice
+        
+        /*List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+		List<GenericValue> invoiceItemList =null;
+		try{
+	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
+		Debug.log("sales invoiceItemList ======"+invoiceItemList);*/
+        
+        for(int i=0; i<invoiceItemList.size(); i++){
+        	
+        	GenericValue eachItem = invoiceItemList.get(i);
+        	
+        	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+            createInvoiceItemContext.put("invoiceId",invoiceId);
+            createInvoiceItemContext.put("invoiceItemTypeId", eachItem.get("invoiceItemTypeId"));
+            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
+            createInvoiceItemContext.put("description", eachItem.get("description"));
+            createInvoiceItemContext.put("quantity",eachItem.get("quantity"));
+            createInvoiceItemContext.put("amount",eachItem.getBigDecimal("amount"));
+            createInvoiceItemContext.put("productId", eachItem.get("productId"));
+            createInvoiceItemContext.put("userLogin", userLogin);
+            try{
+            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+            	if(ServiceUtil.isError(createInvoiceItemResult)){
+            		String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
+                    Debug.logError(errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+          		}
+            } catch (Exception e) {
+            	String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+    		}
+        }
+        
+        
+        
+        
         
         BigDecimal invoiceAmount = BigDecimal.ZERO;
         BigDecimal outstandingAmount = BigDecimal.ZERO;
@@ -8131,8 +8222,8 @@ public class DepotSalesServices{
 			 Debug.logError("-----------error-------------- : "+e.toString(), module);
 		 } 
 		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
-	return result;
-}
+		return result;
+	}	
 	public static Map<String, Object> updateIndentSummaryPO(DispatchContext ctx, Map<String, ? extends Object> context){ 
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = ctx.getDelegator();
@@ -8326,7 +8417,13 @@ public class DepotSalesServices{
 		  	 			return ServiceUtil.returnError(" Error While getting getMaterialItemValuationDetails !"+errMsg);
 					}
 					List<Map> itemDetails = (List)result.get("itemDetail");
+									
+					
+					
 			  	}
+	  	 		
+	  	 		
+	  	 		
 				
 			}catch(Exception e){
 				try {
@@ -8349,11 +8446,9 @@ public class DepotSalesServices{
 			 Debug.logError("-----------error-------------- : "+e.toString(), module);
 		 } 
 		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
-	return result;
-}
-
+		return result;
+	}	
 	
-
 	public static Map<String, Object> editPartyLooms(DispatchContext ctx, Map<String, ? extends Object> context){ 
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = ctx.getDelegator();

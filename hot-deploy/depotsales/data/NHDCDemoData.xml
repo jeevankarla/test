@@ -395,4 +395,27 @@ under the License.
 	<TaxAuthorityRateType taxAuthorityRateTypeId="VAT_SURCHARGE" parentTypeId="VAT_SALE" description="Surcharge On VAT"/> 
 	
 	
+	
+	<InvoiceItemType invoiceItemTypeId="ADDITIONAL_CHARGES" description="Additional Charges"/> 
+	<InvoiceItemType invoiceItemTypeId="DISCOUNTS" description="Discounts"/> 
+	
+	<InvoiceItemType invoiceItemTypeId="PRICE_DISCOUNT" parentTypeId="DISCOUNTS" description="Price Discount"/> 
+	<InvoiceItemType invoiceItemTypeId="OTHER_DISCOUNT" parentTypeId="DISCOUNTS" description="Other Discounts"/> 
+	
+	<InvoiceItemType invoiceItemTypeId="INSURANCE_CHGS" parentTypeId="ADDITIONAL_CHARGES" description="Insurance Charges"/> 
+	<InvoiceItemType invoiceItemTypeId="PACKING_FORWARDIG" parentTypeId="ADDITIONAL_CHARGES" description="Packing And Forwarding Charges"/>
+	<InvoiceItemType invoiceItemTypeId="OTHER_CHARGES" parentTypeId="ADDITIONAL_CHARGES" description="Other Charges"/> 
+	
+	<InvoiceItemTypeAttr invoiceItemTypeId="PRICE_DISCOUNT" attrName="ASSESSABLE_VALUE"/> 
+	<InvoiceItemTypeAttr invoiceItemTypeId="OTHER_DISCOUNT" attrName="ASSESSABLE_VALUE"/>
+	
+	<InvoiceItemType invoiceItemTypeId="TAX_PURCHASE" description="Tax Purchase"/> 
+	<InvoiceItemType invoiceItemTypeId="CST_PUR" parentTypeId="TAX_PURCHASE" description="CST"/> 
+	<InvoiceItemType invoiceItemTypeId="VAT_PUR" parentTypeId="TAX_PURCHASE" description="VAT"/> 
+	
+	<InvoiceItemType invoiceItemTypeId="TAX_SALE" description="Tax Purchase"/> 
+	<InvoiceItemType invoiceItemTypeId="CST_SALE" parentTypeId="TAX_SALE" description="CST"/> 
+	<InvoiceItemType invoiceItemTypeId="VAT_SALE" parentTypeId="TAX_SALE" description="VAT"/> 
+	
+	
 </entity-engine-xml>

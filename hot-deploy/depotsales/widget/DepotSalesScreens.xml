@@ -475,6 +475,12 @@
 				<set field="disableAcctgFlag" value="Y" />
 				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
 				<set field="partyId" from-field="parameters.partyId" />
+				<set field="cfcs" from-field="parameters.cfcs" />
+				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
+				<set field="referenceNo" from-field="parameters.referenceNo" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/AdhocIndentFormDepot.groovy" />
 				<script
@@ -1528,7 +1534,7 @@
 				<set field="defaultEffectiveDate"
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 				<script
-					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseInvoiceEntryForm.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/PurchaseInvoiceEntryForm.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="BranchTransactionsCommonDecorator"
@@ -4700,6 +4706,7 @@
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
@@ -4878,10 +4885,10 @@
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
-				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -5398,6 +5405,7 @@
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -5576,6 +5584,7 @@
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -5755,6 +5764,7 @@
 				<set field="salesChannel" from-field="parameters.salesChannel" />
 				<set field="partyGeoId" from-field="parameters.partyGeoId" />
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -6480,7 +6490,7 @@
 			</widgets>
 		</section>
 	</screen>
-	      <screen name="orderAmend">
+	<screen name="orderAmend">
     		<section>
     			<actions>
     				<set field="titleProperty" value="Indent Amend" />
@@ -6588,4 +6598,3 @@
     		</section>
     	</screen> 
 </screens>
- 
