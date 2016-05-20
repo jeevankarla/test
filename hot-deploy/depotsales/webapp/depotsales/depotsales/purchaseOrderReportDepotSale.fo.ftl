@@ -38,6 +38,7 @@ under the License.
         <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
 			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
  			<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PURCHASE ORDER </fo:block>
  			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
  			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOAddress?if_exists}</fo:block>
 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -48,7 +49,7 @@ under the License.
 					<fo:table-column column-width="200pt"/>               
 					    <fo:table-body>
                               <fo:table-row>
-				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Tin No &#160;  : 09152300064</fo:block></fo:table-cell> 
+				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TIN No &#160;  : 09152300064</fo:block></fo:table-cell> 
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >${BOEmail?if_exists} </fo:block></fo:table-cell>       			
                                </fo:table-row>
@@ -59,7 +60,6 @@ under the License.
 			    </fo:table>
 			</fo:block>	
             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >--------------------------------------------------------------------------------------------------- </fo:block>
-            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PURCHASE ORDER </fo:block>
 	        <fo:block >
 			   <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
 			   <fo:table-column column-width="250pt"/>               
@@ -68,10 +68,9 @@ under the License.
 			   <fo:table-column column-width="100pt"/>               
 				   <fo:table-body>
 				       <fo:table-row>
-				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >PO NO   &#160;  : ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
+				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >P.O.NO: ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >PO DATE</fo:block></fo:table-cell>       		
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left" keep-together="always" font-size="11pt" number-columns-spanned="2" >P.O.DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
 				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  ><#if allDetailsMap.get("refNo")?has_content> Reference NO   &#160;: ${allDetailsMap.get("refNo")?if_exists}</#if></fo:block></fo:table-cell>
@@ -86,13 +85,13 @@ under the License.
 			   <fo:table-column column-width="800pt"/>               
 				   <fo:table-body>
                       <fo:table-row>
-						  <fo:table-cell><fo:block text-align="left" font-size="11pt">&#160;&#160;&#160;&#160; Form for purchase of Yarn from NTC/Co-operative/State Sector Agencies with terms of conditions</fo:block></fo:table-cell>
+						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Yarn  with terms and conditions</fo:block></fo:table-cell>
                       </fo:table-row>
 			      </fo:table-body>
 			  </fo:table>
 		  </fo:block>	
       	 <#--<fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;</fo:block>-->
-      	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO: </fo:block>
+      	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO </fo:block>
          <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${supppartyName}</fo:block>        
          <#if suppAdd?has_content>
         <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${suppAdd.address1?if_exists}</fo:block>
@@ -116,7 +115,7 @@ under the License.
 						<fo:table-cell><fo:block text-align="left" font-size="11pt">Dear Sir,</fo:block></fo:table-cell>
                       </fo:table-row>
                       <fo:table-row>
-						<fo:table-cell><fo:block text-align="left" font-size="11pt">Please supply the following items as per the terms and conditions overleaf. All goods should be consigned to self and booked to NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. freight TO PAY basis unless otherwise specified</fo:block></fo:table-cell>
+						<fo:table-cell><fo:block text-align="left" font-size="11pt">Please supply the following items as per the terms and conditions overleaf. All goods should be consigned to self and booked to NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. FREIGHT TO PAY basis unless otherwise specified.</fo:block></fo:table-cell>
                       </fo:table-row>
 	               </fo:table-body>
 	           </fo:table>
@@ -129,9 +128,9 @@ under the License.
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteId")?has_content>QUOTATION NO     :${allDetailsMap.get("quoteId")?if_exists}</#if>                                            <#if allDetailsMap.get("qutationDate")?has_content> DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("qutationDate")?if_exists, "dd-MMM-yy")} </#if>   <#if allDetailsMap.get("qutationDateAttr")?has_content> DATE:${allDetailsMap.get("qutationDateAttr")?if_exists}</#if> </fo:block>
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteRef")?has_content>QUOTE REF NO     :${allDetailsMap.get("quoteRef")?if_exists}</#if>       </fo:block>
          <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
-      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM             REMARKS       QUANTITY       BASIC RATE    AMOUNT</fo:block>
-      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;                                            (Kgs)           (Rs)        (Rs)     </fo:block>
-      	 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
+      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM             REMARKS       QUANTITY       BASIC RATE            AMOUNT</fo:block>
+      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;                                            (Kgs)           (Rs)                (Rs)     </fo:block>
+      	<#-- <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>-->
     	 <fo:block>
             <fo:table text-align="center" >
             <fo:table-column column-width="50pt"/>
@@ -146,13 +145,19 @@ under the License.
 				  <#assign productId= orderListItem("productId")?if_exists >
 		          <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
 		           <#if productNameDetails?has_content> 
-                  	 <fo:table-row >
-                	   <fo:table-cell ><fo:block text-align="center"  font-size="12pt" >${sNo} </fo:block></fo:table-cell>     
-  				  	   <fo:table-cell ><fo:block text-align="left" font-size="9pt"> ${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("remarks")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center"  font-size="12pt">${orderListItem.get("quantity")?if_exists?string("##0.000")}</fo:block></fo:table-cell>     
-  			           <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="left"  font-size="12pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
+                  	 <fo:table-row  border-style="solid">
+                	   <fo:table-cell ><fo:block text-align="center"  font-size="10pt" >${sNo} </fo:block></fo:table-cell>     
+  				  	   <fo:table-cell ><fo:block text-align="left" font-size="10pt"> ${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("remarks")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  >
+  				      	 	<fo:block text-align="center"  font-size="10pt">${orderListItem.get("quantity")?if_exists?string("##0.000")}</fo:block>
+							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("Unit")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("baleqty")?if_exists?string("##0.000")}(${orderListItem.get("Unit")?if_exists})<#else></#if></fo:block>
+						</fo:table-cell>     
+  			           <fo:table-cell  >
+  			           		<fo:block text-align="center"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block>
+							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("bundleUnitListPrice")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("bundleUnitListPrice")?if_exists?string("##0.00")}(Bundle)<#else></#if></fo:block>
+  			           </fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				     </fo:table-row>
   				    	<#assign sNo=sNo+1>
   				    	</#if>
@@ -160,8 +165,8 @@ under the License.
                 </fo:table-body>
            </fo:table>
        </fo:block>
-       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>
-       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TAXES AND OTHER CHARGES DETAILS : &#160;0.00  </fo:block> 
+       <#--><fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>-->
+       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;OTHER CHARGES(Packing/Loading Forwarding/others) : &#160;0.00  </fo:block> 
        <#if allDetailsMap.get("total")?has_content> 
        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TOTAL VALUE (RS) : &#160;${allDetailsMap.get("total")?if_exists?string("##0.00")}</fo:block> </#if>
 	   <#if parentMap?has_content>
@@ -287,7 +292,7 @@ under the License.
 			<fo:table-body>	
 			    <fo:table-row>
 					<fo:table-cell><fo:block text-align="left" font-size="11pt">2</fo:block></fo:table-cell>
-					<fo:table-cell><fo:block text-align="left" font-size="11pt">DISPATCH INSTRUCTIONS:</fo:block></fo:table-cell>
+					<fo:table-cell><fo:block text-align="left" font-size="11pt">DESPATCH INSTRUCTIONS:</fo:block></fo:table-cell>
                 </fo:table-row>		                 
 	            <fo:table-row border-style="solid">
                     <fo:table-cell border-style="solid">
@@ -351,7 +356,7 @@ under the License.
 			<fo:table-body>
                <fo:table-row>
 				  <fo:table-cell><fo:block text-align="left" font-size="11pt">3</fo:block></fo:table-cell>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Dispatch Goods Through Registered Common Carriers Only</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Despatch Goods Through Registered Common Carriers Only</fo:block></fo:table-cell>
                </fo:table-row>
 	        </fo:table-body>
 	   </fo:table>
@@ -398,14 +403,22 @@ under the License.
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >Payment to mills will be released only after receipt of payment from user agency  </fo:block>     
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;Sub Standard Goods will be returned at your cost and risk  </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;</fo:block>
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Jr. Asstt/ Supdt(y) / Asstt. Manager (y) </fo:block>
+        
+        
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Checked by: </fo:block>
-        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+        <fo:block>
+        	&#160;
+        </fo:block>
+        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Officer(C)/Sr.Officer(C)/A.M.(C)/D.M.(C)/M(C) </fo:block>
+        
+        
+        
+        <#--<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>-->
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Copy to: </fo:block>
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >1. Indentor </fo:block>
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >2. Finance and Account Department </fo:block>
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >3. Dealing Section in Purchase  </fo:block>
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >4. Purchase Master File </fo:block>
+        <#--><fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >1. Indentor </fo:block>-->
+        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >1. Finance and Account Department </fo:block>
+       <#--> <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >3. Dealing Section in Purchase  </fo:block>-->
+        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >2. Purchase Master File </fo:block>
         <#if signature?has_content> 
           <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;       ${signature} &#160;&#160; </fo:block>
         <#else>

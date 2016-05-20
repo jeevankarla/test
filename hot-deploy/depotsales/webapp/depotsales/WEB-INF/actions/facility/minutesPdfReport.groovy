@@ -28,15 +28,19 @@ rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 dctx = dispatcher.getDispatchContext();
 
 context.partyName = parameters.partyName;
+partyId = parameters.partyId;
+Debug.log("partyId========"+partyId);
 consList=[];
 consList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 /*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
 condEXr = EntityCondition.makeCondition(consList, EntityOperator.AND);
 orderItemAttr = delegator.findList("OrderItemAttribute", condEXr, null, null, null, false);
-
-
  orderHeaderList = delegator.findOne("OrderHeader", [orderId : parameters.orderId], false);
- 
+ heldOnDate = "";
+ if(orderHeaderList.get("statusId") == "APPROVE_LEVEL3"){
+	 heldOnDate = orderHeaderList.get("lastUpdatedStamp");
+ }
+context.heldOnDate = heldOnDate;
  orderDate = orderHeaderList.get("orderDate");
  
  externalOrderId = orderHeaderList.get("externalId");
@@ -50,7 +54,7 @@ productStoreId = orderHeaderList.get("productStoreId");
 branchId="";
 if (productStoreId) {
 	productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
-	branchId=productStore.payToPartyId;	
+	branchId=productStore.payToPartyId;
 }
 //get Report Header
 branchContext=[:];
@@ -113,7 +117,7 @@ paymentDetailList = delegator.findList("Payment", cond2, null, null, null ,false
 paymentRefNumList =[];
 paymentDetailList.each{eachPayment->
 	if((eachPayment) && (eachPayment.paymentRefNum)){
-		paymentRefNum = eachPayment.paymentRefNum; 
+		paymentRefNum = eachPayment.paymentRefNum;
 		paymentRefNumList.add(paymentRefNum);
 	}
 	
@@ -133,7 +137,7 @@ PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
   if(UtilValidate.isNotEmpty(PaymentList)){
    for (eachPayment in PaymentList) {
 	   totAmt = totAmt+eachPayment.amount;
-      }
+	  }
    }
 
  }
@@ -203,6 +207,17 @@ conditionList=[];
 			supplierHindiPartyId = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
 			}
 			
+			if(UtilValidate.isEmpty(partyId)){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_TO_CUSTOMER"));
+				
+				condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				orderRoleAgencyList = EntityUtil.getFirst(delegator.findList("OrderRole", condition1,  UtilMisc.toSet("partyId"), null, null, false));
+				if(UtilValidate.isNotEmpty(orderRoleAgencyList)){					
+					partyId=orderRoleAgencyList.partyId;
+				}
+			}
 			context.supplierPartyId = supplierPartyId;
 			
 			context.supplierHindiPartyId = supplierHindiPartyId;
@@ -328,32 +343,59 @@ conditionList=[];
 				 bedPercent=productSummary.get("bedPercent")
 				 cstPercent=productSummary.get("cstPercent")
 				 vatPercent=productSummary.get("vatPercent")
-				 itemSeqList=productSummary.get("itemSeqList");				
+				 itemSeqList=productSummary.get("itemSeqList");
+				 bundleWeight=productSummary.get("bundleQuantity");
+				 unit=productSummary.get("Unit");
+				 bundleUnitListPrice=productSummary.get("bundleUnitListPrice");
+				 Debug.log("bundleWeight================="+bundleWeight+"========"+unit);
+				 baleqty=0;
+				 if(bundleWeight && bundleWeight!="0"){
+					 if("Bale".equals(unit)){
+						 baleqty=bundleWeight/40;
+					 }else if("Half-Bale".equals(unit)){
+						 baleqty=bundleWeight/20;
+					 }else{
+						 baleqty=bundleWeight;
+					 }
+				 }
 				 conditionList1=[];
-				 conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));		 
+				 conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 				 conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
-				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));		 
+				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));
 				 condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);	
-				 AttrName="";		 				 				 
+				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+				 AttrName="";
+				 double schemeAmt = 0;
 				 orderItemAttr.each{ eachAttr ->
 					 AttrName=eachAttr.attrValue;
 					 remarkMap.put(eachAttr.orderItemSeqId, eachAttr.attrValue);
-				 }
-				  tempMap = [:];
+				/*	 if(eachAttr.attrName == "quotaQty"){
+						 schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
+					 }
+				*/ }
+				 Map tempMap = [:];
 				  productName = ""
 				  prod=delegator.findOne("Product",[productId:productId],false);
 				  tempMap.put("productId", productId);
 				  tempMap.put("remarks", AttrName);
 				  tempMap.put("quantity", quantity);
-				  
+				  tempMap["Unit"]=unit;
+				  tempMap["baleqty"]=baleqty;
+				  tempMap["bundleUnitListPrice"]=bundleUnitListPrice;
+				  mgpsQty =0;
+				  if(quantity > schemeAmt)
+				  mgpsQty = schemeAmt;
+				  else
+				  mgpsQty = quantity;
+				  tempMap.put("mgpsQty", mgpsQty);
 				  /*changeDatetime = eachOrderItem.changeDatetime;
 				  context.changeDatetime = changeDatetime;*/
-				  
 				  unitPrice=productSummary.get("unitListPrice");
 				  context.unitPrice = unitPrice;
+				  if(unitPrice)  
 				  tempMap.put("unitPrice", unitPrice);
-				  
+				  else
+				  tempMap.put("unitPrice", "");
 				  String srNoStr = SrNo;
 				  char firSrno = srNoStr.charAt(0);
 				  srNoStr = String.valueOf(firSrno)+srNoStr;
@@ -365,11 +407,10 @@ conditionList=[];
 					  char firstProChr = productNameStr.charAt(0);
 					  productNameStr = String.valueOf(firstProChr)+productNameStr;
 					  tempMap.put("productName", productNameStr);
-					  
 				  }else{
 					  tempMap.put("productName", productName);
 				  }
-				   double annum = 0;
+				  double annum = 0;
 				  if(UtilValidate.isNotEmpty(quantity)&& UtilValidate.isNotEmpty(unitPrice)){
 				  
 					  annum = (double) (unitPrice*quantity);
@@ -382,13 +423,62 @@ conditionList=[];
 				  }else{
 				  tempMap.put("annum", 0);
 				  }
-				  
 				  totannum = totannum+annum;
+				  if(quantity)
 				  totQuantity = totQuantity+quantity;
-				  orderedHindiItemList.add(tempMap);				  				  
+				  orderedHindiItemList.add(tempMap);
 				  SrNo = SrNo+1;
-				 OrderItems.add(tempMap);				 				 
+				 OrderItems.add(tempMap);
 			}
+			finalAddresList=[];
+			address1="";
+			address2="";
+			city="";
+			postalCode="";
+			panId="";
+			tanId="";
+			supplierPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:supplierPartyId, userLogin: userLogin]);
+			weaverPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+			SupplierCity=supplierPostalAddress.city;
+			weaverCity=weaverPostalAddress.city;
+			context.SupplierCity = SupplierCity;
+			context.weaverCity = weaverCity;
+		/*	if(partyPostalAddress){
+				
+			   if(partyPostalAddress.address1){
+				   address1=partyPostalAddress.address1;
+			   }
+			   tempMap=[:];
+			   tempMap.put("key1","Road / Street / Lane");
+			   tempMap.put("key2",address1);
+			   finalAddresList.add(tempMap);
+			   if(partyPostalAddress.address2){
+				   address2=partyPostalAddress.address2;
+			   }
+			   tempMap=[:];
+			   tempMap.put("key1","Area / Locality");
+			   tempMap.put("key2",address2);
+			   finalAddresList.add(tempMap);
+			   if(partyPostalAddress.city){
+				   
+				   city=partyPostalAddress.city;
+			   }
+			   tempMap=[:];
+			   tempMap.put("key1","Town / District / City");
+			   tempMap.put("key2",city);
+			   finalAddresList.add(tempMap);
+			   
+			   if(partyPostalAddress.postalCode){
+				   postalCode=partyPostalAddress.postalCode;
+			   }
+			   tempMap=[:];
+			   tempMap.put("key1","PIN Code");
+			   tempMap.put("key2",postalCode);
+			   finalAddresList.add(tempMap);
+			   
+			}*/
+			
+	context.finalAddresList = finalAddresList;		
 	context.OrderItemList = OrderItems;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
