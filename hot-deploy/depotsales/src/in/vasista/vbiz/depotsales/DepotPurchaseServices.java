@@ -133,7 +133,10 @@ public class DepotPurchaseServices{
 		}
 		List productQtyList = FastList.newInstance();
 		List invoiceAdjChargesList = FastList.newInstance();
+		List invoiceDiscountsList = FastList.newInstance();
+		
 		String applicableTo = "ALL";
+		String applicableToDisc = "ALL";
 		for (int i = 0; i < rowCount; i++) {
 			
 			Map prodQtyMap = FastMap.newInstance();
@@ -141,6 +144,10 @@ public class DepotPurchaseServices{
 			String invoiceItemTypeId = "";
 			String adjAmtStr = "";
 			BigDecimal adjAmt = BigDecimal.ZERO;
+			
+			String invoiceItemDiscTypeId = "";
+			String adjAmtDiscStr = "";
+			BigDecimal adjDiscAmt = BigDecimal.ZERO;
 			
 			String vatStr=null;
 			String cstStr=null;
@@ -189,12 +196,45 @@ public class DepotPurchaseServices{
 			
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
 				Map invItemMap = FastMap.newInstance();
-				invItemMap.put("otherTermId", invoiceItemTypeId);
-				invItemMap.put("termValue", adjAmt);
+				invItemMap.put("adjustmentTypeId", invoiceItemTypeId);
+				invItemMap.put("amount", adjAmt);
 				invItemMap.put("uomId", "INR");
 				invItemMap.put("applicableTo", applicableTo);
 				invoiceAdjChargesList.add(invItemMap);	
 			}
+			
+			
+			if (paramMap.containsKey("invoiceItemTypeDiscId" + thisSuffix)) {
+				invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
+			}
+			
+			if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
+				applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
+			}
+			
+			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
+				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
+			}
+			
+			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
+				try {
+					adjDiscAmt = new BigDecimal(adjAmtDiscStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing amount string: " + adjAmtStr, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + adjAmtStr);
+					return "error";
+				}
+			}
+			
+			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
+				Map invItemMap = FastMap.newInstance();
+				invItemMap.put("adjustmentTypeId", invoiceItemDiscTypeId);
+				invItemMap.put("amount", adjDiscAmt);
+				invItemMap.put("uomId", "INR");
+				invItemMap.put("applicableTo", applicableToDisc);
+				invoiceDiscountsList.add(invItemMap);	
+			}
+			
 			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
@@ -327,6 +367,8 @@ public class DepotPurchaseServices{
 		processInvoiceContext.put("shipmentId", shipmentId);
 		processInvoiceContext.put("invoiceDate", invoiceDate);
 		processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
+		processInvoiceContext.put("invoiceDiscountsList", invoiceDiscountsList);
+		
 		if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			processInvoiceContext.put("isDisableAcctg", isDisableAcctg);
 		}
@@ -655,6 +697,8 @@ public class DepotPurchaseServices{
 		    Map<String, Object> result = ServiceUtil.returnSuccess();
 		    List<Map> productQtyList = (List) context.get("productQtyList");
 		    List<Map> invoiceAdjChargesList = (List) context.get("invoiceAdjChargesList");
+		    List<Map> invoiceDiscountsList = (List) context.get("invoiceDiscountsList");
+		    
 		    Timestamp invoiceDate = (Timestamp) context.get("invoiceDate");
 		    Locale locale = (Locale) context.get("locale");
 		  	String purposeTypeId = (String) context.get("purposeTypeId");
@@ -720,15 +764,20 @@ public class DepotPurchaseServices{
 					Debug.logError("Invoices already generated for shipment : "+shipmentId, module);
 					return ServiceUtil.returnError("Invoices already generated for shipment : "+shipmentId);
 				}
-				Map resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQtyList, "otherCharges", invoiceAdjChargesList, "userLogin", userLogin, "incTax", ""));
+				
+				/*Map resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQtyList, "otherCharges", invoiceAdjChargesList, "userLogin", userLogin, "incTax", ""));
 				if(ServiceUtil.isError(resultCtx)){
 	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
 	  		  		Debug.logError(errMsg , module);
 	  		  		return ServiceUtil.returnError(errMsg);
-				}
-				Debug.log("#####resultCtx#########"+resultCtx);
-				List<Map> itemDetails = (List)resultCtx.get("itemDetail");
-				List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
+				}*/
+				//Debug.log("#####resultCtx#########"+resultCtx);
+				//List<Map> itemDetails = (List)resultCtx.get("itemDetail");
+				//List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
+				
+				//invoiceDiscountsList
+				
+				
 				Map input = FastMap.newInstance();
 				input.put("userLogin", userLogin);
 		        input.put("invoiceTypeId", "PURCHASE_INVOICE");        
@@ -750,12 +799,18 @@ public class DepotPurchaseServices{
 				}
 				
 				String invoiceId = (String)result.get("invoiceId");
-				for (Map<String, Object> prodQtyMap : itemDetails) {
+				
+				Map itemSeqMap = FastMap.newInstance();
+				
+				for (Map<String, Object> prodQtyMap : productQtyList) {
 					
 					String productId = "";
 					BigDecimal quantity = BigDecimal.ZERO;
 					BigDecimal amount = BigDecimal.ZERO;
 					Map invoiceItemCtx = FastMap.newInstance();
+					Map vatItemCtx = FastMap.newInstance();
+					Map cstItemCtx = FastMap.newInstance();
+					
 					BigDecimal unitListPrice = BigDecimal.ZERO;
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 						productId = (String)prodQtyMap.get("productId");
@@ -768,7 +823,7 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 						amount = (BigDecimal)prodQtyMap.get("unitPrice");
 						BigDecimal unitPrice = amount;
-						if(UtilValidate.isNotEmpty(prodQtyMap.get("bedUnitRate"))){
+						/*if(UtilValidate.isNotEmpty(prodQtyMap.get("bedUnitRate"))){
 							unitPrice = unitPrice.add((BigDecimal)prodQtyMap.get("bedUnitRate"));
 						}
 						if(UtilValidate.isNotEmpty(prodQtyMap.get("bedcessUnitRate"))){
@@ -776,37 +831,44 @@ public class DepotPurchaseServices{
 						}
 						if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessUnitRate"))){
 							unitPrice = unitPrice.add((BigDecimal)prodQtyMap.get("bedseccessUnitRate"));
-						}
+						}*/
 						invoiceItemCtx.put("amount", unitPrice);
 						invoiceItemCtx.put("unitPrice", unitPrice);
 						
 					}
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
 						unitListPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
 						invoiceItemCtx.put("unitListPrice", unitListPrice);
-					}
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+					}*/
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
 						BigDecimal vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
 						if(vatPercent.compareTo(BigDecimal.ZERO)>0){
-							invoiceItemCtx.put("vatPercent", vatPercent);
+							vatItemCtx.put("vatPercent", vatPercent);
 						}
-					}
+					}*/
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
 						BigDecimal vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
 						if(vatAmount.compareTo(BigDecimal.ZERO)>0){
-							invoiceItemCtx.put("vatAmount", vatAmount);
+							vatItemCtx.put("invoiceItemTypeId", "VAT_PUR");
+							vatItemCtx.put("amount", vatAmount);
+							vatItemCtx.put("quantity", BigDecimal.ONE);
+							vatItemCtx.put("description", "VAT");
 						}
+						
 					}
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 						BigDecimal cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
 						if(cstPercent.compareTo(BigDecimal.ZERO)>0){
 							invoiceItemCtx.put("cstPercent", cstPercent);
 						}
-					}
+					}*/
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
 						BigDecimal cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
 						if(cstAmount.compareTo(BigDecimal.ZERO)>0){
-							invoiceItemCtx.put("cstAmount", cstAmount);
+							cstItemCtx.put("invoiceItemTypeId", "CST_PUR");
+							cstItemCtx.put("amount", cstAmount);
+							cstItemCtx.put("quantity", BigDecimal.ONE);
+							vatItemCtx.put("description", "CST");
 						}
 					}
 					invoiceItemCtx.put("invoiceId", invoiceId);
@@ -819,6 +881,31 @@ public class DepotPurchaseServices{
 						return ServiceUtil.returnError("Error creating Invoice item for product : "+productId);
 					}
 					String invItemSeqId = (String) result.get("invoiceItemSeqId");
+					
+					itemSeqMap.put(productId, invItemSeqId);
+					
+					if(UtilValidate.isNotEmpty(vatItemCtx)){
+						vatItemCtx.put("invoiceId", invoiceId);
+						vatItemCtx.put("parentInvoiceId", invoiceId);
+						vatItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+						vatItemCtx.put("userLogin", userLogin);
+						result = dispatcher.runSync("createInvoiceItem", vatItemCtx);
+						if (ServiceUtil.isError(result)) {
+							Debug.logError("Error creating Invoice item for Item : VAT PUR", module);	
+							return ServiceUtil.returnError("Error creating Invoice item for Item : VAT PUR");
+						}
+					}
+					if(UtilValidate.isNotEmpty(cstItemCtx)){
+						vatItemCtx.put("invoiceId", invoiceId);
+						cstItemCtx.put("parentInvoiceId", invoiceId);
+						cstItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+						cstItemCtx.put("userLogin", userLogin);
+						result = dispatcher.runSync("createInvoiceItem", cstItemCtx);
+						if (ServiceUtil.isError(result)) {
+							Debug.logError("Error creating Invoice item for Item: CST PUR", module);	
+							return ServiceUtil.returnError("Error creating Invoice item for Item: CST PUR");
+						}
+					}
 					
 					List<GenericValue> receipts = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 					if(UtilValidate.isNotEmpty(receipts)){
@@ -833,9 +920,10 @@ public class DepotPurchaseServices{
 					}
 				}
 				
-				for (Map<String, Object> adjustMap : adjustmentDetail) {
+				for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
 					
 					String adjustmentTypeId = "";
+					String applicableTo = "";
 					BigDecimal amount = BigDecimal.ZERO;
 					Map invoiceItemCtx = FastMap.newInstance();
 					if(UtilValidate.isNotEmpty(adjustMap.get("adjustmentTypeId"))){
@@ -850,6 +938,54 @@ public class DepotPurchaseServices{
 						invoiceItemCtx.put("invoiceId", invoiceId);
 						invoiceItemCtx.put("quantity", BigDecimal.ONE);
 						invoiceItemCtx.put("userLogin", userLogin);
+						
+						invoiceItemCtx.put("parentInvoiceId", invoiceId);
+						if( (UtilValidate.isNotEmpty(adjustMap.get("applicableTo")))  &&    (!(adjustMap.get("applicableTo")).equals("ALL"))  ){
+							applicableTo = (String)adjustMap.get("applicableTo");
+							if( UtilValidate.isNotEmpty(itemSeqMap.get(applicableTo))) {
+								String seqId = (String)itemSeqMap.get(applicableTo);
+								invoiceItemCtx.put("parentInvoiceItemSeqId", seqId);
+							}
+						}
+						
+						result = dispatcher.runSync("createInvoiceItem", invoiceItemCtx);
+						if (ServiceUtil.isError(result)) {
+							Debug.logError("Error creating Invoice item for Item : "+adjustmentTypeId, module);	
+							return ServiceUtil.returnError("Error creating Invoice item for Item : "+adjustmentTypeId);
+						}
+						String invItemSeqId = (String) result.get("invoiceItemSeqId");
+					}
+					
+				}
+				
+				for (Map<String, Object> adjustMap : invoiceDiscountsList) {
+					
+					String adjustmentTypeId = "";
+					String applicableTo = "";
+					BigDecimal amount = BigDecimal.ZERO;
+					Map invoiceItemCtx = FastMap.newInstance();
+					if(UtilValidate.isNotEmpty(adjustMap.get("adjustmentTypeId"))){
+						adjustmentTypeId = (String)adjustMap.get("adjustmentTypeId");
+						invoiceItemCtx.put("invoiceItemTypeId", adjustmentTypeId);
+					}
+					if(UtilValidate.isNotEmpty(adjustMap.get("amount"))){
+						amount = (BigDecimal)adjustMap.get("amount");
+						invoiceItemCtx.put("amount", amount.negate());
+					}
+					if(UtilValidate.isNotEmpty(adjustmentTypeId) && !(amount.compareTo(BigDecimal.ZERO) == 0)){
+						invoiceItemCtx.put("invoiceId", invoiceId);
+						invoiceItemCtx.put("quantity", BigDecimal.ONE);
+						invoiceItemCtx.put("userLogin", userLogin);
+						
+						invoiceItemCtx.put("parentInvoiceId", invoiceId);
+						if( (UtilValidate.isNotEmpty(adjustMap.get("applicableTo")))  &&    (!(adjustMap.get("applicableTo")).equals("ALL"))  ){
+							applicableTo = (String)adjustMap.get("applicableTo");
+							if( UtilValidate.isNotEmpty(itemSeqMap.get(applicableTo))) {
+								String seqId = (String)itemSeqMap.get(applicableTo);
+								invoiceItemCtx.put("parentInvoiceItemSeqId", seqId);
+							}
+						}
+						
 						result = dispatcher.runSync("createInvoiceItem", invoiceItemCtx);
 						if (ServiceUtil.isError(result)) {
 							Debug.logError("Error creating Invoice item for Item : "+adjustmentTypeId, module);	
