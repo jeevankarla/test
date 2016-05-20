@@ -78,8 +78,8 @@
 	}
 	
 </style>			
-
-<#include "EditUDPPriceDepot.ftl"/>			
+	
+<#include "EditUDPPriceDepot.ftl"/>		
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -163,13 +163,15 @@
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			
+			var serviceCharge = data[rowCount]["taxAmt"];
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
+			var checkE2Form = data[rowCount]["checkE2Form"];
+			var applicableTaxType = data[rowCount]["applicableTaxType"];
+			var checkCForm = data[rowCount]["checkCForm"];
 			
-			
-			
+			$("#orderTaxType").val(applicableTaxType);
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
@@ -185,6 +187,10 @@
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
+				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
+				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
+				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
+				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -195,6 +201,10 @@
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
+				
+				jQuery(formId).append(jQuery(inputCheckE2Form));
+				jQuery(formId).append(jQuery(inputApplicableTaxType));
+				jQuery(formId).append(jQuery(inputCheckCForm));
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -219,6 +229,9 @@
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
 				}
+				
+				var taxList = [];
+				taxList = data[rowCount]["taxList"]
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
@@ -916,7 +929,7 @@
 	}
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
+         if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
 	         $.ajax({
 	        	type: "POST",
 	         	url: "calculateTaxesByGeoId",
@@ -975,7 +988,6 @@
 	   	  				//var taxList = [];
 	   	  				taxList.push("VAT_SALE");
 	   	  				taxList.push("CST_SALE");
-	   	  				
 	   	  				if(taxType == "Intra-State"){
 	   	  					data[row]["VAT_SALE"] = vatPercent;
 	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
@@ -1027,7 +1039,40 @@
 	      	 		alert(result["_ERROR_MESSAGE_"]);
 	     	 	}
 	    	});
-	    }				
+	    }	
+	    else{
+	    	data[row]["VAT_SURCHARGE"] = 0;
+			data[row]["VAT_SURCHARGE_AMT"] = 0;
+			
+			data[row]["CST_SALE"] = 0;
+	   	  	data[row]["CST_SALE_AMT"] = 0;
+	   	  	
+	   	  	data[row]["VAT_SALE"] = 0;
+	   	  	data[row]["VAT_SALE_AMT"] = 0;
+	   	  	
+	   	  	data[row]["totPayable"] = totalAmt;
+	   	  	
+			var taxList = [];
+			taxList.push("VAT_SALE");
+	   	  	taxList.push("CST_SALE");
+	   	  	taxList.push("VAT_SURCHARGE");
+	   	  	
+	   	  	var vatSurchargeList = [];		
+			vatSurchargeList.push("VAT_SURCHARGE");
+			
+			data[row]["taxList"] = taxList;
+			data[row]["vatSurchargeList"] = vatSurchargeList;
+			data[row]["taxAmt"] = 0;
+	   	  		
+	   	  	alert("test");	
+	   	  		
+	   	  	$("#orderTaxType").val("Intra-State");
+	   	  				
+			addServiceCharge(row);
+	   	  	grid.updateRow(row);
+	   	  	
+	   	  	updateTotalIndentAmount();
+	    }			
 	}
 	
 </script>			
