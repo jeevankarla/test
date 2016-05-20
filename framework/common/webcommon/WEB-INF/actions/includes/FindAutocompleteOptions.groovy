@@ -69,11 +69,15 @@ if (searchFields && fieldValue) {
             orExprs.add(EntityCondition.makeCondition(EntityFieldValue.makeFieldValue(searchFieldsList[0]), EntityOperator.EQUALS, searchValue));    
             return;//in case of EQUALS, we search only a match for the returned field
         } else {
-            orExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER(EntityFieldValue.makeFieldValue(fieldName)), EntityOperator.LIKE, searchValue));
+		    //here handle remove space 
+		    List removeSpaceCondList = [];
+			removeSpaceCondList.add(EntityCondition.makeCondition(EntityFunction.UPPER(EntityFieldValue.makeFieldValue(fieldName)), EntityOperator.LIKE, searchValue));
+			removeSpaceCondList.add(EntityCondition.makeCondition(EntityFunction.REMOVESPACES(EntityFieldValue.makeFieldValue(fieldName)), EntityOperator.LIKE, searchValue));
+            orExprs.add(EntityCondition.makeCondition(removeSpaceCondList,EntityOperator.OR));
         }        
     }
 }
-
+//Debug.log("orExprs==================="+orExprs);
 /* the following is part of an attempt to handle additional parameters that are passed in from other form fields at run-time,
  * but that is not supported by the scrip.aculo.us Ajax.Autocompleter, but this is still useful to pass parameters from the
  * lookup screen definition:

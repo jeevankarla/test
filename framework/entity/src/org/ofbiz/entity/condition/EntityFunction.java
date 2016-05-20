@@ -60,14 +60,15 @@ public abstract class EntityFunction<T extends Comparable<?>> extends EntityCond
     }
 
     public static enum SQLFunction {
-        LENGTH, TRIM, UPPER, LOWER;
+        LENGTH, TRIM, UPPER, LOWER,REMOVESPACES;
     }
 
     public static final int ID_LENGTH = SQLFunction.LENGTH.ordinal();
     public static final int ID_TRIM = SQLFunction.TRIM.ordinal();
     public static final int ID_UPPER = SQLFunction.UPPER.ordinal();
     public static final int ID_LOWER = SQLFunction.LOWER.ordinal();
-
+    public static final int ID_REMOVESPACES = SQLFunction.REMOVESPACES.ordinal();
+    
     public static EntityFunction<Integer> LENGTH(EntityConditionValue nested) { return LENGTH.lengthFactory.createFunction(nested); }
     public static EntityFunction<Integer> LENGTH(Object value) { return LENGTH.lengthFactory.createFunction(value); }
     public static EntityFunction<String> TRIM(EntityConditionValue nested) { return TRIM.trimFactory.createFunction(nested); }
@@ -77,7 +78,11 @@ public abstract class EntityFunction<T extends Comparable<?>> extends EntityCond
     public static EntityFunction<String> UPPER_FIELD(String fieldName) { return UPPER.upperFactory.createFunction(EntityFieldValue.makeFieldValue(fieldName)); }
     public static EntityFunction<String> LOWER(EntityConditionValue nested) { return LOWER.lowerFactory.createFunction(nested); }
     public static EntityFunction<String> LOWER(Object value) { return LOWER.lowerFactory.createFunction(value); }
-
+    
+    public static EntityFunction<String> REMOVESPACES(EntityConditionValue nested) { return REMOVESPACES.trimFactory.createFunction(nested); }
+    public static EntityFunction<String> REMOVESPACES(Object value) { return REMOVESPACES.trimFactory.createFunction(value); }
+    public static EntityFunction<String> REMOVESPACES_FIELD(String fieldName) { return  REMOVESPACES.trimFactory.createFunction(EntityFieldValue.makeFieldValue(fieldName)); }
+    
     /**
      * Length() entity function.
      *
@@ -290,4 +295,45 @@ public abstract class EntityFunction<T extends Comparable<?>> extends EntityCond
         Object value = nested != null ? nested.getValue(delegator, map) : this.value;
         return value != null ? fetcher.getValue(value) : null;
     }
+    
+    public static class REMOVESPACES extends EntityFunction<String> {
+    	 public static Fetcher<String> FETCHER = new Fetcher<String>() {
+    		 	public String getValue(Object value) { return value.toString().replaceAll(" ", ""); }
+    	 };
+    	 protected static final SQLFunctionFactory<String, REMOVESPACES> 
+    	 	trimFactory = new SQLFunctionFactory<String, REMOVESPACES>() {
+	    	 @Override
+	    	 protected REMOVESPACES create() {
+	    		 return new REMOVESPACES();
+	    	 }
+	    	 @Override
+	    	 protected void init(REMOVESPACES function, Object value) {
+	    	 function.init(value);
+	    	 }
+    	 };
+    	 protected REMOVESPACES() {}
+	    	 public void init(Object value) {
+	    	 super.init(FETCHER, SQLFunction.REMOVESPACES, value);
+    	 }
+    	
+    	 @Override
+    	 public void addSqlValue(StringBuilder sql, Map<String, String> 
+    	tableAliases, ModelEntity modelEntity, List<EntityConditionParam> 
+    	entityConditionParams, boolean includeTableNamePrefix, DatasourceInfo 
+    	datasourceinfo) {
+	    	 sql.append("REPLACE(");
+	    	 if (nested != null) {
+	    	 nested.addSqlValue(sql, tableAliases, modelEntity, 
+	    	entityConditionParams, includeTableNamePrefix, datasourceinfo);
+	    	 } else {
+	    	 addValue(sql, null, value, entityConditionParams);
+	    	 }
+	    	 sql.append(", ' ', '')");
+    	 }
+    	 }
+    	
+    
+    
+    
+    
 }
