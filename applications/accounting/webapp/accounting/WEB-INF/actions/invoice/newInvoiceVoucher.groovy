@@ -244,7 +244,7 @@ if(actualOrderId){
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, [orderId,actualOrderId]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-OrderHeader = delegator.findList("OrderHeader", cond, null, null, null, false);
+OrderHeader = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId","orderDate"), null, null, false);
 
 indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 indentDate = indentDetails[0].get("orderDate");
@@ -391,12 +391,18 @@ context.externalOrderId = externalOrderId;
 		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemAttributeList1 = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
-		 
-		 
+		 baleQty="";
+		 unit="";
 		 if(OrderItemAttributeList1){
 		 OrderItemAttributeList1.each{ eachAttr ->
 			if(eachAttr.attrName == "quotaQty"){
 				schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
+			}
+			if(eachAttr.attrName == "BALE_QTY"){
+				baleQty =  eachAttr.attrValue;
+			}
+			if(eachAttr.attrName == "YARN_UOM"){
+				unit =  eachAttr.attrValue;
 			}
 		 }
 	   }
@@ -407,9 +413,10 @@ context.externalOrderId = externalOrderId;
 		 
 	
 	   }
-		
-		tempMap.put("baleQty", 0);
-		tempMap.put("unit", "");
+		if(baleQty && baleQty!="0"){
+			tempMap.put("baleQty",baleQty);
+			tempMap.put("unit", unit);
+		}
 		tempMap.put("quantity", quantity);
 		
 		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
@@ -423,13 +430,16 @@ context.externalOrderId = externalOrderId;
 		  tempMap.put("ToTamount", quantity*amount);
 		
 		  grandTotal = grandTotal+(quantity*amount);
-		  
-		  
+		  double mgpsQty = 0;
+		  if(quantity > schemeAmt)
+		    mgpsQty = schemeAmt;
+		  else  
+		    mgpsQty = quantity;
+		    tempMap.put("mgpsQty", mgpsQty);
 		finalDetails.add(tempMap);
 		}		
-		
 	 }
-		
+	
 	context.grandTotal = Math.round(grandTotal);
 	context.finalDetails = finalDetails;
 	

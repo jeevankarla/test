@@ -2251,7 +2251,7 @@ public class DepotPurchaseServices{
                while (it.hasNext()) {
                 	String productId = (String) it.next();                    
     				List itemSeqDetail = FastList.newInstance();
-    				
+    				String Unit="";
     				BigDecimal vatPercent = BigDecimal.ZERO;
 					BigDecimal cstPercent = BigDecimal.ZERO;
     				
@@ -2287,22 +2287,50 @@ public class DepotPurchaseServices{
 			    	BigDecimal prdAmount=BigDecimal.ZERO;
 			    	BigDecimal unitListPrice=BigDecimal.ZERO;
 			    	BigDecimal bedPercent=BigDecimal.ZERO;
+			    	BigDecimal bundleQuantity=BigDecimal.ZERO;
+			    	BigDecimal baleAmount=BigDecimal.ZERO;
+			    	BigDecimal bundleUnitListPrice=BigDecimal.ZERO;
 
 			    	//BigDecimal cstPercent=BigDecimal.ZERO;
 			    	//BigDecimal vatPercent=BigDecimal.ZERO;
 			    	
 			    	
-			    	
+	                List<GenericValue> itemAttrs = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+
 			    	
 			    	for (int i = 0; i < headerItems.size(); i++) {						
 						GenericValue eachProductList = (GenericValue)headerItems.get(i);
-						Debug.log("eachProductList=================="+eachProductList);
 						BigDecimal quantity=(BigDecimal)eachProductList.getBigDecimal("quantity");
 						unitListPrice=(BigDecimal)eachProductList.getBigDecimal("unitPrice");
+						List<GenericValue> ItemAtrs = EntityUtil.filterByCondition(itemAttrs, EntityCondition.makeCondition("orderItemSeqId",EntityOperator.EQUALS,eachProductList.get("orderItemSeqId")));
+						BigDecimal balequantity=BigDecimal.ZERO;
+						String yarUOM="";
+						for (int j = 0; j < ItemAtrs.size(); j++) {	
+							GenericValue ItemAtrsList = (GenericValue)ItemAtrs.get(j);
+
+							if("BALE_QTY".equals((String)ItemAtrsList.get("attrName"))){
+								 balequantity=new BigDecimal((String)ItemAtrsList.get("attrValue"));
+							}
+							if("BANDLE_UNITPRICE".equals((String)ItemAtrsList.get("attrName"))){
+								bundleUnitListPrice=new BigDecimal((String)ItemAtrsList.get("attrValue"));
+							}
+							if("YARN_UOM".equals((String)ItemAtrsList.get("attrName"))){
+								yarUOM=(String)ItemAtrsList.get("attrValue");
+							}
+						}
+						Unit=yarUOM;
+						if("Bale".equals(yarUOM)){
+							balequantity=balequantity.multiply(new BigDecimal(40));
+						}else if("Half-Bale".equals(yarUOM)){
+							balequantity=balequantity.multiply(new BigDecimal(20));
+						}else{
+							balequantity=balequantity;
+						}
 						String orderItemSeqId=(String)eachProductList.get("orderItemSeqId");
 						itemSeqDetail.add(orderItemSeqId);
 						BigDecimal amount=unitListPrice.multiply(quantity);
 						prdQuantity =prdQuantity.add(quantity);
+						bundleQuantity=bundleQuantity.add(balequantity);
 						prdAmount =prdAmount.add(amount);
 						
 			    	}
@@ -2310,6 +2338,9 @@ public class DepotPurchaseServices{
 
 		       		productDetailsMap.put("unitListPrice",unitListPrice);
 		       		productDetailsMap.put("quantity",prdQuantity);
+		       		productDetailsMap.put("Unit",Unit);
+		       		productDetailsMap.put("bundleQuantity",bundleQuantity);
+		       		productDetailsMap.put("bundleUnitListPrice",bundleUnitListPrice);
 		       		productDetailsMap.put("amount",prdAmount);
 		       		productDetailsMap.put("bedPercent",bedPercent);
 		       		productDetailsMap.put("cstPercent",cstPercent);
