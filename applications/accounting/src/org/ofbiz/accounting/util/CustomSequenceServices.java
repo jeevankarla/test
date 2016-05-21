@@ -277,9 +277,13 @@ public class CustomSequenceServices {
                             String roSequnce = partyROs.getString("externalId");
 			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
 							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
+							orderHeaderSequence.put("productCategoryId", "Y");
+							orderHeaderSequence.put("indentTypeId", "D");
 				            delegator.create(orderHeaderSequence);
+				            String productCategoryId = (String) orderHeaderSequence.get("productCategoryId");
+				            String indentTypeId = (String) orderHeaderSequence.get("indentTypeId");
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
-				            orderHeaderSequence.put("orderNo", "IN"+"/"+roSequnce+"/"+boSequnce+"/"+"Y"+"/"+"D"+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+				            orderHeaderSequence.put("orderNo", "IN"+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
 				            //orderHeaderSequence.put("orderNo", sequenceId);
 				            delegator.createOrStore(orderHeaderSequence);
 				            result.put("sequenceId", sequenceId) ;

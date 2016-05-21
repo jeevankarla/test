@@ -1462,12 +1462,16 @@ under the License.
 		<field name="orderHeaderSequenceTypeId" type="id"></field>
 		<field name="sequenceId" type="id-ne"></field>
 		<field name="partyId" type="id-ne"></field>
+		<field name="productCategoryId" type="id-ne"></field>
+		<field name="indentTypeId" type="id-ne"></field>
 		<field name="orderId" type="id-ne"></field>
 		<field name="orderNo" type="id-long-ne"></field>
 		<prim-key field="finYearId" />
 		<prim-key field="orderHeaderSequenceTypeId" />
 		<prim-key field="sequenceId" />
 		<prim-key field="partyId" />
+		<prim-key field="productCategoryId"/>
+		<prim-key field="indentTypeId"/>
 		<relation type="one" fk-name="OHSEQ_FY"
 			rel-entity-name="CustomTimePeriod">
 			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
