@@ -230,6 +230,12 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 
 
 context.indentNo = actualOrderId;
+orderHeaderSequences = delegator.findList("OrderHeaderSequence", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId), null, null, null, false);
+if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+	orderSquences = EntityUtil.getFirst(orderHeaderSequences);
+	orderNo= orderSquences.orderNo;
+	context.indentNo = orderNo;
+}
 
 OrderHeader = [];
 OrderRoleList = [];
