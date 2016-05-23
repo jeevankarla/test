@@ -259,14 +259,16 @@ public class CustomSequenceServices {
 			   				orderHeaderSequence.put("orderId", orderId);
 			   				orderHeaderSequence.put("finYearId", finYearId);
 			   				List<GenericValue> orderRoles = FastList.newInstance();
-			   				List<EntityExpr> exprs = FastList.newInstance();
 			   				String partyId = "";
+			   				String indentTypeId = "D";
 			   				if(UtilValidate.isNotEmpty(orderId)){
-			   					exprs.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			   					exprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-			   				    EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
-			   					orderRoles = delegator.findList("OrderRole", condition, null,null, null, false);	
-					            partyId = EntityUtil.getFirst(orderRoles).getString("partyId");
+				       			orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				       			List<GenericValue> billFromParyDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+                                partyId = EntityUtil.getFirst(billFromParyDetails).getString("partyId");
+                                List<GenericValue> indentTypeDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+                                if(UtilValidate.isNotEmpty(indentTypeDetails)){
+                                	indentTypeId = "C";
+                                }
 			   				}	
 			   				orderHeaderSequence.put("partyId", partyId);
 			   				GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
@@ -278,10 +280,9 @@ public class CustomSequenceServices {
 			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
 							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 							orderHeaderSequence.put("productCategoryId", "Y");
-							orderHeaderSequence.put("indentTypeId", "D");
+							orderHeaderSequence.put("indentTypeId",indentTypeId);
 				            delegator.create(orderHeaderSequence);
 				            String productCategoryId = (String) orderHeaderSequence.get("productCategoryId");
-				            String indentTypeId = (String) orderHeaderSequence.get("indentTypeId");
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
 				            orderHeaderSequence.put("orderNo", "IN"+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
 				            //orderHeaderSequence.put("orderNo", sequenceId);
