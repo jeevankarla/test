@@ -163,7 +163,7 @@
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			var serviceCharge = data[rowCount]["taxAmt"];
+			var taxAmt = data[rowCount]["taxAmt"];
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
@@ -231,7 +231,7 @@
 				}
 				
 				var taxList = [];
-				taxList = data[rowCount]["taxList"]
+				taxList = data[rowCount]["taxList"];
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
