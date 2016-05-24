@@ -55,6 +55,8 @@
 				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 					
+					populateData();
+					
 					$('input[type=radio][name=applicableTaxType]').change(function() {
 				        if (this.value == 'Intra-State') {
 				           $('.InterState').hide();
@@ -506,6 +508,7 @@
 
 
 var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
+
 var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	
 
