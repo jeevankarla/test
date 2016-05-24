@@ -121,9 +121,13 @@ function drawRow(rowData) {
     row.append($("<td>" + rowData.partyName + "</td>"));
        
     var salesOrder = '\'' + rowData.orderId + '\'';
-    
-    var SalesOrderView ='<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'</@ofbizUrl>" target="_blank">'+rowData.orderId+'</a>';
-    
+    var SalesOrderView;
+    if(rowData.orderNo != undefined && rowData.orderNo != "NA"){
+           SalesOrderView ='<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'</@ofbizUrl>" target="_blank">'+rowData.orderNo+'</a>';
+   
+    }else{
+          SalesOrderView ='<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'</@ofbizUrl>" target="_blank">'+rowData.orderId+' </a>';
+    }
     row.append($("<td>"+ SalesOrderView +"</td>"));
     var PurchaseOrderView ='<a class="buttontext" href="<@ofbizUrl>POoverview?orderId='+rowData.PoOrderId+'</@ofbizUrl>" target="_blank">'+rowData.PoOrderId+'</a>';
     row.append($("<td>" + PurchaseOrderView + "</td>"));
