@@ -89,11 +89,14 @@ List conditionList=[];
 		
 		if(UtilValidate.isNotEmpty(OrderAss)){
 			salesOrder = OrderAss.get("toOrderId");
+			tempMap.put("orderId",OrderAss.get("toOrderId"));
+			orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , salesOrder)  , null, null, null, false );
+			if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+				orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+				salesOrder = orderSeqDetails.orderNo;
+			}		
 			tempMap.put("salesOrder",salesOrder);
-		}else{
-			tempMap.put("salesOrder","");
 		}
-		
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyIdFrom", shipment.partyIdFrom);

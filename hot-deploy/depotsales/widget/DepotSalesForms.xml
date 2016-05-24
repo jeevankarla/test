@@ -371,7 +371,7 @@
            <!--  <field name="estimatedShipDate" title="GRN Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field> -->
             <field name="salesOrder" title="Indent" widget-style="buttontext">
             	<hyperlink target="POoverview" description="${salesOrder}" target-window="_blank">
-          			<parameter param-name="orderId" value="${salesOrder}"/>
+          			<parameter param-name="orderId" value="${orderId}"/>
           		</hyperlink>
             </field>
             <field name="primaryOrderId" title="PO" widget-style="buttontext">
