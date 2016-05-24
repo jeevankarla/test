@@ -120,8 +120,12 @@ function drawRow(rowData) {
     $("#coreTable tr:even").css("background-color", "#F4F4F8");
     row.append($("<td>" + rowData.partyId + "</td>"));
     row.append($("<td>" + rowData.partyName + "</td>"));
-    row.append($("<td>" + rowData.orderId + "</td>"));
-    
+    if(rowData.orderNo != undefined && rowData.orderNo != "NA"){
+        row.append($("<td>" + rowData.orderNo + "</td>"));
+    }
+    else{
+        row.append($("<td>" + rowData.orderId + "</td>"));
+    }
     var indDateSplit = (rowData.orderDate).split("-");
     
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
