@@ -53,10 +53,20 @@
 			  border-width: 0 0 1px 0; 
 			  border-radius: 20px; 
 		}
-		.screenlet .serviceCharge
-		{	
-			float: right;
-		}
+		#popup{
+    		position: fixed;
+    		background: white;
+    		display: none;
+    		top: 300px;
+    		right: 30px;
+    		left: 680px;
+    		width: 200px;
+    		height: 200px;
+   			border: 1px solid #000;
+    		border-radius: 5px;
+    		padding: 10px;
+    		color: black;
+		} 
 	</style>
 	
 	<script type="text/javascript">
@@ -64,14 +74,26 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
 		$(document).ready(function(){
+			 $("#open_popup").click(function(){
+               	getShipmentAddress();
+		    
+             	$("#popup").css("display", "block");
+             });
+			 $("#close_popup").click(function(){
+             	$("#popup").css("display", "none");
+           	 });
+           
 			 $("#societyfield").hide();
 			 	fillPartyData();
-			 	
-			if(indententryinit.schemeCategory.value.length > 0){
+			 	$("#editServChgButton").hide();
+			 if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
-	  				$("#serviceCharge").html("<b>2% Service Charge is applicable</b>");
+	  				$("#editServChgButton").show();
+	  				$('#serviceChargePercent').val(2);
+	  				var scPerc = $('#serviceChargePercent').val();
+	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
-	  		} 	
+	  		 } 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -170,6 +192,10 @@
 			  			$('#taxTypeApplicable').val("VAT_SALE");
 			  		}
 	    			
+	    			var transporterId = $("#transporterId").val();
+			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+					jQuery(indententryinit).append(jQuery(transporte));
+					
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
@@ -197,6 +223,8 @@
 			$("#productStoreId").blur(function() {
 				getCfcList();
 			});
+			
+			calculateTaxApplicability();
 			
 		});
 		
@@ -274,7 +302,7 @@
 		       	  				  var cottonLooms=0;
 		       	  				  var WoolLooms=0;
 		       	  				  var obj ={};
-		       	  				  var objQuota ={};
+		       	  				   var objQuota ={};
 		       	  				 // alert(JSON.stringify(LoomDetails));
 		       	  				  $.each(LoomList, function(key, item){
 		       	  				  obj [item.loomType]=0;
@@ -282,8 +310,7 @@
 		       	  				  	for(var i=0 ; i<LoomDetails.length ; i++){
 			       	  				  if(LoomDetails[i].loomType==item.loomType){
 			       	  				 		 obj [item.loomType] = LoomDetails[i].loomQty;
-			       	  				 		  objQuota [item.loomType] = LoomDetails[i].loomQuota; 
-          									  
+          									  objQuota [item.loomType] = LoomDetails[i].loomQuota; 
 			       	  				 	}			       	  				 	
 		       	  				  }
 		       	  				  
@@ -293,12 +320,12 @@
 		       	  				  
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
 		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td></tr>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td></tr>';
 		       	  				   
 		       	  				 $.each(LoomList, function(key, item){
 		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
 		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td>';
-		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td></tr>';
+		       	  		            tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td></tr>';
 		       	  				 	totLooms = totLooms+parseInt(obj[item.loomType]);
 		       	  				     
 		       	  				 });
@@ -330,17 +357,45 @@
 		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
 		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
-		       	  				   
-	       	  				   }
+		       	  				    
+		       	  				    var transprotersList;
+						 
+						 			if(prodStoreId != undefined && prodStoreId !=""){
+						 
+						  				var dataJson = {"prodStoreId":prodStoreId};
+						 
+										jQuery.ajax({
+					                		url: 'getTransportersList',
+					                		type: 'POST',
+					                		data: dataJson,
+					                		dataType: 'json',
+					               			success: function(result){
+												if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+										    		alert("Error in order Items");
+												}else{
+													transprotersList = result["transporterJSON"];
+										    		if(transprotersList.length != 0){
+										     			var transporterJSON = ${StringUtil.wrapString(transprotersList)!'[]'};
+														$(document).ready(function(){
+										             	$("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
+													});
+										   		}
+					               			}
+					               		}							
+									});
+							
+								}
+							  
+	       	  				}
 	      			}
 	               
 	          	} ,
-	         	 error: function() {
+	         	error: function() {
 	          	 	alert(result["_ERROR_MESSAGE_"]);
-	         	 }
-	         	 });
-	         	 }
-	        }
+	         	}
+	         });
+	       }
+	    }
 		
 		
 		
@@ -542,7 +597,71 @@
 					
 			  });	
 		 }
+	 	
+	 	
+	 	var orderAddres;
+
+      	function getShipmentAddress(){
+         
+        	var contactMechId = $("#contactMechId").val();
+         	var partyId = $("#partyId").val();
 	 
+	      	if(contactMechId.length != 0){
+		
+		   		var dataJson = {"partyId": partyId,"contactMechId":contactMechId};
+				jQuery.ajax({
+                	url: 'getShipmentAddress',
+                	type: 'POST',
+                	data: dataJson,
+                	dataType: 'json',
+               		success: function(result){
+						if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    	alert("Error in order Items");
+						}else{
+							OrderAddress = result["OrderAddress"];
+						
+						 	$('#addressTable tbody').remove();
+						
+					    	var row = $("<tr />")
+                        	$("#addressTable").append(row); 
+                        	row.append($("<td>Adress1 :</td>"));
+                        	row.append($("<td>" + OrderAddress.address1 + "</td>"));
+					    
+					     	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>Adress2 :</td>"));
+                        	row.append($("<td>" + OrderAddress.address2 + "</td>"));
+                        
+                          	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>Country :</td>"));
+                        	row.append($("<td> India </td>"));
+                        
+                         	var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>State   :</td>"));
+                        	row.append($("<td>" + OrderAddress.state + "</td>"));
+                        
+                       		var row = $("<tr />") 
+					     	$("#addressTable").append(row); 
+                        	row.append($("<td>City    :</td>"));
+                        	row.append($("<td>" + OrderAddress.city + "</td>"));
+                        
+                         	var row = $("<tr />") 
+					    	$("#addressTable").append(row); 
+                        	row.append($("<td>PostalCode:</td>"));
+                        	row.append($("<td>" + OrderAddress.postalCode + "</td>"));
+						
+                 		}	
+                 	
+                 	}							
+		      	});
+		
+		    }
+      
+      	}
+	 	
+	 	
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -564,7 +683,7 @@
 		     </div>
       
     		<div class="screenlet-body">
-    		  <#assign frmAction="IndentorBranchSalesOrder">
+    		<#assign frmAction="IndentorBranchSalesOrder">
 	    <#if parameters.formAction?has_content>
 	    	    <#assign frmAction=parameters.formAction>
 	    </#if>
@@ -641,12 +760,23 @@
 		       			 <#else>               
 			          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
 			          	</#if>
+			          	<#if parameters.supplierGeoId?exists && parameters.supplierGeoId?has_content>  
+		       				<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${supplierGeoId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>
+			          	</#if>
 		       			<input type="hidden" name="taxTypeApplicable" id="taxTypeApplicable" value=""/> 
-		       			<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>  
+		       			<#--<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>-->  
 		       			<#--<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>-->
 		       			<input type="hidden" name="e2FormCheck" id="e2FormCheck" value=""/>
 		       			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>
-		       			
+		       			<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="0"/> 
+		       			<#if parameters.contactMechId?exists && parameters.contactMechId?has_content>  
+		       				<input type="hidden" name="contactMechId" id="contactMechId" value="${contactMechId?if_exists}"/>
+		       			 <#else>               
+			          		<input type="hidden" name="contactMechId" id="contactMechId"/>
+			          	</#if>
+			          	
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>${uiLabelMap.Customer}:</#if><font color="red">*</font></div></td>
 				        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
 							<#if partyId?exists && partyId?has_content>  
@@ -877,6 +1007,9 @@
 		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
+		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${parameters.supplierGeoId?if_exists}"/>
+		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
+		<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
 		
 		<br>
 	</form>    
@@ -895,12 +1028,13 @@
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       			
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green"><b>   PartyName       : </b></font></td><td width="70%"> <label  align="left" id="partyName"style="color: blue" ></label></td> 
 			       			</tr>
 			       			</#if>
 				 	 	 	<#if parameters.address?exists && parameters.address?has_content> 
@@ -909,13 +1043,34 @@
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="15%" keep-together="always" align="left"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	</table>	
 				 	 	
+				 	 	<div id="popup" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
+						     <h1>Address</h1>
+						     <table id ="addressTable"><tbody></tbody></table>
+						     <a href="#" id="close_popup">Close</a>
+						</div>
+						    
+					    <table width="100%">
+					    	<tr>
+					    
+					   			<td> <input type="button" id="open_popup" class="buttontext" value="View Delivery Address"  /> </td>    
+					    		<td> <input type="button" class="buttontext" value="Edit Delivery Address" onclick="javascript:manualAddress();" /> </td>
+					   			<td>
+					    			<#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
+					    				<input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
+					    			<#else>
+					    				<input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
+									</#if>
+								</td>		 	 	   
+				 	 	 	</tr>
+				 	 	</table>
+				 	 	 
 				 	 	<hr class="style18"></hr>
-				 	  <table width="100%" border="2" cellspacing="0" cellpadding="0">
+				 	  	<table width="100%" border="2" cellspacing="0" cellpadding="0">
 					 	<tr>
 						<td width="60%">
 		      				<table width="100%" border="1" border-style="solid">
@@ -1008,8 +1163,9 @@
 	<div class="bottom">
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
-				<span id="totalAmount"></span>
-				<span id="serviceCharge" class="serviceCharge">Service Charge: </span>
+				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
+				<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>
+				<span style="float:right; margin-left: -5px;" id="totalAmount"></span>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>

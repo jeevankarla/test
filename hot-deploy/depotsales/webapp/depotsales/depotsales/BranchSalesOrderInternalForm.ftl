@@ -76,6 +76,8 @@
 	}
 	
 </style>			
+	
+<#include "EditUDPPriceDepot.ftl"/>		
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -163,6 +165,13 @@
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];			
 			
+			var taxAmt = data[rowCount]["taxAmt"];
+			var checkE2Form = data[rowCount]["checkE2Form"];
+			var applicableTaxType = data[rowCount]["applicableTaxType"];
+			var checkCForm = data[rowCount]["checkCForm"];
+			
+			$("#orderTaxType").val(applicableTaxType);
+			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
@@ -178,6 +187,10 @@
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
+				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
+				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
+				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
+				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -189,6 +202,10 @@
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
+				
+				jQuery(formId).append(jQuery(inputCheckE2Form));
+				jQuery(formId).append(jQuery(inputApplicableTaxType));
+				jQuery(formId).append(jQuery(inputCheckCForm));
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -202,17 +219,20 @@
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
 				if(taxList != undefined){
-				for(var i=0;i<taxList.length;i++){
-					var taxType = taxList[i];
-					var taxPercentage = data[rowCount][taxType];
-					var taxValue = data[rowCount][taxType + "_AMT"];
-					
-					var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-					var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
-					jQuery(formId).append(jQuery(inputTaxTypePerc));
-					jQuery(formId).append(jQuery(inputTaxTypeValue));
+					for(var i=0;i<taxList.length;i++){
+						var taxType = taxList[i];
+						var taxPercentage = data[rowCount][taxType];
+						var taxValue = data[rowCount][taxType + "_AMT"];
+						
+						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						jQuery(formId).append(jQuery(inputTaxTypePerc));
+						jQuery(formId).append(jQuery(inputTaxTypeValue));
+					}
 				}
-				}
+				
+				var taxList = [];
+				taxList = data[rowCount]["taxList"];
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
@@ -255,6 +275,8 @@
 			var productStoreId = $("#productStoreId").val();
 			var cfcId = $("#cfcs").val();
 			var schemeCategory = $("#schemeCategory").val();
+			var contactMechId = $("#contactMechId").val();
+			var transporterId = $("#transporterId").val();
 			
 			
 			
@@ -273,6 +295,8 @@
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
+			var contactMechId = jQuery("<input>").attr("type", "hidden").attr("name", "belowContactMechId").val(contactMechId);
+			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -292,6 +316,8 @@
 			jQuery(formId).append(jQuery(disableAcctgFlag));
 			jQuery(formId).append(jQuery(schemeCategoryObj));
 			jQuery(formId).append(jQuery(partyGeo));
+			jQuery(formId).append(jQuery(contactMechId));
+			jQuery(formId).append(jQuery(transporterId));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -441,7 +467,7 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"${uiLabelMap.QuotaAvailable} (In Kgs)", field:"quota", width:110, minWidth:110, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		hid_columns = [
@@ -470,8 +496,6 @@
 		var data_view = new Slick.Data.DataView();
 		grid = new Slick.Grid("#myGrid1", data, hid_columns,options);
 		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
-		
-		
 		
 		var options = {
 			editable: true,		
@@ -578,25 +602,13 @@
 	      	
 	      	if (args.cell == 1) {
 				var row = args.row;
-				
 				updateCurrentQuota(row);
 			}
-			
-			if ( (args.cell == 2) || (args.cell == 3) || ((args.cell == 4)) ) {
-	      		var productName = data[args.row]["productNameStr"];
-      			<#if changeFlag?exists && changeFlag != "EditDepotSales">
-      				if (productName.toLowerCase().indexOf("cotton") <= 0){
-      					grid.updateRow(args.row);
-      					return false;
-      				}
-      			</#if>
-      		}
-	      	
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-      
-        	if (args.cell == 2) {
+        	
+			if (args.cell == 2) {
    				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['KgunitPrice'];
@@ -644,7 +656,10 @@
         	       	
         	   	
         	}
-			
+			if (args.cell == 2) {
+				var row = args.row;
+				updateCurrentQuota(row);
+			}
 			if (args.cell == 3) {
 				var row = args.row;
 				var prod = data[args.row]["cProductId"];
@@ -695,7 +710,6 @@
 				updateCurrentQuota(row);
 				
 			}
-			
 			if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
@@ -899,6 +913,7 @@
             }else {
            $(activeCellNode).attr("tittle", "");
         }
+
     });
     	//updateInlineTotalAmount();
 		//updateProductTotalAmount();
@@ -933,6 +948,7 @@
             	tabindex++;
         	}
     	});
+
     	var rowCount = jQuery('#myGrid1 .slick-row').length;
 		if (rowCount > 0) {			
 			$(mainGrid.getCellNode(rowCount-1, 0)).click();		   
@@ -1118,7 +1134,7 @@
 	}
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
+         if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
 	         $.ajax({
 	        	type: "POST",
 	         	url: "calculateTaxesByGeoId",
@@ -1177,7 +1193,6 @@
 	   	  				//var taxList = [];
 	   	  				taxList.push("VAT_SALE");
 	   	  				taxList.push("CST_SALE");
-	   	  				
 	   	  				if(taxType == "Intra-State"){
 	   	  					data[row]["VAT_SALE"] = vatPercent;
 	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
@@ -1230,6 +1245,39 @@
 	     	 	}
 	    	});
 	    }	
+	    else{
+	    	data[row]["VAT_SURCHARGE"] = 0;
+			data[row]["VAT_SURCHARGE_AMT"] = 0;
+			
+			data[row]["CST_SALE"] = 0;
+	   	  	data[row]["CST_SALE_AMT"] = 0;
+	   	  	
+	   	  	data[row]["VAT_SALE"] = 0;
+	   	  	data[row]["VAT_SALE_AMT"] = 0;
+	   	  	
+	   	  	data[row]["totPayable"] = totalAmt;
+	   	  	
+			var taxList = [];
+			taxList.push("VAT_SALE");
+	   	  	taxList.push("CST_SALE");
+	   	  	taxList.push("VAT_SURCHARGE");
+	   	  	
+	   	  	var vatSurchargeList = [];		
+			vatSurchargeList.push("VAT_SURCHARGE");
+			
+			data[row]["taxList"] = taxList;
+			data[row]["vatSurchargeList"] = vatSurchargeList;
+			data[row]["taxAmt"] = 0;
+	   	  		
+	   	  	alert("test");	
+	   	  		
+	   	  	$("#orderTaxType").val("Intra-State");
+	   	  				
+			addServiceCharge(row);
+	   	  	grid.updateRow(row);
+	   	  	
+	   	  	updateTotalIndentAmount();
+	    }			
 	}
 	
-</script>		
+</script>			
