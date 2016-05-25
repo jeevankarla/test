@@ -267,7 +267,7 @@ public class CustomSequenceServices {
                                 partyId = EntityUtil.getFirst(billFromParyDetails).getString("partyId");
                                 List<GenericValue> indentTypeDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
                                 if(UtilValidate.isNotEmpty(indentTypeDetails)){
-                                	indentTypeId = "C";
+                                	indentTypeId = "O";
                                 }
 			   				}	
 			   				orderHeaderSequence.put("partyId", partyId);
