@@ -719,7 +719,7 @@
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
-        <response name="error" type="view" value="BranchSalesOrder"/>
+        <response name="error" type="view" value="orderPayment"/>
     </request-map>
      <request-map uri="IndentorprocessBranchSalesOrder">
         <security https="true" auth="true"/>
