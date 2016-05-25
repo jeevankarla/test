@@ -52,12 +52,17 @@ under the License.
             </#list>
             <#if ("Y" == displayReturnField)>
              <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :returnField,"partyIdentificationTypeId":"PSB_NUMER"}, true)?if_exists>
+             <#assign partyRegIdentification = delegator.findOne("PartyIdentification", {"partyId" :returnField,"partyIdentificationTypeId":"REGISTRATION_NUMBER"}, true)?if_exists>
               <#assign  psbNumbr = "">
+              <#assign  regNumbr = "">
 				<#if partyIdentification.idValue?has_content>
              	 <#assign  psbNumbr = partyIdentification.idValue>
 				</#if>
-               <#assign displayString = displayString +  "[" + returnField + "]"+"["+psbNumbr+"]"  >
-
+               <#assign displayString = displayString +  "[" + returnField + "]"+"["+psbNumbr+"]">
+				<#if partyRegIdentification.idValue?has_content>
+             	 	<#assign  regNumbr = partyRegIdentification.idValue>
+             	  	<#assign displayString = displayString +"["+regNumbr+"]">
+				</#if>
             </#if>
             "id": " ${returnField}",
             "label": "<#if (displayString?trim?has_content )>${displayString?trim}<#else>${returnField}</#if>",
