@@ -93,6 +93,11 @@ context.BOEmail=BOEmail;
 
 
 context.orderId = parameters.orderId;
+orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , parameters.orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+	orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+	context.orderId = orderSeqDetails.orderNo;
+}
 
 condtList = [];
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
