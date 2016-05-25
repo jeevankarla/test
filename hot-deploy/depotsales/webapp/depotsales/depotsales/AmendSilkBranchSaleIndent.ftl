@@ -146,7 +146,6 @@
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		var orderId = $("#orderId").val();			
-		alert(orderId);
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];

@@ -148,6 +148,7 @@
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
+		var orderId = $("#orderId").val();			
 		
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
@@ -177,7 +178,8 @@
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(prodId)) {	 		
+	 		if (!isNaN(prodId)) {
+				var inputOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId_o_" + rowCount).val(orderId);
 				var inputcustomerId = jQuery("<input>").attr("type", "hidden").attr("name", "customerId_o_" + rowCount).val(customerId); 			
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
@@ -190,6 +192,7 @@
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
+				jQuery(formId).append(jQuery(inputOrder));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -509,7 +512,7 @@
 	    });
         grid.onCellChange.subscribe(function(e,args) {
         	
-        	if (args.cell == 3) {
+        	if (args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 6) {
    				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['KgunitPrice'];
@@ -531,12 +534,19 @@
 				var kgUnitPrice;
 				if(uom == "Bale"){
 					roundedAmount = Math.round(baleQty*price*40);
+					quantity = baleQty*bundleWeight*40;
+					
 				}
 				if(uom == "Half-Bale"){
 					roundedAmount = Math.round(baleQty*price*20);
+					quantity = baleQty*bundleWeight*20;
+					
 				}
 				if(uom == "KGs" ||uom == "Bundle"){				
 					roundedAmount = Math.round(baleQty*price);
+				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
 				}
 				kgUnitPrice=price/bundleWeight;				
 				if(isNaN(roundedAmount)){
@@ -544,7 +554,22 @@
 				}
 				if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
+				}
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+					kgUnitPrice=udp;
 				}	
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				
+				alert(roundedAmount);
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["bundleWeight"] = bundleWeight;
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
 				
@@ -556,213 +581,7 @@
         	
         	}
 			
-			if (args.cell == 4) {
-				var row = args.row;
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
 				
-				
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}
-				
-				quantity = 0;
-				if(uom == "Bale"){
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "Bundle"){
-					quantity = baleQty*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*unitPrice);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				grid.updateRow(args.row);			
-				updateTotalIndentAmount();
-				updateCurrentQuota(row);
-				
-			}
-			if (args.cell == 5) {
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}				
-				quantity = 0;
-				if(uom == "Bale"){
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				if(uom == "Bundle"){
-					quantity = baleQty*bundleWeight;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*unitPrice);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				
-				grid.updateRow(args.row);
-				var prod = data[args.row]["cProductId"];
-				var row = args.row;
-				updateCurrentQuota(row);				
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*price*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*price*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle" ){				
-					roundedAmount = Math.round(baleQty*price);
-				}
-				
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-			}
-			if (args.cell == 6) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['KgunitPrice'];
-				var uom = data[args.row]["cottonUom"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-				var kgUnitPrice;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*price*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*price*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle"){				
-					roundedAmount = Math.round(baleQty*price);
-				}
-				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				kgUnitPrice=price/bundleWeight;
-				
-				}
-				if(uom == "KGs" ){
-				kgUnitPrice=price;
-				}
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-				}	
-				data[args.row]["unitPrice"] = kgUnitPrice;
-				data[args.row]["amount"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-			}
-			
-			if (args.cell == 7) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['amount'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}				
-				var roundedAmount;
-					roundedAmount = price/qty;
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["unitPrice"] = roundedAmount;
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-			}
-			
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {

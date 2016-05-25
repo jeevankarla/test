@@ -2564,8 +2564,8 @@ public class MaterialPurchaseServices {
 	  	String primaryOrderId = "";
 	  	try{
 	  		//
-		  	for (int i = 1; i < rowCount; i++) {
-				
+		  	for (int i = 0; i < rowCount; i++) {
+		  		
 		  		String orderId = "";
 		        String orderItemSeqId = "";
 				String productId = "";
@@ -2590,6 +2590,7 @@ public class MaterialPurchaseServices {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing orderItemSeq Id");
 					return "error";			  
 				}
+				GenericValue orderItemAttr = null;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
 					productId = (String) paramMap.get("productId" + thisSuffix);
 				}else {
@@ -2600,14 +2601,14 @@ public class MaterialPurchaseServices {
 				if (paramMap.containsKey("amendedQuantity" + thisSuffix)) {
 					amendedQuantityStr = (String) paramMap.get("amendedQuantity" + thisSuffix);
 				}
-						  
+				  
 				if(UtilValidate.isNotEmpty(amendedQuantityStr)){
 					amendedQuantity = new BigDecimal(amendedQuantityStr);
 				}
 				if (paramMap.containsKey("amendedPrice" + thisSuffix)) {
 					amendedPriceStr = (String) paramMap.get("amendedPrice" + thisSuffix);
 				}
-						  
+				  
 				if(UtilValidate.isNotEmpty(amendedPriceStr)){
 					amendedPrice = new BigDecimal(amendedPriceStr);
 				}
@@ -2648,6 +2649,50 @@ public class MaterialPurchaseServices {
 			  		return "error";
 		        }
 				orderItem.store();
+				//updating OrderItemAttribute 
+				String baleQuantityStr = null;
+				String yarnUOMStr = null;
+				String remarks = "";
+				String bundleWeightStr = null;
+
+				if (paramMap.containsKey("baleQuantity" + thisSuffix)) {
+					baleQuantityStr = (String) paramMap
+							.get("baleQuantity" + thisSuffix);
+					 orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "BALE_QTY"), false);
+				     orderItemAttr.set("attrValue", baleQuantityStr);
+					 orderItemAttr.store();
+
+				}
+				if (paramMap.containsKey("remarks" + thisSuffix)) {
+					 if(UtilValidate.isNotEmpty(paramMap.get("remarks" + thisSuffix)) && (paramMap.get("remarks" + thisSuffix) != null)){
+						 remarks = (String) paramMap.get("remarks" + thisSuffix);
+					 }
+					 orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "REMARKS"), false);
+					 if(UtilValidate.isNotEmpty(orderItemAttr)){
+						 orderItemAttr.set("attrValue", remarks);
+						 orderItemAttr.store();
+					 }
+					
+				}
+				if (paramMap.containsKey("bundleWeight" + thisSuffix)) {
+					bundleWeightStr = (String) paramMap
+							.get("bundleWeight" + thisSuffix);
+					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "BUNDLE_WGHT"), false);
+			        orderItemAttr.set("attrValue", bundleWeightStr);
+					orderItemAttr.store();
+
+				}
+				
+				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
+					yarnUOMStr = (String) paramMap
+							.get("yarnUOM" + thisSuffix);
+					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "YARN_UOM"), false);
+			        orderItemAttr.set("attrValue", yarnUOMStr);
+					orderItemAttr.store();
+
+					
+				}
+				//Debug.log("baleQuantityStr=="+baleQuantityStr+"remarks=="+remarks+"bundleWeightStr==="+bundleWeightStr+"yarnUOMStr==="+yarnUOMStr);
 		        request.setAttribute("orderId",orderId);
 		        
 		        if(UtilValidate.isNotEmpty(primaryOrderId)){
@@ -2698,6 +2743,25 @@ public class MaterialPurchaseServices {
 					
 			  	}
 		  	}
+		  	 List condList= FastList.newInstance();;
+	           condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, primaryOrderId));
+			   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+			  if(UtilValidate.isNotEmpty(orderAssocList)){
+				  String PoOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+			    
+			    Map processContext = FastMap.newInstance();
+	    		processContext.put("userLogin",userLogin);
+	    		processContext.put("SalesOrder",primaryOrderId);
+	    		processContext.put("PurchaseOrder",PoOrderId);
+	            result =updateIndentSummaryPO(dctx, processContext);
+				if(ServiceUtil.isError(result)){
+					Debug.logError("Unable to update order: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Error in Unable to update related Purchase order  :");
+					return "error";
+				}
+  
+			  }
 	  	}catch(Exception e){
 	  		Debug.logError(e, "Error in amending order, module");
 			request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
@@ -4666,7 +4730,230 @@ catch(Exception e){
 		result.put("partyId", partyId);
 		return result;
 	}
-	
+	public static Map<String, Object> updateIndentSummaryPO(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String salesOrderId = (String)context.get("SalesOrder");
+		String purchaseOrderId = (String)context.get("PurchaseOrder");
+	  	boolean beganTransaction = false;
+		try{
+			Map<String, Object> orderDtlMap = FastMap.newInstance();
+			orderDtlMap.put("orderId", salesOrderId);
+			orderDtlMap.put("userLogin", userLogin);
+			result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
+				return ServiceUtil.returnError(null, null, null,result);
+			}
+			Map productSummaryMap = (Map)result.get("productSummaryMap");
+			Iterator eachProductIter = productSummaryMap.entrySet().iterator();
+			try{
+				beganTransaction = TransactionUtil.begin(7200);
+			
+				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId), null, null, null, false);
+				BigDecimal totalBedAmount = BigDecimal.ZERO;
+				BigDecimal totalBedCessAmount = BigDecimal.ZERO;
+				BigDecimal totalBedSecCessAmount = BigDecimal.ZERO;
+				BigDecimal totalVatAmount = BigDecimal.ZERO;
+				BigDecimal totalCstAmount = BigDecimal.ZERO;
+				
+				GenericValue orderItemValue = null;
+				while(eachProductIter.hasNext()) {
+					Map.Entry entry = (Entry)eachProductIter.next();
+					String productId = (String)entry.getKey();
+					Map prodQtyMap=(Map)entry.getValue();
+					List taxList=FastList.newInstance();
+					
+					BigDecimal quantity = BigDecimal.ZERO;
+					BigDecimal unitPrice = BigDecimal.ZERO;
+					BigDecimal unitListPrice = BigDecimal.ZERO;
+					BigDecimal vatPercent = BigDecimal.ZERO;
+					BigDecimal vatAmount = BigDecimal.ZERO;
+					BigDecimal cstAmount = BigDecimal.ZERO;
+					BigDecimal cstPercent = BigDecimal.ZERO;
+					BigDecimal bedAmount = BigDecimal.ZERO;
+					BigDecimal bedPercent = BigDecimal.ZERO;
+					BigDecimal bedcessPercent = BigDecimal.ZERO;
+					BigDecimal bedcessAmount = BigDecimal.ZERO;
+					BigDecimal bedseccessAmount = BigDecimal.ZERO;
+					BigDecimal bedseccessPercent = BigDecimal.ZERO;
+					
+					
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+						productId = (String)prodQtyMap.get("productId");
+					}*/
+					
+					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					
+					
+					if(UtilValidate.isNotEmpty(orderItem)){
+						orderItemValue = EntityUtil.getFirst(orderItem);
+					}
+					else{
+						continue;
+					}
+					
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+						quantity = (BigDecimal)prodQtyMap.get("quantity");
+						orderItemValue.put("quantity", quantity);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
+						unitPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
+						orderItemValue.put("unitPrice", unitPrice);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
+						unitListPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
+						orderItemValue.put("unitListPrice", unitListPrice);
+					}
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+						vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
+						orderItemValue.put("vatAmount", vatAmount);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+						vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
+						orderItemValue.put("vatPercent", vatPercent);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+						cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
+						orderItemValue.put("cstAmount", cstAmount);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+						cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+						orderItemValue.put("cstPercent", cstPercent);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+						bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
+						orderItemValue.put("bedAmount", bedAmount);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+						bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
+						orderItemValue.put("bedPercent", bedPercent);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedcessAmount"))){
+						bedcessAmount = (BigDecimal)prodQtyMap.get("bedcessAmount");
+						orderItemValue.put("bedcessAmount", bedcessAmount);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedcessPercent"))){
+						bedcessPercent = (BigDecimal)prodQtyMap.get("bedcessPercent");
+						orderItemValue.put("bedcessPercent", bedcessPercent);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessAmount"))){
+						bedseccessAmount = (BigDecimal)prodQtyMap.get("bedseccessAmount");
+						orderItemValue.put("bedseccessAmount", bedseccessAmount);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessPercent"))){
+						bedseccessPercent = (BigDecimal)prodQtyMap.get("bedseccessPercent");
+						orderItemValue.put("bedseccessPercent", bedseccessPercent);
+					}
+*/
+					orderItemValue.set("changeByUserLoginId", userLogin.getString("userLoginId"));
+					orderItemValue.set("changeDatetime", UtilDateTime.nowTimestamp());
+					orderItemValue.store();
+				}
+/*				
+				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				delegator.removeAll(orderAdjustments);
+				
+				for(Map eachAdj : otherChargesAdjustment){
+					
+					String adjustmentTypeId = (String)eachAdj.get("adjustmentTypeId");
+					String applicableTo = (String)eachAdj.get("applicableTo");
+					if(!applicableTo.equals("_NA_")){
+						List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+						if(UtilValidate.isNotEmpty(sequenceItems)){
+							GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+							applicableTo = sequenceItem.getString("orderItemSeqId");
+						}
+					}
+					BigDecimal amount =(BigDecimal)eachAdj.get("amount");
+					Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);
+					adjustCtx.put("orderId", orderId);
+			    	adjustCtx.put("orderItemSeqId", applicableTo);
+			    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+		    		adjustCtx.put("amount", amount);
+		    		Map adjResultMap=FastMap.newInstance();
+			  	 	try{
+			  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+			  	 		if (ServiceUtil.isError(adjResultMap)) {
+			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+			  	 			Debug.logError(errMsg , module);
+			  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+			  	 		}
+			  	 	}catch (Exception e) {
+			  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+				  		return adjResultMap;			  
+				  	}
+				}*/
+				Map resetTotalCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+				resetTotalCtx.put("orderId", purchaseOrderId);
+				resetTotalCtx.put("userLogin", userLogin);
+				Map resetMap=FastMap.newInstance();
+	  	 		try{
+	  	 			resetMap = dispatcher.runSync("resetGrandTotal",resetTotalCtx);  		  		 
+		  	 		if (ServiceUtil.isError(resetMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(resetMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While reseting order totals for Purchase Order !"+purchaseOrderId);
+		  	 		}
+	  	 		}catch (Exception e) {
+	  	 			Debug.logError(e, " Error While reseting order totals for Purchase Order !"+purchaseOrderId, module);
+	  	 			return resetMap;			  
+	  	 		}
+	  	 		
+
+		       /* if(UtilValidate.isNotEmpty(purchaseOrderId)){
+			  		
+			  		result = DepotHelperServices.getOrderItemAndTermsMapForCalculation(ctx, UtilMisc.toMap("userLogin", userLogin, "orderId", purchaseOrderId));
+					Debug.log("resultMap==============11======================"+result);
+
+			  		if (ServiceUtil.isError(result)) {
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  		  		Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While getting Order Adjestment Details !"+errMsg);
+		  		  	}
+					List<Map> otherCharges = (List)result.get("otherCharges");
+					List<Map> productQty = (List)result.get("productQty");
+					result = DepotHelperServices.getMaterialItemValuationDetails(ctx, UtilMisc.toMap("userLogin", userLogin, "productQty", productQty, "otherCharges", otherCharges, "incTax", ""));
+					if(ServiceUtil.isError(result)){
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  		  		Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While getting getMaterialItemValuationDetails !"+errMsg);
+					}
+					List<Map> itemDetails = (List)result.get("itemDetail");
+									
+					
+					
+			  	}*/
+	  	 		
+	  	 		
+	  	 		
+				
+			}catch(Exception e){
+				try {
+					// only rollback the transaction if we started one...
+		  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+				} catch (GenericEntityException e2) {
+		  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		  		}
+				return ServiceUtil.returnError(e.toString()); 
+			}
+			finally {
+		  		  // only commit the transaction if we started one... this will throw an exception if it fails
+		  		  try {
+		  			  TransactionUtil.commit(beganTransaction);
+		  		  } catch (GenericEntityException e) {
+		  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+		  		  }
+		  	}
+		 }catch(Exception e){
+			 Debug.logError("-----------error-------------- : "+e.toString(), module);
+		 } 
+		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
+	return result;
+}
 	
 	
 }

@@ -143,7 +143,7 @@
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
-		
+		var orderId = $("#orderId").val();			
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
@@ -167,19 +167,21 @@
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(prodId)) {	 		
+	 		if (!isNaN(prodId)) {
+				var inputOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId_o_" + rowCount).val(orderId);
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
-				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "amendedQuantity_o_" + rowCount).val(qty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
-				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "amendedPrice_o_" + rowCount).val(unitPrice);
 				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
+				jQuery(formId).append(jQuery(inputOrder));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -622,9 +624,10 @@
 				if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
 				}
-					if(uom == "KGs"){				
+				if(uom == "KGs"){				
 					quantity = baleQty;
 					bundleWeight=0;
+					kgUnitPrice=udp;
 				}	
 				if(isNaN(baleQty)){
 					baleQty = 1;
@@ -632,8 +635,7 @@
 				if(isNaN(bundleWeight)){
 					qty = 0;
 				}
-				
-				
+				data[args.row]["bundleWeight"] = bundleWeight;
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
