@@ -4628,7 +4628,7 @@ public class DepotSalesServices{
 			
 			productName = productName + attrValue;
 			if(attribute.equals("PLY")){
-				if( (productCategoryId.equals("COTTON")) || (productCategoryId.equals("WOOL")) || (productCategoryId.equals("STAPLE")) || (productCategoryId.equals("ACRYLIC")) || (productCategoryId.equals("BLENDED"))){
+				if( (productCategoryId.equals("COTTON")) || (productCategoryId.equals("WOOL")) || (productCategoryId.equals("STAPLE")) || (productCategoryId.equals("ACRYLIC")) || (productCategoryId.equals("BLENDED")) || (productCategoryId.equals("POLYESTER"))){
 					productName = productName + "/";
 				}
 				else{
