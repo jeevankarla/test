@@ -1064,7 +1064,6 @@
 			data[row]["vatSurchargeList"] = vatSurchargeList;
 			data[row]["taxAmt"] = 0;
 	   	  		
-	   	  	alert("test");	
 	   	  		
 	   	  	$("#orderTaxType").val("Intra-State");
 	   	  				
