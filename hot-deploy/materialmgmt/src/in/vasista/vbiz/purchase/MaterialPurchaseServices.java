@@ -2678,19 +2678,21 @@ public class MaterialPurchaseServices {
 					bundleWeightStr = (String) paramMap
 							.get("bundleWeight" + thisSuffix);
 					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "BUNDLE_WGHT"), false);
-			        orderItemAttr.set("attrValue", bundleWeightStr);
-					orderItemAttr.store();
+					 if(UtilValidate.isNotEmpty(orderItemAttr)){
+						orderItemAttr.set("attrValue", bundleWeightStr);
+						orderItemAttr.store();
+					 }
 
 				}
-				
 				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
 					yarnUOMStr = (String) paramMap
 							.get("yarnUOM" + thisSuffix);
 					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "YARN_UOM"), false);
-			        orderItemAttr.set("attrValue", yarnUOMStr);
-					orderItemAttr.store();
+					 if(UtilValidate.isNotEmpty(orderItemAttr)){
+						orderItemAttr.set("attrValue", yarnUOMStr);
+						orderItemAttr.store();
+					 }
 
-					
 				}
 				//Debug.log("baleQuantityStr=="+baleQuantityStr+"remarks=="+remarks+"bundleWeightStr==="+bundleWeightStr+"yarnUOMStr==="+yarnUOMStr);
 		        request.setAttribute("orderId",orderId);

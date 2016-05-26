@@ -133,6 +133,15 @@ if(PartyClassificationDetails){
 	}
 }
 custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, parameters.partyId, false);
+regno="";
+partyRegIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "REGISTRATION_NUMBER"), false);
+if(partyRegIdentification){
+	regno = partyRegIdentification.get("idValue");
+}
+if(regno){
+	custPartyName=custPartyName+"[ RegNo: "+regno+"]";
+}
+
 partyJSON.put("custPartyName",custPartyName);
 JSONArray partyLoomArrayJSON = new JSONArray();
 if(PartyLoomDetails){

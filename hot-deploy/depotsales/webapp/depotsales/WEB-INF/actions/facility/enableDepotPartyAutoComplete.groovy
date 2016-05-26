@@ -204,7 +204,17 @@
 			JSONObject newObj = new JSONObject();
 			newObj.put("value",society.partyId);
 			partyName=PartyHelper.getPartyName(delegator, society.partyId, false);
-			newObj.put("label",partyName+"["+society.partyId+"]");
+			custPartyName=partyName+"["+society.partyId+"]"
+			
+			regno="";
+			partyRegIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", society.partyId, "partyIdentificationTypeId", "REGISTRATION_NUMBER"), false);
+			if(partyRegIdentification){
+				regno = partyRegIdentification.get("idValue");
+			}
+			if(regno){
+				custPartyName=custPartyName+"[ RegNo: "+regno+"]";
+			}
+			newObj.put("label",custPartyName);
 			societyJSON.add(newObj);
 		}
 	}
