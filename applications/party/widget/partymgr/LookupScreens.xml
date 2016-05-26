@@ -111,7 +111,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER" />
-                <set field="parameters.partyClassificationGroupId" value="INDIVIDUAL_WEAVERS" />
+<!--                 <set field="parameters.partyClassificationGroupId" value="" /> -->
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->
                 <set field="entityName" value="PartyIdentificationAndPerson"/>
@@ -128,7 +128,7 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/StatusCondition.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-screen name="LookupNonDepoDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
                         <include-form name="LookupEmpanelledPartyName" location="component://party/widget/partymgr/LookupForms.xml"/>
                     </decorator-section>
