@@ -446,7 +446,7 @@
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                 <hyperlink target="processSalesInvoice" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
-                    <parameter param-name="orderId" value="${salesOrder}"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
                     <parameter param-name="partyId" from-field="partyId"/>
                     <parameter param-name="billToPartyId" from-field="partyId"/>
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
