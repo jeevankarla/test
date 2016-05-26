@@ -868,7 +868,7 @@ public class DepotPurchaseServices{
 							cstItemCtx.put("invoiceItemTypeId", "CST_PUR");
 							cstItemCtx.put("amount", cstAmount);
 							cstItemCtx.put("quantity", BigDecimal.ONE);
-							vatItemCtx.put("description", "CST");
+							cstItemCtx.put("description", "CST");
 						}
 					}
 					invoiceItemCtx.put("invoiceId", invoiceId);
@@ -896,7 +896,7 @@ public class DepotPurchaseServices{
 						}
 					}
 					if(UtilValidate.isNotEmpty(cstItemCtx)){
-						vatItemCtx.put("invoiceId", invoiceId);
+						cstItemCtx.put("invoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
 						cstItemCtx.put("userLogin", userLogin);
