@@ -6764,9 +6764,10 @@ public class DepotSalesServices{
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String shipmentId = (String) context.get("shipmentId");
 	    String orderId = (String) context.get("orderId");
+	    Debug.log(" orderId ======"+orderId);
 	    String billToPartyId = (String) context.get("billToPartyId");
 	    String purchaseInvoiceId = (String) context.get("purchaseInvoiceId");
-	    
+	    Debug.log("purchaseInvoiceId ======"+purchaseInvoiceId);
 	    List<GenericValue> items = null;
 	    try {
 	    	items = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, UtilMisc.toList("orderItemSeqId"), null, false);
@@ -6775,6 +6776,7 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+	    Debug.log("items ======"+items);
 	    if (items.size() == 0) {
             Debug.logInfo("No items issued for shipments", module);
             return ServiceUtil.returnSuccess();
@@ -6786,6 +6788,7 @@ public class DepotSalesServices{
 		List<GenericValue> invoiceItemList =null;
 		try{
 	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	      Debug.log("invoiceItemList ======"+invoiceItemList);
 		} catch (Exception e) {
 			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
@@ -6795,6 +6798,7 @@ public class DepotSalesServices{
 	    GenericValue orderHeader = null;
 	    try {
 	    	orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+	    	Debug.log("orderHeader ======"+orderHeader);
 	    } catch (GenericEntityException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
@@ -6810,7 +6814,8 @@ public class DepotSalesServices{
 	    List<GenericValue> salesOrderitems = null;
 	    try {
 	    	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("orderItemSeqId"), null, false);
-        } catch (GenericEntityException e) {
+	    	Debug.log("salesOrderitems ======"+salesOrderitems);
+	    } catch (GenericEntityException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
