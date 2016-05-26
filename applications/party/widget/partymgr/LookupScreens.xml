@@ -111,6 +111,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER" />
+                <set field="parameters.partyIdentificationTypeId" value="PSB_NUMER" />
 <!--                 <set field="parameters.partyClassificationGroupId" value="" /> -->
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->

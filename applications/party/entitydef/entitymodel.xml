@@ -1835,6 +1835,7 @@ under the License.
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="PC" name="partyClassificationGroupId"/>
+      <alias entity-alias="PI" name="partyIdentificationTypeId"/>
       <alias entity-alias="PTY" name="description"/>
       <alias entity-alias="PTY" name="statusId"/>
       <alias entity-alias="PER" name="firstName"/>

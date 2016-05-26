@@ -117,7 +117,6 @@ if (orExprs && entityName && displayFieldsSet) {
 	autocompleteOptions = delegator.findList(entityName, entityConditionList, displayFieldsSet, StringUtil.toList(displayFields), findOptions, false);
 	if (autocompleteOptions) {
 		conditionDeopoList=[];
-		Debug.log("===========autocompleteOptions.partyId=====*************======="+autocompleteOptions.partyId)
 		conditionDeopoList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,autocompleteOptions.partyId));
 		conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
 		facilityDepoList = delegator.findList("Facility",conditionDepo,null,null,null,false);

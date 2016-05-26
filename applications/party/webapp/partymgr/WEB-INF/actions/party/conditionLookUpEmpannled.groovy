@@ -59,6 +59,9 @@ if(roleTypeId != null){
 		if(partyClassificationGroupId != null){
 		conditionFields.partyClassificationGroupId=partyClassificationGroupId;
 		}
+		if(parameters.partyIdentificationTypeId != null){
+		conditionFields.partyIdentificationTypeId=parameters.partyIdentificationTypeId;
+		}		
 		context.conditionFields=conditionFields;	
 	
 	
