@@ -197,18 +197,19 @@ public class CustomSequenceServices {
 			        try {
 			        	
 			        	GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+			        	String indentNo = orderHeader.getString("externalId");
 			        	 if (orderHeader == null) {
 				                Debug.logError("Invalid order id  " + orderId, module);
 				                return ServiceUtil.returnError("Invalid order id  " + orderId);            	
 				            }
 			        	 
-			   GenericValue orderType = delegator.findOne("OrderType",UtilMisc.toMap("orderTypeId",orderHeader.getString("orderTypeId")) , false);
-			   if((orderHeader.getString("orderTypeId").equals("SALES_ORDER") ) || (orderType.getString("parentTypeId").equals("") )) {
-				   tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","DEPOT_SALE_SEQUENCE", "propertyName","enableDepotSalesOrderSequence"), false);
-				   if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
-					   enableSequence = Boolean.TRUE;
-		       		}
-	            }else{	
+			       GenericValue orderType = delegator.findOne("OrderType",UtilMisc.toMap("orderTypeId",orderHeader.getString("orderTypeId")) , false);
+				   if((orderHeader.getString("orderTypeId").equals("SALES_ORDER") ) || (orderType.getString("parentTypeId").equals("") )) {
+					   tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","DEPOT_SALE_SEQUENCE", "propertyName","enableDepotSalesOrderSequence"), false);
+					   if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
+						   enableSequence = Boolean.TRUE;
+			       		}
+		            }else{	
 			    		tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enablePOSequence"), false);
 			       		if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
 			       			enableSequence = Boolean.TRUE;
@@ -264,12 +265,26 @@ public class CustomSequenceServices {
 			   				if(UtilValidate.isNotEmpty(orderId)){
 				       			orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 				       			List<GenericValue> billFromParyDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-                                partyId = EntityUtil.getFirst(billFromParyDetails).getString("partyId");
+				       			partyId = EntityUtil.getFirst(billFromParyDetails).getString("partyId");
                                 List<GenericValue> indentTypeDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
-                                if(UtilValidate.isNotEmpty(indentTypeDetails)){
+                                List<GenericValue> orderRolesDetails = FastList.newInstance();
+                                if(UtilValidate.isNotEmpty(indentNo)){
+	                                List condList = FastList.newInstance();
+	                                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, indentNo));
+	                                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+	             					EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	             					orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+                                }
+                                if(UtilValidate.isNotEmpty(indentTypeDetails) || (UtilValidate.isNotEmpty(orderRolesDetails))){
                                 	indentTypeId = "O";
                                 }
-			   				}	
+			   				}
+			   			    String prefix = "IN";
+				            if((tenantConfigEnableSeq.getString("propertyTypeEnumId").equals("PURCHASE_OR_STORES") && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y"))){
+				            	prefix = "PO";
+				            	List<GenericValue> billToParyDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+				            	partyId = EntityUtil.getFirst(billToParyDetails).getString("partyId");
+				            }
 			   				orderHeaderSequence.put("partyId", partyId);
 			   				GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
                             String boSequnce = partyBOs.getString("externalId");
@@ -284,7 +299,7 @@ public class CustomSequenceServices {
 				            delegator.create(orderHeaderSequence);
 				            String productCategoryId = (String) orderHeaderSequence.get("productCategoryId");
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
-				            orderHeaderSequence.put("orderNo", "IN"+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+				            orderHeaderSequence.put("orderNo", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
 				            //orderHeaderSequence.put("orderNo", sequenceId);
 				            delegator.createOrStore(orderHeaderSequence);
 				            result.put("sequenceId", sequenceId) ;
