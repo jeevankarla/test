@@ -391,7 +391,7 @@ under the License.
 	<Enumeration description="Depot Reimbursement for every 2 months" enumId="DEPOT_BILLING"/>
 	
 	<TaxAuthorityRateType taxAuthorityRateTypeId="VAT_SALE" description="Vat Sale"/> 
-	<TaxAuthorityRateType taxAuthorityRateTypeId="CST_SALE" description="Vat Sale"/> 
+	<TaxAuthorityRateType taxAuthorityRateTypeId="CST_SALE" description="Cst Sale"/> 
 	<TaxAuthorityRateType taxAuthorityRateTypeId="VAT_SURCHARGE" parentTypeId="VAT_SALE" description="Surcharge On VAT"/> 
 	
 <!-- 	RO classification Data -->
@@ -480,6 +480,78 @@ under the License.
 	<InvoiceItemType invoiceItemTypeId="TAX_SALE" description="Tax Purchase"/> 
 	<InvoiceItemType invoiceItemTypeId="CST_SALE" parentTypeId="TAX_SALE" description="CST"/> 
 	<InvoiceItemType invoiceItemTypeId="VAT_SALE" parentTypeId="TAX_SALE" description="VAT"/> 
+	
+	
+	<PartyRole partyId="15410" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15410" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15411" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15411" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15412" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15412" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15413" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15413" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15414" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15414" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15415" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15415" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15416" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15416" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15417" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15417" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+    <PartyRole partyId="15418" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15418" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+	<PartyRole partyId="15419" roleTypeId="BRANCH_EMPLOYEE"/>
+    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15419" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
+    
+	
+	
+	<SchemeType schemeTypeId="MGPS"/>
+    <Scheme schemeId="TEN_PERCENT_MGPS" schemeName="Ten Percent Scheme" schemeTypeId="MGPS" description="Ten Percent Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0" productPromoId="TEN_PERCENT_SUBSIDY"/>
+    
+    <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" maxQty="30" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
+    <SchemeParty schemeId="TEN_PERCENT_MGPS" partyId="11435" fromDate="2015-04-01 00:00:00.0"/>
+	
+	
+	<Scheme schemeId="DEPOT_REIMBURSEMENT" schemeName="Depot Reimbursement Scheme" schemeTypeId="MGPS" description="Depot Reimbursement Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0"/>
+    <Scheme schemeId="SHIP_REIMBURSEMENT" schemeName="Shipment Reimbursement Scheme" schemeTypeId="MGPS" description="Shipment Reimbursement Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0"/>
+   
+	
+	
+	
+	<Scheme schemeId="MGPS" schemeName="Mill Gates Price Scheme" description="Mill Gates Price Scheme" fromDate="2015-04-01 00:00:00.0"/>
+	
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="APEX_BODY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="CLUSTER_COOP_SOCIETY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="COOP_SOCIETY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="GOVT_BODY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="HEPC_EXPORTERS"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="INDIVIDUAL_WEAVERS"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="JLG_SOCIETY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="NGO"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="OTHERS"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="REG_BODY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="REG_COOP_SOCIETY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="SHG_SOCIETY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="UN_REG_BODY"/>
+	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="WEAVER_ENTERPRENEURE"/>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 </entity-engine-xml>
