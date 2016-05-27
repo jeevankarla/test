@@ -108,6 +108,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+        <request-map uri="getpartyQuotaDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/" invoke="partyQuotaDetails.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      <request-map uri="getPaymentDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getPaymentDetails.groovy"/> 

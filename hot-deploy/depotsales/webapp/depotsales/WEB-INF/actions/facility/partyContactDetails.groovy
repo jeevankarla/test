@@ -46,6 +46,7 @@ if(parameters.partyId){
 	state="";
 	city="";
 	postalCode="";
+	effectiveDate=UtilDateTime.nowTimestamp();
 contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, parameters.partyId, false,"POSTAL_ADDRESS");
 //Debug.log("contactMechesDetails======================="+contactMechesDetails);
 if(contactMechesDetails){
@@ -120,7 +121,9 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
 PartyClassificationDetails = EntityUtil.getFirst(delegator.findList("PartyClassification",condition,null,null,null,false));
 partyType="";
-
+resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate));
+productCategoryQuotasMap = resultCtx.get("schemesMap");
+usedQuotaMap = resultCtx.get("usedQuotaMap");
 if(PartyClassificationDetails){
 	PartyClassificationDetails.each{ eachPartyClassificationDetails ->
 		partyClassificationGroupId=PartyClassificationDetails.get("partyClassificationGroupId");
@@ -168,6 +171,8 @@ if(PartyLoomDetails){
 	
 	partyLoomJSON.put("loomType",Desc);
 	partyLoomJSON.put("loomQuota",loomQuota);
+	partyLoomJSON.put("availableQuota",productCategoryQuotasMap.get(Desc));
+	partyLoomJSON.put("usedQuota",usedQuotaMap.get(Desc));
 	partyLoomJSON.put("loomQty",loomQty);
 	partyLoomArrayJSON.add(partyLoomJSON);
 	}
