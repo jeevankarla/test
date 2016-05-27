@@ -242,6 +242,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
 								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
 								<#assign POorderId=orderDetails.get("POorder")>
+								<#assign poSquenceNo = orderDetails.get("poSquenceNo")>
 								<#assign productStoreId=orderDetails.get("productStoreId")>
 								</#if>
 				</#if>
@@ -261,7 +262,9 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
               <#if (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO =="N")>
               	<td><a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>DraftPO</td>
               	<#else>
-              	<td>${POorderId?if_exists}</td>
+                    <#if poSquenceNo?has_content><td>${poSquenceNo}</td>
+	              	     <#else><td>${POorderId?if_exists}</td>
+	              	</#if>
               	</#if>
                 <#if (isgeneratedPO =="Y")> 
 	                <#if (eachOrder.get('statusId') == "ORDER_CREATED")>          

@@ -2198,6 +2198,7 @@ under the License.
       <alias entity-alias="OHS" name="orderHeaderSequenceTypeId"/> 
       <alias entity-alias="OHS" name="sequenceId"/>
       <alias entity-alias="OHS" name="orderSeqNo"/>
+      <alias entity-alias="OHS" name="orderNo"/>
       <view-link entity-alias="OH" rel-entity-alias="ORLE">
         <key-map field-name="orderId"/>
       </view-link>
