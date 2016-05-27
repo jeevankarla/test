@@ -207,7 +207,12 @@
 			//context.orderId =POorder;
 			isgeneratedPO="Y";
 		}
-		
+		poSquenceNo="";
+        poOrderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , POorder)  , null, null, null, false );
+		if(UtilValidate.isNotEmpty(poOrderHeaderSequences)){
+			poOrderSeqDetails = EntityUtil.getFirst(poOrderHeaderSequences);
+			poSquenceNo = poOrderSeqDetails.orderNo;
+		}		
 		exprList=[];
 		exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
@@ -223,7 +228,8 @@
 		tempMap=[:];
 		tempMap.put("supplierPartyId", supplierPartyId);
 		tempMap.put("isgeneratedPO", isgeneratedPO);
-		tempMap.put("POorder", POorder);	
+		tempMap.put("POorder", POorder);
+		tempMap.put("poSquenceNo", poSquenceNo);
 		supplierPartyName="";
 		if(supplierPartyId){
 			supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
