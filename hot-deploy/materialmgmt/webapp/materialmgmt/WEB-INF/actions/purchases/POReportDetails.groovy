@@ -126,7 +126,13 @@ for (eachpayment in PaymentList) {
 
 context.payment = total;
 
-
+poSquenceNo="";
+poOrderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(poOrderHeaderSequences)){
+	poOrderSeqDetails = EntityUtil.getFirst(poOrderHeaderSequences);
+	poSquenceNo = poOrderSeqDetails.orderNo;
+}
+allDetailsMap.put("poSquenceNo",poSquenceNo);
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
 allDetailsMap["grandTotal"]=BigDecimal.ZERO;
