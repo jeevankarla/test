@@ -157,6 +157,7 @@ public class InvoiceServices {
         String orderId = (String) context.get("orderId");
         List<GenericValue> billItems = UtilGenerics.checkList(context.get("billItems"));
         String invoiceId = (String) context.get("invoiceId");
+        String shipmentId = (String) context.get("shipmentId");
 
         if (UtilValidate.isEmpty(billItems)) {
             Debug.logVerbose("No order items to invoice; not creating invoice; returning success", module);
@@ -229,6 +230,7 @@ public class InvoiceServices {
             if (UtilValidate.isEmpty(invoiceId)) {
                 Map<String, Object> createInvoiceContext = FastMap.newInstance();
                 createInvoiceContext.put("partyId", billToCustomerPartyId);
+                createInvoiceContext.put("shipmentId", shipmentId);
                 createInvoiceContext.put("partyIdFrom", billFromVendorPartyId);
                 createInvoiceContext.put("billingAccountId", billingAccountId);
                 createInvoiceContext.put("invoiceDate", invoiceDate);
@@ -5151,20 +5153,67 @@ public class InvoiceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue invoiceDetails = null;
         Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue tenantConfigEnableTaxInvSeq;
         try {
         	
         	Boolean enableTaxInvSeq  = Boolean.FALSE;
-    		GenericValue tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableTaxInvSeq"), false);
+    	    tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableTaxInvSeq"), false);
        		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
        			enableTaxInvSeq = Boolean.TRUE;
        		}
+       		else{
+       			tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","INVOICE_SQUENCE", "propertyName","enableInvoiceSequence"), false);
+	       		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
+	       			enableTaxInvSeq = Boolean.TRUE;
+	       		}
+       		}
+       		Timestamp invDate=null;
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
-       			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceItemTypeId", "dueDate", "invoiceDate"), null, null, false);
-       			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceItemTypeId", true);
-       			Timestamp invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
+       			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
+       			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
+       			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate"))){
+       			    invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
+       			}    
        			if(UtilValidate.isEmpty(invDate)){
        				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
        			}
+       			String shipmentId = (EntityUtil.getFirst(invoiceItems)).getString("shipmentId");
+       			String partyId ="";
+       			String prefix ="";
+       			String orderId = "";
+       			GenericValue shipments = null;
+       			List<GenericValue> orderAssoc = FastList.newInstance();
+       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
+       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
+        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+        			orderId = shipments.getString("primaryOrderId");
+           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+                	prefix="PI";
+       			}
+       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
+       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+        			orderId = shipments.getString("primaryOrderId");
+                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+                	prefix="SI";
+       			}
+       		    List condList = FastList.newInstance();
+                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+				EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+       			String indentTypeId = "D";
+                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+                	indentTypeId = "O";
+                }
+       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+                String boSequnce = partyBOs.getString("externalId");
+       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
+       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
+    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
+                String roSequnce = partyROs.getString("externalId");
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");
@@ -5185,11 +5234,12 @@ public class InvoiceServices {
    				}
    				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
    				String finYearId = "";
+   				GenericValue customTimePeriod =null;
    				if(UtilValidate.isNotEmpty(customTimePeriodList)){
-   					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+   					customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
    					finYearId = (String)customTimePeriod.get("customTimePeriodId");
    				}
-       			if(invoiceItemTypeIds.contains("BED_SALE")){
+       			/*if(invoiceItemTypeIds.contains("BED_SALE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
     				billOfSale.put("billOfSaleTypeId", "EXCISE_INV");
     				billOfSale.put("invoiceId", invoiceId);
@@ -5197,9 +5247,9 @@ public class InvoiceServices {
     				billOfSale.put("invoiceDueDate", invDate);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
     	            delegator.create(billOfSale);
-       				
+
        			}
-       			else if(invoiceItemTypeIds.contains("VAT_SALE") || invoiceItemTypeIds.contains("CST_SALE")){
+       			else if(invoiceItemTypeIds.contains("INV_RAWPROD_ITEM") || invoiceItemTypeIds.contains("CST_SALE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
     				billOfSale.put("billOfSaleTypeId", "VAT_INV");
     				billOfSale.put("invoiceId", invoiceId);
@@ -5207,7 +5257,40 @@ public class InvoiceServices {
     				billOfSale.put("invoiceDueDate", invDate);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
     	            delegator.create(billOfSale);
-       			}
+       			}*/
+       			if(invoiceItemTypeIds.contains("PURCHASE_INVOICE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "PUR_INV_SQUENCE");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("partyId", partyId);
+    				billOfSale.put("invoiceDueDate", invDate);
+    				billOfSale.put("productCategoryId", "Y");
+    				billOfSale.put("indentTypeId",indentTypeId);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    	            delegator.create(billOfSale);
+		            String sequenceId = (String) billOfSale.get("sequenceId");
+		            String productCategoryId = (String) billOfSale.get("productCategoryId");
+    				billOfSale.put("invoiceSquence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				delegator.createOrStore(billOfSale); 
+   			    }
+   			    if(invoiceItemTypeIds.contains("SALES_INVOICE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "SALE_INV_SQUENCE");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("partyId", partyId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
+    				billOfSale.put("productCategoryId", "Y");
+    				billOfSale.put("indentTypeId",indentTypeId);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    	            delegator.create(billOfSale);
+		            String sequenceId = (String) billOfSale.get("sequenceId");
+		            String productCategoryId = (String) billOfSale.get("productCategoryId");
+    				billOfSale.put("invoiceSquence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				delegator.createOrStore(billOfSale);
+   			   }
+       			
        		}
         }catch(Exception e){
         	Debug.logError(e, e.toString(), module);
