@@ -7518,6 +7518,7 @@ public class OrderServices {
        String inFavourOf = (String) context.get("inFavourOf");
        
        Timestamp eventDate = (Timestamp) context.get("eventDate");
+       Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
        Locale locale = (Locale) context.get("locale");
        
        
@@ -7525,6 +7526,10 @@ public class OrderServices {
        if (UtilValidate.isEmpty(eventDate)) {
     	   
            eventDate = UtilDateTime.nowTimestamp();
+       }
+       if (UtilValidate.isEmpty(instrumentDate)) {
+    	   
+    	   instrumentDate = UtilDateTime.nowTimestamp();
        }
        try {
            // get the order payment preference
@@ -7577,6 +7582,7 @@ public class OrderServices {
                paymentParams.put("amount", amount);
                paymentParams.put("statusId", "PMNT_RECEIVED");
                paymentParams.put("paymentDate", eventDate);
+               paymentParams.put("instrumentDate", instrumentDate);
                paymentParams.put("partyIdFrom", paymentFromId);
                paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
                paymentParams.put("partyIdTo", payToPartyId);

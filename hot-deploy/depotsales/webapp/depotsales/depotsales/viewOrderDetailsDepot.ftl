@@ -88,12 +88,39 @@
 		$( "#paymentDate" ).datepicker({
 			dateFormat:'dd/mm/yy',
 			changeMonth: true,
-			numberOfMonths: 1});		
+			numberOfMonths: 1
+			});
+			
+			
+		$( "#chequeDate" ).datepicker({
+			dateFormat:'dd/mm/yy',
+			changeMonth: true,
+			numberOfMonths: 1});	
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
+		
+		$("#chequeDate").change(function() {
+        var date = $(this).datepicker("getDate");
+        var oneDay = 24*60*60*1000; 
+        var diffDays = Math.round(Math.abs((date.getTime() - new Date().getTime())/(oneDay)));
+    
+         
+         if(parseInt(diffDays) >= 90){
+         
+          var partyId = $("#partyId").val();
+          var balance = $("#bal").val();
+          var grandTotal = $("#totAmt").val();
+          var orderId = $("#orderId").val();
+          var partyName = $("#partyName").val();
+         
+          alertForDate(orderId, partyId,partyName,grandTotal,balance);
+         
+         }
+        
+    });
+		
+		
 	}
-	
-	
 	
 	function disableSubmitButton(){			
 		$("input[type=submit]").attr("disabled", "disabled");
@@ -236,8 +263,6 @@
 		orderId = orderId;
 		partyId = partyId;
 		
-		
-		
 		grandTotal = grandTotal;
 		partyName= partyName;
 		var formAction = 'createOrderPayment';
@@ -260,9 +285,11 @@
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='partyName' name='partyName' value='"+partyName+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='grandTotal' name='grandTotal' value='"+grandTotal+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
 				 		
                 		
 					message +=	"</table></form></body></html>";
@@ -277,18 +304,11 @@
 		orderId = orderId;
 		partyId = partyId;
 		
-		
-		
 		//finalBal = grandTotal-balance;
-		
-		
 		//var paymentList = eachAdvancePaymentOrderMap[partyId];
-		
-		
 		
 		grandTotal = grandTotal;
 		partyName= partyName;
-		
 		
 		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
@@ -317,8 +337,9 @@
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount'   onblur='javascript:amountCheck()' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><span  align='left' id='bal'>"+balance+"</span></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+grandTotal+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
-                        "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'><span  align='left' id='totAmt'>"+grandTotal+"</span></td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
+                        "<tr class='h3'><td align='left' class='h3' width='60%' id='cheqInFavLable' style='color:green'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' value='NHDC' readonly /></td></tr>"+
+                        "<tr class='h3'><td align='left' class='h3' width='60%' id='chequDateLable' style='color:green' >Chq Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='chequeDate' name='chequeDate' onmouseover='datepick()'/></td></tr>" + 
 						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
@@ -339,13 +360,8 @@
 		orderId = orderId;
 		partyId = partyId;
 		
-		
-		
 		//finalBal = grandTotal-balance;
-		
-		
 		//var paymentList = eachAdvancePaymentOrderMap[partyId];
-		
 		
 		grandTotal = grandTotal;
 		partyName= partyName;
@@ -393,10 +409,6 @@
 		var title = "Dues Payment : "+partyName +" [ "+partyId+" ]";
 		Alert(message, title);
 	}
-
-
-
-
 
 
 
@@ -481,14 +493,37 @@
      $("#comments").parent().parent().show();
      $("#issuingAuthority").parent().parent().show();
      $("#paymentRefNum").parent().parent().show(); 
-     $("#checkNoLabel").html("Cheque No :"); 
+     $("#chequeDate").parent().parent().show(); 
+     $("#checkNoLabel").html("Cheque No :");
+     $("#cheqInFavLable").html("Chq.in favour:");
+     $("#chequDateLable").html("Cheque Date :"); 
                    
+    }
+    else if(paymentType == 'DD'){
+    
+     $("#inFavourOf").parent().parent().show();
+     $("#comments").parent().parent().show();
+     $("#issuingAuthority").parent().parent().show();
+     $("#paymentRefNum").parent().parent().show(); 
+     $("#chequeDate").parent().parent().show();
+     $("#checkNoLabel").html("Cheque/DD No :");
+     $("#cheqInFavLable").html("Chq.in/DD favour:");
+     $("#chequDateLable").html("Cheque/DD Date :"); 
+    
+    
+     var date =  $("#chequeDate").val();
+    
+      alert(date);
+    
     }
    else if(paymentType == 'FT_PAYIN'){
       $("#issuingAuthority").parent().parent().show();
+      $("#chequeDate").parent().parent().hide(); 
+      $("#checkNoLabel").html("Receipt No :"); 
     }
     else if('CASH_PAYIN'){
       $("#paymentRefNum").parent().parent().show(); 
+       $("#chequeDate").parent().parent().hide(); 
        $("#checkNoLabel").html("Receipt No :"); 
     }
   }
@@ -604,6 +639,42 @@
 		
 	}
     
+	
+	
+	function alertForDate(orderId, partyId,partyName,grandTotal,balance) {
+		
+		 var message = "";
+		message += "<html><head></head><body><form action='' id='cancelDepotOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
+			//message += "<br/><br/>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' width=100% class='h3' >Instrument Date is Greater Than 3 Months.</td></tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			
+            message +="<tr class='h3'><td align='center' class='h3'><button value='Ok' id='cancel' onclick='return showPaymentEntryForIndentPayment(orderId,partyId,partyName,grandTotal,balance);' class='smallSubmit'>Ok</button></td>  </tr>";				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "";
+		Alert(message, title);
+		
+		
+	}
+	
+	
 	
 	
 </script>

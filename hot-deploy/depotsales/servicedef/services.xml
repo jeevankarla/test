@@ -43,6 +43,7 @@
            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment">
        <description>Creates a payment using the order payment preference</description>
        <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
+       <attribute name="chequeDate" type="String" mode="IN" optional="true"/>
        <attribute name="orderId" type="String" mode="IN" optional="true"/>
        <attribute name="partyId" type="String" mode="IN" optional="true"/>
        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
