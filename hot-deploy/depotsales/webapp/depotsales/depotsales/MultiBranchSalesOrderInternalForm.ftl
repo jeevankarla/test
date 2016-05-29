@@ -163,9 +163,9 @@
 			var bundleWeight = data[rowCount]["bundleWeight"];
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
-			var unitPrice = data[rowCount]["unitPrice"];
+			var bundleUnitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			var bundleUnitPrice = data[rowCount]["KgunitPrice"];			
+			var unitPrice = data[rowCount]["KgunitPrice"];			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
