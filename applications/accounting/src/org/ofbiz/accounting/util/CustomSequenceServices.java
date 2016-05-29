@@ -293,9 +293,9 @@ public class CustomSequenceServices {
 			       			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
                             String roSequnce = partyROs.getString("externalId");
 			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
-							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 							orderHeaderSequence.put("productCategoryId", "Y");
 							orderHeaderSequence.put("indentTypeId",indentTypeId);
+							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 				            delegator.create(orderHeaderSequence);
 				            String productCategoryId = (String) orderHeaderSequence.get("productCategoryId");
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");

@@ -1379,6 +1379,7 @@ public class DepotSalesServices{
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String referenceNo = (String) request.getParameter("referenceNo");
+		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
 		Debug.log("referenceNo ===="+referenceNo);
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
@@ -1823,6 +1824,7 @@ public class DepotSalesServices{
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("referenceNo", referenceNo);
+		processOrderContext.put("tallyRefNo", tallyReferenceNo);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);
@@ -2944,6 +2946,7 @@ public class DepotSalesServices{
 	    Locale locale = (Locale) context.get("locale");
 		
 	    String paymentDate = (String) context.get("paymentDate");
+	    String chequeDate = (String) context.get("chequeDate");
 	    String orderId = (String) context.get("orderId");
 	  	String partyId = (String) context.get("partyId");
 	  	String paymentMethodTypeId = (String) context.get("paymentTypeId");
@@ -2961,10 +2964,13 @@ public class DepotSalesServices{
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
 	  	
 	  	Timestamp eventDate = null;
+	  	Timestamp chequeDateTS = null;
+	  	
 	      if (UtilValidate.isNotEmpty(paymentDate)) {
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
 				try {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+					chequeDateTS = new java.sql.Timestamp(sdf.parse(chequeDate).getTime());
 				} catch (ParseException e) {
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
 				} catch (NullPointerException e) {
@@ -2975,7 +2981,7 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDate,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
@@ -6756,18 +6762,16 @@ public class DepotSalesServices{
 	//	sales invoice generation based on shipment
 	
 	public static Map<String, Object> createBranchSaleInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
-		
-	    Delegator delegator = ctx.getDelegator();
+	   
+		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    Locale locale = (Locale) context.get("locale");
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String shipmentId = (String) context.get("shipmentId");
 	    String orderId = (String) context.get("orderId");
-	    Debug.log(" orderId ======"+orderId);
 	    String billToPartyId = (String) context.get("billToPartyId");
 	    String purchaseInvoiceId = (String) context.get("purchaseInvoiceId");
-	    Debug.log("purchaseInvoiceId ======"+purchaseInvoiceId);
 	    List<GenericValue> items = null;
 	    try {
 	    	items = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, UtilMisc.toList("orderItemSeqId"), null, false);
@@ -6788,7 +6792,6 @@ public class DepotSalesServices{
 		List<GenericValue> invoiceItemList =null;
 		try{
 	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	      Debug.log("invoiceItemList ======"+invoiceItemList);
 		} catch (Exception e) {
 			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
@@ -6798,7 +6801,6 @@ public class DepotSalesServices{
 	    GenericValue orderHeader = null;
 	    try {
 	    	orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-	    	Debug.log("orderHeader ======"+orderHeader);
 	    } catch (GenericEntityException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
@@ -6814,7 +6816,6 @@ public class DepotSalesServices{
 	    List<GenericValue> salesOrderitems = null;
 	    try {
 	    	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("orderItemSeqId"), null, false);
-	    	Debug.log("salesOrderitems ======"+salesOrderitems);
 	    } catch (GenericEntityException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
             Debug.logError(e, errMsg, module);
@@ -6836,8 +6837,6 @@ public class DepotSalesServices{
 	    	}
 	    	
 	    }
-	    Debug.log("shipProdQtyMap ==================="+shipProdQtyMap);
-	    
 	    List<GenericValue> toBillItems = FastList.newInstance();
 	    
 	    for(Object productKey : shipProdQtyMap.keySet()){
@@ -6877,10 +6876,10 @@ public class DepotSalesServices{
 	    	
 	    }
 	    
-	    Debug.log("toBillItems =========Final=========="+toBillItems);
 	    String invoiceId = null;
-        // Raise Invoice for the unbilled items
-        Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
+        // Raise Invoice for the unbilled items	    
+        Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
+        serviceContext.put("shipmentId",shipmentId);
         try {
             Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
             invoiceId = (String) servResult.get("invoiceId");
@@ -6889,15 +6888,16 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-        
-        try{
+       /* try{
 			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+			Debug.log("invoice========================="+invoice);
 			invoice.set("shipmentId", shipmentId);
 			invoice.store();
+			Debug.log("invoice========================="+invoice);
 		}catch (GenericEntityException e) {
 			Debug.logError("Error in updating shipment in invoice", module);
 			return ServiceUtil.returnError("Error in updating shipment in invoice");
-		}
+		}*/
         
         // Indentify the adjustments applied to purchase invoice and apply them to the sales invoice
         
@@ -7039,9 +7039,6 @@ public class DepotSalesServices{
 	        }else{
 	    	    BranchSaleTransactionsList = delegator.findList("BranchSaleTransactionInfo", null, null,null, null, false);
 	        }
-	    
-	    Debug.log("======================test=================="+BranchSaleTransactionsList);
-	    
 	    List externalIndentNosList = EntityUtil.getFieldListFromEntityList(BranchSaleTransactionsList, "indentNo", true);
 	    HttpServletRequest request = (HttpServletRequest) context.get("request");
 	    HttpServletResponse response = (HttpServletResponse) context.get("response");
@@ -7053,71 +7050,33 @@ public class DepotSalesServices{
 	    	    Timestamp  effectiveDate = null;
 	    	    String shipmentTypeId ="";
 	    	    String salesChannel ="";
-		        Debug.log("======================test=================="+BrachTrans);
 		         partyId =BrachTrans.getString("partyId");
-		        Debug.log("======================partyId=================="+partyId);
-
 				 billToCustomer = BrachTrans.getString("partyId");//using For Amul Sales
-		        Debug.log("======================billToCustomer=================="+billToCustomer);
-
 				Map resultMap = FastMap.newInstance();
 				List invoices = FastList.newInstance(); 
 				effectiveDate =  BrachTrans.getTimestamp("effectiveDate");
-		        Debug.log("======================effectiveDateStr=================="+effectiveDate);
-
 				shipmentTypeId = (String) BrachTrans.get("shipmentTypeId");
-		        Debug.log("======================shipmentTypeId=================="+shipmentTypeId);
-
 				salesChannel = (String)BrachTrans.getString("salesChannel");
 
 				String remarks = (String)BrachTrans.get("remarks");
-		        Debug.log("======================salesChannel=================="+salesChannel);
-		        Debug.log("======================remarks=================="+remarks);
-
 				String productId = (String) BrachTrans.getString("productId");
-		        Debug.log("======================productId=================="+productId);
-
 		        BigDecimal baleQuantity = (BigDecimal) BrachTrans.get("baleQuantity");
-		        Debug.log("======================baleQuantity=================="+baleQuantity);
-
 				String yarnUOM = (String) BrachTrans.get("yarnUOM");
-		        Debug.log("======================yarnUOM=================="+yarnUOM);
-
 		        BigDecimal bundleWeight = (BigDecimal) BrachTrans.get("bundleWeight");
-		        Debug.log("======================bundleWeight=================="+bundleWeight);
-
 		        BigDecimal quantity = (BigDecimal) BrachTrans.get("quantity");
-		        Debug.log("======================quantity=================="+quantity);
-
 		        BigDecimal unitPrice = (BigDecimal) BrachTrans.get("unitPrice");
-		        Debug.log("======================unitPrice=================="+unitPrice);
-
 				String suplierPartyId = (String) BrachTrans.get("suplierPartyId");
-		        Debug.log("======================suplierPartyId=================="+suplierPartyId);
-
 				String societyPartyId = (String) BrachTrans.get("societyPartyId");
-		        Debug.log("======================societyPartyId=================="+societyPartyId);
-
 				String productStoreId = (String) BrachTrans.get("productStoreId");
-		        Debug.log("======================productStoreId=================="+productStoreId);
-
 				String orderTaxType = (String) BrachTrans.getString("orderTaxType");
-		        Debug.log("======================orderTaxType=================="+orderTaxType);
-
 				String disableAcctgFlag = (String) BrachTrans.getString("disableAcctgFlag");
-		        Debug.log("======================disableAcctgFlag=================="+disableAcctgFlag);
-
 				String schemeCategory = (String) BrachTrans.get("schemeCategory");
-		        Debug.log("======================schemeCategory=================="+schemeCategory);
-
 		        String orderTypeId ="";
 				if(UtilValidate.isNotEmpty(BrachTrans.get("orderTypeId"))){
 					 orderTypeId = (String) BrachTrans.get("orderTypeId");
-			        Debug.log("======================orderTypeId=================="+orderTypeId);
 				}
 				String billingType = (String) BrachTrans.get("billingType");
 				String entryOrderId = (String) BrachTrans.getString("orderId");
-		        Debug.log("======================entryOrderId=================="+entryOrderId);
 		        String orderId ="";
 				String subscriptionTypeId = "AM";
 				String partyIdFrom = "";
@@ -7208,7 +7167,6 @@ public class DepotSalesServices{
 						}
 				
 						orderId = (String)result.get("orderId");
-						Debug.log("orderId================"+orderId);
 						if(UtilValidate.isNotEmpty(orderId)){
 						
 						String schemePartyId="";

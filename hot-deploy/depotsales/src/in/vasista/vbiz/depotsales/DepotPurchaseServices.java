@@ -787,6 +787,7 @@ public class DepotPurchaseServices{
 		        input.put("invoiceDate", invoiceDate);
 		        input.put("dueDate", invoiceDate); 	        
 		        input.put("partyId",partyIdFrom );
+		        input.put("shipmentId",shipmentId );
 		        input.put("purposeTypeId", purposeTypeId);
 		        if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			        input.put("isEnableAcctg", "N");
@@ -997,9 +998,9 @@ public class DepotPurchaseServices{
 				}
 				
 				GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
-				invoice.set("shipmentId", shipmentId);
+				/*invoice.set("shipmentId", shipmentId);
 				invoice.store();
-				
+				*/
 				result.put("invoiceId", invoiceId);
 				 // creating invoiceRole for order
 				 Map<String, Object> createInvoiceRoleContext = FastMap.newInstance();
