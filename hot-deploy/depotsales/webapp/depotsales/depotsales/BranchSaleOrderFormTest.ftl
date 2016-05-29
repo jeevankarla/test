@@ -956,7 +956,7 @@
 					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyReferenceNo?if_exists}"/>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${referenceNo}               
+				               			${tallyReferenceNo}               
 				            		</div>
 				          		</td>       
 				          	</#if>
