@@ -6,6 +6,12 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
 
+<input type="hidden" name="PaymentOrderId" id="PaymentOrderId">
+<input type="hidden" name="PayPartyId" id="PayPartyId">
+<input type="hidden" name="PayPartyName" id="PayPartyName">
+<input type="hidden" name="PaygrandTotal" id="PaygrandTotal">
+<input type="hidden" name="Paybalance" id="Paybalance">
+
 <script type="application/javascript">
 					 
 	var orderData;			
@@ -113,7 +119,7 @@
           var orderId = $("#orderId").val();
           var partyName = $("#partyName").val();
          
-          alertForDate(orderId, partyId,partyName,grandTotal,balance);
+          alertForDate();
          
          }
         
@@ -301,14 +307,24 @@
 
    function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
 		var message = "";
-		orderId = orderId;
-		partyId = partyId;
+		
+		 if(orderId != '' && orderId != undefined){
+		 $("#PayOrderId").val(orderId);
+		 $("#PayPartyId").val(partyId);
+		 $("#PayPartyName").val(partyName);
+		 $("#PaygrandTotal").val(grandTotal);
+		 $("#Paybalance").val(balance);
+		 }
+		
+		orderId = $("#PayOrderId").val();
+		partyId = $("#PayPartyId").val();
 		
 		//finalBal = grandTotal-balance;
 		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
-		grandTotal = grandTotal;
-		partyName= partyName;
+		grandTotal = $("#PaygrandTotal").val();
+		partyName=  $("#PayPartyName").val();
+		balance = $("#Paybalance").val();
 		
 		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
@@ -497,6 +513,10 @@
      $("#checkNoLabel").html("Cheque No :");
      $("#cheqInFavLable").html("Chq.in favour:");
      $("#chequDateLable").html("Cheque Date :"); 
+      $("#checkNoLabel").html("Cheque/DD No :");
+     $("#cheqInFavLable").html("Chq.in/DD favour:");
+     $("#chequDateLable").html("Cheque/DD Date :"); 
+     
                    
     }
     else if(paymentType == 'DD'){
@@ -506,14 +526,11 @@
      $("#issuingAuthority").parent().parent().show();
      $("#paymentRefNum").parent().parent().show(); 
      $("#chequeDate").parent().parent().show();
-     $("#checkNoLabel").html("Cheque/DD No :");
-     $("#cheqInFavLable").html("Chq.in/DD favour:");
-     $("#chequDateLable").html("Cheque/DD Date :"); 
-    
+     $("#checkNoLabel").html("Cheque No :");
+     $("#cheqInFavLable").html("Chq.in favour:");
+     $("#chequDateLable").html("Cheque Date :"); 
     
      var date =  $("#chequeDate").val();
-    
-      alert(date);
     
     }
    else if(paymentType == 'FT_PAYIN'){
@@ -641,7 +658,7 @@
     
 	
 	
-	function alertForDate(orderId, partyId,partyName,grandTotal,balance) {
+	function alertForDate() {
 		
 		 var message = "";
 		message += "<html><head></head><body><form action='' id='cancelDepotOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
@@ -665,7 +682,8 @@
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			
-            message +="<tr class='h3'><td align='center' class='h3'><button value='Ok' id='cancel' onclick='return showPaymentEntryForIndentPayment(orderId,partyId,partyName,grandTotal,balance);' class='smallSubmit'>Ok</button></td>  </tr>";				 		
+			
+            message +="<tr class='h3'><td align='center' class='h3'><button value='Ok' id='cancel' onclick='return showPaymentEntryForIndentPayment();' class='smallSubmit'>Ok</button></td>  </tr>";				 		
                 		
 					message +=	"</table></form></body></html>";
 		var title = "";
