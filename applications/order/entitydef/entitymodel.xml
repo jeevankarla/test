@@ -844,6 +844,41 @@ under the License.
         <key-map field-name="changeUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
+    <entity entity-name="OrderItemDetail"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Detail Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="baleQuantity" type="fixed-point"></field>
+      <field name="bundleWeight" type="fixed-point"></field>
+      <field name="bundleUnitPrice" type="currency-amount"></field>
+      <field name="itemDescription" type="description"></field>
+<!--       <field name="unitPrice" type="currency-amount"></field> -->
+      <field name="remarks" type="comment"></field>
+      <field name="quotaQuantity" type="fixed-point"></field>
+      <field name="changeUserLogin" type="id-vlong"></field>
+      
+      <prim-key field="orderId"/>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITDTL_OITM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+       <relation type="one" fk-name="ORDER_ITDTL_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITDTL_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITDTL_USER" rel-entity-name="UserLogin">
+        <key-map field-name="changeUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
     <entity entity-name="OrderItemContactMech"
             package-name="org.ofbiz.order.order"
             never-cache="true"
