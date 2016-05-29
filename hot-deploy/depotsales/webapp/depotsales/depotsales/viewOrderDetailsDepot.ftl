@@ -308,7 +308,6 @@
    function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
 		var message = "";
 		
-		 alert(orderId );
 		 if(orderId != '' && orderId != undefined){
 		 $("#PayOrderId").val(orderId);
 		 $("#PayPartyId").val(partyId);
