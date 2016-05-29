@@ -8,7 +8,7 @@
 		}
 		.form-style-8{
 		    max-width: 650px;
-		    max-height: 150px;
+		    max-height: 170px;
 		    max-right: 10px;
 			margin-bottom: -10px;
 		    padding: 20px;

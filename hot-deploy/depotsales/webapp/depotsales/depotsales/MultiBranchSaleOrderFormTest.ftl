@@ -8,7 +8,7 @@
 		}
 		.form-style-8{
 		    max-width: 650px;
-		    max-height: 185px;
+		    max-height: 200px;
 		    max-right: 10px;
 		    margin-top: 10px;
 			margin-bottom: -15px;
@@ -690,7 +690,37 @@
 			        	</#if>
 						
 	               	</tr>
-	               	               	
+	               	 
+	               	 <tr>
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if tallyReferenceNo?exists && tallyReferenceNo?has_content>  
+					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyReferenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${tallyReferenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.tallyReferenceNo?exists && parameters.tallyReferenceNo?has_content>  
+					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.tallyReferenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo"/>
+				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          		</td>
+				          		
+				          	</#if>
+			        	</#if>
+	               	</tr>	   
+	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -749,6 +779,7 @@
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 		<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 		<input type="hidden" name="referenceNo" id="referenceNo" value="${parameters.referenceNo?if_exists}"/>
+		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>
 		<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 		<input type="hidden" name="branchGeoId" id="branchGeoId" value="${parameters.branchGeoId?if_exists}"/>
 		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
