@@ -1379,6 +1379,7 @@ public class DepotSalesServices{
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String referenceNo = (String) request.getParameter("referenceNo");
+		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
 		Debug.log("referenceNo ===="+referenceNo);
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
@@ -1823,6 +1824,7 @@ public class DepotSalesServices{
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("referenceNo", referenceNo);
+		processOrderContext.put("tallyRefNo", tallyReferenceNo);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);
@@ -2944,6 +2946,7 @@ public class DepotSalesServices{
 	    Locale locale = (Locale) context.get("locale");
 		
 	    String paymentDate = (String) context.get("paymentDate");
+	    String chequeDate = (String) context.get("chequeDate");
 	    String orderId = (String) context.get("orderId");
 	  	String partyId = (String) context.get("partyId");
 	  	String paymentMethodTypeId = (String) context.get("paymentTypeId");
@@ -2961,10 +2964,13 @@ public class DepotSalesServices{
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
 	  	
 	  	Timestamp eventDate = null;
+	  	Timestamp chequeDateTS = null;
+	  	
 	      if (UtilValidate.isNotEmpty(paymentDate)) {
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
 				try {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+					chequeDateTS = new java.sql.Timestamp(sdf.parse(chequeDate).getTime());
 				} catch (ParseException e) {
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
 				} catch (NullPointerException e) {
@@ -2975,7 +2981,7 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"userLogin", userLogin);
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDate,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");

@@ -383,6 +383,7 @@ under the License.
       <field name="orderTypeId" type="id"></field>
       <field name="orderName" type="name"></field>
       <field name="externalId" type="id"></field>
+      <field name="tallyRefNo" type="id"></field>
       <field name="salesChannelEnumId" type="id"></field>
       <field name="orderDate" type="date-time"></field>
       <field name="priority" type="indicator"><description>Sets priority for Inventory Reservation</description></field>

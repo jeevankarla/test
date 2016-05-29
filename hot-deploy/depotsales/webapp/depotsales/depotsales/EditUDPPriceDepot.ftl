@@ -539,7 +539,7 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId' onchange='storeValues();'/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: <font color=red>*</font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onchange='storeValues();' required/></td></tr>";
-	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: <font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();' /></td></tr>";
+	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();'  /></td></tr>";
 				    message +=  "<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitAddress();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
                 		
 					message +=	"</table></body></html>";
@@ -560,6 +560,11 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	     var address2 = $("#address2").val();
 	     var city = $("#city").val();
 	     var postalCode = $("#postalCode").val();
+	     
+	     if(postalCode == ''){
+			 postalCode = '0';
+	 	}
+	     
 	     var countryCode = $("#countryCode").val();
 	     var stateProvinceGeoId = $("#stateProvinceGeoId").val();
 	     var stateName = $("#stateProvinceGeoId").find('option:selected').text();
@@ -639,8 +644,6 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 	}
 	
 	
-	
-	
  	var stateListJSON;
  	function setServiceName(selection) {
  		var country=selection.value;
@@ -692,5 +695,53 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 		StateOptions = StateOptionList;
  		jQuery("[name='stateProvinceGeoId']").html(StateOptions);
 	} 	
+	
+	
+	
+		function alertForDate() {
+		
+		 var message = "";
+		message += "<html><head></head><body><form action='' id='cancelDepotOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
+			//message += "<br/><br/>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' width=100% class='h3' >Instrument Date is Greater Than 3 Months</td></tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			
+           message +="<tr class='h3'><td align='center' class='h3'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>Ok</button></td>  </tr>";				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "";
+		Alert(message, title);
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </script>
