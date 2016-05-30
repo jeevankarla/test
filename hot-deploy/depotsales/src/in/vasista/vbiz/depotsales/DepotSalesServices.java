@@ -6126,10 +6126,12 @@ public class DepotSalesServices{
 	   LocalDispatcher dispatcher = dctx.getDispatcher();
 	   Map<String, Object> result = ServiceUtil.returnSuccess();
 	   Map<String, Object> productCategoryQuotamap = ServiceUtil.returnSuccess();
+	   Map<String, Object> usedQuotaMap = ServiceUtil.returnSuccess();
 	   List conditionList = FastList.newInstance();
 		String schemeId="TEN_PERCENT_MGPS";
 		String partyId=(String) context.get("partyId");
 		Timestamp effectiveDate=(Timestamp) context.get("effectiveDate");
+		String productCategoryId=(String) context.get("productCategoryId");
 		if(UtilValidate.isEmpty(effectiveDate)){
 			effectiveDate = UtilDateTime.nowTimestamp();
 		}
@@ -6160,6 +6162,9 @@ public class DepotSalesServices{
 		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+		if(UtilValidate.isNotEmpty(productCategoryId)){
+			conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+		}
 		List<GenericValue> productCategoryApplicableSchemes = null;
 		try {
 			productCategoryApplicableSchemes = delegator.findList("SchemeProductCategory", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -6172,7 +6177,7 @@ public class DepotSalesServices{
 			BigDecimal partyLooms = BigDecimal.ZERO;
 			for(int j=0; j<productCategoryApplicableSchemes.size(); j++){
 				GenericValue schemeProductCategory = productCategoryApplicableSchemes.get(j);
-				String productCategoryId = schemeProductCategory.getString("productCategoryId");
+				productCategoryId = schemeProductCategory.getString("productCategoryId");
 				BigDecimal usedQuata=BigDecimal.ZERO;
 				BigDecimal periodTime=(BigDecimal)schemeProductCategory.get("periodTime");
 				partyLooms = BigDecimal.ZERO;
@@ -6205,7 +6210,7 @@ public class DepotSalesServices{
 	//					return ServiceUtil.returnError("schemeTimePeriod count does not match with SchemeProductCategory periodTime. ");
 	//				}
 				  for(int i=0;i< periodTime.intValueExact();i++){
-					if(UtilValidate.isNotEmpty(schemeTimePeriodIdList.get(i))){
+					if(schemeTimePeriodIdList.size()>i){
 						String schemeTimePeriodId=(String)((GenericValue)schemeTimePeriodIdList.get(i)).get("schemeTimePeriodId");
 						Map<String, Object> resultPartyQuotaBalanceHistoryMap = getPartyQuotaBalanceHistory(dctx,UtilMisc.toMap("productCategoryId",productCategoryId,"partyId",partyId,"schemeTimePeriodId",schemeTimePeriodId));	
 						GenericValue partyQuotaBalanceHistory=(GenericValue)resultPartyQuotaBalanceHistoryMap.get("partyQuotaBalanceHistory");
@@ -6232,10 +6237,12 @@ public class DepotSalesServices{
 					}
 				}
 				availableQuata=availableQuata.subtract(usedQuata);
+				usedQuotaMap.put(productCategoryId,usedQuata);
 				productCategoryQuotamap.put(productCategoryId,availableQuata);
 				
 			}
 			result.put("schemesMap",productCategoryQuotamap);
+			result.put("usedQuotaMap",usedQuotaMap);
 		}
 		else{
 			// we need to insert SchemeTimePeriods

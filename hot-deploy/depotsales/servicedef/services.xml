@@ -206,8 +206,10 @@
     <service name="getPartyAvailableQuotaBalanceHistory" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPartyAvailableQuotaBalanceHistory" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
+         <attribute name="usedQuotaMap" type="Map" mode="OUT" optional="true"/>
     </service>
     <service name="getSchemeTimePeriodId" engine="java" auth="true" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getSchemeTimePeriodId">

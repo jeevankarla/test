@@ -273,29 +273,38 @@
 		       	  			var WoolLooms=0;
 		       	  			var obj ={};
 		       	  			var objQuota ={};
-
+ 						var  objAvailableQuota ={};
+		       	  			var objUsedQuota ={};
 		       	  			// alert(JSON.stringify(LoomDetails));
 		       	  			$.each(LoomList, function(key, item){
 		       	  				 obj [item.loomType]=0;
 		       	  				 objQuota[item.loomType]=0;
+		       	  				 objAvailableQuota[item.loomType]=0;
+		       	  			     objUsedQuota[item.loomType]=0;
 		       	  				 for(var i=0 ; i<LoomDetails.length ; i++){
 			       	  				if(LoomDetails[i].loomType==item.loomType){
 			       	  				 	obj [item.loomType] = LoomDetails[i].loomQty;
-          								 objQuota [item.loomType] = LoomDetails[i].loomQuota; 	  
-			       	  				}			       	  				 	
+          								 objQuota [item.loomType] = LoomDetails[i].loomQuota; 	
+          								 objAvailableQuota [item.loomType] = LoomDetails[i].availableQuota; 
+          								objUsedQuota [item.loomType] = LoomDetails[i].usedQuota;   
+ 			       	  				}			       	  				 	
 		       	  				 }
 		       	  			});		       	  				   
 		       	  			var tableElement;
 		       	  			var totLooms = 0;
 		       	  				  
 		       	  			tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
-		       	  			tableElement += '<td width="20%" align="left" class="label"><font color="green">No of Looms</font></td>';
-						tableElement += '<td width="20%" align="left" class="label"><font color="green">Loom Quota</font></td></tr>';
+		       	  			tableElement += '<td width="20%" align="left" class="label"><font color="green">No.Looms</font></td>';
+		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="green">Elg.Quota</font></td>';
+		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="green">Bal.Quota</font></td>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">UsedQuota</font></td></tr>';
 		       	  				   
 		       	  			$.each(LoomList, function(key, item){
 		       	  				 tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
 		       	  				 tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td>';
-		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td></tr>';
+		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td>';
+		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objAvailableQuota[item.loomType]+'</font></td>';
+		       	  		            tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objUsedQuota[item.loomType]+'</font></td></tr>';
 		       	  				 totLooms = totLooms+parseInt(obj[item.loomType]);
 		       	  				     
 		       	  			});
@@ -800,21 +809,21 @@
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName: </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   PartyName: </b></font></td><td width="85%"> <label  align="left" id="partyName"style="color: blue" ></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	 	<#if parameters.address?exists && parameters.address?has_content> 
 			       			<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address         : </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green"><b>   Address: </b></font></td><td width="85%"> <font color="blue"><b>${parameters.address}</b></font></td>
 			       			</tr>
 			       			<#else>
 		               		<tr>
-			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address         : </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
+			       				<td width="15%" keep-together="always" align="center"><font color="green" ><b>   Address: </b></font></td><td width="85%"> <label  align="left" id="address" style="color: blue"></label></td>
 			       			</tr>
 			       			</#if>
 				 	 	</table>	
@@ -827,61 +836,61 @@
 			               
 				       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 				       			 <tr>
-				       				<td width="30%" keep-together="always"><font color="green">PassBook        : </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook: </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="30%" keep-together="always"><font color="green">PassBook    : </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
+				       				<td width="30%" keep-together="always"><font color="green">PassBook: </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
 				       			</tr>
 				       			</#if>
 				       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
 				       			<tr>
-				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
+				       				<td width="20%"><font color="green">IssueDate: </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="20%"><font color="green">IssueDate     : </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
+				       				<td width="20%"><font color="green">IssueDate: </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
 				       			</tr>
 				       			</#if>
 				       			
 				       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 				       			<tr>
-				       				<td width="20%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+				       				<td width="20%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="35%" keep-together="always"><font color="green">postal Code     : </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+				       				<td width="35%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
 				       			</tr>
 				       			</#if>-->
 				       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 				       			<tr>
-				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}: </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="20%"><font color="green">${uiLabelMap.Depot}     : </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
+				       				<td width="20%"><font color="green">${uiLabelMap.Depot}: </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
 				       			</tr>
 				       			</#if>
 				       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
 				       			<tr>
-				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+				       				<td width="20%"><font color="green">DOA: </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="20%"><font color="green">DOA     : </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+				       				<td width="20%"><font color="green">DOA: </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
 				       			</tr>
 				       			</#if>
 				       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
 				       			<tr>
-				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+				       				<td width="25%"><font color="green">partyType: </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
 				       			</tr>
 				       			<#else>
 				       			<tr>
-				       				<td width="25%"><font color="green">partyType     : </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+				       				<td width="25%"><font color="green">partyType: </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
 				       			</tr>
 				       			</#if>
 				       			<tr>
-				       				<td width="25%"><font color="green">Total Looms     : </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+				       				<td width="25%"><font color="green">Total Looms: </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
 				       			</tr>
 				       		</table>
 			       		</td>

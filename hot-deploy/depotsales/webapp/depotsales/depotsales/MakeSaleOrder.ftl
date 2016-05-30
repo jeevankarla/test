@@ -113,13 +113,14 @@
           					}
         			});
         			
-      			}
+      			},
 	      		
 	      		
 	      		
-	      		//source: billToPartyIdsList , select: function( event, ui ) {
-				//$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
-				//}
+	      		select: function( event, ui ) {
+				$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+					fillPartyQuota(ui.item.value);
+				}
 				
 				
 		  });	
@@ -150,6 +151,8 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='productId' name='productId' value='"+productId+"'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='"+productStoreId+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Order Date:</td><td align='left' width='50%'><input type='text' id='saleOrderDate' name='saleOrderDate' onmouseover='datepick1()'/></td><input type='hidden'  id='effectiveDate' name='effectiveDate'/><input type='hidden'  id='quantityOnHandTotal' name='quantityOnHandTotal' value='"+quantityOnHandTotal+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Bill to Party:</td><td align='left' width='70%'><input class='h3' type='text' id='partyId' name='partyId' onclick='javascript:autoCompletePartyId();' size='13'/><span align='right' id='partyTooltip'></span></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Scheme Category:</td><td align='left' width='70%'><select name='schemeCategory' id='schemeCategory' onchange='getQuota(this)' class='h3' style='width:162px'></select></td></tr>";
+		message +=  "<tr id='quotatr' style='display:none' class='h3'><td align='left'  class='h3' width='50%'>Available Quota:</td><td align='left' width='70%'><input class='h3' type='text' id='quota' readonly name='quota' size='13'/></td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Unit Cost:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='unitCost' name='unitCost' value='"+unitCost+"'/></td><input type='hidden'  id='disableAcctgFlag' name='disableAcctgFlag' value='Y'/><input type='hidden'  id='inventoryItemId' name='inventoryItemId' value='"+inventoryItemId+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Quantity:</td><td align='left' width='50%'><input class='h3' type='text' id='quantity' name='quantity' value='' onBlur='showTotalAmount(quantity , unitCost, quantityOnHandTotal)'/></td><input type='hidden'  id='salesChannel' name='salesChannel' value='WEB_SALES_CHANNEL'/></tr>";
 		
@@ -159,6 +162,47 @@
 		message += "</table></form>";
 		Alert(message, title);
 	};
+
+function getQuota(obj){
+$("#quotatr").hide();
+	if($(obj).val()=="TEN_PERCENT_MGPS"){
+	  $("#quotatr").show();
+	}
+
+}
 	
-	
+function fillPartyQuota(partyId){
+
+	if( partyId != undefined && partyId != ""){
+				var dataString="partyId="+partyId+"&productId="+$("#productId").val();
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyQuotaDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{ 
+	          			      $("#quotatr").hide();
+	       	  				  contactDetails =result["quotaJson"];
+	       	  				  $("#quota").val(contactDetails['quota']);
+	       	  				  SchemeList=contactDetails["SchemeList"];
+	       	  				  var tableElement="";
+	       	  				  
+	       	  				   $.each(SchemeList, function(key, item){
+		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
+		       	  				 });
+		       	  			$('#schemeCategory').empty().append(tableElement);	 
+
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	         	 });
+	         	 }
+	        }
 </script>
