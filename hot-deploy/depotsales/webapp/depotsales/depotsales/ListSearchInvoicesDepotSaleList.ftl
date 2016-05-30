@@ -90,6 +90,8 @@ function cancelForm(){
 		  	
 	}
 
+var i=1;
+
 function datepick()
 	{		
 		$( "#effectiveDate" ).datepicker({
@@ -99,10 +101,41 @@ function datepick()
 		$( "#paymentDate" ).datepicker({
 			dateFormat:'dd/mm/yy',
 			changeMonth: true,
-			numberOfMonths: 1});		
+			numberOfMonths: 1});
+		$( "#chequeDate" ).datepicker({
+			dateFormat:'dd/mm/yy',
+			changeMonth: true,
+			numberOfMonths: 1});
+			 i=1;
+			$("#chequeDate").change(function() {
+	        var date = $(this).datepicker("getDate");
+	        var oneDay = 24*60*60*1000; 
+	        var diffDays = Math.round(Math.abs((date.getTime() - new Date().getTime())/(oneDay)));
+           
+         if(parseInt(diffDays) >= 90){
+          // alert("Instrument Date is Greater Than 3 Months.");
+           alertForPayment();
+         }
+        
+    });	
+			
+					
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
+	
+	
+	
+	function alertForPayment(){
+	    if(i==1)
+	    {
+	      alert("Instrument Date is Greater Than 3 Months.");
+	       i++;
+	    }
+	}
+	
+	
+	
 //<![CDATA[
 
     function toggleInvoiceId(master) {

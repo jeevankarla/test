@@ -1,11 +1,12 @@
-
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
-
 <script type="application/javascript">
 					 
+	 
 	 
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
@@ -61,6 +62,8 @@
 			}
 		});
 	}
+	
+
 	
 	function disableSubmitButton(){			
 		$("input[type=submit]").attr("disabled", "disabled");
@@ -188,11 +191,12 @@
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
 	                   </#list> 
 					    "</select></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+grandTotal+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
-                        "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavour' name='inFavour' value='NHDC' readonly /></td></tr>"+
+                       "<tr class='h3'><td align='left' class='h3' width='60%' ><font color='green'>Chq Date:</font></td><td align='left' width='60%'><input class='h4' type='text' id='chequeDate' name='chequeDate'  onmouseover='datepick()' /></td></tr>" +
+                        "<tr class='h3'><td align='left' class='h3' width='60%'><font id='cheqInFavLable'  color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavour' name='inFavour' value='NHDC' readonly /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
@@ -244,35 +248,90 @@
 	
 	
 		function paymentFieldsOnchange(){
+  
      
-	      var paymentType =  $("#paymentTypeId").val()
-	      $("#inFavourOf").parent().parent().hide();
-	      $("#comments").parent().parent().hide();
-	      $("#issuingAuthority").parent().parent().hide();
-	      $("#paymentRefNum").parent().parent().hide();
-	     
-	     
-	     if(paymentType == 'CHEQUE'){
-	     
-	     $("#inFavourOf").parent().parent().show();
-	     $("#comments").parent().parent().show();
-	     $("#issuingAuthority").parent().parent().show();
-	     $("#paymentRefNum").parent().parent().show(); 
-	     $("#checkNoLabel").html("Cheque No :"); 
-	                   
-	    }
-	   else if(paymentType == 'FT_PAYIN'){
-	      $("#issuingAuthority").parent().parent().show();
-	    }
-	    else if('CASH_PAYIN'){
-	      $("#paymentRefNum").parent().parent().show(); 
-	       $("#checkNoLabel").html("Receipt No :"); 
-	    }
+      var paymentType =  $("#paymentTypeId").val()
+      $("#inFavourOf").parent().parent().hide();
+      $("#comments").parent().parent().hide();
+      $("#issuingAuthority").parent().parent().hide();
+      $("#paymentRefNum").parent().parent().hide();
+     
+     
+     if(paymentType == 'CHEQUE'){
+     
+     $("#inFavourOf").parent().parent().show();
+     $("#comments").parent().parent().show();
+     $("#issuingAuthority").parent().parent().show();
+     $("#paymentRefNum").parent().parent().show(); 
+     $("#chequeDate").parent().parent().show(); 
+     $("#checkNoLabel").html("Cheque No :");
+     $("#cheqInFavLable").html("Chq.in favour:");
+     $("#chequDateLable").html("Cheque Date :"); 
+      $("#checkNoLabel").html("Cheque/DD No :");
+     $("#cheqInFavLable").html("Chq.in/DD favour:");
+     $("#chequDateLable").html("Cheque/DD Date :"); 
+     
+                   
+    }
+    else if(paymentType == 'DD'){
+    
+     $("#inFavourOf").parent().parent().show();
+     $("#comments").parent().parent().show();
+     $("#issuingAuthority").parent().parent().show();
+     $("#paymentRefNum").parent().parent().show(); 
+     $("#chequeDate").parent().parent().show();
+     $("#checkNoLabel").html("Cheque No :");
+     $("#cheqInFavLable").html("Chq.in favour:");
+     $("#chequDateLable").html("Cheque Date :"); 
+    
+    
+    }
+   else if(paymentType == 'FT_PAYIN'){
+      $("#issuingAuthority").parent().parent().show();
+      $("#chequeDate").parent().parent().hide(); 
+      $("#checkNoLabel").html("Receipt No :"); 
+    }
+    else if('CASH_PAYIN'){
+      $("#paymentRefNum").parent().parent().show(); 
+       $("#chequeDate").parent().parent().hide(); 
+       $("#checkNoLabel").html("Receipt No :"); 
+    }
   }
 	
 	
-	
-	
+		function alertForDate() {
+		
+		 var message = "";
+		message += "<html><head></head><body><form action='' id='cancelDepotOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
+			//message += "<br/><br/>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' width=100% class='h3' >Instrument Date is Greater Than 3 Months.</td></tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
+			
+			
+            message +="<tr class='h3'><td align='center' class='h3'><button value='Ok' id='cancel' onclick='return showPaymentEntryForIndentPayment();' class='smallSubmit'>Ok</button></td>  </tr>";				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "";
+		Alert(message, title);
+		
+		
+	}
 	
 	
 	

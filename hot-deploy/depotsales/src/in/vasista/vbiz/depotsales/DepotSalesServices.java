@@ -2970,6 +2970,16 @@ public class DepotSalesServices{
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
 				try {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
+			}
+	      
+	      if (UtilValidate.isNotEmpty(chequeDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+				try {
 					chequeDateTS = new java.sql.Timestamp(sdf.parse(chequeDate).getTime());
 				} catch (ParseException e) {
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
@@ -2977,11 +2987,12 @@ public class DepotSalesServices{
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
 				}
 			}
+	      
 	     
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDate,"userLogin", userLogin);
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
