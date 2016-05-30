@@ -109,18 +109,9 @@
         var date = $(this).datepicker("getDate");
         var oneDay = 24*60*60*1000; 
         var diffDays = Math.round(Math.abs((date.getTime() - new Date().getTime())/(oneDay)));
-    
          
          if(parseInt(diffDays) >= 90){
-         
-          var partyId = $("#partyId").val();
-          var balance = $("#bal").val();
-          var grandTotal = $("#totAmt").val();
-          var orderId = $("#orderId").val();
-          var partyName = $("#partyName").val();
-         
-          alertForDate();
-         
+          alert("Instrument Date is Greater Than Indent Date");
          }
         
     });
@@ -308,23 +299,15 @@
    function showPaymentEntryForIndentPayment(orderId, partyId,partyName,grandTotal,balance) {
 		var message = "";
 		
-		 if(orderId != '' && orderId != undefined){
-		 $("#PayOrderId").val(orderId);
-		 $("#PayPartyId").val(partyId);
-		 $("#PayPartyName").val(partyName);
-		 $("#PaygrandTotal").val(grandTotal);
-		 $("#Paybalance").val(balance);
-		 }
-		
-		orderId = $("#PayOrderId").val();
-		partyId = $("#PayPartyId").val();
+		orderId = orderId;
+		partyId = partyId;
 		
 		//finalBal = grandTotal-balance;
 		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
-		grandTotal = $("#PaygrandTotal").val();
-		partyName=  $("#PayPartyName").val();
-		balance = $("#Paybalance").val();
+		grandTotal = grandTotal;
+		partyName =  partyName;
+		balance = balance;
 		
 		message += "<html><head></head><body><form action='createOrderPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
