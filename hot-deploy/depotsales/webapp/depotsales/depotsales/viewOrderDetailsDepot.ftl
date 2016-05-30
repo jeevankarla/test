@@ -83,7 +83,7 @@
 	}
 	
 	
-	
+	var i = 1;
 	
 	function datepick()
 	{		
@@ -104,20 +104,33 @@
 			numberOfMonths: 1});	
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
-		
+		 i=1;
 		$("#chequeDate").change(function() {
         var date = $(this).datepicker("getDate");
         var oneDay = 24*60*60*1000; 
         var diffDays = Math.round(Math.abs((date.getTime() - new Date().getTime())/(oneDay)));
          
          if(parseInt(diffDays) >= 90){
-          alert("Instrument Date is Greater Than Indent Date");
+           alertForPayment();
          }
+        
         
     });
 		
 		
 	}
+	
+	
+	function alertForPayment(){
+	    if(i==1)
+	    {
+	      alert("Instrument Date is Greater Than 3 Months.");
+	       i++;
+	    }
+	}
+	
+	
+	
 	
 	function disableSubmitButton(){			
 		$("input[type=submit]").attr("disabled", "disabled");
