@@ -3089,6 +3089,7 @@ public class DepotSalesServices{
 	    Locale locale = (Locale) context.get("locale");
 		
 	    String paymentDate = (String) context.get("paymentDate");
+	    String chequeDate = (String) context.get("chequeDate");
 	    String invoiceId = (String) context.get("invoiceId");
 	  	String partyIdFrom = (String) context.get("partyIdFrom");
 	  	String partyIdTo = (String) context.get("partyIdTo");
@@ -3105,6 +3106,9 @@ public class DepotSalesServices{
 	  	
 	  	if(UtilValidate.isNotEmpty(amount)){
 	  	Timestamp eventDate = null;
+	  	Timestamp chequeDateTS = null;
+	  	
+	  	
 	      if (UtilValidate.isNotEmpty(paymentDate)) {
 		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
 				try {
@@ -3116,6 +3120,24 @@ public class DepotSalesServices{
 				}
 			}
 	      
+	      if (UtilValidate.isNotEmpty(chequeDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+				try {
+					chequeDateTS = new java.sql.Timestamp(sdf.parse(chequeDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
+			}
+	      if (UtilValidate.isEmpty(chequeDate)) {
+	    	  chequeDateTS = UtilDateTime.nowTimestamp();
+	      }
+	      
+	      if (UtilValidate.isEmpty(paymentDate)) {
+	    	  eventDate = UtilDateTime.nowTimestamp();
+	      }
+	      
           Map<String, Object> paymentParams = new HashMap<String, Object>();
               paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
               paymentParams.put("paymentMethodTypeId", paymentMethodTypeId);
@@ -3123,6 +3145,7 @@ public class DepotSalesServices{
               paymentParams.put("amount", new BigDecimal(amount));
               paymentParams.put("statusId", "PMNT_RECEIVED");
               paymentParams.put("paymentDate", eventDate);
+              paymentParams.put("instrumentDate", chequeDateTS);
               paymentParams.put("partyIdFrom", partyIdFrom);
            //   paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
               paymentParams.put("partyIdTo", partyIdTo);
