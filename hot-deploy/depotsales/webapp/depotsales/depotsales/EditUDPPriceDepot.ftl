@@ -710,7 +710,7 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
-			message += "<tr class='h3'><td align='center' width=100% class='h3' >Instrument Date is Greater Than 3 Months</td></tr>";
+			message += "<tr class='h3'><td align='center' width=100% class='h3'><font color=red>Received Date is greater than Indent Date</font></td></tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";

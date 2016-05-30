@@ -73,6 +73,7 @@
 			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};	
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 
+          
 		$(document).ready(function(){
 			 $("#open_popup").click(function(){
                	getShipmentAddress();
@@ -93,11 +94,16 @@
 	  				var scPerc = $('#serviceChargePercent').val();
 	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
-	  		} 	
+	  		}
+	  		
+           	  		
+	  		 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
+				changeYear : true,
+				//changeDate : true,
 				//minDate: new Date(),
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
@@ -105,6 +111,9 @@
 				}
 				
 			});
+			
+			
+			
 			$( "#orderDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -119,17 +128,39 @@
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
+				changeYear: true,
 				//minDate: new Date(),
 				//maxDate: 14,
+				//maxDate: new Date(),
 				onSelect: function( selectedDate ) {
-   		        var date = $(this).datepicker("getDate");
-                var oneDay = 24*60*60*1000; 
-                var diffDays = Math.round(Math.abs((date.getTime() - new Date().getTime())/(oneDay)));
-		         if(parseInt(diffDays) >= 90){
-		          alertForDate();
-		         }
-					$( "#indentReceivedDate" ).datepicker("option", selectedDate);
-				}
+   		         
+   		         
+   		            var rmonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                    var ryear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                    var date = $("#indentReceivedDate").datepicker( 'getDate' );
+   		            var vdate = date.toString();
+   		            var vdateArr = vdate.split(" ");
+                    var rvday = vdateArr[2];
+
+                    var indentDate = $("#effectiveDate").datepicker( 'getDate' );
+
+                    var iYear    = indentDate.getFullYear(); 
+					var imonth   = indentDate.getMonth(); 
+					var idateStr = indentDate.toString();
+					var idateArr = idateStr.split(" ");
+                    var ivday    = idateArr[2];
+					
+                    if(parseInt(ryear) > parseInt(iYear)){
+                      alertForDate();
+                    }else if(parseInt(ryear) == parseInt(iYear) && parseInt(rmonth) > parseInt(imonth)){
+                        alertForDate();
+                    }else if(parseInt(rmonth) == parseInt(imonth) && parseInt(rvday) > parseInt(ivday)){
+                        alertForDate();
+                    }
+                    
+                    
+                
+                }
 			});
 			
 			$( "#chequeDate" ).datepicker({

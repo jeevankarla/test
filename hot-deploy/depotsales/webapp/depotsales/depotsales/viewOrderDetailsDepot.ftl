@@ -6,7 +6,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
 
-<input type="hidden" name="PaymentOrderId" id="PaymentOrderId">
+<input type="hidden" name="PayOrderId" id="PayOrderId">
 <input type="hidden" name="PayPartyId" id="PayPartyId">
 <input type="hidden" name="PayPartyName" id="PayPartyName">
 <input type="hidden" name="PaygrandTotal" id="PaygrandTotal">
