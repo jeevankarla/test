@@ -2595,7 +2595,7 @@ public class DepotSalesServices{
 		try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			orderHeader.set("purposeTypeId", "BRANCH_SALES");
-			orderHeader.set("grandTotal", orderGrandTotal);
+			//orderHeader.set("grandTotal", orderGrandTotal);
 			orderHeader.store();
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
