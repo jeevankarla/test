@@ -5271,7 +5271,7 @@ public class InvoiceServices {
     	            delegator.create(billOfSale);
 		            String sequenceId = (String) billOfSale.get("sequenceId");
 		            String productCategoryId = (String) billOfSale.get("productCategoryId");
-    				billOfSale.put("invoiceSquence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
     				delegator.createOrStore(billOfSale); 
    			    }
    			    if(invoiceItemTypeIds.contains("SALES_INVOICE")){
@@ -5287,7 +5287,7 @@ public class InvoiceServices {
     	            delegator.create(billOfSale);
 		            String sequenceId = (String) billOfSale.get("sequenceId");
 		            String productCategoryId = (String) billOfSale.get("productCategoryId");
-    				billOfSale.put("invoiceSquence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
     				delegator.createOrStore(billOfSale);
    			   }
        			
