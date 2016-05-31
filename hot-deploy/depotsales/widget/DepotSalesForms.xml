@@ -374,8 +374,8 @@
           			<parameter param-name="orderId" value="${orderId}"/>
           		</hyperlink>
             </field>
-            <field name="primaryOrderId" title="PO" widget-style="buttontext">
-            	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
+            <field name="poOrder" title="PO" widget-style="buttontext">
+            	<hyperlink target="POoverview" description="${poOrder}" target-window="_blank">
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
           		</hyperlink>
             </field>
@@ -498,8 +498,8 @@
                 </hyperlink>
           	</field>
             <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
-            <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}" widget-style="buttontext">
-            	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
+            <field name="salesOrder" title="${uiLabelMap.PurchaseOrderNo}" widget-style="buttontext">
+            	<hyperlink target="POoverview" description="${salesOrder}" target-window="_blank">
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
           		</hyperlink>
             </field>

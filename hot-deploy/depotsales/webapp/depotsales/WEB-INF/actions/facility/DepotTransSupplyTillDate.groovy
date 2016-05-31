@@ -42,7 +42,15 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		if(UtilValidate.isNotEmpty(receipt.orderId)){
 			orderId=receipt.orderId;
 		}
-		tempMap.put("orderId", orderId);
+		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+		if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+			orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+			salesOrder = orderSeqDetails.orderNo;
+			tempMap.put("orderId",salesOrder);
+		}else{
+			tempMap.put("orderId", orderId);
+		}
+		//tempMap.put("orderId", orderId);
 		if(UtilValidate.isNotEmpty(receipt.orderItemSeqId)){
 			orderItemSeqId=receipt.orderItemSeqId;
 		}

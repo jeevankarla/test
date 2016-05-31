@@ -237,7 +237,11 @@ under the License.
       			<input type="hidden" name="partyId" value="${eachOrder.partyId}">
             	<td>${eachOrder.partyId?if_exists}</td>
               	<td>${eachOrder.partyName?if_exists}</td>
-              	<td>${eachOrder.orderId?if_exists}</td>
+              	<#if eachOrder.salesOrder?has_content>
+              	     <td>${eachOrder.salesOrder}</td>
+              	<#else>
+              	     <td>${eachOrder.orderId?if_exists}</td>
+              	</#if>           
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
                 <td>${eachOrder.orderTotal?if_exists}</td>
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>

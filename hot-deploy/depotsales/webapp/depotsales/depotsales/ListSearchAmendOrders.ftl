@@ -122,6 +122,7 @@ function drawRow(rowData) {
        
     var salesOrder = '\'' + rowData.orderId + '\'';
     var SalesOrderView;
+    var PurchaseOrderView;
     if(rowData.orderNo != undefined && rowData.orderNo != "NA"){
            SalesOrderView ='<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'</@ofbizUrl>" target="_blank">'+rowData.orderNo+'</a>';
    
@@ -129,7 +130,12 @@ function drawRow(rowData) {
           SalesOrderView ='<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'</@ofbizUrl>" target="_blank">'+rowData.orderId+' </a>';
     }
     row.append($("<td>"+ SalesOrderView +"</td>"));
-    var PurchaseOrderView ='<a class="buttontext" href="<@ofbizUrl>POoverview?orderId='+rowData.PoOrderId+'</@ofbizUrl>" target="_blank">'+rowData.PoOrderId+'</a>';
+    if(rowData.poOrder != undefined && rowData.poOrder != "NA"){
+           PurchaseOrderView ='<a class="buttontext" href="<@ofbizUrl>POoverview?orderId='+rowData.PoOrderId+'</@ofbizUrl>" target="_blank">'+rowData.poOrder+'</a>';
+    }
+    else{
+           PurchaseOrderView ='<a class="buttontext" href="<@ofbizUrl>POoverview?orderId='+rowData.PoOrderId+'</@ofbizUrl>" target="_blank">'+rowData.PoOrderId+'</a>';
+    }    
     row.append($("<td>" + PurchaseOrderView + "</td>"));
     
     var indDateSplit = (rowData.orderDate).split("-");
