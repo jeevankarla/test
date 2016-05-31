@@ -118,10 +118,36 @@
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
+				changeYear: true,
 				//minDate: new Date(),
 				//maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#indentReceivedDate" ).datepicker("option", selectedDate);
+					
+					
+					 var rmonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                    var ryear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                    var date = $("#indentReceivedDate").datepicker( 'getDate' );
+   		            var vdate = date.toString();
+   		            var vdateArr = vdate.split(" ");
+                    var rvday = vdateArr[2];
+
+                    var indentDate = $("#effectiveDate").datepicker( 'getDate' );
+
+                    var iYear    = indentDate.getFullYear(); 
+					var imonth   = indentDate.getMonth(); 
+					var idateStr = indentDate.toString();
+					var idateArr = idateStr.split(" ");
+                    var ivday    = idateArr[2];
+					
+                    if(parseInt(ryear) > parseInt(iYear)){
+                      alertForDate();
+                    }else if(parseInt(ryear) == parseInt(iYear) && parseInt(rmonth) > parseInt(imonth)){
+                        alertForDate();
+                    }else if(parseInt(rmonth) == parseInt(imonth) && parseInt(rvday) > parseInt(ivday)){
+                        alertForDate();
+                    }
+                    
 				}
 			});
 			

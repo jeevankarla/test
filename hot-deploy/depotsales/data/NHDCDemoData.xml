@@ -544,10 +544,8 @@ under the License.
 	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="UN_REG_BODY"/>
 	<SchemePartyClassificationGroup schemeId="MGPS" fromDate="2015-04-01 00:00:00.0" partyClassificationGroupId="WEAVER_ENTERPRENEURE"/>
 	
-	
-	
-	
-	
+	<PaymentMethodType createdStamp="2016-02-08 11:59:38.0" createdTxStamp="2016-02-08 11:59:38.0" description="Cheque/Demand Draft" lastUpdatedStamp="2016-05-28 12:39:50.0" lastUpdatedTxStamp="2016-05-28 12:39:50.0" parentTypeId="MONEY" paymentMethodTypeId="CHEQUE"/> 
+    <PaymentMethodType createdStamp="2016-05-28 12:42:07.0" createdTxStamp="2016-05-28 12:42:07.0" description="Demand Draft" lastUpdatedStamp="2016-05-28 12:42:07.0" lastUpdatedTxStamp="2016-05-28 12:42:07.0" parentTypeId="MONEY" paymentMethodTypeId="DD"/> 
 	
 	
 	
