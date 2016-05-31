@@ -1046,6 +1046,14 @@ under the License.
         <override name="orderItemSeqId" optional="false"/>
         <override name="changeTypeEnumId" optional="false"/>
     </service>
+     <service name="createOrderItemDetail" engine="simple" auth="true" default-entity-name="OrderItemDetail"
+            location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="createOrderItemDetail">
+        <description>Creates a new OrderItemDetail record</description>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="orderId" optional="false"/>
+        <override name="orderItemSeqId" optional="true"/>
+    </service>
     <service name="runSubscriptionAutoReorders" engine="java" auth="true" use-transaction="false"
         location="org.ofbiz.order.order.OrderServices" invoke="runSubscriptionAutoReorders">
         <description>A service designed to be automatically run by job scheduler to create orders from subscriptions which need to be extended.

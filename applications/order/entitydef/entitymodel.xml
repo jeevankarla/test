@@ -848,6 +848,7 @@ under the License.
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Order Item Detail Entity">
+      <field name="orderItemDetailId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -858,10 +859,11 @@ under the License.
       <field name="itemDescription" type="description"></field>
 <!--       <field name="unitPrice" type="currency-amount"></field> -->
       <field name="remarks" type="comment"></field>
+      <field name="Uom" type="comment"></field>
       <field name="quotaQuantity" type="fixed-point"></field>
       <field name="changeUserLogin" type="id-vlong"></field>
       
-      <prim-key field="orderId"/>
+      <prim-key field="orderItemDetailId"/>
       <relation type="one-nofk" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>

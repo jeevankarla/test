@@ -1510,6 +1510,9 @@ public class DepotSalesServices{
 		Debug.log("paramMap ============ "+paramMap);
 		List productIds = FastList.newInstance();
 		List indentProductList = FastList.newInstance();
+		List indentItemProductList = FastList.newInstance();
+		Map consolMap=FastMap.newInstance();
+        String onBeHalfOf="N";
 		for (int i = 0; i < rowCount; i++) {
 		  
 			List taxRateList = FastList.newInstance();
@@ -1728,6 +1731,52 @@ public class DepotSalesServices{
 							"Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
+				
+				//consolidation logic
+				if (UtilValidate.isNotEmpty(customerId)) {
+					onBeHalfOf="Y";
+					if (UtilValidate.isNotEmpty(consolMap.get(productId))){
+						
+						BigDecimal tempbaleqty=BigDecimal.ZERO;
+						BigDecimal tempquantity=BigDecimal.ZERO;
+						BigDecimal tempbundleWeight=BigDecimal.ZERO;
+						Map tempconsolMap=(Map)consolMap.get(productId);
+						Debug.log("tempconsolMap=========================="+tempconsolMap);
+						tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
+						tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
+						tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
+						Debug.log("tempquantity=========================="+tempquantity+"=tempbaleqty======"+tempbaleqty+"=tempbundleWeight====="+tempbundleWeight);
+						tempconsolMap.put("quantity",tempquantity);
+						tempconsolMap.put("baleQuantity",tempbaleqty);
+						tempconsolMap.put("bundleWeight",tempbundleWeight);
+					}else{
+						Map tempconsolMap= FastMap.newInstance();
+						tempconsolMap.put("productId", productId);
+						tempconsolMap.put("quantity", quantity);
+						//tempconsolMap.put("customerId", customerId);
+						tempconsolMap.put("remarks", remarks);
+						tempconsolMap.put("baleQuantity", baleQuantity);
+						tempconsolMap.put("bundleWeight", bundleWeight);
+						tempconsolMap.put("bundleUnitPrice", bundleUnitPriceStr);				
+						tempconsolMap.put("yarnUOM", yarnUOM);
+						tempconsolMap.put("baleQuantity", baleQuantity);
+						tempconsolMap.put("bundleWeight", bundleWeight);
+						tempconsolMap.put("bundleUnitPrice", bundleUnitPriceStr);				
+						tempconsolMap.put("yarnUOM", yarnUOM);
+						tempconsolMap.put("batchNo", batchNo);
+						tempconsolMap.put("daysToStore", daysToStore);
+						tempconsolMap.put("basicPrice", basicPrice);
+						tempconsolMap.put("taxRateList", taxRateList);
+						tempconsolMap.put("serviceCharge", serviceCharge);
+						tempconsolMap.put("serviceChargeAmt", serviceChargeAmt);
+						tempconsolMap.put("applicableTaxType", applicableTaxType);
+						tempconsolMap.put("checkE2Form", checkE2Form);
+						tempconsolMap.put("checkCForm", checkCForm);
+						consolMap.put(productId,tempconsolMap);						
+					}
+				}
+				
+
 				productQtyMap.put("productId", productId);
 				productQtyMap.put("quantity", quantity);
 				productQtyMap.put("customerId", customerId);
@@ -1760,6 +1809,7 @@ public class DepotSalesServices{
 				productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
 */
 				indentProductList.add(productQtyMap);
+				indentItemProductList.add(productQtyMap);
 
 			}//end of productQty check
 		}//end row count for loop
@@ -1805,10 +1855,21 @@ public class DepotSalesServices{
 			}
 			//end of adjustment check
 		}
-		
+		if("Y".equals(onBeHalfOf)){
+			indentProductList.clear();
+			Iterator eachProductIter = consolMap.entrySet().iterator();
+	       	 
+	       	 while (eachProductIter.hasNext()) {
+	       		Map.Entry entry = (Entry)eachProductIter.next();
+				//String productId = (String)entry.getKey();
+				Map eachproductMap=(Map)entry.getValue();
+				indentProductList.add(eachproductMap);
+			}			
+		}
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("schemeCategory", schemeCategory);
 		processOrderContext.put("productQtyList", indentProductList);
+		processOrderContext.put("indentItemProductList", indentItemProductList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("schemePartyId", schemePartyId);
 		processOrderContext.put("supplierPartyId", supplierPartyId);
@@ -1917,6 +1978,7 @@ public class DepotSalesServices{
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String schemeCategory = (String) context.get("schemeCategory");
 	    List<Map> productQtyList = (List) context.get("productQtyList");
+	    List<Map> indentItemProductList = (List) context.get("indentItemProductList");
 	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
 	    Locale locale = (Locale) context.get("locale");
 	    String productStoreId = (String) context.get("productStoreId");
@@ -2475,6 +2537,85 @@ public class DepotSalesServices{
 			  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
   	 	}
 		
+		 List<GenericValue> orderItemValue = FastList.newInstance();
+		 try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				orderItemValue = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			}
+		 }catch (Exception e) {
+			  Debug.logError(e, "Error While Fetching OrderItem ", module);
+			  return ServiceUtil.returnError("Error While  Fetching OrderItem : "+orderId);
+ 	 	}
+
+		for (Map<String, Object> prodItemMap : indentItemProductList) {
+			String customerId = "";
+			//BigDecimal basicPrice = BigDecimal.ZERO;
+			String prodId="";
+			String  budlUnitPriceStr="";
+			BigDecimal budlWeight=BigDecimal.ZERO;
+			BigDecimal budlUnitPrice=BigDecimal.ZERO;
+			BigDecimal blQuantity=BigDecimal.ZERO;
+			BigDecimal Kgquantity=BigDecimal.ZERO;
+			String Uom="";
+			String specification="";
+
+			if(UtilValidate.isNotEmpty(prodItemMap.get("productId"))){
+				prodId = (String)prodItemMap.get("productId");
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("customerId"))){
+				customerId = (String)prodItemMap.get("customerId");
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("remarks"))){
+				specification = (String)prodItemMap.get("remarks");
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("baleQuantity"))){
+				blQuantity =(BigDecimal)  prodItemMap.get("baleQuantity");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodItemMap.get("bundleUnitPrice"))){
+				budlUnitPriceStr = (String)(prodItemMap.get("bundleUnitPrice"));
+				budlUnitPrice = new BigDecimal(budlUnitPriceStr);
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("quantity"))){
+				Kgquantity =  (BigDecimal)(prodItemMap.get("quantity"));
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("yarnUOM"))){
+				Uom = (String)prodItemMap.get("yarnUOM");
+			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("bundleWeight"))){
+				budlWeight =  (BigDecimal)prodItemMap.get("bundleWeight");
+			}
+        	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
+			Map<String, Object> orderItemDetail = FastMap.newInstance();
+			String orderItemSeqId="";
+			
+			orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
+			//orderItemDetail.put("",);
+			orderItemDetail.put("orderId",orderId);
+			orderItemDetail.put("orderItemSeqId",orderItemSeqId);
+			orderItemDetail.put("userLogin",userLogin);
+			orderItemDetail.put("partyId",customerId);
+			orderItemDetail.put("Uom",Uom);
+			orderItemDetail.put("productId",prodId);
+			orderItemDetail.put("baleQuantity",blQuantity);
+			orderItemDetail.put("bundleWeight",budlWeight);
+			orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
+			orderItemDetail.put("remarks",specification);
+			orderItemDetail.put("quotaQuantity",Kgquantity);
+			orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+
+			try{
+				Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
+		        
+		        if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+		        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
+		        }
+			}catch(Exception e){
+		  		Debug.logError(e, "Error in Order Item Detail, module");
+		  		return ServiceUtil.returnError( "Error in Order Item Detail");
+		  	}
+		}
 		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
