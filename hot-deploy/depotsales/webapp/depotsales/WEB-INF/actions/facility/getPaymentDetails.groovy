@@ -215,8 +215,20 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 	tempData.put("statusId", eachHeader.statusId);
-	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
-		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
+	
+	
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
+	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	double adjAmout = 0;
+	for (eachAdjustment in orderAdjustments) {
+		adjAmout = adjAmout+eachAdjustment.amount;
+	}
+	
+	double grandTotal = 0;
+	grandTotal = Double.valueOf(eachHeader.getBigDecimal("grandTotal"));
+	if(UtilValidate.isNotEmpty(grandTotal)){
+		tempData.put("orderTotal", (grandTotal+adjAmout));
 	}
 	/*creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
 	creditPartyRole = EntityUtil.getFirst(creditPartRoleList);

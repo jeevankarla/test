@@ -2127,6 +2127,7 @@ public class DepotSalesServices{
 		
 		//int groupSeqCount = 1;
 		//String groupSequenceId = "";
+		BigDecimal orderGrandTotal = BigDecimal.ZERO;
 		
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			String customerId = "";
@@ -2360,6 +2361,8 @@ public class DepotSalesServices{
 				
 				item.setListPrice(totalPrice);
 				
+				orderGrandTotal.add(totalPrice);
+				
 				//Debug.log("groupSequenceId =============="+groupSequenceId);
 				//item.setItemGroup(groupSequenceId, cart);
 				
@@ -2469,6 +2472,7 @@ public class DepotSalesServices{
 		try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			orderHeader.set("purposeTypeId", "BRANCH_SALES");
+			orderHeader.set("grandTotal", orderGrandTotal);
 			orderHeader.store();
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
