@@ -958,6 +958,20 @@ under the License.
         <create-value value-field="newEntity"/>
         <field-to-result field="newEntity.orderItemChangeId" result-name="orderItemChangeId"/>
     </simple-method>
+       <simple-method method-name="createOrderItemDetail" short-description="Creates a new Order Item Detail record">
+        <make-value value-field="newEntity" entity-name="OrderItemDetail"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="parameters.changeDatetime">
+            <now-timestamp field="nowTimestamp"/>
+            <set field="newEntity.changeDatetime" from-field="nowTimestamp"/>
+        </if-empty>
+        <if-empty field="parameters.changeUserLogin">
+            <set field="newEntity.changeUserLogin" from-field="userLogin.userLoginId"/>
+        </if-empty>
+        <sequenced-id sequence-name="OrderItemDetail" field="newEntity.orderItemDetailId"/>
+        <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.orderItemDetailId" result-name="orderItemDetailId"/>
+    </simple-method>
 
     <simple-method method-name="createUpdateShippingAddress" short-description="create and update Shipping address" login-required="false">
         <set field="keepAddressBook" from-field="parameters.keepAddressBook" default-value="Y"/>
