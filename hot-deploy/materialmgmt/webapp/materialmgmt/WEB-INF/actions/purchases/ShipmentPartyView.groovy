@@ -74,7 +74,14 @@ List conditionList=[];
 		}else{
 			tempMap.put("salesOrder","");
 		}
-		
+		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , shipment.primaryOrderId)  , null, null, null, false );
+		if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+			orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+			salesOrder = orderSeqDetails.orderNo;
+			tempMap.put("salesOrder",salesOrder);
+		}else{
+		    tempMap.put("salesOrder",shipment.primaryOrderId);
+		}
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyId", shipment.partyIdFrom);

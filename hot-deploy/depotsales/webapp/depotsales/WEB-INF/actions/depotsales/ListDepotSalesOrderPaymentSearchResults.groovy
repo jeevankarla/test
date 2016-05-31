@@ -161,6 +161,13 @@ orderHeader.each{ eachHeader ->
 	tempData.put("partyId", partyId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
+	salesOrder ="";
+	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+		salesOrder = orderSeqDetails.orderNo;
+	}
+	tempData.put("salesOrder",salesOrder);
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	tempData.put("statusId", eachHeader.statusId);
