@@ -650,6 +650,7 @@ public class DepotSalesServices{
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
 	  	String orderMessage = (String) context.get("orderMessage");
 	  	String disableAcctgFlag = (String) context.get("disableAcctgFlag");
+	  	String schemeCategory= (String) context.get("schemeCategory");
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -916,18 +917,140 @@ public class DepotSalesServices{
 			}
 			BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 			List<Map> taxList = (List)priceResult.get("taxList");
+			//Quota start
+			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+
+			// Get Scheme Categories
+			  	List schemeCategoryIds = FastList.newInstance();
+			  	try{
+			  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+			  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+			   	}catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive ProductCategory ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+				}
+
+		// Scheme Calculation
+					List productCategoriesList = FastList.newInstance();
+					condsList.clear();
+				  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+				  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+				  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+					try {
+						List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+						productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+					}
+
+					BigDecimal quota = BigDecimal.ZERO;
+					// Get first productCategoriesList. We got productCategoryId here
+					
+					if(schemeCategory.equals("TEN_PERCENT_MGPS")){
+						
+						String schemeId="TEN_PERCENT_MGPS";
+						String productCategoryId=(String)productCategoriesList.get(0);
+						
+						Map partyBalanceHistoryContext = FastMap.newInstance();
+						partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+						
+//						if(UtilValidate.isNotEmpty(customerId)){
+//							partyBalanceHistoryContext.put("partyId",customerId);
+//						}
+								
+						try {
+							Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+							quota=(BigDecimal)resultMapquota.get("quota");
+						} catch (Exception e) {
+							Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+							return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+						}
+					}
+			
+			
+			
+			//Quota end
+					
+					
 				ShoppingCartItem item = null;
 				try{
-					int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
-					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 					
-					item = cart.findCartItem(itemIndx);
-					item.setListPrice(totalPrice);
+					item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
+				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
+					
+					
+					/*int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
+					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));*/
+					
+					//item = cart.findCartItem(itemIndx);
+			//		item.setListPrice(totalPrice);
 					item.setOrderItemAttribute("INDENTQTY_FOR:"+productId+"",quantity.toString());
 					item.setOrderItemAttribute("productId",productId);
 					//item.setAttribute(productId,quantity);
 	        		item.setTaxDetails(taxList);
+				
+				
+				if(quota.compareTo(BigDecimal.ZERO)>0){
+					
+					// Have to get these details from schemes. Temporarily hard coding it.
+					BigDecimal schemePercent = new BigDecimal("10");
+					BigDecimal percentModifier = schemePercent.movePointLeft(2);
+					item.setOrderItemAttribute("quotaQty",quota.toString());
+					
+					BigDecimal discountAmount = BigDecimal.ZERO;
+					if(quantity.compareTo(quota)>0){
+						discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
+						item.setOrderItemAttribute("quotaQty",quota.toString());
+					}
+					else{
+						discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
+						item.setOrderItemAttribute("quotaQty",quantity.toString());
+					}
+					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+			                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+			                        "description", "10 Percent Subsidy on eligible product categories"));
+					item.addAdjustment(orderAdjustment);
+					
+					totalPrice.add(discountAmount);
+				}
+
+				
+				// Tax Handling
+				
+//				Debug.log("size ====== ====== "+taxRateList.size());
+//				for(int i=0; i<taxRateList.size(); i++){
+//					Map taxMap = (Map) taxRateList.get(i);
+//					if(  ((BigDecimal) taxMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
+//						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxMap);
+//		 				item.addAdjustment(orderAdjustment);
+//						
+//		 				totalPrice.add((BigDecimal) taxMap.get("amount"));
+//					}
+//				}
+				
+				// Service Charge
+//				if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
+//					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+//			                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceChargeAmt, "sourcePercentage", serviceCharge,
+//			                        "description", "Service Charge"));
+//					item.addAdjustment(orderAdjustment);
+//					
+//					totalPrice.add(serviceChargeAmt);
+//				}
+				
+				item.setListPrice(totalPrice);
+				
+				//Debug.log("groupSequenceId =============="+groupSequenceId);
+				//item.setItemGroup(groupSequenceId, cart);
+				
+				//item.setTaxDetails(taxList);
+				cart.addItemToEnd(item);
+				
 				}
 				catch (Exception exc) {
 					Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
@@ -3222,6 +3345,7 @@ public class DepotSalesServices{
 		String unitCostStr = (String) request.getParameter("unitCost");
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
+		String schemeCategory = (String) request.getParameter("schemeCategory");
 		String disableAcctgFlag = (String) request.getParameter("disableAcctgFlag");
 		String salesChannel = (String) request.getParameter("salesChannel");
 		String orderId = (String) request.getParameter("orderId");
@@ -3311,6 +3435,7 @@ public class DepotSalesServices{
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);*/
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+		processOrderContext.put("schemeCategory", schemeCategory);
 		
 		try{
 		result = processDepotSaleOrder(dctx, processOrderContext);
