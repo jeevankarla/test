@@ -191,7 +191,7 @@ else{
 
 context.Scheam =Scheam;
 
-conditionList=[];
+            conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItemList = delegator.findList("OrderItem", condition, null, null, null, false);
@@ -238,7 +238,7 @@ conditionList=[];
 			remarkMap=[:];
 			for (eachOrderItem in OrderItemList) {
 				
-					conditionList1=[];
+				conditionList1=[];
 					
 					
 				conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderItem.orderId));
@@ -365,7 +365,7 @@ conditionList=[];
 				 }
 				 conditionList1=[];
 				 conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
-				 conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+				// conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));
 				 condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
 				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
@@ -374,10 +374,13 @@ conditionList=[];
 				 orderItemAttr.each{ eachAttr ->
 					 AttrName=eachAttr.attrValue;
 					 remarkMap.put(eachAttr.orderItemSeqId, eachAttr.attrValue);
-				/*	 if(eachAttr.attrName == "quotaQty"){
+					 if(eachAttr.attrName == "quotaQty"){
 						 schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
 					 }
-				*/ }
+					 if(eachAttr.attrName == "REMARKS"){
+						 AttrName =  schemeAmt+Double.valueOf(eachAttr.attrValue);
+					 }
+				 }
 				 Map tempMap = [:];
 				  productName = ""
 				  prod=delegator.findOne("Product",[productId:productId],false);
