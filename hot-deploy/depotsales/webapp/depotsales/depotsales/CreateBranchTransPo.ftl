@@ -145,7 +145,7 @@ function populateData(){
 					    	return false;
 				    	}
                         supplierName = partyNameObj[supplierId];
-                        if( (supplierName).length < 1 ) {
+                        if( ((supplierName != undefined) && (supplierName).length < 1) ) {
  					    	$('#supplierName').css('background', 'yellow'); 
  					       	setTimeout(function () {
  					           	$('#supplierName').css('background', 'white').focus(); 
