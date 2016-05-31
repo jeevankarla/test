@@ -90,12 +90,20 @@ List conditionList=[];
 		if(UtilValidate.isNotEmpty(OrderAss)){
 			salesOrder = OrderAss.get("toOrderId");
 			tempMap.put("orderId",OrderAss.get("toOrderId"));
-			orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , salesOrder)  , null, null, null, false );
+			orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , salesOrder)  , UtilMisc.toSet("orderNo"), null, null, false );
 			if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 				orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 				salesOrder = orderSeqDetails.orderNo;
 			}		
 			tempMap.put("salesOrder",salesOrder);
+		}
+		orderHeaderSeqs = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , shipment.primaryOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+		if(UtilValidate.isNotEmpty(orderHeaderSeqs)){
+			orderHeaderSeqs = EntityUtil.getFirst(orderHeaderSeqs);
+			poOrder = orderHeaderSeqs.orderNo;
+			tempMap.put("poOrder",poOrder);
+		}else{
+		    tempMap.put("poOrder",shipment.primaryOrderId);
 		}
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
 		if(shipment.partyIdFrom){

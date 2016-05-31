@@ -547,6 +547,26 @@ under the License.
 	<PaymentMethodType createdStamp="2016-02-08 11:59:38.0" createdTxStamp="2016-02-08 11:59:38.0" description="Cheque/Demand Draft" lastUpdatedStamp="2016-05-28 12:39:50.0" lastUpdatedTxStamp="2016-05-28 12:39:50.0" parentTypeId="MONEY" paymentMethodTypeId="CHEQUE"/> 
     <PaymentMethodType createdStamp="2016-05-28 12:42:07.0" createdTxStamp="2016-05-28 12:42:07.0" description="Demand Draft" lastUpdatedStamp="2016-05-28 12:42:07.0" lastUpdatedTxStamp="2016-05-28 12:42:07.0" parentTypeId="MONEY" paymentMethodTypeId="DD"/> 
 	
+  <!-- 	 Confighuration For Depot sale Sequence -->
+
+   <Enumeration createdStamp="2014-12-01 17:44:21.0" createdTxStamp="2014-12-01 17:44:21.0" description="Branch Sale Order Tenant Configurations" enumId="DEPOT_SALE_SEQUENCE" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-12-01 17:44:21.0" lastUpdatedTxStamp="2014-12-01 17:44:21.0" sequenceId="1"/>
+   <EnumerationType createdStamp="2014-02-10 20:38:54.0" createdTxStamp="2014-02-10 20:38:54.0" description="Tenant Configuration" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-02-10 20:38:54.0" lastUpdatedTxStamp="2014-02-10 20:38:54.0"/>
+   <TenantConfiguration createdStamp="2015-01-29 20:47:09.0" createdTxStamp="2015-01-29 20:47:09.0" description="Enable DepotSales Order Sequence Functionality" lastUpdatedStamp="2015-02-09 17:39:33.0" lastUpdatedTxStamp="2015-02-09 17:39:33.0" propertyName="enableDepotSalesOrderSequence" propertyTypeEnumId="DEPOT_SALE_SEQUENCE" propertyValue="Y"/>
+   <CustomTimePeriod customTimePeriodId="APRL_MAR17" fromDate="2016-04-01" isClosed="Y" organizationPartyId="Company" periodName="FIN_YR1" periodNum="1" periodTypeId="FISCAL_YEAR" thruDate="2017-03-31"/>
+
+   <!--   Configuration For  Draft PO Sequence -->
+  
+   <Enumeration createdStamp="2014-12-01 17:44:21.0" createdTxStamp="2014-12-01 17:44:21.0" description="Stores Or Purchase Tenant Configurations" enumId="PURCHASE_OR_STORES" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-12-01 17:44:21.0" lastUpdatedTxStamp="2014-12-01 17:44:21.0" sequenceId="1"/>
+   <EnumerationType createdStamp="2014-02-10 20:38:54.0" createdTxStamp="2014-02-10 20:38:54.0" description="Tenant Configuration" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-02-10 20:38:54.0" lastUpdatedTxStamp="2014-02-10 20:38:54.0"/>
+   <TenantConfiguration createdStamp="2015-01-29 20:47:09.0" createdTxStamp="2015-01-29 20:47:09.0" description="Enable PO Sequence Functionality" lastUpdatedStamp="2015-02-09 17:39:33.0" lastUpdatedTxStamp="2015-02-09 17:39:33.0" propertyName="enablePOSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+
+<!--   configuration for Sales Invoice and Purchase Invoice -->
+
+  <Enumeration createdStamp="2014-12-01 17:44:21.0" createdTxStamp="2014-12-01 17:44:21.0" description="Sales Invoice Tenant Configurations" enumId="SALE_INV_SQUENCE" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-12-01 17:44:21.0" lastUpdatedTxStamp="2014-12-01 17:44:21.0" sequenceId="1"/>
+  <Enumeration createdStamp="2014-12-01 17:44:21.0" createdTxStamp="2014-12-01 17:44:21.0" description="Purchase Invoice Tenant Configurations" enumId="PUR_INV_SQUENCE" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-12-01 17:44:21.0" lastUpdatedTxStamp="2014-12-01 17:44:21.0" sequenceId="1"/>
+  <EnumerationType createdStamp="2014-02-10 20:38:54.0" createdTxStamp="2014-02-10 20:38:54.0" description="Tenant Configuration" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2014-02-10 20:38:54.0" lastUpdatedTxStamp="2014-02-10 20:38:54.0"/>
+  <TenantConfiguration createdStamp="2015-01-29 20:47:09.0" createdTxStamp="2015-01-29 20:47:09.0" description="Enable PO Sequence Functionality" lastUpdatedStamp="2015-02-09 17:39:33.0" lastUpdatedTxStamp="2015-02-09 17:39:33.0" propertyName="enableInvoiceSequence" propertyTypeEnumId="INVOICE_SQUENCE" propertyValue="Y"/>
+	
 	
 	
 	

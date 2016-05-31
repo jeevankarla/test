@@ -203,7 +203,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
 	orderNo ="NA";
-	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , null, null, null, false );
+	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 		orderNo = orderSeqDetails.orderNo;
@@ -239,10 +239,14 @@ orderHeader.each{ eachHeader ->
 		PoOrderId=OrderAss.orderId;
 		
 	}
-	Debug.log("POOrderId======================"+PoOrderId);
+	poOrder="NA";
+	orderHeaderSeqs = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , PoOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+	if(UtilValidate.isNotEmpty(orderHeaderSeqs)){
+		orderHeaderSeqs = EntityUtil.getFirst(orderHeaderSeqs);
+		poOrder = orderHeaderSeqs.orderNo;
+	}
+    tempData.put("poOrder", poOrder);
 	tempData.put("PoOrderId", PoOrderId);
-	
-	
 	exprList=[];
 	exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
@@ -267,6 +271,5 @@ orderHeader.each{ eachHeader ->
 	orderDetailsMap.put(orderId,tempMap);		
 	orderList.add(tempData);
 }
-Debug.log("orderList======================"+orderList);
 request.setAttribute("orderList", orderList);
 return "success";
