@@ -598,7 +598,33 @@ vatAmount=0;
 cstAmount=0;
 listSize=0;
 bedPercent=0;
-orderTerms= delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+vatAdjAmount = 0;
+cstAdjAmount = 0;
+
+
+List Newcondition = [];
+Newcondition.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+newcond=EntityCondition.makeCondition(Newcondition,EntityOperator.AND);
+orderAdjts= delegator.findList("OrderAdjustment",newcond , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+
+if(orderAdjts){
+orderAdjts.each{orderAdjt->
+	
+	if(orderAdjt.orderAdjustmentTypeId == "VAT_PUR"){
+		if(orderAdjt.amount){
+		  vatAdjAmount=orderAdjt.amount;
+		}
+   }
+	if(orderAdjt.orderAdjustmentTypeId == "CST_PUR"){
+		if(orderAdjt.amount){
+			cstAdjAmount=orderAdjt.amount;
+		  }
+	}
+}
+}
+
+
+/*orderTerms= delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 parentMap=[:];
 if(UtilValidate.isNotEmpty(orderTerms)){
 	orderTerms.each{orderTerm ->
@@ -612,11 +638,24 @@ if(UtilValidate.isNotEmpty(orderTerms)){
 		if(orderTerm.termTypeId == "BED_PUR"){
 			condition = EntityCondition.makeCondition([
 				EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
-				EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN,UtilMisc.toList("BEDCESS_PUR","BEDSECCESS_PUR","BED_PUR") )],
+				EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN,UtilMisc.toList("BEDCESS_PUR","BEDSECCESS_PUR","BED_PUR","VAT_PUR","CST_PUR") )],
 			EntityOperator.AND);
 			orderAdjts= delegator.findList("OrderAdjustment",condition , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+			
+			
 			orderAdjts.each{orderAdjt->
 				Amount+=orderAdjt.amount;
+				
+				if(orderAdjt.orderAdjustmentTypeId == "VAT_PUR"){
+					vatAdjAmount=orderAdjt.amount;
+				}
+				if(orderAdjt.orderAdjustmentTypeId == "CST_PUR"){
+					cstAdjAmount=orderAdjt.amount;
+				}
+				
+				
+				
+				
 			}
 			bedAmount=Amount;
 			bedPercent=orderTerm.termValue;
@@ -699,11 +738,11 @@ if(UtilValidate.isNotEmpty(orderTerms)){
 		}
 	
 	}
-}
-context.parentMap=parentMap;
+}*/
+//context.parentMap=parentMap;
 context.Amount=bedAmount;
-context.vatAmount=vatAmount;
-context.cstAmount=cstAmount;
+context.vatAmount=vatAdjAmount;
+context.cstAmount=cstAdjAmount;
 context.bedPercent=bedPercent;
 context.listSize=listSize;
 
