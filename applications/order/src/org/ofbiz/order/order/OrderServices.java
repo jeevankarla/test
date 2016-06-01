@@ -7516,6 +7516,7 @@ public class OrderServices {
        String amountStr = (String) context.get("amount");
        String issuingAuthority = (String) context.get("issuingAuthority");
        String inFavourOf = (String) context.get("inFavourOf");
+       String purposeTypeId = (String) context.get("purposeTypeId");
        
        Timestamp eventDate = (Timestamp) context.get("eventDate");
        Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
@@ -7576,6 +7577,7 @@ public class OrderServices {
            Map<String, Object> paymentParams = new HashMap<String, Object>();
            BigDecimal maxAmount = orderPaymentPreference.getBigDecimal("maxAmount");
            //if (maxAmount > 0.0) {
+           	   paymentParams.put("paymentPurposeType", purposeTypeId);	
                paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
                paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
                paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
