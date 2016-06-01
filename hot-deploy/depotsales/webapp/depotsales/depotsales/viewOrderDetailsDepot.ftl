@@ -24,19 +24,7 @@
 	 * as they share very similar styles, but with varying content and titles.
 	 */
 
-	 function amountOnchange(bal,actual){
-	 	var amtappling=bal.value;
-	 	var transtotal=actual.value;
-	 	var Bal="";
-	 	if(amtappling != undefined && transtotal != undefined){
-	 	Bal=transtotal-amtappling;
-	 	if(Bal <0){
-	 	Bal=0;
-	 	}
-	 	Bal=Bal.toFixed(2);
-	 	}
-		 $('#bal').html("<h4>"+Bal+"</h4>");
-	 }
+	
 	 
 	function dialogue(content, title) {
 		/* 
@@ -255,14 +243,13 @@
 	    if(parseFloat(amount)<=0){
 	      alert("Please Enter Amount Greater Than The 0.");
 	        $("#amount").val(balance);
-	   }else{
-	        if(bal >= 0)
-	        $("#bal").html(bal);
+    	   }else{
+	        if(isNaN(bal)){
+	        $("#bal").html(document.getElementById("#totAmt").innerText);
+	        }
 	        else
-	         $("#bal").html(0);
-	   
+	        $("#bal").html(bal);
 	   }
-	   
 	}
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
