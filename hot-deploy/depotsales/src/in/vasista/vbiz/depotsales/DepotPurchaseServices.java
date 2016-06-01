@@ -83,7 +83,7 @@ public class DepotPurchaseServices{
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
 		String partyIdFrom = "";
 		String shipmentId = (String) request.getParameter("shipmentId");
-		String purposeTypeId = "MATERIAL_PUR_CHANNEL";
+		String purposeTypeId = "YARN_SALE";
 	  
 		Timestamp invoiceDate = null;
 		Timestamp suppInvDate = null;
@@ -357,6 +357,20 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
+		
+		// Get Purpose type based on product
+		
+		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
+		
+		try{
+	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
+	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
+	  	}catch (GenericServiceException e) {
+	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
+			return "error";
+	  	}
+		
 		Map processInvoiceContext = FastMap.newInstance();
 		processInvoiceContext.put("userLogin", userLogin);
 		processInvoiceContext.put("productQtyList", productQtyList);

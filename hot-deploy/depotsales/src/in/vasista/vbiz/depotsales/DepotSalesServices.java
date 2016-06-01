@@ -2963,6 +2963,32 @@ public class DepotSalesServices{
 	  	String orderPaymentPreferenceId = null;
 	  	Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
 	  	
+	  	// Check If order belongs to yarn sales or dies and chemicals.
+	  	
+	  	String purposeTypeId = null;
+	  	List<GenericValue> salesOrderitems = null;
+	    try {
+	    	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	    	if(UtilValidate.isNotEmpty(salesOrderitems)){
+	    		GenericValue orderitem = EntityUtil.getFirst(salesOrderitems);
+	    		String productId = (String)orderitem.get("productId");
+	    		
+	    		
+	    		try{
+			  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", productId, "userLogin", userLogin));  	
+			  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
+			  	}catch (GenericServiceException e) {
+			  		Debug.logError(e , module);
+			  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+			  	}
+	    		
+	    	}
+	    } catch (GenericEntityException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+	  	
 	  	Timestamp eventDate = null;
 	  	Timestamp chequeDateTS = null;
 	  	
@@ -2992,7 +3018,7 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin);
+	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
@@ -6480,8 +6506,12 @@ public class DepotSalesServices{
    	    List<GenericValue> completeProductCategoryMembers = FastList.newInstance();
    	    List completeProductIdsList = FastList.newInstance();
    	    
-   	    List categoriesList = FastList.newInstance();
-   	    categoriesList.add(productCategoryId);
+   	    List categoriesList = (List) context.get("categoriesList");
+   	    //List categoriesList = FastList.newInstance();
+   	    
+   	    if(UtilValidate.isNotEmpty(productCategoryId)){
+   	    	categoriesList.add(productCategoryId);
+   	    }
    	    
    	    List completeChildCategoriesList = FastList.newInstance();
    	    List baseProductCategoriesList = FastList.newInstance();
@@ -6490,7 +6520,6 @@ public class DepotSalesServices{
    	    
    	    for(int i=0; i<categoriesList.size(); i++){
 			String categoryId = (String) categoriesList.get(i);
-			
 			// Get Category Members
 			Map prodCatMemCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			prodCatMemCtx.put("productCategoryId", categoryId);
@@ -6521,8 +6550,9 @@ public class DepotSalesServices{
 		  		}	
 		  		List<GenericValue> productCategories = (List)resultCtx.get("childCategoriesList");
 		  		if(UtilValidate.isNotEmpty(productCategories)){
-		  			childCategoriesList = EntityUtil.getFieldListFromEntityList(productCategories, "productCategoryId", true);
-		  			completeChildCategoriesList.addAll(childCategoriesList);
+		  			List childCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategories, "productCategoryId", true);
+		  			completeChildCategoriesList.addAll(childCategoryIdsList);
+		  			childCategoriesList.addAll(childCategoryIdsList);
 		  		}
 		  		else{
 		  			baseProductCategoriesList.add(categoryId);
@@ -6532,6 +6562,7 @@ public class DepotSalesServices{
 		  		Debug.logError(e , module);
 		  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 		  	}
+		  	
 		  	if(i == (categoriesList.size()-1)){
 		  		if(UtilValidate.isNotEmpty(childCategoriesList)){
 		  			List tempChildCategoriesList = FastList.newInstance();
@@ -6827,6 +6858,18 @@ public class DepotSalesServices{
             return ServiceUtil.returnSuccess();
         }
 	    
+	    String purposeTypeId = null;
+	    try{
+	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", purchaseInvoiceId), false);
+	    	purposeTypeId = (String)invoice.get("purposeTypeId");
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
+	    
+	    
+	    
 	    List conditionList = FastList.newInstance();
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
 		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
@@ -6929,6 +6972,20 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+        
+        
+        if(UtilValidate.isNotEmpty(purposeTypeId)){
+        	 try{
+     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+     	    	invoice.set("purposeTypeId", purposeTypeId);
+    			invoice.store();
+     		} catch (Exception e) {
+     			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+                 Debug.logError(e, errMsg, module);
+                 return ServiceUtil.returnError(errMsg);
+     		}
+        }
+        
        /* try{
 			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 			Debug.log("invoice========================="+invoice);
@@ -8869,5 +8926,113 @@ public class DepotSalesServices{
 		return result;
  		
  	}
+ 	
+ 	public static Map<String, Object> getPurposeTypeForProduct(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productId = (String) context.get("productId");
+   	    Map result = ServiceUtil.returnSuccess();
+   	    String purposeTypeId = null;
+   	    
+   	    List yarnProdCategoryTypeIds = FastList.newInstance();
+   	    List<GenericValue> yarnProductCategoryTypes = null;
+		try {
+			yarnProductCategoryTypes = delegator.findList("ProductCategoryType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"YARN"), null, null, null, false);
+			Debug.log("yarnProductCategoryTypes =======  11111 ========="+yarnProductCategoryTypes);
+			if(UtilValidate.isNotEmpty(yarnProductCategoryTypes)){
+				yarnProdCategoryTypeIds = EntityUtil.getFieldListFromEntityList(yarnProductCategoryTypes, "productCategoryTypeId", true);
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductCategoryType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductCategoryType " + e);
+		}
+		Debug.log("yarnProdCategoryTypeIds =======  11111 ========="+yarnProdCategoryTypeIds);
+		
+		List diesProdCategoryTypeIds = FastList.newInstance();
+		List<GenericValue> diesProductCategoryTypes = null;
+		try {
+			diesProductCategoryTypes = delegator.findList("ProductCategoryType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"DiesAndChemicals"), null, null, null, false);
+			Debug.log("diesProductCategoryTypes =======  11111 ========="+diesProductCategoryTypes);
+			if(UtilValidate.isNotEmpty(diesProductCategoryTypes)){
+				diesProdCategoryTypeIds = EntityUtil.getFieldListFromEntityList(diesProductCategoryTypes, "productCategoryTypeId", true);
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductCategoryType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductCategoryType " + e);
+		}
+		Debug.log("diesProdCategoryTypeIds =======  11111 ========="+diesProdCategoryTypeIds);
+		
+		List yarnProdCategoryIds = FastList.newInstance();
+	  	try{
+	  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.IN, yarnProdCategoryTypeIds), UtilMisc.toSet("productCategoryId"), null, null, false);
+	  		yarnProdCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductCategory ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+		}	 
+	  	Debug.log("yarnProdCategoryIds =======  11111 ========="+yarnProdCategoryIds);
+	  	try{
+	  		
+	  		Map prodCatCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	   	    prodCatCtx.put("categoriesList", yarnProdCategoryIds);
+	  		
+	  		Map resultCtx = dispatcher.runSync("getAllChildProductCategoriesAndMembers",prodCatCtx);  	
+	  		List completeProductIdsList = (List) resultCtx.get("completeProductIdsList");
+	  		Debug.log("completeProductIdsList =======  11111 ========="+completeProductIdsList);
+	  		if(completeProductIdsList.contains(productId)){
+	  			purposeTypeId = "YARN_SALE";
+	  		}
+	  		if (ServiceUtil.isError(resultCtx)) {
+	  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+	  	 		Debug.logError(errMsg , module);
+	  		}	
+	  	}catch (GenericServiceException e) {
+	  		Debug.logError(e , module);
+	  		return ServiceUtil.returnError(e+" Error While Checking Yarn Product Category");
+	  	}
+	  	
+	  	
+	  	if(UtilValidate.isEmpty(purposeTypeId)){
+		  	List diesProdCategoryIds = FastList.newInstance();
+		  	try{
+		  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.IN, yarnProdCategoryTypeIds), UtilMisc.toSet("productCategoryId"), null, null, false);
+		  		diesProdCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+		   	}catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive ProductCategory ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+			}
+		  	
+		  	try{
+		  		Map prodCatCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+		   	    prodCatCtx.put("categoriesList", diesProdCategoryIds);
+		  		
+		  		Map resultCtx = dispatcher.runSync("getAllChildProductCategoriesAndMembers",prodCatCtx);  	
+		  		List completeProductIdsList = (List) resultCtx.get("completeProductIdsList");
+		  		Debug.log("completeProductIdsList =======  2222 ========="+completeProductIdsList);
+		  		if(completeProductIdsList.contains(productId)){
+		  			purposeTypeId = "DIES_AND_CHEM_SALE";
+		  		}
+		  		if (ServiceUtil.isError(resultCtx)) {
+		  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+		  	 		Debug.logError(errMsg , module);
+		  		}
+		  	}catch (GenericServiceException e) {
+		  		Debug.logError(e , module);
+		  		return ServiceUtil.returnError(e+" Error While Checking Dies Product Category");
+		  	}
+	  	}
+	  	
+	  	Debug.log("purposeTypeId ======="+purposeTypeId);
+	  	
+	  	if(UtilValidate.isEmpty(purposeTypeId)){
+	  		purposeTypeId = "YARN_SALE";
+	  	}
+	  	
+   	    result.put("purposeTypeId",purposeTypeId);
+   	    return result;
+   	}
+ 	
+ 	
 	
 }
