@@ -6844,13 +6844,15 @@ public class DepotSalesServices{
    	    List<GenericValue> completeProductCategoryMembers = FastList.newInstance();
    	    List completeProductIdsList = FastList.newInstance();
    	    
-   	    List categoriesList = (List) context.get("categoriesList");
-   	    //List categoriesList = FastList.newInstance();
+   	    List categoriesList = FastList.newInstance();
+   	    
+   	    if(UtilValidate.isNotEmpty(context.get("categoriesList"))){
+   	    	categoriesList = (List) context.get("categoriesList");
+   	    }
    	    
    	    if(UtilValidate.isNotEmpty(productCategoryId)){
    	    	categoriesList.add(productCategoryId);
    	    }
-   	    
    	    List completeChildCategoriesList = FastList.newInstance();
    	    List baseProductCategoriesList = FastList.newInstance();
    	    
@@ -6900,7 +6902,6 @@ public class DepotSalesServices{
 		  		Debug.logError(e , module);
 		  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 		  	}
-		  	
 		  	if(i == (categoriesList.size()-1)){
 		  		if(UtilValidate.isNotEmpty(childCategoriesList)){
 		  			List tempChildCategoriesList = FastList.newInstance();
