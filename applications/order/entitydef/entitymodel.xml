@@ -853,9 +853,11 @@ under the License.
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
+      <field name="quantity" type="fixed-point"></field>
       <field name="baleQuantity" type="fixed-point"></field>
       <field name="bundleWeight" type="fixed-point"></field>
       <field name="bundleUnitPrice" type="currency-amount"></field>
+      <field name="unitPrice" type="currency-amount"></field>
       <field name="itemDescription" type="description"></field>
 <!--       <field name="unitPrice" type="currency-amount"></field> -->
       <field name="remarks" type="comment"></field>
