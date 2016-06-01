@@ -1293,6 +1293,7 @@ under the License.
         <description>Creates a payment using the order payment preference</description>
         <attribute name="orderPaymentPreferenceId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentFromId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
         <attribute name="amount" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
