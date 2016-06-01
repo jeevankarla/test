@@ -69,6 +69,7 @@
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
+					fillPartyData();
 				}
 			});
 			$( "#orderDate" ).datepicker({
@@ -210,7 +211,7 @@
 	     
 	     var partyId = $('[name=societyPartyId]').val();
 			$('.partyLoom').remove();			
-				var dataString="partyId=" + partyId ;
+				var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
 	      	$.ajax({
 	             type: "POST",
 	             url: "getpartyContactDetails",

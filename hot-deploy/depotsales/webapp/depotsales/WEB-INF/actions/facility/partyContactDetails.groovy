@@ -46,7 +46,19 @@ if(parameters.partyId){
 	state="";
 	city="";
 	postalCode="";
-	effectiveDate=UtilDateTime.nowTimestamp();
+	effectiveDate = parameters.effectiveDate;
+	if(UtilValidate.isEmpty(effectiveDate)){
+		effectiveDate=UtilDateTime.nowTimestamp();
+	}
+	else if(UtilValidate.isNotEmpty(effectiveDate)){
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDate).getTime());
+		}catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + effDate, "");
+			displayGrid = false;
+		}
+	}
 contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, parameters.partyId, false,"POSTAL_ADDRESS");
 //Debug.log("contactMechesDetails======================="+contactMechesDetails);
 if(contactMechesDetails){
