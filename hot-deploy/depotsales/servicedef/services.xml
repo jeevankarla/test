@@ -240,7 +240,8 @@
     </service>
     <service name="getAllChildProductCategoriesAndMembers" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getAllChildProductCategoriesAndMembers">
         <description>Get Child Categories and Category Members</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="categoriesList" type="List" mode="IN" optional="true"/>
         <attribute name="completeProductCategoryMembers" type="List" mode="OUT" optional="true"/>
         <attribute name="completeProductIdsList" type="List" mode="OUT" optional="true"/>
         <attribute name="completeChildCategoriesList" type="List" mode="OUT" optional="true"/>
@@ -404,6 +405,12 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="usedQuota" type="BigDecimal" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="getPurposeTypeForProduct" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getPurposeTypeForProduct">
+        <description>Get Purpose Type Based on productId</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="purposeTypeId" type="String" mode="OUT" optional="false"/>
     </service>
 </services>
 
