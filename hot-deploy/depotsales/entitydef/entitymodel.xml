@@ -370,4 +370,216 @@
             
         </view-link>
     </view-entity>
+    
+    
+    <entity entity-name="Bank"
+            package-name="org.ofbiz.party.party"
+            title="Bank Entity">
+      <field name="bankId" type="id-ne"></field>
+      <field name="bankTypeId" type="id-ne"></field>
+      <field name="externalId" type="id"></field>
+      <field name="preferredCurrencyUomId" type="id-ne"></field>
+      <field name="description" type="very-long"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="dataSourceId" type="id"></field>
+      <field name="isUnread" type="indicator"></field>
+      <prim-key field="bankId"/>
+      <relation type="one" fk-name="BANK_BANK_TYP" rel-entity-name="BankType">
+        <key-map field-name="bankTypeId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_PREF_CRNCY" rel-entity-name="Uom">
+        <key-map field-name="preferredCurrencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_STATUSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      
+      <relation type="one" fk-name="BANK_DATSRC" rel-entity-name="DataSource">
+        <key-map field-name="dataSourceId"/>
+      </relation>
+      <index name="BANKEXT_ID_IDX">
+        <index-field name="externalId"/>
+      </index>
+    </entity>
+    <entity entity-name="BankType"
+            package-name="org.ofbiz.party.party"
+            title="Bank Type Entity">
+      <field name="bankTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="bankTypeId"/>
+      <relation type="one" fk-name="BANK_TYPE_BANK" title="Parent" rel-entity-name="BankType">
+        <key-map field-name="parentTypeId" rel-field-name="bankTypeId"/>
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="BankType">
+        <key-map field-name="parentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="BankClassification"
+            package-name="org.ofbiz.party.party"
+            title="Bank Classification Entity">
+      <field name="bankId" type="id-ne"></field>
+      <field name="bankClassificationGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="bankId"/>
+      <prim-key field="bankClassificationGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="BANK_CLASS_BANK" rel-entity-name="Bank">
+        <key-map field-name="bankId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CLASS_GRP" rel-entity-name="BankClassificationGroup">
+        <key-map field-name="bankClassificationGroupId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="BankClassificationGroup"
+            package-name="org.ofbiz.party.party"
+            title="Bank Classification Group Entity">
+      <field name="bankClassificationGroupId" type="id-ne"></field>
+      <field name="bankClassificationTypeId" type="id"></field>
+      <field name="parentGroupId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="bankClassificationGroupId"/>
+      <relation type="one" fk-name="BANK_CLASS_GRPBNK" title="Parent" rel-entity-name="BankClassificationGroup">
+        <key-map field-name="parentGroupId" rel-field-name="bankClassificationGroupId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CLSGRP_TYPE" rel-entity-name="BankClassificationType">
+        <key-map field-name="bankClassificationTypeId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="BankClassificationType"
+            package-name="org.ofbiz.party.party"
+            title="Bank Classification Type Entity">
+      <field name="bankClassificationTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="bankClassificationTypeId"/>
+      <relation type="one" fk-name="BANK_CLASS_TYPPAR" title="Parent" rel-entity-name="BankClassificationType">
+        <key-map field-name="parentTypeId" rel-field-name="bankClassificationTypeId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="BankBranch"
+            package-name="org.ofbiz.party.party"
+            title="Bank Branch Relationship Entity">
+      <field name="bankId" type="id-ne"></field>
+      <field name="branchCode" type="id"></field>
+      <field name="ifscCode" type="id"></field>
+      <field name="geoId" type="id-ne"></field>
+      <field name="branchName" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="bankId"/>
+      <prim-key field="branchCode"/>
+      <relation type="one" fk-name="BANK_BRANCH" title="Parent" rel-entity-name="Bank">
+        <key-map field-name="bankId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_BRNCH_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="BankBranchContactMech"
+            package-name="org.ofbiz.party.contact"
+            title="Bank Branch Contact Mechanism Entity">
+      <field name="branchCode" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="allowSolicitation" type="indicator"></field>
+      <field name="extension" type="long-varchar"></field>
+      <field name="verified" type="indicator"></field>
+      <field name="comments" type="comment"></field>
+      <field name="yearsWithContactMech" type="numeric"></field>
+      <field name="monthsWithContactMech" type="numeric"></field>
+      <prim-key field="branchCode"/>
+      <prim-key field="contactMechId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="BANK_CMECH_BANK" rel-entity-name="BankBranch">
+        <key-map field-name="branchCode"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CMECH_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CMECH_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BankContactMechPurpose">
+        <key-map field-name="branchCode"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </entity>
+    <entity entity-name="BankBranchContactMechPurpose"
+            package-name="org.ofbiz.party.contact"
+            title="Bank Branch Contact Mechanism Purpose Entity">
+      <field name="branchCode" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="branchCode"/>
+      <prim-key field="contactMechId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="many" rel-entity-name="BankBranchContactMech">
+        <key-map field-name="branchCode"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="BRNCH_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one" fk-name="BANK_CMPRP_BRNCH" rel-entity-name="BankBranch">
+        <key-map field-name="branchCode"/>
+      </relation>
+      <relation type="one" fk-name="BRNCH_CMPRP_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="BankBranchGeoPoint"
+        package-name="org.ofbiz.party.party"
+        title="Bank Branch Geo Location with history">
+        <field name="branchCode" type="id-ne"></field>
+        <field name="geoPointId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <prim-key field="branchCode"/>
+        <prim-key field="geoPointId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="BANKGEOPT_BRNCH" rel-entity-name="BankBranch">
+            <key-map field-name="branchCode"/>
+        </relation>
+        <relation type="one" fk-name="BANKGEOPT_GEOPT" rel-entity-name="GeoPoint">
+            <key-map field-name="geoPointId"/>
+        </relation>
+    </entity>
+    
+    
+    
 </entitymodel>
