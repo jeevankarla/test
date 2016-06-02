@@ -5006,6 +5006,7 @@ public class DepotSalesServices{
 				
 		// Product Name Creation
 		String productName = "";
+		String packingAttribute ="HANK";
 		for(int i=0; i<productCategoryAttributeTypesList.size(); i++){
 			String attribute = (String) ((GenericValue) productCategoryAttributeTypesList.get(i)).get("attrTypeId");
 			String attrValue = (String) paramMap.get(attribute);
@@ -5013,6 +5014,9 @@ public class DepotSalesServices{
 				continue;
 			}
 			if(attribute.equals("PACKING")){
+				if(attrValue.equals("CONE")){
+					packingAttribute = attrValue;
+				}
 				productName = productName + categoryName + " ";
 			}
 			
@@ -5122,6 +5126,23 @@ public class DepotSalesServices{
 			catch(Exception e){
 				Debug.logError(e, "Error Creating Product Attribute", module);
 				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Attribute");
+				return "error";
+			}
+		}
+		
+		//Creating product Category for Packing Attribute
+		productCatgMap.clear();
+		if(UtilValidate.isNotEmpty(packingAttribute)){
+			try{
+				productCatgMap.put("productCategoryId", packingAttribute);
+				productCatgMap.put("productId", productId);
+				productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+				productCatgMap.put("userLogin", userLogin);
+				result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			}
+			catch(Exception e){
+				Debug.logError(e, "Error Creating Product Category Attribute", module);
+				request.setAttribute("_ERROR_MESSAGE_","Error Creating Product Category Attribute");
 				return "error";
 			}
 		}
