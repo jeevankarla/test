@@ -9274,7 +9274,7 @@ public class DepotSalesServices{
    	    Map result = ServiceUtil.returnSuccess();
    	    String purposeTypeId = null;
    	    
-   	    List yarnProdCategoryTypeIds = FastList.newInstance();
+   	    /*List yarnProdCategoryTypeIds = FastList.newInstance();
    	    List<GenericValue> yarnProductCategoryTypes = null;
 		try {
 			yarnProductCategoryTypes = delegator.findList("ProductCategoryType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"YARN"), null, null, null, false);
@@ -9362,7 +9362,7 @@ public class DepotSalesServices{
 		  	}
 	  	}
 	  	
-	  	Debug.log("purposeTypeId ======="+purposeTypeId);
+	  	Debug.log("purposeTypeId ======="+purposeTypeId);*/
 	  	
 	  	if(UtilValidate.isEmpty(purposeTypeId)){
 	  		purposeTypeId = "YARN_SALE";
