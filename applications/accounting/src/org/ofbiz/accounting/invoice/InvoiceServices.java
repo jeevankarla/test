@@ -5266,8 +5266,8 @@ public class InvoiceServices {
     				billOfSale.put("partyId", partyId);
     				billOfSale.put("invoiceDueDate", invDate);
     				billOfSale.put("productCategoryId", "Y");
-    				billOfSale.put("indentTypeId",indentTypeId);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    				billOfSale.put("indentTypeId",indentTypeId);
     	            delegator.create(billOfSale);
 		            String sequenceId = (String) billOfSale.get("sequenceId");
 		            String productCategoryId = (String) billOfSale.get("productCategoryId");
@@ -5282,8 +5282,8 @@ public class InvoiceServices {
     				billOfSale.put("finYearId", finYearId);
     				billOfSale.put("invoiceDueDate", invDate);
     				billOfSale.put("productCategoryId", "Y");
-    				billOfSale.put("indentTypeId",indentTypeId);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    				billOfSale.put("indentTypeId",indentTypeId);
     	            delegator.create(billOfSale);
 		            String sequenceId = (String) billOfSale.get("sequenceId");
 		            String productCategoryId = (String) billOfSale.get("productCategoryId");
