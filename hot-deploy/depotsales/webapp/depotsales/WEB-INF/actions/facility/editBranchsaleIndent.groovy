@@ -274,9 +274,11 @@
 		cList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,updateOrderId ));
 		
 		  orderAdjList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
-		JSONObject OrderItemUIJSON = new JSONObject();
+		  orderItemDtl = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
+		  
+		  JSONObject OrderItemUIJSON = new JSONObject();
 		
-		orderItems.each{ eachItem ->
+		  orderItemDtl.each{ eachItem ->
 			
 			productDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 			prodDetail = null;
@@ -284,36 +286,6 @@
 				prodDetail = productDetails.get(0);
 			}
 			JSONObject newObj = new JSONObject();
-			
-			cond=[];
-			cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BALE_QTY"));
-			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			condExpBale = EntityCondition.makeCondition(cond, EntityOperator.AND);
-			baleQtyAttr = EntityUtil.filterByCondition(orderItemAttr, condExpBale);
-			
-			cond.clear();
-			cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "YARN_UOM"));
-			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			condExpYarn = EntityCondition.makeCondition(cond, EntityOperator.AND);
-			yarnUOMAttr = EntityUtil.filterByCondition(orderItemAttr,condExpYarn);
-			
-			cond.clear();
-			cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WIEVER_CUSTOMER"));			
-			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			condExpWiever = EntityCondition.makeCondition(cond, EntityOperator.AND);		
-			WieverAttr = EntityUtil.filterByCondition(orderItemAttr,condExpWiever);
-			
-			cond.clear();
-			cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BUNDLE_WGHT"));
-			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			condExpBundle = EntityCondition.makeCondition(cond, EntityOperator.AND);
-			bundleAttr = EntityUtil.filterByCondition(orderItemAttr,condExpBundle);
-			
-			cond.clear();
-			cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
-			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			condExpRmrk = EntityCondition.makeCondition(cond, EntityOperator.AND);
-			RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
 			
 			productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 			quota=0;		
@@ -327,33 +299,22 @@
 			}
 			
 			baleQty=0;
-			yarnUOM="";
+			yarnUOM=eachItem.Uom;
 			bundleWeight=0;
-			if(baleQtyAttr){
-				baleQty=(baleQtyAttr.get(0)).get("attrValue");
-			}
-			if(yarnUOMAttr){
-				yarnUOM=(yarnUOMAttr.get(0)).get("attrValue");
-			}
-			remrk="";
-			if(RmrkAttr){
-				remrk=(RmrkAttr.get(0)).get("attrValue");
-			}
+			baleQty=eachItem.baleQuantity;
+			remrk=eachItem.remarks;
 			wieverName="";
-			wieverId="";
+			wieverId=eachItem.partyId;
 			psbNo="";
 			
-			if(WieverAttr){
-				wieverId=(WieverAttr.get(0)).get("attrValue");
+			if(wieverId){
 				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 				if(partyIdentification){
 					psbNo = partyIdentification.get("idValue");
 				}
 				wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
 			}
-			if(bundleAttr){
-				bundleWeight=(bundleAttr.get(0)).get("attrValue");
-			}
+			bundleWeight=eachItem.bundleWeight;
 			newObj.put("customerName",wieverName+"["+psbNo+"]");
 			newObj.put("customerId",wieverId);
 			newObj.put("remarks",remrk);
@@ -378,8 +339,19 @@
 			}
 			newObj.put("quantity",eachItem.quantity);
 			newObj.put("quota",quota);
-			newObj.put("unitPrice",eachItem.unitPrice);
-			amount=eachItem.unitPrice*eachItem.quantity;
+			newObj.put("unitPrice",eachItem.bundleUnitPrice);
+			newObj.put("KgunitPrice",eachItem.unitPrice);
+			 BigDecimal noOfBundles=0;
+			if("Bale".equals(yarnUOM)){
+				noOfBundles=baleQty*40;
+			}
+			if("Half-Bale".equals(yarnUOM)){
+				noOfBundles=baleQty*20;
+			}
+			if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
+				noOfBundles=baleQty;
+			}
+			amount=eachItem.bundleUnitPrice*noOfBundles;
 			newObj.put("amount", amount);
 			
 			// Temporatily Preparing for taxes until login is been build to get it from the UI. 
