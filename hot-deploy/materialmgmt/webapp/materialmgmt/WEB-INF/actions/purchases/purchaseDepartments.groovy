@@ -58,7 +58,19 @@ List formatList = [];
 	}
 
 	context.formatList = formatList;
+	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+	Map branchMap = [:];
+	List branchList = [];
+	List productStoreList = resultCtx.get("productStoreList");
+	context.productStoreList = productStoreList;
 	
+	for (eachList in productStoreList) {
+		branchMap = [:];
+		branchMap.put("productStoreName",eachList.get("storeName"));
+		branchMap.put("payToPartyId",eachList.get("payToPartyId"));
+		branchList.addAll(branchMap);
+	}
+	context.branchList = branchList;
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);
