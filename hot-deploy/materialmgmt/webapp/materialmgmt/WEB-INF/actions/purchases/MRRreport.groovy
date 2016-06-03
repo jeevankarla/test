@@ -56,7 +56,14 @@ shipmentMap=[:];
 shipmentList=[];
 
 shipmentMap.put("shipmentId",shipmentId);
-shipmentMap.put("ordId",orderId);
+orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+	orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+	salesOrder = orderSeqDetails.orderNo;
+    shipmentMap.put("ordId",salesOrder);
+}else{
+    shipmentMap.put("ordId",orderId);
+}
 shipmentMap.put("dateReceived",dateReceived);
 shipmentMap["total"]=BigDecimal.ZERO;
 

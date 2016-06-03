@@ -30,7 +30,14 @@ import org.ofbiz.service.ServiceUtil;
 
 
 invoiceId = parameters.invoiceId;
-context.invoiceId = invoiceId;
+billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+	invoiceSequence = invoiceSeqDetails.invoiceSequence;
+	context.invoiceId = invoiceSequence;
+}else{
+	context.invoiceId = invoiceId;
+}
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 context.partyId = partyId;
@@ -74,7 +81,14 @@ supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
 
 context.deliveryChallanDate = deliveryChallanDate;
-context.poNumber = orderId;
+orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+	orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+	draftPoNum = orderSeqDetails.orderNo;
+	context.poNumber = draftPoNum;
+}else{
+	context.poNumber = orderId;
+}
 context.supplierInvoiceId = supplierInvoiceId;
 context.supplierInvoiceDate = supplierInvoiceDate;
 context.lrNumber = lrNumber;
@@ -94,14 +108,7 @@ invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
-
-
-
-Debug.log("invoiceAdjItemList==========="+invoiceAdjItemList.size());
-
-
 invoiceItemLevelAdjustments = [:];
-
 int i=0;
 for (eachList in invoiceItemList) {
 	
@@ -144,14 +151,6 @@ for (eachList in invoiceItemList) {
 	i++;
 	
 }
-
-
-Debug.log("invoiceItemLevelAdjustments================"+invoiceItemLevelAdjustments);
-
-
-Debug.log("invoiceRemainigAdjItemList================"+invoiceRemainigAdjItemList);
-
-
 context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
@@ -228,8 +227,14 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 	}
 }
 
-
-context.indentNo = actualOrderId;
+indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , actualOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+if(UtilValidate.isNotEmpty(indentOrderSequences)){
+	indentOrderSeqDetails = EntityUtil.getFirst(indentOrderSequences);
+	salesOrder = indentOrderSeqDetails.orderNo;
+	context.indentNo = salesOrder;
+}else{
+	context.indentNo = actualOrderId;
+}
 orderHeaderSequences = delegator.findList("OrderHeaderSequence", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId), null, null, null, false);
 if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	orderSquences = EntityUtil.getFirst(orderHeaderSequences);
