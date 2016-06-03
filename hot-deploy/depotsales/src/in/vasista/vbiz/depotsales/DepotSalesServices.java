@@ -5031,10 +5031,11 @@ public class DepotSalesServices{
 				}
 				productName = productName + categoryName + " ";
 			}
-			
-			if( (attribute.equals("PLY")) && (attrValue.equals("1")) ){
-				continue;
-			}
+			if(!(productCategoryId.equals("COIR"))){
+				if( (attribute.equals("PLY")) && (attrValue.equals("1")) ){
+					continue;
+				}
+			}	
 			
 			if(productCategoryId.equals("LINEN")){
 				if( attribute.equals("COUNT") ){
