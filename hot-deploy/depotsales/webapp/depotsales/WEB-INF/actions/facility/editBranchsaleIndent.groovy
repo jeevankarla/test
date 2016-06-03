@@ -341,14 +341,17 @@
 			newObj.put("quota",quota);
 			newObj.put("unitPrice",eachItem.bundleUnitPrice);
 			newObj.put("KgunitPrice",eachItem.unitPrice);
-			noOfBundles="";
+			 BigDecimal noOfBundles=0;
 			if("Bale".equals(yarnUOM)){
 				noOfBundles=baleQty*40;
 			}
 			if("Half-Bale".equals(yarnUOM)){
+				Debug.log("baleQty=============="+baleQty);
 				noOfBundles=baleQty*20;
+				Debug.log("noOfBundles=============="+noOfBundles);
+				
 			}
-			if("Bundle".equals(yarnUOM)){
+			if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
 				noOfBundles=baleQty;
 			}
 			amount=eachItem.bundleUnitPrice*noOfBundles;

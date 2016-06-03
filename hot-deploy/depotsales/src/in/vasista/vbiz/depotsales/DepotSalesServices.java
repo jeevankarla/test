@@ -1909,8 +1909,11 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
 			 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
 			 try {
-			 GenericValue value = delegator.makeValue("OrderRole", fields);
-			 delegator.create(value);
+			    	List <GenericValue> orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			    	if(UtilValidate.isEmpty(orderRoles)){
+			    		GenericValue value = delegator.makeValue("OrderRole", fields);
+			    		delegator.create(value);
+			    	}
 			 } catch (GenericEntityException e) {
 				 request.setAttribute("_ERROR_MESSAGE_"," Could not add role to order for OnBeHalf ");
 					Debug.logError(e, "Could not add role to order for OnBeHalf  party " + schemePartyId, module);
@@ -2470,7 +2473,8 @@ public class DepotSalesServices{
 			String PoOrderId ="";
 			try{
 				List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId"), null, null, false);
-				 PoOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");	
+				if(UtilValidate.isNotEmpty(orderAssocList)){ 
+				PoOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");	
 				if(UtilValidate.isNotEmpty(PoOrderId)){
 		            Map<String, Object> svcCtx = UtilMisc.<String, Object>toMap("orderId", PoOrderId, "userLogin", userLogin);
 		            try {
@@ -2490,6 +2494,7 @@ public class DepotSalesServices{
 					}
 		            
 				}
+			  }
 			}catch (GenericEntityException e) {
 				Debug.logError("Error in creating shipmentId for DirectOrder", module);
 				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
@@ -2546,7 +2551,14 @@ public class DepotSalesServices{
 			  Debug.logError(e, "Error While Fetching OrderItem ", module);
 			  return ServiceUtil.returnError("Error While  Fetching OrderItem : "+orderId);
  	 	}
-
+	 try{
+			List<GenericValue> orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(orderItemDetails)){
+				delegator.removeAll(orderItemDetails);
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive orderItemDetail ", module);
+		}
 		for (Map<String, Object> prodItemMap : indentItemProductList) {
 			String customerId = "";
 			//BigDecimal basicPrice = BigDecimal.ZERO;
