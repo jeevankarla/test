@@ -706,8 +706,8 @@
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field title="Entry Date" name="entryDate"><date-find/></field>
-        <field name="sequenceId"><text-find/></field>
-       <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="orderNo" title="sequenceId"><text-find default-option="contains"/></field>
+<!--        <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
 	        	<drop-down allow-empty="true">
@@ -769,10 +769,10 @@
       		<set field="vehicleId" value="${ShipmentList[0].vehicleId}"/> -->
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
-      		<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
+      	<hyperlink target="POoverview" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
       			<parameter param-name="orderId"/>
       		</hyperlink>
-      	</field>
+       </field>
       	<field name="customerId" title="Customer"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, customerId, false);} - [${customerId}]"></display></field>
 		<field name="supplierId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);} - [${supplierId}]"></display></field>
         <field name="partyId" title="Branch"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
