@@ -86,6 +86,9 @@ if(UtilValidate.isEmpty(parameters.productId)){
 		}
 		sortedOrderMap =  [:]as TreeMap;
 		for (eachList in resultList) {
+			if(eachList.orderNo !=null){
+				eachList.orderNo=eachList.orderNo
+			}
 			sortedOrderMap.put(eachList.orderId, eachList);
 		}
 		Collection allValues = sortedOrderMap.values();
