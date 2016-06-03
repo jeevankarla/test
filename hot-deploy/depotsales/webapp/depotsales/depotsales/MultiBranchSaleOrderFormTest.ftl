@@ -678,7 +678,7 @@
                       <tr>
 		       			<td>&nbsp;</td>
 		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
-							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ReceivedDate}:</div></td>
+							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Received Date by NHDC:</div></td>
 							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
 				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
 				   				<td valign='middle'>
