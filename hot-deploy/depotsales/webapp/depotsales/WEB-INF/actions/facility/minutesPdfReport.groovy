@@ -169,7 +169,7 @@ if(UtilValidate.isNotEmpty(orderAttr)){
 
 
 context.scheme = scheme;
-
+/*
 condtList.clear();
 condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, parameters.orderId));
 condtList.add(EntityCondition.makeCondition("orderAdjustmentTypeId" ,EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));//
@@ -190,8 +190,8 @@ else{
 }
 
 context.Scheam =Scheam;
-
-            conditionList=[];
+*/
+			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItemList = delegator.findList("OrderItem", condition, null, null, null, false);
@@ -219,7 +219,7 @@ context.Scheam =Scheam;
 				
 				condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				orderRoleAgencyList = EntityUtil.getFirst(delegator.findList("OrderRole", condition1,  UtilMisc.toSet("partyId"), null, null, false));
-				if(UtilValidate.isNotEmpty(orderRoleAgencyList)){					
+				if(UtilValidate.isNotEmpty(orderRoleAgencyList)){
 					partyId=orderRoleAgencyList.partyId;
 				}
 			}
@@ -236,18 +236,21 @@ context.Scheam =Scheam;
 			
 			SrNo = 1;
 			remarkMap=[:];
-			for (eachOrderItem in OrderItemList) {
+			
+			OrderItems=[];
+			
+		/*	for (eachOrderItem in OrderItemList) {
 				
 				conditionList1=[];
 					
 					
 				conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderItem.orderId));
 				
-				conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+				//conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 				conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachOrderItem.orderItemSeqId));
 				
 				condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-				orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+				orderItemAttr = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
 				if((orderItemAttr) && (orderItemAttr.get(0).attrValue)){
 					remarkMap.put(eachOrderItem.orderItemSeqId, orderItemAttr.get(0).attrValue);
 					
@@ -312,11 +315,11 @@ context.Scheam =Scheam;
 				 
 				 SrNo = SrNo+1;
 				 
-			}
+			}*/
 			
 			totalsMap = [:];
 			
-			String totQuantityStr = String.valueOf(Math.round(totQuantity));
+			/*String totQuantityStr = String.valueOf(Math.round(totQuantity));
 			char firstTOTQChr = totQuantityStr.charAt(0);
 			totQuantityStr = String.valueOf(firstTOTQChr)+totQuantityStr;
 			totalsMap.put("totQuantity", totQuantityStr);
@@ -328,11 +331,16 @@ context.Scheam =Scheam;
 			totalsMap.put("totannum", totannumStr);
 			
 			totalsList.add(totalsMap);
-			OrderItems=[];
+			
 			Map<String, Object> orderDtlMap = FastMap.newInstance();
 			orderDtlMap.put("orderId", parameters.orderId);
 			orderDtlMap.put("userLogin", userLogin);
 			result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
+			
+			
+			Debug.log("result================="+result)
+			
+			
 			if(ServiceUtil.isError(result)){
 				Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
 				return ServiceUtil.returnError(null, null, null,result);
@@ -368,7 +376,7 @@ context.Scheam =Scheam;
 				// conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));
 				 condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-				 orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+				 orderItemAttr = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
 				 AttrName="";
 				 double schemeAmt = 0;
 				 orderItemAttr.each{ eachAttr ->
@@ -380,6 +388,11 @@ context.Scheam =Scheam;
 					 if(eachAttr.attrName == "REMARKS"){
 						 AttrName =  schemeAmt+Double.valueOf(eachAttr.attrValue);
 					 }
+					 
+					// schemeAmt = eachAttr
+					 
+					 
+					 
 				 }
 				 Map tempMap = [:];
 				  productName = ""
@@ -396,11 +409,11 @@ context.Scheam =Scheam;
 				  else
 				  mgpsQty = quantity;
 				  tempMap.put("mgpsQty", mgpsQty);
-				  /*changeDatetime = eachOrderItem.changeDatetime;
-				  context.changeDatetime = changeDatetime;*/
+				  changeDatetime = eachOrderItem.changeDatetime;
+				  context.changeDatetime = changeDatetime;
 				  unitPrice=productSummary.get("unitListPrice");
 				  context.unitPrice = unitPrice;
-				  if(unitPrice)  
+				  if(unitPrice)
 				  tempMap.put("unitPrice", unitPrice);
 				  else
 				  tempMap.put("unitPrice", "");
@@ -438,20 +451,11 @@ context.Scheam =Scheam;
 				  SrNo = SrNo+1;
 				 OrderItems.add(tempMap);
 			}
-			finalAddresList=[];
-			address1="";
-			address2="";
-			city="";
-			postalCode="";
-			panId="";
-			tanId="";
-			supplierPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:supplierPartyId, userLogin: userLogin]);
-			weaverPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
-			SupplierCity=supplierPostalAddress.city;
-			weaverCity=weaverPostalAddress.city;
-			context.SupplierCity = SupplierCity;
-			context.weaverCity = weaverCity;
-		/*	if(partyPostalAddress){
+			
+		*/
+			
+			
+			/*if(partyPostalAddress){
 				
 			   if(partyPostalAddress.address1){
 				   address1=partyPostalAddress.address1;
@@ -486,16 +490,133 @@ context.Scheam =Scheam;
 			   
 			}*/
 			
-	context.finalAddresList = finalAddresList;		
+			conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			OrderItemDetail = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
+
+			for (echItemDetail in OrderItemDetail) {
+				
+				
+				tempMap = [:];
+				tempMap.put("productId", echItemDetail.productId);
+				
+				productName = ""
+				prod=delegator.findOne("Product",[productId:echItemDetail.productId],false);
+				
+				if(prod.get("productName"))
+					tempMap.put("productName", prod.get("productName"));
+				else
+					tempMap.put("productName", "");
+					
+				tempMap.put("quantity", echItemDetail.quantity);
+				
+				
+				tenPerQty = 0;
+				
+				double quantity = 0;
+				double quotaQuantity = 0;
+				
+				if(echItemDetail.quantity)
+				  quantity = Double.valueOf(echItemDetail.quantity);
+				
+				  
+				  Debug.log("quantity================"+quantity);
+				  
+				  
+				if(echItemDetail.quotaQuantity)
+				  quotaQuantity = Double.valueOf(echItemDetail.quotaQuantity);
+				  
+				  
+				  Debug.log("quotaQuantity================"+quotaQuantity);
+				  
+				  if(quantity > quotaQuantity)
+				  {
+					tempMap.put("tenPerQty", quotaQuantity);
+					tenPerQty = quotaQuantity;
+				  }
+				  else
+				  {
+					tempMap.put("tenPerQty", quantity);
+					tenPerQty = quantity;
+				  }
+				//mgps Qty
+				 
+				  tempMap.put("mgpsQty", quantity-tenPerQty);
+				  
+				  tempMap.put("unitPrice", echItemDetail.unitPrice);
+				  
+				  if(echItemDetail.Uom)
+				  tempMap.put("Uom", "/"+echItemDetail.Uom);
+				  else
+				  tempMap.put("Uom", "/KGs");
+				
+			   //purChasesVal;
+				  
+				  tempMap.put("totalCost", echItemDetail.quantity*echItemDetail.unitPrice);
+				  
+				  OrderItems.add(tempMap);
+			}
+			
+			
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
+			
+			
+			OrderAdjustmentWithOutSubsidy = EntityUtil.filterByCondition(OrderAdjustment, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
+			
+			orderAdjustmentTypeIds = EntityUtil.getFieldListFromEntityList(OrderAdjustmentWithOutSubsidy,"orderAdjustmentTypeId", true);
+			
+			typeBasedMap = [:];
+			
+			for (eachType in orderAdjustmentTypeIds) {
+				eachTypeOrderAdjustment = EntityUtil.filterByCondition(OrderAdjustmentWithOutSubsidy, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, eachType));
+					  adjustmentAmounts = EntityUtil.getFieldListFromEntityList(eachTypeOrderAdjustment,"amount", true);
+					  
+				sameTypeAmount = 0;
+				SAmeAmountMap = [:];
+				 for (eachAmount in adjustmentAmounts) {
+					 eachTypeOrderAdjustmentBasedOnAmount = EntityUtil.filterByCondition(eachTypeOrderAdjustment, EntityCondition.makeCondition("amount", EntityOperator.EQUALS, eachAmount));
+					
+					   for (eachAdjList in eachTypeOrderAdjustmentBasedOnAmount) {
+						  sameTypeAmount = sameTypeAmount+Double.valueOf(eachAdjList.amount);
+					}
+					  SAmeAmountMap.put(eachAmount, sameTypeAmount);
+				}
+				 typeBasedMap.put(eachType, SAmeAmountMap);
+			}
+			
+			Debug.log("typeBasedMap==================="+typeBasedMap);
+			
+			finalAddresList=[];
+			address1="";
+			address2="";
+			city="";
+			postalCode="";
+			panId="";
+			tanId="";
+			supplierPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:supplierPartyId, userLogin: userLogin]);
+			weaverPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+			SupplierCity=supplierPostalAddress.city;
+			weaverCity=weaverPostalAddress.city;
+			context.SupplierCity = SupplierCity;
+			context.weaverCity = weaverCity;
+			
+			
+			
+	context.finalAddresList = finalAddresList;
 	context.OrderItemList = OrderItems;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
 		
-	contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
+	/*contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	
 	contextMap = UtilMisc.toMap("translateList", totalsList);
 	totalsHindiList = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	
 	context.totalsHindiList = totalsHindiList[0];
-	context.dayWiseEntriesLidast = dayWiseEntriesLidast;
+	context.dayWiseEntriesLidast = dayWiseEntriesLidast;*/
