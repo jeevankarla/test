@@ -50,6 +50,7 @@ isLedgerCallFor="ArOnly";
 if(parameters.isLedgerCallFor){
 	isLedgerCallFor=parameters.isLedgerCallFor;
 }
+branchId = parameters.branchId;
 fromDateTime = null;
 thruDateTime = null;
 if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
@@ -122,8 +123,6 @@ if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
 if(UtilValidate.isNotEmpty(context.partyDayWiseFinHistryMap)){
 	partyFinHistryDayWiseMap=context.partyDayWiseFinHistryMap;
 }
-Debug.log("====partyDebits=====>"+partyDebits+"==partyCredits=="+partyCredits);
-//Debug.log("====partyFinHistryDayWiseMap=====>"+partyFinHistryDayWiseMap);
 partyIds=[];
 //partyIdsList
 if(UtilValidate.isNotEmpty(context.partyIdsList)){
@@ -131,7 +130,6 @@ if(UtilValidate.isNotEmpty(context.partyIdsList)){
 }
 //Abstract Ledger Map
 partyWiseLedgerAbstractMap=[:]
-Debug.log("====partyIds=====>OBJJJJJJJJJJJ"+partyIds);
 //Check for Party is Valid or Not
 result = [:];
 /*GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
@@ -155,33 +153,34 @@ if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 }
+conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, parameters.partyId))
+
 //adding for Abstract PartyLedger
-if(UtilValidate.isNotEmpty(partyIds)){
+if((UtilValidate.isNotEmpty(parameters.partyId)) && (UtilValidate.isNotEmpty(parameters.branchId))){
 conditionList.add( EntityCondition.makeCondition([
 				EntityCondition.makeCondition([
-					EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds),
-					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId)
 					],EntityOperator.AND),
 				EntityCondition.makeCondition([
-					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"),
-					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds)
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,branchId),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
 					],EntityOperator.AND)
 				],EntityOperator.OR));
 	
-}else if(UtilValidate.isNotEmpty(parameters.partyId) || UtilValidate.isEmpty(parameters.isLedgerCallFor)){
+}else if(UtilValidate.isNotEmpty(parameters.partyId)){
 conditionList.add( EntityCondition.makeCondition([
             EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+                EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, null)
                 ],EntityOperator.AND),
             EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"),
+                EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ],EntityOperator.AND)
             ],EntityOperator.OR));
 }
 newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-
 
 	List<String> payOrderBy = UtilMisc.toList("invoiceDate");
 tempInvIterator=null;
@@ -377,26 +376,26 @@ if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 }//adding for Abstract PartyLedger
-if(UtilValidate.isNotEmpty(partyIds)){
+if((UtilValidate.isNotEmpty(parameters.partyId)) && (UtilValidate.isNotEmpty(parameters.branchId))){
 conditionList.add( EntityCondition.makeCondition([
 				EntityCondition.makeCondition([
-					EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, partyIds),
-					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
 					],EntityOperator.AND),
 				EntityCondition.makeCondition([
-					EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,"Company"),
-					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds)
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,parameters.branchId),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
 					],EntityOperator.AND)
 				],EntityOperator.OR));
 	
-}else if(UtilValidate.isNotEmpty(parameters.partyId) || UtilValidate.isEmpty(parameters.isLedgerCallFor)){
+}else if(UtilValidate.isNotEmpty(parameters.partyId)){
 conditionList.add(EntityCondition.makeCondition([
                EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+                EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, null)
                 ], EntityOperator.AND),
             EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"),
+                EntityCondition.makeCondition("partyIdTo", EntityOperator.NOT_EQUAL, null),
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ], EntityOperator.AND)
             ], EntityOperator.OR));
@@ -408,7 +407,6 @@ newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 payIterator = delegator.find("PaymentAndType", newPayCondition, null, null, orderBy, findOpts);
 
 while (payment = payIterator.next()) {
-	
 	paymentDate=payment.paymentDate;
 	if(payCounter==0){
 		paymentFirstDate=payment.paymentDate;
