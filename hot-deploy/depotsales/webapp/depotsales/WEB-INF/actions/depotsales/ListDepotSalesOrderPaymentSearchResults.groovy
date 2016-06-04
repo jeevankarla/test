@@ -68,7 +68,12 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	facilityDateStart = UtilDateTime.getDayStart(transDate);
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
 }
-
+indentOrderNo = parameters.orderNo;
+indentOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderNo", EntityOperator.EQUALS , indentOrderNo)  , UtilMisc.toSet("orderId"), null, null, false );
+if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
+	indentOrderIdDetails = EntityUtil.getFirst(indentOrderIdDetails);
+	searchOrderId = indentOrderIdDetails.orderId;
+}
 orderList=[];
 condList = [];
 if(UtilValidate.isNotEmpty(searchOrderId)){

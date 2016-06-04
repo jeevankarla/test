@@ -19,10 +19,20 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 if(UtilValidate.isNotEmpty(result.listIt)){
-	list=result.listIt;
+	list = [];
+	list=result.listIt.getCompleteList();
 	receiptList=[];
-	GenericValue receipt = null;
-	while ((receipt = list.next()) != null) {
+	shipmentList=result.listIt.getCompleteList();
+	if(UtilValidate.isNotEmpty(parameters.orderNo)){
+		draftOrderNo = parameters.orderNo;
+		draftOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderNo", EntityOperator.EQUALS , draftOrderNo)  , UtilMisc.toSet("orderId"), null, null, false );
+		if(UtilValidate.isNotEmpty(draftOrderIdDetails)){
+			draftOrderIdDetails = EntityUtil.getFirst(draftOrderIdDetails);
+			orderId = draftOrderIdDetails.orderId;
+			list = EntityUtil.filterByCondition(list, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		}
+	}
+	list.each{receipt->
 		tempMap=[:];
 		receiptId="";
 		orderId="";

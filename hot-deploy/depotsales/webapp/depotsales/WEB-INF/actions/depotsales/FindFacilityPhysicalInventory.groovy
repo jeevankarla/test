@@ -44,9 +44,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
     if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
 	}
-	if(UtilValidate.isNotEmpty(parameters.primaryOrderId)){
+	/*if(UtilValidate.isNotEmpty(parameters.primaryOrderId)){
 		conditionList.add(EntityCondition.makeCondition("primaryOrderId",EntityOperator.EQUALS,parameters.primaryOrderId));
-	}
+	}*/
 	if(UtilValidate.isNotEmpty(parameters.statusId)){
 		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,parameters.statusId));
 	}

@@ -49,8 +49,17 @@ List conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);*/
-	shipmentList=result.listIt;
-	
+    shipmentList = [];
+	shipmentList=result.listIt.getCompleteList();
+	if(UtilValidate.isNotEmpty(parameters.orderNo)){
+		draftOrderNo = parameters.orderNo;
+		draftOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderNo", EntityOperator.EQUALS , draftOrderNo)  , UtilMisc.toSet("orderId"), null, null, false );
+		if(UtilValidate.isNotEmpty(draftOrderIdDetails)){
+			draftOrderIdDetails = EntityUtil.getFirst(draftOrderIdDetails);
+			primaryOrderId = draftOrderIdDetails.orderId;
+			shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, primaryOrderId));
+		}
+	}
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
