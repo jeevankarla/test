@@ -122,6 +122,7 @@
         </field>
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
@@ -155,6 +156,7 @@
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
         </field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
@@ -299,10 +301,12 @@
               </drop-down>
         </field>
         <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field> 
-        <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field>
+<!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
         	<drop-down allow-empty="true" > 
         		<option key="DISPATCHED" description="Dispatched" > </option>
@@ -510,7 +514,7 @@
                     </sub-hyperlink>
                 </display-entity>
             </field>
-            <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><display/></field>
+<!--             <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><display/></field> -->
             <field name="partyIdTo" ><hidden/></field>
             <field name="partyName" ><hidden/></field>
             <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -1372,6 +1376,7 @@
         </field>
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
          <field name="indentDateSort">
 	        	<drop-down allow-empty="false">
@@ -1411,6 +1416,7 @@
               </drop-down>
         </field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
@@ -1442,6 +1448,7 @@
         </field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="orderId" title="PO Order"><text-find/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -1486,9 +1493,10 @@
         <field name="shipmentTypeId"><hidden value="DEPOT_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="vehicleId" title="Vehicle No"><text-find/></field>
+<!--         <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
         <field name="statusId" title="Status"  >
         <drop-down allow-empty="true" > 
         <option key="SHIPMENT_CANCELLED" description="Cancelled" > </option>
@@ -1544,7 +1552,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="vehicleId" title="Vehicle No"><display/></field>
+<!--         <field name="vehicleId" title="Vehicle No"><display/></field> -->
         <field name="depoPartyName" title="Vehicle No"><hidden/></field>
         <field name="partyIdTo" title="Vehicle No"><hidden/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -1580,7 +1588,7 @@
         
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
-        <field name="primaryOrderId" title="PO no"><text-find/></field>
+<!--         <field name="primaryOrderId" title="PO no"><text-find/></field> -->
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>

@@ -14,7 +14,7 @@
         <field name="orderId"><text-find/></field>
         <field title="Entry Date" name="entryDate"><date-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
-       <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+<!--        <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
 	        	<drop-down allow-empty="true">
@@ -182,6 +182,7 @@
               </drop-down>
         </field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
@@ -329,7 +330,7 @@
                 </sub-hyperlink> -->
             </display-entity>
         </field>
-        <field name="vehicleId" title="Vehicle No"><display/></field>
+<!--         <field name="vehicleId" title="Vehicle No"><display/></field> -->
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
         </field>

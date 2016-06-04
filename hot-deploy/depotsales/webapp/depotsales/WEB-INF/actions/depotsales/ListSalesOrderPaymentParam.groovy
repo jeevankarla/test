@@ -60,6 +60,12 @@ paramEstimatedDeliveryDate = "";
 paramStatusId = "";
 paramBranch = "";
 indentDateSort = ""
+indentOrderNo = parameters.orderNo;
+indentOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderNo", EntityOperator.EQUALS , indentOrderNo)  , UtilMisc.toSet("orderId"), null, null, false );
+if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
+	indentOrderIdDetails = EntityUtil.getFirst(indentOrderIdDetails);
+	paramOrderId = indentOrderIdDetails.orderId;
+}
 if(parameters.orderId)
 	 paramOrderId = parameters.orderId;
    
