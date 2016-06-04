@@ -160,10 +160,10 @@
 					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State'/>Inter State<br> </td>  </tr>";
 				}
 				if(applicableTaxType == "Inter-State"){
-					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
 				}
 				if(applicableTaxType == 'undefined' || applicableTaxType == null || applicableTaxType == ""){
-					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State'/>Inter State<br> </td>  </tr>";
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State'/>Inter State<br> </td>  </tr>";
 				}
 				
 				
@@ -195,13 +195,13 @@
 			if($("#orderTaxType").val() == "Intra-State"){
 				
 				if(applicableTaxType == "Intra-State"){
-					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
 				}
 				if(applicableTaxType == "Inter-State"){
-					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' />With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' checked/>Inter State<br> </td>  </tr>";
 				}
 				if(applicableTaxType == 'undefined' || applicableTaxType == null || applicableTaxType == ""){
-					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>Intra State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
+					message += "<tr ><td><input type='radio' name='applicableTaxType' value='Intra-State' checked/>With-In State<br> </td>  <td></td>   <td><input type='radio' name='applicableTaxType' value='Inter-State' />Inter State<br> </td>  </tr>";
 				}
 				
 				
