@@ -25,118 +25,8 @@ under the License.
     <Uom abbreviation="Bale" description="Bale" uomId="BALE" uomTypeId="YARN_MEASURE"/>
     <Uom abbreviation="Half Bale" description="Half Bale" uomId="HALF-BALE" uomTypeId="YARN_MEASURE"/>
     
-    <!-- <ProductCategory categoryName="Cotton" longDescription="Cotton" productCategoryId="COTTON"/>
-        
-    <Product productId="COTTON-HANK" productName="COTTON HANK" productTypeId="FINISHED_GOOD" primaryProductCategoryId="COTTON" description="Cotton Hank" internalName="Cotton Hank" isVariant="N" isVirtual="Y" returnable="N" taxable="N"chargeShipping="N" quantityUomId="Bale"/>
-    
-    <Product productId="CH-CROSS-10S" productName="Cotton Hank Cross 10S" productTypeId="FINISHED_GOOD" description="Cotton Hank Cross 10S" internalName="Cotton Hank Cross 10S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CH-CROSS-20S" productName="Cotton Hank Cross 20S" productTypeId="FINISHED_GOOD" description="Cotton Hank Cross 20S" internalName="Cotton Hank Cross 20S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CH-CROSS-30S" productName="Cotton Hank Cross 30S" productTypeId="FINISHED_GOOD" description="Cotton Hank Cross 30S" internalName="Cotton Hank Cross 30S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    
-    <Product productId="CH-PLAIN-10S" productName="Cotton Hank Plain 10S" productTypeId="FINISHED_GOOD" description="Cotton Hank Plain 10S" internalName="Cotton Hank Plain 10S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CH-PLAIN-20S" productName="Cotton Hank Plain 20S" productTypeId="FINISHED_GOOD" description="Cotton Hank Plain 20S" internalName="Cotton Hank Plain 20S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CH-PLAIN-30S" productName="Cotton Hank Plain 30S" productTypeId="FINISHED_GOOD" description="Cotton Hank Plain 30S" internalName="Cotton Hank Plain 30S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    
-    <Product productId="COTTON-CONE" productName="COTTON CONE" productTypeId="FINISHED_GOOD" primaryProductCategoryId="COTTON" description="Cotton Cone" internalName="Cotton Cone" isVariant="N" isVirtual="Y" returnable="N" taxable="N"chargeShipping="N" quantityUomId="Bale"/>
-    
-    <Product productId="CC-10S" productName="Cotton Cone 10S" productTypeId="FINISHED_GOOD" description="Cotton Cone 10S" internalName="Cotton Cone 10S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CC-20S" productName="Cotton Cone 20S" productTypeId="FINISHED_GOOD" description="Cotton Cone 20S" internalName="Cotton Cone 20S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="CC-30S" productName="Cotton Cone 30S" productTypeId="FINISHED_GOOD" description="Cotton Cone 30S" internalName="Cotton Cone 30S" isVariant="Y" isVirtual="N" returnable="N" taxable="N"chargeShipping="N" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    
-    
-    <ProductFeatureType productFeatureTypeId="COUNT" description="Count" hasTable="N"/> 
-    
-    <ProductFeature productFeatureId="10S" productFeatureTypeId="COUNT" description="10S" defaultSequenceNum="1" />
-    <ProductFeature productFeatureId="20S" productFeatureTypeId="COUNT" description="20S" defaultSequenceNum="2" />
-    <ProductFeature productFeatureId="30S" productFeatureTypeId="COUNT" description="30S" defaultSequenceNum="3" />
-    
-    <ProductFeatureAppl productId="COTTON-HANK" productFeatureId="10S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="COTTON-HANK" productFeatureId="20S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="COTTON-HANK" productFeatureId="30S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="3"/>
-    
-    <ProductFeatureAppl productId="COTTON-CONE" productFeatureId="10S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="COTTON-CONE" productFeatureId="20S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="COTTON-CONE" productFeatureId="30S" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2015-04-01 12:00:00.0" sequenceNum="3"/>
-    
-    <ProductFeatureAppl productId="CH-CROSS-10S" productFeatureId="10S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="1"/>
-    <ProductFeatureAppl productId="CH-CROSS-20S" productFeatureId="20S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="2"/>
-    <ProductFeatureAppl productId="CH-CROSS-30S" productFeatureId="30S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="3"/>
-    
-    <ProductFeatureAppl productId="CH-PLAIN-10S" productFeatureId="10S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="1"/>
-    <ProductFeatureAppl productId="CH-PLAIN-20S" productFeatureId="20S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="2"/>
-    <ProductFeatureAppl productId="CH-PLAIN-30S" productFeatureId="30S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="3"/>
-    
-    <ProductFeatureAppl productId="CC-10S" productFeatureId="10S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="1"/>
-    <ProductFeatureAppl productId="CC-20S" productFeatureId="20S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="2"/>
-    <ProductFeatureAppl productId="CC-30S" productFeatureId="30S" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="3"/>
-    
-    
-    
-    
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-CROSS-10S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-CROSS-20S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-CROSS-30S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-PLAIN-10S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-PLAIN-20S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-HANK" productIdTo="CH-PLAIN-30S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    
-    <ProductAssoc productId="COTTON-CONE" productIdTo="CC-10S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-CONE" productIdTo="CC-20S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/>
-    <ProductAssoc productId="COTTON-CONE" productIdTo="CC-30S" fromDate="2015-04-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT"/> -->
-    
-    
-   <!--  <ProductStore productStoreId="STORE" storeName="NHDC Store" companyName="NHDC" title="NHDC"
-        subtitle="NHDC" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
-        inventoryFacilityId="" oneInventoryFacility="Y" checkInventory="Y" isFactoryStore="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
-        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
-        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
-        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
-        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
-        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
-        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
-        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/> -->
-    
+   
     <VisualThemeResource createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/vasista/complogos/logo_nhdc.png" sequenceId="01" visualThemeId="VASISTA"/>
-    
-    
-    <!-- SCHEMES SAMPLE -->
-    <!-- <Enumeration enumId="PROMO_ALL_ITEM_DISC" enumTypeId="PROD_PROMO_ACTION" enumCode="PROD_ITEM_DISC" sequenceId="12" description="X% Discount on cart item quantity"/> -->
-   	
-    
-    <!-- <ProductPromo productPromoId="TEN_PERCENT_SUBSIDY" promoName="Ten Percent Subsidy" promoText="10 Percent Subsidy on eligible product categories" requireCode="N" showToCustomer="N" userEntered="N" useLimitPerOrder="1"/>
-    <ProductPromoRule productPromoId="TEN_PERCENT_SUBSIDY" productPromoRuleId ="01" ruleName ="10 Percent Subsidy" /> 
-    <ProductPromoCond condValue="checkEligibility" inputParamEnumId="PPIP_SERVICE" productPromoCondSeqId="01" productPromoId="100" productPromoRuleId="01"/> 
-    <ProductPromoAction productPromoId="TEN_PERCENT_SUBSIDY" amount="10" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productPromoActionEnumId="PROMO_SERVICE" productPromoActionSeqId="01" productPromoRuleId="01" serviceName="calculateSchemeQuantity" useCartQuantity="N"/>
-    <ProductPromoAction orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productPromoActionEnumId="PROMO_SERVICE" productPromoActionSeqId="01" productPromoId="100" productPromoRuleId="01" serviceName="calculateSchemeQuantity" useCartQuantity="N"/> 
-    <ProductPromoCategory productPromoId="TEN_PERCENT_SUBSIDY" productCategoryId="COTTON_UPTO40" productPromoRuleId="01" includeSubCategories="Y" productPromoActionSeqId="01" productPromoApplEnumId="PPPA_INCLUDE" productPromoCondSeqId="_NA_" andGroupId="_NA_"/>
-     -->
-    <!-- <LoomType loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"/> 
-    <PartyLoom partyId="11435" loomTypeId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" quantity="20"/>  -->
-    
-    <!-- <ProductStorePromoAppl fromDate="2015-01-01 18:44:04.0"  productPromoId="TEN_PERCENT_SUBSIDY" productStoreId="STORE"/> -->
-	
-   <!--  <SchemeType schemeTypeId="MGPS"/>
-    <Scheme schemeId="TEN_PERCENT_MGPS" schemeName="Ten Percent Scheme" schemeTypeId="MGPS" description="Ten Percent Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0" productPromoId="TEN_PERCENT_SUBSIDY"/>
-     -->
-    <!-- <SchemeProductCategory schemeId="TEN_PERCENT_MGPS" productCategoryId="COTTON_UPTO40" fromDate="2015-04-01 00:00:00.0" maxQty="30" qtyUomId="KG" periodTime="" periodTimeUomId=""/>
-    <SchemeParty schemeId="TEN_PERCENT_MGPS" partyId="11435" fromDate="2015-04-01 00:00:00.0"/> -->
-   
-   	
-   
-   
-    
-    <!-- <ProductPromo productPromoId="100" promoName="BUY 12ltrs AND GET 02 TM 1/2 packets Free" promoText="BUY 12ltrs AND GET 02 TM 1/2 packets Free" requireCode="N" showToCustomer="N" useLimitPerOrder="1" userEntered="N"/> 
-    <ProductPromoRule productPromoId="100" productPromoRuleId="01" ruleName="Rule 1: Free 02 packets of TM 1/2 ltr"/> 
-    <ProductPromoCond condValue="schemeProductPromoCond" inputParamEnumId="PPIP_SERVICE" productPromoCondSeqId="01" productPromoId="100" productPromoRuleId="01"/> 
-    <ProductPromoAction orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productPromoActionEnumId="PROMO_SERVICE" productPromoActionSeqId="01" productPromoId="100" productPromoRuleId="01" serviceName="calculateSchemeQuantity" useCartQuantity="N"/> 
-	<ProductPromoProduct productId="22" productPromoActionSeqId="01" productPromoApplEnumId="PPPA_INCLUDE" productPromoCondSeqId="01" productPromoId="100" productPromoRuleId="01"/>
-	<InvoiceItemType description="Invoice Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ADJ"/>
-	<InvoiceItemType description="Invoice item Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ITM_ADJ"/>
-	<ProductStorePromoAppl fromDate="2015-01-01 18:44:04.0"  productPromoId="100" productStoreId="9001"/>
-	<ProductStorePromoAppl fromDate="2015-01-01 18:44:04.0"  productPromoId="100" productStoreId="DAIRY"/> -->
-    
     
     <OrderAdjustmentType orderAdjustmentTypeId="MGPS_SCHEME" description="MGPS Scheme" hasTable="N"/>
     <OrderAdjustmentType orderAdjustmentTypeId="TEN_PERCENT_SUBSIDY" parentTypeId="MGPS_SCHEME" description="10 percent subsidy" hasTable="N"/>
@@ -153,9 +43,6 @@ under the License.
      
     <SchemeType schemeTypeId="MGPS"/>
     <Scheme schemeId="TEN_PERCENT_MGPS" schemeName="Ten Percent Scheme" schemeTypeId="MGPS" description="Ten Percent Scheme" discountPercent="10.0" fromDate="2015-04-01 00:00:00.0"/>
-    
-    <!-- <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="10.000000" productCategoryId="COTTON_40ABOVE" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="3" periodTimeUomId="TF_mon"/> 	
-    <SchemeProductCategory fromDate="2015-04-01 00:00:00.0" maxQty="30.000000" productCategoryId="COTTON_UPTO40" qtyUomId="KG" schemeId="TEN_PERCENT_MGPS" periodTime="2" periodTimeUomId="TF_mon"/> --> 	
     
     <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="GOVT_BODY" fromDate="2015-04-01 00:00:00.00"/>
     <SchemePartyClassificationGroup schemeId="TEN_PERCENT_MGPS" partyClassificationGroupId="APEX_BODY" fromDate="2015-04-01 00:00:00.00"/>
@@ -231,23 +118,7 @@ under the License.
     	<PortalPageColumn portalPageId="MYPORTAL_BS_ADMIN" columnSeqId="00001"/>
     	<PortalPagePortlet portalPageId="MYPORTAL_BS_ADMIN" portalPortletId="BRANCH_SALES_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
-    <!-- To auto pick branch based on Userlogin for employees -->
-    	
-    	<RoleType roleTypeId="BRANCH_EMPLOYEE" parentTypeId="" description="Branch Employee"/>
-    	<PartyRole partyId="13680" roleTypeId="BRANCH_EMPLOYEE"/>
-    	<PartyRelationship partyIdFrom="INT7" partyIdTo="13680" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
-    
-    	<RoleType roleTypeId="BRANCH_EMPLOYEE" parentTypeId="" description="Branch Employee"/>
-    	<PartyRole partyId="15230" roleTypeId="BRANCH_EMPLOYEE"/>
-    	<PartyRelationship partyIdFrom="INT10" partyIdTo="15230" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE" fromDate="2015-01-01 00:00:00.0" partyRelationshipTypeId="GROUP_ROLLUP"/>
-    
-    	<!-- <UserPreference userLoginId="vikram" userPrefTypeId="LANGUAGE_PREFERENCE" userPrefValue="zh_CN"/> --> 
-    	
-    <!-- To auto pick language preference -->
-    	
-    	<UserLogin partyId="13670" userLoginId="vikram" preferredLocale="hi_IN"/>
-    	
-    	
+       	
     	<StatusItem description="Dispatched" sequenceId="01" statusCode="DISPATCHED" statusId="DISPATCHED" statusTypeId="SHIPMENT_STATUS"/> 
     	<StatusItem description="Documents Received" sequenceId="02" statusCode="DOCUMENTS_RECEIVED" statusId="DOCUMENTS_RECEIVED" statusTypeId="SHIPMENT_STATUS"/>
     	<StatusItem description="Documents Endorsed" sequenceId="03" statusCode="DOCUMENTS_ENDORSED" statusId="DOCUMENTS_ENDORSED" statusTypeId="SHIPMENT_STATUS"/>
@@ -264,51 +135,7 @@ under the License.
 		<ProductCategoryAssoc productCategoryId="COTTON" productCategoryIdTo="COTTON_UPTO40" productCategoryAssocTypeId="SCHEME_APPLICABILITY" fromDate="2014-04-01 00:00:00.0" /> 
 		
 		
-		<ProductCategoryAttributeType attrTypeId="ORGANIC" attributeApplType="Mandatory" description="Organic" inputType="Indicator" sequenceId="01"/>
-		<ProductCategoryAttributeType attrTypeId="FINESSE" attributeApplType="Mandatory" description="Finesse" inputType="Select" sequenceId="02"/> 
-		<ProductCategoryAttributeType attrTypeId="FINISHING" attributeApplType="Mandatory" description="Finishing" inputType="Select" sequenceId="03"/> 
-		<ProductCategoryAttributeType attrTypeId="LUSTER" attributeApplType="Selectable" description="Luster" inputType="Select" sequenceId="04"/> 
-		<ProductCategoryAttributeType attrTypeId="COLORING" attributeApplType="Selectable" description="Coloring" inputType="Select" sequenceId="05"/>
-		<ProductCategoryAttributeType attrTypeId="PACKING" attributeApplType="Mandatory" description="Packing" inputType="Select" sequenceId="06"/>  
-		<ProductCategoryAttributeType attrTypeId="COUNT" attributeApplType="Mandatory" description="Count" inputType="Number" sequenceId="08"/> 
-		<ProductCategoryAttributeType attrTypeId="PLY" attributeApplType="Mandatory" description="Ply" inputType="Number" sequenceId="07"/>
-		<ProductCategoryAttributeType attrTypeId="UOM" attributeApplType="Mandatory" description="Uom" inputType="Select" sequenceId="09"/>  
-		 
-		
-		
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="SHPR" sequenceId="01" attrCode="SHPR"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="DHPR" sequenceId="02" attrCode="DHPR"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="SHCR" sequenceId="03" attrCode="SHCR"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="DHCR" sequenceId="04" attrCode="DHCR"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PACKING"  attrName="CONE" sequenceId="05" attrCode="CONE"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="ORGANIC"  attrName="ORGANIC" attrCode="ORGANIC"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="CARDED" sequenceId="01" attrCode="K"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="COMBED" sequenceId="02" attrCode="C"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="SUPER-COMBED" sequenceId="03" attrCode="SUPER COMBED"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINESSE"  attrName="SEMI-COMBED" sequenceId="04" attrCode="SEMI COMBED"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="OE" attrCode="OE"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="HS" attrCode="HS"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="RF(TFO)" attrCode="TFO"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="FINISHING"  attrName="RF" attrCode="RF"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="LUSTER"  attrName="MERCERIZED" sequenceId="01" attrCode="MERC"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="LUSTER"  attrName="GAS MERCERIZED" sequenceId="02" attrCode="GAS MERC"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COLORING"  attrName="BLEACHED" sequenceId="01" attrCode="BLEACHED"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COLORING"  attrName="DYED" sequenceId="02" attrCode="DYED"/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="PLY"  attrName="PLY" attrCode=""/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="COUNT"  attrName="COUNT" attrCode=""/>
-		
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="NF" sequenceId="02" attrCode="NF"/>
-		<ProductCategoryAttribute productCategoryId="COTTON_GREY" attrTypeId="UOM"  attrName="S" sequenceId="01" attrCode="S"/>
-		
 		<PeriodType description="Ten Percent Scheme Year" periodLength="1" periodTypeId="TEN_PERC_SCH_YEAR" uomId="TF_yr"/>
-
 
 		<SchemeTimePeriod fromDate="2015-04-01" thruDate="2016-03-31" isClosed="N" periodNum="01" periodTypeId="TEN_PERC_SCH_YEAR" schemeTimePeriodId="TPSY0001"/>
 		<SchemeTimePeriod fromDate="2016-04-01" thruDate="2017-03-31" isClosed="N" periodNum="02" periodTypeId="TEN_PERC_SCH_YEAR" schemeTimePeriodId="TPSY0002"/>
@@ -378,14 +205,11 @@ under the License.
 
 	<RoleType roleTypeId="CFC_INDENTOR" description="Indentor In CFC"/> 
 
-<!-- Sample Not to be pushed -->
-	<ProductStoreRole partyId="15140" productStoreId="LOHATA_CFC" roleTypeId="CFC_INDENTOR" fromDate="2015-04-01 00:00:00.0"/> 
-
  
-		<ProductCategoryType description="Service Charges" productCategoryTypeId="SERVICE_CHARGES"/>
-		<ProductCategory productCategoryId="SERVICE_CHARGES" description="Service Charges" productCategoryTypeId="SERVICE_CHARGES"/>
+	<ProductCategoryType description="Service Charges" productCategoryTypeId="SERVICE_CHARGES"/>
+	<ProductCategory productCategoryId="SERVICE_CHARGES" description="Service Charges" productCategoryTypeId="SERVICE_CHARGES"/>
 	
-		<Product autoCreateKeywords="Y" brandName="Service Charges" description="Service Charges" inShippingBox="N" internalName="Service Charges" primaryProductCategoryId="SERVICE_CHARGES" productId="SERVICE_CHARGE" productName="Service Charges" productTypeId="SERVICE"/>
+	<Product autoCreateKeywords="Y" brandName="Service Charges" description="Service Charges" inShippingBox="N" internalName="Service Charges" primaryProductCategoryId="SERVICE_CHARGES" productId="SERVICE_CHARGE" productName="Service Charges" productTypeId="SERVICE"/>
 	
 	<Enumeration description="Shipment Reimbursement for every 2 months" enumId="SHIPMENT_BILLING"/>
 	<Enumeration description="Depot Reimbursement for every 2 months" enumId="DEPOT_BILLING"/>
@@ -459,7 +283,7 @@ under the License.
 <!-- 	End RO classification Data -->
 	
 	
-	
+<!-- 	Invoice Adjustments -->	
 	<InvoiceItemType invoiceItemTypeId="ADDITIONAL_CHARGES" description="Additional Charges"/> 
 	<InvoiceItemType invoiceItemTypeId="DISCOUNTS" description="Discounts"/> 
 	
@@ -480,38 +304,6 @@ under the License.
 	<InvoiceItemType invoiceItemTypeId="TAX_SALE" description="Tax Purchase"/> 
 	<InvoiceItemType invoiceItemTypeId="CST_SALE" parentTypeId="TAX_SALE" description="CST"/> 
 	<InvoiceItemType invoiceItemTypeId="VAT_SALE" parentTypeId="TAX_SALE" description="VAT"/> 
-	
-	
-	<PartyRole partyId="15410" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15410" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15411" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15411" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15412" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15412" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15413" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15413" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15414" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15414" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15415" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15415" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15416" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15416" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15417" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15417" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-    <PartyRole partyId="15418" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15418" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
-	<PartyRole partyId="15419" roleTypeId="BRANCH_EMPLOYEE"/>
-    <PartyRelationship fromDate="2015-04-01 00:00:00.0" partyIdFrom="INT15" partyIdTo="15419" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="ORGANIZATION_UNIT" roleTypeIdTo="BRANCH_EMPLOYEE"/>
-    
 	
 	
 	<SchemeType schemeTypeId="MGPS"/>
@@ -593,7 +385,7 @@ under the License.
 	
 	
     
-    
+ <!--   To Identify Purpose Type based on product -->   
     <ProductCategory productCategoryId="CHENNILE" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="COTTON_GREY" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="SLUB" productCategoryTypeId="YARN_SALE"/>
@@ -604,9 +396,7 @@ under the License.
 	<ProductCategory productCategoryId="TWINE_JUTE" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="WASTE_JUTE" productCategoryTypeId="YARN_SALE"/>
 	
-	
 	<ProductCategory productCategoryId="LINEN_YARN" productCategoryTypeId="YARN_SALE"/>
-	
 	
 	<ProductCategory productCategoryId="CHIFFON" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="ERI" productCategoryTypeId="YARN_SALE"/>
@@ -620,15 +410,10 @@ under the License.
 	<ProductCategory productCategoryId="TOPE" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="TUSSAR" productCategoryTypeId="YARN_SALE"/>
 	
-	
-	
 	<ProductCategory productCategoryId="BARRACK" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="CARPET" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="MERINO" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="SHODDY" productCategoryTypeId="YARN_SALE"/>
-	
-	
-	
 	
 	<ProductCategory productCategoryId="FINE_GOLDEN_ZARI" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="FINE_SILVER_ZARI" productCategoryTypeId="YARN_SALE"/>
@@ -641,24 +426,17 @@ under the License.
 	<ProductCategory productCategoryId="POWDER_ZARI" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="REAL_GOLD_ZARI" productCategoryTypeId="YARN_SALE"/>
 	
-	
-	
 	<ProductCategory productCategoryId="ACRYLIC_YARN" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="CHENNILE_ACRYLIC" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="SPUN_YARN" productCategoryTypeId="YARN_SALE"/>
 	
-	
-	
 	<ProductCategory productCategoryId="CHENNILE-STAPLE" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="VISCOSE_STAPLE" productCategoryTypeId="YARN_SALE"/>
 	
-	
 	<ProductCategory productCategoryId="POLYESTER" productCategoryTypeId="YARN_SALE"/>
-	
 	
 	<ProductCategory productCategoryId="P_C_BLENDED" productCategoryTypeId="YARN_SALE"/>
 	<ProductCategory productCategoryId="P_V_BLENDED" productCategoryTypeId="YARN_SALE"/>
-	
 	
 	<ProductCategory productCategoryId="COIR" productCategoryTypeId="YARN_SALE"/>
 	

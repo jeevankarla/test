@@ -66,6 +66,7 @@
        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
        <attribute name="partyIdTo" type="String" mode="IN" optional="true"/>
        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentPurposeType" type="String" mode="IN" optional="true"/>
        <attribute name="amount" type="String" mode="IN" optional="false"/>
        <attribute name="comments" type="String" mode="IN" optional="true"/>
        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>

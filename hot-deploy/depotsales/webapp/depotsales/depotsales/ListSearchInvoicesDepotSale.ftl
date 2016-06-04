@@ -205,7 +205,7 @@ function datepick()
 	var amount;
 	var partyName;
 	var comments;
-function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp) {
+function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp,purposeTypeId1) {
 		var message = "";
 		 partyIdFrom=partyIdFrom1;
 	     partyIdTo=partyIdTo1;
@@ -215,6 +215,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		 partyName=partyNameTemp;
 		 var methodOptionList =[];
 		 var payMethodList="";
+		 purposeTypeId=purposeTypeId1;
 		 
 		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
 		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
@@ -237,9 +238,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
-						"</select></td></tr>"+
+						"</select><input class='h4' type='hidden' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
                         "<tr class='h3'><td align='left' class='h3' width='60%'><#if parentTypeId?exists && parentTypeId=="SALES_INVOICE">Payment Method Type :<#else>Payment Method:</#if> </td><td align='left' width='60%'><select <#if parentTypeId?exists && parentTypeId=="SALES_INVOICE"> name='paymentMethodTypeId' <#else> name='paymentMethodId' </#if> id='paymentMethodTypeId'  class='h4'>"+
-						"</select></td></tr>"+						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td><input class='h4' type='hidden' id='parentTypeId' name='parentTypeId' value='${parentTypeId?if_exists}'/></td></tr>"+
+						"</select></td></tr>"+						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/><input class='h4' type='hidden' id='parentTypeId' name='parentTypeId' value='${parentTypeId?if_exists}'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>"+
 				 		<#--"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+-->
@@ -427,7 +428,10 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                
                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
-              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}');"/></td>
+              		  <#if invoice.purposeTypeId?has_content>
+              		  	<#assign purposeTypeId=invoice.purposeTypeId>
+              		  </#if>
+              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>

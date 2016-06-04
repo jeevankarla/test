@@ -3482,6 +3482,7 @@ public class DepotSalesServices{
 	  	String amount = (String) context.get("amount");
 	  	String comments = (String) context.get("comments");
 	  	String paymentRefNum = (String) context.get("paymentRefNum");
+	  	String paymentPurposeType = (String) context.get("paymentPurposeType");
 	  	String issuingAuthority = (String) context.get("issuingAuthority");
 	  	String inFavourOf = (String) context.get("inFavour");
 	  	List advancePayments = (List) context.get("advPayments");
@@ -3526,6 +3527,9 @@ public class DepotSalesServices{
           Map<String, Object> paymentParams = new HashMap<String, Object>();
               paymentParams.put("paymentTypeId", "INDENTADV_PAYIN");
               paymentParams.put("paymentMethodTypeId", paymentMethodTypeId);
+              if(UtilValidate.isNotEmpty(paymentPurposeType)){
+            	  paymentParams.put("paymentPurposeType", paymentPurposeType);
+              }
              // paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
               paymentParams.put("amount", new BigDecimal(amount));
               paymentParams.put("statusId", "PMNT_RECEIVED");
@@ -9308,95 +9312,43 @@ public class DepotSalesServices{
    	    Map result = ServiceUtil.returnSuccess();
    	    String purposeTypeId = null;
    	    
-   	    /*List yarnProdCategoryTypeIds = FastList.newInstance();
-   	    List<GenericValue> yarnProductCategoryTypes = null;
-		try {
-			yarnProductCategoryTypes = delegator.findList("ProductCategoryType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"YARN"), null, null, null, false);
-			Debug.log("yarnProductCategoryTypes =======  11111 ========="+yarnProductCategoryTypes);
-			if(UtilValidate.isNotEmpty(yarnProductCategoryTypes)){
-				yarnProdCategoryTypeIds = EntityUtil.getFieldListFromEntityList(yarnProductCategoryTypes, "productCategoryTypeId", true);
+   	    String primaryProductCategoryId = null;
+   	    try{
+			GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+			if(UtilValidate.isEmpty(product)){
+				Debug.logError("Not a valid product. No Product with Id : "+productId, module);
+				return ServiceUtil.returnError("Not a valid product. No Product with Id : "+productId);
 			}
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductCategoryType ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductCategoryType " + e);
+			primaryProductCategoryId = (String) product.get("primaryProductCategoryId");
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Not a valid product. No Product with Id : "+productId, module);
+			return ServiceUtil.returnError("Not a valid product. No Product with Id : "+productId + e);
 		}
-		Debug.log("yarnProdCategoryTypeIds =======  11111 ========="+yarnProdCategoryTypeIds);
-		
-		List diesProdCategoryTypeIds = FastList.newInstance();
-		List<GenericValue> diesProductCategoryTypes = null;
-		try {
-			diesProductCategoryTypes = delegator.findList("ProductCategoryType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"DiesAndChemicals"), null, null, null, false);
-			Debug.log("diesProductCategoryTypes =======  11111 ========="+diesProductCategoryTypes);
-			if(UtilValidate.isNotEmpty(diesProductCategoryTypes)){
-				diesProdCategoryTypeIds = EntityUtil.getFieldListFromEntityList(diesProductCategoryTypes, "productCategoryTypeId", true);
+   	    
+   	    if(UtilValidate.isEmpty(primaryProductCategoryId)){
+   	    	Debug.logError("primaryProductCategoryId is not configured for the selected product. It is must to identify the category type like (Yarn Product, Dies and Chemicals etc.) : "+productId, module);
+			return ServiceUtil.returnError("primaryProductCategoryId is not configured for the selected product. It is must to identify the category type like (Yarn Product, Dies and Chemicals etc.) : ");
+   	    }
+   	    
+   	    String productCategoryTypeId = "";
+   	    try{
+   	    	GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", primaryProductCategoryId), false);
+			if(UtilValidate.isEmpty(productCategory)){
+				Debug.logError("Not a valid product category. "+primaryProductCategoryId, module);
+				return ServiceUtil.returnError("Not a valid product category. "+primaryProductCategoryId);
 			}
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductCategoryType ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductCategoryType " + e);
+			productCategoryTypeId = (String) productCategory.get("productCategoryTypeId");
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Not a valid product category. "+primaryProductCategoryId, module);
+			return ServiceUtil.returnError("Not a valid product category. "+primaryProductCategoryId + e);
 		}
-		Debug.log("diesProdCategoryTypeIds =======  11111 ========="+diesProdCategoryTypeIds);
-		
-		List yarnProdCategoryIds = FastList.newInstance();
-	  	try{
-	  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.IN, yarnProdCategoryTypeIds), UtilMisc.toSet("productCategoryId"), null, null, false);
-	  		yarnProdCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
-	   	}catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductCategory ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
-		}	 
-	  	Debug.log("yarnProdCategoryIds =======  11111 ========="+yarnProdCategoryIds);
-	  	try{
-	  		
-	  		Map prodCatCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	   	    prodCatCtx.put("categoriesList", yarnProdCategoryIds);
-	  		
-	  		Map resultCtx = dispatcher.runSync("getAllChildProductCategoriesAndMembers",prodCatCtx);  	
-	  		List completeProductIdsList = (List) resultCtx.get("completeProductIdsList");
-	  		Debug.log("completeProductIdsList =======  11111 ========="+completeProductIdsList);
-	  		if(completeProductIdsList.contains(productId)){
-	  			purposeTypeId = "YARN_SALE";
-	  		}
-	  		if (ServiceUtil.isError(resultCtx)) {
-	  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
-	  	 		Debug.logError(errMsg , module);
-	  		}	
-	  	}catch (GenericServiceException e) {
-	  		Debug.logError(e , module);
-	  		return ServiceUtil.returnError(e+" Error While Checking Yarn Product Category");
-	  	}
-	  	
-	  	
-	  	if(UtilValidate.isEmpty(purposeTypeId)){
-		  	List diesProdCategoryIds = FastList.newInstance();
-		  	try{
-		  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.IN, yarnProdCategoryTypeIds), UtilMisc.toSet("productCategoryId"), null, null, false);
-		  		diesProdCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
-		   	}catch (GenericEntityException e) {
-				Debug.logError(e, "Failed to retrive ProductCategory ", module);
-				return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
-			}
-		  	
-		  	try{
-		  		Map prodCatCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		   	    prodCatCtx.put("categoriesList", diesProdCategoryIds);
-		  		
-		  		Map resultCtx = dispatcher.runSync("getAllChildProductCategoriesAndMembers",prodCatCtx);  	
-		  		List completeProductIdsList = (List) resultCtx.get("completeProductIdsList");
-		  		Debug.log("completeProductIdsList =======  2222 ========="+completeProductIdsList);
-		  		if(completeProductIdsList.contains(productId)){
-		  			purposeTypeId = "DIES_AND_CHEM_SALE";
-		  		}
-		  		if (ServiceUtil.isError(resultCtx)) {
-		  	 		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
-		  	 		Debug.logError(errMsg , module);
-		  		}
-		  	}catch (GenericServiceException e) {
-		  		Debug.logError(e , module);
-		  		return ServiceUtil.returnError(e+" Error While Checking Dies Product Category");
-		  	}
-	  	}
-	  	
-	  	Debug.log("purposeTypeId ======="+purposeTypeId);*/
+   	    
+   	    if(productCategoryTypeId.equals("YARN_SALE")){
+   	    	purposeTypeId = "YARN_SALE";
+   	    }
+   	    if(productCategoryTypeId.equals("DIES_AND_CHEM_SALE")){
+	    	purposeTypeId = "DIES_AND_CHEM_SALE";
+	    }
 	  	
 	  	if(UtilValidate.isEmpty(purposeTypeId)){
 	  		purposeTypeId = "YARN_SALE";
