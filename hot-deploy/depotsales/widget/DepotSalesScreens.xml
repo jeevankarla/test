@@ -3526,15 +3526,16 @@
     					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
     				</entity-and> -->
     				<set field="partyId" from-field="parameters.partyId"/>
-    				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
+    				<entity-condition list="EditAccountDetailsList" entity-name="BankAccount">
     					<condition-list combine="and">
-    						<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>
+    					<!-- 	<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>  -->
     						<condition-expr field-name="ownerPartyId"  operator="equals" from-field="parameters.partyId" />
     					</condition-list>
     				</entity-condition>
-    				<set field="finAccountCode" value="${EditAccountDetailsList[0].finAccountCode}"/>
-    				<set field="finAccountName" value="${EditAccountDetailsList[0].finAccountName}"/>
-    				<set field="finAccountBranch" value="${EditAccountDetailsList[0].finAccountBranch}"/>
+    				<set field="partyId" value="${EditAccountDetailsList[0].ownerPartyId}"/>
+    				<set field="finAccountCode" value="${EditAccountDetailsList[0].bankAccountCode}"/>
+    				<set field="finAccountName" value="${EditAccountDetailsList[0].bankAccountName}"/>
+    				<set field="finAccountBranch" value="${EditAccountDetailsList[0].ifscCode}"/>
     				<set field="ifscCode" value="${EditAccountDetailsList[0].ifscCode}"/>
     			</actions>
     			<widgets>
@@ -5929,8 +5930,7 @@
 						<condition-expr field-name="roleTypeId" value="UNEMPALED_SUPPLIER" />
 					</condition-list>
 				</entity-condition>
-                
-                
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/createNewWieverInfo.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -6022,6 +6022,7 @@
                             	 <container>
                                     <include-screen name="Vendor"/>
                                     <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="EditProducerAccountDetails" location="component://depotsales/widget/DepotSalesScreens.xml"/>
                       				<include-form name="EditVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                       				<include-form name="createVendorIdentification" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                 </container>
@@ -6032,6 +6033,34 @@
                                 </container>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="AddOtherDetails">
+        <section>
+            <actions>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="FindSupplier"/>
+                <set field="headerItem" value="find"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+                <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+					
+					
+					
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+          					<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/AddOtherDetails.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

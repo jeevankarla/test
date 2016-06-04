@@ -3742,11 +3742,17 @@ public class MaterialPurchaseServices {
 		String contactNumber =(String)context.get("contactNumber");
 		String countryCode = (String) context.get("countryCode");
 		String roleTypeId = (String) context.get("roleTypeId");
-		String accName= (String) context.get("accName");
+		/*String accName= (String) context.get("accName");
         String accNo= (String) context.get("accNo");
         String accBranch= (String) context.get("accBranch");
-        String IfscCode= (String) context.get("IfscCode");
+     */   String IfscCode= (String) context.get("IfscCode");
 		String suppRole = (String) context.get("suppRole");
+		String bankName = (String) context.get("bankName");		
+		String branch = (String) context.get("branch");		
+		String ifscCode = (String) context.get("ifscCode");		
+		String accNo = (String) context.get("accNo");
+		String accName = (String) context.get("accName");
+
 
 
 		Map<String, Object> outMap = FastMap.newInstance();
@@ -3870,6 +3876,33 @@ public class MaterialPurchaseServices {
             Debug.logError(e, "Error creating Group For Vendor",module);
 			return ServiceUtil.returnError("Error creating Group For Vendor :"+groupName);
         }
+		
+		
+		
+		 if(UtilValidate.isNotEmpty(partyId)){
+		        try{
+					GenericValue BankAccount = delegator.makeValue("BankAccount");
+						BankAccount.set("bankAccountName", accName);
+						BankAccount.set("bankAccountCode", accNo);
+						BankAccount.set("branchCode", ifscCode);
+						BankAccount.set("ifscCode", ifscCode);
+						BankAccount.set("ownerPartyId", partyId);
+						delegator.createSetNextSeqId(BankAccount);
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
+				}
+	        }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		result.put("partyId", partyId);
 		return result;
 	}
@@ -4220,11 +4253,11 @@ catch(Exception e){
         String lastName= (String) context.get("lastName");
         String weaverCode= (String) context.get("weaverCode");
         String passBook= (String) context.get("passBook");
-        String accName= (String) context.get("accName");
+       /* String accName= (String) context.get("accName");
         String accNo= (String) context.get("accNo");
         String accBranch= (String) context.get("accBranch");
         String IfscCode= (String) context.get("IfscCode");
-        BigDecimal CottonAbove= (BigDecimal) context.get("COTTON_40ABOVE");
+     */   BigDecimal CottonAbove= (BigDecimal) context.get("COTTON_40ABOVE");
         BigDecimal CottonUpto= (BigDecimal) context.get("COTTON_UPTO40");
         BigDecimal silkYarn= (BigDecimal) context.get("SILK_YARN");
         BigDecimal WoolST= (BigDecimal) context.get("WOOLYARN_10STO39NM");
@@ -4234,7 +4267,16 @@ catch(Exception e){
         String gender= (String) context.get("gender");
         Map<String, Object> inMap = FastMap.newInstance();
         Map<String, Object> outMap = FastMap.newInstance();
-		String roleTypeId = (String) context.get("roleTypeId");		
+		String roleTypeId = (String) context.get("roleTypeId");	
+		String bankName = (String) context.get("bankName");		
+		String branch = (String) context.get("branch");		
+		String ifscCode = (String) context.get("ifscCode");		
+		String accNo = (String) context.get("accNo");
+		String accName = (String) context.get("accName");
+
+		
+		
+		
 		/*String tenantId = (String) context.get("tenantId");
         
         delegator = DelegatorFactory.getDelegator("default#" + tenantId);
@@ -4534,6 +4576,26 @@ catch(Exception e){
         
         
         }
+        
+        
+        if(UtilValidate.isNotEmpty(partyId)){
+	        try{
+				GenericValue BankAccount = delegator.makeValue("BankAccount");
+					BankAccount.set("bankAccountName", accName);
+					BankAccount.set("bankAccountCode", accNo);
+					BankAccount.set("branchCode", ifscCode);
+					BankAccount.set("ifscCode", ifscCode);
+					BankAccount.set("ownerPartyId", partyId);
+					delegator.createSetNextSeqId(BankAccount);
+			}catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
+			}
+        }
+        
+        
+        
+        
         
         result.put("partyId",partyId);
 			

@@ -129,11 +129,13 @@
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
         <attribute name="suppRole" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="sourceSeco" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="sourceSeco" mode="IN" type="String" optional="true"></attribute> 
+           <attribute name="bankName" mode="IN" type="String" optional="true"/>
+      <!--   <attribute name="bankAccountTypeId" mode="IN" type="String" optional="true"/>   -->
         <attribute name="accName" mode="IN" type="String" optional="true"/>
-        <attribute name="accBranch" mode="IN" type="String" optional="true"/>
-        <attribute name="IfscCode" mode="IN" type="String" optional="true"/>
+        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="branch" mode="IN" type="String" optional="true"/>
+        <attribute name="ifscCode" mode="IN" type="String" optional="true"/>
         
     </service>
      <service name="createWeaver" engine="java" auth="true" invoke="createWeaver" 
@@ -180,7 +182,13 @@
         <attribute name="SILK_YARN" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="WOOLYARN_10STO39NM" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="WOOLYARN_40SNMABOVE" mode="IN" type="BigDecimal" optional="true"/>
-        <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="BigDecimal" optional="true"/>        
+        <attribute name="WOOLYARN_BELOW10NM" mode="IN" type="BigDecimal" optional="true"/> 
+        <attribute name="bankName" mode="IN" type="String" optional="true"/>
+      <!--   <attribute name="bankAccountTypeId" mode="IN" type="String" optional="true"/>   -->
+        <attribute name="accName" mode="IN" type="String" optional="true"/>
+        <attribute name="accNo" mode="IN" type="String" optional="true"/>
+        <attribute name="branch" mode="IN" type="String" optional="true"/>
+        <attribute name="ifscCode" mode="IN" type="String" optional="true"/>
      </service>
          
      <service name="createTransporter" engine="java" auth="true" invoke="createTransporter" 

@@ -2,6 +2,8 @@
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
 	
+	
+	
 <style type="text/css">
 	 	
 		.table-style-9{
@@ -228,6 +230,61 @@ function datepick()	{
                    });
  
 }
+
+
+    $(document).ready(function(){
+    
+    var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};
+    
+    var brachesGeoLIst = ${StringUtil.wrapString(brachesGeoLIst)!'[]'};
+    
+		$("#bankName").autocomplete({					
+			source:  BankListJSON,
+			select: function(event, ui) {
+		     var selectedValue = ui.item.value;
+		       $("#bankName").val(selectedValue);	
+					      
+					    }
+		});
+		
+		
+		$("#branch").autocomplete({					
+			source:  brachesGeoLIst,
+			select: function(event, ui) {
+			  var selectedValue = ui.item.value;
+				
+				var branch = selectedValue;
+				var bankName = $("#bankName").val();	
+				
+				var dataJson = {"branch": branch, "bankName":bankName};
+					      
+			   jQuery.ajax({
+                url: 'getIfscCode',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("No Branches Available");
+					}else{
+						var ifscCode = result["ifscCode"];
+						$("#ifscCode").val(ifscCode.IfscCode);
+               		}
+               	}					        
+					        
+		});
+					    }
+		});
+		
+		
+					        
+			  
+    
+  });
+  
+
+
+
 </script>
 	<form id="EditPartyGroup"  action="<@ofbizUrl>createWeaver</@ofbizUrl>" name="EditPartyGroup" method="post">
 	    <div id="wizard-2">
@@ -265,7 +322,7 @@ function datepick()	{
 	                    <tr>
 				        <td class="label" id="groupNamelabel"><b><FONT COLOR="red">*</font> Group Name :</b></td>
 				        <td>
-        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" />
+        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" value="vamsi" />
 				       </td>
 				        </tr>
 				         <tr>
@@ -331,7 +388,7 @@ function datepick()	{
 									<tr>
 									    <td class="label"><b><FONT COLOR="red">*</font> Address1 :</b></td>
 									    <td>
-									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" value="hyd"/>
 									    </td>
 									</tr>
 									<tr>
@@ -343,7 +400,7 @@ function datepick()	{
 									<tr>
 									    <td class="label"><b><FONT COLOR="red">*</font> City :</b></td>
 									    <td>
-									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" value="bang" />
 									    </td>
 									</tr>
 									<tr>
@@ -443,6 +500,28 @@ function datepick()	{
 		       			           <tr>
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bank Details</div></td>
 					               </tr>
+					               <tr>
+									    <td class="label"><b> Bank :</b></td>
+									    <td>
+									      	<input type="text" name="bankName" id="bankName" size="30" maxlength="60"/>
+									    </td>
+									</tr>
+					               
+					               <tr>
+									    <td class="label"><b>Account Branch :</b></td>
+									     <td>
+						                 	<input type="text" name="branch" id="branch" size="30" maxlength="60"/>
+							            </td>
+									</tr>
+									
+									<tr>
+									    <td class="label"><b> Ifsc Code :</b></td>
+									    <td>
+									      	<input type="text" name="ifscCode" id="ifscCode" size="30" maxlength="60" value="0"  />
+									    </td>
+									</tr>
+									
+									
 									<tr>
 									    <td class="label"><b> Account No :</b></td>
 									    <td>
@@ -453,18 +532,6 @@ function datepick()	{
 									    <td class="label"><b> Account Name :</b></td>
 									    <td>
 									      	<input type="text" name="accName" id="accName" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-									</tr>
-									<tr>
-									    <td class="label"><b>Account Branch :</b></td>
-									    <td>
-									      	<input type="text" name="accBranch" id="accBranch" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-									</tr>
-									<tr>
-									    <td class="label"><b> Ifsc Code :</b></td>
-									    <td>
-									      	<input type="text" name="IfscCode" id="IfscCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>

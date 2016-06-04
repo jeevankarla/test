@@ -158,11 +158,15 @@ under the License.
                 </#if>
               </td>
             </tr>
- </#if>           
+             </#if>           
           </#list>
+          <tr>
+            <td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId=${partyId}&amp;</@ofbizUrl>" target="_blank"/>AddOtherAddressOfSupplier</td>
+          </tr>
         </table>
       <#else>
         ${uiLabelMap.PartyNoContactInformation}
       </#if>
     </div>
+    
   </div>
