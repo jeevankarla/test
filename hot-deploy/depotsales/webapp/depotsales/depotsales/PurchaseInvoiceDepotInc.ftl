@@ -187,18 +187,23 @@
 			var invItemTypeId = data3[rowCount]["invoiceItemTypeId"];
 			var applicableToLabel = data3[rowCount]["applicableTo"];
 			var adjAmt = parseFloat(data3[rowCount]["adjAmount"]);
+			var discQty = parseFloat(data3[rowCount]["discQty"]);
 			
 			if(applicableToLabel && applicableToLabel != "ALL"){
 				applicableTo = productLabelIdMap["["+applicableToLabel+"]"];
 			}
-			
+			if (isNaN(discQty) ) {
+				discQty = 0;
+			}
 	 		if (!isNaN(adjAmt)) {	 		
 				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemTypeDiscId_o_" + rowCount).val(invItemTypeId);
 				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableToDisc_o_" + rowCount).val(applicableTo);
 				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjDiscAmt_o_" + rowCount).val(adjAmt);
+				var inputDiscQty= jQuery("<input>").attr("type", "hidden").attr("name", "discQty_o_" + rowCount).val(discQty);
 				jQuery(formId).append(jQuery(inputInv));	
 				jQuery(formId).append(jQuery(inputApplicable));			
 				jQuery(formId).append(jQuery(inputAmt));
+				jQuery(formId).append(jQuery(inputDiscQty));
 			}
 		}
 		
@@ -729,8 +734,8 @@
 	function setupGrid2() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:415, minWidth:415, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:355, minWidth:355, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
 		
 		];
@@ -865,9 +870,10 @@
 	function setupGrid3() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:415, minWidth:415, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:315, minWidth:315, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"}
 		];
 		
 		var options3 = {

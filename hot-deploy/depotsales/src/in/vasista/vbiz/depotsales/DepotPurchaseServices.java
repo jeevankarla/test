@@ -147,7 +147,9 @@ public class DepotPurchaseServices{
 			
 			String invoiceItemDiscTypeId = "";
 			String adjAmtDiscStr = "";
+			String discQtyStr = "";
 			BigDecimal adjDiscAmt = BigDecimal.ZERO;
+			BigDecimal discQty = BigDecimal.ZERO;
 			
 			String vatStr=null;
 			String cstStr=null;
@@ -215,6 +217,9 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
 				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
 			}
+			if (paramMap.containsKey("discQty" + thisSuffix)) {
+				discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
+			}
 			
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
@@ -225,11 +230,29 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 			}
-			
+			if(UtilValidate.isNotEmpty(discQtyStr)){
+				try {
+					discQty = new BigDecimal(discQtyStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing amount string: " + discQtyStr, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + discQtyStr);
+					return "error";
+				}
+			}
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
+				
+				BigDecimal adjQty = BigDecimal.ONE;
+				if(UtilValidate.isNotEmpty(discQty)){
+					if(discQty.compareTo(BigDecimal.ONE)>0){
+						adjDiscAmt = adjDiscAmt.divide(discQty);
+						adjQty = discQty;
+					}
+				}
+				
 				Map invItemMap = FastMap.newInstance();
 				invItemMap.put("adjustmentTypeId", invoiceItemDiscTypeId);
 				invItemMap.put("amount", adjDiscAmt);
+				invItemMap.put("quantity", adjQty);
 				invItemMap.put("uomId", "INR");
 				invItemMap.put("applicableTo", applicableToDisc);
 				invoiceDiscountsList.add(invItemMap);	
@@ -989,7 +1012,7 @@ public class DepotPurchaseServices{
 					}
 					if(UtilValidate.isNotEmpty(adjustmentTypeId) && !(amount.compareTo(BigDecimal.ZERO) == 0)){
 						invoiceItemCtx.put("invoiceId", invoiceId);
-						invoiceItemCtx.put("quantity", BigDecimal.ONE);
+						invoiceItemCtx.put("quantity", adjustMap.get("quantity"));
 						invoiceItemCtx.put("userLogin", userLogin);
 						
 						invoiceItemCtx.put("parentInvoiceId", invoiceId);
