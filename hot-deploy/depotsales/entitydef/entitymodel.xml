@@ -580,6 +580,57 @@
         </relation>
     </entity>
     
-    
+    <entity entity-name="BankAccount" package-name="org.ofbiz.accounting.finaccount"
+        title="Bank Account Entity">
+        <field name="bankAccountId" type="id-ne"></field>
+        <field name="bankAccountTypeId" type="id"></field>
+        <field name="statusId" type="id"></field>
+        <field name="bankAccountName" type="name"></field>
+        <field name="bankAccountCode" type="long-varchar" encrypt="true"></field>
+        <field name="branchCode" type="id"></field>
+        <field name="ifscCode" type="long-varchar" encrypt="true"></field>
+        <field name="currencyUomId" type="id-ne" />
+        <field name="organizationPartyId" type="id">
+            <description>The internal organization Party that owns (or rather, is liable for) the account.</description>
+        </field>
+        <field name="ownerPartyId" type="id">
+            <description>The customer or third party that owns the account.</description>
+        </field>
+        <field name="fromDate" type="date-time">
+            <description>Describes when account will be valid. If null, valid immediately.</description>
+        </field>
+        <field name="thruDate" type="date-time">
+            <description>Expiration date of the account. If null, will never expire.</description>
+        </field>
+        <field name="actualBalance" type="currency-amount">
+            <description>Calculated as the sum of FinAccountTrans.amount</description>
+        </field>
+        <field name="availableBalance" type="currency-amount">
+            <description>Calculated as actualBalance minus sum of outstanding FinAccountAuth.amount</description>
+        </field>
+        <prim-key field="bankAccountId" />
+        <relation type="one" fk-name="BNKACCT_TYPE" rel-entity-name="FinAccountType">
+            <key-map field-name="bankAccountTypeId" rel-field-name="finAccountTypeId"/>
+        </relation>
+        <relation type="one" fk-name="BANK_BRNCH_ACC" rel-entity-name="BankBranch">
+            <key-map field-name="branchCode"/>
+        </relation>
+        <relation type="one" fk-name="BNKACCT_CURUOM" title="Currency"
+            rel-entity-name="Uom">
+            <key-map field-name="currencyUomId" rel-field-name="uomId" />
+        </relation>
+        <relation type="one" fk-name="BNKACCT_ORGPTY" title="Organization"
+            rel-entity-name="Party">
+            <key-map field-name="organizationPartyId" rel-field-name="partyId" />
+        </relation>
+        <relation type="one" fk-name="BNKACCT_OWNPTY" title="Owner"
+            rel-entity-name="Party">
+            <key-map field-name="ownerPartyId" rel-field-name="partyId" />
+        </relation>
+        <relation type="many" rel-entity-name="FinAccountTypeAttr">
+            <key-map field-name="bankAccountTypeId" rel-field-name="finAccountTypeId"/>
+        </relation>
+        
+    </entity>
     
 </entitymodel>

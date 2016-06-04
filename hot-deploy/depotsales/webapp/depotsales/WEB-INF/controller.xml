@@ -147,6 +147,14 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
+      <request-map uri="getIfscCode">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getIfscCode.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    
     <request-map uri="getOrderInformation">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getOrderInformation.groovy"/> 
@@ -788,12 +796,18 @@
         <response name="success" type="view" value="CreateNewTransporter"/>
     </request-map>
     
+     <request-map uri="addOtherAddressView">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="addOtherAddressView"/>
+    </request-map>
+    
     <request-map uri="createTransporter">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createTransporter"/>
         <response name="success" type="request-redirect" value="FindTransporter"/>
         <response name="error" type="view" value="FindTransporter"/>
     </request-map>
+     
      
     <request-map uri="createSupplier">
         <security https="true" auth="true"/>
@@ -1197,6 +1211,14 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
+    
+     <request-map uri="updateBankDetails">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateBankDetails"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
     
     <request-map uri="updateProcProducer">
         <security https="true" auth="true"/>
@@ -1926,6 +1948,7 @@
    	
    	<view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
    	<view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
+   	<view-map name="addOtherAddressView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AddOtherDetails"/>
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>

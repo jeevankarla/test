@@ -127,6 +127,59 @@
             });
 	}); 
 	
+	
+	
+	
+	 $(document).ready(function(){
+    
+    var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};
+    
+    var brachesGeoLIst = ${StringUtil.wrapString(brachesGeoLIst)!'[]'};
+    
+		$("#bankName").autocomplete({					
+			source:  BankListJSON,
+			select: function(event, ui) {
+		     var selectedValue = ui.item.value;
+		       $("#bankName").val(selectedValue);	
+					    }
+		});
+		
+		
+		$("#branch").autocomplete({					
+			source:  brachesGeoLIst,
+			select: function(event, ui) {
+			  var selectedValue = ui.item.value;
+				
+				var branch = selectedValue;
+				var bankName = $("#bankName").val();	
+				
+				var dataJson = {"branch": branch, "bankName":bankName};
+					      
+			   jQuery.ajax({
+                url: 'getIfscCode',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("No Branches Available");
+					}else{
+						var ifscCode = result["ifscCode"];
+						$("#ifscCode").val(ifscCode.ifscCode);
+               		}
+               	}					        
+					        
+		});
+					      
+					    }
+		});
+		
+  });
+  
+	
+	
+	
+	
 </script>
 	<form id="EditPartyGroup"  action="<@ofbizUrl>createSupplier</@ofbizUrl>" name="EditPartyGroup" method="post">
 	    <div id="wizard-2">
@@ -270,13 +323,35 @@
                     </fieldset>  
                </section>
   
-                 <h3>BANK AND IDENTIFICATION DETAILS</h3>
+                <h3>BANK AND IDENTIFICATION DETAILS</h3>
             <section>
             	<fieldset>
-				    <table cellpadding="2" cellspacing="1">
+				    <table cellpadding="2" cellspacing="1" class="table-style-9">
 		       			           <tr>
 		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bank Details</div></td>
 					               </tr>
+					               <tr>
+									    <td class="label"><b> Bank :</b></td>
+									    <td>
+									      	<input type="text" name="bankName" id="bankName" size="30" maxlength="60"/>
+									    </td>
+									</tr>
+					               
+					               <tr>
+									    <td class="label"><b>Account Branch :</b></td>
+									     <td>
+						                 	<input type="text" name="branch" id="branch" size="30" maxlength="60"/>
+							            </td>
+									</tr>
+									
+									<tr>
+									    <td class="label"><b> Ifsc Code :</b></td>
+									    <td>
+									      	<input type="text" name="ifscCode" id="ifscCode" size="30" maxlength="60" value="0"  />
+									    </td>
+									</tr>
+									
+									
 									<tr>
 									    <td class="label"><b> Account No :</b></td>
 									    <td>
@@ -290,42 +365,29 @@
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b>Account Branch :</b></td>
-									    <td>
-									      	<input type="text" name="accBranch" id="accBranch" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-									</tr>
-									<tr>
-									    <td class="label"><b> Ifsc Code :</b></td>
-									    <td>
-									      	<input type="text" name="IfscCode" id="IfscCode" size="30" maxlength="60" value="0" autocomplete="off" />
-									    </td>
-									</tr>
-									
-							      <#--   <tr>
 							        <td class="label"><b>Pan Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
 			          				</td>
-							        </tr>-->
+							        </tr>
 							        <tr>
 							         <td class="label"><b>Tin Number :</b></td>
 							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUM" id="USER_TINNUM" onblur="javascript:partyIdentificationVal();" />
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUMBER" id="USER_TINNUMBER" onblur="javascript:partyIdentificationVal();" />
 			          				</td>
 							        </tr>
 							        <tr>
 							         
 			                        <td class="label"><b>Cst Number :</b></td>
 							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUM" id="USER_CSTNUM"  />
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUMBER" id="USER_CSTNUMBER"  />
 			          				</td>
 							        </tr>
-							        							        
 							         <tr>
-			                        <td class="label" id="ADHLABEL"><b>Aadhar Number :</b></td>
+							         
+			                        <td class="label" id="ADHLABEL"><FONT COLOR="red">*</font><b>Aadhar Number :</b></td>
 							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="ADR_NUMBER" id="ADR_NUMBER"  />
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
 			          				</td>
 							        </tr>
 									

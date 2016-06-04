@@ -8216,6 +8216,97 @@ public static Map<String, Object> approveValidationEntries(DispatchContext dctx,
 				result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
 		      return result;
 		    }
+	  	 
+	  	 
+	  	 
+	  	 public static Map<String, Object> updateBankDetails(DispatchContext dctx, Map<String, ? extends Object> context){
+			    Delegator delegator = dctx.getDelegator();
+		      LocalDispatcher dispatcher = dctx.getDispatcher();
+		      GenericValue userLogin = (GenericValue) context.get("userLogin");
+		      String partyId = (String) context.get("partyId");
+		      String finAccountCode = (String)context.get("finAccountCode");
+		      String finAccountName = (String)context.get("finAccountName");
+		      String finAccountBranch = (String)context.get("finAccountBranch");
+		      String ifscCode = (String)context.get("ifscCode");
+		      Map result = ServiceUtil.returnSuccess();
+		      
+		      
+		       
+		      try{
+		    	  List conditionList = FastList.newInstance();
+		    	  conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId));
+		    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		    	  List<GenericValue> finAccountList = delegator.findList("BankAccount", condition, null, null, null, false);
+		    		  if(UtilValidate.isEmpty(finAccountList)){
+		    			  /*Map input = UtilMisc.toMap("userLogin", userLogin, 
+		    					  "ownerPartyId", partyId, "finAccountCode", 
+		    					  finAccountCode, "finAccountBranch", finAccountBranch, 
+		    					  "finAccountName" , finAccountName,"finAccountTypeId","BANK_ACCOUNT","ifscCode",ifscCode
+		    					  );
+		    			  
+		    			  
+							 result = dispatcher.runSync("createFinAccount", input);
+							 if (ServiceUtil.isError(result)) {
+								 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+				                 return result;
+				             }*/
+		    		        if(UtilValidate.isNotEmpty(partyId)){
+		    			        try{
+		    						GenericValue BankAccount = delegator.makeValue("BankAccount");
+		    							BankAccount.set("bankAccountName", finAccountName);
+		    							BankAccount.set("bankAccountCode", finAccountCode);
+		    							BankAccount.set("branchCode", finAccountBranch);
+		    							BankAccount.set("ifscCode", ifscCode);
+		    							BankAccount.set("ownerPartyId", partyId);
+		    							delegator.createSetNextSeqId(BankAccount);
+		    					}catch (Exception e) {
+		    						Debug.logError(e, module);
+		    						return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
+		    					}
+		    		        }
+		    		        
+		    			  
+						}else{	
+							
+							
+							Debug.log("finAccountList=================="+finAccountList);
+							
+							GenericValue finAccount = finAccountList.get(0);
+							if(!finAccountCode.equals(finAccount.getString("bankAccountCode"))){
+								finAccount.set("bankAccountCode",finAccountCode);
+							}
+							if(!finAccountName.equals(finAccount.getString("bankAccountName"))){
+								finAccount.set("bankAccountName",finAccountName);
+							}
+							if((UtilValidate.isNotEmpty(finAccountBranch))){
+								if(!finAccountBranch.equals(finAccount.getString("branchCode"))){
+									finAccount.set("branchCode", finAccountBranch);
+								}
+							}						
+							if((UtilValidate.isNotEmpty(ifscCode))){
+								if(!ifscCode.equals(finAccount.getString("ifscCode"))){
+									finAccount.set("ifscCode", ifscCode);
+								}
+							}
+							finAccount.store();
+						}
+		    		  /*if(UtilValidate.isNotEmpty(finAccountId) && UtilValidate.isNotEmpty(date)){
+		    			  Map resultMap=updateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date));
+		    		  }*/
+		      }catch(GenericEntityException e){
+					Debug.logError("Error while updating new FinAccount :: "+e , module);
+					result = ServiceUtil.returnSuccess("Error while updating new FinAccount :: "+e.getMessage());
+					return result;
+				}catch(Exception e){
+					Debug.logError("Error while Creating New Fin Account ::"+e,module);
+					result = ServiceUtil.returnSuccess("Error while creating new FinAccount :: "+e.getMessage());
+					return result;
+				}	  
+				result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
+		      return result;
+		    }
+	  	 
+	  	 
 	  	public static Map<String, Object> updateCattleInformation(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();

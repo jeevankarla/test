@@ -57,3 +57,53 @@ if(parameters.productStoreId){
 }
 Debug.log("productStoreIds=============================="+productStoreIds);
 context.productStoreDetails=productStoreDetails;
+
+
+BankBranchList = delegator.findList("BankBranch", null, null, null, null, false);
+
+context.BankBranchList=BankBranchList;
+
+
+BankList = delegator.findList("Bank", null, null, null, null, false);
+
+
+JSONArray BankListJSON = new JSONArray();
+
+if(BankList){
+	BankList.each{ eachBank ->
+		JSONObject newObj = new JSONObject();
+			newObj.put("value",eachBank.bankId);
+			newObj.put("label",eachBank.description);
+			BankListJSON.add(newObj);
+	}
+}
+
+
+
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"BANK_BRANCH"));
+condGroup=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+GeoList = delegator.findList("Geo", condGroup, null, null, null, false);
+
+
+
+JSONArray brachesGeoLIst = new JSONArray();
+
+if(GeoList){
+	GeoList.each{ eachGEO ->
+		JSONObject newObj = new JSONObject();
+			newObj.put("value",eachGEO.geoId);
+			newObj.put("label",eachGEO.geoName);
+			brachesGeoLIst.add(newObj);
+	}
+}
+
+
+context.brachesGeoLIst=brachesGeoLIst;
+
+
+Debug.log("BankListJSON=============================="+BankListJSON);
+
+
+context.BankListJSON=BankListJSON;
+
