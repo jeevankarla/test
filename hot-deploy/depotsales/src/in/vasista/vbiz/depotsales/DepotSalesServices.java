@@ -6635,14 +6635,16 @@ public class DepotSalesServices{
 				BigDecimal availableQuata=((BigDecimal)schemeProductCategory.get("maxQty")).multiply(partyLooms);
 				
 				if(UtilValidate.isNotEmpty(periodTime)){
-					availableQuata=availableQuata.multiply(periodTime);
+					
 					
 	//				//periodTime does not match with scheme time period count
 	//				if(periodTime.intValueExact()>schemeTimePeriodIdList.size()){
 	//					return ServiceUtil.returnError("schemeTimePeriod count does not match with SchemeProductCategory periodTime. ");
 	//				}
+					BigDecimal periodTimeFinal=BigDecimal.ZERO;
 				  for(int i=0;i< periodTime.intValueExact();i++){
 					if(schemeTimePeriodIdList.size()>i){
+						periodTimeFinal=periodTimeFinal.add(BigDecimal.ONE);
 						String schemeTimePeriodId=(String)((GenericValue)schemeTimePeriodIdList.get(i)).get("schemeTimePeriodId");
 						Map<String, Object> resultPartyQuotaBalanceHistoryMap = getPartyQuotaBalanceHistory(dctx,UtilMisc.toMap("productCategoryId",productCategoryId,"partyId",partyId,"schemeTimePeriodId",schemeTimePeriodId));	
 						GenericValue partyQuotaBalanceHistory=(GenericValue)resultPartyQuotaBalanceHistoryMap.get("partyQuotaBalanceHistory");
@@ -6651,12 +6653,13 @@ public class DepotSalesServices{
 							//getting balancequota
 							usedQuata=usedQuata.add((BigDecimal)partyQuotaBalanceHistory.get("usedQuota"));
 						}
-						else{
-							break;
-						}
+//						else{
+//							break;
+//						}
 					}
 					
 				  }
+				  availableQuata=availableQuata.multiply(periodTimeFinal);
 	//				usedQuata=getUsedQuataFromQuotaBalanceHistory(dctx,UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"userLogin", userLogin));
 				}
 				else{
