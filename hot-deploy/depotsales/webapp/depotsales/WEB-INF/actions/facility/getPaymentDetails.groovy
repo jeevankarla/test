@@ -60,6 +60,22 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 salesChannel = parameters.salesChannelEnumId;
 
 
+uniqueOrderId = parameters.uniqueOrderId;
+
+/*
+JSONObject personalDetailMap = null;
+if (UtilValidate.isNotEmpty(uniqueOrderId)) {
+	personalDetailMap = new JSONObject();
+	personalDetailMap = (JSONObject) JSONSerializer.toJSON(uniqueOrderId);
+}*/
+
+uniqueOrderIdsList = Eval.me(uniqueOrderId)
+
+
+Debug.log("uniqueOrderIdsList==============="+uniqueOrderIdsList);
+
+
+
 searchOrderId = parameters.orderId;
 
 facilityOrderId = parameters.orderId;
@@ -93,17 +109,15 @@ inputFields.put("hideSearch","Y");
 if(UtilValidate.isNotEmpty(searchOrderId)){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
 }
+if(UtilValidate.isNotEmpty(uniqueOrderIdsList)){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
+}
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
 }
 else{
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
 }
-
-/*if(salesChannel == "DEPOT_CHANNEL"){
-	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
-}
-*/
 	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
