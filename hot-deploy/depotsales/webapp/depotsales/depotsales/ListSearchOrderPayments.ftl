@@ -38,7 +38,7 @@ var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 
 
-
+var uniqueOrderIdsList = [];
 var orderData;
 var domOrderIds = "";
 var low = 0, high = 20;
@@ -61,7 +61,9 @@ $(document).ready(function() {
 
   function recursively_ajax(){
     
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"low":low,"high":high};
+           var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+	     uniqueOrderIdsList = [];
 	
 	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
      
@@ -100,16 +102,10 @@ function blinker() {
 function drawTable(data) {
 
     for (var i = 0; i < data.length; i++) {
-    
-        if(!domOrderIds.includes(data[i].orderId+" "))
-         {
             drawRow(data[i]);
-         domOrderIds = domOrderIds + data[i].orderId +" ";
-         }
-         
-         
-         
+          uniqueOrderIdsList.push(data[i].orderId);
     }
+    
 }
 
 var totIndents = 0;
@@ -170,10 +166,6 @@ function drawRow(rowData) {
 
 }
 
-
-
-  
-  
   
 </script>
 
