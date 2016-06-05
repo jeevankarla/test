@@ -1990,6 +1990,7 @@ public class DepotSalesServices{
 			}			
 		}
 		processOrderContext.put("userLogin", userLogin);
+		processOrderContext.put("onBeHalfOf", onBeHalfOf);
 		processOrderContext.put("schemeCategory", schemeCategory);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("indentItemProductList", indentItemProductList);
@@ -2118,6 +2119,7 @@ public class DepotSalesServices{
 	  	String transporterId = (String) context.get("transporterId");
 	  	String schemePartyId = (String) context.get("schemePartyId");
 		String billToCustomer = (String) context.get("billToCustomer");
+		String onBeHalfOf = (String) context.get("onBeHalfOf");
 	  	String orderId = (String) context.get("orderId");
 	  	String referenceNo = (String) context.get("referenceNo");
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
@@ -2441,28 +2443,28 @@ public class DepotSalesServices{
 			}
 			BigDecimal quota = BigDecimal.ZERO;
 			// Get first productCategoriesList. We got productCategoryId here
-			
-			if(schemeCategory.equals("MGPS_10Pecent")){
-				
-				String schemeId="TEN_PERCENT_MGPS";
-				String productCategoryId=(String)productCategoriesList.get(0);
-				
-				Map partyBalanceHistoryContext = FastMap.newInstance();
-				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
-				
-				if(UtilValidate.isNotEmpty(customerId)){
-					partyBalanceHistoryContext.put("partyId",customerId);
-				}
-						
-				try {
-					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-					quota=(BigDecimal)resultMapquota.get("quota");
-				} catch (Exception e) {
-					Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
-					return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
-				}
-			}	
-			
+			/*if(onBeHalfOf.equals("N")){
+				if(schemeCategory.equals("MGPS_10Pecent")){
+					
+					String schemeId="TEN_PERCENT_MGPS";
+					String productCategoryId=(String)productCategoriesList.get(0);
+					
+					Map partyBalanceHistoryContext = FastMap.newInstance();
+					partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+					
+					if(UtilValidate.isNotEmpty(customerId)){
+						partyBalanceHistoryContext.put("partyId",customerId);
+					}
+							
+					try {
+						Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+						quota=(BigDecimal)resultMapquota.get("quota");
+					} catch (Exception e) {
+						Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+						return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+					}
+				}	
+			}*/
 			// Populate Shopping Cart With Items.
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
 			ShoppingCartItem item = null;
@@ -2751,27 +2753,26 @@ public class DepotSalesServices{
 						}
 						BigDecimal quota = BigDecimal.ZERO;
 						// Get first productCategoriesList. We got productCategoryId here
-						
-						if(schemeCategory.equals("MGPS_10Pecent")){
-							
-							String schemeId="TEN_PERCENT_MGPS";
-							String productCategoryId=(String)productCategoriesList.get(0);
-							
-							Map partyBalanceHistoryContext = FastMap.newInstance();
-							partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
-							
-							if(UtilValidate.isNotEmpty(customerId)){
-								partyBalanceHistoryContext.put("partyId",customerId);
-							}
-									
-							try {
-								Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-								quota=(BigDecimal)resultMapquota.get("quota");
-							} catch (Exception e) {
-								Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
-								return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
-							}
-						}	
+							if(schemeCategory.equals("MGPS_10Pecent")){
+								
+								String schemeId="TEN_PERCENT_MGPS";
+								String productCategoryId=(String)productCategoriesList.get(0);
+								
+								Map partyBalanceHistoryContext = FastMap.newInstance();
+								partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+								
+								if(UtilValidate.isNotEmpty(customerId)){
+									partyBalanceHistoryContext.put("partyId",customerId);
+								}
+										
+								try {
+									Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+									quota=(BigDecimal)resultMapquota.get("quota");
+								} catch (Exception e) {
+									Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+									return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+								}
+							}	
 						if(quota.compareTo(BigDecimal.ZERO)>0){
 							
 							// Have to get these details from schemes. Temporarily hard coding it.
