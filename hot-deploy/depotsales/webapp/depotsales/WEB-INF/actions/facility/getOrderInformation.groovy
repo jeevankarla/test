@@ -17,14 +17,14 @@ import org.ofbiz.entity.util.EntityFindOptions;
 
 orderId = parameters.orderId;
 
-orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+orderItems = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 //conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 
-conditionList = [];
+/*conditionList = [];
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
 orderAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -33,7 +33,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 OrderItemRemarks = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-
+*/
 
 JSONArray orderInformationDetails = new JSONArray();
 
@@ -69,20 +69,24 @@ for (eachItem in orderItems) {
 		
 	}
 	
-	if(UtilValidate.isNotEmpty(orderAttributes)){
+	quotaAvbl=eachItem.quotaQuantity;
+	/*if(UtilValidate.isNotEmpty(orderAttributes)){
 		orderItemAttributes = EntityUtil.filterByCondition(orderAttributes, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		if(UtilValidate.isNotEmpty(orderItemAttributes)){
 			quotaAvbl = (orderItemAttributes.get(0)).get("attrValue");
 		}
-	}
+	}*/
 	remarks = "";
-	if(UtilValidate.isNotEmpty(OrderItemRemarks)){
+	if(eachItem.remarks){
+		remarks=eachItem.remarks;
+	}
+	/*if(UtilValidate.isNotEmpty(OrderItemRemarks)){
 		orderRemarks = EntityUtil.filterByCondition(OrderItemRemarks, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 	
 		if(UtilValidate.isNotEmpty(orderRemarks)){
 			remarks = (orderRemarks.get(0)).get("attrValue");
 		}
-	}
+	}*/
 	
 	
 	JSONObject orderDetail = new JSONObject();
