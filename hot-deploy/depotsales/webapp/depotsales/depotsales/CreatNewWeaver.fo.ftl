@@ -322,7 +322,7 @@ function datepick()	{
 	                    <tr>
 				        <td class="label" id="groupNamelabel"><b><FONT COLOR="red">*</font> Group Name :</b></td>
 				        <td>
-        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" value="vamsi" />
+        		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" />
 				       </td>
 				        </tr>
 				         <tr>
@@ -388,7 +388,7 @@ function datepick()	{
 									<tr>
 									    <td class="label"><b><FONT COLOR="red">*</font> Address1 :</b></td>
 									    <td>
-									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" value="hyd"/>
+									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
@@ -400,7 +400,7 @@ function datepick()	{
 									<tr>
 									    <td class="label"><b><FONT COLOR="red">*</font> City :</b></td>
 									    <td>
-									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" value="bang" />
+									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
