@@ -120,6 +120,21 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    
+     <request-map uri="otherAddressStore">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="otherAddressStore.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+     <request-map uri="editFacility">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="editFacility.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="getAmendOrderDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/" invoke="getAmendOrderDetails.groovy"/> 

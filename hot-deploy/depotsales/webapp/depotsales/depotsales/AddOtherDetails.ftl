@@ -20,7 +20,7 @@
 	  var branchList;
 	var finalAddressMap = {};
 	var finalAddressList = [];
-	
+		
     $(document).ready(function(){
       	      $("#wizard-2").steps({
                 headerTag: "h3",
@@ -134,6 +134,7 @@
 	
 			$(document).ready(function(){
 	
+	           
 	      	var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
 			var catgoryOptionList=[];
 			if(branchAutoJSON != undefined && branchAutoJSON != ""){
@@ -172,157 +173,227 @@
    	      $('#selectBranch').html(tempList.join('')); 
 	    }
 	    
-	   function addAdressList(){
-	  
-	     var map= {};
-	     var tempList = [];
-	     
-	     var selectedBranch = $("#selectBranch").val();
-	     var address1 = $("#address1").val();
-	     var address2 = $("#address2").val();
-	     var city = $("#city").val();
-	     var postalCode = $("#postalCode").val();
-	     var emailAddress = $("#emailAddress").val();
-	     var AltemailAddress = $("#AltemailAddress").val();
-	     var countryCode = $("#countryCode").val();
-	     var mobileNumber = $("#mobileNumber").val();
-	     var contactNumber = $("#contactNumber").val();
-	     var countryGeoId = $("#countryGeoId").val();
-	     
-          	     
-	     map['selectedBranch'] = selectedBranch;
-	     map['address1'] = address1;
-	     map['address2'] = address2;
-	     map['city'] = city;
-	     map['postalCode'] = postalCode;
-	     map['emailAddress'] = emailAddress;
-	     map['AltemailAddress'] = AltemailAddress;
-	     map['countryCode'] = countryCode;
-	     map['mobileNumber'] = mobileNumber;
-	     map['contactNumber'] = contactNumber;
-	     map['countryGeoId'] = countryGeoId;
-	      
-         tempList = map;
-	   
-	    finalAddressMap[selectedBranch] = tempList;
-	   
-	   }
+	//===========Faci Address==============
 	
-	   function addressStoredList(){
+	    var addressFaciMap = {};
+    
+    function storeFacilityValues(){
 	   
+	     
+	     var supplierId = $("#createdSupplierId").val();
+	     var address1 = $("#Faddress1").val();
+	     var address2 = $("#Faddress2").val();
+	     var city = $("#Fcity").val();
+	     var postalCode = $("#postalCode").val();
+	     var countryCode = $("#FcountryCode").val();
+	     var stateProvinceGeoId = $("#FstateProvinceGeoId").val();
+	     var country = $("#Fcountry").val();
+	     var facilityName = $("#facilityName").val();
+	     var facicontactMechType = $("#facicontactMechType").val();
+	     var FcontactNumber = $("#FcontactNumber").val();
+	     
+	     var country = $("#editcontactmechform_countryId").find('option:selected').val();
+         var state = $("#editcontactmechform_stateId").find('option:selected').val();	  
+          var TFcountry = $("#TFeditcontactmechform_countryId").find('option:selected').val();
+         var TFstate = $("#TFeditcontactmechform_stateId").find('option:selected').val();	     
+	     
+	     var TFaddress1 = $("#TFaddress1").val();
+	     var TFaddress2 = $("#TFaddress2").val();
+	     var TFcity = $("#TFcity").val();
+	     var TFpostalCode = $("#TFpostalCode").val();
+	     	     
+	     addressFaciMap['supplierId'] = supplierId;
+	     addressFaciMap['address1'] = address1;
+	     addressFaciMap['address2'] = address2;
+	     addressFaciMap['city'] = city;
+	     addressFaciMap['postalCode'] = postalCode;
+	     addressFaciMap['country'] = country;
+	     addressFaciMap['state'] = state;
+	     addressFaciMap['FcontactNumber'] = FcontactNumber;
+	     addressFaciMap['facicontactMechType'] = facicontactMechType;
+	     addressFaciMap['facilityName'] = facilityName;
+	     addressFaciMap['TFcountry'] = TFcountry;
+	     addressFaciMap['TFstate'] = TFstate;
+	     addressFaciMap['TFaddress1'] = TFaddress1;
+	     addressFaciMap['TFaddress2'] = TFaddress2;
+	     addressFaciMap['TFcity'] = TFcity;
+	     addressFaciMap['TFpostalCode'] = TFpostalCode;
+	     
 	   
-	   var selectedBranch = $("#selectBranch").val();
-	   var addressList = finalAddressMap[selectedBranch];
+	     submitFacilityAddress();
+	   }
+     var orderFaciData;
+	 var contactctMechFeciId;
+	 function submitFacilityAddress() {
+	
+	 	var count = Object.keys(addressFaciMap).length;
 	 
-	   if(addressList != undefined && addressList != ""){
-	     $("#selectBranch").val(addressList.selectedBranch);
-	     $("#address1").val(addressList.address1);
-	     $("#address2").val(addressList.address2);
-	     $("#city").val(addressList.city);
-	     $("#postalCode").val(addressList.postalCode);
-	     $("#emailAddress").val(addressList.emailAddress);
-	     $("#AltemailAddress").val(addressList.AltemailAddress);
-	     $("#countryCode").val(addressList.countryCode);
-	     $("#mobileNumber").val(addressList.mobileNumber);
-	     $("#contactNumber").val(addressList.contactNumber);
-	     $("#countryGeoId").val(addressList.countryGeoId);
-	   
-	  }else{
-  	   
-  	    // $("#selectBranch").val('');
-  	     $("#address1").val('');
-  	     $("#address2").val('');
-  	     $("#city").val('');
-  	     $("#postalCode").val(0);
-  	     $("#emailAddress").val('');
-  	     $("#AltemailAddress").val('');
-  	     $("#countryCode").val('');
-  	     $("#mobileNumber").val('');
-  	     $("#contactNumber").val('');
-  	     //$("#countryGeoId").val('');
-  	   
-  	   }
-	   
-	   }	
-	   
-	   
-	   
-	    function clearallSelectedData(){
-	    
-	      
-	       finalAddressMap = [];
-   	      
-   	     $('#selectBranch').html(''); 
-  	     $("#address1").val('');
-  	     $("#address2").val('');
-  	     $("#city").val('');
-  	     $("#postalCode").val(0);
-  	     $("#emailAddress").val('');
-  	     $("#AltemailAddress").val('');
-  	     $("#countryCode").val('');
-  	     $("#mobileNumber").val('');
-  	     $("#contactNumber").val('');
-  	     //$("#countryGeoId").val('');
-  	     
-  	     $("#noFoBranches").val('');
-	    
-	    
-	    }
+	 
+	    var supplierId = addressFaciMap.supplierId;
+	 	var city = addressFaciMap.city;
+	 	var address1 = addressFaciMap.address1;
+	 	var address2 = addressFaciMap.address2;
+		var countryName = addressFaciMap.countryName;
+	 	var postalCode = addressFaciMap.postalCode;
+	 	var stateName = addressFaciMap.stateName;
+	    var facilityName = addressFaciMap.facilityName;
+	    var facicontactMechType = addressFaciMap.facicontactMechType;
+	 	
+	 	
+	 	
+	 
+if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0){
+		
+		   jQuery.ajax({
+                url: 'otherAddressStore',
+                type: 'POST',
+                data: addressFaciMap,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						orderFaciData = result["orderList"];
+					    if(orderFaciData.length != 0) 
+					    {
+					     contactctMechId = orderFaciData.contactMechId;
+					     supplierId = orderFaciData.facilityId;
+					     $("#supplierId").val(supplierId);
+					    
+					     alert(supplierId);
+					     alert(contactctMechId);
+					     
+					    // $("#contactMechId").val(contactctMechId);
+					   }
+               		}
+               	}							
+		}); 
+		
+		
+		}
+		else{
+		  alert("Please Fill The Values");
+		}
+	}
+	
+	
+	
+	
+	
+	///edit Facility Detailssssss=============================
+	
+	
+	var supplierFacilityListJSON = [];
+	
+	
+	function editFacilityAddress(){
+	
+	
+	
+	 
+	          var supplierId = $("#createdSupplierId").val();
+	  		var dataJson = {"partyId": supplierId};
+	  
+	      jQuery.ajax({
+                url: 'editFacility',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						supplierFacilityListJSON = result["supplierFacilityListJSON"];
+    
+					$("#editFacility").autocomplete({					
+						source:  supplierFacilityList,
+						select: function(event, ui) {
+					     var selectedValue = ui.item.value;
+					       $("#bankName").val(selectedValue);	
+								      
+								    }
+					});
+					   
+               		}
+               	}							
+		}); 
+		
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </script>
 	<form id="EditPartyGroup"  action="<@ofbizUrl>createTransporter</@ofbizUrl>" name="EditPartyGroup" method="post">
 	    <div id="wizard-2"  >
                 
-                 <h3>Personal Information</h3>
+                 <h3>Supplier Other Address Information</h3>
             <section>
             	<fieldset>
-				    <table cellpadding="2" cellspacing="1" class="table-style-9">
-		       			           <tr>
-		       			           		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Personal Details</div></td>
-					               </tr>
-									<tr>
-									    <td class="label"><b><FONT COLOR="red">*</font> Address1 :</b></td>
+				            <table cellpadding="2" cellspacing="1">
+							
+							<tr>
+					        <td class="label"><FONT COLOR="red">*</font><b> Supplier Id</b></td>
+					        <#if partyId?has_content>
+					         <td>
+	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId"  value=${partyId}  readonly/>
+	          				</td>
+					        <#else>
+					        <td>
+	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId" />
+	          				</td>
+	          				
+	          				</#if>
+	          			    <td class="label"><input class="button" type="button" size="18" value="EditFacilityDetails" onclick="editFacilityAddress();"  /></td>
+	          				<td>
+	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="editFacility"  id="editFacility" />
+	          				</td>
+				        </tr>
+                           <tr>	            
+						    <td class="label"><b> Address Type</b></td>
+						    <td>
+						     <select style="border-radius: 4px;" name="facicontactMechType" id="facicontactMechType" >
+	                            <option value="MANUFAC_LOCATION" >Manufacture Office Address</option>
+	                            <option value="HEAD_LOCATION" >Head Office Address</option>
+	                            <option value="BRANCH_LOCATION" >Branch Office Address</option>
+	                            <option value="SUBBRANCH_LOCATION" >Sub branch Office Address</option>
+	                             <option value="DEPOT_LOCATION" >Depot Office Address</option>
+				             </select>
+				            <td>
+						     </tr>
+
+							<tr>
+							    <td class="label"><FONT COLOR="red">*</font><b>Facility Name</b></td>
+							    <td>
+							      	<input type="text" name="facilityName" id="facilityName" size="30" maxlength="60" autocomplete="off" />
+							    </td>
+							</tr>
+									
+                         
+									    <td class="label"><FONT COLOR="red">*</font><b>Address1</b></td>
 									    <td>
-									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" value="hyd"/>
+									      	<input type="text" name="address1" id="Faddress1" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> Address2 :</b></td>
+									    <td class="label"><b> Address2</b></td>
 									    <td>
-									      	<input type="text" name="address2" id="address2" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="address2" id="Faddress2" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
-									<tr>
-									    <td class="label"><b><FONT COLOR="red">*</font> City :</b></td>
-									    <td>
-									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" value="bang" />
-									    </td>
-									</tr>
-									<tr>
-									    <td class="label"><b> Postal Code :</b></td>
-									    <td>
-									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
-									    </td>
-									    </tr>
-									    <tr>
-									    <td class="label"><b>Caste :</b></td>
-									    <td>
-									    <select name="Cast" id="Cast">
-				                            <option value="general" selected="selected">General</option>
-				                            <option value="BC">BC</option>
-				                            <option value="OBC">OBC</option>
-				                            <option value="SC">SC</option>
-				                            <option value="ST">ST</option>
-							            </select>
-							            </td>
-				          
-									</tr>
-									<tr>
-									    <td class="label"><b>E-mail Address :</b></td>
-									    <td>
-									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-									</tr>
+									
 									<tr>
 								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
 								      <td>
@@ -350,42 +421,121 @@
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
-								    </tr>	   								 
-	   								 <tr>
-								      <td class="label"><b>Branch :</b></td>
+								    </tr>
+									<tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
+									    <td>
+									      	<input type="text" name="city" id="Fcity" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									    <td class="label"><b> Postal Code</b></td>
+									    <td>
+									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>
+								<#-->	<tr>
+									    <td class="label"><b> Postal Code</b></td>
+									    <td>
+									      	<input type="text" name="postalCode" id="FpostalCode" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> E-mail Address</b></td>
+									    <td>
+									      	<input type="text" name="emailAddress" id="FemailAddress" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b>Alternative E-mail Address</b></td>
+									    <td>
+									      	<input type="text" name="AltemailAddress" id="FAltemailAddress" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>-->
+       								<#--><tr>
+									    <td class="label"><b>Mobile Number</b></td>
+									    <td>
+									      	<input type="text" name="mobileNumber" id="FmobileNumber" size="15" maxlength="10" autocomplete="off" />
+									    </td>
+								   </tr>-->
+									<tr>
+									    <td class="label"><b>Contact Number</b></td>
+									    <td>
+									      	<input type="text" name="contactNumber" id="FcontactNumber" size="15" maxlength="15" autocomplete="off"/>
+									    </td>
+								  </tr>
+								     
+								      <tr>
+									    <td>
+									      	<h3>Tax Address:</h3>
+									    </td>
+									     <td>
+									      	<h3>(Optional)</h3>
+									    </td>
+									</tr>
+		       			             <tr>
+									    <td class="label"><FONT COLOR="red">*</font><b>Address1</b></td>
+									    <td>
+									      	<input type="text" name="address1" id="TFaddress1" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> Address2</b></td>
+									    <td>
+									      	<input type="text" name="address2" id="TFaddress2" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
+									    <td>
+									      	<input type="text" name="city" id="TFcity" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
 								      <td>
-								        <select name="productStoreId" id="productStoreId">
-								         <#list productStoreDetails as eachstore>
-							   					 <option value='${eachstore.payToPartyId}'>${eachstore.productStoreId}</option>
+								        <select name="countryGeoId" id="TFeditcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
+										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
+								          <option selected="selected" value="${defaultCountryGeoId}">
+								          <#assign countryGeo = delegator.findByPrimaryKey("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId))>
+								          ${countryGeo.get("geoName",locale)}
+								          </option>
+								          <option></option>
+								          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+								        </select>
+								      </td>
+	    							</tr>
+	    							 <tr>
+								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
+								      <td>
+								        <select name="stateProvinceGeoId" id="TFeditcontactmechform_stateId">
+										
+							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
+								         <#list stateAssocs as stateAssoc>
+							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
 										</#list>
 								          <option></option>
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
-	   								 </tr>
-	   								  <tr>
-								      <td class="label"><b>Cluster :</b></td>
-								      <td>
-								        <input type="text" name="Cluster" id="Cluster" size="15" maxlength="10" autocomplete="off" />
-								        
-								      </td>
-	   								 </tr>
+								    </tr>
 									<tr>
-									    <td class="label"><b>Mobile Number :</b></td>
-									    <td>
-									      	<input type="text" name="mobileNumber" id="mobileNumber" size="15" maxlength="10" autocomplete="off" />
-									    </td>
-								   </tr>
 									<tr>
-									    <td class="label"><b>Contact Number :</b></td>
+									    <td class="label"><b> Postal Code</b></td>
 									    <td>
-									      	<input type="text" name="contactNumber" id="contactNumber" size="15" maxlength="15" autocomplete="off"/>
+									      	<input type="text" name="postalCode" id="TFpostalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
-								  </tr>
-									
-									
-					        </tr>
-		                 </table>
+									</tr>
+								    <tr>
+							        <td class="label"></td>
+							        <td>
+			        		 			<input class="button" type="button" size="18" value="Save" onclick="storeFacilityValues();"  />
+			          				</td>
+							        </tr>   	
+		                        </table>
+								    </div>
+								    <div>
+								    
+								    
+								      
                     </fieldset>  
                </section>
                 
