@@ -259,13 +259,30 @@
 		   BankAccountList = delegator.findList("BankAccount", null ,null,null,null,false);
 		   
 		   
-		   if(BankAccountList){
-			   
-			   tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
-			   tempMap.put("bankAccountCode", BankAccountList[0].bankAccountCode);
-			   tempMap.put("ifscCode", BankAccountList[0].ifscCode);
-			   tempMap.put("branchCode", BankAccountList[0].branchCode);
-			   tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+		   if(BankAccountList[0]){
+			   if(BankAccountList[0].bankAccountName)
+			    tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+			   else
+			   tempMap.put("bankAccountName", "");
+			   if(BankAccountList[0].bankAccountCode)
+			    tempMap.put("bankAccountCode", BankAccountList[0].bankAccountCode);
+			    else
+				tempMap.put("bankAccountCode", "");
+				if(BankAccountList[0].ifscCode)
+				tempMap.put("ifscCode", BankAccountList[0].ifscCode);
+			    else
+				tempMap.put("ifscCode","");
+				if(BankAccountList[0].branchCode)
+				tempMap.put("branchCode", BankAccountList[0].branchCode);
+			     else
+				 tempMap.put("branchCode", "");
+				
+				if(BankAccountList[0].bankAccountName)
+				tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+				 else
+				 tempMap.put("bankAccountName","");
+				
+				
 		   }
 		   
 		   
