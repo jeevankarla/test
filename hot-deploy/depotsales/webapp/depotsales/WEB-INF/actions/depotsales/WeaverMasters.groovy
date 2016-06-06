@@ -296,10 +296,9 @@
 			}
 		}
 		
-		 break;
+		 
 		
 	}
 	prodsEli.close();
-	Debug.log("finalList ==============================="+finalList.size());
 	
 	context.listIt = finalList;
