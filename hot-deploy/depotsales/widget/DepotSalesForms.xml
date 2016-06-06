@@ -2064,12 +2064,13 @@
         
         <field name="passbookId" title="Passbook No"><display/></field>
         <field name="issueDate" title="Issue Date"><display/></field>
-        
         <field name="loomType" title="Quota Category"><display/></field>
         <field name="qty" title="No of Looms"><display/></field>
         <field name="ledgerQuota" title="Ledger Quota"><display/></field>
-        
-        
+        <field name="bankAccountName" title="Name of Account"><display/></field>
+        <field name="bankAccountCode" title="Account Number"><display/></field>
+        <field name="ifscCode" title="IfscCode"><display/></field>
+        <field name="branchCode" title="Branch Code"><display/></field>
         
         
     </form>
@@ -2087,6 +2088,11 @@
         <field name="cstNo" title="CST No"><display/></field>
         <field name="tinNo" title="TIN No"><display/></field>
         <field name="panNo" title="PAN No"><display/></field>
+         <field name="bankAccountName" title="Name of Account"><display/></field>
+        <field name="bankAccountCode" title="Account Number"><display/></field>
+        <field name="ifscCode" title="IfscCode"><display/></field>
+        <field name="branchCode" title="Branch Code"><display/></field>
+        
     </form>
 
  <form name="ViewIndentStatus" type="list" list-name="statusHistory"

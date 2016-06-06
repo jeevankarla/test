@@ -253,13 +253,30 @@
            	tempMap.put("ledgerQuota", noOfLooms*maxQtyPerLoom);
            	
         }
-        
+
+		   conditionList=[];
+		   conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,eachPartyId));
+		   BankAccountList = delegator.findList("BankAccount", null ,null,null,null,false);
+		   
+		   
+		   if(BankAccountList){
+			   
+			   tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+			   tempMap.put("bankAccountCode", BankAccountList[0].bankAccountCode);
+			   tempMap.put("ifscCode", BankAccountList[0].ifscCode);
+			   tempMap.put("branchCode", BankAccountList[0].branchCode);
+			   tempMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+		   }
+		   
+		   
+		   
+		           
 		weaverMap = [:];
         weaverMap.putAll(tempMap);
 
 		finalList.add(weaverMap);
 
-        
+		
 		if(partyLoomDetailsList.size() > 1){
 			for(int i=1; i<partyLoomDetailsList.size(); i++){
 				addLoom = partyLoomDetailsList.get(i);
@@ -279,6 +296,7 @@
 			}
 		}
 		
+		 break;
 		
 	}
 	prodsEli.close();
