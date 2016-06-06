@@ -17,6 +17,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<script>
+
+
+   function viewFacilityAddresses(){
+   
+   
+   
+        // alert("vamsi");
+   
+   
+   }
+
+
+</script>
+
+
+
   <div id="partyContactInfo" class="screenlet">
     <div class="screenlet-title-bar">
       <ul>
@@ -162,6 +179,10 @@ under the License.
           </#list>
           <tr>
             <td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId=${partyId}&amp;</@ofbizUrl>" target="_blank"/>AddOtherAddressOfSupplier</td>
+            <td><input type="button" name="approveOrder" id="approveOrder" value="ViewFacilityAddresses" onclick="javascript: viewFacilityAddresses();"/></td>
+             
+             
+             
           </tr>
         </table>
       <#else>
@@ -170,3 +191,133 @@ under the License.
     </div>
     
   </div>
+
+  
+  
+  
+  <#-->
+   <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 5px; border-style: solid; border-color: grey; ">
+  
+        <h3>Supplier Other Address Information</h3>
+    <table cellpadding="2" cellspacing="1">
+							
+							<tr>
+					        <td class="label"><b> Supplier Id</b></td>
+					        <td>
+	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId" />
+	          				</td>
+				        </tr>
+
+							<tr>
+							    <td class="label"><FONT COLOR="red">*</font><b>Facility Name</b></td>
+							    <td>
+							      	<input type="text" name="facilityName" id="facilityName" size="30" maxlength="60" autocomplete="off" />
+							    </td>
+							</tr>
+									
+                          <tr>	            
+						    <td class="label"><b> Address Type</b></td>
+						    <td>
+						     <select style="border-radius: 4px;" name="facicontactMechType" id="facicontactMechType" >
+	                            <option value="MANUFAC_LOCATION" >Manufacture Office Address</option>
+	                            <option value="HEAD_LOCATION" >Head Office Address</option>
+	                            <option value="BRANCH_LOCATION" >Branch Office Address</option>
+	                            <option value="SUBBRANCH_LOCATION" >Sub branch Office Address</option>
+	                             <option value="DEPOT_LOCATION" >Depot Office Address</option>
+				             </select>
+				            <td>
+						     </tr>
+									    <td class="label"><FONT COLOR="red">*</font><b>Address1</b></td>
+									    <td>
+									      	<input type="text" name="address1" id="Faddress1" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> Address2</b></td>
+									    <td>
+									      	<input type="text" name="address2" id="Faddress2" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									
+									<tr>
+								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
+								      <td>
+								        <select name="countryGeoId" id="editcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
+										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
+								          <option selected="selected" value="${defaultCountryGeoId}">
+								          <#assign countryGeo = delegator.findByPrimaryKey("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId))>
+								          ${countryGeo.get("geoName",locale)}
+								          </option>
+								          <option></option>
+								          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+								        </select>
+								      </td>
+	    							</tr>
+	    							 <tr>
+								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
+								      <td>
+								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
+										
+							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
+								         <#list stateAssocs as stateAssoc>
+							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
+										</#list>
+								          <option></option>
+								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
+								      <#-->  </select>
+								      </td>
+								    </tr>
+									<tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
+									    <td>
+									      	<input type="text" name="city" id="Fcity" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>-->
+									 
+									  
+								<#-->	<tr>
+									    <td class="label"><b> Postal Code</b></td>
+									    <td>
+									      	<input type="text" name="postalCode" id="FpostalCode" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b> E-mail Address</b></td>
+									    <td>
+									      	<input type="text" name="emailAddress" id="FemailAddress" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									<tr>
+									    <td class="label"><b>Alternative E-mail Address</b></td>
+									    <td>
+									      	<input type="text" name="AltemailAddress" id="FAltemailAddress" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>-->
+       								<#--><tr>
+									    <td class="label"><b>Mobile Number</b></td>
+									    <td>
+									      	<input type="text" name="mobileNumber" id="FmobileNumber" size="15" maxlength="10" autocomplete="off" />
+									    </td>
+								   </tr>
+									<tr>
+									    <td class="label"><b>Contact Number</b></td>
+									    <td>
+									      	<input type="text" name="contactNumber" id="FcontactNumber" size="15" maxlength="15" autocomplete="off"/>
+									    </td>
+								  </tr>-->
+								<#-->    <tr>
+							        <td class="label"></td>
+							        <td>
+			        		 			<input style="background-color: grey;" type="button" size="18" value="Save" onclick="storeFacilityValues();"  />
+			          				</td>
+							        </tr>   -->	
+		     <#-->                   </table>
+  
+    </div>
+      
+         -->
+  
+                
+  
+  
+  

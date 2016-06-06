@@ -267,4 +267,54 @@
 			stateListJSON.add(newObj);
 	}
 	context.stateListJSON = stateListJSON;
-
+	
+	
+/*	JSONArray supplierFacilityListJSON = new JSONArray();
+	
+	
+	
+	
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+	faciList = delegator.findList("Facility", EntityCondition.makeCondition(condList,EntityOperator.AND), null,null,null, false);
+	
+     Debug.log("faciList================"+faciList);	
+	
+	 facilityTypeList = EntityUtil.getFieldListFromEntityList(faciList, "facilityTypeId", true);
+	
+	Debug.log("facilityTypeList================"+facilityTypeList);
+	
+	
+	 filterredFeciList = [];
+	
+	   for (eachType in facilityTypeList) {
+		
+		   
+		   condList.clear();
+		   condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+		   condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, eachType));
+		    List<String> orderBy = UtilMisc.toList("-facilityId");
+		   faciListBasedOnTypeList = delegator.findList("Facility", EntityCondition.makeCondition(condList,EntityOperator.AND), null,orderBy,null, false);
+		   
+		   if(faciListBasedOnTypeList[0])
+		   filterredFeciList.add(faciListBasedOnTypeList[0]);
+		   
+	}
+	
+	   
+	
+	if(UtilValidate.isNotEmpty(filterredFeciList)){
+		
+		filterredFeciList.each{ echFaci ->
+				JSONObject newObj = new JSONObject();
+				newObj.put("value",echFaci.facilityId);
+				newObj.put("label",echFaci.facilityName);
+				supplierFacilityListJSON.add(newObj);
+		}
+		
+	}
+	
+	context.supplierFacilityListJSON = supplierFacilityListJSON;
+	
+	Debug.log("supplierFacilityListJSON==================="+supplierFacilityListJSON);
+	*/
