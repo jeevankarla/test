@@ -165,7 +165,7 @@
 
 function getQuota(obj){
 $("#quotatr").hide();
-	if($(obj).val()=="TEN_PERCENT_MGPS"){
+	if($(obj).val()=="MGPS_10Pecent"){
 	  $("#quotatr").show();
 	}
 

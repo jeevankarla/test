@@ -84,7 +84,7 @@
            	 });
            
 			 $("#societyfield").hide();
-			 	fillPartyData();
+			 	fillPartyData($('#partyId').val());
 			 	$("#editServChgButton").hide();
 			 if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
@@ -102,7 +102,7 @@
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
-					fillPartyData();
+					fillPartyData($('#partyId').val());
 				}
 			});
 			$( "#orderDate" ).datepicker({
@@ -274,10 +274,9 @@
 	         }
 	    }
 	    
-		function fillPartyData(){
-					var partyId = $('[name=partyId]').val();
-		
-				       	  				 if( partyId != undefined && partyId != ""){
+		function fillPartyData(partyId){
+
+			if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
 				var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
 	      	$.ajax({
@@ -605,12 +604,45 @@
 	      			},
 	      			select: function(e, ui) {
 			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+			        	fillPartyData(ui.item.value);
+			        	fillPartyQuota(ui.item.value);
+	
 			        }
 					
 			  });	
 		 }
 	 	
-	 	
+	 	function fillPartyQuota(partyId){
+	if( partyId != undefined && partyId != ""){
+				var dataString="partyId="+partyId;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyQuotaDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{ 
+	          			      contactDetails =result["quotaJson"];
+	       	  				  SchemeList=contactDetails["SchemeList"];
+	       	  				  var tableElement="";
+	       	  				  
+	       	  				   $.each(SchemeList, function(key, item){
+		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
+		       	  				 });
+		       	  			$('#schemeCategory').empty().append(tableElement);	 
+
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	         	 });
+	         	 }
+	        }
 	 	var orderAddres;
 
       	function getShipmentAddress(){
@@ -855,10 +887,8 @@
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
-		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>	          					
+		          				<select name="schemeCategory" id="schemeCategory" class='h3' onchange='getQotaByManuval()' style="width:162px">
+		          						          					
 		          				</select>
 		          			</td>
 		       			</#if>
@@ -905,7 +935,7 @@
 				            		</div>
 				          		</td>       
 			       	  		<#else> 
-				          		<td valign='left'>          
+				          		<td valign='left' id='effectiveDateTd'>          
 				            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 				            	</td>
 			       	  		</#if>

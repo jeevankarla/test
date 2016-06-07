@@ -131,12 +131,43 @@
 			
 			$("#societyPartyId").blur(function() {
 			fillPartyData();
+			fillPartyQuota($("#societyPartyId").val());
 				});
 				
 			
 			
 		});
-		
+		function fillPartyQuota(partyId){
+	if( partyId != undefined && partyId != ""){
+				var dataString="partyId="+partyId;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyQuotaDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{ 
+	          			      contactDetails =result["quotaJson"];
+	       	  				  SchemeList=contactDetails["SchemeList"];
+	       	  				  var tableElement="";
+	       	  				  
+	       	  				   $.each(SchemeList, function(key, item){
+		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
+		       	  				 });
+		       	  			$('#schemeCategory').empty().append(tableElement);	 
+
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	         	 });
+	         	 }
+	        }
 		var partyName;
 		function dispSuppName(selection){
 		   var value = $("#partyId").val();
@@ -481,9 +512,7 @@
 		       			<#else>      	         
 		          			<td valign='middle'>
 		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>	          					
+		          				          					
 		          				</select>
 		          			</td>
 		       			</#if>

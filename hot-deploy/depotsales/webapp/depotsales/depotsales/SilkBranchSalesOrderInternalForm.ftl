@@ -170,6 +170,7 @@
 			var checkE2Form = data[rowCount]["checkE2Form"];
 			var applicableTaxType = data[rowCount]["applicableTaxType"];
 			var checkCForm = data[rowCount]["checkCForm"];
+			var quotaAvbl = data[rowCount]["quota"];
 			
 			$("#orderTaxType").val(applicableTaxType);
 			
@@ -190,6 +191,7 @@
 				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
 				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
 				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
+				var inputQuotaAvbl = jQuery("<input>").attr("type", "hidden").attr("name", "quotaAvbl_o_" + rowCount).val(quotaAvbl);
 				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -205,6 +207,7 @@
 				jQuery(formId).append(jQuery(inputCheckE2Form));
 				jQuery(formId).append(jQuery(inputApplicableTaxType));
 				jQuery(formId).append(jQuery(inputCheckCForm));
+				jQuery(formId).append(jQuery(inputQuotaAvbl));
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -276,7 +279,7 @@
 			var schemeCategory = $("#schemeCategory").val();
 			var contactMechId = $("#contactMechId").val();
 			var transporterId = $("#transporterId").val();
-			
+			var manualQuota = $("#manualQuota").val();
 			
 			
 			var orderMessage = $("#orderMessage").val();
@@ -296,6 +299,7 @@
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
 			var contactMechId = jQuery("<input>").attr("type", "hidden").attr("name", "belowContactMechId").val(contactMechId);
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+			var manualQuotaObj = jQuery("<input>").attr("type", "hidden").attr("name", "manualQuota").val(manualQuota);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -317,6 +321,7 @@
 			jQuery(formId).append(jQuery(partyGeo));
 			jQuery(formId).append(jQuery(contactMechId));
 			jQuery(formId).append(jQuery(transporterId));
+			jQuery(formId).append(jQuery(manualQuotaObj));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -462,7 +467,7 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+ 			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 		];
 		

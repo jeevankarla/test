@@ -443,14 +443,14 @@
 				   </link>
 				</menu-item>
 				<menu-item name="DyesIndent" title="${uiLabelMap.DyesIndent}">
-				    <link target="DyesBranchSalesOrder">
+				   <!--  <link target="DyesBranchSalesOrder">
 						<parameter param-name="menuName" value="DyesIndent"/>
-				   </link>
+				   </link> -->
 				</menu-item>
 				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
-				    <link target="ChemicalBranchSalesOrder">
+				    <!-- <link target="ChemicalBranchSalesOrder">
 						<parameter param-name="menuName" value="ChemicalIndent"/>
-				   </link>
+				   </link> -->
 				</menu-item>
         	   
 	      

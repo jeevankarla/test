@@ -949,7 +949,7 @@ public class DepotSalesServices{
 					BigDecimal quota = BigDecimal.ZERO;
 					// Get first productCategoriesList. We got productCategoryId here
 					
-					if(schemeCategory.equals("TEN_PERCENT_MGPS")){
+					if(schemeCategory.equals("MGPS_10Pecent")){
 						
 						String schemeId="TEN_PERCENT_MGPS";
 						String productCategoryId=(String)productCategoriesList.get(0);
@@ -1507,6 +1507,8 @@ public class DepotSalesServices{
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
 		String transporterId = (String) request.getParameter("transporterId");
+		String manualQuotaStr = (String) request.getParameter("manualQuota");
+
 		
 		String cfcId = (String) request.getParameter("cfcId");
 		if(UtilValidate.isNotEmpty(cfcId)){
@@ -1557,6 +1559,7 @@ public class DepotSalesServices{
 		String taxListStr = null;
 		String serviceChgStr = null;
 		String serviceChgAmtStr = null;
+		String quotaAvblStr = null;
 		
 		Timestamp effectiveDate=null;
 		
@@ -1567,6 +1570,8 @@ public class DepotSalesServices{
 		BigDecimal basicPrice = BigDecimal.ZERO;
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+		BigDecimal quotaAvbl = BigDecimal.ZERO;
+		BigDecimal manualQuota = BigDecimal.ZERO;
 		/*BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal tcsPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
@@ -1604,6 +1609,9 @@ public class DepotSalesServices{
 		}
 		else{
 			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		if (UtilValidate.isNotEmpty(manualQuotaStr) && !(manualQuotaStr.equals("NaN"))) {
+			manualQuota =new BigDecimal(manualQuotaStr);
 		}
 		if (partyId == "") {
 			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
@@ -1754,6 +1762,11 @@ public class DepotSalesServices{
 					bundleUnitPriceStr = (String) paramMap.get("bundleUnitPrice"
 							+ thisSuffix);
 				}
+			
+				if (paramMap.containsKey("quotaAvbl" + thisSuffix)) {
+					quotaAvblStr = (String) paramMap.get("quotaAvbl"+ thisSuffix);
+				}
+				
 				/*if (paramMap.containsKey("vatPrice" + thisSuffix)) {
 					vatPriceStr = (String) paramMap
 							.get("vatPrice" + thisSuffix);
@@ -1815,6 +1828,10 @@ public class DepotSalesServices{
 					}
 					if (UtilValidate.isNotEmpty(serviceChgAmtStr)) {
 						serviceChargeAmt = new BigDecimal(serviceChgAmtStr);
+					}
+					
+					if(UtilValidate.isNotEmpty(quotaAvblStr) && !(quotaAvblStr.equals("NaN"))){
+						quotaAvbl = new BigDecimal(quotaAvblStr);
 					}
 					/*if (UtilValidate.isNotEmpty(cstPriceStr)) {
 						cstPrice = new BigDecimal(cstPriceStr);
@@ -1895,6 +1912,7 @@ public class DepotSalesServices{
 						tempconsolMap.put("applicableTaxType", applicableTaxType);
 						tempconsolMap.put("checkE2Form", checkE2Form);
 						tempconsolMap.put("checkCForm", checkCForm);
+						tempconsolMap.put("quotaAvbl", quotaAvbl);
 						consolMap.put(productId,tempconsolMap);						
 					}
 				}
@@ -1918,7 +1936,7 @@ public class DepotSalesServices{
 				productQtyMap.put("applicableTaxType", applicableTaxType);
 				productQtyMap.put("checkE2Form", checkE2Form);
 				productQtyMap.put("checkCForm", checkCForm);
-				
+				productQtyMap.put("quotaAvbl", quotaAvbl);
 				/*productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
 				productQtyMap.put("tcsPrice", tcsPrice);
@@ -2015,6 +2033,7 @@ public class DepotSalesServices{
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+		processOrderContext.put("manualQuota", manualQuota);
 		
 		try{
 		result = processBranchSalesOrder(dctx, processOrderContext);
@@ -2126,6 +2145,7 @@ public class DepotSalesServices{
 	  	String orderMessage = (String) context.get("orderMessage");
 	  	String disableAcctgFlag = (String) context.get("disableAcctgFlag");
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
+	  	BigDecimal manualQuota= (BigDecimal)context.get("manualQuota");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
@@ -2324,6 +2344,7 @@ public class DepotSalesServices{
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal taxPercent = BigDecimal.ZERO;
 			BigDecimal serviceCharge = BigDecimal.ZERO;
+			BigDecimal quotaAvbl = BigDecimal.ZERO;
 			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 			String bundleUnitPrice="";
 			String quotaQuantity="";
@@ -2398,8 +2419,10 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
 				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
 			}
-			
-					
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("quotaAvbl"))){
+				quotaAvbl = (BigDecimal)prodQtyMap.get("quotaAvbl");
+			}
+				
 			//add percentages
 			BigDecimal vatPercent=BigDecimal.ZERO;
 			BigDecimal cstPercent=BigDecimal.ZERO;
@@ -2444,8 +2467,21 @@ public class DepotSalesServices{
 			BigDecimal quota = BigDecimal.ZERO;
 			// Get first productCategoriesList. We got productCategoryId here
 			/*if(onBeHalfOf.equals("N")){
-				if(schemeCategory.equals("MGPS_10Pecent")){
-					
+			if(schemeCategory.equals("MGPS_10Pecent")){
+				Timestamp targetDate =null;
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+					targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
+				} catch (Exception e) {
+					Debug.logError(e, "Failed to covert date ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+				}
+				Debug.log(manualQuota+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--------------1---------"+quotaAvbl+"===((((((((((((((=="+targetDate.compareTo(supplyDate));
+				if(targetDate.compareTo(supplyDate)==1){
+					Debug.log(supplyDate+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-----------2------------"+targetDate);
+					quota=manualQuota.subtract(quotaAvbl);
+					manualQuota=manualQuota.subtract(quota);
+				}else{
 					String schemeId="TEN_PERCENT_MGPS";
 					String productCategoryId=(String)productCategoriesList.get(0);
 					
@@ -2463,8 +2499,10 @@ public class DepotSalesServices{
 						Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 						return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
 					}
-				}	
-			}*/
+				}
+				Debug.log(manualQuota+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-----------3------------"+quota);
+			}
+			}*/	
 			// Populate Shopping Cart With Items.
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
 			ShoppingCartItem item = null;
@@ -2699,6 +2737,7 @@ public class DepotSalesServices{
 			BigDecimal blQuantity=BigDecimal.ZERO;
 			BigDecimal Kgquantity=BigDecimal.ZERO;
 			BigDecimal prdPrice=BigDecimal.ZERO;
+			BigDecimal quotaAvbl = BigDecimal.ZERO;
 			String Uom="";
 			String specification="";
 
@@ -2731,6 +2770,9 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodItemMap.get("basicPrice"))){
 				prdPrice = (BigDecimal)prodItemMap.get("basicPrice");
 			}
+			if(UtilValidate.isNotEmpty(prodItemMap.get("quotaAvbl"))){
+				quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
+			}
         	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
 			Map<String, Object> orderItemDetail = FastMap.newInstance();
 			String orderItemSeqId="";
@@ -2754,8 +2796,20 @@ public class DepotSalesServices{
 						}
 						BigDecimal quota = BigDecimal.ZERO;
 						// Get first productCategoriesList. We got productCategoryId here
-							if(schemeCategory.equals("MGPS_10Pecent")){
-								
+						if(schemeCategory.equals("MGPS_10Pecent")){
+							Timestamp targetDate =null;
+							try {
+								SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+								targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
+							} catch (Exception e) {
+								Debug.logError(e, "Failed to covert date ", module);
+								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+							}
+						
+							if(targetDate.compareTo(supplyDate)==1){
+								quota=manualQuota.subtract(quotaAvbl);
+								manualQuota=manualQuota.subtract(quota);
+							}else{
 								String schemeId="TEN_PERCENT_MGPS";
 								String productCategoryId=(String)productCategoriesList.get(0);
 								
@@ -2773,7 +2827,8 @@ public class DepotSalesServices{
 									Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 									return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
 								}
-							}	
+							}
+						}	
 						if(quota.compareTo(BigDecimal.ZERO)>0){
 							
 							// Have to get these details from schemes. Temporarily hard coding it.

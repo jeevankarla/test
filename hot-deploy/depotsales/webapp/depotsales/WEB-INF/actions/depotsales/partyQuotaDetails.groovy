@@ -64,7 +64,7 @@ if(parameters.partyId){
 	for(scheme in groupNameList){
 		JSONObject schemeJson = new JSONObject();
 		if(scheme.get("schemeId").equals("TEN_PERCENT_MGPS")){
-			schemeJson.put("schemeId",scheme.get("schemeId"));
+			schemeJson.put("schemeId","MGPS_10Pecent");
 			schemeJson.put("schemeValue","MGPS + 10%");
 			schemeArray.add(schemeJson);
 		}else if(scheme.get("schemeId").equals("MGPS")){
@@ -87,28 +87,33 @@ if(parameters.partyId){
 	schemeArray.add(schemeJson);
 	finalJson.put("SchemeList", schemeArray);
 	quota=0;
-	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS,"SCHEME_MGPS"));
-	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,parameters.productId));
-	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	ProductCategoryAndMemberObject = EntityUtil.getFirst(delegator.findList("ProductCategoryAndMember",condition,null,null,null,false));
-	productCategoryId=ProductCategoryAndMemberObject.get("productCategoryId");
-	resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate,"productCategoryId",productCategoryId));
-	productCategoryQuotasMap = resultCtx.get("schemesMap");
 	
-	if(productCategoryQuotasMap.containsKey(productCategoryId)){
-		if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(productCategoryId))){
-			quota = productCategoryQuotasMap.get(productCategoryId);
-		}
-		else{
-			
+	if(UtilValidate.isNotEmpty(parameters.productId)){
+		
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS,"SCHEME_MGPS"));
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,parameters.productId));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		ProductCategoryAndMemberObject = EntityUtil.getFirst(delegator.findList("ProductCategoryAndMember",condition,null,null,null,false));
+		productCategoryId=ProductCategoryAndMemberObject.get("productCategoryId");
+		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate,"productCategoryId",productCategoryId));
+		productCategoryQuotasMap = resultCtx.get("schemesMap");
+		
+		if(productCategoryQuotasMap.containsKey(productCategoryId)){
+			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(productCategoryId))){
+				quota = productCategoryQuotasMap.get(productCategoryId);
+			}
+			else{
+				
+			}
+	
 		}
 
 	}
 	
 	finalJson.put("quota", quota);
 	context.quotaJson=finalJson;
-	Debug.log("&&&&&&&&&&&&&&&&&&&&&&&&-----------------"+finalJson);
+
 	request.setAttribute("quotaJson", finalJson);
 	
 }
