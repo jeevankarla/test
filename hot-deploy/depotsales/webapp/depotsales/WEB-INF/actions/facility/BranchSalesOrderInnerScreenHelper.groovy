@@ -224,10 +224,15 @@
 		context.partyAddress = partyAddress;
 	}
 	
+	productListCtx = dispatcher.runSync("getSchemeApplicableProducts",UtilMisc.toMap("userLogin",userLogin, "schemeCategory", parameters.schemeCategory, "productCategoryId",parameters.screenFlag));
 	prodList=[];
-	exprList.clear();
+	/*exprList.clear();
 	//exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	//exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+	
+	
+	
+	
 	if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
 		catIds=["COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
 		
@@ -273,7 +278,10 @@
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);*/
+	
+	prodList = productListCtx.get("productList");
+	
 	if(UtilValidate.isNotEmpty(productCatageoryId)){
 		
 		
