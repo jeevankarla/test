@@ -47,10 +47,7 @@ for (eachItem in orderItems) {
 	otherCharges = 0;
 	quotaAvbl = 0;
 	if(UtilValidate.isNotEmpty(orderAdjustments)){
-		
 			adjustmentAmount =eachItem.discountAmount;
-		
-		
 		conditionList = [];
 		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
@@ -62,11 +59,6 @@ for (eachItem in orderItems) {
 				otherCharges += eachAdj.get("amount");
 			}
 		}
-		
-		
-		
-		
-		
 	}
 	
 	quotaAvbl=eachItem.quotaQuantity;
