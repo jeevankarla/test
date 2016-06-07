@@ -413,5 +413,16 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="purposeTypeId" type="String" mode="OUT" optional="false"/>
     </service>
+    
+    
+    <service name="getSchemeApplicableProducts" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getSchemeApplicableProducts">
+        <description>Get Scheme Applicable products</description>
+        <attribute name="schemeCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdsList" type="List" mode="OUT" optional="true"/>
+        <attribute name="productList" type="List" mode="OUT" optional="true"/>
+    </service>
+    
+    
 </services>
 

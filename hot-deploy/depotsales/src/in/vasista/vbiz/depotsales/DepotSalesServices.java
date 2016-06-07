@@ -9371,6 +9371,88 @@ public class DepotSalesServices{
    	    return result;
    	}
  	
+ 	public static Map<String, Object> getSchemeApplicableProducts(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    Map result = ServiceUtil.returnSuccess();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String productCategoryId = (String) context.get("productCategoryId");
+   	    String schemeCategory = (String) context.get("schemeCategory");
+   	    
+   	    List schemeProductCategoryList = FastList.newInstance();
+   	    if(UtilValidate.isNotEmpty(schemeCategory)){
+   	    	if(schemeCategory.equals("MGPS_10Pecent")){
+   	    		schemeProductCategoryList = UtilMisc.toList("COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE");
+   	    	}
+   	    	else if(schemeCategory.equals("MGPS")){
+   	    		schemeProductCategoryList.add("HANK"); 
+   	    	}
+   	    }
+   	    
+   	    List schemeApplicableProductIds = FastList.newInstance();
+   	    if(UtilValidate.isNotEmpty(schemeProductCategoryList)){
+   	    	List condList= FastList.newInstance();;
+   			condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeProductCategoryList));
+   			try {
+   				schemeApplicableProductIds = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("productId"), null, null, false), "productId", true);
+   			}catch(GenericEntityException e){
+    			Debug.logError(e, "Not a valid productCategoryId", module);
+    			return ServiceUtil.returnError("Not a valid productCategoryId" + e);
+    		}
+   	    }
+   	    
+   	    List productCategoryIdsList = FastList.newInstance();
+   	    if(UtilValidate.isNotEmpty(productCategoryId)){
+   	    	if(productCategoryId.equals("CottonIndent")){
+   	    		productCategoryIdsList.add("COTTON");
+   	    	}
+   	    	else if(productCategoryId.equals("SilkIndent")){
+   	    		productCategoryIdsList.add("SILK");
+   	    	}
+   	    	else if(productCategoryId.equals("OtherIndent")){
+   	    		
+   	    		List condList= FastList.newInstance();;
+   	    		condList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.IN, UtilMisc.toList("NATURAL_FIBERS","SYNTHETIC")));
+   	    		condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.NOT_IN, UtilMisc.toList("COTTON","SILK")));
+   	    		try {
+   	    			productCategoryIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategory",EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, false), "productCategoryId", true);
+   	    		}catch(GenericEntityException e){
+   	    			Debug.logError(e, "Not a valid productCategoryId", module);
+   	    			return ServiceUtil.returnError("Not a valid productCategoryId" + e);
+   	    		}
+   	    		
+   	    	}
+   	    	else{
+   	    		productCategoryIdsList.add(productCategoryId);
+   	    	}
+   	    }
+   	    
+   	    List prodCondList= FastList.newInstance();;
+   	    prodCondList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN, productCategoryIdsList));
+		if(UtilValidate.isNotEmpty(schemeApplicableProductIds)){
+			prodCondList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, schemeApplicableProductIds));
+		}
+		
+		List productIdsList = FastList.newInstance();
+		try {
+			productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",EntityCondition.makeCondition(prodCondList, EntityOperator.AND), UtilMisc.toSet("productId"), null, null, false), "productId", true);
+   		}catch(GenericEntityException e){
+   			Debug.logError(e, "Not a valid productCategoryId", module);
+   			return ServiceUtil.returnError("Not a valid productCategoryId" + e);
+		}
+   	    
+		List productList = FastList.newInstance();
+		try {
+			productList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList),null, null, null, false);  
+   		}catch(GenericEntityException e){
+   			Debug.logError(e, "Not a valid productCategoryId", module);
+   			return ServiceUtil.returnError("Not a valid productCategoryId" + e);
+		}
+		Debug.log("productList ========="+productList.size());
+		
+   	    result.put("productList",productList);
+   	    return result;
+   	}
  	
 	
 }
