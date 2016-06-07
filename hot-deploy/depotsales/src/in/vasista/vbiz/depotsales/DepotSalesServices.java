@@ -2502,7 +2502,7 @@ public class DepotSalesServices{
 				}
 				
 				
-				if(quota.compareTo(BigDecimal.ZERO)>0){
+				/*if(quota.compareTo(BigDecimal.ZERO)>0){
 					
 					// Have to get these details from schemes. Temporarily hard coding it.
 					BigDecimal schemePercent = new BigDecimal("10");
@@ -2524,7 +2524,7 @@ public class DepotSalesServices{
 					item.addAdjustment(orderAdjustment);
 					
 					totalPrice.add(discountAmount);
-				}
+				}*/
 				
 				// Tax Handling
 				
@@ -2688,6 +2688,7 @@ public class DepotSalesServices{
 		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive orderItemDetail ", module);
 		}
+		BigDecimal totalDiscount=BigDecimal.ZERO;
 		for (Map<String, Object> prodItemMap : indentItemProductList) {
 			String customerId = "";
 			//BigDecimal basicPrice = BigDecimal.ZERO;
@@ -2788,13 +2789,11 @@ public class DepotSalesServices{
 								discountAmount = ((quantity.multiply(prdPrice)).multiply(percentModifier)).negate();
 								quotaQuantity=quota;
 							}
-							GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-					                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
-					                        "description", "10 Percent Subsidy on eligible product categories"));
-							
+							totalDiscount=totalDiscount.add(discountAmount);
+							orderItemDetail.put("discountAmount",discountAmount);
 						}
 								
-			Debug.log("quotaQuantity====================="+quotaQuantity);
+			//Debug.log("quotaQuantity====================="+quotaQuantity);
 			
 			//orderItemDetail.put("",);
 			orderItemDetail.put("orderId",orderId);
@@ -2823,6 +2822,16 @@ public class DepotSalesServices{
 		  		Debug.logError(e, "Error in Order Item Detail, module");
 		  		return ServiceUtil.returnError( "Error in Order Item Detail");
 		  	}
+		}
+		String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+		GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+		UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
+                "description", "10 Percent Subsidy on eligible product categories"));
+		try{
+			orderAdjustment.create();
+		}catch (GenericEntityException e) {
+			Debug.logError("Error in creating OrderAdjestments", module);
+			return ServiceUtil.returnError("Error in creating OrderAdjestments");
 		}
 		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){

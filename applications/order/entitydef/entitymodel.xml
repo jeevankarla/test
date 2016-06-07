@@ -863,6 +863,7 @@ under the License.
       <field name="remarks" type="comment"></field>
       <field name="Uom" type="comment"></field>
       <field name="quotaQuantity" type="fixed-point"></field>
+      <field name="discountAmount" type="currency-amount"></field>
       <field name="changeUserLogin" type="id-vlong"></field>
       
       <prim-key field="orderItemDetailId"/>
