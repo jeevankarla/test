@@ -72,8 +72,22 @@
 	<script type="text/javascript">
 			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};	
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
-
-          
+	function getQotaByManuval(){
+		var selectedDate= $('#effectiveDate').val();
+		var effDate=Date.parse(selectedDate);
+		var targetDate=Date.parse("04/01/2016");
+		if(effDate<targetDate && $('#schemeCategory').val()=="MGPS_10Pecent"){
+			if($('#manualQuota').val()==undefined){
+			var externalQupta="<label id='manualQuotaLabel' name='manualQuotaLabel'>Quota</label><input type='text' id='manualQuota' name='manualQuota' />"
+		 	$('#effectiveDateTd').append(externalQupta);
+		   }
+		} else{
+		    $("#manualQuota").remove();
+		    $("#manualQuotaLabel").remove();
+		 }
+		
+		
+		}
 		$(document).ready(function(){
 			 $("#open_popup").click(function(){
                	getShipmentAddress();
@@ -85,7 +99,7 @@
            	 });
            
 			 $("#societyfield").hide();
-			 	fillPartyData();
+			 	fillPartyData($('#partyId').val());
 			 	$("#editServChgButton").hide();
 			if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
@@ -108,7 +122,8 @@
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
-					fillPartyData();
+					getQotaByManuval();
+					fillPartyData($('#partyId').val());
 				}
 				
 			});
@@ -312,10 +327,9 @@
 	         }
 	    }
 	    
-		function fillPartyData(){
-					var partyId = $('[name=partyId]').val();
-		
-				       	  				 if( partyId != undefined && partyId != ""){
+		function fillPartyData(partyId){
+
+			if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
 				var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
 	      	$.ajax({
@@ -642,12 +656,45 @@
 	      			},
 	      			select: function(e, ui) {
 			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+			        	fillPartyData(ui.item.value);
+			        	fillPartyQuota(ui.item.value);
+			        	getQotaByManuval();
 			        }
 					
 			  });	
 		 }
 	 	
-	 	
+function fillPartyQuota(partyId){
+	if( partyId != undefined && partyId != ""){
+				var dataString="partyId="+partyId;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyQuotaDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{ 
+	          			      contactDetails =result["quotaJson"];
+	       	  				  SchemeList=contactDetails["SchemeList"];
+	       	  				  var tableElement="";
+	       	  				  
+	       	  				   $.each(SchemeList, function(key, item){
+		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
+		       	  				 });
+		       	  			$('#schemeCategory').empty().append(tableElement);	 
+
+	      			}
+	               
+	          	} ,
+	         	 error: function() {
+	          	 	alert(result["_ERROR_MESSAGE_"]);
+	         	 }
+	         	 });
+	         	 }
+	        }
 	 	var orderAddres;
 
       	function getShipmentAddress(){
@@ -886,10 +933,8 @@
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
-		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					<option value="MGPS_10Pecent">MGPS + 10%</option>
-		          					<option value="MGPS">MGPS</option>
-		          					<option value="General">General</option>	          					
+		          				<select name="schemeCategory" id="schemeCategory" class='h3' onchange='getQotaByManuval()' style="width:162px">
+		          						          					
 		          				</select>
 		          			</td>
 		       			</#if>
@@ -931,12 +976,15 @@
 					        </#if>
 			          		<#if effectiveDate?exists && effectiveDate?has_content>  
 				  	  			<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
+				  	  		<#if manualQuota?exists && manualQuota?has_content>
+				  	  			<input type="hidden" name="manualQuota" id="manualQuota" value="${manualQuota}"/>
+				  	  		</#if>
 				          		<td align='left' valign='middle'>
 				            		<div><font color="green">${effectiveDate}         
 				            		</div>
 				          		</td>       
 			       	  		<#else> 
-				          		<td valign='left'>          
+				          		<td valign='left' id='effectiveDateTd'>          
 				            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 				            	</td>
 			       	  		</#if>
@@ -1083,7 +1131,7 @@
 		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${parameters.supplierGeoId?if_exists}"/>
 		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
 		<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
-		
+		<input type="hidden" name="manualQuota" id="manualQuota" value="${parameters.manualQuota?if_exists}" />
 		<br>
 	</form>    
 		</div>

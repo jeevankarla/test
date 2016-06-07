@@ -418,6 +418,12 @@
 			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
 				quota = productCategoryQuotasMap.get(schemeCatId);
 			}
+			String dateInString = "01 APRIL, 2016";
+			targetDate = new java.sql.Timestamp(sdf.parse(dateInString).getTime());
+			if(effectiveDate<targetDate){
+				quota=parameters.manualQuota;
+			}
+
 			productQuotaJSON.put(schemeProdId, quota);
 			productCategoryJSON.put(schemeProdId, schemeCatId);
 		}
