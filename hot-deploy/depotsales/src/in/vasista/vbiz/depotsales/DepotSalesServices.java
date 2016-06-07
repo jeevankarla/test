@@ -2790,9 +2790,10 @@ public class DepotSalesServices{
 								quotaQuantity=quota;
 							}
 							totalDiscount=totalDiscount.add(discountAmount);
+							orderItemDetail.put("discountAmount",discountAmount);
 						}
 								
-			Debug.log("quotaQuantity====================="+quotaQuantity);
+			//Debug.log("quotaQuantity====================="+quotaQuantity);
 			
 			//orderItemDetail.put("",);
 			orderItemDetail.put("orderId",orderId);
