@@ -2842,7 +2842,7 @@ public class DepotSalesServices{
 							}
 							else{
 								discountAmount = ((quantity.multiply(prdPrice)).multiply(percentModifier)).negate();
-								quotaQuantity=quota;
+								quotaQuantity=quantity;
 							}
 							totalDiscount=totalDiscount.add(discountAmount);
 							orderItemDetail.put("discountAmount",discountAmount);
