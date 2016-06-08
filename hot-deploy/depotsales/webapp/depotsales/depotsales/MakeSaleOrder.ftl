@@ -194,8 +194,10 @@ function fillPartyQuota(partyId){
 	       	  				   $.each(SchemeList, function(key, item){
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				 });
-		       	  			$('#schemeCategory').empty().append(tableElement);	 
-
+		       	  			$('#schemeCategory').empty().append(tableElement);
+							 if($('#schemeCategory').val()=="MGPS_10Pecent"){
+		       	  				    	$("#quotatr").show();
+		       	  				    }
 	      			}
 	               
 	          	} ,
