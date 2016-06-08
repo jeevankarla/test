@@ -43,6 +43,9 @@ consList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, ord
 /*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
 condEXr = EntityCondition.makeCondition(consList, EntityOperator.AND);
 orderItemAttr = delegator.findList("OrderItemAttribute", condEXr, null, null, null, false);
+
+orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+
 condist=[];
 condist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 expr = EntityCondition.makeCondition(condist, EntityOperator.AND);
@@ -352,7 +355,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 
 		
-		Map<String, Object> orderDtlMap = FastMap.newInstance();
+		/*Map<String, Object> orderDtlMap = FastMap.newInstance();
 		orderDtlMap.put("orderId", orderId);
 		orderDtlMap.put("userLogin", userLogin);	
 		result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
@@ -361,11 +364,11 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			return ServiceUtil.returnError(null, null, null,result);
 		}
 		productSummaryMap=result.get("productSummaryMap");
-		
+	*/	
 		
 		JSONArray orderItemsJSON = new JSONArray();
 		
-			Iterator eachProductIter = productSummaryMap.entrySet().iterator();
+		/*	Iterator eachProductIter = productSummaryMap.entrySet().iterator();
 			while(eachProductIter.hasNext()) {
 				Map.Entry entry = (Entry)eachProductIter.next();
 				String productId = (String)entry.getKey();
@@ -435,13 +438,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			
 			
 			
-			}
+			}*/
 			
 			
 		
 	
-	
-	/*orderItems.each{ eachItem ->
+	//Debug.log("orderitemdetails================="+orderItemDetails)
+	orderItems.each{ eachItem ->
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
 			amount = 0;
@@ -463,44 +466,21 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			}
 			
 		}
-		cond = [];
-		cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WIEVER_CUSTOMER"));
-		cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-		condExpWiever = EntityCondition.makeCondition(cond, EntityOperator.AND);
-		WieverAttr = EntityUtil.filterByCondition(orderItemAttr,condExpWiever);
-		
-		cond1 = [];
-		cond1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
-		cond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-		condExpRmrk = EntityCondition.makeCondition(cond1, EntityOperator.AND);
-		RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
-		
-		wieverName="";
-		wieverId="";
-		psbNo="";
 		remarks="";
-		
-		
-		if(WieverAttr){
-			wieverId=(WieverAttr.get(0)).get("attrValue");
-			partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
-				if(partyIdentification){
-					psbNo = partyIdentification.get("idValue");
-				}
-			wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
-			}
-		
-		if(RmrkAttr){
-			remarks=(RmrkAttr.get(0)).get("attrValue");
-			}
+		uom="";
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+		//Debug.log("orderItemDtl====================="+orderItemDtl);
+		if(UtilValidate.isNotEmpty(orderItemDtl)){
+			remarks = (orderItemDtl.get(0)).get("remarks");
+			uom = (orderItemDtl.get(0)).get("Uom");
+		}					
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
-		newObj.put("customerName",wieverName+"["+psbNo+"]");
-		newObj.put("customerId",wieverId);
-		newObj.put("psbNumber",psbNo);
 		newObj.put("remarks",remarks);
-		
+		newObj.put("uom",uom);
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);
@@ -516,7 +496,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
-	}*/
+	}
 	context.put("orderItemsJSON", orderItemsJSON);
 	
 	JSONArray orderAdjustmentJSON = new JSONArray();
