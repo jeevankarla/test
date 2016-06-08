@@ -129,20 +129,39 @@
 			supplierMap.put("contactNo", supplierDetails.tnContactNumber);
 		}
 		
-		conditionList=[];
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,eachPartyId));
-		BankAccountList = delegator.findList("BankAccount", null ,null,null,null,false);
-		
-		
-		if(BankAccountList){
-			
-			supplierMap.put("bankAccountName", BankAccountList[0].bankAccountName);
-			supplierMap.put("bankAccountCode", BankAccountList[0].bankAccountCode);
-			supplierMap.put("ifscCode", BankAccountList[0].ifscCode);
-			supplierMap.put("branchCode", BankAccountList[0].branchCode);
-			supplierMap.put("bankAccountName", BankAccountList[0].bankAccountName);
-		}
-		
+	
+		 conditionList=[];
+		   conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,supplierId));
+		   BankAccountList = delegator.findList("BankAccount", null ,null,null,null,false);
+		   
+		   
+		   if(BankAccountList[0]){
+			   if(BankAccountList[0].bankAccountName)
+			    supplierMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+			   else
+			   supplierMap.put("bankAccountName", "");
+			   if(BankAccountList[0].bankAccountCode)
+			    supplierMap.put("bankAccountCode", BankAccountList[0].bankAccountCode);
+			    else
+				supplierMap.put("bankAccountCode", "");
+				if(BankAccountList[0].ifscCode)
+				supplierMap.put("ifscCode", BankAccountList[0].ifscCode);
+			    else
+				supplierMap.put("ifscCode","");
+				if(BankAccountList[0].branchCode)
+				supplierMap.put("branchCode", BankAccountList[0].branchCode);
+			     else
+				 supplierMap.put("branchCode", "");
+				
+				if(BankAccountList[0].bankAccountName)
+				supplierMap.put("bankAccountName", BankAccountList[0].bankAccountName);
+				 else
+				 supplierMap.put("bankAccountName","");
+				
+				
+		   }
+		   
+		   
 		
 		
 		
