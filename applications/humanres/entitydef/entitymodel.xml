@@ -446,6 +446,7 @@ under the License.
       <field name="resignationDate" type="date-time"></field>
       <field name="locationGeoId" type="id"></field>
       <field name="stateGeoId" type="id"></field>
+      <field name="temporaryFlag" type="indicator"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -488,6 +489,26 @@ under the License.
         </view-link>
     </view-entity>
 
+     <entity entity-name="PayrollAttendanceArrears"
+            package-name="org.ofbiz.humanres.employment"
+            title="Attendance Arrear days Entry Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="basicSalCustomTimePeriodId" type="id-ne"/>
+        <field name="customTimePeriodId" type="id-ne"/>
+        <field name="noOfArrearDays" type="fixed-point"/>
+        <field name="createdByUserLogin" type="id-vlong"></field>
+	  	<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="partyId"/>
+        <prim-key field="basicSalCustomTimePeriodId"/>
+        <relation type="one" fk-name="PAYROLL_ARREAR_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+        </relation>
+         <relation type="one" fk-name="PAYROLL_ARREAR_PARTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+  </entity>
+    
+    
     <entity entity-name="EmploymentApp"
             package-name="org.ofbiz.humanres.employment"
             title="Employment Application Entity">
