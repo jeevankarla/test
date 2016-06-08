@@ -591,7 +591,7 @@
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				grid.updateRow(args.row);			
 				updateTotalIndentAmount();
-				updateCurrentQuota(row);
+				//updateCurrentQuota(row);
 				
 			}
 			if(args.cell == 5 || args.cell == 6 || args.cell == 7 ) {
@@ -658,7 +658,7 @@
 				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*kgUnitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
 				grid.updateRow(args.row);
 			
-				updateCurrentQuota(row);
+				//updateCurrentQuota(row);
 				
 			}
 			if(args.cell == 8){
