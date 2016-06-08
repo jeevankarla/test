@@ -342,11 +342,19 @@ under the License.
     	<response name="success" type="view" value="EmployeeArrearDays"/>
     	<response name="error" type="view" value="EmployeeArrearDays"/>
     </request-map>
+     <request-map uri="EmplArrearDays">
+      	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="EmplArrearDays"/>
+   	</request-map>
+   	<request-map uri="findEmplArrearDays">
+      	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="EmplArrearDays"/>
+   	</request-map>
     <request-map uri="updateArrearDays">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="updateArrearDays"/>
-    	<response name="success" type="view" value="EmployeeArrearDays"/>
-    	<response name="error" type="view" value="EmployeeArrearDays"/>
+    	<response name="success" type="view" value="EmplArrearDays"/>
+    	<response name="error" type="view" value="EmplArrearDays"/>
     </request-map>
     <request-map uri="deletePartySkill">
         <security https="true" auth="true"/>
@@ -1896,7 +1904,7 @@ under the License.
     </request-map>  
     <request-map uri="ArrearDays">
        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EmployeeArrearDays"/>
+        <response name="success" type="view" value="EmplArrearDays"/>
     </request-map>
     <request-map uri="EditHolidays">
        <security https="true" auth="true"/>
@@ -2599,6 +2607,10 @@ under the License.
     </request-map>
     
     <!-- ===================Lookup Request===================== -->
+    
+    
+     <view-map name="EmplArrearDays" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmplArrearDays"></view-map>
+    
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
     <request-map uri="LookupBudget"><security auth="true" https="true"/><response name="success" type="view" value="LookupBudget"/></request-map>
@@ -2775,7 +2787,6 @@ under the License.
     
     <view-map name="EmployeeAttendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendance"/>
     <view-map name="AttendanceFinalization" type="screen" page="component://humanres/widget/HumanresScreens.xml#AttendanceFinalization"/>
-    <view-map name="EmployeeArrearDays" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeArrearDays"></view-map>
     <view-map name="ApprovalHolidays" type="screen" page="component://humanres/widget/HumanresScreens.xml#ApprovalHolidays"></view-map>
     <view-map name="EditEmplLateHours" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditEmplLateHours"></view-map>
     <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>

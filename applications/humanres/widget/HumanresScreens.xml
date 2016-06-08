@@ -216,6 +216,37 @@
 			</widgets>
 		</section>    
     </screen>
+	  <screen name="EmplArrearDays">
+   		<section>
+   			<actions>
+   				<set field="tabButtonItem" value="Attendance" />
+   				<set field="tabButtonItem2" value="ArrearDays"/>
+   				<set field="tabButtonItem3" value="EmplArrearDays"/>                                           				
+   				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/selectTimePeriod.js" global="true"/>
+   				<set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+   				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmplArrearDays.groovy"/>
+   				<set field="timePeriodId" from-field="parameters.customTimePeriodId"/>
+   				 <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+   			</actions>
+   			<widgets>
+   				<decorator-screen name="HumanresCommonDecorator"
+   					location="component://humanres/widget/CommonScreens.xml">
+   					<decorator-section name="body"> 
+                           <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
+                           <include-menu location="component://humanres/widget/HumanresMenus.xml" name="ArrearDaysTabBar"/>                                                        					   					
+                           <screenlet title="Employee Arrear Days">
+                           <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EmplArrearDays"/>
+                           </screenlet> 
+                           <screenlet title="Edit Employee Arrear Days">
+                           <platform-specific>
+                          		<html><html-template location="component://humanres/webapp/humanres/humanres/EmplArrearDays.ftl"></html-template></html>
+                      		</platform-specific>
+                      		 </screenlet> 
+                       </decorator-section>
+                   </decorator-screen>
+   			</widgets>
+   		</section>    
+    </screen>
 	 <screen name="DailyBusTimings">
 	 	<section>
 			<actions>
