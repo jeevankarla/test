@@ -59,7 +59,9 @@ if(parameters.partyId){
 	JSONArray schemeArray = new JSONArray();
 	try {
 	beganTransaction = TransactionUtil.begin();
-	prodsEli = delegator.findListIteratorByCondition(partyRoleAndIde, cond,null, UtilMisc.toSet("schemeId"), null, null);
+	orderBy = [];
+	orderBy.add("-schemeId");
+	prodsEli = delegator.findListIteratorByCondition(partyRoleAndIde, cond,null, UtilMisc.toSet("schemeId"), orderBy, null);
 	groupNameList = prodsEli.getCompleteList();
 	for(scheme in groupNameList){
 		JSONObject schemeJson = new JSONObject();
