@@ -48,12 +48,12 @@ dctx = dispatcher.getDispatchContext();
 
 //Check for Party is Valid or Not
 result = [:];
-GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
-if (UtilValidate.isEmpty(partyDetail)) {
-	Debug.logError("Party Id:"+parameters.partyId+ "'is not a valid Party!!", "");
-	context.errorMessage ="Party Id:"+parameters.partyId+"'is not a valid Party!!";
-	return "error" ;
-}
+//GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
+//if (UtilValidate.isEmpty(partyDetail)) {
+//	Debug.logError("Party Id:"+parameters.partyId+ "'is not a valid Party!!", "");
+//	context.errorMessage ="Party Id:"+parameters.partyId+"'is not a valid Party!!";
+//	return "error" ;
+//}
 //finAccount Reconcilation Report will use this logic....
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
 

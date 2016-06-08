@@ -128,8 +128,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
              <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
       		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
-             <td width="20%">Party Code <font color="red">*</font><@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
             <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
+            <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					    <option value=''></option>
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></td>
               <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
 					<option value=""></option>
