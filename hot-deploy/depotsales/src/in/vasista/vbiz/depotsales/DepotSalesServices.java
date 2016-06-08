@@ -2338,7 +2338,8 @@ public class DepotSalesServices{
 		//int groupSeqCount = 1;
 		//String groupSequenceId = "";
 		BigDecimal orderGrandTotal = BigDecimal.ZERO;
-		
+		List directIndentProductList = FastList.newInstance();
+		int itemIndex=productQtyList.size();
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			String customerId = "";
 			BigDecimal basicPrice = BigDecimal.ZERO;
@@ -2507,7 +2508,7 @@ public class DepotSalesServices{
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
 			ShoppingCartItem item = null;
 			try{
-				
+				Map<String, Object> productQtyMap = FastMap.newInstance();
 				item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, basicPrice,
 			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
@@ -2607,6 +2608,31 @@ public class DepotSalesServices{
 					cart.addItemToEnd(item);
 				}
 				groupSeqCount++;*/
+			if("N".equals(onBeHalfOf)){
+				String istemSeq=String.format("%05d", itemIndex);
+				if(UtilValidate.isNotEmpty(yarnUOM)){
+					productQtyMap.put("yarnUOM", yarnUOM.toString());
+				}
+				if(UtilValidate.isNotEmpty(bundleWeight)){
+					productQtyMap.put("bundleWeight",bundleWeight);
+				}
+				if(UtilValidate.isNotEmpty(remarks)){
+					productQtyMap.put("remarks", remarks.toString());
+				}
+				if(UtilValidate.isNotEmpty(bundleUnitPrice)){
+					productQtyMap.put("bundleUnitPrice", bundleUnitPrice);				
+				}
+				productQtyMap.put("productId", productId);
+				productQtyMap.put("quantity", quantity);
+				productQtyMap.put("customerId", partyId);
+				productQtyMap.put("baleQuantity", baleQuantity);
+				productQtyMap.put("bundleWeight", bundleWeight);
+				productQtyMap.put("orderItemSeqId",istemSeq);
+				productQtyMap.put("basicPrice", basicPrice);
+				productQtyMap.put("quotaAvbl", quotaAvbl);
+				directIndentProductList.add(productQtyMap);
+			  }	
+			itemIndex=itemIndex-1;
 			}
 			catch (Exception exc) {
 				Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
@@ -2718,176 +2744,204 @@ public class DepotSalesServices{
 			  Debug.logError(e, "Error While Fetching OrderItem ", module);
 			  return ServiceUtil.returnError("Error While  Fetching OrderItem : "+orderId);
  	 	}
-	 try{
-			List<GenericValue> orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-			if(UtilValidate.isNotEmpty(orderItemDetails)){
-				delegator.removeAll(orderItemDetails);
+		 if("N".equals(onBeHalfOf)){
+			 indentItemProductList=directIndentProductList;
+		 }
+			 try{
+				List<GenericValue> orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(orderItemDetails)){
+					delegator.removeAll(orderItemDetails);
+				}
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive orderItemDetail ", module);
 			}
-		}catch(GenericEntityException e){
-			Debug.logError(e, "Failed to retrive orderItemDetail ", module);
-		}
-		BigDecimal totalDiscount=BigDecimal.ZERO;
-		for (Map<String, Object> prodItemMap : indentItemProductList) {
-			String customerId = "";
-			//BigDecimal basicPrice = BigDecimal.ZERO;
-			String prodId="";
-			String  budlUnitPriceStr="";
-			BigDecimal budlWeight=BigDecimal.ZERO;
-			BigDecimal budlUnitPrice=BigDecimal.ZERO;
-			BigDecimal blQuantity=BigDecimal.ZERO;
-			BigDecimal Kgquantity=BigDecimal.ZERO;
-			BigDecimal prdPrice=BigDecimal.ZERO;
-			BigDecimal quotaAvbl = BigDecimal.ZERO;
-			String Uom="";
-			String specification="";
-
-			if(UtilValidate.isNotEmpty(prodItemMap.get("productId"))){
-				prodId = (String)prodItemMap.get("productId");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("customerId"))){
-				customerId = (String)prodItemMap.get("customerId");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("remarks"))){
-				specification = (String)prodItemMap.get("remarks");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("baleQuantity"))){
-				blQuantity =(BigDecimal)  prodItemMap.get("baleQuantity");
-			}
-			
-			if(UtilValidate.isNotEmpty(prodItemMap.get("bundleUnitPrice"))){
-				budlUnitPriceStr = (String)(prodItemMap.get("bundleUnitPrice"));
-				budlUnitPrice = new BigDecimal(budlUnitPriceStr);
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("quantity"))){
-				Kgquantity =  (BigDecimal)(prodItemMap.get("quantity"));
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("yarnUOM"))){
-				Uom = (String)prodItemMap.get("yarnUOM");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("bundleWeight"))){
-				budlWeight =  (BigDecimal)prodItemMap.get("bundleWeight");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("basicPrice"))){
-				prdPrice = (BigDecimal)prodItemMap.get("basicPrice");
-			}
-			if(UtilValidate.isNotEmpty(prodItemMap.get("quotaAvbl"))){
-				quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
-			}
-        	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
-			Map<String, Object> orderItemDetail = FastMap.newInstance();
-			String orderItemSeqId="";
-			BigDecimal quotaQuantity=BigDecimal.ZERO;
-			orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
-			
-			// Scheme Calculation
-						List productCategoriesList = FastList.newInstance();
-						List condsList = FastList.newInstance();
-					  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-					  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
-					  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-					  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-						try {
-							List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
-							productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
-						} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-						}
-						BigDecimal quota = BigDecimal.ZERO;
-						// Get first productCategoriesList. We got productCategoryId here
-						if(schemeCategory.equals("MGPS_10Pecent")){
-							Timestamp targetDate =null;
+			 BigDecimal totalDiscount=BigDecimal.ZERO;
+			for (Map<String, Object> prodItemMap : indentItemProductList) {
+				String customerId = "";
+				//BigDecimal basicPrice = BigDecimal.ZERO;
+				String prodId="";
+				String  budlUnitPriceStr="";
+				BigDecimal budlWeight=BigDecimal.ZERO;
+				BigDecimal budlUnitPrice=BigDecimal.ZERO;
+				BigDecimal blQuantity=BigDecimal.ZERO;
+				BigDecimal Kgquantity=BigDecimal.ZERO;
+				BigDecimal prdPrice=BigDecimal.ZERO;
+				BigDecimal quotaAvbl = BigDecimal.ZERO;
+				String Uom="";
+				String specification="";
+	
+				if(UtilValidate.isNotEmpty(prodItemMap.get("productId"))){
+					prodId = (String)prodItemMap.get("productId");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("customerId"))){
+					customerId = (String)prodItemMap.get("customerId");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("remarks"))){
+					specification = (String)prodItemMap.get("remarks");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("baleQuantity"))){
+					blQuantity =(BigDecimal)  prodItemMap.get("baleQuantity");
+				}
+				
+				if(UtilValidate.isNotEmpty(prodItemMap.get("bundleUnitPrice"))){
+					budlUnitPriceStr = (String)(prodItemMap.get("bundleUnitPrice"));
+					budlUnitPrice = new BigDecimal(budlUnitPriceStr);
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("quantity"))){
+					Kgquantity =  (BigDecimal)(prodItemMap.get("quantity"));
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("yarnUOM"))){
+					Uom = (String)prodItemMap.get("yarnUOM");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("bundleWeight"))){
+					budlWeight =  (BigDecimal)prodItemMap.get("bundleWeight");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("basicPrice"))){
+					prdPrice = (BigDecimal)prodItemMap.get("basicPrice");
+				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("quotaAvbl"))){
+					quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
+				}
+				
+	        	Map<String, Object> orderItemDetail = FastMap.newInstance();
+				String orderItemSeqId="";
+				BigDecimal quotaQuantity=BigDecimal.ZERO;
+				orderItemSeqId=(String)prodItemMap.get("orderItemSeqId");
+				if("Y".equals(onBeHalfOf)){
+		        	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
+					orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
+				}
+				Debug.log("orderItemSeqId========IN=============="+orderItemSeqId);
+				// Scheme Calculation
+							List productCategoriesList = FastList.newInstance();
+							List condsList = FastList.newInstance();
+						  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+						  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+						  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+									EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
 							try {
-								SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
-								targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
-							} catch (Exception e) {
-								Debug.logError(e, "Failed to covert date ", module);
+								List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+								productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+							} catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 							}
-						
-							if(targetDate.compareTo(supplyDate)==1){
-								quota=manualQuota.subtract(quotaAvbl);
-								manualQuota=manualQuota.subtract(quota);
-							}else{
-								String schemeId="TEN_PERCENT_MGPS";
-								String productCategoryId=(String)productCategoriesList.get(0);
-								
-								Map partyBalanceHistoryContext = FastMap.newInstance();
-								partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
-								
-								if(UtilValidate.isNotEmpty(customerId)){
-									partyBalanceHistoryContext.put("partyId",customerId);
-								}
-										
+							BigDecimal quota = BigDecimal.ZERO;
+							// Get first productCategoriesList. We got productCategoryId here
+							if(schemeCategory.equals("MGPS_10Pecent")){
+								Timestamp targetDate =null;
 								try {
-									Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-									quota=(BigDecimal)resultMapquota.get("quota");
+									SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+									targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
 								} catch (Exception e) {
-									Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
-									return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+									Debug.logError(e, "Failed to covert date ", module);
+									return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 								}
-							}
-						}	
-						if(quota.compareTo(BigDecimal.ZERO)>0){
 							
-							// Have to get these details from schemes. Temporarily hard coding it.
-							BigDecimal schemePercent = new BigDecimal("10");
-							BigDecimal percentModifier = schemePercent.movePointLeft(2);
-							quotaQuantity=quota;
-							BigDecimal discountAmount = BigDecimal.ZERO;
-							if(quantity.compareTo(quota)>0){
-								discountAmount = ((quota.multiply(prdPrice)).multiply(percentModifier)).negate();
-								quotaQuantity=quota;
-							}
-							else{
-								discountAmount = ((quantity.multiply(prdPrice)).multiply(percentModifier)).negate();
-								quotaQuantity=quantity;
-							}
-							totalDiscount=totalDiscount.add(discountAmount);
-							orderItemDetail.put("discountAmount",discountAmount);
-						}
+								if(targetDate.compareTo(supplyDate)==1){
+									quota=manualQuota.subtract(quotaAvbl);
+									manualQuota=manualQuota.subtract(quota);
+								}else{
+									String schemeId="TEN_PERCENT_MGPS";
+									String productCategoryId=(String)productCategoriesList.get(0);
+									
+									Map partyBalanceHistoryContext = FastMap.newInstance();
+									partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+									
+									if(UtilValidate.isNotEmpty(customerId)){
+										partyBalanceHistoryContext.put("partyId",customerId);
+									}
+											
+									try {
+										Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+										quota=(BigDecimal)resultMapquota.get("quota");
+									} catch (Exception e) {
+										Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+										return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+									}
+								}
+							}	
+							if(quota.compareTo(BigDecimal.ZERO)>0){
 								
-			//Debug.log("quotaQuantity====================="+quotaQuantity);
-			
-			//orderItemDetail.put("",);
-			orderItemDetail.put("orderId",orderId);
-			orderItemDetail.put("orderItemSeqId",orderItemSeqId);
-			orderItemDetail.put("userLogin",userLogin);
-			orderItemDetail.put("partyId",customerId);
-			orderItemDetail.put("unitPrice",prdPrice);
-			orderItemDetail.put("Uom",Uom);
-			orderItemDetail.put("productId",prodId);
-			orderItemDetail.put("baleQuantity",blQuantity);
-			orderItemDetail.put("bundleWeight",budlWeight);
-			orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
-			orderItemDetail.put("remarks",specification);
-			orderItemDetail.put("quotaQuantity",quotaQuantity);
-			orderItemDetail.put("quantity",Kgquantity);
-			orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+								// Have to get these details from schemes. Temporarily hard coding it.
+								BigDecimal schemePercent = new BigDecimal("10");
+								BigDecimal percentModifier = schemePercent.movePointLeft(2);
+								quotaQuantity=quota;
+								BigDecimal discountAmount = BigDecimal.ZERO;
+								if(quantity.compareTo(quota)>0){
+									discountAmount = ((quota.multiply(prdPrice)).multiply(percentModifier)).negate();
+									quotaQuantity=quota;
+								}
+								else{
+									discountAmount = ((quantity.multiply(prdPrice)).multiply(percentModifier)).negate();
+									quotaQuantity=quantity;
+								}
+								totalDiscount=totalDiscount.add(discountAmount);
+								orderItemDetail.put("discountAmount",discountAmount);
+								
+								// creating order adjustment for direct 
+								 if("N".equals(onBeHalfOf)){
+										String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+										GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+										UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
+								                "description", "10 Percent Subsidy on eligible product categories"));
+										try{
+											orderAdjustment.create();
+										}catch (GenericEntityException e) {
+											Debug.logError("Error in creating OrderAdjestments", module);
+											return ServiceUtil.returnError("Error in creating OrderAdjestments");
+										}
+									 }
 
-			try{
-				Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
-		        
-		        if (ServiceUtil.isError(resultMap)) {
-		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
-		        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
-		        }
-			}catch(Exception e){
-		  		Debug.logError(e, "Error in Order Item Detail, module");
-		  		return ServiceUtil.returnError( "Error in Order Item Detail");
-		  	}
-		}
-		String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
-		GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-		UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
-                "description", "10 Percent Subsidy on eligible product categories"));
-		try{
-			orderAdjustment.create();
-		}catch (GenericEntityException e) {
-			Debug.logError("Error in creating OrderAdjestments", module);
-			return ServiceUtil.returnError("Error in creating OrderAdjestments");
-		}
+							}
+									
+				//Debug.log("quotaQuantity====================="+quotaQuantity);
+				
+				//orderItemDetail.put("",);
+				orderItemDetail.put("orderId",orderId);
+				orderItemDetail.put("orderItemSeqId",orderItemSeqId);
+				orderItemDetail.put("userLogin",userLogin);
+				orderItemDetail.put("partyId",customerId);
+				orderItemDetail.put("unitPrice",prdPrice);
+				orderItemDetail.put("Uom",Uom);
+				orderItemDetail.put("productId",prodId);
+				orderItemDetail.put("baleQuantity",blQuantity);
+				orderItemDetail.put("bundleWeight",budlWeight);
+				orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
+				orderItemDetail.put("remarks",specification);
+				orderItemDetail.put("quotaQuantity",quotaQuantity);
+				orderItemDetail.put("quantity",Kgquantity);
+				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+	
+				try{
+					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
+			        
+			        if (ServiceUtil.isError(resultMap)) {
+			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+			        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
+			        }
+				}catch(Exception e){
+			  		Debug.logError(e, "Error in Order Item Detail, module");
+			  		return ServiceUtil.returnError( "Error in Order Item Detail");
+			  	}
+				
+				
+				
+				
+			}
+			 if("Y".equals(onBeHalfOf)){
+				String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+				GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+				UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
+		                "description", "10 Percent Subsidy on eligible product categories"));
+				try{
+					orderAdjustment.create();
+				}catch (GenericEntityException e) {
+					Debug.logError("Error in creating OrderAdjestments", module);
+					return ServiceUtil.returnError("Error in creating OrderAdjestments");
+				}
+			 }
 		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
