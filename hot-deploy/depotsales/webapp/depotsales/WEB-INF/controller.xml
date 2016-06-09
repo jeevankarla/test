@@ -169,6 +169,21 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
+        
+     <request-map uri="getFacilityAddressAjax">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getFacilityAddressAjax.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+     <request-map uri="deleteFacilityAjax">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="deleteFacilityAjax.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     
     <request-map uri="getOrderInformation">
         <security https="true" auth="true"/>

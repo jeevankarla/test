@@ -144,7 +144,7 @@
     display: block;
     margin: 0.5em;
     min-height: 40em;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
     width: auto;
 

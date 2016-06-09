@@ -13,7 +13,28 @@
         <attribute name="orderId" type="String" mode="OUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
-       <service name="CreditapproveDepotSalesOrder" engine="java" 
+       <service name="updateFacilityContactMechDetail" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="updateFacilityContactMechDetail">
+        <description>Approve Depot Orders</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
+     <service name="updateFacilityPostalAddressDetails" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="updateFacilityPostalAddressDetails">
+        <description>Approve Depot Orders</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    
+     <service name="CreditapproveDepotSalesOrder" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreditapproveDepotOrder">
         <description>Approve Depot Orders</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>

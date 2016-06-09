@@ -11,6 +11,234 @@
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
 
 
+
+
+
+<style type="text/css">
+.myTable { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable th { 
+  background-color: goldenrod;
+  color: white; 
+  }
+.myTable td, 
+.myTable th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+  
+  
+  
+  
+</style>
+
+
+
+<script>
+
+var data;
+
+function getFecilityAddressDetailAjax(){
+
+          var supplierId = $("#createdSupplierId").val()
+
+          //alert(supplierId);
+          
+          $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
+
+         var dataJson = {"supplierId": supplierId};
+					      
+			   jQuery.ajax({
+                url: 'getFacilityAddressAjax',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error While getting Details");
+					}else{
+						data = result["facilityAddressJSON"];
+						
+//						alert(data);
+
+                       if(data.length != 0)
+                       {
+                        $('div#orderSpinn').html('');
+						drawTable(data);
+					   }
+					   else
+					   {
+					    $("#supplierInfo").show().delay(5000).fadeOut();
+						}
+						
+               		}
+               	}					        
+					        
+		});
+         
+
+
+}
+
+
+
+function drawTable(data) {
+
+    for (var i = 0; i < data.length; i++) {
+            drawRow(data[i]);
+    }
+    
+}
+
+
+
+function drawRow(rowData) {
+
+
+
+    var row = $("<tr />")
+    $("#addressTable").append(row); 
+    
+    
+    //=====view Address =========
+    
+    
+    var facilityName = '\'' + rowData.facilityName + '\'';
+    var Naddress1 = '\'' + rowData.Naddress1 + '\'';
+    var Naddress2 = '\'' + rowData.Naddress2 + '\'';
+    var Ncity = '\'' + rowData.Ncity + '\'';
+    var NcountryGeoId = '\'' + rowData.NcountryGeoId + '\'';
+    var NstateProvinceGeoId = '\'' + rowData.NstateProvinceGeoId + '\'';
+    var NcontactMechPurposeTypeId = '\'' + rowData.NcontactMechPurposeTypeId + '\'';
+    var NpostalCode = '\'' + rowData.NpostalCode + '\'';
+    var Taddress1 = '\'' + rowData.Taddress1 + '\'';
+    var Taddress2 = '\'' + rowData.Taddress2 + '\'';
+    var Tcity = '\'' + rowData.Tcity + '\'';
+    var TcountryGeoId = '\'' + rowData.TcountryGeoId + '\'';
+    var TstateProvinceGeoId = '\'' + rowData.TstateProvinceGeoId + '\'';
+    var TcontactMechPurposeTypeId = '\'' + rowData.TcontactMechPurposeTypeId + '\'';
+    var TpostalCode = '\'' + rowData.TpostalCode + '\'';
+    var facilityName = '\'' + rowData.facilityName + '\'';
+    var facilityId = '\'' + rowData.facilityId + '\'';
+    var facilityTypeId = '\'' + rowData.facilityTypeId + '\'';
+    
+    var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+")";
+    var inputbox ='<input type=button name="viewAddress" id=viewAddress value='+facilityName+' onclick="'+customMethod+'">';
+    row.append($("<td>" +  inputbox  +"</td>"));
+     
+  
+     //=====Edit Address =========
+     
+     var NcontactMechId = '\'' + rowData.NcontactMechId + '\'';
+      var TcontactMechId = '\'' + rowData.TcontactMechId + '\'';
+     
+      var editAddress = "javascript:editFaciAddress("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+NcontactMechId+","+TcontactMechId+","+facilityId+","+facilityTypeId+")";
+    var editFaciAddress ='<input type=button name="EditFac" id=EditFac value=EditFacilityAddress onclick="'+editAddress+'">';
+    row.append($("<td>" +  editFaciAddress  +"</td>"));
+  
+  
+    //================Remove Row ==============
+  
+     
+
+    var NcontactMechId = '\'' + rowData.NcontactMechId + '\'';    
+    
+    var TcontactMechId = '\'' + rowData.TcontactMechId + '\'';    
+    
+    var removeAddress = "javascript:removeFacilityAddress("+ facilityId + ","+ NcontactMechId + ","+TcontactMechId+")";
+    var removeFaciAddress ='<input type=button name="removeFaci" id=removeFaci value="Remove" onclick="'+removeAddress+'">';
+    
+    row.append($("<td>" +  removeFaciAddress  +"</td>"));
+  
+   
+     $("#approveOrder").hide();
+  
+}
+
+
+
+function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName,NcontactMechId,TcontactMechId,facilityId,facilityTypeId){
+
+
+          $("#facicontactMechType").val(facilityTypeId);
+	     var address1 = $("#Faddress1").val(Naddress1);
+	     var address2 = $("#Faddress2").val(Naddress2);
+	     var city = $("#Fcity").val(Ncity);
+	     var postalCode = $("#postalCode").val(NpostalCode);
+	     var facilityName = $("#facilityName").val(facilityName);
+	     var FcontactNumber = $("#FcontactNumber").val();
+	     
+	     document.getElementById("facicontactMechType").value = facilityTypeId;
+	    
+	    var countryelement = document.getElementById('editcontactmechform_countryId');
+             countryelement.value = NcountryGeoId;
+	     var stateelement = document.getElementById('editcontactmechform_stateId');
+             stateelement.value = NstateProvinceGeoId;
+             
+          var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
+             Tcountryelement.value = TcountryGeoId;
+	     var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
+             Tstateelement.value = TstateProvinceGeoId;
+	     
+	     var TFaddress1 = $("#TFaddress1").val(Taddress1);
+	     var TFaddress2 = $("#TFaddress2").val(Taddress2);
+	     var TFcity = $("#TFcity").val(Tcity);
+	     var TFpostalCode = $("#TFpostalCode").val(TpostalCode);
+          
+          $("#TcontactMechId").val(TcontactMechId);
+          $("#NcontactMechId").val(NcontactMechId);
+          $("#facilityId").val(facilityId);
+          
+          
+
+
+}
+
+
+//================Remove row=============
+
+
+function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
+      
+         var dataJson = {"facilityId": facilityId,"NcontactMechId":NcontactMechId,"TcontactMechId":TcontactMechId};
+					      
+			   jQuery.ajax({
+                url: 'deleteFacilityAjax',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error While getting Details");
+					}else{
+					  
+					  $("#facilityCreated").html("Facility Has Been Removed Sucessfully..");
+		               $("#facilityCreated").show().delay(5000).fadeOut();
+					  
+					  
+               		}
+               	}					        
+					        
+		}); 
+         
+
+         $('#addressTable tr').click(function () {
+           var rowIndex = $('#addressTable tr').index(this); 
+             if(rowIndex != -1)
+              document.getElementById("addressTable").deleteRow(rowIndex);  
+          });
+
+}
+
+
+</script>
+
+
 <script type="application/javascript">
 	function validateEmail(email) { 
     	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -143,6 +371,22 @@
 					catgoryOptionList.push('<option value="'+item.value+'">' +item.label+'</option>');
 				});
             }
+            
+            $("#supplierInfo").hide();
+             $("#facilityCreated").hide();
+            
+            
+             $("#open_popup").click(function(){
+		    
+             	$("#popup").css("display", "block");
+             });
+			 $("#close_popup").click(function(){
+             	$("#popup").css("display", "none");
+           	 });
+            
+            
+            
+            
 	     $('#productStoreId').html(catgoryOptionList.join('')); 
 	
 	                $("#productStoreId").multiselect({
@@ -185,9 +429,6 @@
 	     var address2 = $("#Faddress2").val();
 	     var city = $("#Fcity").val();
 	     var postalCode = $("#postalCode").val();
-	     var countryCode = $("#FcountryCode").val();
-	     var stateProvinceGeoId = $("#FstateProvinceGeoId").val();
-	     var country = $("#Fcountry").val();
 	     var facilityName = $("#facilityName").val();
 	     var facicontactMechType = $("#facicontactMechType").val();
 	     var FcontactNumber = $("#FcontactNumber").val();
@@ -201,6 +442,11 @@
 	     var TFaddress2 = $("#TFaddress2").val();
 	     var TFcity = $("#TFcity").val();
 	     var TFpostalCode = $("#TFpostalCode").val();
+	     
+	     var NcontactMechId = $("#NcontactMechId").val();
+	     var TcontactMechId = $("#TcontactMechId").val();
+	     var facilityId = $("#facilityId").val();
+	     
 	     	     
 	     addressFaciMap['supplierId'] = supplierId;
 	     addressFaciMap['address1'] = address1;
@@ -212,15 +458,22 @@
 	     addressFaciMap['FcontactNumber'] = FcontactNumber;
 	     addressFaciMap['facicontactMechType'] = facicontactMechType;
 	     addressFaciMap['facilityName'] = facilityName;
+	     addressFaciMap['facilityId'] = facilityId;
 	     addressFaciMap['TFcountry'] = TFcountry;
 	     addressFaciMap['TFstate'] = TFstate;
 	     addressFaciMap['TFaddress1'] = TFaddress1;
 	     addressFaciMap['TFaddress2'] = TFaddress2;
 	     addressFaciMap['TFcity'] = TFcity;
 	     addressFaciMap['TFpostalCode'] = TFpostalCode;
+	     addressFaciMap['NcontactMechId'] = NcontactMechId;
+	     addressFaciMap['TcontactMechId'] = TcontactMechId;
 	     
 	   
 	     submitFacilityAddress();
+	     
+	    
+	     
+	     
 	   }
      var orderFaciData;
 	 var contactctMechFeciId;
@@ -244,6 +497,7 @@
 	 
 if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0){
 		
+		    $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
 		   jQuery.ajax({
                 url: 'otherAddressStore',
                 type: 'POST',
@@ -254,22 +508,35 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 					    alert("Error in order Items");
 					}else{
 						orderFaciData = result["orderList"];
-					    if(orderFaciData.length != 0) 
-					    {
-					     contactctMechId = orderFaciData.contactMechId;
-					     supplierId = orderFaciData.facilityId;
-					     $("#supplierId").val(supplierId);
 					    
-					     alert(supplierId);
-					     alert(contactctMechId);
+					     if(orderFaciData.lenght != 0){
 					     
-					    // $("#contactMechId").val(contactctMechId);
-					   }
+					       $("#addressTable").find("tr:not(:first)").remove();
+					     
+					        createdStatus = orderFaciData[0].createdStatus;
+					       
+					        if(createdStatus == "C")
+					        {
+					          $("#facilityCreated").html("Facility Has Been Created Sucessfully..");
+					        }else{
+					          $("#facilityCreated").html("Facility Has Been Edited Sucessfully..");
+					        }
+					       
+					       $("#facilityCreated").show().delay(5000).fadeOut();
+					      
+	                      getFecilityAddressDetailAjax();
+	                      $("input[type=text], textarea").val("");
+	                      $("#postalCode").val("0");
+	                      $("#TFpostalCode").val("0");
+	                      
+	                      
+					     }
+					    
                		}
                	}							
 		}); 
 		
-		
+		   
 		}
 		else{
 		  alert("Please Fill The Values");
@@ -342,13 +609,16 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
                  <h3>Supplier Other Address Information</h3>
             <section>
             	<fieldset>
+            	
+            	     <div class="lefthalf">
+            	
 				            <table cellpadding="2" cellspacing="1">
 							
 							<tr>
 					        <td class="label"><FONT COLOR="red">*</font><b> Supplier Id</b></td>
 					        <#if partyId?has_content>
 					         <td>
-	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId"  value=${partyId}  readonly/>
+	        		 			<input style="border-radius: 4px;" type="label" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId"  value=${partyId}  readonly/>
 	          				</td>
 					        <#else>
 					        <td>
@@ -356,10 +626,7 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 	          				</td>
 	          				
 	          				</#if>
-	          			    <td class="label"><input class="button" type="button" size="18" value="EditFacilityDetails" onclick="editFacilityAddress();"  /></td>
-	          				<td>
-	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="editFacility"  id="editFacility" />
-	          				</td>
+	          			   
 				        </tr>
                            <tr>	            
 						    <td class="label"><b> Address Type</b></td>
@@ -378,6 +645,7 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 							    <td class="label"><FONT COLOR="red">*</font><b>Facility Name</b></td>
 							    <td>
 							      	<input type="text" name="facilityName" id="facilityName" size="30" maxlength="60" autocomplete="off" />
+							      	<input type="hidden" name="facilityId" id="facilityId"  />
 							    </td>
 							</tr>
 									
@@ -427,11 +695,16 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 									    <td>
 									      	<input type="text" name="city" id="Fcity" size="30" maxlength="60" autocomplete="off" />
 									    </td>
+									</tr>
+									
+									<tr>
 									    <td class="label"><b> Postal Code</b></td>
 									    <td>
 									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
+									
+									
 								<#-->	<tr>
 									    <td class="label"><b> Postal Code</b></td>
 									    <td>
@@ -524,10 +797,20 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 									      	<input type="text" name="postalCode" id="TFpostalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
+									
+									<tr>
+									    <td>
+									      	<input type="hidden" name="NcontactMechId" id="NcontactMechId" />
+									      	<input type="hidden" name="TcontactMechId" id="TcontactMechId" />
+									    </td>
+									</tr>
+									
+									
 								    <tr>
 							        <td class="label"></td>
 							        <td>
 			        		 			<input class="button" type="button" size="18" value="Save" onclick="storeFacilityValues();"  />
+			          				
 			          				</td>
 							        </tr>   	
 		                        </table>
@@ -535,7 +818,53 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								    <div>
 								    
 								    
-								      
+								 </div> 
+
+
+
+                              <div class="righthalf">
+						          
+						          
+						          <td><input type="button" name="approveOrder" id="approveOrder" value="ViewFacilityAdresses" onclick="javascript: getFecilityAddressDetailAjax();"/></td>
+						          
+						          
+						          <table>
+						          <tr>
+						            <table class="myTable" id ="addressTable"><tbody>
+						            
+						            <tr>
+										<th>View Address</th>
+										<th>Edit Address</th>
+										<th>Remove Address</th>
+									</tr>
+						            
+						            </tbody></table>	     
+						          <tr>
+						          
+						          <tr>
+						          
+						          <div  id="supplierInfo" align='center'  style=" border-radius: 10px;  color:blue; height:20px;   font-size: larger; "><span class="blink_me">The supplier has no facilities..</span></div>
+						         
+						           <div  id="facilityCreated" align='left'  style=" border-radius: 10px;  color:blue;    font-size: larger; "></div>
+						         
+						            <div align='center' name ='displayMsg' id='orderSpinn'/></div>
+						         
+						         
+						          </tr>
+						         </table>  
+						           
+						           
+						           
+							     
+                               </div>
+
+
+                                
+
+
+
+
+    
                     </fieldset>  
                </section>
                 
