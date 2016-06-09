@@ -517,9 +517,11 @@
     
     }
    else if(paymentType == 'FT_PAYIN'){
+      $("#paymentRefNum").parent().parent().show(); 
       $("#issuingAuthority").parent().parent().show();
       $("#chequeDate").parent().parent().hide(); 
-      $("#checkNoLabel").html("Receipt No :"); 
+      //$("#checkNoLabel").html("Receipt No :");
+      $("#checkNoLabel").html("Chq No/UTR No/DD :");
     }
     else if('CASH_PAYIN'){
       $("#paymentRefNum").parent().parent().show(); 
