@@ -4712,6 +4712,7 @@
 				<set field="tallyReferenceNo" from-field="parameters.tallyReferenceNo" />
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
+				<set field="manualQuota" from-field="parameters.manualQuota" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
@@ -6060,6 +6061,14 @@
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">   
+                      
+                         <platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
+    										</html>
+    									</platform-specific>
+                      
           					<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/AddOtherDetails.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

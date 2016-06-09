@@ -17,20 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script>
-
-
-   function viewFacilityAddresses(){
-   
-   
-   
-        // alert("vamsi");
-   
-   
-   }
-
-
-</script>
 
 
 
@@ -179,9 +165,6 @@ under the License.
           </#list>
           <tr>
             <td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId=${partyId}&amp;</@ofbizUrl>" target="_blank"/>AddOtherAddressOfSupplier</td>
-            <td><input type="button" name="approveOrder" id="approveOrder" value="ViewFacilityAddresses" onclick="javascript: viewFacilityAddresses();"/></td>
-             
-             
              
           </tr>
         </table>

@@ -39,7 +39,6 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 JSONArray orderList =new JSONArray();
 
-
 supplierId = parameters.supplierId;
 address1 = parameters.address1;
 address2 = parameters.address2;
@@ -56,24 +55,34 @@ TFaddress1 = parameters.TFaddress1;
 TFaddress2 = parameters.TFaddress2;
 TFcity = parameters.TFcity;
 TFpostalCode = parameters.TFpostalCode;
+NcontactMechId = parameters.NcontactMechId;
+TcontactMechId = parameters.TcontactMechId;
 
+facilityId = "";
+
+createdStatus = "";
+
+Debug.log("NcontactMechId==================="+NcontactMechId);
+
+Debug.log("TcontactMechId==================="+TcontactMechId);
+
+
+if(UtilValidate.isEmpty(NcontactMechId) && UtilValidate.isEmpty(TcontactMechId)){
 
 inputCtx = [:];
 inputCtx.put("userLogin",userLogin);
 inputCtx.put("facilityName", facilityName);
 inputCtx.put("facilityTypeId", facicontactMechType);
 inputCtx.put("ownerPartyId", supplierId);
-facilityId = "";
 try{
  resultCtx = dispatcher.runSync("createFacility", inputCtx);
  
  facilityId = resultCtx.facilityId;
  
- Debug.log("facilityId==================="+facilityId);
  
 }catch(Exception e){}
 
-
+}
 FacilityPostalAddress = [:];
 FacilityPostalAddress.put("userLogin",userLogin);
 FacilityPostalAddress.put("facilityId",facilityId);
@@ -85,7 +94,35 @@ FacilityPostalAddress.put("stateProvinceGeoId", state);
 FacilityPostalAddress.put("contactMechPurposeTypeId", "NORMAL_ADDRESS");
 FacilityPostalAddress.put("postalCode", postalCode);
 
+createdStatus="C"
+
+if(UtilValidate.isEmpty(NcontactMechId) && UtilValidate.isEmpty(TcontactMechId)){
 resultcreateFacilityPostalAddress = dispatcher.runSync("createFacilityPostalAddress", FacilityPostalAddress);
+
+
+}
+else{
+ FacilityPostalAddress.put("contactMechId", NcontactMechId);
+ FacilityPostalAddress.remove("contactMechPurposeTypeId");
+ 
+ resultEditedFacilityPostalAddress = dispatcher.runSync("updateFacilityPostalAddressDetails", FacilityPostalAddress);
+ 
+ if(parameters.facilityId){
+ facilityUpdate = [:];
+ facilityUpdate.put("userLogin",userLogin);
+ facilityUpdate.put("facilityId",parameters.facilityId);
+ facilityUpdate.put("facilityTypeId",facicontactMechType);
+ facilityUpdate.put("facilityName",facilityName);
+ 
+ resultfacilityUpdate = dispatcher.runSync("updateFacility", facilityUpdate);
+ 
+ }
+ 
+ createdStatus="E"
+ 
+ 
+}
+
 
 FacilityTaxAddress = [:];
 FacilityTaxAddress.put("userLogin",userLogin);
@@ -117,11 +154,29 @@ FacilityTaxAddress.put("postalCode", postalCode);
 FacilityTaxAddress.put("contactMechPurposeTypeId", "TAX_ADDRESS");
 
 
+if(UtilValidate.isEmpty(NcontactMechId) && UtilValidate.isEmpty(TcontactMechId)){
+  resultcreateFacilityTaxAddress = dispatcher.runSync("createFacilityPostalAddress", FacilityTaxAddress);
+  
+}
+else{
+	FacilityTaxAddress.put("contactMechId", TcontactMechId);
+	FacilityTaxAddress.remove("contactMechPurposeTypeId");
+	resultEditedFacilityTaxAddress = dispatcher.runSync("updateFacilityPostalAddressDetails", FacilityTaxAddress);
+	
+   }
 
-resultcreateFacilityTaxAddress = dispatcher.runSync("createFacilityPostalAddress", FacilityTaxAddress);
 
-Debug.log("resultcreateFacilityTaxAddress==================="+resultcreateFacilityTaxAddress);
-Debug.log("resultcreateFacilityPostalAddress==================="+resultcreateFacilityPostalAddress);
+
+
+
+
+JSONObject tempMap = new JSONObject();
+
+tempMap.put("facilityId", "Sucess");
+tempMap.put("createdStatus", createdStatus);
+
+
+orderList.add(tempMap);
 
 
 request.setAttribute("orderList", orderList);
