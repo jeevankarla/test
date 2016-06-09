@@ -52,6 +52,7 @@
 		isLedgerCallFor=parameters.isLedgerCallFor;
 	}
 	branchId = parameters.branchId;
+	partyClassificationGroupId = parameters.partyClassificationGroupId;
 	fromDateTime = null;
 	thruDateTime = null;
 	if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
@@ -130,8 +131,8 @@
 	List rolePartyIds = [];
 	conditionList=[];
 	if(UtilValidate.isNotEmpty(roleTypeId)){
-	    conditionList.add(EntityCondition.makeCondition("attrName",EntityOperator.EQUALS, "ACCOUNTING_ROLE"))
-	    conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId))
+	    conditionList.add(EntityCondition.makeCondition("attrName",EntityOperator.EQUALS, "ACCOUNTING_ROLE"));
+	    conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId));
 	    condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    List roleTypeAttr=delegator.findList("RoleTypeAttr",condition,null,null,null,false);
 		roleTypeList=EntityUtil.getFieldListFromEntityList(roleTypeAttr, "roleTypeId", true);
@@ -141,6 +142,36 @@
 	if(UtilValidate.isNotEmpty(partyCode)){
 		List otherPartyRoles=delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyCode),UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
 		rolePartyIds = EntityUtil.getFieldListFromEntityList(otherPartyRoles, "partyId", true);
+	}
+	if(UtilValidate.isNotEmpty(branchId)){
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, branchId));
+	    conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, rolePartyIds));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+		if(UtilValidate.isNotEmpty(roleTypeId)){
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo",EntityOperator.EQUALS, roleTypeId));
+		}
+	    condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    List partyRelationships =delegator.findList("PartyRelationship",condition,UtilMisc.toSet("partyIdTo"),UtilMisc.toList("partyIdTo"),null,false);
+		rolePartyIds = EntityUtil.getFieldListFromEntityList(partyRelationships, "partyIdTo", true);
+	}
+	if(UtilValidate.isNotEmpty(partyClassificationGroupId)){
+		if(partyClassificationGroupId == "INDIVIDUAL_WEAVERS"){
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, rolePartyIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS, "INDIVIDUAL_WEAVERS"));
+			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			List partyClassifications =delegator.findList("PartyClassification",condition,UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
+			rolePartyIds = EntityUtil.getFieldListFromEntityList(partyClassifications, "partyId", true);
+		}
+		if(partyClassificationGroupId == "OTHERS"){
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, rolePartyIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
+			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			List partyClassifications =delegator.findList("PartyClassification",condition,UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
+			rolePartyIds = EntityUtil.getFieldListFromEntityList(partyClassifications, "partyId", true);
+		}
 	}
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_IN_PROCESS","INVOICE_WRITEOFF","INVOICE_CANCELLED")));
@@ -403,15 +434,14 @@
 	        Debug.logError("PaymentTypeId: " + payment.paymentTypeId + " without a valid parentTypeId: " + payment.parentTypeId + " !!!! Should be either DISBURSEMENT, TAX_PAYMENT or RECEIPT", "");
 	    }
 	}
-	payIterator.close();
-	arOpeningBalance  =BigDecimal.ZERO;
-	apOpeningBalance  =BigDecimal.ZERO;
+	payIterator.close();	
 	TreeMap newMap = new TreeMap(partyDayWiseDetailMap);
 	uniquePartIds=[];
 	uniquePartIds= newMap.keySet();
 	openingBalanceMap = [:];
-	uniquePartIds.each{eachParty->
-		tempMap = [:];
+	rolePartyIds.each{eachParty->
+		arOpeningBalance  =BigDecimal.ZERO;
+		apOpeningBalance  =BigDecimal.ZERO;
 		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:eachParty]));
 		if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
 			arOpeningBalance=arOpeningBalanceRes.get("openingBalance");
@@ -428,10 +458,14 @@
 		}
         else{
 			creditValue=(-1*oB);
-		}
+		}		
+		tempMap = [:];
 		tempMap["debitValue"]=debitValue;
 		tempMap["creditValue"]=creditValue;
-		openingBalanceMap.put(eachParty,tempMap);
+		
+		tempOpeningBalanceMap = [:];
+		tempOpeningBalanceMap.putAll(tempMap);		
+		openingBalanceMap.put(eachParty,tempOpeningBalanceMap);
 	}
 	context.openingBalanceMap=openingBalanceMap;
 	context.partyDayWiseDetailMap=newMap;
