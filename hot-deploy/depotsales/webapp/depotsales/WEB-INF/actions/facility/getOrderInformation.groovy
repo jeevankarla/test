@@ -39,6 +39,16 @@ conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUAL
 OrderItemRemarks = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 */
 
+condList=[];
+condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+expr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+partyOrders = delegator.findList("OrderRole", expr, null, null, null, false);
+
+orderType="direct";
+onbehalfof = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+if(onbehalfof){
+	orderType = "onbehalfof";
+}
 JSONArray orderInformationDetails = new JSONArray();
 
 for (eachItem in orderItems) {
@@ -49,8 +59,10 @@ for (eachItem in orderItems) {
 	if(UtilValidate.isNotEmpty(orderAdjustments)){
 			adjustmentAmount =eachItem.discountAmount;
 		conditionList = [];
-		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-		conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
+		if("direct".equals(orderType)){
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		}
+			conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
 		otherChargesList = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		
 		for(int i=0; i<otherChargesList.size(); i++){

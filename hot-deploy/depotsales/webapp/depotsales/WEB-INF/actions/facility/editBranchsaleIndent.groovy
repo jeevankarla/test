@@ -339,24 +339,38 @@
 			}
 			newObj.put("quantity",eachItem.quantity);
 			newObj.put("quota",quota);
-			newObj.put("unitPrice",eachItem.bundleUnitPrice);
+			amount=0;
+			if("onbehalfof".equals(orderType)){
+				newObj.put("unitPrice",eachItem.bundleUnitPrice);
+				BigDecimal noOfBundles=0;
+				if("Bale".equals(yarnUOM)){
+					noOfBundles=baleQty*40;
+				}
+				if("Half-Bale".equals(yarnUOM)){
+					noOfBundles=baleQty*20;
+				}
+				if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
+					noOfBundles=baleQty;
+				}
+				amount=eachItem.bundleUnitPrice*noOfBundles;
+			}else{
+				newObj.put("unitPrice",eachItem.unitPrice);
+				amount=eachItem.unitPrice*eachItem.quantity;
+				
+			}
 			newObj.put("KgunitPrice",eachItem.unitPrice);
-			 BigDecimal noOfBundles=0;
-			if("Bale".equals(yarnUOM)){
-				noOfBundles=baleQty*40;
-			}
-			if("Half-Bale".equals(yarnUOM)){
-				noOfBundles=baleQty*20;
-			}
-			if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
-				noOfBundles=baleQty;
-			}
-			amount=eachItem.bundleUnitPrice*noOfBundles;
+			 
 			newObj.put("amount", amount);
 			
 			// Temporatily Preparing for taxes until login is been build to get it from the UI. 
 			totalTaxAmt = 0;
-			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE"]));
+			cond=[];
+			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE"]));
+			
+			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
+	
+			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
 			for(i=0; i<taxList.size(); i++){
 				totalTaxAmt += (taxList.get(i)).get("amount");
 				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
@@ -365,7 +379,12 @@
 			
 			serviceChgPercent = 0;
 			serviceChg = 0;
-			serviceChargeList = EntityUtil.filterByCondition(orderAdjustmentsList, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["SERVICE_CHARGE"]));
+			cond1=[];
+			cond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond1.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["SERVICE_CHARGE"]));
+			
+			expr1 = EntityCondition.makeCondition(cond1,EntityOperator.AND);
+			serviceChargeList = EntityUtil.filterByCondition(orderAdjustmentsList,expr1);
 			if(UtilValidate.isNotEmpty(serviceChargeList)){
 				serviceChg = (serviceChargeList.get(0)).get("amount");
 				serviceChgPercent = (serviceChargeList.get(0)).get("sourcePercentage");

@@ -2847,7 +2847,7 @@ public class DepotSalesServices{
 									String productCategoryId=(String)productCategoriesList.get(0);
 									
 									Map partyBalanceHistoryContext = FastMap.newInstance();
-									partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+									partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",Kgquantity,"userLogin", userLogin);
 									
 									if(UtilValidate.isNotEmpty(customerId)){
 										partyBalanceHistoryContext.put("partyId",customerId);
@@ -2862,29 +2862,28 @@ public class DepotSalesServices{
 									}
 								}
 							}	
+							BigDecimal discountAmount = BigDecimal.ZERO;
 							if(quota.compareTo(BigDecimal.ZERO)>0){
 								
 								// Have to get these details from schemes. Temporarily hard coding it.
 								BigDecimal schemePercent = new BigDecimal("10");
 								BigDecimal percentModifier = schemePercent.movePointLeft(2);
 								quotaQuantity=quota;
-								BigDecimal discountAmount = BigDecimal.ZERO;
-								if(quantity.compareTo(quota)>0){
+								if(Kgquantity.compareTo(quota)>0){
 									discountAmount = ((quota.multiply(prdPrice)).multiply(percentModifier)).negate();
 									quotaQuantity=quota;
 								}
 								else{
-									discountAmount = ((quantity.multiply(prdPrice)).multiply(percentModifier)).negate();
-									quotaQuantity=quantity;
+									discountAmount = ((Kgquantity.multiply(prdPrice)).multiply(percentModifier)).negate();
+									quotaQuantity=Kgquantity;
 								}
 								totalDiscount=totalDiscount.add(discountAmount);
-								orderItemDetail.put("discountAmount",discountAmount);
 								
 								// creating order adjustment for direct 
 								 if("N".equals(onBeHalfOf)){
 										String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
 										GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-										UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
+										UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
 								                "description", "10 Percent Subsidy on eligible product categories"));
 										try{
 											orderAdjustment.create();
@@ -2904,6 +2903,7 @@ public class DepotSalesServices{
 				orderItemDetail.put("userLogin",userLogin);
 				orderItemDetail.put("partyId",customerId);
 				orderItemDetail.put("unitPrice",prdPrice);
+				orderItemDetail.put("discountAmount",discountAmount);
 				orderItemDetail.put("Uom",Uom);
 				orderItemDetail.put("productId",prodId);
 				orderItemDetail.put("baleQuantity",blQuantity);
