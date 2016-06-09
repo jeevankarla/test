@@ -441,6 +441,13 @@ under the License.
 	
 	<ProductCategory productCategoryId="COIR" productCategoryTypeId="YARN_SALE"/>
 	
+
+	<InvoiceItemType description="VAT SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" parentTypeId="TAX_SALE"/> 
+	<InvoiceItemType description="TEN PERCENT SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY"/> 
 	
+	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SALE" invoiceItemTypeId="VAT_SALE" invoiceTypeId="SALES_INVOICE"/> 
+	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" invoiceTypeId="SALES_INVOICE"/> 
+	
+	<InvoiceItemTypeMap invoiceItemMapKey="TEN_PERCENT_SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY" invoiceTypeId="SALES_INVOICE"/> 
 	
 </entity-engine-xml>
