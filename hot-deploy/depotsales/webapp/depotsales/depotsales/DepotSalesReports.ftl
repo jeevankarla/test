@@ -125,10 +125,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
           </tr>
           <tr class="alternate-row">
       	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
-             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
-             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
-      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
-             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+             <td width="10%">Party Financial History With Dr/Cr</td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
+             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
             <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
             <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
   					    <option value=''></option>
@@ -136,15 +136,19 @@ function makeDatePicker3(fromDateId ,thruDateId){
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
   						</select></td>
-              <td width="15%"><span class='h3'>Branch
+  		    <td width="10%">Party Type :<select name="partyClassificationGroupId" id="partyClassificationGroupId">
+			    <option value=''></option>
+                <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
+                <option value='OTHERS'>Others</option>
+  			 </select></td>				
+             <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
-					<option value=""></option>
 				        <#list  branchList as eachBranch>
 				          <option value='${eachBranch.payToPartyId?if_exists}'>${eachBranch.productStoreName?if_exists}</option>
 				        </#list> 
 				  </select>    								
 			  </span></td>
-             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+             <td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
            </form>
         </tr>
 		<tr class="alternate-row">
