@@ -9563,5 +9563,124 @@ public class DepotSalesServices{
    	    return result;
    	}
  	
+ 	
+ 	
+	public static Map<String, Object> updateFacilityContactMechDetail(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String contactMechId = (String) context.get("contactMechId");
+   	    String facilityId = (String) context.get("facilityId");
+		List conditionList = FastList.newInstance();
+   	    
+   	    Map result = ServiceUtil.returnSuccess();
+
+   	 if(UtilValidate.isNotEmpty(facilityId)){
+/*			conditionList.add(EntityCondition.makeCondition("contactMechId", EntityOperator.EQUALS, contactMechId));
+			conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+			List<GenericValue> FacilityContactMech = null;
+			try {
+				FacilityContactMech = delegator.findList("FacilityContactMech", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			
+			    Debug.log("FacilityContactMech============="+FacilityContactMech);
+			    
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive FacilityContactMech ", module);
+				return ServiceUtil.returnError("Failed to retrive FacilityContactMech " + e);
+			}
+			
+			*/
+			 try{
+	     	    	
+	     	    GenericValue Facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+
+	     	   Facility.set("closedReason", "REMOVED");
+	     	  Facility.store();
+	     	    	
+	     	    	
+	     		} catch (Exception e) {
+	     			Debug.logError(e, "Failed to retrive FacilityContactMech ", module);
+					return ServiceUtil.returnError("Failed to retrive FacilityContactMech " + e);
+	     		}
+			
+		}
+	  	
+   	    result.put("facilityId",facilityId);
+   	    return result;
+   	}
+ 	
+ 	
+ 	public static Map<String, Object> updateFacilityPostalAddressDetails(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String contactMechId = (String) context.get("contactMechId");
+   	    String facilityId = (String) context.get("facilityId");
+   	    String facilityName = (String) context.get("facilityName");
+   	    String facilityTpeId = (String) context.get("facilityTpeId");
+   	    
+		String address1 = (String) context.get("address1");
+		String address2 = (String) context.get("address2");
+		String city = (String) context.get("city");
+		String countryGeoId = (String) context.get("countryGeoId");
+		String stateProvinceGeoId = (String) context.get("stateProvinceGeoId");
+		String postalCode = (String) context.get("postalCode");
+		List conditionList = FastList.newInstance();
+   	    
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+     	 if(UtilValidate.isNotEmpty(contactMechId)){
+     		 try{
+	     	    	
+ 	     	    GenericValue PostalAddress = delegator.findOne("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId), false);
+ 	     	    
+ 	     	    
+ 	     	        if(UtilValidate.isNotEmpty(address1))
+					PostalAddress.set("address1", address1);
+ 	     	        else
+ 	     	        PostalAddress.set("address1", "");	
+ 	     	       if(UtilValidate.isNotEmpty(address2))
+ 				   PostalAddress.set("address2", address2);
+ 	 	     	   else
+ 	 	     	   PostalAddress.set("address2", "");
+ 	     	       if(UtilValidate.isNotEmpty(city))
+ 	 			   PostalAddress.set("city", city);
+ 	 	 	     	else
+ 	 	 	        PostalAddress.set("city", "");
+ 	     	       if(UtilValidate.isNotEmpty(countryGeoId))
+ 	 	 			PostalAddress.set("countryGeoId", countryGeoId);
+ 	 	 	 	     else
+ 	 	 	 	    PostalAddress.set("countryGeoId", "");
+ 	     	       if(UtilValidate.isNotEmpty(stateProvinceGeoId))
+  	 	 			PostalAddress.set("stateProvinceGeoId", stateProvinceGeoId);
+  	 	 	 	     else
+  	 	 	 	    PostalAddress.set("stateProvinceGeoId", "");
+ 	     	        if(UtilValidate.isNotEmpty(postalCode))
+   	 	 			PostalAddress.set("postalCode", postalCode);
+   	 	 	 	     else
+   	 	 	 	    PostalAddress.set("postalCode", "");
+					PostalAddress.store();
+					    	
+ 	     	    	
+ 	     		} catch (Exception e) {
+ 	     			Debug.logError(e, "Failed to retrive PostalAddress ", module);
+ 					return ServiceUtil.returnError("Failed to retrive PostalAddress " + e);
+ 	     		}
+ 			
+		}
+	  	
+   	    result.put("facilityId",facilityId);
+   	    return result;
+   	}
+ 	
+
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 	
 }

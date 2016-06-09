@@ -73,6 +73,7 @@ function getFecilityAddressDetailAjax(){
 					   }
 					   else
 					   {
+					    $('div#orderSpinn').html('');
 					    $("#supplierInfo").show().delay(5000).fadeOut();
 						}
 						
@@ -175,16 +176,23 @@ function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , Nstate
 	     
 	     document.getElementById("facicontactMechType").value = facilityTypeId;
 	    
+	    
 	    var countryelement = document.getElementById('editcontactmechform_countryId');
              countryelement.value = NcountryGeoId;
 	     var stateelement = document.getElementById('editcontactmechform_stateId');
+             
+             if(NstateProvinceGeoId.includes('IN'))
              stateelement.value = NstateProvinceGeoId;
+             else
+             stateelement.value = 'IN-'+NstateProvinceGeoId;
              
           var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
              Tcountryelement.value = TcountryGeoId;
 	     var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
+             if(TstateProvinceGeoId.includes('IN'))
              Tstateelement.value = TstateProvinceGeoId;
-	     
+             else
+	          Tstateelement.value = 'IN-'+TstateProvinceGeoId;
 	     var TFaddress1 = $("#TFaddress1").val(Taddress1);
 	     var TFaddress2 = $("#TFaddress2").val(Taddress2);
 	     var TFcity = $("#TFcity").val(Tcity);
@@ -217,7 +225,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 					    alert("Error While getting Details");
 					}else{
 					  
-					  $("#facilityCreated").html("Facility Has Been Removed Sucessfully..");
+					  $("#facilityCreated").html("Facility Has Been Removed Successfully..");
 		               $("#facilityCreated").show().delay(5000).fadeOut();
 					  
 					  
@@ -517,9 +525,9 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 					       
 					        if(createdStatus == "C")
 					        {
-					          $("#facilityCreated").html("Facility Has Been Created Sucessfully..");
+					          $("#facilityCreated").html("Facility Has Been Created Successfully..");
 					        }else{
-					          $("#facilityCreated").html("Facility Has Been Edited Sucessfully..");
+					          $("#facilityCreated").html("Facility Has Been Edited Successfully..");
 					        }
 					       
 					       $("#facilityCreated").show().delay(5000).fadeOut();
