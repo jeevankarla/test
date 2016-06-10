@@ -6637,4 +6637,119 @@
     			</widgets>
     		</section>
     	</screen> 
+    	<screen name="FebricBranchSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="FebricIndent" />
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="FebricIndent"/>
+				<set field="parameters.formAction" value="FebricBranchSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/TransportersList.groovy" />
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="BranchTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+							<include-menu name="VariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="FebricIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	 <screen name="FebricMultiIndentorSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="FebricIndent" />
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="FebricIndent"/>
+				<set field="parameters.formAction" value="FebricMultiIndentorSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="BranchTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="VariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="FebricIndentorIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkMultiBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SilkMultiBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 </screens>
