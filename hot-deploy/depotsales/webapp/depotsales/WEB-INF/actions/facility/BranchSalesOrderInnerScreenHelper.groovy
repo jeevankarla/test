@@ -428,9 +428,9 @@
 			}
 			String dateInString = "01 APRIL, 2016";
 			targetDate = new java.sql.Timestamp(sdf.parse(dateInString).getTime());
-			if(effectiveDate<targetDate){
-				quota=parameters.manualQuota;
-			}
+//			if(effectiveDate<targetDate){
+//				quota=parameters.manualQuota;
+//			}
 
 			productQuotaJSON.put(schemeProdId, quota);
 			productCategoryJSON.put(schemeProdId, schemeCatId);

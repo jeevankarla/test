@@ -171,7 +171,7 @@
 			var checkCForm = data[rowCount]["checkCForm"];
 			
 			$("#orderTaxType").val(applicableTaxType);
-			
+			var usedQuota = data[rowCount]["usedQuota"];
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
@@ -190,7 +190,7 @@
 				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
 				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
 				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
-				
+				var inputUsedQuota = jQuery("<input>").attr("type", "hidden").attr("name", "usedQuota_o_" + rowCount).val(usedQuota);
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -202,7 +202,7 @@
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
-				
+				jQuery(formId).append(jQuery(inputUsedQuota));
 				jQuery(formId).append(jQuery(inputCheckE2Form));
 				jQuery(formId).append(jQuery(inputApplicableTaxType));
 				jQuery(formId).append(jQuery(inputCheckCForm));
@@ -446,8 +446,9 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-		
-		var columns = [
+		var columns = [];
+		var columns2 =null;
+		var columns1 = [
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
@@ -467,11 +468,19 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
+ 			{id:"quotaAvbl", name:"AvailableQuota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false}
 		];
-		
-
+		var selectedDate= $('#effectiveDate').val();
+		var effDate=Date.parse(selectedDate);
+		var targetDate=Date.parse("04/01/2016");
+		if(effDate<targetDate && $('#schemeCategory').val()=="MGPS_10Pecent"){
+		columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+		    {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}else{
+		  columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+		  {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}
+		columns= columns1.concat(columns2);
 		var data_view = new Slick.Data.DataView();
 		grid = new Slick.Grid("#myGrid1", data, columns,options);
 		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
@@ -1083,12 +1092,14 @@
 				
 				if(lineQuota < 0){
 					data[i]["quota"] = 0;
+					data[i]["usedQuota"] = takenQty+lineQuota;
 					if(schemeCategory == "MGPS_10Pecent"){
 						data[i]["warning"] = 'Quota Exceeded';
 					}
 				}
 				else{
 					data[i]["quota"] = lineQuota;
+					data[i]["usedQuota"] = takenQty;
 					data[i]["warning"] = '';
 				}
 				

@@ -168,7 +168,7 @@
 			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
+			var usedQuota = data[rowCount]["usedQuota"];
 			
 			
 			
@@ -187,7 +187,7 @@
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
-				
+				var inputUsedQuota = jQuery("<input>").attr("type", "hidden").attr("name", "usedQuota_o_" + rowCount).val(usedQuota);
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputcustomerId));				
@@ -199,7 +199,7 @@
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
-				
+				jQuery(formId).append(jQuery(inputUsedQuota));
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
 					jQuery(formId).append(jQuery(batchNum));
@@ -355,8 +355,9 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-		
-		var columns = [
+		var columns = [];
+		var columns2 =null;
+		var columns1 = [
 			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
@@ -372,11 +373,19 @@
  				}
  			},
 			{id:"quotaAvbl", name:"Quota Available (In Kgs)", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
-			
-			
+
 		];
-		
+		var selectedDate= $('#effectiveDate').val();
+		var effDate=Date.parse(selectedDate);
+		var targetDate=Date.parse("04/01/2016");
+		if(effDate<targetDate && $('#schemeCategory').val()=="MGPS_10Pecent"){
+		columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+		    {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}else{
+		  columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+		  {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}
+		columns= columns1.concat(columns2);
 		var options = {
 			editable: true,		
 			forceFitColumns: false,			
@@ -848,12 +857,14 @@
 				
 				if(lineQuota < 0){
 					data[i]["quota"] = 0;
+					data[i]["usedQuota"] = takenQty+lineQuota;
 					if(schemeCategory == "MGPS_10Pecent"){
 						data[i]["warning"] = 'Quota Exceeded';
 					}
 				}
 				else{
 					data[i]["quota"] = lineQuota;
+					data[i]["usedQuota"] = takenQty;
 					data[i]["warning"] = '';
 				}
 				

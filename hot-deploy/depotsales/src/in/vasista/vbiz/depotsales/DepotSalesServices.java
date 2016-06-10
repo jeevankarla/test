@@ -1763,8 +1763,8 @@ public class DepotSalesServices{
 							+ thisSuffix);
 				}
 			
-				if (paramMap.containsKey("quotaAvbl" + thisSuffix)) {
-					quotaAvblStr = (String) paramMap.get("quotaAvbl"+ thisSuffix);
+				if (paramMap.containsKey("usedQuota" + thisSuffix)) {
+					quotaAvblStr = (String) paramMap.get("usedQuota"+ thisSuffix);
 				}
 				
 				/*if (paramMap.containsKey("vatPrice" + thisSuffix)) {
