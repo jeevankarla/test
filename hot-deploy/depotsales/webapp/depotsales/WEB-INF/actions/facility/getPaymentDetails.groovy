@@ -231,7 +231,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("statusId", eachHeader.statusId);
 	
 	
-	conditionList = [];
+	/*conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
 	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	double adjAmout = 0;
@@ -241,9 +241,9 @@ orderHeader.each{ eachHeader ->
 	
 	double grandTotWithAdj = 0;
 	grandTotWithAdj = Double.valueOf(eachHeader.getBigDecimal("remainingSubTotal"))+adjAmout;
-	
-	if(UtilValidate.isNotEmpty(grandTotWithAdj)){
-		tempData.put("orderTotal", grandTotWithAdj);
+*/	
+	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("orderTotal"))){
+		tempData.put("orderTotal", eachHeader.getBigDecimal("orderTotal"));
 	}
 	/*creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
 	creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
@@ -337,9 +337,9 @@ orderHeader.each{ eachHeader ->
 	}
 	
 	tempData.put("paidAmt", paidAmt);
-	grandTOT = eachHeader.getBigDecimal("remainingSubTotal");
+	grandTOT = eachHeader.getBigDecimal("orderTotal");
 	balance = grandTOT-paidAmt;
-	balance = balance+adjAmout;
+	//balance = balance+adjAmout;
 	
 	tempData.put("balance", balance);
 	
