@@ -128,8 +128,10 @@ function drawRow(rowData) {
     var facilityId = '\'' + rowData.facilityId + '\'';
     var facilityTypeId = '\'' + rowData.facilityTypeId + '\'';
     
+    var viewButton = rowData.facilityName+"/"+rowData.Ncity;
+    
     var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+")";
-    var inputbox ='<input type=button name="viewAddress" id=viewAddress value='+facilityName+' onclick="'+customMethod+'">';
+    var inputbox ='<input type=button name="viewAddress" id=viewAddress value='+viewButton+' onclick="'+customMethod+'">';
     row.append($("<td>" +  inputbox  +"</td>"));
      
   
@@ -189,10 +191,13 @@ function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , Nstate
           var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
              Tcountryelement.value = TcountryGeoId;
 	     var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
+            /* 
              if(TstateProvinceGeoId.includes('IN'))
              Tstateelement.value = TstateProvinceGeoId;
              else
 	          Tstateelement.value = 'IN-'+TstateProvinceGeoId;
+	         */
+	     
 	     var TFaddress1 = $("#TFaddress1").val(Taddress1);
 	     var TFaddress2 = $("#TFaddress2").val(Taddress2);
 	     var TFcity = $("#TFcity").val(Tcity);
@@ -430,6 +435,9 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	    var addressFaciMap = {};
     
     function storeFacilityValues(){
+	   
+	   
+	      $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
 	   
 	     
 	     var supplierId = $("#createdSupplierId").val();
@@ -669,22 +677,14 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 									      	<input type="text" name="address2" id="Faddress2" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
-									
 									<tr>
-								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
-								      <td>
-								        <select name="countryGeoId" id="editcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
-										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
-								          <option selected="selected" value="${defaultCountryGeoId}">
-								          <#assign countryGeo = delegator.findByPrimaryKey("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId))>
-								          ${countryGeo.get("geoName",locale)}
-								          </option>
-								          <option></option>
-								          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-								        </select>
-								      </td>
-	    							</tr>
-	    							 <tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
+									    <td>
+									      	<input type="text" name="city" id="Fcity" size="30" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
+									
+									 <tr>
 								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
@@ -699,12 +699,20 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								      </td>
 								    </tr>
 									<tr>
-									    <td class="label"><FONT COLOR="red">*</font><b> City</b></td>
-									    <td>
-									      	<input type="text" name="city" id="Fcity" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-									</tr>
-									
+								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
+								      <td>
+								        <select name="countryGeoId" id="editcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
+										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
+								          <option selected="selected" value="${defaultCountryGeoId}">
+								          <#assign countryGeo = delegator.findByPrimaryKey("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId))>
+								          ${countryGeo.get("geoName",locale)}
+								          </option>
+								          <option></option>
+								          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+								        </select>
+								      </td>
+	    							</tr>
+	    							
 									<tr>
 									    <td class="label"><b> Postal Code</b></td>
 									    <td>
