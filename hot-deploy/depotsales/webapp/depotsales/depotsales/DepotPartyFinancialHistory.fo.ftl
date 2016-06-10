@@ -24,7 +24,7 @@ under the License.
             <#--><fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".1in" margin-top=".5in"> -->
               <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left=".3in" margin-right=".1in">
-                <fo:region-body margin-top="1.5in"/>
+                <fo:region-body margin-top="1.7in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -47,6 +47,7 @@ under the License.
          		    <fo:block text-align="left"  white-space-collapse="false"  font-size="10pt" >C.S.T No : 683925 w.e.f 12.06.1985                                            C.I.N No : U17299UP1983GOI005974 </fo:block>
                     <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
                     <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;SUBLEDGER REPORT FOR THE PERIOD FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+              	    <fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Branch Name:${branchName.toUpperCase()}</fo:block>  
               	    <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block> 
 		        	<fo:block>
                  	<fo:table>
@@ -92,7 +93,7 @@ under the License.
               </fo:block> 
               <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>	
 		        	</fo:static-content>	        	
-		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
+		        	<fo:flow flow-name="xsl-region-body"  font-family="Helvetica">		
             	<fo:block>
                  	<fo:table>
                      <fo:table-column column-width="90pt"/>
@@ -108,6 +109,7 @@ under the License.
                          <#assign partDebitTotal=0>
                          <#assign partyCreditTotal=0>
                          <#assign closingBalance=0>
+                         <#if  (openingBalanceMap.get(eachParty)?has_content) || (partyDayWiseDetailMap.get(eachParty)?has_content)>
                      <fo:table-row>
                         <fo:table-cell>
                     	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">${partyName}</fo:block>
@@ -119,19 +121,32 @@ under the License.
                     	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false">&#xA;</fo:block>
 	                	 </fo:table-cell>
 	                    <fo:table-cell font-weight="bold">
-	                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Opening Balance:</fo:block>  
+	                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Op. Bal:</fo:block>  
 	                    </fo:table-cell>
-	                    <#assign debitValue=openingBalanceMap.get(eachParty).debitValue?if_exists>
+	                    <#if openingBalanceMap.get(eachParty).debitValue?has_content>
+	                      <#assign debitValue=openingBalanceMap.get(eachParty).debitValue>
 	                    <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${debitValue?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
+	                	 <#else>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">&#xA;</fo:block>
+	                	 </fo:table-cell>
+	                	 </#if>
+	                	  <#if openingBalanceMap.get(eachParty).creditValue?has_content>
 	                	 <#assign creditValue = openingBalanceMap.get(eachParty).creditValue?if_exists>
 	                	 <#assign closingBalance=closingBalance+debitValue-creditValue>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${creditValue?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
+	                	  <#else>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">&#xA;</fo:block>
+	                	 </fo:table-cell>
+	                	  </#if>
                       </fo:table-row>
-                       <#if partyDayWiseDetailMap.get(eachParty)?has_content>	 
+                      </#if>
+                      <#if partyDayWiseDetailMap.get(eachParty)?has_content>
                       <#assign partyLedgerDeatils = partyDayWiseDetailMap.get(eachParty)?if_exists>
                        <#assign allDays = partyLedgerDeatils.keySet()>
                         <#list allDays as eachDay >
@@ -172,6 +187,7 @@ under the License.
 	                	 </fo:table-cell>
 					  </fo:table-row>
 					    </#list></#list>
+					    <#if partDebitTotal?has_content || partyCreditTotal?has_content>
 					     <fo:table-row>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
@@ -183,7 +199,7 @@ under the License.
                     	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
 	                	 </fo:table-cell>
 	                	 <fo:table-cell>
-                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">--------------------------------------------</fo:block>
+                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">-------------------------------------------------------------------------------</fo:block>
 	                	 </fo:table-cell>
 	                	</fo:table-row> 
 					    <fo:table-row>
@@ -222,9 +238,10 @@ under the License.
                     	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
 	                	 </fo:table-cell>
 	                	 <fo:table-cell>
-                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">--------------------------------------------</fo:block>
+                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">-------------------------------------------------------------------------------</fo:block>
 	                	 </fo:table-cell>
 	                	</fo:table-row> 
+	                	</#if>
 					     </#list>
 					  <fo:table-row>
 	                    	<fo:table-cell>
