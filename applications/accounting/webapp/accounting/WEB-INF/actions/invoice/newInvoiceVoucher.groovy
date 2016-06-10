@@ -162,6 +162,10 @@ if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 
+tallyRefNo = OrderHeaderList.get("tallyRefNo");
+
+context.tallyRefNo = tallyRefNo;
+
 productStoreId = OrderHeaderList.get("productStoreId");
 branchId="";
 if (productStoreId) {
