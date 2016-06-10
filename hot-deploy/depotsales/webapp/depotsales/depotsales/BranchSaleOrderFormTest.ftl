@@ -122,7 +122,6 @@
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
-					getQotaByManuval();
 					fillPartyData($('#partyId').val());
 				}
 				
@@ -658,7 +657,6 @@
 			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
 			        	fillPartyData(ui.item.value);
 			        	fillPartyQuota(ui.item.value);
-			        	getQotaByManuval();
 			        }
 					
 			  });	
@@ -933,7 +931,7 @@ function fillPartyQuota(partyId){
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
-		          				<select name="schemeCategory" id="schemeCategory" class='h3' onchange='getQotaByManuval()' style="width:162px">
+		          				<select name="schemeCategory" id="schemeCategory" class='h3'  style="width:162px">
 		          						          					
 		          				</select>
 		          			</td>

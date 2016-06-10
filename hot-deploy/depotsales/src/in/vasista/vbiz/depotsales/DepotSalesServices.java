@@ -1763,8 +1763,8 @@ public class DepotSalesServices{
 							+ thisSuffix);
 				}
 			
-				if (paramMap.containsKey("quotaAvbl" + thisSuffix)) {
-					quotaAvblStr = (String) paramMap.get("quotaAvbl"+ thisSuffix);
+				if (paramMap.containsKey("usedQuota" + thisSuffix)) {
+					quotaAvblStr = (String) paramMap.get("usedQuota"+ thisSuffix);
 				}
 				
 				/*if (paramMap.containsKey("vatPrice" + thisSuffix)) {
@@ -2843,8 +2843,9 @@ public class DepotSalesServices{
 								}
 							
 								if(targetDate.compareTo(supplyDate)==1){
-									quota=manualQuota.subtract(quotaAvbl);
-									manualQuota=manualQuota.subtract(quota);
+									quota=quotaAvbl;
+								//	quota=manualQuota.subtract(quotaAvbl);
+								//	manualQuota=manualQuota.subtract(quota);
 								}else{
 									String schemeId="TEN_PERCENT_MGPS";
 									String productCategoryId=(String)productCategoriesList.get(0);

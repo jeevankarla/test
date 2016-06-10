@@ -168,7 +168,7 @@
 			var unitPrice = data[rowCount]["KgunitPrice"];			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
+			var usedQuota = data[rowCount]["usedQuota"];
 			
 			
 			
@@ -188,7 +188,7 @@
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
-				
+				var inputUsedQuota = jQuery("<input>").attr("type", "hidden").attr("name", "usedQuota_o_" + rowCount).val(usedQuota);
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputcustomerId));				
@@ -200,7 +200,7 @@
 				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
-				
+				jQuery(formId).append(jQuery(inputUsedQuota));
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
 					jQuery(formId).append(jQuery(batchNum));
@@ -356,8 +356,9 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-		
-		var columns = [
+		var columns = [];
+		var columns2 =null;
+		var columns1 = [
 			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:300, minWidth:300, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
@@ -379,11 +380,19 @@
  				}
  			},
  			{id:"quotaAvbl", name:"Quota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
-		
-			
+
 		];
-		
+		var selectedDate= $('#effectiveDate').val();
+		var effDate=Date.parse(selectedDate);
+		var targetDate=Date.parse("04/01/2016");
+		if(effDate<targetDate && $('#schemeCategory').val()=="MGPS_10Pecent"){
+		columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+		    {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}else{
+		  columns2=[{id:"usedQuota", name:"Quota(In Kgs)", field:"usedQuota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+		  {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
+		}
+		columns= columns1.concat(columns2);
 
 		var data_view = new Slick.Data.DataView();
 		grid = new Slick.Grid("#myGrid1", data, columns,options);
@@ -504,7 +513,9 @@
 				var uom = data[args.row]["cottonUom"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				
 				var price = 0;
+
 				if(udp){
 					var totalPrice = udp;
 					price = totalPrice;
@@ -533,6 +544,26 @@
 				if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
 				}	
+				
+				quantity = 0;
+				if(uom == "Bale"){
+					bundleWeight=4.54;
+					quantity = baleQty*bundleWeight*40;
+				}
+				if(uom == "Half-Bale"){
+					bundleWeight=4.54;
+					quantity = baleQty*bundleWeight*20;
+				}
+				if(uom == "Bundle"){
+					bundleWeight=4.54;
+					quantity = baleQty*bundleWeight;
+				}
+				
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+				}
+				data[args.row]["quantity"] = quantity;
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
 				
@@ -541,7 +572,7 @@
 				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
-        	
+
         	}
 			
 			if (args.cell == 4) {
@@ -756,6 +787,17 @@
 				
 			
 			
+			}
+			
+			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
+			    updatedQty=parseFloat(data[args.row]["quantity"]);
+			    var quota = parseFloat(data[args.row]["quota"]);
+				if(updatedQty<=quota){
+				      data[args.row]["usedQuota"]=qty;
+				    }
+				    else{
+				      data[args.row]["usedQuota"]=quota;
+				    }
 			}
 		
 		}); 
@@ -976,12 +1018,14 @@
 				
 				if(lineQuota < 0){
 					data[i]["quota"] = 0;
+					data[i]["usedQuota"] = takenQty+lineQuota;
 					if(schemeCategory == "MGPS_10Pecent"){
 						data[i]["warning"] = 'Quota Exceeded';
 					}
 				}
 				else{
 					data[i]["quota"] = lineQuota;
+					data[i]["usedQuota"] = takenQty;
 					data[i]["warning"] = '';
 				}
 				
