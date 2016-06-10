@@ -684,20 +684,6 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 									    </td>
 									</tr>
 									
-									 <tr>
-								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
-								      <td>
-								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
-										
-							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
-								         <#list stateAssocs as stateAssoc>
-							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
-										</#list>
-								          <option></option>
-								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
-								        </select>
-								      </td>
-								    </tr>
 									<tr>
 								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
 								      <td>
@@ -712,6 +698,23 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								        </select>
 								      </td>
 	    							</tr>
+									
+									
+									 <tr>
+								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
+								      <td>
+								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
+										
+							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
+								         <#list stateAssocs as stateAssoc>
+							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
+										</#list>
+								          <option></option>
+								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
+								        </select>
+								      </td>
+								    </tr>
+									
 	    							
 									<tr>
 									    <td class="label"><b> Postal Code</b></td>
