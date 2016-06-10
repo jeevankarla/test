@@ -181,11 +181,11 @@ function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , Nstate
              countryelement.value = NcountryGeoId;
 	     var stateelement = document.getElementById('editcontactmechform_stateId');
              
-             if(NstateProvinceGeoId.includes('IN'))
+          /*   if(NstateProvinceGeoId.includes('IN'))
              stateelement.value = NstateProvinceGeoId;
              else
              stateelement.value = 'IN-'+NstateProvinceGeoId;
-             
+             */
           var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
              Tcountryelement.value = TcountryGeoId;
 	     var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
