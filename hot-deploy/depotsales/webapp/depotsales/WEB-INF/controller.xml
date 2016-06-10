@@ -718,6 +718,14 @@
     <request-map uri="SilkMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkMultiIndentorSalesOrder"/></request-map>
     <request-map uri="CottonMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonMultiIndentorSalesOrder"/></request-map>
     <request-map uri="OtherMultiIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherMultiIndentorSalesOrder"/></request-map>
+    <request-map uri="FebricBranchSalesOrder"><security https="true" auth="true"/>
+         <response name="success" type="view" value="FebricBranchSalesOrder"/>
+         <response name="error" type="view" value="FebricBranchSalesOrder"/>
+    </request-map>
+    <request-map uri="FebricMultiIndentorSalesOrder"><security https="true" auth="true"/>
+         <response name="success" type="view" value="FebricMultiIndentorSalesOrder"/>
+         <response name="error" type="view" value="FebricMultiIndentorSalesOrder"/>
+    </request-map>
     <request-map uri="processBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
@@ -1820,6 +1828,8 @@
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
     <view-map name="CottonMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonMultiBranchSalesOrder"/>
     <view-map name="OtherMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherMultiBranchSalesOrder"/>
+    <view-map name="FebricBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FebricBranchSalesOrder"/>
+    <view-map name="FebricMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FebricMultiIndentorSalesOrder"/>
 <!--     indentor portal screens -->
     <view-map name="IndentorBranchSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorBranchSalesOrder"/>
      <view-map name="SilkIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#SilkIndentorSalesOrder"/>
@@ -1833,6 +1843,7 @@
     <view-map name="SilkMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#SilkMultiIndentorSalesOrder"/>
     <view-map name="CottonMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#CottonMultiIndentorSalesOrder"/>
     <view-map name="OtherMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#OtherMultiIndentorSalesOrder"/>
+
 <!--     indentor portal screens end -->
     
     
