@@ -131,7 +131,6 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
             <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
             <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
-  					    <option value=''></option>
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
