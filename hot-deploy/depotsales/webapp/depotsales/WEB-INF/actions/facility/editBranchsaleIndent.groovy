@@ -341,7 +341,11 @@
 			newObj.put("quota",quota);
 			amount=0;
 			if("onbehalfof".equals(orderType)){
+				if(eachItem.bundleUnitPrice){
 				newObj.put("unitPrice",eachItem.bundleUnitPrice);
+				}else{
+				newObj.put("unitPrice",eachItem.unitPrice);
+				}
 				BigDecimal noOfBundles=0;
 				if("Bale".equals(yarnUOM)){
 					noOfBundles=baleQty*40;
@@ -352,7 +356,11 @@
 				if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
 					noOfBundles=baleQty;
 				}
+				if(eachItem.bundleUnitPrice){
 				amount=eachItem.bundleUnitPrice*noOfBundles;
+				}else{
+					amount=eachItem.unitPrice*eachItem.quantity;
+				}
 			}else{
 				newObj.put("unitPrice",eachItem.unitPrice);
 				amount=eachItem.unitPrice*eachItem.quantity;
