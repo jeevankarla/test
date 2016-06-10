@@ -450,4 +450,13 @@ under the License.
 	
 	<InvoiceItemTypeMap invoiceItemMapKey="TEN_PERCENT_SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY" invoiceTypeId="SALES_INVOICE"/> 
 	
+  <FacilityType createdStamp="2015-12-13 15:08:19.0" createdTxStamp="2015-12-13 15:08:19.0" description="Depot" facilityTypeId="MANUFAC_LOCATION" lastUpdatedStamp="2015-12-13 15:08:19.0" lastUpdatedTxStamp="2015-12-13 15:08:19.0"/> 
+  <FacilityType createdStamp="2015-12-13 15:08:19.0" createdTxStamp="2015-12-13 15:08:19.0" description="Depot" facilityTypeId="HEAD_LOCATION" lastUpdatedStamp="2015-12-13 15:08:19.0" lastUpdatedTxStamp="2015-12-13 15:08:19.0"/> 
+  <FacilityType createdStamp="2015-12-13 15:08:19.0" createdTxStamp="2015-12-13 15:08:19.0" description="Depot" facilityTypeId="BRANCH_LOCATION" lastUpdatedStamp="2015-12-13 15:08:19.0" lastUpdatedTxStamp="2015-12-13 15:08:19.0"/> 
+  <FacilityType createdStamp="2015-12-13 15:08:19.0" createdTxStamp="2015-12-13 15:08:19.0" description="Depot" facilityTypeId="SUBBRANCH_LOCATION" lastUpdatedStamp="2015-12-13 15:08:19.0" lastUpdatedTxStamp="2015-12-13 15:08:19.0"/> 
+  <FacilityType createdStamp="2015-12-13 15:08:19.0" createdTxStamp="2015-12-13 15:08:19.0" description="Depot" facilityTypeId="DEPOT_LOCATION" lastUpdatedStamp="2015-12-13 15:08:19.0" lastUpdatedTxStamp="2015-12-13 15:08:19.0"/> 
+
+   <ContactMechPurposeType contactMechPurposeTypeId="NORMAL_ADDRESS" createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" description="Billing (AP) Email" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0"/> 
+   <ContactMechPurposeType contactMechPurposeTypeId="TAX_ADDRESS" createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" description="Billing (AP) Email" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0"/> 
+	
 </entity-engine-xml>
