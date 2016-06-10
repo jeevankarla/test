@@ -242,8 +242,8 @@ orderHeader.each{ eachHeader ->
 	double grandTotWithAdj = 0;
 	grandTotWithAdj = Double.valueOf(eachHeader.getBigDecimal("remainingSubTotal"))+adjAmout;
 */	
-	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("orderTotal"))){
-		tempData.put("orderTotal", eachHeader.getBigDecimal("orderTotal"));
+	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
+		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	}
 	/*creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
 	creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
@@ -337,7 +337,7 @@ orderHeader.each{ eachHeader ->
 	}
 	
 	tempData.put("paidAmt", paidAmt);
-	grandTOT = eachHeader.getBigDecimal("orderTotal");
+	grandTOT = eachHeader.getBigDecimal("grandTotal");
 	balance = grandTOT-paidAmt;
 	//balance = balance+adjAmout;
 	
