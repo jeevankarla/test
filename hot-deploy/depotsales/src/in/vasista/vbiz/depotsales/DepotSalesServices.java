@@ -2052,7 +2052,10 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
 			 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
 			 try {
-			    	List <GenericValue> orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+					List conditions = FastList.newInstance();
+					conditions.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+			    	List <GenericValue> orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
 			    	if(UtilValidate.isEmpty(orderRoles)){
 			    		GenericValue value = delegator.makeValue("OrderRole", fields);
 			    		delegator.create(value);
