@@ -5148,12 +5148,14 @@ public class DepotSalesServices{
 			if(UtilValidate.isEmpty(attrValue) || (attrValue.equals("N"))){
 				continue;
 			}
-			if(attribute.equals("PACKING")){
-				if(attrValue.equals("CONE")){
-					packingAttribute = attrValue;
+			if(!(productCategoryId.equals("BRANDED"))){
+				if(attribute.equals("PACKING")){
+					if(attrValue.equals("CONE")){
+						packingAttribute = attrValue;
+					}
+					productName = productName + categoryName + " ";
 				}
-				productName = productName + categoryName + " ";
-			}
+			}	
 			if(!(productCategoryId.equals("COIR"))){
 				if( (attribute.equals("PLY")) && (attrValue.equals("1")) ){
 					continue;
