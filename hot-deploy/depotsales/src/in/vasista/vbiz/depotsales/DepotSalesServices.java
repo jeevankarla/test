@@ -2322,6 +2322,7 @@ public class DepotSalesServices{
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
 			cart.setUserLogin(userLogin, dispatcher);
+			cart.setOrderAttribute("ON_BEHALF_OF",onBeHalfOf);
 			//cart.setOrderMessage(orderMessage);
 		} catch (Exception e) {
 			Debug.logError(e, "Error in setting cart parameters", module);
