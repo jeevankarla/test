@@ -2840,8 +2840,9 @@ public class DepotSalesServices{
 								}
 							
 								if(targetDate.compareTo(supplyDate)==1){
-									quota=manualQuota.subtract(quotaAvbl);
-									manualQuota=manualQuota.subtract(quota);
+									quota=quotaAvbl;
+								//	quota=manualQuota.subtract(quotaAvbl);
+								//	manualQuota=manualQuota.subtract(quota);
 								}else{
 									String schemeId="TEN_PERCENT_MGPS";
 									String productCategoryId=(String)productCategoriesList.get(0);

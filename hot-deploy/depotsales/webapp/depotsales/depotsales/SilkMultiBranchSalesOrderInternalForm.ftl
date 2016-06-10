@@ -496,6 +496,7 @@
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
+				var quota = parseFloat(data[args.row]["quota"]);
 				var price = 0;
 				if(udp){
 					var totalPrice = udp;
@@ -519,6 +520,16 @@
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
+				if (args.cell == 3) {
+				    if(qty<=quota){
+				      data[args.row]["usedQuota"]=qty;
+				    }
+				    else{
+				      data[args.row]["usedQuota"]=quota;
+				    }
+				}
+				
+				
 			}
 			
 			if (args.cell == 4) {
