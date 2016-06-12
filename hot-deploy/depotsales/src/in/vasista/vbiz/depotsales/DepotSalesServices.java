@@ -2947,6 +2947,18 @@ public class DepotSalesServices{
 					return ServiceUtil.returnError("Error in creating OrderAdjestments");
 				}
 			 }
+			 //updating grandtotal 
+			 GenericValue orderHeaderDetail = null;
+				try{
+					orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+					BigDecimal grandTotal = BigDecimal.ZERO;
+				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
+				     orderHeaderDetail.set("grandTotal", grandTotal.add(totalDiscount));
+				     orderHeaderDetail.store();
+				}catch (Exception e) {
+					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
+		  	 	}
 		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
