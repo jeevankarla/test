@@ -2947,14 +2947,12 @@ public class DepotSalesServices{
 					return ServiceUtil.returnError("Error in creating OrderAdjestments");
 				}
 			 }
+			 //updating grandtotal 
 			 GenericValue orderHeaderDetail = null;
-				//update PurposeType
 				try{
 					orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-					//orderHeader.set("purposeTypeId", "BRANCH_SALES");
 					BigDecimal grandTotal = BigDecimal.ZERO;
 				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
-
 				     orderHeaderDetail.set("grandTotal", grandTotal.add(totalDiscount));
 				     orderHeaderDetail.store();
 				}catch (Exception e) {
