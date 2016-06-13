@@ -536,7 +536,7 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 			        message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Retailer Code :</font></td><td align='left' width='60%'><input class='h4' type='label' id='partyId' name='partyId' value='"+partyId+"' readOnly/></td></tr>";
 		            message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address1:<font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='storeValues();' required/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Address2: </td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='storeValues();' /></td></tr>";
-	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>";
+	     		    message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>Country: </td><td align='left' width='60%'><select name='country' id='country'><option value='IND' selected>india</option></select></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>State: </td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId' onchange='storeValues();'/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>City: <font color=red>*</font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onchange='storeValues();' required/></td></tr>";
 	     		   	message +=	"<tr class='h3'><td align='center' class='h3' width='40%'>PostalCode: </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='storeValues();'  /></td></tr>";
@@ -676,15 +676,15 @@ var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 
 
 	function populateData(){
-		CountryOptionList += "<option value = IND selected>India  </option>";          			
+		//CountryOptionList += "<option value = IND selected>India  </option>";          			
 
- 		if(CountryJsonMap != undefined && CountryJsonMap != ""){
-			$.each(CountryJsonMap, function(key, item){
-			    CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
-			});
-	 	}
-		CountryOptions = CountryOptionList;
- 		jQuery("[name='country']").html(CountryOptions);
+ 		//if(CountryJsonMap != undefined && CountryJsonMap != ""){
+		//	$.each(CountryJsonMap, function(key, item){
+			//    CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+			//});
+	 	//}
+		//CountryOptions = CountryOptionList;
+ 		//jQuery("[name='country']").html(CountryOptions);
  					 
  		if(StateJsonMap != undefined && StateJsonMap != ""){
 			$.each(StateJsonMap, function(key, item){
