@@ -171,13 +171,13 @@ under the License.
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each>  
 				        
-				        <#if each.invoiceItemTypeId == "INVOICE_ITM_ADJ">
+				        <#if each.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY">
 				        
 				         <#assign mgpsAndTotalDeductions = mgpsAndTotalDeductions+each.amount>
 				        
 				        </#if>
 				        
-				        <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				        
 				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 			
@@ -215,7 +215,7 @@ under the License.
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each>  
 				        
-				         <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				         <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				
                           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
                           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
