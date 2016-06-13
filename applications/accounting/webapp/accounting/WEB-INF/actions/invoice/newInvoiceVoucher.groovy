@@ -432,7 +432,11 @@ context.externalOrderId = externalOrderId;
 		 
 	
 	   }
+		    if(OrderItemDetail[0].baleQuantity)
 			tempMap.put("baleQty",OrderItemDetail[0].baleQuantity);
+			else
+			tempMap.put("baleQty",);
+			
 			tempMap.put("unit", OrderItemDetail[0].unitPrice);
 			
 		    tempMap.put("quantity", quantity);
