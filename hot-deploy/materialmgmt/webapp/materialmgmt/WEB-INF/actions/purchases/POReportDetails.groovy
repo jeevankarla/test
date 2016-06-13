@@ -390,9 +390,15 @@ exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperato
 
 orderAssc = EntityUtil.getFirst(delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false));
 
-
-
 toOrderId=orderAssc.toOrderId;
+
+
+orderHeader = delegator.findOne("OrderHeader",["orderId":toOrderId],false);
+
+tallyRefNo = orderHeader.tallyRefNo;
+context.tallyRefNo = tallyRefNo;
+
+
 Map<String, Object> orderDtlMap = FastMap.newInstance();
 orderDtlMap.put("orderId", toOrderId);
 orderDtlMap.put("userLogin", userLogin);

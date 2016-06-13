@@ -69,7 +69,7 @@ under the License.
 				   <fo:table-body>
 				       <fo:table-row>
 				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  >P.O.NO: <#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >TallyRef.No:${tallyRefNo?if_exists}</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left" keep-together="always" font-size="11pt" number-columns-spanned="2" >P.O.DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
