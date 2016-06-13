@@ -250,7 +250,7 @@ context.Scheam =Scheam;
 				conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachOrderItem.orderItemSeqId));
 				
 				condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-				orderItemAttr = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
+				orderItemAttr = delegator.findList("OrderItem", condExpr, null, null, null, false);
 				if((orderItemAttr) && (orderItemAttr.get(0).attrValue)){
 					remarkMap.put(eachOrderItem.orderItemSeqId, orderItemAttr.get(0).attrValue);
 					
@@ -376,7 +376,7 @@ context.Scheam =Scheam;
 				// conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 				 conditionList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.IN, itemSeqList));
 				 condExpr = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-				 orderItemAttr = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
+				 orderItemAttr = delegator.findList("OrderItem", condExpr, null, null, null, false);
 				 AttrName="";
 				 double schemeAmt = 0;
 				 orderItemAttr.each{ eachAttr ->
@@ -493,42 +493,47 @@ context.Scheam =Scheam;
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			OrderItemDetail = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
+			OrderItem = delegator.findList("OrderItem", condExpr, null, null, null, false);
 
-			for (echItemDetail in OrderItemDetail) {
+			for (eachItem in OrderItem) {
 				
 				
 				tempMap = [:];
-				tempMap.put("productId", echItemDetail.productId);
+				tempMap.put("productId", eachItem.productId);
 				
 				productName = ""
-				prod=delegator.findOne("Product",[productId:echItemDetail.productId],false);
+				prod=delegator.findOne("Product",[productId:eachItem.productId],false);
 				
 				if(prod.get("productName"))
 					tempMap.put("productName", prod.get("productName"));
 				else
 					tempMap.put("productName", "");
 					
-				tempMap.put("quantity", echItemDetail.quantity);
+				tempMap.put("quantity", eachItem.quantity);
+								
 				
-				
-				tenPerQty = 0;
+				double tenPerQty = 0;
 				
 				double quantity = 0;
 				double quotaQuantity = 0;
 				
-				if(echItemDetail.quantity)
-				  quantity = Double.valueOf(echItemDetail.quantity);
+				
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+				condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				OrderItemDetail = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
+	
+				
+				eachOrderItem = OrderItemDetail[0];
+				
+				if(eachItem.quantity)
+				  quantity = Double.valueOf(eachItem.quantity);
 				
 				  
-				  Debug.log("quantity================"+quantity);
+				if(eachOrderItem.quotaQuantity)
+				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);
 				  
-				  
-				if(echItemDetail.quotaQuantity)
-				  quotaQuantity = Double.valueOf(echItemDetail.quotaQuantity);
-				  
-				  
-				  Debug.log("quotaQuantity================"+quotaQuantity);
 				  
 				  if(quantity > quotaQuantity)
 				  {
@@ -544,16 +549,16 @@ context.Scheam =Scheam;
 				 
 				  tempMap.put("mgpsQty", quantity-tenPerQty);
 				  
-				  tempMap.put("unitPrice", echItemDetail.unitPrice);
+				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(echItemDetail.Uom)
-				  tempMap.put("Uom", "/"+echItemDetail.Uom);
+				  if(eachItem.Uom)
+				  tempMap.put("Uom", "/"+eachItem.Uom);
 				  else
 				  tempMap.put("Uom", "/KGs");
 				
 			   //purChasesVal;
 				  
-				  tempMap.put("totalCost", echItemDetail.quantity*echItemDetail.unitPrice);
+				  tempMap.put("totalCost", eachItem.quantity*eachItem.unitPrice);
 				  
 				  OrderItems.add(tempMap);
 			}
@@ -589,7 +594,7 @@ context.Scheam =Scheam;
 				 typeBasedMap.put(eachType, SAmeAmountMap);
 			}
 			
-			Debug.log("typeBasedMap==================="+typeBasedMap);
+			
 			
 			finalAddresList=[];
 			address1="";
@@ -611,7 +616,8 @@ context.Scheam =Scheam;
 	context.OrderItemList = OrderItems;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
-		
+	context.typeBasedMap = typeBasedMap;
+	
 	/*contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	
