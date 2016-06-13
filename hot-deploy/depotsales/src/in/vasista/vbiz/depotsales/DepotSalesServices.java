@@ -2136,6 +2136,9 @@ public class DepotSalesServices{
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyGeoId = (String) context.get("partyGeoId");
 	  	String partyId = (String) context.get("partyId");
+	  	String tallyReferenceNo = (String) context.get("tallyRefNo");
+	  	
+	  	Debug.log("tallyReferenceNo===================="+tallyReferenceNo);
 	  	String contactMechId = (String) context.get("contactMechId");
 	  	String belowContactMechId = (String) context.get("belowContactMechId");
 	  	String transporterId = (String) context.get("transporterId");
@@ -2166,6 +2169,10 @@ public class DepotSalesServices{
 			Map resultCtx = ByProductNetworkServices.getOrderDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
+			
+			
+			
+			
 			
 			try{
 				if(!indentNotChanged){
@@ -2298,6 +2305,10 @@ public class DepotSalesServices{
 				cart.setIsEnableAcctg("N");
 			}
 	        cart.setExternalId(referenceNo);
+	        
+	        /*if(UtilValidate.isNotEmpty(tallyReferenceNo))
+	        	cart.set(tallyReferenceNo);*/
+	        
 	        if(UtilValidate.isNotEmpty(contactMechId))
 			  cart.setOrderAttribute("SHIPPING_PREF",belowContactMechId);
 	        else if(UtilValidate.isNotEmpty(belowContactMechId))
@@ -2954,12 +2965,14 @@ public class DepotSalesServices{
 					BigDecimal grandTotal = BigDecimal.ZERO;
 				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
 				     orderHeaderDetail.set("grandTotal", grandTotal.add(totalDiscount));
+				     orderHeaderDetail.set("tallyRefNo",tallyReferenceNo);
 				     orderHeaderDetail.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
 		  	 	}
 		
+				
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
 				//GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -2968,6 +2981,7 @@ public class DepotSalesServices{
 				}else{
 					orderHeader.set("isInterState", "Y");
 				}
+				
 				orderHeader.store();
 				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);

@@ -157,6 +157,8 @@ if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 
+Debug.log("OrderHeaderList============="+OrderHeaderList);
+
 tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
 context.tallyRefNo = tallyRefNo;
@@ -392,9 +394,6 @@ context.externalOrderId = externalOrderId;
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
 		
-		 Debug.log("OrderItemBilling==============="+OrderItemBilling);
-		 
-		 
 		 		 
 		 itemOrderId  = OrderItemBilling[0].orderId;
 		 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
@@ -405,7 +404,6 @@ context.externalOrderId = externalOrderId;
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 	
-		 Debug.log("OrderItemDetail==============="+OrderItemDetail);
 		 
 	/*	 conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
@@ -563,8 +561,6 @@ context.finalAddresList = finalAddresList;
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 		
-		Debug.log("OrderItemDetail=============="+OrderItemDetail);
-		
 		
 		for (eachOrderItemList in OrderItemDetail) {
 			
@@ -614,10 +610,6 @@ context.finalAddresList = finalAddresList;
 				passNo = PartyIdentificationList[0].get("idValue");
 				}
 			   
-			 
-			
-			   
-			
 			   tempMap.put("partyId", partyId);
 			   
 			   tempMap.put("passNo", passNo);
