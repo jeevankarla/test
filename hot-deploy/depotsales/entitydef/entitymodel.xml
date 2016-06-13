@@ -632,5 +632,25 @@
         </relation>
         
     </entity>
+    <entity entity-name="SchemeGeo"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Geo Entity">
+      <field name="schemeId" type="id-ne"></field>
+      <field name="geoId" type="id"></field>
+      <field name="schemeGeoEnumId" type="id"></field>
+      <field name="description" type="description"></field>
+      <field name="schemePercent" type="fixed-point"></field>
+      <prim-key field="schemeId"/>
+      <prim-key field="geoId"/>
+      <relation type="one" fk-name="SCHGEO_SCHEME" rel-entity-name="Scheme">
+        <key-map field-name="schemeId"/>
+      </relation>
+      <relation type="one" fk-name="SCHGEO_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="SCHGEO_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="schemeGeoEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
     
 </entitymodel>
