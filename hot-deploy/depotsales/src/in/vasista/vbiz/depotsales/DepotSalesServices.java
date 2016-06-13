@@ -2666,6 +2666,17 @@ public class DepotSalesServices{
 			cart.setOrderId(orderId);
 			checkout = new CheckOutHelper(dispatcher, delegator, cart);
 			orderCreateResult = checkout.editOrder(userLogin);
+			GenericValue orderHeaderDetail = null;
+			try{
+				orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+					BigDecimal grandTotal = BigDecimal.ZERO;
+				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
+				    orderHeaderDetail.set("grandTotal", grandTotal.add(orderGrandTotal));
+				    orderHeaderDetail.store();
+			}catch (Exception e) {
+				  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+				  return ServiceUtil.returnError("Error While Updating grandTotal for Order : "+orderId);
+	  	 	}
 			String PoOrderId ="";
 			try{
 				List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId"), null, null, false);
@@ -2732,11 +2743,6 @@ public class DepotSalesServices{
 		try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			orderHeader.set("purposeTypeId", "BRANCH_SALES");
-			if("Y".equals(onBeHalfOf)){
-				BigDecimal grandTotal = BigDecimal.ZERO;
-			    grandTotal = orderHeader.getBigDecimal("grandTotal");
-			    orderHeader.set("grandTotal", grandTotal.add(orderGrandTotal));
-			}
 			orderHeader.store();
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
