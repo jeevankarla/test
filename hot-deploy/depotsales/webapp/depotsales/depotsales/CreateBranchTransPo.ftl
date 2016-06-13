@@ -97,16 +97,16 @@ function hideManualEntry(){
 }
 
 function populateData(){
-	 CountryOptionList += "<option value = IND selected>India  </option>";          			
+	// CountryOptionList += "<option value = IND selected>India  </option>";          			
 
- 		if(CountryJsonMap != undefined && CountryJsonMap != ""){
-				$.each(CountryJsonMap, function(key, item){
-			         CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
+ 		//if(CountryJsonMap != undefined && CountryJsonMap != ""){
+				//$.each(CountryJsonMap, function(key, item){
+			      //   CountryOptionList += "<option value = " + item.value + " >" + item.label + "</option>";          			
 
-				});
-	 	   }
-		  CountryOptions = CountryOptionList;
- 			jQuery("[name='country']").html(CountryOptions);
+				//});
+	 	 //  }
+		//  CountryOptions = CountryOptionList;
+ 		//	jQuery("[name='country']").html(CountryOptions);
  					 
  		if(StateJsonMap != undefined && StateJsonMap != ""){
 			$.each(StateJsonMap, function(key, item){
@@ -894,7 +894,11 @@ function populateData(){
 				  						<table  id='PostalAddress' cellspacing=5 cellpadding=5 width=500>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address1:</font><font color=red>*</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='address1'  name='address1' onblur='changeToUpperCase();' /></td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Address2: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='address2'  name='address2' onblur='changeToUpperCase();' /></td></tr>
-							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'><select class='h4'  id='country'  name='country' onchange='setServiceName(this)'/></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">Country: </font></td><td align='left' width='60%'>
+							     		   	<select name="country" id="country">
+					      	   					<option value='IND' selected>india</option> 
+					      					</select>
+							     		   	</td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
