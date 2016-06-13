@@ -2578,7 +2578,7 @@ public class DepotSalesServices{
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxMap);
 		 				item.addAdjustment(orderAdjustment);
 						
-		 				totalPrice.add((BigDecimal) taxMap.get("amount"));
+		 				totalPrice=totalPrice.add((BigDecimal) taxMap.get("amount"));
 					}
 				}
 				
@@ -2594,7 +2594,7 @@ public class DepotSalesServices{
 				
 				item.setListPrice(totalPrice);
 				
-				orderGrandTotal.add(totalPrice);
+				orderGrandTotal=orderGrandTotal.add(totalPrice);
 				
 				//Debug.log("groupSequenceId =============="+groupSequenceId);
 				//item.setItemGroup(groupSequenceId, cart);
@@ -2732,7 +2732,11 @@ public class DepotSalesServices{
 		try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			orderHeader.set("purposeTypeId", "BRANCH_SALES");
-			//orderHeader.set("grandTotal", orderGrandTotal);
+			if("Y".equals(onBeHalfOf)){
+				BigDecimal grandTotal = BigDecimal.ZERO;
+			    grandTotal = orderHeader.getBigDecimal("grandTotal");
+			    orderHeader.set("grandTotal", grandTotal.add(orderGrandTotal));
+			}
 			orderHeader.store();
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
