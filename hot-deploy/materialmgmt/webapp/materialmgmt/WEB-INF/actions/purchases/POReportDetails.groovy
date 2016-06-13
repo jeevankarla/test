@@ -964,15 +964,7 @@ for (eachType in orderAdjustmentTypeIds) {
 	 typeBasedMap.put(eachType, SAmeAmountMap);
 }
 
-Debug.log("typeBasedMap==================="+typeBasedMap);
 
+context.typeBasedMap = typeBasedMap;
 
-
-
-
-
-
-
-
-
-
+Debug.log("typeBasedMap=============="+typeBasedMap);
