@@ -301,6 +301,7 @@ under the License.
         <fo:table-column column-width="300pt"/> 
         <fo:table-column column-width="300pt"/>               
 			<fo:table-body>	
+			<#if productStoreId?has_content && productStoreId !="KANNUR">
 			    <fo:table-row>
 					<fo:table-cell><fo:block text-align="left" font-size="11pt">2</fo:block></fo:table-cell>
 					<fo:table-cell><fo:block text-align="left" font-size="11pt">DESPATCH INSTRUCTIONS:</fo:block></fo:table-cell>
@@ -327,6 +328,7 @@ under the License.
                         <fo:block text-align="left" font-size="11pt">&#160;&#160;</fo:block>
                     </fo:table-cell>
                </fo:table-row>
+               </#if>
                 <fo:table-row>
                 	<fo:table-cell border-style="solid">
                         <fo:block text-align="left" font-size="11pt" font-weight="bold" >&#160;</fo:block>
