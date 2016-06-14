@@ -955,22 +955,35 @@ typeBasedMap = [:];
 
 for (eachType in orderAdjustmentTypeIds) {
 	eachTypeOrderAdjustment = EntityUtil.filterByCondition(OrderAdjustmentWithOutSubsidy, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, eachType));
-		  adjustmentAmounts = EntityUtil.getFieldListFromEntityList(eachTypeOrderAdjustment,"amount", true);
+		  adjustmentAmounts = EntityUtil.getFieldListFromEntityList(eachTypeOrderAdjustment,"sourcePercentage", true);
 		  
 	sameTypeAmount = 0;
 	SAmeAmountMap = [:];
 	 for (eachAmount in adjustmentAmounts) {
-		 eachTypeOrderAdjustmentBasedOnAmount = EntityUtil.filterByCondition(eachTypeOrderAdjustment, EntityCondition.makeCondition("amount", EntityOperator.EQUALS, eachAmount));
-		
+		 eachTypeOrderAdjustmentBasedOnAmount = EntityUtil.filterByCondition(eachTypeOrderAdjustment, EntityCondition.makeCondition("sourcePercentage", EntityOperator.EQUALS, eachAmount));
+		  
+		    tempMap = [:];
 		   for (eachAdjList in eachTypeOrderAdjustmentBasedOnAmount) {
 			  sameTypeAmount = sameTypeAmount+Double.valueOf(eachAdjList.amount);
 		}
+		   
 		  SAmeAmountMap.put(eachAmount, sameTypeAmount);
 	}
-	 typeBasedMap.put(eachType, SAmeAmountMap);
+	 
+	 OrderAdjustmentType = delegator.findOne("OrderAdjustmentType", [orderAdjustmentTypeId : eachType], false);
+	 
+	 description = "";
+	 if(OrderAdjustmentType)
+	  description = OrderAdjustmentType.description;
+	 else
+	 description =eachType;
+	 
+	 typeBasedMap.put(description.trim(), SAmeAmountMap);
+	 
 }
 
 
 context.typeBasedMap = typeBasedMap;
 
-Debug.log("typeBasedMap=============="+typeBasedMap);
+
+

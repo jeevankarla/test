@@ -110,13 +110,13 @@ conditionList1 = [];
 OrderPreferencePaymentApplicationDetailList = [];
 conditionList1.add(EntityCondition.makeCondition("orderPaymentPreferenceId" ,EntityOperator.IN,	orderPreferenceIds));
 cond1 = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-OrderPreferencePaymentApplicationDetailList = delegator.findList("OrderPreferencePaymentApplication", cond1, null, null, null ,false);
-paymentIds = EntityUtil.getFieldListFromEntityList(OrderPreferencePaymentApplicationDetailList,"paymentId", true);
+OrderPreferencePaymentApplicationDetailList = delegator.findList("OrderPaymentPreference", cond1, null, null, null ,false);
+orderPaymentPreferenceIdS = EntityUtil.getFieldListFromEntityList(OrderPreferencePaymentApplicationDetailList,"orderPaymentPreferenceId", true);
 
 conditionList2 = [];
 paymentDetailList = [];
  
-conditionList2.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,paymentIds));
+conditionList2.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,orderPaymentPreferenceIdS));
 cond2 = EntityCondition.makeCondition(conditionList2, EntityOperator.AND);
 paymentDetailList = delegator.findList("Payment", cond2, null, null, null ,false);
 paymentRefNumList =[];
@@ -565,35 +565,45 @@ context.Scheam =Scheam;
 			
 			
 			
+						
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
 			
-			
 			OrderAdjustmentWithOutSubsidy = EntityUtil.filterByCondition(OrderAdjustment, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
-			
 			orderAdjustmentTypeIds = EntityUtil.getFieldListFromEntityList(OrderAdjustmentWithOutSubsidy,"orderAdjustmentTypeId", true);
 			
 			typeBasedMap = [:];
 			
-			for (eachType in orderAdjustmentTypeIds) {
+/*			for (eachType in orderAdjustmentTypeIds) {
 				eachTypeOrderAdjustment = EntityUtil.filterByCondition(OrderAdjustmentWithOutSubsidy, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, eachType));
-					  adjustmentAmounts = EntityUtil.getFieldListFromEntityList(eachTypeOrderAdjustment,"amount", true);
+					  adjustmentAmounts = EntityUtil.getFieldListFromEntityList(eachTypeOrderAdjustment,"sourcePercentage", true);
 					  
 				sameTypeAmount = 0;
 				SAmeAmountMap = [:];
 				 for (eachAmount in adjustmentAmounts) {
-					 eachTypeOrderAdjustmentBasedOnAmount = EntityUtil.filterByCondition(eachTypeOrderAdjustment, EntityCondition.makeCondition("amount", EntityOperator.EQUALS, eachAmount));
-					
+					 eachTypeOrderAdjustmentBasedOnAmount = EntityUtil.filterByCondition(eachTypeOrderAdjustment, EntityCondition.makeCondition("sourcePercentage", EntityOperator.EQUALS, eachAmount));
+					  
+					    tempMap = [:];
 					   for (eachAdjList in eachTypeOrderAdjustmentBasedOnAmount) {
 						  sameTypeAmount = sameTypeAmount+Double.valueOf(eachAdjList.amount);
 					}
+					   
 					  SAmeAmountMap.put(eachAmount, sameTypeAmount);
 				}
-				 typeBasedMap.put(eachType, SAmeAmountMap);
-			}
-			
+				 
+				 OrderAdjustmentType = delegator.findOne("OrderAdjustmentType", [orderAdjustmentTypeId : eachType], false);
+				 
+				 description = "";
+				 if(OrderAdjustmentType)
+				  description = OrderAdjustmentType.description;
+				 else
+				 description =eachType;
+				 
+				 typeBasedMap.put(description.trim(), SAmeAmountMap);
+				 
+			}*/
 			
 			
 			finalAddresList=[];
