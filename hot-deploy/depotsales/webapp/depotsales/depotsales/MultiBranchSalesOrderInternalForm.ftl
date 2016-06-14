@@ -537,7 +537,11 @@
 				if(uom == "KGs" ||uom == "Bundle"){				
 					roundedAmount = Math.round(baleQty*price);
 				}
-				kgUnitPrice=price/bundleWeight;				
+				if(uom != "KGs"){
+					kgUnitPrice=price/bundleWeight;	
+				}else{
+					kgUnitPrice=price;	
+				}			
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
@@ -566,7 +570,7 @@
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
-				
+				data[args.row]["totPayable"] =roundedAmount;
 				var row = args.row;
 				
 				grid.updateRow(args.row);
