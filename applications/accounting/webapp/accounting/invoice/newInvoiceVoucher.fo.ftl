@@ -160,9 +160,9 @@ under the License.
 				<fo:table-cell border-style="solid" number-columns-spanned="3">
 				<fo:block text-align="left"  font-size="10pt" >${invoiceDetail.get("prodDescription")}</fo:block>
 				
-				<#assign tempTotAmount = tempTotAmount+(invoiceDetail.get("mgpsQty")*invoiceDetail.get("amount"))>
+				<#assign tempTotAmount = tempTotAmount+(invoiceDetail.get("schemeQty")*invoiceDetail.get("amount"))>
 				
-				<#assign tempScheamQty = tempScheamQty+invoiceDetail.get("mgpsQty")>
+				<#assign tempScheamQty = tempScheamQty+invoiceDetail.get("schemeQty")>
 					
 				
                  <#if invoiceItemLevelAdjustments?has_content>		
@@ -172,15 +172,12 @@ under the License.
 				        <#list eachOne.getValue() as each>  
 				        
 				        <#if each.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY">
-				        
 				         <#assign mgpsAndTotalDeductions = mgpsAndTotalDeductions+each.amount>
-				        
 				        </#if>
 				        
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				        
 				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-			
 				       <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if></fo:block>
 				       
 				       </#if>
@@ -237,14 +234,13 @@ under the License.
 				<#assign totSchemeQty = totSchemeQty+invoiceDetail.get("schemeQty")>
 				</#if>
 				
-				
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("mgpsQty")?has_content>${invoiceDetail.get("mgpsQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<#if invoiceDetail.get("mgpsQty")?has_content>
-				<#assign TotalmgpsQty=TotalmgpsQty+(invoiceDetail.get("quantity")-invoiceDetail.get("mgpsQty"))>
+				<#assign TotalmgpsQty=TotalmgpsQty+(invoiceDetail.get("mgpsQty"))>
 				</#if>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${(invoiceDetail.get("quantity")-invoiceDetail.get("mgpsQty"))?string("#0.000")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				
 				<fo:table-cell border-style="solid">
@@ -262,7 +258,7 @@ under the License.
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each> 
-				        <#if each.invoiceItemTypeId != "INVOICE_ITM_ADJ">
+				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>

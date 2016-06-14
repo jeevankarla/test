@@ -342,10 +342,6 @@ context.externalOrderId = externalOrderId;
 	}*/
 	
 	
-	
-	
-	
-	
 	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 	
 	double grandTotal = 0;
@@ -449,6 +445,9 @@ context.externalOrderId = externalOrderId;
 			if(OrderItemDetail[0].quotaQuantity)
 			quotaQuantity = Double.valueOf(OrderItemDetail[0].quotaQuantity);
 			
+			Debug.log("quotaQuantity================="+quotaQuantity);
+			
+			Debug.log("quantity================="+quantity);
 			
 			if(quantity > quotaQuantity)
 			{
@@ -495,7 +494,6 @@ context.externalOrderId = externalOrderId;
 //}
 
 
-	Debug.log("finalDetails================="+finalDetails);
 	
 
 //==============Address Details===================
@@ -558,11 +556,11 @@ context.finalAddresList = finalAddresList;
 	
 	//context.reportTypeFlag = "ONBEHALF";
 	
-	conditionList.clear();
+	/*conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	OrderItemList = delegator.findList("OrderItem", cond, null, null, null, false);
-	
+*/	
 	if(actualOrderId){
 		
 		conditionList.clear();
