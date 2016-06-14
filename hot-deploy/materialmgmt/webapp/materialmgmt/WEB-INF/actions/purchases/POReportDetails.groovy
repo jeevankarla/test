@@ -153,6 +153,8 @@ if (orderId) {
 	allDetailsMap["grandTotal"] = grandTotal;
 	statusId = orderHeader.statusId;
 	context.statusId=statusId;
+	productStoreId = orderHeader.productStoreId;
+	context.productStoreId=productStoreId;
  }}
 context.roundedGrandTotal=roundedGrandTotal;
 context.orderDesctioption=orderDesctioption;
