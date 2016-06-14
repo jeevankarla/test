@@ -294,18 +294,15 @@ under the License.
 				<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme</fo:block>
 				
 				
-               <#assign grandToT = 0>
-                <#if typeBasedMap?has_content>
-                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;OTHER CHARGES(Packing/Loading Forwarding/others)     : &#160;${typeBaseList?if_exists}  </fo:block>
-				<#assign typeBase=typeBasedMap.entrySet()>
-				  <#list typeBase as typeBaseList>
-				   <#assign typeOFListValues=typeBaseList.getValue().entrySet()>
-				    <#list typeOFListValues as eaValue>
-				 <#assign grandToT = grandToT+eaValue.getValue()>
-				   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                     ${typeBaseList.getKey()?if_exists} : &#160;${eaValue.getValue()?if_exists}  </fo:block>
-				</#list>
-				</#list>
-				</#if>
+		        <#assign grandToT = 0>
+		        <#assign typeBase=typeBasedMap.entrySet()>
+			      <#list typeBase as typeBaseList>
+			       <#assign typeOFListValues=typeBaseList.getValue().entrySet()>
+			        <#list typeOFListValues as eaValue>
+			         <#assign grandToT = grandToT+eaValue.getValue()>
+		           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                     ${typeBaseList.getKey()?if_exists} as ${eaValue.getKey()} % : &#160;${eaValue.getValue()?if_exists}  </fo:block>
+		            </#list>
+		        </#list>
 				
 		        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(toTunitPrice+grandToT)?if_exists?string("##0.00")}</fo:block> 
 				
