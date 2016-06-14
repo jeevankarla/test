@@ -2290,15 +2290,15 @@ public class OrderServices {
             orderHeader.set("statusId", statusId);
 
             // now create a status change
-           /* GenericValue orderStatus = delegator.makeValue("OrderStatus");
+            GenericValue orderStatus = delegator.makeValue("OrderStatus");
             orderStatus.put("orderStatusId", delegator.getNextSeqId("OrderStatus"));
             orderStatus.put("statusId", statusId);
             orderStatus.put("orderId", orderId);
             orderStatus.put("statusDatetime", UtilDateTime.nowTimestamp());
-            orderStatus.put("statusUserLogin", userLogin.getString("userLoginId"));*/
+            orderStatus.put("statusUserLogin", userLogin.getString("userLoginId"));
 
             orderHeader.store();
-           // orderStatus.create();
+            orderStatus.create();
 
             successResult.put("needsInventoryIssuance", orderHeader.get("needsInventoryIssuance"));
             successResult.put("grandTotal", orderHeader.get("grandTotal"));
