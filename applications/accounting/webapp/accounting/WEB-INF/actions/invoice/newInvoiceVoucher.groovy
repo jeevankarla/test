@@ -365,6 +365,8 @@ context.externalOrderId = externalOrderId;
 			double schemeAmt = 0;
 			double quantity = 0;
 			double amount = 0;
+			
+			OrderItemDetail = [];
 		for (eachInvoiceList in eachInvoiceItemList) {
 	   
 		 tempMap.put("productId", eachInvoiceList.productId);
@@ -430,12 +432,11 @@ context.externalOrderId = externalOrderId;
 		 quantity = quantity+eachInvoiceList.quantity;
 		 amount = eachInvoiceList.amount;
 		 
-	
-	   }
+	  
 		    if(OrderItemDetail[0].baleQuantity)
 			tempMap.put("baleQty",OrderItemDetail[0].baleQuantity);
 			else
-			tempMap.put("baleQty",);
+			tempMap.put("baleQty","");
 			
 			tempMap.put("unit", OrderItemDetail[0].unitPrice);
 			
@@ -481,7 +482,10 @@ context.externalOrderId = externalOrderId;
 		    mgpsQty = quantity;
 		    tempMap.put("mgpsQty", mgpsQty);*/
 		  
+		  
+		  
 		finalDetails.add(tempMap);
+		 }
 		}		
 	 }
 	
@@ -491,7 +495,8 @@ context.externalOrderId = externalOrderId;
 //}
 
 
-
+	Debug.log("finalDetails================="+finalDetails);
+	
 
 //==============Address Details===================
 
