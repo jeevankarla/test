@@ -272,11 +272,11 @@ public class DepotSalesServices{
 		         Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
 		         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
 	              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
-	              orderStatus.set("orderId", orderId);
+	             /* orderStatus.set("orderId", orderId);
 	              orderStatus.set("statusId", "ORDER_APPROVED");
 	              orderStatus.set("statusDatetime", nowTimestamp);
 	              orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
-				  delegator.createOrStore(orderStatus);     
+				  delegator.createOrStore(orderStatus); */    
 		         
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
@@ -3516,8 +3516,11 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
+	         
+	         Debug.log("orderPaymentPreferenceId================"+orderPaymentPreferenceId);
+	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
-	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+	        // createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
 	        
