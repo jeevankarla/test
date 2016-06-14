@@ -54,6 +54,7 @@ input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",add
 resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
 
 
+
 contactMechId = resultMap.get("contactMechId");
 
 JSONObject  storeDate = new JSONObject();

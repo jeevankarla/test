@@ -262,6 +262,8 @@
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
+			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+			
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -281,6 +283,7 @@
 			jQuery(formId).append(jQuery(disableAcctgFlag));
 			jQuery(formId).append(jQuery(schemeCategoryObj));
 			jQuery(formId).append(jQuery(partyGeo));
+			jQuery(formId).append(jQuery(transporterId));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
