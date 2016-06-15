@@ -258,6 +258,7 @@
 	productCategoryQuotasMap = [:];
 	resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
 	       productCategoryQuotasMap = resultCtx.get("schemesMap");
+		   productCategoryUsedQuotaMap= resultCtx.get("usedQuotaMap");
 	//        if(UtilValidate.isNotEmpty(schemesMap.get("TEN_PERCENT_MGPS"))){
 	//                productCategoryQuotasMap = schemesMap.get("TEN_PERCENT_MGPS");
 	//        }
@@ -288,12 +289,17 @@
 			JSONObject newObj = new JSONObject();
 			
 			productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-			quota=0;		
+			quota=0;usedQuota=0;		
 			if(productQuotaDetails){
 				schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
 				if(productCategoryQuotasMap.containsKey(schemeCatId)){
 					if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
 						quota = productCategoryQuotasMap.get(schemeCatId);
+					}
+				}
+				if(productCategoryUsedQuotaMap.containsKey(schemeCatId)){
+					if(UtilValidate.isNotEmpty(productCategoryUsedQuotaMap.get(schemeCatId))){
+						usedQuota = productCategoryUsedQuotaMap.get(schemeCatId);
 					}
 				}
 			}
@@ -339,6 +345,7 @@
 			}
 			newObj.put("quantity",eachItem.quantity);
 			newObj.put("quota",quota);
+			newObj.put("usedQuota",usedQuota);
 			amount=0;
 			if("onbehalfof".equals(orderType)){
 				if(eachItem.bundleUnitPrice){

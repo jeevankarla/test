@@ -2227,22 +2227,23 @@ public class DepotSalesServices{
 								condsList.clear();
 								condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 							  	condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
-							  	condsList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
+//							  	condsList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
 							  	BigDecimal quota =BigDecimal.ZERO;
 							  	try {
-									List<GenericValue> OrderItemAttributeList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("attrValue"), null, null, true);
-									if(UtilValidate.isEmpty(OrderItemAttributeList) || OrderItemAttributeList.size()==0){
+									List<GenericValue> orderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("quotaQuantity"), null, null, true);
+									if(UtilValidate.isEmpty(orderItemDetailList) || orderItemDetailList.size()==0){
 										continue;
 									}
-									GenericValue OrderItemAttribute=OrderItemAttributeList.get(0);
-									quota = new BigDecimal((String)OrderItemAttribute.get("attrValue"));
+									for(GenericValue orderItemDetail :orderItemDetailList){
+										quota = quota.add((BigDecimal)orderItemDetail.get("quotaQuantity"));
+									}
 								} catch (GenericEntityException e) {
 									Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 									return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 								}
 							  	Map partyBalanceHistoryContext = FastMap.newInstance();
 								partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
-							  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+								dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 							}
 						}
 						}catch (GenericEntityException e) {
