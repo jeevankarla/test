@@ -64,11 +64,12 @@ function getFecilityAddressDetailAjax(){
 					}else{
 						data = result["facilityAddressJSON"];
 						
-//						alert(data);
+					//alert(data);
 
                        if(data.length != 0)
                        {
                         $('div#orderSpinn').html('');
+                        $("#saveButton").show();
 						drawTable(data);
 					   }
 					   else
@@ -436,9 +437,11 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
     
     function storeFacilityValues(){
 	   
+	      $("#saveButton").hide();
 	   
 	      $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
 	   
+	      
 	     
 	     var supplierId = $("#createdSupplierId").val();
 	     var address1 = $("#Faddress1").val();
@@ -546,6 +549,8 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 	                      $("#TFpostalCode").val("0");
 	                      
 	                      
+	                      
+	                      
 					     }
 					    
                		}
@@ -608,7 +613,14 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 	
 	
 	
+	function clearAllFields(){
 	
+	
+	 $("input[type=text], textarea").val("");
+	 $("#postalCode").val("0");
+	 $("#TFpostalCode").val("0");
+	
+	}
 	
 	
 	
@@ -640,8 +652,12 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 					        <td>
 	        		 			<input style="border-radius: 4px;" type="text" size="18" maxlength="100" name="createdSupplierId"  id="createdSupplierId" />
 	          				</td>
-	          				
 	          				</#if>
+	          				
+	          				 <td class="label"></td>
+							   <td>
+			        		     <input class="button" type="button" size="18" value="Clear All" onclick="clearAllFields();"  />
+			          		   </td>
 	          			   
 				        </tr>
                            <tr>	            
@@ -828,7 +844,7 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								    <tr>
 							        <td class="label"></td>
 							        <td>
-			        		 			<input class="button" type="button" size="18" value="Save" onclick="storeFacilityValues();"  />
+			        		 			<input class="button" type="button" id="saveButton" size="18" value="Save" onclick="storeFacilityValues();"  />
 			          				
 			          				</td>
 							        </tr>   	
