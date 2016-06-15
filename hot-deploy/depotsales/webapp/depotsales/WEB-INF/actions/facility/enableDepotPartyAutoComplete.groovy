@@ -171,15 +171,34 @@
 	
 	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
 	supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
+	
+	partyIdsFromSuppList = EntityUtil.getFieldListFromEntityList(supplierList, "partyId", true);
+	
 	if(supplierList){
 		supplierList.each{ supplier ->
 			JSONObject newObj = new JSONObject();
+			
+			condList.clear();
+			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplier.partyId));
+			 List<String> orderBy = UtilMisc.toList("-statusDate");
+			PartyStatusList = delegator.findList("PartyStatus", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("statusId"),orderBy,null, false);
+			
+			PartyStatus = "";
+			if(PartyStatusList)
+			PartyStatus = (EntityUtil.getFirst(PartyStatusList)).get("statusId");
+			else
+			PartyStatus = "NORECORD";
+			
+			if(PartyStatus == "PARTY_ENABLED" || PartyStatus=="NORECORD")
+			{
 			newObj.put("value",supplier.partyId);
 			partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
 			partyNameObj.put(supplier.partyId,partyName);
 			newObj.put("label",partyName+"["+supplier.partyId+"]");
 			supplierIdJson.put(supplier.partyId, partyName);
 			supplierJSON.add(newObj);
+			}
+			
 		}
 	}
 	context.supplierJSON=supplierJSON;
