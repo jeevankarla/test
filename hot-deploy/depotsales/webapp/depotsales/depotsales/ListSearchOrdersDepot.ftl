@@ -267,7 +267,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 	              	</#if>
               	</#if>
                 <#if (isgeneratedPO =="Y")> 
-	                <#if (eachOrder.get('statusId') == "ORDER_CREATED")>          
+	                <#if (eachOrder.get('statusId') == "DRAFTPO_PROPOSAL")>          
 	                       <#assign statusId ="APPROVE_LEVEL1">
 	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
 	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="Commercial Head" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>

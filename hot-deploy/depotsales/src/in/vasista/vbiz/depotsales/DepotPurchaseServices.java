@@ -1447,7 +1447,15 @@ public class DepotPurchaseServices{
 						return "error";
 					}
 				}
-		
+				if(UtilValidate.isNotEmpty(orderId)){
+				    Map<String, Object> orderStatusMap = UtilMisc.<String, Object>toMap("orderId", orderId, "statusId", "DRAFTPO_PROPOSAL", "userLogin", userLogin);
+				    Map<String, Object> statusResult = null;
+			        try{
+				         statusResult = dispatcher.runSync("changeOrderStatus", orderStatusMap);
+				    }catch (Exception e) {
+					     Debug.logError("Problems adjusting order header status for order #" + orderId, module);
+	                }
+			    }    
 
 			try{
 				
