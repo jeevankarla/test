@@ -91,10 +91,16 @@ context.paramEstimatedDeliveryDate = paramEstimatedDeliveryDate;
 context.paramStatusId = paramStatusId;
 context.paramBranch = paramBranch;
 context.indentDateSort = indentDateSort;
-
-	 
-
-
+BankList = delegator.findList("Bank", null, null, null, null, false);
+JSONArray BankListJSON = new JSONArray();
+if(BankList){
+	BankList.each{ eachBank ->
+		JSONObject newObj = new JSONObject();
+			newObj.put("value",eachBank.description);
+			BankListJSON.add(newObj);
+	}
+}
+context.BankListJSON=BankListJSON;
 
 facilityOrderId = parameters.orderId;
 facilityDeliveryDate = parameters.estimatedDeliveryDate;

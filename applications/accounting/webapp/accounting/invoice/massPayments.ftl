@@ -14,7 +14,7 @@
 	 * as they share very similar styles, but with varying content and titles.
 	 */
 	 
-	 
+	 var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};
 	 var voucherPaymentMethodTypeMap = ${StringUtil.wrapString(voucherPaymentMethodJSON)!'{}'};
 	    var paymentMethodList;
 	    var paymentMethod;
@@ -63,6 +63,19 @@
 		});
 	}
 	
+
+
+  function forBankNames(){
+  
+        $("#issuingAuthority").autocomplete({					
+		source:  BankListJSON,
+		select: function(event, ui) {
+	       var selectedValue = ui.item.label;
+	       $("#issuingAuthority").val(selectedValue);	
+		}
+	});
+	
+  }
 
 	
 	function disableSubmitButton(){			
@@ -199,7 +212,7 @@
                         "<tr class='h3'><td align='left' class='h3' width='60%'><font id='cheqInFavLable'  color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavour' name='inFavour' value='NHDC' readonly /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
-						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' onfocus='forBankNames()' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='invoiceId' value='"+invoiceId+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyIdTo' value='"+partyIdTo+"'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyIdFrom' value='"+partyIdFrom+"'/></td></tr>"+
@@ -248,8 +261,6 @@
 	
 	
 		function paymentFieldsOnchange(){
-  
-     
       var paymentType =  $("#paymentTypeId").val()
       $("#inFavourOf").parent().parent().hide();
       $("#comments").parent().parent().hide();
