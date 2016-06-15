@@ -525,14 +525,19 @@ context.Scheam =Scheam;
 				OrderItemDetail = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
 	
 				
-				eachOrderItem = OrderItemDetail[0];
+				//eachOrderItem = OrderItemDetail[0];
+				
+				for (eachOrderItem in OrderItemDetail) {
+					quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);
+				}
+				
 				
 				if(eachItem.quantity)
 				  quantity = Double.valueOf(eachItem.quantity);
 				
 				  
-				if(eachOrderItem.quotaQuantity)
-				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);
+				/*if(eachOrderItem.quotaQuantity)
+				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);*/
 				  
 				  
 				  if(quantity > quotaQuantity)
@@ -551,8 +556,8 @@ context.Scheam =Scheam;
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(eachItem.Uom)
-				  tempMap.put("Uom", "/"+eachItem.Uom);
+				  if(OrderItemDetail[0].Uom)
+				  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
 				  else
 				  tempMap.put("Uom", "/KGs");
 				
