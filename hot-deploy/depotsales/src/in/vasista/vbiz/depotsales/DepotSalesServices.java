@@ -2853,6 +2853,10 @@ public class DepotSalesServices{
 								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 							}
 							BigDecimal quota = BigDecimal.ZERO;
+							
+							Debug.log("productId =========="+productId);
+							Debug.log("productCategoriesList =========="+productCategoriesList);
+							
 							// Get first productCategoriesList. We got productCategoryId here
 							if(schemeCategory.equals("MGPS_10Pecent")){
 								Timestamp targetDate =null;
@@ -2870,22 +2874,25 @@ public class DepotSalesServices{
 								//	manualQuota=manualQuota.subtract(quota);
 								}else{
 									String schemeId="TEN_PERCENT_MGPS";
-									String productCategoryId=(String)productCategoriesList.get(0);
-									
-									Map partyBalanceHistoryContext = FastMap.newInstance();
-									partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",Kgquantity,"userLogin", userLogin);
-									
-									if(UtilValidate.isNotEmpty(customerId)){
-										partyBalanceHistoryContext.put("partyId",customerId);
+									if(UtilValidate.isNotEmpty(productCategoriesList)){
+										String productCategoryId=(String)productCategoriesList.get(0);
+										
+										Map partyBalanceHistoryContext = FastMap.newInstance();
+										partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",Kgquantity,"userLogin", userLogin);
+										
+										if(UtilValidate.isNotEmpty(customerId)){
+											partyBalanceHistoryContext.put("partyId",customerId);
+										}
+												
+										try {
+											Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+											quota=(BigDecimal)resultMapquota.get("quota");
+										} catch (Exception e) {
+											Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+											return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+										}
 									}
-											
-									try {
-										Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-										quota=(BigDecimal)resultMapquota.get("quota");
-									} catch (Exception e) {
-										Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
-										return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
-									}
+									
 								}
 							}	
 							BigDecimal discountAmount = BigDecimal.ZERO;
