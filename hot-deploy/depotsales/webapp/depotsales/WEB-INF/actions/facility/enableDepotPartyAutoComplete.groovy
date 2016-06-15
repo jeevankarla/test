@@ -186,8 +186,10 @@
 			PartyStatus = "";
 			if(PartyStatusList)
 			PartyStatus = (EntityUtil.getFirst(PartyStatusList)).get("statusId");
+			else
+			PartyStatus = "NORECORD";
 			
-			if(PartyStatus == "PARTY_ENABLED")
+			if(PartyStatus == "PARTY_ENABLED" || PartyStatus=="NORECORD")
 			{
 			newObj.put("value",supplier.partyId);
 			partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
