@@ -157,8 +157,6 @@ if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 
-Debug.log("OrderHeaderList============="+OrderHeaderList);
-
 tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
 context.tallyRefNo = tallyRefNo;
@@ -427,27 +425,40 @@ context.externalOrderId = externalOrderId;
 		 
 		 quantity = quantity+eachInvoiceList.quantity;
 		 amount = eachInvoiceList.amount;
-		 
+		
+		 double baleQty = 0; 
+		 double unit = 0;
+		 double quotaQuantity = 0;
 	  
-		    if(OrderItemDetail[0].baleQuantity)
-			tempMap.put("baleQty",OrderItemDetail[0].baleQuantity);
+		 for (eachOrderItemDetail in OrderItemDetail) {
+		
+			 if(eachOrderItemDetail.baleQuantity)
+			 baleQty = baleQty+Double.valueOf(eachOrderItemDetail.baleQuantity);
+			 
+			 
+			 if(eachOrderItemDetail.unitPrice)
+			 unit = unit+Double.valueOf(eachOrderItemDetail.unitPrice);
+			 
+			 
+			 if(eachOrderItemDetail.quotaQuantity)
+			 quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItemDetail.quotaQuantity);
+			 
+		}
+		 
+		 
+		 
+		 
+		    if(baleQty)
+			tempMap.put("baleQty",baleQty);
 			else
 			tempMap.put("baleQty","");
 			
-			tempMap.put("unit", OrderItemDetail[0].unitPrice);
+			tempMap.put("unit", unit);
 			
 		    tempMap.put("quantity", quantity);
 		
 		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 			double tenPerQty = 0;
-			double quotaQuantity = 0;
-			
-			if(OrderItemDetail[0].quotaQuantity)
-			quotaQuantity = Double.valueOf(OrderItemDetail[0].quotaQuantity);
-			
-			Debug.log("quotaQuantity================="+quotaQuantity);
-			
-			Debug.log("quantity================="+quantity);
 			
 			if(quantity > quotaQuantity)
 			{
