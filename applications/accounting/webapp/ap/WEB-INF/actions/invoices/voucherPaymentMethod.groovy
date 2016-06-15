@@ -128,6 +128,17 @@ condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 finAccountList = delegator.findList("FinAccount", cond, null, ["finAccountName"], null, false);
 context.finAccountList = finAccountList;
+BankList = delegator.findList("Bank", null, null, null, null, false);
+JSONArray BankListJSON = new JSONArray();
+
+if(BankList){
+	BankList.each{ eachBank ->
+		JSONObject newObj = new JSONObject();
+			newObj.put("value",eachBank.description);
+			BankListJSON.add(newObj);
+	}
+}
+context.BankListJSON=BankListJSON;
 
 //Debug.log("====paymentMethodSearchFlag=HECKKKKK="+parameters.paymentMethodSearchFlag);
 JSONObject voucherPaymentMethodJSON = new JSONObject();

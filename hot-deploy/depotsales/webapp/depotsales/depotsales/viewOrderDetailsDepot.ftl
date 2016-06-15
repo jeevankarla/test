@@ -13,7 +13,7 @@
 <input type="hidden" name="Paybalance" id="Paybalance">
 
 <script type="application/javascript">
-					 
+	var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};				 
 	var orderData;			
 	var orderId;
 	var screenFlag;		
@@ -527,7 +527,14 @@
       $("#paymentRefNum").parent().parent().show(); 
        $("#chequeDate").parent().parent().hide(); 
        $("#checkNoLabel").html("Receipt No :"); 
-    }
+    } 
+    $("#issuingAuthority").autocomplete({					
+		source:  BankListJSON,
+		select: function(event, ui) {
+	       var selectedValue = ui.item.label;
+	       $("#issuingAuthority").val(selectedValue);	
+		}
+	});
   }
 	
 	
