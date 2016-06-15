@@ -3530,7 +3530,7 @@ public class DepotSalesServices{
 	         Debug.log("orderPaymentPreferenceId================"+orderPaymentPreferenceId);
 	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
-	        // createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 	        /* GenericValue orderPreferencePaymentApplication = delegator.makeValue("OrderPreferencePaymentApplication");
 	        
