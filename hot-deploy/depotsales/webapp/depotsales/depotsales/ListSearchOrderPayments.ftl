@@ -47,9 +47,10 @@ $(document).ready(function() {
     	if($(window).scrollTop() == $(document).height() - $(window).height()) {
           
            low = high;
-           high = high + 20;
+           high = high + 100;
                      
-           recursively_ajax();           
+           recursively_ajax();          
+                    
     	}
 });
 	recursively_ajax();
@@ -93,17 +94,23 @@ function blinker() {
     $('.blink_me').fadeIn(500);
 } 
 
+var totIndents = 0;
+
+
 
 function drawTable(data) {
 
+   totIndents = totIndents+data.length;
     for (var i = 0; i < data.length; i++) {
             drawRow(data[i]);
           uniqueOrderIdsList.push(data[i].orderId);
+          
+             
+          
     }
     
 }
 
-var totIndents = 0;
 
 function drawRow(rowData) {
     var row = $("<tr />")
@@ -155,7 +162,6 @@ function drawRow(rowData) {
     }
     row.append($("<td>" + rowData.paidAmt + "</td>"));
     
-    totIndents = totIndents+1;
     
     $("#totIndents").html("<h10>"+totIndents+"</h10>");
 
