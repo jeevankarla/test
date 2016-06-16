@@ -1458,7 +1458,7 @@ public class DepotPurchaseServices{
 			    }    
 			try{
 				if (UtilValidate.isNotEmpty(address1)){
-					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION", "contactMechId", contactMechId);
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION");
 					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
 					if (ServiceUtil.isError(resultContatMap)) {
 						Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
