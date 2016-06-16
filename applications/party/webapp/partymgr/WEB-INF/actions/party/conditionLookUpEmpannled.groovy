@@ -55,6 +55,12 @@ if(roleTypeId != null){
 	}else{
 		context.entityName="PartyIdentificationAndPerson";
 	}
+	if(screenFlag && screenFlag.equals("onlyBrnachIndividual")){
+		context.entityName="PartyRelationAndIdentificationAndPerson";
+		if(parameters.branchId){
+			conditionFields.partyIdFrom=parameters.branchId;
+		}
+	}
 		conditionFields.roleTypeId=roleTypeId;
 		if(partyClassificationGroupId != null){
 		conditionFields.partyClassificationGroupId=partyClassificationGroupId;

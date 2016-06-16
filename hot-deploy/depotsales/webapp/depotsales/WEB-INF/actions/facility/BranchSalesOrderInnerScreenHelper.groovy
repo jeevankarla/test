@@ -29,6 +29,10 @@
 		parameters.productStoreId = parameters.productStoreIdFrom;
 		productStoreId=parameters.productStoreIdFrom;
 	}
+	if(parameters.productStoreId){
+	productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : parameters.productStoreId]);
+	parameters.branchId=productStore.payToPartyId;
+	}
 	boothId = parameters.boothId;
 	
 	subscriptionTypeId = parameters.subscriptionTypeId;

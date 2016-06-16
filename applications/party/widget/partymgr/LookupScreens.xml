@@ -116,7 +116,7 @@ under the License.
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->
                 <set field="entityName" value="PartyIdentificationAndPerson"/>
-                <set field="parameters.screenFlag" value="onlyIndividual"></set>
+                <set field="parameters.screenFlag" value="onlyBrnachIndividual"></set>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/conditionLookUpEmpannled.groovy"/>                 
                 <!-- required: fields to search a match -->
                 <!-- the first element from searchFields is returned after user selection --> 
