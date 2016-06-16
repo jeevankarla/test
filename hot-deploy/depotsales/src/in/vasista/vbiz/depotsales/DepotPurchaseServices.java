@@ -1456,11 +1456,9 @@ public class DepotPurchaseServices{
 					     Debug.logError("Problems adjusting order header status for order #" + orderId, module);
 	                }
 			    }    
-
 			try{
-				
 				if (UtilValidate.isNotEmpty(address1)){
-					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechId", contactMechId);
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION", "contactMechId", contactMechId);
 					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
 					if (ServiceUtil.isError(resultContatMap)) {
 						Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
@@ -1505,6 +1503,7 @@ public class DepotPurchaseServices{
 						request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
 			        }
 				}
+				
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
 		request.setAttribute("orderId", orderId); 
 		return "success";

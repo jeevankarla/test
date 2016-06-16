@@ -774,15 +774,26 @@ if(shipToParty.partyId){
 shippPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
 //contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, shipToParty.partyId, false,"POSTAL_ADDRESS");
 
+contactMechesDetails = [];
 conditionListAddress = [];
 conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, shipToParty.partyId));
-conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
 conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
-contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+ List<String> orderBy = UtilMisc.toList("-contactMechId");
+contactMech = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy, null, false);
 
 
+if(contactMech){
+contactMechesDetails = contactMech;
+}
+else{
+	conditionListAddress.clear();
+	conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, shipToParty.partyId));
+	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+	contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+}
 
-//Debug.log("contactMechesDetails======================="+contactMechesDetails);
 if(contactMechesDetails){
 	contactMec=contactMechesDetails.getFirst();
 	if(contactMec){
