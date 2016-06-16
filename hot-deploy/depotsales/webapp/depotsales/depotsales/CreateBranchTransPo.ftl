@@ -399,6 +399,32 @@ function populateData(){
 			
 		} 
 		  
+		  
+		  function populateDestination(){
+		  
+		    
+		    var city = $("#city").val();
+		    var districtGeoId = $("#districtGeoId").val();
+		    var shipingAddCity = $("#shipingAddCity").val();
+		    
+		    if(city.length != 0)
+		     $("#districtGeoId").val(city);
+		     else
+		     $("#districtGeoId").val(shipingAddCity);
+		    
+		    
+		    if(districtGeoId.length == 0)
+		    {
+		    
+		    if(city.length != 0)
+		    $("#districtGeoId").val(city);
+		    else
+		    $("#districtGeoId").val(shipingAddCity);
+		    
+		    }
+		  
+		  }
+		  
 	    
 </script>
 
@@ -879,11 +905,14 @@ function populateData(){
       						<tr>
                     			<td class="label"><FONT COLOR="#045FB4"><b>Destination  : </b></FONT></td>
                             	 <#if shipingAdd?has_content && shipingAdd.get("city")?has_content>
-                            	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("city")?if_exists}">
+                            	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("city")?if_exists}" onblur = "populateDestination()">
                             		<#else>
-                            		     <td><input type="text" name="districtGeoId" id="districtGeoId">
+                            		     <td><input type="text" name="districtGeoId" id="districtGeoId" onblur = "populateDestination()">
                             	 </#if>
                             	 </td>
+                            	 
+                            	  <input type="hidden" name="shipingAddCity" id="shipingAddCity" value="${shipingAdd.get("city")?if_exists}">
+                            	  
       						</tr>
       						
 			           </table>
@@ -900,7 +929,7 @@ function populateData(){
 					      					</select>
 							     		   	</td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">State: </font></td><td align='left' width='60%'><select class='h4'  id='stateProvinceGeoId'  name='stateProvinceGeoId'/></td></tr>
-							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='changeToUpperCase();' /></td></tr>
+							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">City: </font></td><td align='left' width='60%'><input type='text' class='h4'  id='city'  name='city' onblur='populateDestination();' /></td></tr>
 							     		   	<tr class='h5'><td align='center' class='h5' width='40%'><FONT COLOR="#045FB4">PostalCode:</font> </td><td align='left' width='60%'><input type='text' class='h4'  id='postalCode'  name='postalCode' onblur='changeToUpperCase();' /></td></tr>
 							     		</table>
 		   							</div>
