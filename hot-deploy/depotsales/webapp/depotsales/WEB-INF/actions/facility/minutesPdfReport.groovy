@@ -562,7 +562,7 @@ context.Scheam =Scheam;
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(OrderItemDetail[0].Uom)
+				  if(OrderItemDetail[0])
 				  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
 				  else
 				  tempMap.put("Uom", "/KGs");
