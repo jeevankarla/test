@@ -458,5 +458,9 @@ under the License.
 
    <ContactMechPurposeType contactMechPurposeTypeId="NORMAL_ADDRESS" createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" description="Billing (AP) Email" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0"/> 
    <ContactMechPurposeType contactMechPurposeTypeId="TAX_ADDRESS" createdStamp="2014-02-10 20:39:06.0" createdTxStamp="2014-02-10 20:39:06.0" description="Billing (AP) Email" lastUpdatedStamp="2014-02-10 20:39:06.0" lastUpdatedTxStamp="2014-02-10 20:39:06.0"/> 
-	
+  
+   <StatusValidChange createdStamp="2016-03-09 12:02:11.0" createdTxStamp="2016-03-09 12:02:11.0" lastUpdatedStamp="2016-03-09 12:02:11.0" lastUpdatedTxStamp="2016-03-09 12:02:11.0" statusId="ORDER_CREATED" statusIdTo="DRAFTPO_PROPOSAL" transitionName="Draft Proposal"/> 
+   <StatusValidChange createdStamp="2016-03-09 12:02:11.0" createdTxStamp="2016-03-09 12:02:11.0" lastUpdatedStamp="2016-03-09 12:02:11.0" lastUpdatedTxStamp="2016-03-09 12:02:11.0" statusId="DRAFTPO_PROPOSAL" statusIdTo="APPROVE_LEVEL1" transitionName="Approve Order Level1"/> 
+   <StatusValidChange createdStamp="2016-03-09 12:02:11.0" createdTxStamp="2016-03-09 12:02:11.0" lastUpdatedStamp="2016-03-09 12:02:11.0" lastUpdatedTxStamp="2016-03-09 12:02:11.0" statusId="DRAFTPO_PROPOSAL" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/> 
+   <StatusItem createdStamp="2016-06-15 12:50:46.0" createdTxStamp="2016-06-15 12:50:46.0" lastUpdatedStamp="2016-06-15 12:50:46.0" lastUpdatedTxStamp="2016-06-15 12:50:46.0" statusCode="APPROVED" statusId="DRAFTPO_PROPOSAL" statusTypeId="ORDER_STATUS" description="Draft Proposal"/>
 </entity-engine-xml>
