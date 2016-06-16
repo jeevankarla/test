@@ -524,17 +524,19 @@ context.Scheam =Scheam;
 				condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				OrderItemDetail = delegator.findList("OrderItemDetail", condExpr, null, null, null, false);
 	
-				
 				//eachOrderItem = OrderItemDetail[0];
 				
 				for (eachOrderItem in OrderItemDetail) {
-					quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);
+					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
+					
 				}
+				
 				
 				
 				if(eachItem.quantity)
 				  quantity = Double.valueOf(eachItem.quantity);
 				
+				  
 				  
 				/*if(eachOrderItem.quotaQuantity)
 				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);*/
