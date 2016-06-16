@@ -516,6 +516,7 @@ context.Scheam =Scheam;
 				
 				double quantity = 0;
 				double quotaQuantity = 0;
+				double baleQuantity = 0;
 				
 				
 				conditionList.clear();
@@ -528,6 +529,7 @@ context.Scheam =Scheam;
 				
 				for (eachOrderItem in OrderItemDetail) {
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
+					baleQuantity = baleQuantity+Double.valueOf(eachOrderItem.baleQuantity);
 					
 				}
 				
@@ -554,6 +556,8 @@ context.Scheam =Scheam;
 				  }
 				//mgps Qty
 				 
+				  tempMap.put("baleQuantity", baleQuantity);
+				  
 				  tempMap.put("mgpsQty", quantity-tenPerQty);
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
