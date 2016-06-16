@@ -7,6 +7,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,9 +61,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro.ownerPartyId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
+//			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
 			
-			branchParties = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro.ownerPartyId), null, null, null, false);
+			branchParties = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
 			for (int j = 0; j < branchParties.size(); j++) {
 				branchParty = branchParties.get(j);
 				partyIdNameMap.put(branchParty.partyId, branchParty.groupName);
@@ -123,7 +124,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  poOrderList = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId","statusId", "externalId"), null, null, false);
  salesOrderPOMap = [:]
- Debug.log("===poOrderList=="+poOrderList+"==condition=="+condition);	 
+ //Debug.log("===poOrderList=="+poOrderList+"==condition=="+condition);	 
  	if(poOrderList){
 		 poOrderList.each{eachItem ->
 	 		salesOrderPOMap.put(eachItem.getAt("externalId"), eachItem);
@@ -142,7 +143,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 		}
 		 	}
 		 	roId = branchROMap.get(partyId);	
-		 	grandTotal = eachItem.getAt("grandTotal");	 	
+		 	grandTotal = (new BigDecimal(eachItem.getAt("grandTotal"))).setScale(0, RoundingMode.HALF_UP);	 	
 		 	if (DataMap.containsKey(partyId)) {
 		 		branchDetails = DataMap.get(partyId);
 		 		totIndents = branchDetails.get("totIndents");
@@ -176,7 +177,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	
 
 
- Debug.log("===DataMap=="+DataMap);
+//Debug.log("===DataMap=="+DataMap);
  
 	 for(Map.Entry entry : DataMap.entrySet()){
 	 		JSONObject newObj = new JSONObject();
@@ -186,7 +187,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 			roId = branchROMap.get(partyId);
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", partyIdNameMap.get(partyId));
-				newObj.put("ReportsTo", partyIdNameMap.get(roId));
+				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
 				newObj.put("avgTAT","");			
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));
@@ -197,7 +198,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 		else {
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
-				newObj.put("ReportsTo", null);
+				newObj.put("ReportsTo", "");
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");	
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
@@ -208,6 +209,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 		dataList.add(newObj);			
 	 }		
 				
+// Debug.log("===dataList=="+dataList);
 				
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();

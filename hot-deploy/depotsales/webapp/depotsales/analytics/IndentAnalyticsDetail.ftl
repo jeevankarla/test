@@ -49,10 +49,22 @@ $(document).ready(function () {
                     keyDataField: { name: 'partyId' },
                     parentDataField: { name: 'ReportsTo' } 
                 },
-                id: 'branch',
+                id: 'partyId',
                 localData: indents
             };
             var dataAdapter = new $.jqx.dataAdapter(source);
+            
+            var cellsRenderer = function (row, column, value, rowData)
+            {
+                if (rowData.records !== undefined)
+                {
+                    return '<span style="font-weight: bold;">' + value + '</span>';
+                } else
+                {
+                    return '<span>' + value + '</span>';
+                }
+            };            
+            
             // create Tree Grid
             $("#treeGrid").jqxTreeGrid(
             {
@@ -76,12 +88,12 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellclassname:'smallfont'},
-                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'center', cellclassname:'smallfont'},
-                  { text: 'Total Revenue (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'In Process', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellclassname:'smallfont'},
-                  { text: 'Completed', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellclassname:'smallfont' },
+                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
+                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'center', cellsRenderer: cellsRenderer },
+                  { text: 'Total Revenue (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'In Process', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Completed', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                
