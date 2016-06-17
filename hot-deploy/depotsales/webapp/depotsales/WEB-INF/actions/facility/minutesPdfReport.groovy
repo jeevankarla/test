@@ -527,6 +527,25 @@ context.Scheam =Scheam;
 	
 				//eachOrderItem = OrderItemDetail[0];
 				
+				double serviceAmount = 0;
+				 if(scheme == "General"){
+					 
+					 conditionList.clear();
+					 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+					 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					 condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					 OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
+		 
+					 if(OrderAdjustment[0].orderAdjustmentTypeId == "SERVICE_CHARGE"){
+						 if(OrderAdjustment[0].amount){
+						   serviceAmount=OrderAdjustment[0].amount;
+						 }
+					}
+					 
+				 }
+				
+				
 				for (eachOrderItem in OrderItemDetail) {
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
 					baleQuantity = baleQuantity+Double.valueOf(eachOrderItem.baleQuantity);
@@ -562,14 +581,14 @@ context.Scheam =Scheam;
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(OrderItemDetail[0])
+				  if(UtilValidate.isNotEmpty(OrderItemDetail[0].Uom))
 				  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
 				  else
 				  tempMap.put("Uom", "/KGs");
 				
 			   //purChasesVal;
 				  
-				  tempMap.put("totalCost", eachItem.quantity*eachItem.unitPrice);
+				  tempMap.put("totalCost", (eachItem.quantity*eachItem.unitPrice)+serviceAmount);
 				  
 				  OrderItems.add(tempMap);
 			}
@@ -577,7 +596,7 @@ context.Scheam =Scheam;
 			
 			
 						
-			conditionList.clear();
+		/*	conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
@@ -585,6 +604,8 @@ context.Scheam =Scheam;
 			OrderAdjustmentWithOutSubsidy = EntityUtil.filterByCondition(OrderAdjustment, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
 			orderAdjustmentTypeIds = EntityUtil.getFieldListFromEntityList(OrderAdjustmentWithOutSubsidy,"orderAdjustmentTypeId", true);
 			
+			Debug.log("OrderAdjustment================="+OrderAdjustment);
+	*/		
 			typeBasedMap = [:];
 			
 /*			for (eachType in orderAdjustmentTypeIds) {
