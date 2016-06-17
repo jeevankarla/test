@@ -531,13 +531,16 @@
       	    <#--{id:"customerName", name:"Customer", field:"customerName", width:150, minWidth:150, cssClass:"readOnlyColumnClass", availableTags: availableIndCustTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},-->
 			<#--{id:"psbNumber", name:"psbNumber", field:"psbNumber", width:150, minWidth:150, cssClass:"readOnlyColumnClass",focusable :false},-->
 			{id:"cProductName", name:"Product", field:"cProductName", width:270, minWidth:270, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
-			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
-			{id:"unitPrice", name:"Basic Unit Price(Kg)", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"unitPrice", name:"Basic Unit Price in Kgs", field:"unitPrice", width:90, minWidth:90, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
-			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
-			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
-			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", availableTags: cstlableTags, editor: AutoCompleteEditor,validator:cstValidator},
+			<#--{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", editor:FloatCellEditor},-->
+			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
+			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
+			{id:"uom", name:"UOM", field:"uom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, align:"right", toolTip:"uom", focusable :false},
+			{id:"bundleWght", name:"Bundle weight", field:"bundleWght", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"baleQty", name:"Bale Qty", field:"baleQty", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			
 		];
             
@@ -654,7 +657,12 @@
 				var bedPercent = parseFloat(data[args.row]["bedPercent"]);
 				var vatPercent = parseFloat(data[args.row]["vatPercent"]);
 				var cstPercent = parseFloat(data[args.row]["cstPercent"]);
+				
 				var price = data[args.row]['unitPrice'];
+				var bundleWght = data[args.row]['bundleWght'];
+				var uom = data[args.row]['uom'];
+				
+				
 				if(isNaN(price)){
 					price = 0;
 				}
@@ -685,6 +693,10 @@
 					roundedAmount = roundedAmount+amtBED+amtCST+amtVAT;
 				}
 				totalValue=roundedAmount;
+				if(uom == "Bale" || uom == "Half-Bale" || uom == "Bundle"){				
+				baleQty = qty/bundleWght;
+				data[args.row]["baleQty"] = baleQty;
+				}
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = baseAmount;
 				grid.updateRow(args.row);

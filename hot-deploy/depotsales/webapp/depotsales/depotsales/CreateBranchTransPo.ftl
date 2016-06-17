@@ -672,7 +672,7 @@ function populateData(){
 									<label>Material Details</label>
 								</div>
 							
-								<div id="myGrid1" style="width:80%;height:150px;">
+								<div id="myGrid1" style="width:100%;height:150px;">
 									<div class="grid-header" style="width:80%">
 									</div>
 			             		</div>

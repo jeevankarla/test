@@ -468,6 +468,8 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		}
 		remarks="";
 		uom="";
+		baleQty=0;
+		bundleWght=0;
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
@@ -475,12 +477,27 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		if(UtilValidate.isNotEmpty(orderItemDtl)){
 			remarks = (orderItemDtl.get(0)).get("remarks");
 			uom = (orderItemDtl.get(0)).get("Uom");
-		}					
+			bundleWght=(orderItemDtl.get(0)).get("bundleWeight");
+			if(uom==null){
+				uom="KGs";
+			}
+			if(uom == "Bale" || uom =="Half-Bale"|| uom=="Bundle"){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+				orderItemPrdDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+				orderItemPrdDtl.each{ eachprd ->
+					baleQty=baleQty+eachprd.baleQuantity;
+				}
+				
+			}
+		}	
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
 		newObj.put("remarks",remarks);
 		newObj.put("uom",uom);
+		newObj.put("bundleWght",bundleWght);
+		newObj.put("baleQty",baleQty);
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);
