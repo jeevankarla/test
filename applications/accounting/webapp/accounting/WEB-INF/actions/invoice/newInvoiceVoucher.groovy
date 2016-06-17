@@ -483,7 +483,9 @@ context.externalOrderId = externalOrderId;
 		  tempMap.put("schemeQty", 0);
 */		  
 		  
-		
+		  if(scheme == "General")
+		  tempMap.put("mgpsQty", 0);
+		  else
 		  tempMap.put("mgpsQty", quantity-tenPerQty);
 			
 			

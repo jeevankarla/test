@@ -576,8 +576,12 @@ context.Scheam =Scheam;
 				//mgps Qty
 				 
 				  tempMap.put("baleQuantity", baleQuantity);
-				  
+1				  
+				  if(scheme == "General")
+				  tempMap.put("mgpsQty", 0);
+				  else
 				  tempMap.put("mgpsQty", quantity-tenPerQty);
+				  
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
