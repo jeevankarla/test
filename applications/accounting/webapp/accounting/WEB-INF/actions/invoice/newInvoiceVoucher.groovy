@@ -109,6 +109,9 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
 invoiceItemLevelAdjustments = [:];
+
+double totTaxAmount = 0;
+
 int i=0;
 for (eachList in invoiceItemList) {
 	
@@ -134,6 +137,8 @@ for (eachList in invoiceItemList) {
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  
+		  totTaxAmount = totTaxAmount+eachItem.amount;
+		  
 		  itemAdjustList.add(tempMap);
 	}
 	 }
@@ -150,6 +155,7 @@ context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
 
+context.totTaxAmount = totTaxAmount;
 
 
 orderAttrForPo = [];

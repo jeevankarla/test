@@ -204,22 +204,22 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
 				
 				
-                
-				
+                <#assign totServiceCharge = 0>
+				 <#assign serviceCharge = 0>
                  <#if invoiceItemLevelAdjustments?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each>  
 				        
+				        <#if each.description == "Service Charge">
+				           <#assign serviceCharge = each.amount>
+				           
+				        </#if>
+				        
 				         <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				
                           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-                          <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				        
 				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.quantity}</fo:block>
 				         </#if>
 				        </#list>
@@ -248,9 +248,9 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("ToTamount")?has_content>
-				<#assign totAmount = totAmount+invoiceDetail.get("ToTamount")>
+				<#assign totAmount = totAmount+(invoiceDetail.get("ToTamount"))>
 				</#if>
-				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("ToTamount")?string("#0.00")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${(invoiceDetail.get("ToTamount"))?string("#0.00")}</fo:block>
 				
                  
 				 <#if invoiceItemLevelAdjustments?has_content>		
@@ -260,11 +260,7 @@ under the License.
 				        <#list eachOne.getValue() as each> 
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				        
+				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.amount}</fo:block>
 				         </#if>
 				        </#list>
@@ -303,7 +299,7 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${grandTotal?string("#0.00")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 				</fo:table-cell>
 								
 				</fo:table-row>
@@ -383,7 +379,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
-  				<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${finalTOtal?string("#0.00")}</fo:block>
+  				<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${(finalTOtal+totTaxAmount)?string("#0.00")}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
@@ -401,7 +397,7 @@ under the License.
 				<fo:table-body>
 					<fo:table-row white-space-collapse="false">
 						<fo:table-cell number-columns-spanned="2" >
-						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble((totAmount-schemeDeductionAmt)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
+						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble((totAmount-schemeDeductionAmt)+totTaxAmount?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
 						</fo:table-cell>
 						
 					</fo:table-row>
