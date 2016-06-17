@@ -92,6 +92,9 @@ under the License.
                 </fo:table>
               </fo:block> 
               <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>	
+		        	</fo:static-content>
+		        	<fo:static-content flow-name="xsl-region-after">
+		        	    <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace">Page - <fo:page-number/></fo:block>
 		        	</fo:static-content>	        	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Helvetica">		
             	<fo:block>

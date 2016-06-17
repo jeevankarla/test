@@ -36,12 +36,12 @@ import net.sf.json.JSONArray;
 
 
 condListGroup = [];
-partyClassificationGroup = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, CUST_CLASSIFICATION), null,null,null, false);
-List partyClassificationGroupIds = EntityUtil.getFieldListFromEntityList(partyClassificationGroup, "partyClassificationGroupId", true);
+partyClassificationGroup = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), null,null,null, false);
+/*List partyClassificationGroupIds = EntityUtil.getFieldListFromEntityList(partyClassificationGroup, "partyClassificationGroupId", true);
 condListGroup.add(EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.IN, partyClassificationGroupIds));
 condGroup=EntityCondition.makeCondition(condListGroup,EntityOperator.AND);
-partyClassList = delegator.findList("PartyClassificationType", condGroup, null, null, null, false);
-context.partyClassList=partyClassList;
+partyClassList = delegator.findList("PartyClassificationType", condGroup, null, null, null, false);*/
+context.partyClassList=partyClassificationGroup;
 
 
 AllLoomDetails = delegator.findList("LoomType",null,null,null,null,false);
