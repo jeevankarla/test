@@ -100,7 +100,6 @@ JSONArray orderList=new JSONArray();
 inputFields = [:];
 inputFields.put("noConditionFind", "Y");
 inputFields.put("hideSearch","Y");
-inputFields.put("orderId_op", searchOrderId);
 
 if(UtilValidate.isNotEmpty(searchOrderId)){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
@@ -131,7 +130,7 @@ dateSort = "-orderDate";
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 List<String> payOrderBy = UtilMisc.toList(dateSort,"-orderId");
 
-resultList = null;
+resultList = [];
 
 
 if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==1){
@@ -151,46 +150,65 @@ if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==
 	branchbasedIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
 	//orderHeaderbefo = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,branchbasedIds));
-	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	
 	}
 	
 	
-	orderHeaderbefo = delegator.findList("OrderHeader", cond, null, payOrderBy, null ,false);
-	orderIdsbefo=EntityUtil.getFieldListFromEntityList(orderHeaderbefo, "orderId", true);
+	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
-resultList = delegator.find("OrderHeader", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIdsbefo), null, null, null, null);
+	//orderHeaderbefo = delegator.findList("OrderHeader", cond, null, payOrderBy, null ,false);
+	//orderIdsbefo=EntityUtil.getFieldListFromEntityList(orderHeaderbefo, "orderId", true);
+	
+resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 }
 else{
-result = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields,"orderBy",dateSort, "userLogin", userLogin));
-resultList = result.listIt;
+//result = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields,"orderBy",dateSort, "userLogin", userLogin));
+resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
+
+//resultList = result.listIt;
 }
 
-orderHeader1 = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
-//orderHeader2 = EntityUtil.filterByCondition(orderHeader1, cond);
+orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
 
-orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
+//orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
+
+//orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
+
+//orderHeader = EntityUtil.filterByCondition(orderHeader, cond);
+/*
+orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
+
+orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
+*/
+
+if(uniqueOrderIdsList)
+orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
+
+//orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
 
 //condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,orderIds1));
-
+/*
 List condList11 = [];
-
 condList11.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, orderIds1));
-//if(uniqueOrderIdsList)
 condList11.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-
 condList11Tion = EntityCondition.makeCondition(condList11, EntityOperator.AND);
+*/
 
-orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
+//orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
 
-orderIds2 = [];
+
+//orderHeader2 = EntityUtil.filterByCondition(orderHeader2, EntityCondition.makeCondition("orderId" ,EntityOperator.IN,orderIds1));
+
+
+/*orderIds2 = [];
 
 for (eachOrder in orderHeader2) {
 	orderIds2.add(eachOrder.orderId);
 	
 	
-}
+}*/
 
-//orderIds2=EntityUtil.getFieldListFromEntityList(orderHeader2, "orderId", true);
+/*orderIds2=EntityUtil.getFieldListFromEntityList(orderHeader2, "orderId", true);
 
 List FinalcondList = [];
 
@@ -201,23 +219,14 @@ FinalcondList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, or
 finalcond = EntityCondition.makeCondition(FinalcondList, EntityOperator.AND);
 
 
-orderHeader = delegator.findList("OrderHeader", finalcond, null, payOrderBy, null ,false);
+//orderHeader = delegator.findList("OrderHeader", finalcond, null, payOrderBy, null ,false);
 
 //orderHeader = EntityUtil.filterByCondition(orderHeader2, EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, uniqueOrderIdsList));
 
-
+*/
 orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
-//Debug.log("resultList=================="+resultList);
 
-//Debug.log("orderIds1=================="+orderIds1);
-
-//Debug.log("orderIds2=================="+orderIds2);
-
-
-
-
-//Debug.log("orderIds=================="+orderIds);
 
 /*
 forTotalresult = null;
@@ -231,7 +240,6 @@ forTotalorderHeaderList = EntityUtil.filterByCondition(forTotalorderHeader, forT
 
 totIndents = forTotalorderHeaderList.size();
 listItr.close();*/
-
 
 
 custCondList = [];
@@ -257,19 +265,24 @@ if(UtilValidate.isEmpty(orderRoles)){
 customerBasedOrderIds = EntityUtil.getFieldListFromEntityList(orderRoles, "orderId", true);
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, customerBasedOrderIds));
 
+
+
 custCondList.clear();
 custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 // query based on branch
-if(UtilValidate.isNotEmpty(branchList)){
+/*if(UtilValidate.isNotEmpty(branchList)){
 	custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
-}
+}*/
 custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
 
 vendorBasedOrderIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
 
+
+
 orderDetailsMap=[:];
+
 
 
 JSONObject eachPaymentOrderMap = new JSONObject();
@@ -277,7 +290,10 @@ JSONObject eachPaymentOrderMap = new JSONObject();
 
 Set partyIdsSet=new HashSet();
 orderHeader.each{ eachHeader ->
+
 	orderId = eachHeader.orderId;
+	
+	
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
@@ -420,10 +436,10 @@ orderHeader.each{ eachHeader ->
 	tempData.put("balance", balance);
 	
 	orderList.add(tempData);
-	
 }
 
 resultList.close();
+
 
 /*sortedOrderMap =  [:]as TreeMap;
 for (eachList in orderList) {
@@ -438,6 +454,8 @@ NavigableSet nset=sortedOrderMap.descendingKeySet();
 	}
 	
 	Debug.log("===================== basedList=====" +basedList.size());*/
+
+
 request.setAttribute("orderList", orderList);
 return "success";
 

@@ -332,7 +332,6 @@ function cancelviewOrderForm(){
 		var message = "";
 		var title = "";
 		
-		alert("orderData============"+orderData);
 		
 		if(orderData != undefined){
 			var orderAmt = 0;
@@ -411,7 +410,7 @@ function cancelviewOrderForm(){
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address1 :</td><td align='left' class='h3'>"+Naddress1+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address2 :</td><td align='left' class='h3'>"+Naddress2+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> City :</td><td align='left' class='h3'>"+Ncity+"</td><tr>";
-			message += "<thead><tr class='h3'><td align='left' class='h3'> Country :</td><td align='left' class='h3'>"+NcountryGeoId+"</td><tr>";
+			message += "<thead><tr class='h3'><td align='left' class='h3'> Country :</td><td align='left' class='h3'>India</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> State :</td><td align='left' class='h3'>"+NstateProvinceGeoId+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> PostalCode :</td><td align='left' class='h3'>"+NpostalCode+"</td><tr>";
 			
@@ -421,7 +420,7 @@ function cancelviewOrderForm(){
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address1 :</td><td align='left' class='h3'>"+Taddress1+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address2 :</td><td align='left' class='h3'>"+Taddress2+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> City :</td><td align='left' class='h3'>"+Tcity+"</td><tr>";
-			message += "<thead><tr class='h3'><td align='left' class='h3'> Country :</td><td align='left' class='h3'>"+TcountryGeoId+"</td><tr>";
+			message += "<thead><tr class='h3'><td align='left' class='h3'> Country :</td><td align='left' class='h3'>India</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> State :</td><td align='left' class='h3'>"+TstateProvinceGeoId+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> PostalCode :</td><td align='left' class='h3'>"+TpostalCode+"</td><tr>";
 			

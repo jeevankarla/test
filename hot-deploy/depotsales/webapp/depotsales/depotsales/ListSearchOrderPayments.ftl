@@ -41,14 +41,14 @@ var indentDateSort = $("#indentDateSort").val();
 var uniqueOrderIdsList = [];
 var orderData;
 var domOrderIds = "";
-var low = 0, high = 20;
+var low = 0, high = 50;
 $(document).ready(function() {
    $(window).scroll(function() {
     	if($(window).scrollTop() == $(document).height() - $(window).height()) {
           
            low = high;
            high = high + 50;
-                     
+         
            recursively_ajax();          
                     
     	}
