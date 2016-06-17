@@ -41,6 +41,7 @@ under the License.
             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PURCHASE ORDER </fo:block>
  			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
  			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOAddress?if_exists}</fo:block>
+			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOEmail?if_exists}</fo:block>
 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             <fo:block>
 			    <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
@@ -51,7 +52,6 @@ under the License.
                               <fo:table-row>
 				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TIN No &#160;  : 09152300064</fo:block></fo:table-cell> 
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
-				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >${BOEmail?if_exists} </fo:block></fo:table-cell>       			
                                </fo:table-row>
                                <fo:table-row>
 				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">C.S.T.No : 683925 w.e.f 12.06.1985</fo:block></fo:table-cell> 

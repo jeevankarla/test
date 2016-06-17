@@ -370,14 +370,15 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Due Date</td>
           <td>${uiLabelMap.CommonStatus}</td>
-          <td>${uiLabelMap.CommonDescription}</td>
-          <td>Reason For Cancellation</td>
+         <#--- <td>${uiLabelMap.CommonDescription}</td>
+          <td>Reason For Cancellation</td>-->
           <td>${uiLabelMap.AccountingVendorParty}</td>
           <td>${uiLabelMap.AccountingToParty}</td>
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <#--<td>Rise Sales Invoice</td>-->
+         <#--- <td>Invoice voucher</td>-->
           <td>Make Payment</td> 
           <#--<td>Payment Advice</td>-->
          <#-- <td>Cheque</td>--> 
@@ -405,8 +406,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
  		      
 			 
  			
-              <td>${(invoice.description)?if_exists}</td>
- 			  <td>${(invoice.cancelComments)?if_exists}</td>
+             <#--- <td>${(invoice.description)?if_exists}</td>
+ 			  <td>${(invoice.cancelComments)?if_exists}</td>-->
               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists/>
             
             
@@ -423,7 +424,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
-               
+              <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >

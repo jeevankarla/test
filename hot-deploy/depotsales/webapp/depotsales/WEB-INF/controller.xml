@@ -1834,6 +1834,10 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="purchaseInvoiceDetails.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="purchaseInvoiceDetailsPDFReport"/>
+    </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -2029,7 +2033,7 @@
      
      <view-map name="processIndentBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentBranchSales"/>
      
-     
+     <view-map name="purchaseInvoiceDetailsPDFReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseInvoiceDetailsPDFReport" content-type="application/pdf"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
      <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
