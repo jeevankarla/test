@@ -2706,7 +2706,7 @@ public class DepotSalesServices{
 		    		processContext.put("userLogin",userLogin);
 		    		processContext.put("SalesOrder",orderId);
 		    		processContext.put("PurchaseOrder",PoOrderId);
-		            result = updateIndentSummaryPO(dctx, processContext);
+		            result = updateIndentPO(dctx, processContext);
 					if(ServiceUtil.isError(result)){
 						Debug.logError("Unable to update order: " + ServiceUtil.getErrorMessage(result), module);
 			             return ServiceUtil.returnError(" Unable to update related Purchase order  :");
@@ -9727,14 +9727,174 @@ public class DepotSalesServices{
    	    return result;
    	}
  	
+ 	public static Map<String, Object> updateIndentPO(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String salesOrderId = (String)context.get("SalesOrder");
+		String purchaseOrderId = (String)context.get("PurchaseOrder");
+	  	boolean beganTransaction = false;
+		try{
+			try{
+				beganTransaction = TransactionUtil.begin(7200);
+				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, salesOrderId), null, null, null, false);
+				BigDecimal totalBedAmount = BigDecimal.ZERO;
+				BigDecimal totalBedCessAmount = BigDecimal.ZERO;
+				BigDecimal totalBedSecCessAmount = BigDecimal.ZERO;
+				BigDecimal totalVatAmount = BigDecimal.ZERO;
+				BigDecimal totalCstAmount = BigDecimal.ZERO;
+				List<GenericValue> PoOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId), null, null, null, false);
 
- 	
- 	
- 	
- 	
- 	
- 	
- 	
- 	
+				GenericValue orderItemValue = null;
+				for(GenericValue eachItem : orderItems){
+					//Map.Entry entry = (Entry)eachProductIter.next();
+					String productId = "";
+					//Map prodQtyMap=(Map)entry.getValue();
+					List taxList=FastList.newInstance();
+					
+					BigDecimal quantity = BigDecimal.ZERO;
+					BigDecimal unitPrice = BigDecimal.ZERO;
+					BigDecimal unitListPrice = BigDecimal.ZERO;
+					BigDecimal vatPercent = BigDecimal.ZERO;
+					BigDecimal vatAmount = BigDecimal.ZERO;
+					BigDecimal cstAmount = BigDecimal.ZERO;
+					BigDecimal cstPercent = BigDecimal.ZERO;
+					BigDecimal bedAmount = BigDecimal.ZERO;
+					BigDecimal bedPercent = BigDecimal.ZERO;
+					BigDecimal bedcessPercent = BigDecimal.ZERO;
+					BigDecimal bedcessAmount = BigDecimal.ZERO;
+					BigDecimal bedseccessAmount = BigDecimal.ZERO;
+					BigDecimal bedseccessPercent = BigDecimal.ZERO;
+					
+					
+					if(UtilValidate.isNotEmpty(eachItem.get("productId"))){
+						productId = (String)eachItem.get("productId");
+					}
+					
+					List<GenericValue> orderItem = EntityUtil.filterByCondition(PoOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					
+					
+					if(UtilValidate.isNotEmpty(orderItem)){
+						orderItemValue = EntityUtil.getFirst(orderItem);
+					}
+					else{
+						continue;
+					}
+					
+					
+					if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("quantity"))){
+						quantity = (BigDecimal)eachItem.getBigDecimal("quantity");
+						orderItemValue.put("quantity", quantity);
+					}
+					if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("unitPrice"))){
+						unitPrice = (BigDecimal)eachItem.getBigDecimal("unitPrice");
+						orderItemValue.put("unitPrice", unitPrice);
+					}
+					if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("unitPrice"))){
+						unitListPrice = (BigDecimal)eachItem.getBigDecimal("unitPrice");
+						orderItemValue.put("unitListPrice", unitListPrice);
+					}
+	
+					orderItemValue.set("changeByUserLoginId", userLogin.getString("userLoginId"));
+					orderItemValue.set("changeDatetime", UtilDateTime.nowTimestamp());
+					orderItemValue.store();
+				}
+/*				
+				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				delegator.removeAll(orderAdjustments);
+				
+				for(Map eachAdj : otherChargesAdjustment){
+					
+					String adjustmentTypeId = (String)eachAdj.get("adjustmentTypeId");
+					String applicableTo = (String)eachAdj.get("applicableTo");
+					if(!applicableTo.equals("_NA_")){
+						List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+						if(UtilValidate.isNotEmpty(sequenceItems)){
+							GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+							applicableTo = sequenceItem.getString("orderItemSeqId");
+						}
+					}
+					BigDecimal amount =(BigDecimal)eachAdj.get("amount");
+					Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);
+					adjustCtx.put("orderId", orderId);
+			    	adjustCtx.put("orderItemSeqId", applicableTo);
+			    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+		    		adjustCtx.put("amount", amount);
+		    		Map adjResultMap=FastMap.newInstance();
+			  	 	try{
+			  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+			  	 		if (ServiceUtil.isError(adjResultMap)) {
+			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+			  	 			Debug.logError(errMsg , module);
+			  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+			  	 		}
+			  	 	}catch (Exception e) {
+			  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+				  		return adjResultMap;			  
+				  	}
+				}*/
+				Map resetTotalCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+				resetTotalCtx.put("orderId", purchaseOrderId);
+				resetTotalCtx.put("userLogin", userLogin);
+				Map resetMap=FastMap.newInstance();
+	  	 		try{
+	  	 			resetMap = dispatcher.runSync("resetGrandTotal",resetTotalCtx);  		  		 
+		  	 		if (ServiceUtil.isError(resetMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(resetMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While reseting order totals for Purchase Order !"+purchaseOrderId);
+		  	 		}
+	  	 		}catch (Exception e) {
+	  	 			Debug.logError(e, " Error While reseting order totals for Purchase Order !"+purchaseOrderId, module);
+	  	 			return resetMap;			  
+	  	 		}
+	  	 		
+
+		        if(UtilValidate.isNotEmpty(purchaseOrderId)){
+			  		
+			  		result = DepotHelperServices.getOrderItemAndTermsMapForCalculation(ctx, UtilMisc.toMap("userLogin", userLogin, "orderId", purchaseOrderId));
+					Debug.log("resultMap==============11======================"+result);
+
+			  		if (ServiceUtil.isError(result)) {
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  		  		Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While getting Order Adjestment Details !"+errMsg);
+		  		  	}
+					List<Map> otherCharges = (List)result.get("otherCharges");
+					List<Map> productQty = (List)result.get("productQty");
+					result = DepotHelperServices.getMaterialItemValuationDetails(ctx, UtilMisc.toMap("userLogin", userLogin, "productQty", productQty, "otherCharges", otherCharges, "incTax", ""));
+					if(ServiceUtil.isError(result)){
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  		  		Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While getting getMaterialItemValuationDetails !"+errMsg);
+					}
+					List<Map> itemDetails = (List)result.get("itemDetail");
+			  	}
+				
+			}catch(Exception e){
+				try {
+					// only rollback the transaction if we started one...
+		  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+				} catch (GenericEntityException e2) {
+		  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		  		}
+				return ServiceUtil.returnError(e.toString()); 
+			}
+			finally {
+		  		  // only commit the transaction if we started one... this will throw an exception if it fails
+		  		  try {
+		  			  TransactionUtil.commit(beganTransaction);
+		  		  } catch (GenericEntityException e) {
+		  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+		  		  }
+		  	}
+		 }catch(Exception e){
+			 Debug.logError("-----------error-------------- : "+e.toString(), module);
+		 } 
+		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
+		return result;
+	}	
 	
 }
