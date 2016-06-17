@@ -36,7 +36,9 @@ import net.sf.json.JSONArray;
 
 
 condListGroup = [];
-condListGroup.add(EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.IN, ["APEX_BODY","CLUSTER_COOP_SOCIETY","COOP_SOCIETY","GOVT_BODY","HEPC_EXPORTERS","INDIVIDUAL_WEAVERS","JLG_SOCIETY","REG_BODY","REG_COOP_SOCIETY","SHG_SOCIETY","UN_REG_BODY","WEAVER_ENTERPRENEURE"]));
+partyClassificationGroup = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, CUST_CLASSIFICATION), null,null,null, false);
+List partyClassificationGroupIds = EntityUtil.getFieldListFromEntityList(partyClassificationGroup, "partyClassificationGroupId", true);
+condListGroup.add(EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.IN, partyClassificationGroupIds));
 condGroup=EntityCondition.makeCondition(condListGroup,EntityOperator.AND);
 partyClassList = delegator.findList("PartyClassificationType", condGroup, null, null, null, false);
 context.partyClassList=partyClassList;
