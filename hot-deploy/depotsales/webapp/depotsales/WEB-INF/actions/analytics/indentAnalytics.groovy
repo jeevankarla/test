@@ -87,20 +87,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	 conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
  }
  
-/* 
- if(UtilValidate.isNotEmpty(parameters.productId)){
-	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
-	 context.productId = parameters.productId;
- }
- if(UtilValidate.isNotEmpty(filterProductSale)){
-	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
- }
- */
- /*
- if(UtilValidate.isNotEmpty(parameters.partyId)){
-	 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
- }
-*/
+
  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
  conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
  
@@ -171,7 +158,21 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 		roDetails.putAt("totRevenue", grandTotal);	
 		 		roDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(roId, roDetails);	 	
-		 	}		 	
+		 	}	
+		 	if (DataMap.containsKey("NHDC")) {
+		 		totDetails = DataMap.get("NHDC");
+		 		totIndents = totDetails.get("totIndents");
+		 		totDetails.putAt("totIndents", ++totIndents);
+		 		totDetails.putAt("completed", completed + totDetails.get("completed"));		 				 		
+		 		totDetails.putAt("totRevenue", grandTotal + totDetails.get("totRevenue"));		 				 		
+		 	}
+		 	else {
+		 		totDetails = [:];
+		 		totDetails.putAt("totIndents", 1);
+		 		totDetails.putAt("totRevenue", grandTotal);	
+		 		totDetails.putAt("completed", completed);		 				 			 		
+		 		DataMap.putAt("NHDC", totDetails);	 	
+		 	}			 		 	
 		 }
 	 }
 	
@@ -195,10 +196,21 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
 				newObj.put("completed", entryValue.get("completed"));		
 	 		}
+	 		else if (partyId == "NHDC") {
+				newObj.put("partyId", "NHDC" );						
+				newObj.put("branch", "");
+				newObj.put("ReportsTo", "");
+				newObj.put("ro", "NHDC");
+				newObj.put("avgTAT","");	
+				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
+				newObj.put("totalIndents", entryValue.get("totIndents"));
+				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
+				newObj.put("completed", entryValue.get("completed"));	 		
+	 		}	 		
 	 		else {
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
-				newObj.put("ReportsTo", "");
+				newObj.put("ReportsTo", "NHDC");
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");	
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
@@ -209,7 +221,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 		dataList.add(newObj);			
 	 }		
 				
-// Debug.log("===dataList=="+dataList);
+//Debug.log("===dataList=="+dataList);
 				
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();
