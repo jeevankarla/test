@@ -48,7 +48,7 @@ partyName = parameters.partyName;
 context.partyName = partyName;
 partyId = parameters.partyId;
 context.partyId = partyId;
-
+toOrderId = "";
 condtAdjList = [];
 condtAdjList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
 cond2 = EntityCondition.makeCondition(condtAdjList, EntityOperator.AND);
@@ -447,27 +447,30 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		remarks="";
 		baleQty="";
 		unit="";
-		if(toOrderId){
+		if(UtilValidate.isNotEmpty(toOrderId)){
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
-			
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
-			
+			conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
-			//Debug.log("orderItemAttr=================="+orderItemAttr);
+			attrDetails = EntityUtil.getFirst(orderItemAttr);
+			if(UtilValidate.isNotEmpty(attrDetails) && UtilValidate.isNotEmpty(attrDetails.attrValue)){
+			   remarks=attrDetails.attrValue;
+			}
+			/*//Debug.log("orderItemAttr=================="+orderItemAttr);
 			if(orderItemAttr){
 				orderItemAttr.each{ attr ->
 				//Debug.log("remark=================="+attr.attrValue);
-					/*if(eachAttr.attrName == "quotaQty"){
+					if(eachAttr.attrName == "quotaQty"){
 						schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
-					}*/
+					}
 					
 					if(attr.attrValue == "REMARKS"){
 					 remarks=attr.attrValue;
 					}
 				}
-			}
+			}*/
 		}
 		bundleQuantityList=productWiseMap.get(orderitems.productId);
 		bundleWeight=bundleQuantityList.bundleQuantity;

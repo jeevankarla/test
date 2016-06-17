@@ -107,6 +107,8 @@ under the License.
             		<fo:table-column column-width="70pt"/>	
             		<fo:table-column column-width="70pt"/>
                     <fo:table-body>
+                    <#assign debitTotals = 0>
+                    <#assign creditTotals = 0>
                     <#list partyIdsList as eachParty >
                       <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, eachParty, false)>
                          <#assign partDebitTotal=0>
@@ -127,7 +129,8 @@ under the License.
 	                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Op. Bal:</fo:block>  
 	                    </fo:table-cell>
 	                    <#if openingBalanceMap.get(eachParty).debitValue?has_content>
-	                      <#assign debitValue=openingBalanceMap.get(eachParty).debitValue>
+	                      <#assign debitValue=openingBalanceMap.get(eachParty).debitValue?if_exists>
+	                      <#assign debitTotals = debitTotals+debitValue>
 	                    <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${debitValue?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
@@ -138,6 +141,7 @@ under the License.
 	                	 </#if>
 	                	  <#if openingBalanceMap.get(eachParty).creditValue?has_content>
 	                	 <#assign creditValue = openingBalanceMap.get(eachParty).creditValue?if_exists>
+	                	 <#assign creditTotals = creditTotals+ creditValue>
 	                	 <#assign closingBalance=closingBalance+debitValue-creditValue>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${creditValue?string("#0.00")}</fo:block>
@@ -181,10 +185,12 @@ under the License.
 		                	 </fo:table-cell>
 		                 </#if>
 		                 <#assign partDebitTotal =partDebitTotal+eachLedger.debitValue?if_exists>
+		                 <#assign debitTotals = debitTotals+eachLedger.debitValue?if_exists>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right">${eachLedger.debitValue?if_exists?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
 	                	  <#assign partyCreditTotal =partyCreditTotal+eachLedger.creditValue?if_exists>
+	                	  <#assign creditTotals = creditTotals+eachLedger.creditValue?if_exists>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right">${eachLedger.creditValue?if_exists?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
@@ -246,6 +252,59 @@ under the License.
 	                	</fo:table-row> 
 	                	</#if>
 					     </#list>
+					     <#if debitTotals?has_content || creditTotals?has_content>
+					      <fo:table-row>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">-------------------------------------------------------------------------------</fo:block>
+	                	 </fo:table-cell>
+	                	</fo:table-row> 
+					    <fo:table-row>
+                        <fo:table-cell>
+                    	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold"></fo:block>
+	                	</fo:table-cell>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                    <fo:table-cell font-weight="bold">
+	                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Grand Totals:</fo:block>  
+	                    </fo:table-cell>
+	                    <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${debitTotals?string("#0.00")}</fo:block>
+	                	 </fo:table-cell>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${creditTotals?string("#0.00")}</fo:block>
+	                	 </fo:table-cell>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+                      </fo:table-row>
+                      <fo:table-row>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	  <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                	 <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">-------------------------------------------------------------------------------</fo:block>
+	                	 </fo:table-cell>
+	                	</fo:table-row>
+	                	</#if> 
 					  <fo:table-row>
 	                    	<fo:table-cell>
 	                    	   <fo:block font-size="11pt" text-align="left"></fo:block>
