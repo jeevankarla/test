@@ -37,7 +37,7 @@
 	List supplierPartyDetails = delegator.findList("PartyRoleAndContactMechDetail",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	
 	condList = [];
-	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.IN, UtilMisc.toList("CST_NUMBER","PAN_NUMBER","TAN_NUMBER")));
+	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.IN, UtilMisc.toList("CST_NUMBER","PAN_NUMBER","TAN_NUMBER","TIN_NUMBER")));
 	//fieldToSelect = UtilMisc.toSet("partyId", "groupName", "paAddress1", "paAddress2", "paPostalCode", "paCountryGeoId", "paStateProvinceGeoId", "tnContactNumber");
 	List partyIdentificationList = delegator.findList("PartyIdentification",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	
@@ -59,22 +59,27 @@
 		suppIdentificationList = EntityUtil.filterByCondition(partyIdentificationList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
 		
 		cstNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
-		tinNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TAN_NUMBER"));
+		tanNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TAN_NUMBER"));
 		panNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+		tinNoList = EntityUtil.filterByCondition(suppIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+		
 		
 		cstDetail = null;
 		tinDetail = null;
 		panDetail = null;
+		tanDetail = null;
 		if(UtilValidate.isNotEmpty(cstNoList)){
 			cstDetail = cstNoList.get(0);
 		}
-		if(UtilValidate.isNotEmpty(tinNoList)){
-			tinDetail = tinNoList.get(0);
+		if(UtilValidate.isNotEmpty(tanNoList)){
+			tanDetail = tanNoList.get(0);
 		}
 		if(UtilValidate.isNotEmpty(panNoList)){
 			panDetail = panNoList.get(0);
 		}
-		 
+		if(UtilValidate.isNotEmpty(tinNoList)){
+			tinDetail = tinNoList.get(0);
+		}
 		
 		
 		supplierMap = [:];
@@ -85,12 +90,19 @@
 			supplierMap.put("cstNo", cstDetail.idValue);
 		}
 		
-		if(tinDetail && tinDetail.idValue){
-			supplierMap.put("tinNo", tinDetail.idValue);
+		if(tanDetail && tanDetail.idValue){
+			supplierMap.put("tanNo", tanDetail.idValue);
 		}
 		
 		if(panDetail && panDetail.idValue){
 			supplierMap.put("panNo", panDetail.idValue);
+		}
+		
+		if(tinDetail && tinDetail.idValue){
+			
+			Debug.log("tinDetail.idValue============"+tinDetail.idValue);
+			
+			supplierMap.put("tinNo", tinDetail.idValue);
 		}
 		
 		if(supplierDetails.groupName){
