@@ -62,9 +62,6 @@ facilityId = "";
 
 createdStatus = "";
 
-Debug.log("NcontactMechId==================="+NcontactMechId);
-
-Debug.log("TcontactMechId==================="+TcontactMechId);
 
 
 if(UtilValidate.isEmpty(NcontactMechId) && UtilValidate.isEmpty(TcontactMechId)){
@@ -143,7 +140,7 @@ if(TFcountry)
 FacilityTaxAddress.put("countryGeoId", TFcountry);
 else
 FacilityTaxAddress.put("countryGeoId", country);
-if(TFstate)
+if(TFstate && TFstate !="IN-AN")
 FacilityTaxAddress.put("stateProvinceGeoId", TFstate);
 else
 FacilityTaxAddress.put("stateProvinceGeoId", state);

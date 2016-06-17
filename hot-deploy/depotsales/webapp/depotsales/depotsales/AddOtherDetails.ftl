@@ -544,12 +544,10 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 					       $("#facilityCreated").show().delay(5000).fadeOut();
 					      
 	                      getFecilityAddressDetailAjax();
-	                      $("input[type=text], textarea").val("");
+	                     // $("input[type=text], textarea").val("");
+	                     document.getElementById('EditPartyGroup').reset();
 	                      $("#postalCode").val("0");
 	                      $("#TFpostalCode").val("0");
-	                      
-	                      
-	                      
 	                      
 					     }
 					    
@@ -616,9 +614,13 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 	function clearAllFields(){
 	
 	
-	 $("input[type=text], textarea").val("");
+	  document.getElementById('EditPartyGroup').reset();
 	 $("#postalCode").val("0");
 	 $("#TFpostalCode").val("0");
+	 $("#NcontactMechId").val('');
+	  $("#TcontactMechId").val('');
+	 
+	 
 	
 	}
 	

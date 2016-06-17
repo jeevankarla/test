@@ -2086,8 +2086,9 @@
         <field name="state" title="State"><display/></field>
         <field name="country" title="Country"><display/></field>
         <field name="cstNo" title="CST No"><display/></field>
-        <field name="tinNo" title="TIN No"><display/></field>
+        <field name="tanNo" title="TAN No"><display/></field>
         <field name="panNo" title="PAN No"><display/></field>
+        <field name="tinNo" title="TIN No"><display/></field>
          <field name="bankAccountName" title="Name of Account"><display/></field>
         <field name="bankAccountCode" title="Account Number"><display/></field>
         <field name="ifscCode" title="IfscCode"><display/></field>

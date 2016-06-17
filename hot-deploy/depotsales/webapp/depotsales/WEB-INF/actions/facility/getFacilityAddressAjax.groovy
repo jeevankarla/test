@@ -85,7 +85,16 @@ for (eachFacility in FacilityList) {
 			tempMap.put("Naddress2", "");
 			tempMap.put("Ncity", PostalAddressList[0].city);
 			tempMap.put("NcountryGeoId", PostalAddressList[0].countryGeoId);
-			tempMap.put("NstateProvinceGeoId", PostalAddressList[0].stateProvinceGeoId);
+			
+			
+		    geo=delegator.findOne("Geo",[geoId : PostalAddressList[0].stateProvinceGeoId], false);
+			
+			
+			if(geo.geoName)
+			tempMap.put("NstateProvinceGeoId",geo.geoName);
+			else
+			tempMap.put("NstateProvinceGeoId",PostalAddressList[0].stateProvinceGeoId);
+			
 			tempMap.put("NcontactMechPurposeTypeId", FacilityContactMechList[0].contactMechPurposeTypeId);
 			tempMap.put("NpostalCode", PostalAddressList[0].postalCode);
 			tempMap.put("Taddress1", PostalAddressList[1].address1);
@@ -96,7 +105,14 @@ for (eachFacility in FacilityList) {
 			tempMap.put("Taddress2", "");
 			tempMap.put("Tcity", PostalAddressList[1].city);
 			tempMap.put("TcountryGeoId", PostalAddressList[1].countryGeoId);
-			tempMap.put("TstateProvinceGeoId", PostalAddressList[1].stateProvinceGeoId);
+			
+			geo1=delegator.findOne("Geo",[geoId : PostalAddressList[1].stateProvinceGeoId], false);
+			
+			if(geo1.geoName)
+			tempMap.put("TstateProvinceGeoId",geo1.geoName);
+			else
+			tempMap.put("TstateProvinceGeoId",PostalAddressList[1].stateProvinceGeoId);
+		
 			tempMap.put("TcontactMechPurposeTypeId", FacilityContactMechList[1].contactMechPurposeTypeId);
 			tempMap.put("TpostalCode", PostalAddressList[1].postalCode);
 			
