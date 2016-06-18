@@ -129,6 +129,7 @@ for (eachList in invoiceItemList) {
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
 		
+		  if(eachItem.description != "Service Charge"){
 		  tempMap = [:];
 		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
@@ -140,6 +141,7 @@ for (eachList in invoiceItemList) {
 		  totTaxAmount = totTaxAmount+eachItem.amount;
 		  
 		  itemAdjustList.add(tempMap);
+		  }
 	}
 	 }
 	 
@@ -488,10 +490,24 @@ context.externalOrderId = externalOrderId;
 		  else
 		  tempMap.put("mgpsQty", quantity-tenPerQty);
 			
+		  
+		 double serviceAmt = 0;
+		  if(scheme == "General"){
+			  
+			  conditionList.clear();
+			  conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+			  conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachInvoiceList.invoiceItemSeqId));
+			  conditionList.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS,"Service Charge"));
+			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
+			  
+			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount
+		  }
+		  
 			
-		  tempMap.put("ToTamount", quantity*amount);
+		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
 		
-		  grandTotal = grandTotal+(quantity*amount);
+		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 		  
 		 /* double mgpsQty = 0;
 		  if(quantity > schemeAmt)
