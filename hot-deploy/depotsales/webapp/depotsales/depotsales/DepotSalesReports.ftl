@@ -142,9 +142,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			 </select></td>				
              <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
-				        <#list  branchList as eachBranch>
-				          <option value='${eachBranch.payToPartyId?if_exists}'>${eachBranch.productStoreName?if_exists}</option>
-				        </#list> 
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
 				  </select>    								
 			  </span></td>
              <td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>

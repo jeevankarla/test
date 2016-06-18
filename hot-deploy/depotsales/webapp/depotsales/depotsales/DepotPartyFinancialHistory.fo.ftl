@@ -23,10 +23,10 @@ under the License.
         <fo:layout-master-set>
             <#--><fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".1in" margin-top=".5in"> -->
               <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-                     margin-left=".3in" margin-right=".1in">
+                     margin-left=".3in" margin-right=".1in" margin-bottom="0.3in">
                 <fo:region-body margin-top="1.7in"/>
                 <fo:region-before extent="1in"/>
-                <fo:region-after extent="1in"/>
+                <fo:region-after extent="0.1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "PartywiseLedgerAbstract.pdf")}
@@ -94,7 +94,7 @@ under the License.
               <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>	
 		        	</fo:static-content>
 		        	<fo:static-content flow-name="xsl-region-after">
-		        	    <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace">Page - <fo:page-number/></fo:block>
+		        	    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace">Page - <fo:page-number/></fo:block>
 		        	</fo:static-content>	        	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Helvetica">		
             	<fo:block>
@@ -317,7 +317,7 @@ under the License.
 		</fo:page-sequence>
 		</#if>
 		
-			<#if !(partyDayWiseDetailMap?has_content) >
+			<#if !(partyDayWiseDetailMap?has_content) || !(openingBalanceMap?has_content) >
 			<fo:page-sequence master-reference="main">
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			   		 <fo:block font-size="14pt">
