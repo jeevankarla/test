@@ -132,6 +132,9 @@ List<String> payOrderBy = UtilMisc.toList(dateSort,"-orderId");
 
 resultList = [];
 
+forIndentsCount = [];
+
+double totalIndents = 0
 
 if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==1){
 
@@ -160,15 +163,25 @@ if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==
 	//orderIdsbefo=EntityUtil.getFieldListFromEntityList(orderHeaderbefo, "orderId", true);
 	
 resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
+
+fieldsToSelect = ["orderId"] as Set;
+forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
+
 }
 else{
 //result = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields,"orderBy",dateSort, "userLogin", userLogin));
 resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 
+fieldsToSelect = ["orderId"] as Set;
+forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
+
 //resultList = result.listIt;
 }
 
+totalIndents = totalIndents+forIndentsCount.size();
+
 orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
+
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
@@ -224,6 +237,10 @@ finalcond = EntityCondition.makeCondition(FinalcondList, EntityOperator.AND);
 //orderHeader = EntityUtil.filterByCondition(orderHeader2, EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, uniqueOrderIdsList));
 
 */
+
+
+
+
 orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
 
@@ -322,6 +339,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 	tempData.put("statusId", eachHeader.statusId);
 	
+	tempData.put("totalIndents", totalIndents);
 	
 	/*conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
