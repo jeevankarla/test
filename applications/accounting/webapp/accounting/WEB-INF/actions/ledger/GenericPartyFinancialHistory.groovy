@@ -131,6 +131,18 @@
 	partyWiseLedgerAbstractMap=[:]
 	//Check for Party is Valid or Not
 	result = [:];
+	List formatList = [];
+	if(parameters.branchId){
+		resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
+		Map formatMap = [:];
+		partyList=[];
+		if(resultCtx && resultCtx.get("partyList")){
+			partyList=resultCtx.get("partyList")
+			partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
+			formatList=(List)partyIdToList;
+		}
+	}
+	Debug.log("formatList======================="+formatList);
 	List rolePartyIds = [];
 	conditionList=[];
 	if(UtilValidate.isNotEmpty(roleTypeId)){
@@ -148,7 +160,7 @@
 	}
 	if(UtilValidate.isNotEmpty(branchId)){
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, branchId));
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
 	    conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, rolePartyIds));
 		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 		if(UtilValidate.isNotEmpty(roleTypeId)){
@@ -191,10 +203,10 @@
 	conditionList.add( EntityCondition.makeCondition([
 					EntityCondition.makeCondition([
 						EntityCondition.makeCondition("partyId", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId)
+						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
 						],EntityOperator.AND),
 					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,branchId),
+						EntityCondition.makeCondition("partyId", EntityOperator.IN,formatList),
 						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 						],EntityOperator.AND)
 					],EntityOperator.OR));
@@ -345,10 +357,10 @@
 	conditionList.add( EntityCondition.makeCondition([
 					EntityCondition.makeCondition([
 						EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
+						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
 						],EntityOperator.AND),
 					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,parameters.branchId),
+						EntityCondition.makeCondition("partyIdTo", EntityOperator.IN,formatList),
 						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 						],EntityOperator.AND)
 					],EntityOperator.OR));
