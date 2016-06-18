@@ -104,7 +104,7 @@ function drawTable(data) {
     
 }
 
-var totIndents = 0;
+
 
 function drawRow(rowData) {
     var row = $("<tr />")
@@ -156,9 +156,7 @@ function drawRow(rowData) {
     }
     row.append($("<td>" + rowData.paidAmt + "</td>"));
     
-    totIndents = totIndents+1;
-    
-    $("#totIndents").html("<h10>"+totIndents+"</h10>");
+    $("#totIndents").html("<h10>"+rowData.totalIndents+"</h10>");
 
 }
 
