@@ -397,7 +397,7 @@ under the License.
 				<fo:table-body>
 					<fo:table-row white-space-collapse="false">
 						<fo:table-cell number-columns-spanned="2" >
-						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble((totAmount-schemeDeductionAmt)+totTaxAmount?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
+						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(((totAmount-schemeDeductionAmt)+totTaxAmount)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
 						</fo:table-cell>
 						
 					</fo:table-row>
