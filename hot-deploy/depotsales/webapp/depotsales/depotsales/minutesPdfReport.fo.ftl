@@ -127,7 +127,7 @@ under the License.
 					            	<fo:block  text-align="center" font-size="11pt" white-space-collapse="false">${orderList.get("remarks")?if_exists}</fo:block>
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("unitPrice")?has_content>${orderList.get("unitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
@@ -162,10 +162,10 @@ under the License.
 			             <#--<fo:table-column column-width="10%"/>-->
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="15%"/>
-			            <fo:table-column column-width="12%"/>
-			            <fo:table-column column-width="12%"/>
-			            <fo:table-column column-width="12%"/>
+	                    <fo:table-column column-width="11%"/>
+			            <fo:table-column column-width="15%"/>
+			            <fo:table-column column-width="11%"/>
+			            <fo:table-column column-width="15%"/>
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
@@ -230,15 +230,15 @@ under the License.
 					            </fo:table-cell> -->
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.000")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            <#assign tenPreTOT=tenPreTOT+orderList.get("tenPerQty")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("tenPerQty")?if_exists?string("#0.000")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("tenPerQty")?if_exists?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					               <#assign mgpsQtyTOT=mgpsQtyTOT+orderList.get("mgpsQty")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists?string("#0.000")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("unitPrice")?has_content>${orderList.get("unitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
@@ -247,14 +247,14 @@ under the License.
 					            <fo:table-cell border-style="solid">
                                       <#assign purchaeTot =purchaeTot+orderList.get("totalCost")>
 					                 <#assign toTunitPrice = toTunitPrice+orderList.get("totalCost")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("totalCost")?if_exists?string("#0.000")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("totalCost")?if_exists?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("unitPrice")?has_content>${orderList.get("unitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("totalCost")?if_exists?string("#0.000")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("totalCost")?if_exists?string("#0.00")}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>
