@@ -97,38 +97,17 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
  salesOrderList = delegator.findList("OrderHeaderAndRoles", condition, UtilMisc.toSet("orderId","statusId","partyId","grandTotal"), null, null, false);
  
  //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
- salesOrderIds = EntityUtil.getFieldListFromEntityList(salesOrderList, "orderId", true);
-
- conditionList.clear();
- conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, salesOrderIds));
- conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
- condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- poOrderAssocList = delegator.findList("OrderAssoc", condition, UtilMisc.toSet("orderId", "toOrderId"), null, null, false);
- poOrderAssocIdsList = EntityUtil.getFieldListFromEntityList(poOrderAssocList, "orderId", true);
- 
- conditionList.clear(); 
- conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, poOrderAssocIdsList)); 
- condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- poOrderList = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId","statusId", "externalId"), null, null, false);
- salesOrderPOMap = [:]
- //Debug.log("===poOrderList=="+poOrderList+"==condition=="+condition);	 
- 	if(poOrderList){
-		 poOrderList.each{eachItem ->
-	 		salesOrderPOMap.put(eachItem.getAt("externalId"), eachItem);
-		 }
-	 }
 	  
+ ROOT_ID = "NHDC"; //::TODO::	  
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
 		 	partyId = eachItem.getAt("partyId");
 		 	completed = 0;
-		 	if (salesOrderPOMap.containsKey(eachItem.getAt("orderId"))) {
-		 		purchaseOrder = salesOrderPOMap.get(eachItem.getAt("orderId"));
-		 		if (purchaseOrder.get("statusId") == "ORDER_COMPLETED") {
+		 		if (eachItem.get("statusId") == "ORDER_COMPLETED") {
 		 			completed = 1;
 		 		}
-		 	}
+
 		 	roId = branchROMap.get(partyId);	
 		 	grandTotal = (new BigDecimal(eachItem.getAt("grandTotal"))).setScale(0, RoundingMode.HALF_UP);	 	
 		 	if (DataMap.containsKey(partyId)) {
@@ -159,8 +138,8 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 		roDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(roId, roDetails);	 	
 		 	}	
-		 	if (DataMap.containsKey("NHDC")) {
-		 		totDetails = DataMap.get("NHDC");
+		 	if (DataMap.containsKey(ROOT_ID)) {
+		 		totDetails = DataMap.get(ROOT_ID);
 		 		totIndents = totDetails.get("totIndents");
 		 		totDetails.putAt("totIndents", ++totIndents);
 		 		totDetails.putAt("completed", completed + totDetails.get("completed"));		 				 		
@@ -171,7 +150,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 		totDetails.putAt("totIndents", 1);
 		 		totDetails.putAt("totRevenue", grandTotal);	
 		 		totDetails.putAt("completed", completed);		 				 			 		
-		 		DataMap.putAt("NHDC", totDetails);	 	
+		 		DataMap.putAt(ROOT_ID, totDetails);	 	
 		 	}			 		 	
 		 }
 	 }
@@ -196,11 +175,11 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
 				newObj.put("completed", entryValue.get("completed"));		
 	 		}
-	 		else if (partyId == "NHDC") {
-				newObj.put("partyId", "NHDC" );						
+	 		else if (partyId == ROOT_ID) {
+				newObj.put("partyId", ROOT_ID );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", "");
-				newObj.put("ro", "NHDC");
+				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");	
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
 				newObj.put("totalIndents", entryValue.get("totIndents"));
@@ -210,7 +189,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 		else {
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
-				newObj.put("ReportsTo", "NHDC");
+				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");	
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
