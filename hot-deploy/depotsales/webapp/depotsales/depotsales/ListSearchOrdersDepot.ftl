@@ -136,7 +136,7 @@ function drawRow(rowData) {
 
     //Branch Name
     
-     row.append($("<td>" + rowData.productStoreId + "</td>"));
+     row.append($("<td>" + rowData.storeName + "</td>"));
    
     //party Name
     
@@ -165,7 +165,7 @@ function drawRow(rowData) {
      
      if(rowData.POorder != "NA"){
      
-         if(rowData.poSquenceNo)
+         if(rowData.poSquenceNo != "NA")
          row.append($("<td>" +  rowData.poSquenceNo  +"</td>"));  
          else
          row.append($("<td>" +  rowData.POorder  +"</td>"));
@@ -205,8 +205,11 @@ function drawRow(rowData) {
    else if(rowData.statusId == "ORDER_CANCELLED"){
        row.append($("<td>Order Cancelled</td>"));
   }
-   else{
+   else if(rowData.statusId == "APPROVE_LEVEL3" || rowData.statusId == "ORDER_APPROVED"){
         row.append($("<td>P&S Approved</td>"));
+    }else{
+       row.append($("<td></td>"));
+    
     }
     
     if(rowData.POorder != "NA"){
