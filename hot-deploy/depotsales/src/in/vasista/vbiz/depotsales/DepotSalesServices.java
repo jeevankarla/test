@@ -2223,27 +2223,35 @@ public class DepotSalesServices{
 								return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 							}	 	
 							for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
-								
+
 								condsList.clear();
 								condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-							  	condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
-//							  	condsList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "quotaQty"));
+								if(UtilValidate.isEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
+									condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+								}
 							  	BigDecimal quota =BigDecimal.ZERO;
 							  	try {
-									List<GenericValue> orderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("quotaQuantity"), null, null, true);
-									if(UtilValidate.isEmpty(orderItemDetailList) || orderItemDetailList.size()==0){
-										continue;
+									List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity"), null, null, true);
+								  	//Debug.log("OrderItemDetailList========================"+OrderItemDetailList);
+
+									if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+										for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+											if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+												quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+												//Debug.log("quota========================"+quota);
+											  	Map partyBalanceHistoryContext = FastMap.newInstance();
+											  	partyId=(String)OrderItemDetailValue.get("partyId");
+												partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
+											  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+			
+											}
+										}
 									}
-									for(GenericValue orderItemDetail :orderItemDetailList){
-										quota = quota.add((BigDecimal)orderItemDetail.get("quotaQuantity"));
-									}
-								} catch (GenericEntityException e) {
+								  	
+							  	} catch (GenericEntityException e) {
 									Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 									return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 								}
-							  	Map partyBalanceHistoryContext = FastMap.newInstance();
-								partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
-								dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 							}
 						}
 						}catch (GenericEntityException e) {
@@ -6327,13 +6335,13 @@ public class DepotSalesServices{
 					  	BigDecimal quota =BigDecimal.ZERO;
 					  	try {
 							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity"), null, null, true);
-						  	Debug.log("OrderItemDetailList========================"+OrderItemDetailList);
+						  	//Debug.log("OrderItemDetailList========================"+OrderItemDetailList);
 
 							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
 								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
 									if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
 										quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
-										Debug.log("quota========================"+quota);
+										//Debug.log("quota========================"+quota);
 									  	Map partyBalanceHistoryContext = FastMap.newInstance();
 									  	partyId=(String)OrderItemDetailValue.get("partyId");
 										partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
