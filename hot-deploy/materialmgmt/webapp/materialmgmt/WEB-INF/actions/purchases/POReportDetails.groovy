@@ -397,8 +397,7 @@ exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperato
 orderAssc = EntityUtil.getFirst(delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false));
 
 toOrderId=orderAssc.toOrderId;
-
-
+context.toOrderId = toOrderId;
 orderHeader = delegator.findOne("OrderHeader",["orderId":toOrderId],false);
 
 tallyRefNo = orderHeader.tallyRefNo;
