@@ -131,8 +131,9 @@
 	partyWiseLedgerAbstractMap=[:]
 	//Check for Party is Valid or Not
 	result = [:];
+	List partRoIds = ["INT1","INT2","INT3","INT4","INT5","INT6","INT26","INT28","INT47"];
 	List formatList = [];
-	if(parameters.branchId){
+	if((parameters.branchId) && (partRoIds.contains(branchId))){
 		resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
 		Map formatMap = [:];
 		partyList=[];
@@ -142,7 +143,6 @@
 			formatList=(List)partyIdToList;
 		}
 	}
-	Debug.log("formatList======================="+formatList);
 	List rolePartyIds = [];
 	conditionList=[];
 	if(UtilValidate.isNotEmpty(roleTypeId)){
@@ -200,16 +200,29 @@
 	}
 	//adding for Abstract PartyLedger
 	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(parameters.branchId))){
-	conditionList.add( EntityCondition.makeCondition([
+		if(partRoIds.contains(branchId)){
+			conditionList.add( EntityCondition.makeCondition([
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyId", EntityOperator.IN, rolePartyIds),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
+					],EntityOperator.AND),
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyId", EntityOperator.IN,formatList),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
+					],EntityOperator.AND)
+				],EntityOperator.OR));
+		}else{
+	          conditionList.add( EntityCondition.makeCondition([
 					EntityCondition.makeCondition([
 						EntityCondition.makeCondition("partyId", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
+						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
 						],EntityOperator.AND),
 					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyId", EntityOperator.IN,formatList),
+						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.branchId),
 						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 						],EntityOperator.AND)
 					],EntityOperator.OR));
+		}		
 		
 	}
 	newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -354,16 +367,29 @@
 	conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 	}//adding for Abstract PartyLedger
 	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(parameters.branchId))){
-	conditionList.add( EntityCondition.makeCondition([
+		if(partRoIds.contains(branchId)){
+			conditionList.add( EntityCondition.makeCondition([
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, rolePartyIds),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
+					],EntityOperator.AND),
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.IN,formatList),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
+					],EntityOperator.AND)
+				],EntityOperator.OR));
+		}else{
+	     conditionList.add( EntityCondition.makeCondition([
 					EntityCondition.makeCondition([
 						EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, formatList)
+						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
 						],EntityOperator.AND),
 					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyIdTo", EntityOperator.IN,formatList),
+						EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.branchId),
 						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 						],EntityOperator.AND)
 					],EntityOperator.OR));
+		}		
 		
 	}
 	newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);

@@ -43,9 +43,7 @@ Map formatMap = [:];
 List formatList = [];
 	
 	List<GenericValue> partyClassificationList = null;
-		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"), UtilMisc.toSet("partyId"), null, null,false);
-	//Debug.log("partyClassificationList========================"+partyClassificationList);
-	
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));
