@@ -42,7 +42,7 @@ var indentDateSort = $("#indentDateSort").val();
 var uniqueOrderIdsList = [];
 var orderData;
 var domOrderIds = "";
-var low = 0, high = 30;
+var low = 0, high = 20;
 $(document).ready(function() {
    $(window).scroll(function() {
     	if($(window).scrollTop() == $(document).height() - $(window).height()) {
