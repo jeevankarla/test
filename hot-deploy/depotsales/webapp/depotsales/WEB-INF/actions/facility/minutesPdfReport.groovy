@@ -512,11 +512,16 @@ context.Scheam =Scheam;
 				tempMap.put("quantity", eachItem.quantity);
 								
 				
+				
+				
+				
+				
 				double tenPerQty = 0;
 				
 				double quantity = 0;
 				double quotaQuantity = 0;
 				double baleQuantity = 0;
+				double bundleUnitPrice = 0;
 				
 				
 				conditionList.clear();
@@ -551,11 +556,11 @@ context.Scheam =Scheam;
 					 
 				 }
 				
-				
+				 
 				for (eachOrderItem in OrderItemDetail) {
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
 					baleQuantity = baleQuantity+Double.valueOf(eachOrderItem.baleQuantity);
-					
+					bundleUnitPrice = bundleUnitPrice+Double.valueOf(eachOrderItem.bundleUnitPrice);
 				}
 				
 				
@@ -582,7 +587,9 @@ context.Scheam =Scheam;
 				//mgps Qty
 				 
 				  tempMap.put("baleQuantity", baleQuantity);
-1				  
+				  tempMap.put("bundleUnitPrice", bundleUnitPrice);
+
+
 				  if(scheme == "General")
 				  tempMap.put("mgpsQty", 0);
 				  else
@@ -591,7 +598,7 @@ context.Scheam =Scheam;
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(UtilValidate.isNotEmpty(OrderItemDetail[0].Uom))
+				  if(UtilValidate.isNotEmpty(OrderItemDetail[0]))
 				  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
 				  else
 				  tempMap.put("Uom", "/KGs");
