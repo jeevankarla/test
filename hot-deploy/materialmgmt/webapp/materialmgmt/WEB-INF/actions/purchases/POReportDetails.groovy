@@ -68,7 +68,11 @@ if (productStoreId) {
 }
 //get Report Header
 branchContext=[:];
+if(branchId == "INT49" || branchId == "INT12" || branchId == "INT55")
+branchContext.put("branchId","INT12");
+else
 branchContext.put("branchId",branchId);
+
 BOAddress="";
 BOEmail="";
 

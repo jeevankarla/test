@@ -537,11 +537,17 @@ context.Scheam =Scheam;
 					 condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					 OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
 		 
+					 if(OrderAdjustment[0]){
+					 if(UtilValidate.isNotEmpty(OrderAdjustment[0].orderAdjustmentTypeId))
+					 {
 					 if(OrderAdjustment[0].orderAdjustmentTypeId == "SERVICE_CHARGE"){
 						 if(OrderAdjustment[0].amount){
 						   serviceAmount=OrderAdjustment[0].amount;
 						 }
 					}
+					 } 
+					 
+					 }
 					 
 				 }
 				
