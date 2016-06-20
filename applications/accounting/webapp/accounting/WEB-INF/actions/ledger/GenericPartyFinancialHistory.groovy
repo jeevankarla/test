@@ -160,7 +160,11 @@
 	}
 	if(UtilValidate.isNotEmpty(branchId)){
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
+		if(UtilValidate.isNotEmpty(formatList)){
+		   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
+		}else{
+	   	   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, branchId));
+		}   
 	    conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, rolePartyIds));
 		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 		if(UtilValidate.isNotEmpty(roleTypeId)){

@@ -772,9 +772,20 @@ shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("ro
 shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
 shipToParty=EntityUtil.getFirst(shipToPartyRole);
 //Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
-
-
-
+addressFlag = "Y";
+List hiddenPartyIds = ["INT12","INT49","INT55"];
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+billFromVendorDetails = delegator.findList("OrderRole", condition, null, null, null, false);
+billFromVendorDetails = EntityUtil.getFirst(billFromVendorDetails);
+if(UtilValidate.isNotEmpty(billFromVendorDetails)){
+	boPartyId = billFromVendorDetails.partyId;
+	if(hiddenPartyIds.contains(boPartyId)){
+	    addressFlag = "N";
+	}	
+}
 shipingAdd=[:];
 if(shipToParty.partyId){
 shippPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
