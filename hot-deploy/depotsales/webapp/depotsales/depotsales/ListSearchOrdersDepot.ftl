@@ -1,3 +1,4 @@
+
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -16,374 +17,415 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
+<input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
+<input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
+<input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
+<input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
+<input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
+<input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
+
+
 <script type="text/javascript">
-//<![CDATA[
-	
-	
-	function toggleOrderId(master) {
-        var orders = jQuery("#listOrders :checkbox[name='orderId']");
-        jQuery.each(orders, function() {
-            this.checked = master.checked;
-        });
-    }
-    
-    function datepick()
-	{		
-		$( "#shipDate" ).datepicker({
-			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
-			numberOfMonths: 1});
-		$('#ui-datepicker-div').css('clip', 'auto');
-		
-	}
-    
-    function processOrders(current){
-    	jQuery(current).attr( "disabled", "disabled");
-    	var orders = jQuery("#listOrders :checkbox[name='orderId']");
-        var index = 0;
-        var shipDate = $("#shipDate").val();
-        //alert("==shipDate==="+shipDate);
-        var vehicleId = $("#vehicleId").val();
-        var carrierName = $("#carrierName").val();
-        var lrNumber = $("#lrNumber").val();
-        var modeOfDespatch = $("#modeOfDespatch").val();
-        var shipmentTypeId = $("#shipmentTypeId").val();
-         var orderStatusId = $("#orderStatusId").val();
-        jQuery.each(orders, function() {
-            if (jQuery(this).is(':checked')) {
-            	var domObj = $(this).parent().parent();
-            	var orderObj = $(domObj).find("[name='orderId']");
-            	var orderId = $(orderObj).val();
-            	var appendStr = "<input type=hidden name=orderId_o_"+index+" value="+orderId+" />";
-                $("#processOrdersForm").append(appendStr);
-            }
-            index = index+1;
-        });
-        var appStr = "";
-        if(shipDate != "undefined" && shipDate != null){
-    		appStr += "<input type=hidden name=shipDate value='"+ shipDate +"' />";
+
+
+
+var orderId = $("#paramOrderId").val();
+var paramFacilityId = $("#paramFacilityId").val();
+var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
+var paramStatusId = $("#paramStatusId").val();
+var paramBranch = $("#paramBranch").val();
+var indentDateSort = $("#indentDateSort").val();
+
+
+var uniqueOrderIdsList = [];
+var orderData;
+var domOrderIds = "";
+var low = 0, high = 30;
+$(document).ready(function() {
+   $(window).scroll(function() {
+    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
+          
+           low = high;
+           high = high + 50;
+         
+           recursively_ajax();          
+                    
     	}
-    	appStr += "<input type=hidden name=vehicleId value='"+ vehicleId +"' />";
-    	appStr += "<input type=hidden name=carrierName value='"+ carrierName +"' />";
-    	appStr += "<input type=hidden name=lrNumber value='"+ lrNumber +"' />";
-    	appStr += "<input type=hidden name=modeOfDespatch value='"+ modeOfDespatch +"' />";
-    	appStr += "<input type=hidden name=shipmentTypeId value='"+ shipmentTypeId +"' />";
-    	appStr += "<input type=hidden name=orderStatusId value='"+ orderStatusId +"' />";
-    	$("#processOrdersForm").append(appStr);
-    	var salesChannel = '${parameters.salesChannelEnumId?if_exists}';
-    	var splStr = "<input type=hidden name=salesChannelEnumId value='"+ salesChannel +"' />";
-        $("#processOrdersForm").append(splStr);
-    	jQuery('#processOrdersForm').submit();
+});
+	recursively_ajax();
+});
+
+
+  function recursively_ajax(orderIdFroApp){
+    
         
-    }
-    function getDCReport(orderId){
-		var formId = "#" + "dcForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		jQuery(formId).append(jQuery(param1));
-        jQuery(formId).submit();
-    }
-    /*
-    function approveIceCreamOrder(orderId, salesChannel){
-		var formId = "#" + "orderApproveForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-        jQuery(formId).submit();
-    } */
-    function approveDepotOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "orderApproveForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
+     
+         if(typeof(orderIdFroApp) != 'undefined' && orderIdFroApp != ''){
+           orderId = orderIdFroApp;
+            $("#coreTable").find("tr:not(:first)").remove();
+           }
+    
+           var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+	
+	
+	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+     
+    jQuery.ajax({
+                url: 'getIndentListingDetails',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						orderData = result["orderList"];
+                        if(orderData.length != 0){
+                        $('div#orderSpinn').html("");
+                        $('div#blink').hide();
+                        drawTable(orderData);   
+                       }else{
+                        $('div#orderSpinn').html("");
+                         setInterval(blinker, 1000);
+                        
+                         }        
+               		}
+               	}							
+		});
+		
+	  	
+}
+	
+
+function blinker() {
+    $('div#blink').show();
+    $('.blink_me').fadeOut(500);
+    $('.blink_me').fadeIn(500);
+} 
+
+
+function drawTable(data) {
+
+    for (var i = 0; i < data.length; i++) {
+            drawRow(data[i]);
+          uniqueOrderIdsList.push(data[i].orderId);
     }
     
-     function creditApproveDepotOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "creditOrderApproveForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
-    }
- function editDepotOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "orderEditForm"
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
+}
+
+
+function drawRow(rowData) {
+    var row = $("<tr />")
+    $("#coreTable").append(row); 
+    $("#coreTable tr:even").css("background-color", "#F4F4F8");
+    
+    
+    //For Indent OverView
+    
+     if(rowData.orderNo != "NA"){
+     var indentOVButton = '<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">'+rowData.orderNo+'</a>';
+     row.append($("<td>" +  indentOVButton  +"</td>"));
+     }else{
+     
+      var indentOVButton = '<a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">'+rowData.orderId+'</a>';
+     row.append($("<td>" +  indentOVButton  +"</td>"));
+     }
+
+    //Branch Name
+    
+     row.append($("<td>" + rowData.productStoreId + "</td>"));
+   
+    //party Name
+    
+     var partyNameCode = rowData.partyName+"["+rowData.partyId+"]";
+    
+    row.append($("<td>" + partyNameCode + "</td>"));
+    
+    //supplier Name
+    
+    var suppNameCode = rowData.supplierPartyName+"["+rowData.supplierPartyId+"]";
+    row.append($("<td>" + suppNameCode + "</td>"));
+
+     //indent Date  
+    var indDateSplit = (rowData.orderDate).split("-");
+    var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
+    row.append($("<td>" + indentDate + "</td>"));
+    
+    var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
+
+   row.append($("<td>" +  editOrder  +"</td>"));  
+
+    var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">Minutes</a>';
+    
+    row.append($("<td>" +  minutesReport  +"</td>"));  
+
+     
+     if(rowData.POorder != "NA"){
+     
+         if(rowData.poSquenceNo)
+         row.append($("<td>" +  rowData.poSquenceNo  +"</td>"));  
+         else
+         row.append($("<td>" +  rowData.POorder  +"</td>"));
+     
+     }else{
+     
+       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
+       row.append($("<td>" +  DraftPoButton  +"</td>"));  
+     
+      }
+       //For Indent View
+    
+    var orderParam = '\'' + rowData.orderId + '\'';
+    var statusId = '\'' + rowData.statusId + '\'';
+    var partyId = '\'' + rowData.partyId + '\'';
+    
+    
+    
+     
+     if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED"){
+    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+    
+    var buutonName;
+    
+    if(rowData.statusId == "DRAFTPO_PROPOSAL")
+     buutonName = "Commercial";
+    if(rowData.statusId == "APPROVE_LEVEL1") 
+      buutonName = "Account";
+    if(rowData.statusId == "APPROVE_LEVEL2")  
+       buutonName = "Regional";
+    
+    
+    var approveButton ='<input type=button name="approveOrder" id=approveOrder value='+buutonName+'Head onclick="'+orderCustomMethod+'">';
+    row.append($("<td>" +  approveButton  +"</td>"));
+   }
+   
+   else if(rowData.statusId == "ORDER_CANCELLED"){
+       row.append($("<td>Order Cancelled</td>"));
+  }
+   else{
+        row.append($("<td>P&S Approved</td>"));
     }
     
-    function cancelIceCreamOrder(orderId, salesChannel,partyId){
-		var formId = "#" + "orderCancelForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
-        jQuery(formId).submit();
+    if(rowData.POorder != "NA"){
+     var poReport = '<a class="buttontext" href="<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId='+rowData.POorder+'</@ofbizUrl>" target="_blank">PO Report</a>';
+      row.append($("<td>" +  poReport  +"</td>")); 
+    }else if(rowData.statusId == "ORDER_CANCELLED"){
+	  
+	      row.append($("<td>Order Cancelled</td>"));
+	  }else{
+       row.append($("<td></td>")); 
     }
-   function approveDraftPO(orderId, statusId){
-		var formId = "#" + "approveDraftPoForm";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
-		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "statusId").val(statusId);
-		jQuery(formId).append(jQuery(param1));
-		jQuery(formId).append(jQuery(param2));
-        jQuery(formId).submit();
+    
+    if ((rowData.orderTotal) <= (rowData.paidAmt) && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
+    
+        if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000))
+        {
+	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	    var approveButton ='<input type=button name="boapprove" id=boapprove value="BO Approve" onclick="'+orderCustomMethod+'">';
+	    row.append($("<td>" +  approveButton  +"</td>"));
+	    }else if (((rowData.orderTotal)>200000) && ((rowData.orderTotal)<= 5000000)){
+	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	    var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Approve" onclick="'+orderCustomMethod+'">';
+	    row.append($("<td>" +  approveButton  +"</td>"));
+	    }else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
+	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	    var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Approve" onclick="'+orderCustomMethod+'">';
+	    row.append($("<td>" +  approveButton  +"</td>"));
+	    }else{
+	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	    var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Approve" onclick="'+orderCustomMethod+'">';
+	    row.append($("<td>" +  approveButton  +"</td>"));
+	    }
     }
+     if(rowData.statusId == "ORDER_APPROVED"){
+	     row.append($("<td> Approved </td>"));
+	  }else if ((rowData.paidAmt) != -1 && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
+	  
+	     if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000)){
+	      
+	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	    var approveButton ='<input type=button name="boapprove" id=boapprove value="BO Credit Approve" onclick="'+orderCustomMethod+'">';
+	    row.append($("<td>" +  approveButton  +"</td>")); 
+	     
+	     }else if (((rowData.orderTotal)>200000) && ((rowData.orderTotal)<= 5000000)){
+	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	      var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Credit Approve" onclick="'+orderCustomMethod+'">';
+	      row.append($("<td>" +  approveButton  +"</td>"));
+	     } else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
+	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	      var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Credit Approve" onclick="'+orderCustomMethod+'">';
+	      row.append($("<td>" +  approveButton  +"</td>"));
+	     }else{
+	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
+	      var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Credit Approve" onclick="'+orderCustomMethod+'">';
+	      row.append($("<td>" +  approveButton  +"</td>"));
+	     }
+	  }else if(rowData.statusId == "ORDER_CANCELLED"){
+	  
+	      row.append($("<td>Order Cancelled</td>"));
+	  }
+	  else{
+    
+       row.append($("<td></td>"));
+    }
+    
+       var orderParam = '\'' + rowData.orderId + '\'';
+        var partyId = '\'' + rowData.partyId + '\'';
+    var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
+    var viewButton ='<input type=button name="viewOrder" id=viewOrder value="cancel" onclick="'+cancellorder+'">';
+    
+    row.append($("<td>" +  viewButton  +"</td>"));
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $("#totIndents").html("<h10>"+rowData.totalIndents+"</h10>");
+
+}
+
+//==================For Search Fields==================
+
+(function(document) {
+	'use strict';
+
+	var LightTableFilter = (function(Arr) {
+
+		var _input;
+
+		function _onInputEvent(e) {
+			_input = e.target;
+			var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+			Arr.forEach.call(tables, function(table) {
+				Arr.forEach.call(table.tBodies, function(tbody) {
+					Arr.forEach.call(tbody.rows, _filter);
+				});
+			});
+		}
+
+		function _filter(row) {
+			var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+		}
+
+		return {
+			init: function() {
+				var inputs = document.getElementsByClassName('light-table-filter');
+				Arr.forEach.call(inputs, function(input) {
+					input.oninput = _onInputEvent;
+				});
+			}
+		};
+	})(Array.prototype);
+
+	document.addEventListener('readystatechange', function() {
+		if (document.readyState === 'complete') {
+			LightTableFilter.init();
+		}
+	});
+
+})(document);
+
+
+
+function forApprove(orderId,statusId,partyId){
+
+$('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+
+   var response;
+  $("#FindTankerSalesOrder_orderId").val(orderId);
+  
+  uniqueOrderIdsList = [];
+    
+    var statusMap = {};
+    
+    statusMap["DRAFTPO_PROPOSAL"] = "APPROVE_LEVEL1";
+    statusMap["APPROVE_LEVEL1"] = "APPROVE_LEVEL2";
+    statusMap["APPROVE_LEVEL2"] = "APPROVE_LEVEL3";
+    statusMap["APPROVE_LEVEL3"] = "ORDER_APPROVED";
+    
+    
+    var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
+    
+     $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+    
+    jQuery.ajax({
+                url: 'approveOrdersAjax',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						orderData = result["orderList"];
+						
+						
+                        if(orderData[0].response == "success"){
+                       
+                          response =  orderData[0].response;
+                            
+                       }
+                       
+                       
+               		}
+               	}							
+		});
         
-//]]>
+     setTimeout(function(){ recursively_ajax(orderId);}, 2000);
+
+}
+
+
+  
+</script>
+
+
+
 </script>
 <#include "viewOrderDetailsDepot.ftl"/>
-
-<form name="orderEditForm" id="orderEditForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="editBranchIndent"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="editIUSTransferOrder"
-	</#if>>
-</form>
-<form name="orderCancelForm" id="orderCancelForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="cancelDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="cancelIUSTransferOrder"
-	</#if>>
-</form>
-<form name="orderApproveForm" id="orderApproveForm" method="post" 
-	
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="approveDepotSalesOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="approveIUSTransferOrder"
-	</#if>> 
-</form>
-<form name="creditOrderApproveForm" id="creditOrderApproveForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="CreditapproveDepotSalesOrder"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="approveIUSTransferOrder"
-	</#if>
-</form>
-
-<form name="processOrdersForm" id="processOrdersForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="depotSales">
-		action="createShipmentAndInvoiceForDepotSalesOrders"
-	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-		action="createShipAndInvForIUSTransferOrders"
-	</#if>>
-</form>
-<form name="approveDraftPoForm" id="approveDraftPoForm" method="post" action="approvalLevelOfDraftPo"/>		
-<#if orderList?has_content>
+ 
+ 
+ <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
   
-  <form name="listOrders" id="listOrders"  method="post" >
-    <div align="right" width="100%">
-    	
-    	<#if screenFlag?exists && screenFlag=="depotSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
-    	</#if>
-    		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
-    </div>
-	<br/>
-    <table class="basic-table hover-bar" cellspacing="0">
-      <thead>
+     <font color="blue">Search:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
+  
+  
+    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label> </div>
+  
+  
+  <form name="listOrders" id="listOrders"   method="post" >
+   
+     <table id="coreTable" class="basic-table hover-bar" cellspacing="0">
+      <th1ead>
         <tr class="header-row-2">
-        <td>Indent Id</td>
-         <td>Indent Date</td>
-          <td>Party Name</td>
+          <td>Indent Id</td>
+          <td>Branch Name</td>
+          <td>Weaver Name</td>
           <td>Supplier Name</td>
-         <#--> <td>Print Indent</td>-->
+          <td>Indent Date</td>
           <td>Edit</td>
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>P&S Approvals</td>
-         <#-- <td>Minutes Hindi</td>-->
-          <#--<td>Edit Batch</td>-->
+          <td>PO Report</td>
           <td>Approve</td>
-          <td>PO Report</td> 
-        <#-- <td>DC Report</td> -->
-          <#-- <td>Payment</td> -->
-         <#-- <td>Generate PO</td>-->
-          <#--<td>Party Balance</td>-->
-          <td>Cancel</td>
-		<#--  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>-->
-          
+           <td>Cancel</td>
         </tr>
       </thead>
       <tbody>
       <#assign alt_row = false>
-       <#list orderList as eachOrder>
-        
-           <#assign supplierPartyId="">
-				<#assign supplierPartyName="">
-				<#assign isgeneratedPO="N">
-				<#assign POorderId="">
-				
-		              	<#assign productStoreId="">
-						<#if orderDetailsMap?has_content>
-								<#assign orderDetails=orderDetailsMap.get(eachOrder.orderId)?if_exists>
-								<#if orderDetails?has_content>
-								<#assign supplierPartyId=orderDetails.get("supplierPartyId")>
-								<#assign supplierPartyName=orderDetails.get("supplierPartyName")>
-								<#assign isgeneratedPO=orderDetails.get("isgeneratedPO")>
-								<#assign POorderId=orderDetails.get("POorder")>
-								<#assign poSquenceNo = orderDetails.get("poSquenceNo")>
-								<#assign productStoreId=orderDetails.get("productStoreId")>
-								</#if>
-				</#if>
-      		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-      		<td><a class="buttontext" href="<@ofbizUrl>ViewIndentRequest?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"><#if eachOrder.orderNo?has_content>${eachOrder.orderNo?if_exists}<#else>${eachOrder.orderId?if_exists}</#if></a></td>
-              	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
-              	<td>${eachOrder.partyName?if_exists}   [${eachOrder.partyId?if_exists}]</td>
-              	<td>${supplierPartyName?if_exists}  [${supplierPartyId?if_exists}]</td>
-              <#--	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&partyId=${eachOrder.partyId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>-->
-             
-             	<#if (eachOrder.get('statusId') == "ORDER_CREATED") >
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-				<#else>
-				<td></td>
-				</#if>
-              	<td><a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>Minutes</td>
-              <#if (eachOrder.get('statusId') != "ORDER_APPROVED") && (isgeneratedPO =="N")>
-              	<td><a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}</@ofbizUrl>" target="_blank"/>DraftPO</td>
-              	<#else>
-                    <#if poSquenceNo?has_content><td>${poSquenceNo}</td>
-	              	     <#else><td>${POorderId?if_exists}</td>
-	              	</#if>
-              	</#if>
-                <#if (isgeneratedPO =="Y")> 
-	                <#if (eachOrder.get('statusId') == "DRAFTPO_PROPOSAL")>          
-	                       <#assign statusId ="APPROVE_LEVEL1">
-	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value="Commercial Head" onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
-	                </#if>
-	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL1")>          
-	                       <#assign statusId ="APPROVE_LEVEL2">
-	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value=" Account Head " onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
-	                </#if>
-	                <#if (eachOrder.get('statusId') == "APPROVE_LEVEL2")>          
-	                       <#assign statusId ="APPROVE_LEVEL3">
-	                       <#assign StatusItem = delegator.findOne("StatusItem", {"statusId" :statusId}, true)>
-	                       <td><input type="button" name="approveDaftPO" id="approveDaftPO" value=" Regional Head " onclick="javascript: approveDraftPO('${eachOrder.orderId?if_exists}', '${statusId}');"/></td>
-	                </#if>
-	                <#if eachOrder.get('statusId') == "APPROVE_LEVEL3" || eachOrder.get('statusId') == "ORDER_APPROVED">      
-                             <td>P&S Approved</td>
-                     </#if>
-                <#else>
-                   <td></td>
-                </#if>
-              	<#--<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>-->
-              	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
-              	<#assign partyOb=0>
-              	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
-              	<#assign partyOb=partyOBMap.get(eachOrder.partyId)>
-              	</#if>
-              	<#assign orderTotal=0>
-              	<#if eachOrder.orderTotal?exists>
-              	<#assign orderTotal=eachOrder.orderTotal>
-              	</#if>
-              	<#assign isCreditInstution="N">
-              	<#if eachOrder.isCreditInstution?exists>
-              	<#assign isCreditInstution=eachOrder.isCreditInstution>
-              	</#if>
-              	
-              <#-->	<#if (paymentSatusMap.get(eachOrder.orderId).get("amount"))==0 && (eachOrder.get('statusId') != "ORDER_APPROVED")>-->
-              	<#if (eachOrder.orderTotal) <= (eachOrder.paidAmt) && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
-                     <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
-              		       <td><input type="button" name="approveOrder" id="approveOrder" value="    BO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                     <#else>
-                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
-                                <td><input type="button" name="approveOrder" id="approveOrder" value="    RO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                           <#else>
-                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
-                                      <td><input type="button" name="approveOrder" id="approveOrder" value="    HO Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                  <#else>  
-                                        <td><input type="button" name="approveOrder" id="approveOrder" value="    MD Approve     " onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                   </#if>
-                           </#if>
-                    </#if> 
-                 <#elseif (eachOrder.get('statusId') == "ORDER_APPROVED")>
-              	  <td>Approved</td>
-              	 <#elseif (eachOrder.paidAmt) != -1 && (eachOrder.get('statusId') == "APPROVE_LEVEL3") && (isgeneratedPO !="N")>
-					<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                    <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
-	            	     <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-	            	<#else>
-                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
-                               <td><input type="button" name="approveOrder" id="approveOrder" value="RO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                           <#else>
-                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
-                                       <td><input type="button" name="approveOrder" id="approveOrder" value="HO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                  <#else>
-                                         <td><input type="button" name="approveOrder" id="approveOrder" value="MD Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                  </#if>
-                          </#if>  
-                     </#if>      	
-	          		<#else>
-	          		<#if isgeneratedPO !="N" && (eachOrder.get('statusId') == "APPROVE_LEVEL3")>
-	          		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                      <#if ((eachOrder.orderTotal)>= 0) && ((eachOrder.orderTotal)<= 200000)>
-                         <td><input type="button" name="approveOrder" id="approveOrder" value="BO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-	            	  <#else>
-                           <#if ((eachOrder.orderTotal)>200000) && ((eachOrder.orderTotal)<= 5000000)>
-                         	  <td><input type="button" name="approveOrder" id="approveOrder" value="RO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                           <#else>
-                                  <#if ((eachOrder.orderTotal)>5000000) && ((eachOrder.orderTotal)<= 10000000)>
-                         	          <td><input type="button" name="approveOrder" id="approveOrder" value="HO Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                  <#else>
-                         	          <td><input type="button" name="approveOrder" id="approveOrder" value="MD Credit Approve" onclick="javascript: creditApproveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-                                  </#if>
-                          </#if>  
-                     </#if>    
-	          	<#--	<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td> -->
-                 <#else>
-                   <td></td>
-              	</#if>
-				</#if>
-               
-              <#--	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntry('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}');"/></td>-->
-              	
-              
-              	<#--><#if (eachOrder.get('statusId') == "ORDER_APPROVED") && (isgeneratedPO =="N")>
-					<td><input type="button" name="POOrder" id="POOrder" value="Generate PO" onclick="javascript: purchaseOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${supplierPartyId}','${supplierPartyName}','${productStoreId}','${eachOrder.partyId}','${eachOrder.orderDate?if_exists}', '${eachOrder.billFromVendorPartyId}');"/></td>
-         		<#else>
-					<td></td>
-				</#if> -->  
-              	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
-              	
-              	<#if POorderId?has_content><td><a class="buttontext" href="<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId=${POorderId?if_exists}</@ofbizUrl>" target="_blank"/>PO Report</td><#else><td></td></#if>
-        		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript:cancelOrderCaution('${eachOrder.orderId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
-              	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
-              	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
-              		<td><input type="checkbox" id="orderId_${eachOrder_index}" name="orderId" value="${eachOrder.orderId?if_exists}"/></td>
-              	</#if>
-              	-->
-              	
-              	
-              	
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
-        </#list>
+      <#assign alt_row = !alt_row>
       </tbody>
     </table>
   </form>
-<#else>
-  <h3>No Orders Found</h3>
-</#if>
+        <div align='center' name ='displayMsg' id='orderSpinn'/></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
+  

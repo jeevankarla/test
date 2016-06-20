@@ -528,7 +528,7 @@
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
 					/> -->
 				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesResultsForInfinityScroll.groovy" />
 			 <!--  <script
     					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" /> -->  
 					
@@ -552,7 +552,6 @@
                                         <include-form name="FindTankerSalesOrder" location="component://depotsales/widget/DepotSalesForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-								<screenlet title="Sales Indents  &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;     Total Indents:     ${orderListSize}" >
 								<platform-specific>
 										<html>
 											<html-template
@@ -571,7 +570,6 @@
 												location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrdersDepot.ftl" />
 										</html>
 									</platform-specific>
-								</screenlet>
 								</decorator-section>
 								</decorator-screen>
 							</widgets>
