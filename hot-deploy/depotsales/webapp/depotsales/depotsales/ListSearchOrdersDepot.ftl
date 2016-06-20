@@ -212,10 +212,10 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>P&S Approvals</td>
-          <td>Minutes Hindi</td>
+         <#-- <td>Minutes Hindi</td>-->
           <#--<td>Edit Batch</td>-->
           <td>Approve</td>
-
+          <td>PO Report</td> 
         <#-- <td>DC Report</td> -->
           <#-- <td>Payment</td> -->
          <#-- <td>Generate PO</td>-->
@@ -288,7 +288,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
                 <#else>
                    <td></td>
                 </#if>
-              	<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>
+              	<#--<td><a class="buttontext" href="<@ofbizUrl>minutesHindiPdfReport.pdf?orderId=${eachOrder.orderId?if_exists}&&partyName=${eachOrder.partyName?if_exists}&&flag=${"hindi"}</@ofbizUrl>" target="_blank"/>Minutes Hindi</td>-->
               	<#--<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>-->
               	<#assign partyOb=0>
               	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
@@ -367,7 +367,7 @@ var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").va
 				</#if> -->  
               	<#--<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>-->
               	
-              	
+              	<#if POorderId?has_content><td><a class="buttontext" href="<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId=${POorderId?if_exists}</@ofbizUrl>" target="_blank"/>PO Report</td><#else><td></td></#if>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel" onclick="javascript:cancelOrderCaution('${eachOrder.orderId?if_exists}','${eachOrder.partyId?if_exists}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
