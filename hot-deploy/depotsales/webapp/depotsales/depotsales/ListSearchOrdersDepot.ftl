@@ -242,10 +242,9 @@ function drawRow(rowData) {
 	    var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Approve" onclick="'+orderCustomMethod+'">';
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }
-    }
-     if(rowData.statusId == "ORDER_APPROVED"){
+    }else if(rowData.statusId == "ORDER_APPROVED"){
 	     row.append($("<td> Approved </td>"));
-	  }else if ((rowData.paidAmt) != -1 && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
+	  }else if ((rowData.paidAmt) != -1 && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N") ){
 	  
 	     if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000)){
 	      
