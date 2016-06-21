@@ -46,6 +46,23 @@
 	supplierMastersList = [];
 	for(int i=0; i<supplierIds.size(); i++){
 		supplierId = supplierIds.get(i);
+		
+		
+		
+		
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
+		 List<String> orderBy = UtilMisc.toList("-statusDate");
+		PartyStatusList = delegator.findList("PartyStatus", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("statusId"),orderBy,null, false);
+		
+		PartyStatus = "";
+		if(PartyStatusList)
+		PartyStatus = (EntityUtil.getFirst(PartyStatusList)).get("statusId");
+		else
+		PartyStatus = "NORECORD";
+		
+		if(PartyStatus == "PARTY_ENABLED" || PartyStatus=="NORECORD"){
+		
 		suppList = EntityUtil.filterByCondition(supplierPartyDetails, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
 		supplierDetails = suppList.get(0);
 		
@@ -99,8 +116,6 @@
 		}
 		
 		if(tinDetail && tinDetail.idValue){
-			
-			Debug.log("tinDetail.idValue============"+tinDetail.idValue);
 			
 			supplierMap.put("tinNo", tinDetail.idValue);
 		}
@@ -182,7 +197,7 @@
 		tempSupMap.putAll(supplierMap);
 		
 		supplierMastersList.add(tempSupMap);
-		
+		}
 	}
 	context.supplierMastersList=supplierMastersList;
 	
