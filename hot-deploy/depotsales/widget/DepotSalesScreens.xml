@@ -3394,14 +3394,12 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                	<decorator-section name="menu-bar">
                                     	<section>
-                                    	 <condition>
+                                    	 <!-- <condition>
                             				
                             					<if-has-permission permission="WEAVER" action="_CREATE"/>
                             				
-                           				 </condition>
+                           				 </condition> -->
                                     		<widgets>
                                     		
                                                <container style="button-bar">
@@ -3409,8 +3407,6 @@
                                                </container>
                                             </widgets>
                                     	</section>
-                                    </decorator-section>
-                                </decorator-screen>
                              </widgets>  
                         </section>   
                       	<screenlet title="Find Weaver">
