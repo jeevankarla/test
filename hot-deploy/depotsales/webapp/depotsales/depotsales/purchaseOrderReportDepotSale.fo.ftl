@@ -50,11 +50,17 @@ under the License.
 					<fo:table-column column-width="200pt"/>               
 					    <fo:table-body>
                               <fo:table-row>
-				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TIN No &#160;  : 09152300064</fo:block></fo:table-cell> 
+				                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TIN No.  : ${allDetailsMap.get("tinNumber")?if_exists}</fo:block></fo:table-cell> 
 				                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
                                </fo:table-row>
                                <fo:table-row>
-				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">C.S.T.No : 683925 w.e.f 12.06.1985</fo:block></fo:table-cell> 
+				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">CST No. : ${allDetailsMap.get("cstNumber")?if_exists}</fo:block></fo:table-cell> 
+                               </fo:table-row>
+                               <fo:table-row>
+				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">CIN No. : ${allDetailsMap.get("cinNumber")?if_exists}</fo:block></fo:table-cell> 
+                               </fo:table-row>
+                               <fo:table-row>
+				                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">PAN No. : ${allDetailsMap.get("panNumber")?if_exists}</fo:block></fo:table-cell> 
                                </fo:table-row>
 			         </fo:table-body>
 			    </fo:table>

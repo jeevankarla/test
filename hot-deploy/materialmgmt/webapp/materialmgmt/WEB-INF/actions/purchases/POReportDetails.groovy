@@ -245,83 +245,6 @@ if(UtilValidate.isNotEmpty(orderId)){
 			}
 		
 	}
-	
-	
-
-          //to get company details
-
-//tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
-//tinDetails=EntityUtil.getFirst(tinCstDetails);
-//tinNumber="";cstNumber="";kstNumber="";
-//if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
-//	tinNumber=tinDetails.tinNumber;
-//	allDetailsMap.put("tinNumber",tinNumber);
-//}
-//if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
-//	cstNumber=tinDetails.cstNumber;
-//	allDetailsMap.put("cstNumber",cstNumber);
-//}
-
-mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
-if(mailIdConfig){
-propertyValue=mailIdConfig.get("propertyValue");
-
-   partyEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue, userLogin: userLogin]);
-   if(partyEmail){
-   companyMail=partyEmail.emailAddress;
-   context.companyMail=companyMail;
-   allDetailsMap.put("companyMail",companyMail);	
-   } 
-   partySecondEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue,contactMechPurposeTypeId:"SECONDARY_EMAIL" ,userLogin: userLogin]);
-   if(partySecondEmail){
-	   allDetailsMap.put("compSecondMail", partySecondEmail.emailAddress);
-   }
-   companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, userLogin: userLogin]);
-   companyPhone = "";
-   if(companyTelephone != null && companyTelephone.contactNumber != null) {
-   companyPhone = companyTelephone.contactNumber;
-   allDetailsMap.put("companyPhone",companyPhone);
-   }
-   partySecondPhone= dispatcher.runSync("getPartyTelephone", [partyId:propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC" ,userLogin: userLogin]);
-   if(partySecondPhone){
-	   allDetailsMap.put("partySecondPhone", partySecondPhone.contactNumber);
-   }
-   faxId="FAX_BILLING";
-   companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
-   companyFax = "";
-   if (companyFaxNumber != null && companyFaxNumber.contactNumber != null) {
-   companyFax = companyFaxNumber.contactNumber;
-   allDetailsMap.put("companyFax",companyFax);
-   }
-}
-
-//company Details-tin,cst,kst
-tinCstKstDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
-if(UtilValidate.isNotEmpty(tinCstKstDetails)){
-
-tinDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
-tinNumber="";
-if(UtilValidate.isNotEmpty(tinDetails)){
-tinDetails=EntityUtil.getFirst(tinDetails);
-tinNumber=tinDetails.idValue;
-allDetailsMap.put("tinNumber",tinNumber);
-  }
-cstDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
-cstNumber="";
-if(UtilValidate.isNotEmpty(cstDetails)){
-cstDetails=EntityUtil.getFirst(cstDetails);	
-cstNumber=cstDetails.idValue;
-allDetailsMap.put("cstNumber",cstNumber);
-  }
-kstDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "KST_NUMBER"));
-kstNumber="";
-if(UtilValidate.isNotEmpty(kstDetails)){
-kstDetails=EntityUtil.getFirst(kstDetails);
-kstNumber=kstDetails.idValue;
-allDetailsMap.put("kstNumber",kstNumber);
-  }
- }
-
 //orderSequenceNO
 OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
@@ -766,12 +689,10 @@ conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS
 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR","SHIP_TO_CUSTOMER")));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
-//Debug.log("orderRoles========================"+orderRoles);
-
 shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SHIP_TO_CUSTOMER")],EntityOperator.AND);
 shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
 shipToParty=EntityUtil.getFirst(shipToPartyRole);
-//Debug.log("shipToParty.partyId========================"+shipToParty.partyId);
+boPartyId = "";
 addressFlag = "Y";
 List hiddenPartyIds = ["INT12","INT49","INT55"];
 conditionList.clear();
@@ -785,6 +706,74 @@ if(UtilValidate.isNotEmpty(billFromVendorDetails)){
 	if(hiddenPartyIds.contains(boPartyId)){
 	    addressFlag = "N";
 	}	
+}
+mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
+if(mailIdConfig){
+propertyValue=mailIdConfig.get("propertyValue");
+
+partyEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue, userLogin: userLogin]);
+if(partyEmail){
+companyMail=partyEmail.emailAddress;
+context.companyMail=companyMail;
+allDetailsMap.put("companyMail",companyMail);
+}
+partySecondEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue,contactMechPurposeTypeId:"SECONDARY_EMAIL" ,userLogin: userLogin]);
+if(partySecondEmail){
+   allDetailsMap.put("compSecondMail", partySecondEmail.emailAddress);
+}
+companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, userLogin: userLogin]);
+companyPhone = "";
+if(companyTelephone != null && companyTelephone.contactNumber != null) {
+companyPhone = companyTelephone.contactNumber;
+allDetailsMap.put("companyPhone",companyPhone);
+}
+partySecondPhone= dispatcher.runSync("getPartyTelephone", [partyId:propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC" ,userLogin: userLogin]);
+if(partySecondPhone){
+   allDetailsMap.put("partySecondPhone", partySecondPhone.contactNumber);
+}
+faxId="FAX_BILLING";
+companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+companyFax = "";
+if (companyFaxNumber != null && companyFaxNumber.contactNumber != null) {
+companyFax = companyFaxNumber.contactNumber;
+allDetailsMap.put("companyFax",companyFax);
+}
+}
+
+//company Details-tin,cst,kst
+
+
+
+partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , boPartyId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(partyIdentification)){
+	tinNumber="";
+	tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(tinDetails)){
+		tinDetails=EntityUtil.getFirst(tinDetails);
+		tinNumber=tinDetails.idValue;
+		allDetailsMap.put("tinNumber",tinNumber);
+	}
+	cstNumber="";
+	cstDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+	if(UtilValidate.isNotEmpty(cstDetails)){
+	    cstDetails=EntityUtil.getFirst(cstDetails);
+	    cstNumber=cstDetails.idValue;
+	    allDetailsMap.put("cstNumber",cstNumber);
+	}
+	cinNumber="";
+	cinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(cinDetails)){
+	    cinDetails=EntityUtil.getFirst(cinDetails);
+	    cinNumber=cinDetails.idValue;
+	    allDetailsMap.put("cinNumber",cinNumber);
+	}
+	panNumber="";
+	panDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+	if(UtilValidate.isNotEmpty(panDetails)){
+		panDetails=EntityUtil.getFirst(panDetails);
+		panNumber=panDetails.idValue;
+		allDetailsMap.put("panNumber",panNumber);
+	}
 }
 shipingAdd=[:];
 if(shipToParty.partyId){
