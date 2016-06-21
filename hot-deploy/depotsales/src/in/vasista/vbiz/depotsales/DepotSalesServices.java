@@ -181,7 +181,7 @@ public class DepotSalesServices{
               if(UtilValidate.isEmpty(contactNumberTo)){
               	contactNumberTo = "9502532897";
               }
-              contactNumberTo = "9440625565";
+              //contactNumberTo = "9440625565";
               if(UtilValidate.isNotEmpty(contactNumberTo)){
               	 if(UtilValidate.isNotEmpty(countryCode)){
               		 contactNumberTo = countryCode + contactNumberTo;
@@ -5203,7 +5203,7 @@ public class DepotSalesServices{
 			if(UtilValidate.isEmpty(attrValue) || (attrValue.equals("N"))){
 				continue;
 			}
-			if(!(productCategoryId.equals("BRANDED"))){
+			if((!(childProductCategoryId.equals("BRANDED"))) && (!(childProductCategoryId.equals("COTTON_BRANDED")))){
 				if(attribute.equals("PACKING")){
 					if(attrValue.equals("CONE")){
 						packingAttribute = attrValue;
@@ -5726,7 +5726,7 @@ public class DepotSalesServices{
 	        if(UtilValidate.isEmpty(contactNumberTo)){
 	        	contactNumberTo = "9502532897";
 	        }
-	        contactNumberTo = "9440625565";
+	        //contactNumberTo = "9440625565";
 	        if(UtilValidate.isNotEmpty(contactNumberTo)){
 	        	 if(UtilValidate.isNotEmpty(countryCode)){
 	        		 contactNumberTo = countryCode + contactNumberTo;
@@ -7654,7 +7654,7 @@ public class DepotSalesServices{
         if(UtilValidate.isEmpty(contactNumberTo)){
         	contactNumberTo = "9502532897";
         }
-        contactNumberTo = "9440625565";
+        //contactNumberTo = "9440625565";
         if(UtilValidate.isNotEmpty(contactNumberTo)){
         	 if(UtilValidate.isNotEmpty(countryCode)){
         		 contactNumberTo = countryCode + contactNumberTo;
