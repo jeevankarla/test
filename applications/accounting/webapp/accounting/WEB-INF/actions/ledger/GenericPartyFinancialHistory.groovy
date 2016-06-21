@@ -158,7 +158,7 @@
 		List otherPartyRoles=delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyCode),UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
 		rolePartyIds = EntityUtil.getFieldListFromEntityList(otherPartyRoles, "partyId", true);
 	}
-	if(UtilValidate.isNotEmpty(branchId)){
+	if((UtilValidate.isNotEmpty(branchId)) && !(roleTypeId == "EMPANELLED_SUPPLIER")){
 		conditionList.clear();
 		if(UtilValidate.isNotEmpty(formatList)){
 		   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
