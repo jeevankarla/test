@@ -154,9 +154,13 @@ function drawRow(rowData) {
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
     row.append($("<td>" + indentDate + "</td>"));
     
+   if( rowData.POorder == "NA"){
     var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
-
    row.append($("<td>" +  editOrder  +"</td>"));  
+   }else{
+   
+    row.append($("<td></td>"));
+   }
 
     var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">Minutes</a>';
     
