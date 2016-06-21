@@ -679,6 +679,7 @@ public class DepotPurchaseServices{
 	        if(UtilValidate.isEmpty(contactNumberTo)){
 	        	contactNumberTo = "9502532897";
 	        }
+	        contactNumberTo = "9440625565";
 	        if(UtilValidate.isNotEmpty(contactNumberTo)){
 	        	 if(UtilValidate.isNotEmpty(countryCode)){
 	        		 contactNumberTo = countryCode + contactNumberTo;
@@ -696,6 +697,8 @@ public class DepotPurchaseServices{
 	        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("invoiceNo", invoiceId);
 	        	 
 	        	 Debug.log("invoiceMsgToWeaver =============="+invoiceMsgToWeaver);
+	        	 
+	        	 
 	        	 
 	        	 Debug.log("contactNumberTo ===== "+contactNumberTo);
 	        	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
@@ -1050,16 +1053,16 @@ public class DepotPurchaseServices{
 						List<GenericValue> orderRoles = delegator.findList("OrderRole", condExpr1, null, null, null, false);
 			   
 			      for (GenericValue orderRole : orderRoles) {
-				            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
-				            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
-				            Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
-				            if (ServiceUtil.isError(createInvoiceRoleResult)) {
-				            	Debug.logError("Error creating InvoiceRole  for orderId : "+orderId, module);	
-								return ServiceUtil.returnError("Error creating Invoice Role for orderId : "+orderId);
-				            }
-				        }
+			            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+			            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
+			            Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
+			            if (ServiceUtil.isError(createInvoiceRoleResult)) {
+			            	Debug.logError("Error creating InvoiceRole  for orderId : "+orderId, module);	
+							return ServiceUtil.returnError("Error creating Invoice Role for orderId : "+orderId);
+			            }
+			      }
 			      //approve invoice
-			      Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+			      /*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
 		            invoiceCtx.put("userLogin", userLogin);
 			   	 	invoiceCtx.put("statusId","INVOICE_READY");
 			   	 try{
@@ -1071,7 +1074,7 @@ public class DepotPurchaseServices{
 		            }catch(GenericServiceException e){
 		             	 Debug.logError(e, e.toString(), module);
 		                 return ServiceUtil.returnError(e.toString());
-		            }  
+		            } */ 
 			}catch(Exception e){
 				try {
 					// only rollback the transaction if we started one...
@@ -1455,8 +1458,10 @@ public class DepotPurchaseServices{
 				    }catch (Exception e) {
 					     Debug.logError("Problems adjusting order header status for order #" + orderId, module);
 	                }
-			    }    
+			    }
+
 			try{
+				
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION");
 					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
@@ -1503,7 +1508,6 @@ public class DepotPurchaseServices{
 						request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
 			        }
 				}
-				
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
 		request.setAttribute("orderId", orderId); 
 		return "success";
@@ -2168,6 +2172,7 @@ public class DepotPurchaseServices{
 	            if(UtilValidate.isEmpty(contactNumberTo)){
 	            	contactNumberTo = "9502532897";
 	            }
+	            contactNumberTo = "9440625565";
 	            Debug.log("contactNumberTo = "+contactNumberTo);
 	            if(UtilValidate.isNotEmpty(contactNumberTo)){
 	            	 if(UtilValidate.isNotEmpty(countryCode)){
@@ -2218,6 +2223,7 @@ public class DepotPurchaseServices{
 	            if(UtilValidate.isEmpty(contactNumberTo)){
 	            	contactNumberTo = "9502532897";
 	            }
+	            contactNumberTo = "9440625565";
 	            Debug.log("contactNumberTo = "+contactNumberTo);
 	            if(UtilValidate.isNotEmpty(contactNumberTo)){
 	            	 if(UtilValidate.isNotEmpty(countryCode)){

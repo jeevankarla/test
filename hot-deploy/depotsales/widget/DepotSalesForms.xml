@@ -116,10 +116,10 @@
            </drop-down>
         </field> -->
         <field name="partyIdFrom" title="${uiLabelMap.Branch}">
-            <drop-down allow-empty="true">
-               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-            </drop-down>
-        </field>
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
@@ -152,10 +152,10 @@
         </field> -->
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
        <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
@@ -174,10 +174,10 @@
          <field name="findPoFlag"><hidden value="Y"/></field>  
      	<field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
        <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -296,10 +296,10 @@
     <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="hideSearch"><hidden value="Y"/></field>
        <field name="partyId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
         <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
@@ -408,37 +408,37 @@
                 <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
                 </hyperlink>
             </field>  -->
-            <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DISPATCHED&quot;)" >
+            <field name="statusUpdate" title="GRN" widget-style="buttontext" use-when="statusId.equals(&quot;DISPATCHED&quot;)" >
 	            <hyperlink target="updateShipment" description="Docs Received">
 	                 <parameter param-name="shipmentId"/>
 	                 <parameter param-name="statusId" value="DOCUMENTS_RECEIVED"/>
 	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
 	            </hyperlink>
 	        </field>
-	        <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_RECEIVED&quot;)" >
+	        <field name="statusUpdate" title="GRN" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_RECEIVED&quot;)" >
 	            <hyperlink target="updateShipment" description="Docs Endorsed">
 	                 <parameter param-name="shipmentId"/>
 	                 <parameter param-name="statusId" value="DOCUMENTS_ENDORSED"/>
 	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
 	            </hyperlink>
 	        </field>
-	        <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
-	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
+	        <field name="statusUpdate" title="GRN" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
+	            <display description="Docs Endorsed"></display>
 	        </field>
-	        <field name="statusUpdate" title="Status Update" use-when="statusId.equals(&quot;GOODS_RECEIVED&quot;)" >
-	            <display description="Received"></display>
+	        <field name="statusUpdate" title="GRN" use-when="statusId.equals(&quot;GOODS_RECEIVED&quot;)" >
+	            <display description="Accepted"></display>
 	        </field>
-            <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <!-- <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
                 <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
                  	<parameter param-name="shipmentId" value="${shipmentId}"/>
                  	<parameter param-name="orderId" value="${primaryOrderId}"/>
                    	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
                 </hyperlink>
-            </field>
+            </field> -->
             <!-- <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
                  <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
             </field> --> 
-            <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(&quot;${purchaseInvoiceSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(statusId.equals(&quot;GOODS_RECEIVED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+            <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(&quot;${purchaseInvoiceSize}&quot; == &quot;0&quot;) &amp;&amp;(statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)) ">
                 <hyperlink target="MaterialInvoiceInit" description="Pur Invoice">
                     <parameter param-name="shipmentId"/>
                     <parameter param-name="billToPartyId"/>
@@ -460,6 +460,20 @@
             <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="${salesInvoiceId}"></display>
             </field>
+            <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
+	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
+	        </field> -->
+            <field name="invStatus" title="Approval" widget-style="buttontext" use-when="(!salesInvoiceSize.equals(&quot;0&quot;)) &amp;&amp; (!salesInvoiceSize.equals(&quot;0&quot;))" >
+	            <hyperlink  target-type="plain" description="Approve Invoice"  target="javascript:QCApprovalBranchSalesAndInvApproveQTip('${shipmentId}','${partyIdTo}','${partyName}', '${salesInvoiceId}', '${purchaseInvoiceId}');"></hyperlink>
+	            
+	            <!-- <hyperlink target="approveInvoices" description="Approve Invoice">
+                    <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
+                    <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
+                </hyperlink> -->
+	        </field>
+            <field name="invStatus" title="Invoice Approval" use-when="statusId.equals(&quot;GOODS_RECEIVED&quot;)" >
+	            <display description="Approved"></display>
+	        </field>
             <field name="cancelGRN" widget-style="buttontext" title="Cancel Ship" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
                 <hyperlink target="CancelGrnShipment" description="Cancel">
                     <parameter param-name="shipmentId"/>
@@ -693,10 +707,10 @@
             <field name="findPoFlag"><hidden value="Y"/></field>
              <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
 		<field name="partyId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
        
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field> 
         <field name="orderTypeId" ><hidden value="PURCHASE_ORDER"/></field> 
@@ -847,15 +861,15 @@
 			</drop-down>
 		</field> -->
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
 		<field name="partyIdTo" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
@@ -1369,10 +1383,10 @@
               <field name="groupName" title="Weaver Name"><text  size="15"></text></field>
              
            <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
               <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               <field name="submit" title="Find"><submit/></field>
@@ -1400,10 +1414,10 @@
            </drop-down>
         </field> -->
         <field name="partyIdFrom" title="${uiLabelMap.Branch}">
-            <drop-down allow-empty="true">
-               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-            </drop-down>
-        </field>
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
         <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
@@ -1441,10 +1455,10 @@
         </field> -->
          <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
        <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
@@ -1773,9 +1787,9 @@
            <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
-             <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
+             <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
         </field>
         <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
@@ -1830,9 +1844,9 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="PMNT_RECEIVED"/></field>
         <field name="parentTypeId"><hidden value="ADVANCES_PAYIN"/></field>
         <field position="1" name="partyIdTo" title="OrganizationPartyId">
-             <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
+             <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
         </field>
         <field name="partyIdFrom" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
@@ -2115,10 +2129,10 @@
     </form>
 <form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
 	<!-- 	 <field name="timePeriodId" title="Scheme Time Period">
-              <drop-down >
-                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
-              </drop-down>
-        </field> -->
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
+              </drop-down>
+        </field> -->
         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> 
          <field name="statusId"><hidden value="GOODS_RECEIVED"/></field>  
         <field name="estimatedShipDate" title="Shipment Date"><date-find default-option-from="sameDay"  /></field>
@@ -2245,19 +2259,19 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="timePeriodId" title="Scheme Time Period">
-              <drop-down >
-                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
-              </drop-down>
-        </field>
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
+              </drop-down>
+        </field>
 
        <field name="groupName" title="Depot Name"><text  size="15"></text></field>
               <field name="partyId" title="Owner Id"><text  size="15"></text></field>
              
            <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
             <!--   <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field> -->
        
@@ -2313,16 +2327,16 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="timePeriodId" title="Scheme Time Period">
-              <drop-down >
-                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/>
-              </drop-down>
-        </field>
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/>
+              </drop-down>
+        </field>
 
            <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -2374,16 +2388,16 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="timePeriodId" title="Scheme Time Period">
-              <drop-down >
-                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/>
-              </drop-down>
-        </field>
+              <drop-down >
+                  <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/>
+              </drop-down>
+        </field>
 
            <field name="branchId" title="${uiLabelMap.Branch}">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
