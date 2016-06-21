@@ -48,7 +48,7 @@ $(document).ready(function() {
     	if($(window).scrollTop() == $(document).height() - $(window).height()) {
           
            low = high;
-           high = high + 50;
+           high = high + 30;
          
            recursively_ajax();          
                     

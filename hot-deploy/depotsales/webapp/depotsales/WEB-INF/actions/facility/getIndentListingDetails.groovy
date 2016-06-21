@@ -307,8 +307,6 @@ orderHeader.each{ eachHeader ->
 
 	orderId = eachHeader.orderId;
 	
-	Debug.log("orderId=================="+orderId)
-	
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
@@ -502,7 +500,15 @@ orderHeader.each{ eachHeader ->
 	orderList.add(tempData);
 }
 
-resultList.close();
+
+
+if (UtilValidate.isNotEmpty(resultList)) {
+	try {
+		resultList.close();
+	} catch (Exception e) {
+		Debug.logWarning(e, module);
+	}
+}
 
 
 /*sortedOrderMap =  [:]as TreeMap;
