@@ -67,7 +67,7 @@ if(shipments){
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		}
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_ACCEPTED", "DOCUMENTS_ENDORSED"]));
 		condition2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		shipmentReceipts = delegator.findList("ShipmentReceipt", condition2, null, null, null, false);
 		

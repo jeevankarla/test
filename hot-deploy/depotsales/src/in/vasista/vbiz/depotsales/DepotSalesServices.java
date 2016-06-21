@@ -68,6 +68,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.util.EntityListIterator;
+
 import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -180,6 +181,7 @@ public class DepotSalesServices{
               if(UtilValidate.isEmpty(contactNumberTo)){
               	contactNumberTo = "9502532897";
               }
+              contactNumberTo = "9440625565";
               if(UtilValidate.isNotEmpty(contactNumberTo)){
               	 if(UtilValidate.isNotEmpty(countryCode)){
               		 contactNumberTo = countryCode + contactNumberTo;
@@ -272,11 +274,11 @@ public class DepotSalesServices{
 		         Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
 		         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
 	              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
-	             /* orderStatus.set("orderId", orderId);
+	              /* orderStatus.set("orderId", orderId);
 	              orderStatus.set("statusId", "ORDER_APPROVED");
 	              orderStatus.set("statusDatetime", nowTimestamp);
 	              orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
-				  delegator.createOrStore(orderStatus); */    
+				  delegator.createOrStore(orderStatus); */     
 		         
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
@@ -2714,7 +2716,7 @@ public class DepotSalesServices{
 		    		processContext.put("userLogin",userLogin);
 		    		processContext.put("SalesOrder",orderId);
 		    		processContext.put("PurchaseOrder",PoOrderId);
-		            result = updateIndentPO(dctx, processContext);
+		    		result = updateIndentPO(dctx, processContext);
 					if(ServiceUtil.isError(result)){
 						Debug.logError("Unable to update order: " + ServiceUtil.getErrorMessage(result), module);
 			             return ServiceUtil.returnError(" Unable to update related Purchase order  :");
@@ -2862,10 +2864,6 @@ public class DepotSalesServices{
 								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 							}
 							BigDecimal quota = BigDecimal.ZERO;
-							
-							Debug.log("productId =========="+productId);
-							Debug.log("productCategoriesList =========="+productCategoriesList);
-							
 							// Get first productCategoriesList. We got productCategoryId here
 							if(schemeCategory.equals("MGPS_10Pecent")){
 								Timestamp targetDate =null;
@@ -3542,9 +3540,6 @@ public class DepotSalesServices{
 	  	try {
 	    	 result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 	         orderPaymentPreferenceId = (String) result.get("orderPaymentPreferenceId");
-	         
-	         Debug.log("orderPaymentPreferenceId================"+orderPaymentPreferenceId);
-	         
 	         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"paymentRefNum",paymentRefNum,"issuingAuthority",issuingAuthority,"comments",comments,"inFavourOf",inFavourOf,"instrumentDate",chequeDateTS,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
 	         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
 	         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
@@ -5731,6 +5726,7 @@ public class DepotSalesServices{
 	        if(UtilValidate.isEmpty(contactNumberTo)){
 	        	contactNumberTo = "9502532897";
 	        }
+	        contactNumberTo = "9440625565";
 	        if(UtilValidate.isNotEmpty(contactNumberTo)){
 	        	 if(UtilValidate.isNotEmpty(countryCode)){
 	        		 contactNumberTo = countryCode + contactNumberTo;
@@ -7658,6 +7654,7 @@ public class DepotSalesServices{
         if(UtilValidate.isEmpty(contactNumberTo)){
         	contactNumberTo = "9502532897";
         }
+        contactNumberTo = "9440625565";
         if(UtilValidate.isNotEmpty(contactNumberTo)){
         	 if(UtilValidate.isNotEmpty(countryCode)){
         		 contactNumberTo = countryCode + contactNumberTo;
@@ -9912,6 +9909,180 @@ public class DepotSalesServices{
 		 } 
 		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
 		return result;
-	}	
+	}
+ 	
+
+ 	public static Map<String, Object> acceptShipmentAndApproveInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String shipmentId = (String) context.get("shipmentId");
+		String partyId = (String) context.get("partyId");
+		String saleInvoiceId = (String) context.get("saleInvoiceId");
+		String purInvoiceId = (String) context.get("purInvoiceId");
+		
+		String transactionDateStr = (String) context.get("transactionDate");
+		Timestamp transactionDate=null;
+		if (UtilValidate.isNotEmpty(transactionDateStr)) { //2011-12-25 18:09:45
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MM, yy");             
+			try {
+				transactionDate = new java.sql.Timestamp(sdf.parse(transactionDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + transactionDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + transactionDateStr, module);
+			}
+		}
+		else{
+			transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_RECEIVED"));
+			List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(shipmentReceipts)){
+				for(GenericValue receipt:shipmentReceipts){
+		        	GenericValue shipmentValue = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+					String shipmentTypeId=shipmentValue.getString("shipmentTypeId");
+					if(UtilValidate.isNotEmpty(shipmentTypeId)){
+						if( !shipmentTypeId.equals("BRANCH_SHIPMENT")){
+							Map inputMap = FastMap.newInstance();
+				        	inputMap.put("userLogin", userLogin);
+				        	inputMap.put("partyId", partyId);
+				        	inputMap.put("statusIdTo", statusId);
+				        	inputMap.put("receiptId", receipt.get("receiptId"));
+
+				        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
+				        	/*if(ServiceUtil.isError(resultReceipt)){
+				        		Debug.logError("Error While Sending Receipt to QC", module);
+				  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
+				        	}*/
+				        	if(ServiceUtil.isError(resultReceipt)){
+				        		Debug.logError("Error While  While Accepting Receipt", module);
+				  	  			return ServiceUtil.returnError("Error While Accepting Receipt "+receipt.get("receiptId"));
+				        	}
+			        	//send QC in same time
+			        	inputMap.clear();
+			        	resultReceipt.clear();
+						
+						inputMap.put("statusIdTo","SR_ACCEPTED");
+						inputMap.put("receiptId",receipt.get("receiptId"));
+						inputMap.put("shipmentId",shipmentId);
+						inputMap.put("shipmentItemSeqId",receipt.get("shipmentItemSeqId") );
+						inputMap.put("quantityAccepted",receipt.get("quantityAccepted"));
+						inputMap.put("userLogin",userLogin);
+						resultReceipt = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
+						
+						if (ServiceUtil.isError(resultReceipt)) {
+							Debug.logError("Error While Accepting ", module);
+			  	  			return ServiceUtil.returnError("Error While  While Accepting"+receipt.get("receiptId"));
+			            }
+					}else{
+						BigDecimal quantityAccepted = (BigDecimal) receipt.get("quantityAccepted");
+						String shipStatusId="SR_ACCEPTED";
+						if(UtilValidate.isEmpty(quantityAccepted)){
+							return ServiceUtil.returnError("Quantity accepted cannot be ZERO ");
+						}
+						if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
+							shipStatusId = "SR_REJECTED";
+						}
+						if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
+							return ServiceUtil.returnError("negative value not allowed");
+						}
+						GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receipt.get("receiptId")), false);
+						
+						GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", receipt.get("shipmentItemSeqId")), false);
+						BigDecimal origReceiptQty=BigDecimal.ZERO;
+						origReceiptQty = shipmentItem.getBigDecimal("quantity");
+						BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
+						
+						if(quantityAccepted.compareTo(origReceiptQty) >0){
+							return ServiceUtil.returnError("not accept more than the received quantity");
+						}
+						//shipment receipts accept quantity populating
+						shipmentReceipt.put("quantityAccepted", quantityAccepted);
+						shipmentReceipt.put("quantityRejected", rejectedQty);
+						shipmentReceipt.put("statusId", shipStatusId);
+						shipmentReceipt.store();
+						
+						
+						if(UtilValidate.isNotEmpty(receipt.get("receiptId"))){
+							GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+							shipmentReceiptStatus.set("receiptId", receipt.get("receiptId"));
+							shipmentReceiptStatus.set("statusId", shipStatusId);
+							shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+							shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+							delegator.createSetNextSeqId(shipmentReceiptStatus);
+						}
+						
+						
+						
+					}
+				}
+				}
+			}
+			try {
+	        	 Map<String, Object> updateShipmentCtx = FastMap.newInstance();
+	        	 updateShipmentCtx.put("userLogin", context.get("userLogin"));
+	        	 updateShipmentCtx.put("shipmentId", shipmentId);
+	        	 updateShipmentCtx.put("statusId", "GOODS_RECEIVED");            
+	             dispatcher.runSync("updateShipment", updateShipmentCtx);
+	        }
+	        catch (GenericServiceException e) {
+	    		Debug.logError(e, "Failed to update shipment status " + shipmentId, module);
+	    		return ServiceUtil.returnError("Failed to update shipment status " + shipmentId + ": " + e);          	
+	        }
+			
+			Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", saleInvoiceId);
+            invoiceCtx.put("userLogin", userLogin);
+	   	 	invoiceCtx.put("statusId", "INVOICE_READY");
+	   	 	invoiceCtx.put("statusDate", transactionDate);
+	   	 	try{
+            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+             	if (ServiceUtil.isError(invoiceResult)) {
+             		Debug.logError(invoiceResult.toString(), module);
+                    return ServiceUtil.returnError(null, null, null, invoiceResult);
+                }	             	
+            }catch(GenericServiceException e){
+             	 Debug.logError(e, e.toString(), module);
+                 return ServiceUtil.returnError(e.toString());
+            } 
+	   	 	
+		   	Map<String, Object> purInvoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", purInvoiceId);
+		   	purInvoiceCtx.put("userLogin", userLogin);
+		   	purInvoiceCtx.put("statusId", "INVOICE_READY");
+		   	purInvoiceCtx.put("statusDate", transactionDate);
+	   	 	try{
+	   	 		Map<String, Object> purInvoiceResult = dispatcher.runSync("setInvoiceStatus",purInvoiceCtx);
+	   	 		if (ServiceUtil.isError(purInvoiceResult)) {
+	   	 			Debug.logError(purInvoiceResult.toString(), module);
+	   	 			return ServiceUtil.returnError(null, null, null, purInvoiceResult);
+	   	 		}	             	
+	        }catch(GenericServiceException e){
+	          	Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+	        } 
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		//result = ServiceUtil.returnSuccess("GRN no: "+shipmentId+" Send For Quality Check ");
+		result = ServiceUtil.returnSuccess("Sales and purchase invoices are approved Successfully  !!!! ");
+		
+		return result;
+	}
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 	
 }

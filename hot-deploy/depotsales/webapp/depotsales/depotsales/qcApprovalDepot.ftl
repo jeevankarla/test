@@ -57,6 +57,30 @@
 		$("input[type=submit]").attr("disabled", "disabled");
 	}
 	
+	function datepick()
+	{		
+		$( "#transactionDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			showSecond: true,
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
+	
+	function datepick1()
+	{		
+		$( "#grnDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			showSecond: true,
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
+	
 	function Alert(message, title)
 	{
 		// Content will consist of the message and an ok button
@@ -117,6 +141,39 @@
 					"</select></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Accept' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		title = "<center>Accept Shipment<center><br />";
+		message += "</table></form>";
+		Alert(message, title);
+	};
+	
+	function QCApprovalBranchSalesAndInvApproveQTip(shipmentId,partyIdTo,partyName,saleInvoiceId, purInvoiceId) {	
+		var message = "";
+		message += "<form action='acceptShipmentAndApproveInvoice' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ShipmentId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='shipmentId' name='shipmentId' value='"+shipmentId+"'/></td><input class='h4' type='hidden' readonly id='statusIdTo' name='statusIdTo' value='SR_QUALITYCHECK'/></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>User Agency:</td><td align='left' width='50%'>"+partyName+"   ["+partyIdTo+"]</td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='partyId' name='partyId' value='"+partyIdTo+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='saleInvoiceId' name='saleInvoiceId' value='"+saleInvoiceId+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='purInvoiceId' name='purInvoiceId' value='"+purInvoiceId+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Transaction Date:</td><td align='left' width='50%'><input type='text' name='transactionDate' id='transactionDate' onmouseover='datepick()'></td></tr>";
+		
+		//message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Received GRN:</td><td align='left' width='50%'><input type='radio' name='receivedGRN' id='transactionDate' onmouseover='datepick()'></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Received GRN:</td><td align='left' width='50%'><input type='radio' name='receivedGRN' value='Y'/> Yes   <input type='radio' name='receivedGRN' value='N'/> No </td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>GRN Ref No:</td><td align='left' width='50%'><input type='textarea' name='grnRefNo' id='grnRefNo'></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>GRN Date:</td><td align='left' width='50%'><input type='text' name='grnDate' id='grnDate' onmouseover='datepick1()'></td></tr>";
+		
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Remarks:</td><td align='left' width='50%'><input type='textarea' name='grnNotes' id='grnNotes'></td></tr>";
+		
+		
+		//message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Department :</td><td align='left' width='50%'><select name='partyId' id='partyId'  class='h4'>"+
+					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
+					"</select></td></tr>";
+		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Accept' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		title = "<center>Approve Invoice<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};

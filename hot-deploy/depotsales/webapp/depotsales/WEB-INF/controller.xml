@@ -128,7 +128,6 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    
     <request-map uri="getIndentListingDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getIndentListingDetails.groovy"/> 
@@ -142,7 +141,6 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
     
      <request-map uri="editFacility">
         <security https="true" auth="true"/>
@@ -465,6 +463,12 @@
        <event type="service" path="" invoke="shipmentSendForQC"></event>
        <response name="success" type="request-redirect-noparam" value="IndentorFindGRNShipments"/>
        <response name="error" type="request-redirect-noparam" value="IndentorFindGRNShipments"/>
+     </request-map>
+     <request-map uri="acceptShipmentAndApproveInvoice">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="acceptShipmentAndApproveInvoice"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
      </request-map>
       <request-map uri="MaterialForQCApproval">
        <security https="true" auth="true"/>

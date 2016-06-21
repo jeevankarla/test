@@ -443,7 +443,15 @@
         <attribute name="productIdsList" type="List" mode="OUT" optional="true"/>
         <attribute name="productList" type="List" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="acceptShipmentAndApproveInvoice" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="acceptShipmentAndApproveInvoice">
+        <description>Accept Shipment And Approve Invoice</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="saleInvoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="purInvoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="transactionDate" type="String" mode="IN" optional="true"/> 
+    </service>
     
 </services>
 
