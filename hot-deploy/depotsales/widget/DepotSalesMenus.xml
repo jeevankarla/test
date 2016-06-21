@@ -452,7 +452,7 @@
 						<parameter param-name="menuName" value="ChemicalIndent"/>
 				   </link> -->
 				</menu-item>
-				<menu-item name="FebricIndent" title="Febric Indent">
+				<menu-item name="FebricIndent" title="Fabric Indent">
 				    <link target="FebricBranchSalesOrder">
 						<parameter param-name="menuName" value="FebricIndent"/>
 				   </link>
