@@ -29,7 +29,6 @@ dctx = dispatcher.getDispatchContext();
 
 context.partyName = parameters.partyName;
 partyId = parameters.partyId;
-Debug.log("partyId========"+partyId);
 consList=[];
 consList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 /*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
@@ -512,10 +511,6 @@ context.Scheam =Scheam;
 				tempMap.put("quantity", eachItem.quantity);
 								
 				
-				
-				
-				
-				
 				double tenPerQty = 0;
 				
 				double quantity = 0;
@@ -598,12 +593,21 @@ context.Scheam =Scheam;
 				  
 				  tempMap.put("unitPrice", eachItem.unitPrice);
 				  
-				  if(UtilValidate.isNotEmpty(OrderItemDetail[0]))
-				  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
-				  else
+				  if(UtilValidate.isNotEmpty(OrderItemDetail[0])){
+					  
+					  if(OrderItemDetail[0].Uom) 
+					  tempMap.put("Uom", "/"+OrderItemDetail[0].Uom);
+				      else
+					  tempMap.put("Uom", "/KGs");
+					  
+			      }else{
 				  tempMap.put("Uom", "/KGs");
-				
+				  }
+				   
 			   //purChasesVal;
+				  
+				  
+				  tempMap.put("totalPurCost", (eachItem.quantity*eachItem.unitPrice));
 				  
 				  tempMap.put("totalCost", (eachItem.quantity*eachItem.unitPrice)+serviceAmount);
 				  
