@@ -5203,7 +5203,7 @@ public class DepotSalesServices{
 			if(UtilValidate.isEmpty(attrValue) || (attrValue.equals("N"))){
 				continue;
 			}
-			if(!(productCategoryId.equals("BRANDED"))){
+			if((!(childProductCategoryId.equals("BRANDED"))) && (!(childProductCategoryId.equals("COTTON_BRANDED")))){
 				if(attribute.equals("PACKING")){
 					if(attrValue.equals("CONE")){
 						packingAttribute = attrValue;
