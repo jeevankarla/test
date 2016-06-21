@@ -568,18 +568,24 @@ context.Scheam =Scheam;
 				/*if(eachOrderItem.quotaQuantity)
 				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);*/
 				  
+				  Debug.log("scheme================"+scheme);
 				  
-				  if(quantity > quotaQuantity)
-				  {
-					tempMap.put("tenPerQty", quotaQuantity);
-					tenPerQty = quotaQuantity;
-				  }
-				  else
-				  {
-					tempMap.put("tenPerQty", quantity);
-					tenPerQty = quantity;
+				  if(scheme != "General"){
+					  if(quantity > quotaQuantity)
+					  {
+						tempMap.put("tenPerQty", quotaQuantity);
+						tenPerQty = quotaQuantity;
+					  }
+					  else
+					  {
+						tempMap.put("tenPerQty", quantity);
+						tenPerQty = quantity;
+					  }
 				  }
 				//mgps Qty
+				  
+				  if(scheme == "General")
+				  tempMap.put("tenPerQty", 0);
 				 
 				  tempMap.put("baleQuantity", baleQuantity);
 				  tempMap.put("bundleUnitPrice", bundleUnitPrice);
@@ -614,7 +620,7 @@ context.Scheam =Scheam;
 				  OrderItems.add(tempMap);
 			}
 			
-			
+			Debug.log("OrderItems================="+OrderItems);
 			
 						
 		/*	conditionList.clear();
