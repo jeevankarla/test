@@ -325,9 +325,11 @@
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelPartyQuotaBalanceHistory">
         <description>cancel PartyQuota Balance History</description>
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
         <attribute name="orderItemAndAdjustment" mode="IN" type="GenericValue" optional="false"/>
         <attribute name="schemeCategory" mode="IN" type="String" optional="false"/>
         <attribute name="schemeCategoryIds" mode="IN" type="List" optional="false"/>
+        <attribute name="orderDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="quota" mode="IN" type="BigDecimal" optional="false"/>
     </service>
     <service name="cancelQuota" engine="java" auth="false" 
