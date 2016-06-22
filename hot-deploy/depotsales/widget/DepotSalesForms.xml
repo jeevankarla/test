@@ -1296,7 +1296,7 @@
      	       			<entity-options description="${description}" entity-name="LoomType"></entity-options>
      	       		</drop-down>
      	       	</field>
-     	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" maxlength="3"></text> </field>
+     	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" ></text> </field>
      	       	<field name="submit" title="update"><submit/></field>
      	      </form>
      	      <form name="ProducerProfilePicture"  type="upload" target="createWeaverContent" 	header-row-style="header-row">
