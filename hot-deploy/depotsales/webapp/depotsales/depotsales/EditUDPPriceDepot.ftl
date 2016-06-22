@@ -120,7 +120,76 @@
 	function cancelForm(){		 
 		return false;
 	}
+	var customerContactList={};
+	function showCustomerDetailsToolTip(gridRow, index) {
 	
+	    dataRow = gridRow;
+		var  partyId= dataRow["customerId"];
+		var customerContactDetails=customerContactList[partyId];
+	    var message="";
+	    var LoomDetails=customerContactDetails["LoomDetails"];
+	    var LoomList=customerContactDetails["LoomList"];
+	    var address1=customerContactDetails["address1"];
+		address1 +=customerContactDetails["address2"];
+		address1 +=customerContactDetails["city"];
+		var obj ={};
+		var objQuota ={};
+		var  objAvailableQuota ={};
+		var objUsedQuota ={};
+		var totLooms = 0;
+		$.each(LoomList, function(key, item){
+		 obj [item.loomType]=0;
+		 objQuota[item.loomType]=0;
+		 objAvailableQuota[item.loomType]=0;
+		 objUsedQuota[item.loomType]=0;
+		 for(var i=0 ; i<LoomDetails.length ; i++){
+			if(LoomDetails[i].loomType==item.loomType){
+			   obj [item.loomType] = LoomDetails[i].loomQty;
+          	   objQuota [item.loomType] = LoomDetails[i].loomQuota; 
+          	   objAvailableQuota [item.loomType] = LoomDetails[i].availableQuota; 
+          	   objUsedQuota [item.loomType] = LoomDetails[i].usedQuota; 
+          	   totLooms+=LoomDetails[i].loomQty;
+			 }			       	  				 	
+		  }
+		       	  				  
+		});		       	  				   
+		var tableElement;
+		
+
+	    message+="<div class='screenlet'>";
+	    message+="<div class='screenlet-body'>";
+	    message+="<form  name='partyDetails' id='partyDetails'>";
+	    message+="<table width='700px' border='0' cellspacing='0' cellpadding='0' style='font-size:11px'>";
+	    message+="<tr><td width='15%' keep-together='always' align='left'><font color='green'><b>   PartyName: </b></font></td><td width='85%'><font color='blue'><b>"+customerContactDetails['custPartyName']+"</b></font></td></tr>";
+	    message+="<tr><td width='15%' keep-together='always' align='left'><font color='green'><b>   Address: </b></font></td><td width='85%'> <font color='blue'><b>"+address1+"</b></font></td></tr>";
+	    message+="<tr><td width='100%' colspan='4'><table width='100%' border='1' border-style='solid'>";
+	    message+="<td width='100%' style='padding-top:10px' ><table  class='style18' width='100%' border='1' border-style='solid'>";
+	    message+= "<hr class='style16' ></hr>";
+	    message+="<tr><td><font color='green'>PassBook: </font></td><td width='10%'><font color='blue'><b>"+customerContactDetails["psbNo"]+"</b></font></td>";
+	    message+="<td width='20%'><font color='green'>IssueDate: </font></td><td width='50%'><font color='blue'><b>"+customerContactDetails["issueDate"]+"</b></font></td></tr>";
+	    message+="<tr><td width='20%'><font color='green'>Depot: </font></td><td width='50%'><font color='blue'><b>"+customerContactDetails["Depo"]+"</b></font></td>";
+	    message+="<td width='20%'><font color='green'>DOA: </font></td><td width='50%'><font color='blue'><b>"+customerContactDetails["DAO"]+"</b></font></td></tr>";
+	    message+="<tr><td width='20%'><font color='green'>PartyType: </font></td><td width='50%'><font color='blue'><b>"+customerContactDetails["partyType"]+"</b></font></td>";
+	    message+="<td width='20%'><font color='green'>Total Looms: </font></td><td width='50%'><font color='blue'><b>"+totLooms+"</b></font></td></tr>";
+	    message+="</table></td></tr>";
+	    
+	    message+="<tr><td width='100%' style='padding-top:10px' ><table  width='100%' border='1' border-style='solid'>";
+	    message+= "<hr class='style16' ></hr>";
+	    message+="<tr><td><font color='green'>Loom Type </font></td><td><font color='green'>No.Looms </font></td><td><font color='green'>Elg.Quota </font></td><td><font color='green'>Bal.Quota </font></td><td><font color='green'>UsedQuota </font></td></tr>";
+	   
+	    $.each(LoomList, function(key, item){
+	      message+="<tr><td><font color='blue'><b>"+item.loomType+"</b></font></td><td ><font color='blue'><b>"+obj[item.loomType]+"</b></font></td><td ><font color='blue'><b>"+objQuota[item.loomType]+"</b></font></td><td ><font color='blue'><b>"+objAvailableQuota[item.loomType]+"</b></font></td><td ><font color='blue'><b>"+objUsedQuota[item.loomType]+"</b></font></td></tr>";
+	    });
+	    
+	    message+="</table></td></tr>";
+	    message+="</table></td></tr><tr ><td style='text-align:center' colspan='2'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr</table></form></div></div";
+		var title = "";
+		
+		title = "<h2><center>Customer Details <center></h2>";
+			
+		Alert(message, title);
+		
+		}
 	function showUDPPriceToolTip(gridRow, index) {
 	
 		rowIndex = index;

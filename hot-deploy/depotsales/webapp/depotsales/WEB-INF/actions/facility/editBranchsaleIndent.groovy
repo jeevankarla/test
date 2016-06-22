@@ -188,6 +188,7 @@
 	
 	
 	JSONArray orderItemsJSON = new JSONArray();
+	JSONObject usedQuotaForExistingProd = new JSONObject();
 	
 	JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
 	
@@ -289,7 +290,11 @@
 			JSONObject newObj = new JSONObject();
 			
 			productQuotaDetails = EntityUtil.filterByCondition(prodCategoryMembers, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-			quota=0;usedQuota=0;		
+			quota=0;
+			usedQuota=eachItem.quotaQuantity;
+			
+			
+			
 			if(productQuotaDetails){
 				schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
 				if(productCategoryQuotasMap.containsKey(schemeCatId)){
@@ -297,10 +302,11 @@
 						quota = productCategoryQuotasMap.get(schemeCatId);
 					}
 				}
-				if(productCategoryUsedQuotaMap.containsKey(schemeCatId)){
-					if(UtilValidate.isNotEmpty(productCategoryUsedQuotaMap.get(schemeCatId))){
-						usedQuota = productCategoryUsedQuotaMap.get(schemeCatId);
-					}
+				if(usedQuotaForExistingProd.containsKey(schemeCatId)){
+					usedTotalQuota=(usedQuotaForExistingProd.get(schemeCatId)).add(new BigDecimal(usedQuota));
+					usedQuotaForExistingProd.put(schemeCatId, usedTotalQuota);
+				}else{
+					usedQuotaForExistingProd.put(schemeCatId, usedQuota);
 				}
 			}
 			
@@ -452,6 +458,7 @@
 		
 	}
 	context.dataJSON = orderItemsJSON;
+	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
 	
 	
 	

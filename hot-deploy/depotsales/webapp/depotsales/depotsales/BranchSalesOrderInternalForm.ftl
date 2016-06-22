@@ -632,10 +632,30 @@
 				if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
 				}	
+				
+				quantityq = 0;
+				if(uom == "Bale"){
+					bundleWeight=4.54;
+					quantityq = baleQty*bundleWeight*40;
+				}
+				if(uom == "Half-Bale"){
+					bundleWeight=4.54;
+					quantityq = baleQty*bundleWeight*20;
+				}
+				if(uom == "Bundle"){
+					bundleWeight=4.54;
+					quantityq = baleQty*bundleWeight;
+				}
+				
+				if(uom == "KGs"){				
+					quantityq = baleQty;
+					bundleWeight=0;
+				}
+				
 				data[args.row]["unitPrice"] = kgUnitPrice;
 				data[args.row]["amount"] = roundedAmount;
 				data[args.row]["totPayable"] = roundedAmount;
-				
+				data[args.row]["quantity"]=quantityq;
 				var row = args.row;
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
@@ -920,6 +940,10 @@
 		//updateProductTotalAmount();
 		
 		mainGrid = grid;
+		for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{
+		       updateCurrentQuota(rowCount);
+		}
 	}
 		
 	jQuery(function(){

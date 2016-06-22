@@ -421,7 +421,7 @@
 	  
 	JSONObject productQuotaJSON=new JSONObject();
 	JSONObject productCategoryJSON=new JSONObject();
-	  
+	JSONObject usedQuotaForExistingProd=(JSONObject)context.get("usedQuotaForExistingProd");
 	for(int i=0; i<prodCategoryMembers.size(); i++){
 		quota = 0;
 		schemeProdId = (prodCategoryMembers.get(i)).get("productId");
@@ -429,6 +429,10 @@
 		if(productCategoryQuotasMap.containsKey(schemeCatId)){
 			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(schemeCatId))){
 				quota = productCategoryQuotasMap.get(schemeCatId);
+				
+				if(usedQuotaForExistingProd!=null && usedQuotaForExistingProd.containsKey(schemeCatId)){
+					quota=quota.add(new BigDecimal(usedQuotaForExistingProd.get(schemeCatId)));
+				}
 			}
 			String dateInString = "01 APRIL, 2016";
 			targetDate = new java.sql.Timestamp(sdf.parse(dateInString).getTime());
