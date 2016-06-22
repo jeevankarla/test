@@ -132,7 +132,7 @@ List<String> payOrderBy = UtilMisc.toList(dateSort,"-orderId");
 
 resultList = [];
 
-forIndentsCount = [];
+forIndentsCount = null;
 
 double totalIndents = 0
 
@@ -167,6 +167,8 @@ resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 fieldsToSelect = ["orderId"] as Set;
 forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
 
+totalIndents = forIndentsCount.size();
+
 }
 else{
 //result = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields,"orderBy",dateSort, "userLogin", userLogin));
@@ -174,31 +176,34 @@ resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 
 fieldsToSelect = ["orderId"] as Set;
 forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
+totalIndents = forIndentsCount.size();
 
 //resultList = result.listIt;
 }
 
-totalIndents = totalIndents+forIndentsCount.size();
 
-orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
+//int low = Integer.valueOf(parameters.low);
+
+//int high = Integer.valueOf(parameters.high)-low;
+
+orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high)-Integer.valueOf(parameters.low));
 
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
-
 //orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
-
 //orderHeader = EntityUtil.filterByCondition(orderHeader, cond);
 /*
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
-
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 */
 
-if(uniqueOrderIdsList)
+if(uniqueOrderIdsList){
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
+}
+
+
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
-
 //condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,orderIds1));
 /*
 List condList11 = [];

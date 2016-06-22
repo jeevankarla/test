@@ -39,6 +39,7 @@ var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 
 
+var displayedIndent = 0;
 var uniqueOrderIdsList = [];
 var orderData;
 var domOrderIds = "";
@@ -84,6 +85,8 @@ $(document).ready(function() {
 					}else{
 						orderData = result["orderList"];
                         if(orderData.length != 0){
+                          displayedIndent = displayedIndent+orderData.length;
+                         $("#displayedIndent").html(displayedIndent);      
                         $('div#orderSpinn').html("");
                         $('div#blink').hide();
                         drawTable(orderData);   
@@ -186,8 +189,6 @@ function drawRow(rowData) {
     var statusId = '\'' + rowData.statusId + '\'';
     var partyId = '\'' + rowData.partyId + '\'';
     
-    
-    
      
      if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED"){
     var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
@@ -284,11 +285,6 @@ function drawRow(rowData) {
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="cancel" onclick="'+cancellorder+'">';
     
     row.append($("<td>" +  viewButton  +"</td>"));
-    
-    
-    
-    
-    
     
     
     
@@ -404,7 +400,7 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
      <font color="blue">Search:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
   
   
-    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label> </div>
+    <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Displayed Indents : <label  align="center" id="displayedIndent"style="color: blue" ></label> </div>
   
   
   <form name="listOrders" id="listOrders"   method="post" >
