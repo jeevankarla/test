@@ -1164,6 +1164,7 @@ public class DepotPurchaseServices{
 				String bedPriceStr = null;
 				String cstPriceStr = null;
 				String unitPriceStr = null;
+				String remarksStr = null;
 				String serTaxPriceStr = null;
 				BigDecimal quantity = BigDecimal.ZERO;
 				BigDecimal basicPrice = BigDecimal.ZERO;
@@ -1229,6 +1230,12 @@ public class DepotPurchaseServices{
 						
 						if (paramMap.containsKey("unitPrice" + thisSuffix)) {
 							unitPriceStr = (String) paramMap.get("unitPrice"
+									+ thisSuffix);
+						}
+						
+						
+						if (paramMap.containsKey("remarks" + thisSuffix)) {
+							remarksStr = (String) paramMap.get("remarks"
 									+ thisSuffix);
 						}
 
@@ -1307,6 +1314,7 @@ public class DepotPurchaseServices{
 						productQtyMap.put("productId", productId);
 						productQtyMap.put("quantity", quantity);
 						productQtyMap.put("unitPrice", unitPrice);
+						productQtyMap.put("remarks", remarksStr);
 						productQtyMap.put("unitListPrice", unitPrice);
 						productQtyMap.put("basicPrice", basicPrice);
 						productQtyMap.put("bedPrice", bedPrice);
@@ -1633,6 +1641,8 @@ public class DepotPurchaseServices{
 				
 				String productId = "";
 				
+				String remarks = "";
+				
 				for (Map<String, Object> prodQtyMap : productQtyList) {
 					List taxList=FastList.newInstance();
 					
@@ -1654,6 +1664,11 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 						productId = (String)prodQtyMap.get("productId");
 					}
+					
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
+						remarks = (String)prodQtyMap.get("remarks");
+					}
+					
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 						quantity = (BigDecimal)prodQtyMap.get("quantity");
 					}
@@ -1754,12 +1769,19 @@ public class DepotPurchaseServices{
 					}
 					
 					ShoppingCartItem item = null;
+					
+					ShoppingCartItem cartitem = null;
+					
+					
 					try{
 						int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, unitPrice,
 					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 					
 						item = cart.findCartItem(itemIndx);
+						
+						item.setOrderItemAttribute("remarks",remarks);
+						
 						
 						//item.setTaxDetails(taxList);
 						
