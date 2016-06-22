@@ -2211,8 +2211,10 @@ public class DepotSalesServices{
 						condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
 						condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
 						try{
-						List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderItemAndAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-						
+						List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+						Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
+						GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+					    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
 						if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
 							List schemeCategoryIds = FastList.newInstance();
 						  	try{
@@ -2226,22 +2228,21 @@ public class DepotSalesServices{
 
 								condsList.clear();
 								condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-								if(UtilValidate.isEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
+								if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
 									condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
 								}
 							  	BigDecimal quota =BigDecimal.ZERO;
 							  	try {
-									List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity"), null, null, true);
-								  	//Debug.log("OrderItemDetailList========================"+OrderItemDetailList);
+									List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 
 									if(UtilValidate.isNotEmpty(OrderItemDetailList)){
 										for(GenericValue OrderItemDetailValue : OrderItemDetailList){
 											if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
 												quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
-												//Debug.log("quota========================"+quota);
 											  	Map partyBalanceHistoryContext = FastMap.newInstance();
 											  	partyId=(String)OrderItemDetailValue.get("partyId");
-												partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
+											  	String productId=(String)OrderItemDetailValue.get("productId");
+											  	partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
 											  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 			
 											}
@@ -6314,49 +6315,50 @@ public class DepotSalesServices{
 				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
 				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
 				try{
-				List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderItemAndAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-				
-			  	if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
-					List schemeCategoryIds = FastList.newInstance();
-				  	try{
-				  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
-				  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
-				   	}catch (GenericEntityException e) {
-						Debug.logError(e, "Failed to retrive ProductCategory ", module);
-						return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
-					}
-					for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
+					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+					Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
+					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
+					if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
+						List schemeCategoryIds = FastList.newInstance();
+					  	try{
+					  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+					  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+					   	}catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductCategory ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+						}	 	
+						for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
 
-						condsList.clear();
-						condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-						if(UtilValidate.isEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
-							condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
-						}
-					  	BigDecimal quota =BigDecimal.ZERO;
-					  	try {
-							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity"), null, null, true);
-						  	//Debug.log("OrderItemDetailList========================"+OrderItemDetailList);
+							condsList.clear();
+							condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+							if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
+								condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+							}
+						  	BigDecimal quota =BigDecimal.ZERO;
+						  	try {
+								List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 
-							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
-								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
-									if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
-										quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
-										//Debug.log("quota========================"+quota);
-									  	Map partyBalanceHistoryContext = FastMap.newInstance();
-									  	partyId=(String)OrderItemDetailValue.get("partyId");
-										partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin);
-									  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-	
+								if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+									for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+										if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+											quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+										  	Map partyBalanceHistoryContext = FastMap.newInstance();
+										  	partyId=(String)OrderItemDetailValue.get("partyId");
+										  	String productId=(String)OrderItemDetailValue.get("productId");
+										  	partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
+										  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+		
+										}
 									}
 								}
+							  	
+						  	} catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 							}
-						  	
-					  	} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 						}
 					}
-				}
 				}catch (GenericEntityException e) {
 					Debug.logError(e, "Failed to retrive ProductCategory ", module);
 					return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
@@ -6379,16 +6381,16 @@ public class DepotSalesServices{
 		GenericValue orderItemAndAdjustment=(GenericValue)context.get("orderItemAndAdjustment");
 		List schemeCategoryIds=(List) context.get("schemeCategoryIds");
 		String schemeCategory=(String) context.get("schemeCategory");
-		Timestamp fromDate = (Timestamp) orderItemAndAdjustment.get("orderDate");
-		Timestamp thruDate = (Timestamp) orderItemAndAdjustment.get("orderDate");
-		String productId=(String) orderItemAndAdjustment.get("productId");
+		Timestamp fromDate = (Timestamp) context.get("orderDate");
+		Timestamp thruDate = (Timestamp) context.get("orderDate");
+		String productId=(String) context.get("productId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String partyId=(String) context.get("partyId");
 		BigDecimal quota=(BigDecimal) context.get("quota");
 		List condsList = FastList.newInstance();
 		if(schemeCategory.equals("MGPS_10Pecent")){
 			String periodTypeId="TEN_PERC_PERIOD";
-			
+
 			List productCategoriesList = FastList.newInstance();
 			condsList.clear();
 		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -6396,7 +6398,7 @@ public class DepotSalesServices{
 		  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDate));
 		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, thruDate)));
-			try {
+		  	try {
 				List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
 				productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
 			} catch (GenericEntityException e) {
@@ -6421,7 +6423,7 @@ public class DepotSalesServices{
 			
 			Map partyBalanceHistoryContext = FastMap.newInstance();
 			partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quota",quota,"userLogin", userLogin);
-				
+			
 			try { 	
 				Map<String, Object> resultMapquota = dispatcher.runSync("cancelQuota", partyBalanceHistoryContext);
 				quota=(BigDecimal)resultMapquota.get("quota");
