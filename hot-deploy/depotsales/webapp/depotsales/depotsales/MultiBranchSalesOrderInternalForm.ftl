@@ -267,7 +267,7 @@
 			
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
-				var extOrder = jQuery("<input>").attr("type", "hidden").attr("namme", "orderId").val(order);		
+				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
 				jQuery(formId).append(jQuery(extOrder));
 			</#if>
 			
