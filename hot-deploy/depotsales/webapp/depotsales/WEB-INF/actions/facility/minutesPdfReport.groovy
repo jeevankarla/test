@@ -46,8 +46,7 @@ context.heldOnDate = heldOnDate;
  
  context.orderDate = orderDate;
  context.externalOrderId = externalOrderId;
- 
- 
+ allDetailsMap = [:];
 grandTOt = orderHeaderList.get("grandTotal");
 productStoreId = orderHeaderList.get("productStoreId");
 branchId="";
@@ -198,30 +197,59 @@ context.Scheam =Scheam;
 			products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
-			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
-			
+			//conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER"));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			orderRoleList = delegator.findList("OrderRole", condition,  UtilMisc.toSet("partyId"), null, null, false);
-
+			orderRoleList = delegator.findList("OrderRole", condition,null, null, null, false);
+			supperPartyDetails = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+			
 			supplierPartyId = "";
 			supplierHindiPartyId = "";
-			if(UtilValidate.isNotEmpty(orderRoleList)){
-			supplierPartyId = orderRoleList[0].get("partyId");
-			
-			supplierHindiPartyId = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
+			if(UtilValidate.isNotEmpty(supperPartyDetails)){
+			   supplierPartyId = supperPartyDetails[0].get("partyId");
+			   supplierHindiPartyId = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierPartyId, false);
 			}
 			
 			if(UtilValidate.isEmpty(partyId)){
-				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
-				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_TO_CUSTOMER"));
-				
-				condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				orderRoleAgencyList = EntityUtil.getFirst(delegator.findList("OrderRole", condition1,  UtilMisc.toSet("partyId"), null, null, false));
+				orderRoleAgencyList = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 				if(UtilValidate.isNotEmpty(orderRoleAgencyList)){
-					partyId=orderRoleAgencyList.partyId;
+					partyId=orderRoleAgencyList[0].partyId;
 				}
 			}
+			billFromPartyDetails = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			billFromPartyDetails = EntityUtil.getFirst(billFromPartyDetails);
+			boPartyId = billFromPartyDetails.partyId;
+			partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , boPartyId)  , null, null, null, false );
+			if(UtilValidate.isNotEmpty(partyIdentification)){
+				tinNumber="";
+				tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+				if(UtilValidate.isNotEmpty(tinDetails)){
+					tinDetails=EntityUtil.getFirst(tinDetails);
+					tinNumber=tinDetails.idValue;
+					allDetailsMap.put("tinNumber",tinNumber);
+				}
+				cstNumber="";
+				cstDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+				if(UtilValidate.isNotEmpty(cstDetails)){
+					cstDetails=EntityUtil.getFirst(cstDetails);
+					cstNumber=cstDetails.idValue;
+					allDetailsMap.put("cstNumber",cstNumber);
+				}
+				cinNumber="";
+				cinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CIN_NUMBER"));
+				if(UtilValidate.isNotEmpty(cinDetails)){
+					cinDetails=EntityUtil.getFirst(cinDetails);
+					cinNumber=cinDetails.idValue;
+					allDetailsMap.put("cinNumber",cinNumber);
+				}
+				panNumber="";
+				panDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+				if(UtilValidate.isNotEmpty(panDetails)){
+					panDetails=EntityUtil.getFirst(panDetails);
+					panNumber=panDetails.idValue;
+					allDetailsMap.put("panNumber",panNumber);
+				}
+			}
+			context.allDetailsMap= allDetailsMap;
 			context.supplierPartyId = supplierPartyId;
 			
 			context.supplierHindiPartyId = supplierHindiPartyId;
