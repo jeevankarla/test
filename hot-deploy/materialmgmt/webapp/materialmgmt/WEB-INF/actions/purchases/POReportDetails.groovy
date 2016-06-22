@@ -245,15 +245,6 @@ if(UtilValidate.isNotEmpty(orderId)){
 			}
 		
 	}
-//orderSequenceNO
-OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
-OrderHeaderSequenceData=EntityUtil.getFirst(OrderHeaderSequenceData);
-sequenceId=OrderHeaderSequenceData.sequenceId;
-orderNo=OrderHeaderSequenceData.orderNo;
-allDetailsMap.put("sequenceId",sequenceId);
-allDetailsMap.put("orderNo",orderNo);
-	}
 
 //FileNo
 fileNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"FILE_NUMBER"],false);
@@ -320,6 +311,15 @@ exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperato
 orderAssc = EntityUtil.getFirst(delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false));
 
 toOrderId=orderAssc.toOrderId;
+//indentSequenceNO
+OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , toOrderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
+    OrderHeaderSequenceData=EntityUtil.getFirst(OrderHeaderSequenceData);
+    sequenceId=OrderHeaderSequenceData.sequenceId;
+    indentSquienceNo=OrderHeaderSequenceData.orderNo;
+    allDetailsMap.put("sequenceId",sequenceId);
+    allDetailsMap.put("indentSquienceNo",indentSquienceNo);
+}
 context.toOrderId = toOrderId;
 orderHeader = delegator.findOne("OrderHeader",["orderId":toOrderId],false);
 

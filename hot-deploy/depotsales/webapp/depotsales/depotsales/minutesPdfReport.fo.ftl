@@ -54,7 +54,31 @@ under the License.
 							</fo:table-row>
 			            </fo:table-body>
 			        </fo:table>
-        		</fo:block> 
+        		</fo:block>
+        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+               <fo:block>
+				    <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+						<fo:table-column column-width="165pt"/>               
+						<fo:table-column column-width="280pt"/>               
+						<fo:table-column column-width="200pt"/>               
+						    <fo:table-body>
+	                              <fo:table-row>
+					                  <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TIN No.  : ${allDetailsMap.get("tinNumber")?if_exists}</fo:block></fo:table-cell> 
+					                  <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;</fo:block></fo:table-cell>
+	                               </fo:table-row>
+	                               <fo:table-row>
+					                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">CST No. : ${allDetailsMap.get("cstNumber")?if_exists}</fo:block></fo:table-cell> 
+	                               </fo:table-row>
+	                               <fo:table-row>
+					                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">CIN No. : ${allDetailsMap.get("cinNumber")?if_exists}</fo:block></fo:table-cell> 
+	                               </fo:table-row>
+	                               <fo:table-row>
+					                  <fo:table-cell ><fo:block text-align="left" font-size="12pt"  keep-together="always">PAN No. : ${allDetailsMap.get("panNumber")?if_exists}</fo:block></fo:table-cell> 
+	                               </fo:table-row>
+				         </fo:table-body>
+				    </fo:table>
+			   </fo:block>	
+                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">--------------------------------------------------------------------------------------------- </fo:block>
         		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
              	<fo:block  text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">Minutes of Purchase and Sales Committee meeting held on :<#if heldOnDate?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(heldOnDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
