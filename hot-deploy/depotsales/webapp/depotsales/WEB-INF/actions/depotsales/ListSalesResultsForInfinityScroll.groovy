@@ -589,6 +589,7 @@ facilityPartyId = parameters.partyId;
 
 facilityDateStart = null;
 facilityDateEnd = null;
+transDate = null;
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	try {

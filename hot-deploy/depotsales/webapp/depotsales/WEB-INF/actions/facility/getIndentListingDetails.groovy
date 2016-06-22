@@ -167,6 +167,7 @@ resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 fieldsToSelect = ["orderId"] as Set;
 forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
 
+totalIndents = forIndentsCount.size();
 
 }
 else{
@@ -176,14 +177,19 @@ resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 fieldsToSelect = ["orderId"] as Set;
 forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
 
+totalIndents = forIndentsCount.size();
+
 //resultList = result.listIt;
 }
 
+//orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
 
-totalIndents = totalIndents+forIndentsCount.size();
 
 
-orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
+orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high)-Integer.valueOf(parameters.low));
+
+
+
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
@@ -198,6 +204,11 @@ orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCond
 
 if(uniqueOrderIdsList)
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
+
+
+
+
+Debug.log("orderHeader==============="+orderHeader.size());
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
 
