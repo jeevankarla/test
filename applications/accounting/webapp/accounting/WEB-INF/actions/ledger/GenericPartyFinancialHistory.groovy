@@ -131,21 +131,26 @@
 	partyWiseLedgerAbstractMap=[:]
 	//Check for Party is Valid or Not
 	result = [:];
-	List partRoIds = ["INT1","INT2","INT3","INT4","INT5","INT6","INT26","INT28","INT47"];
+	conditionList=[];
 	List formatList = [];
-	if((parameters.branchId) && (partRoIds.contains(branchId))){
+	if(UtilValidate.isNotEmpty(branchId)){
 		resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
 		Map formatMap = [:];
 		partyList=[];
 		if(resultCtx && resultCtx.get("partyList")){
 			partyList=resultCtx.get("partyList")
 			partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
-			formatList=(List)partyIdToList;
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS, "BRANCH_OFFICE"));
+			conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, partyIdToList));
+			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			List partyClassificationList=delegator.findList("PartyClassification",condition,UtilMisc.toSet("partyId"),null,null,false);
+			formatList= EntityUtil.getFieldListFromEntityList(partyClassificationList,"partyId", true);
 		}
+		formatList.add(branchId);
 	}
 	List rolePartyIds = [];
-	conditionList=[];
 	if(UtilValidate.isNotEmpty(roleTypeId)){
+		conditionList.clear();
 	    conditionList.add(EntityCondition.makeCondition("attrName",EntityOperator.EQUALS, "ACCOUNTING_ROLE"));
 	    conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId));
 	    condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -158,13 +163,9 @@
 		List otherPartyRoles=delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyCode),UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
 		rolePartyIds = EntityUtil.getFieldListFromEntityList(otherPartyRoles, "partyId", true);
 	}
-	if((UtilValidate.isNotEmpty(branchId)) && !(roleTypeId == "EMPANELLED_SUPPLIER")){
+	if((UtilValidate.isNotEmpty(branchId)) && (roleTypeId == "EMPANELLED_CUSTOMER")){
 		conditionList.clear();
-		if(UtilValidate.isNotEmpty(formatList)){
-		   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
-		}else{
-	   	   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, branchId));
-		}   
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, formatList));
 	    conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, rolePartyIds));
 		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 		if(UtilValidate.isNotEmpty(roleTypeId)){
@@ -203,8 +204,7 @@
 		conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 	}
 	//adding for Abstract PartyLedger
-	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(parameters.branchId))){
-		if(partRoIds.contains(branchId)){
+	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(formatList))){
 			conditionList.add( EntityCondition.makeCondition([
 				EntityCondition.makeCondition([
 					EntityCondition.makeCondition("partyId", EntityOperator.IN, rolePartyIds),
@@ -215,19 +215,6 @@
 					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 					],EntityOperator.AND)
 				],EntityOperator.OR));
-		}else{
-	          conditionList.add( EntityCondition.makeCondition([
-					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyId", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
-						],EntityOperator.AND),
-					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.branchId),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
-						],EntityOperator.AND)
-					],EntityOperator.OR));
-		}		
-		
 	}
 	newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	List<String> payOrderBy = UtilMisc.toList("invoiceDate");
@@ -370,8 +357,7 @@
 	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 	conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 	}//adding for Abstract PartyLedger
-	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(parameters.branchId))){
-		if(partRoIds.contains(branchId)){
+	if((UtilValidate.isNotEmpty(rolePartyIds)) || (UtilValidate.isNotEmpty(formatList))){
 			conditionList.add( EntityCondition.makeCondition([
 				EntityCondition.makeCondition([
 					EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, rolePartyIds),
@@ -382,19 +368,6 @@
 					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
 					],EntityOperator.AND)
 				],EntityOperator.OR));
-		}else{
-	     conditionList.add( EntityCondition.makeCondition([
-					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, rolePartyIds),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.branchId)
-						],EntityOperator.AND),
-					EntityCondition.makeCondition([
-						EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.branchId),
-						EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, rolePartyIds)
-						],EntityOperator.AND)
-					],EntityOperator.OR));
-		}		
-		
 	}
 	newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
     List<String> orderBy = UtilMisc.toList("paymentDate");
