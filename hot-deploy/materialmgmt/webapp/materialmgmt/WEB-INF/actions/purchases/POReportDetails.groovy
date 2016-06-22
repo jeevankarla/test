@@ -450,9 +450,9 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		remarks="";
 		baleQty="";
 		unit="";
-		if(UtilValidate.isNotEmpty(toOrderId)){
+		if(UtilValidate.isNotEmpty(orderitems.orderId)){
 			conditionList=[];
-			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderitems.orderId));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
 			conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
