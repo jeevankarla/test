@@ -106,6 +106,11 @@
 			}
 			dataMap["productId_o_"+rowCount] = prodId;
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			
+			var remarks = parseFloat(data[rowCount]["remarks"]);
+			
+			dataMap["remarks_o_"+rowCount] = remarks;
+			
 			dataMap["quantity_o_"+rowCount] = qty;
 			var unitPrice = data[rowCount]["unitPrice"];
 			dataMap["unitPrice_o_"+rowCount] = unitPrice;
@@ -203,6 +208,11 @@
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var unitPrice = data[rowCount]["unitPrice"];
+			
+			var remarks = data[rowCount]["remarks"];
+			
+			
+			
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
 			//var bedPercent = data[rowCount]["bedPercent"];
@@ -221,6 +231,10 @@
 				
 				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_" + rowCount).val(cstPercent);
 				jQuery(formId).append(jQuery(inputCSTPer));
+
+				var remarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
+				jQuery(formId).append(jQuery(remarks));
+                 
 				
 				//var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
 				//jQuery(formId).append(jQuery(inputExcisePer));

@@ -564,6 +564,16 @@ context.Scheam =Scheam;
 				  quantity = Double.valueOf(eachItem.quantity);
 				
 				  
+				  if(OrderItemDetail[0]){
+					  
+					 if(OrderItemDetail[0].remarks)				  
+				      tempMap.put("remarks", OrderItemDetail[0].remarks);
+				     else
+					 tempMap.put("remarks", "");
+				  
+				  }else{
+				  tempMap.put("remarks", "");
+				  }
 				  
 				/*if(eachOrderItem.quotaQuantity)
 				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);*/
@@ -620,7 +630,7 @@ context.Scheam =Scheam;
 				  OrderItems.add(tempMap);
 			}
 			
-			Debug.log("OrderItems================="+OrderItems);
+			//Debug.log("OrderItems================="+OrderItems);
 			
 						
 		/*	conditionList.clear();
