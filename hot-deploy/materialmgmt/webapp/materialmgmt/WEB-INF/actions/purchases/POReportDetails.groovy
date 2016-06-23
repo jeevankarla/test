@@ -70,8 +70,11 @@ if (productStoreId) {
 branchContext=[:];
 if(branchId == "INT49" || branchId == "INT12" || branchId == "INT55")
 branchContext.put("branchId","INT12");
+else if(branchId == "INT8" || branchId == "INT20")
+branchContext.put("branchId","INT8");
 else
 branchContext.put("branchId",branchId);
+
 
 BOAddress="";
 BOEmail="";
