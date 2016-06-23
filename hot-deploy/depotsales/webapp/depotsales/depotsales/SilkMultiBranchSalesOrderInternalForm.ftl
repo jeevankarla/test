@@ -295,7 +295,9 @@
 	function editClickHandlerEvent(row){
 		showUDPPriceToolTip(data[row], row, userDefPriceObj);
 	}
-	
+	function clickCustomerDetails(row){
+		showCustomerDetailsToolTip(data[row], row, userDefPriceObj);
+	}
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
 		processIndentEntryInternal(formName, action);
@@ -373,6 +375,11 @@
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
+ 			{id:"button", name:"View Customer Details", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="clickCustomerDetails('+row+')" value="View">View</a>'; 
  				}
  			},
 			{id:"quotaAvbl", name:"Quota Available (In Kgs)", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
@@ -523,12 +530,15 @@
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
-				if (args.cell == 3) {
-				    if(qty<=quota){
-				      data[args.row]["usedQuota"]=qty;
+				if(!isNaN(quota)){
+				    if(qty<=data[args.row]["usedQuota"]){
+				       var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
+				       data[args.row]["quota"]=totalQuota-qty;
+				       data[args.row]["usedQuota"]=qty;
 				    }
 				    else{
-				      data[args.row]["usedQuota"]=quota;
+				      data[args.row]["usedQuota"]=qty;
+				       data[args.row]["quota"]=0;
 				    }
 				}
 				
@@ -611,6 +621,10 @@
 	      		 	grid.updateRow(args.row);
 				   	
   		 		}
+  		 		if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
+  		 		  getCustomerDetails(args);
+  		 		}
+  		 		
    			}
    			
    			if (args.cell == 2 ) {
@@ -639,8 +653,9 @@
 					                	if(isNaN(qut)){
 											qut = 0;
 										}
-					                	data[args.row]["quota"] = qut;
+					                	data[args.row]["quota"] = 0;
 						       			data[args.row]['quantity'] =qut;
+						       			data[args.row]['usedQuota'] =qut;
 						       			utprice=data[currentrow]["unitPrice"];
 						       			amount=qut*utprice;
 						       			data[args.row]['amount'] = amount;
@@ -1028,6 +1043,42 @@
 	     	 	}
 	    	});
 	    }	
+	}
+	
+	function getCustomerDetails(args){
+	    var currentrow=args.row;
+	    var partyId=data[args.row]['customerId']
+	 	if(data[args.row]['customerId'] != "undefined"){
+			var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyContactDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				  contactDetails =result["partyJSON"];
+	       	  				 if( contactDetails != undefined && contactDetails != ""){
+	       	  						
+					                customerContactList[partyId]=contactDetails;
+					                
+				   					}
+						      		 	
+					               }
+					             } ,
+					             error: function() {
+				            	 	alert(result["_ERROR_MESSAGE_"]);
+				            	 }
+				            	
+					        }); 				
+							
+							
+			      	 }
+	
+	
 	}
 	
 </script>			

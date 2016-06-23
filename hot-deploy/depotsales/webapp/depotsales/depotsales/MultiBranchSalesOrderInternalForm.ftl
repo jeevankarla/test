@@ -296,7 +296,9 @@
 	function editClickHandlerEvent(row){
 		showUDPPriceToolTip(data[row], row, userDefPriceObj);
 	}
-	
+	function clickCustomerDetails(row){
+		showCustomerDetailsToolTip(data[row], row, userDefPriceObj);
+	}
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
 		processIndentEntryInternal(formName, action);
@@ -380,6 +382,11 @@
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
+ 			{id:"button", name:"View Customer Details", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="clickCustomerDetails('+row+')" value="View">View</a>'; 
  				}
  			},
  			{id:"quotaAvbl", name:"AvailableQuota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
@@ -823,6 +830,9 @@
 	      		 	grid.updateRow(args.row);
 				   	
   		 		}
+  		 		if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
+  		 		  getCustomerDetails(args);
+  		 		}
    			}
    			
    			if (args.cell == 2 ) {
@@ -1184,5 +1194,39 @@
 	    	});
 	    }
 	}
+	function getCustomerDetails(args){
+	    var currentrow=args.row;
+	    var partyId=data[args.row]['customerId']
+	 	if(data[args.row]['customerId'] != "undefined"){
+			var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
+	      	$.ajax({
+	             type: "POST",
+	             url: "getpartyContactDetails",
+	           	 data: dataString ,
+	           	 dataType: 'json',
+	           	 async: false,
+	        	 success: function(result) {
+	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 alert(result["_ERROR_MESSAGE_"]);
+	          			}else{
+	       	  				  contactDetails =result["partyJSON"];
+	       	  				 if( contactDetails != undefined && contactDetails != ""){
+	       	  						
+					                customerContactList[partyId]=contactDetails;
+					                
+				   					}
+						      		 	
+					               }
+					             } ,
+					             error: function() {
+				            	 	alert(result["_ERROR_MESSAGE_"]);
+				            	 }
+				            	
+					        }); 				
+							
+							
+			      	 }
 	
+	
+	}	
 </script>			

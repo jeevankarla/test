@@ -727,6 +727,10 @@
 		//updateProductTotalAmount();
 		
 		mainGrid = grid;
+		for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{
+		       updateCurrentQuota(rowCount);
+		}
 	}
 		
 	jQuery(function(){
