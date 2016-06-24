@@ -6365,6 +6365,34 @@ public class DepotSalesServices{
 			  Debug.logError(e, e.toString(), module);
 			  return ServiceUtil.returnError("Problem cancelling order");
 		}
+		
+		
+		List OrderAssocList = FastList.newInstance();
+			
+			  List conditionList = FastList.newInstance();
+
+			  conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS,orderId));
+			  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
+			  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			  try{
+			  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
+			  
+			   if(UtilValidate.isNotEmpty(OrderAssocList)){
+
+			  GenericValue OrderAssoc = EntityUtil.getFirst(OrderAssocList);
+			  String PoOrderId = (String)OrderAssoc.get("orderId");
+			 
+			  
+			  GenericValue	poOrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", PoOrderId), false);
+			  poOrderHeader.set("statusId","ORDER_CANCELLED");
+			  poOrderHeader.store();
+			 }
+			
+		}catch (Exception e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling OrderHeader");
+		}
+		
 		result.put("salesChannelEnumId", salesChannelEnumId);
 		return result;
 	}

@@ -90,6 +90,23 @@ context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
 
 
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+
+FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
+
+
+isDepot = "";
+if(FacilityList)
+isDepot ="Y"
+else
+isDepot ="N"
+
+
+context.isDepot = isDepot;
+
 context.orderId = parameters.orderId;
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , parameters.orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(orderHeaderSequences)){
@@ -556,6 +573,7 @@ context.Scheam =Scheam;
 				//eachOrderItem = OrderItemDetail[0];
 				
 				double serviceAmount = 0;
+				double sourcePercentage = 0;
 				 if(scheme == "General"){
 					 
 					 conditionList.clear();
@@ -571,6 +589,7 @@ context.Scheam =Scheam;
 					 if(OrderAdjustment[0].orderAdjustmentTypeId == "SERVICE_CHARGE"){
 						 if(OrderAdjustment[0].amount){
 						   serviceAmount=OrderAdjustment[0].amount;
+						   sourcePercentage = OrderAdjustment[0].sourcePercentage;
 						 }
 					}
 					 } 
@@ -635,7 +654,14 @@ context.Scheam =Scheam;
 				  tempMap.put("mgpsQty", quantity-tenPerQty);
 				  
 				  
+				  if(scheme == "General"){
+                  double perAmt = (eachItem.unitPrice*sourcePercentage)/100;
+			      tempMap.put("unitPrice",(eachItem.unitPrice+perAmt));
+				  }else{
 				  tempMap.put("unitPrice", eachItem.unitPrice);
+				  }
+				  
+				  tempMap.put("PurunitPrice", eachItem.unitPrice);
 				  
 				  if(UtilValidate.isNotEmpty(OrderItemDetail[0])){
 					  
@@ -649,7 +675,6 @@ context.Scheam =Scheam;
 				  }
 				   
 			   //purChasesVal;
-				  
 				  
 				  tempMap.put("totalPurCost", (eachItem.quantity*eachItem.unitPrice));
 				  
