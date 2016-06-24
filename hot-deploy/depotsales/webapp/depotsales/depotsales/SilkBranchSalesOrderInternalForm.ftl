@@ -616,9 +616,24 @@
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				addServiceCharge(row);
+				
+				var taxAmt = data[row]["taxAmt"];
+				
+				var servChg = data[args.row]['SERVICE_CHARGE_AMT'];
+				if(servChg){
+					roundedAmount = roundedAmount + servChg;
+				}
+				
+				if(taxAmt != undefined && taxAmt != 0){
+					updateTax(row, roundedAmount);
+				}
+				else{
+					getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				}
 				
 				grid.updateRow(args.row);
+				updatePayableAmount(row);
 				updateTotalIndentAmount();
 			}
 			if (args.cell == 2) {
@@ -649,10 +664,33 @@
 				data[args.row]["amount"] = roundedAmount;
 				
 				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				addServiceCharge(row);
 				
+				var servChg = data[args.row]['SERVICE_CHARGE_AMT'];
+				if(servChg){
+					roundedAmount = roundedAmount + servChg;
+				}
+				
+				
+				var taxAmt = data[row]["taxAmt"];
+				
+				var servChg = data[row]['SERVICE_CHARGE_AMT'];
+				if(servChg){
+					roundedAmount = roundedAmount + servChg;
+				}
+				
+				if(taxAmt != undefined && taxAmt != 0){
+					updateTax(row, roundedAmount);
+				}
+				else{
+					getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+				}
+				
+				
+				updatePayableAmount(row);
 				grid.updateRow(args.row);
 				updateTotalIndentAmount();
+				
 			}
 			if (args.cell == 4) {
 				var prod = data[args.row]["cProductId"];
@@ -661,7 +699,7 @@
 				var price = 0;
 				
 				var row = args.row;
-				updatePayablePrice(row);
+				//updatePayablePrice(row);
 				
 				
 				if(udp){
@@ -681,9 +719,24 @@
 				}
 				data[args.row]["unitPrice"] = roundedAmount;
 				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
+				var row = args.row;
+				addServiceCharge(row);
+				
+				var taxAmt = data[row]["taxAmt"];
+				
+				var servChg = data[row]['SERVICE_CHARGE_AMT'];
+				if(servChg){
+					price = price + servChg;
+				}
+				if(taxAmt != undefined && taxAmt != 0){
+					updateTax(row, price);
+				}
+				else{
+					getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
+				}
+				
+				updatePayableAmount(row);
 				grid.updateRow(args.row);
 				
 				updateTotalIndentAmount();
@@ -929,7 +982,7 @@
 		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
 		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
 		
-		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
+		//data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
 	}
 	
 	function updateServiceChargeAmounts(){
@@ -940,12 +993,66 @@
 				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
 				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
 				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+				
+				updateTax(i, (basicAmt + serviceChargeAmt));
+				
 				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
+				
 				grid.updateRow(i);
 			}
 		}
+		
 		updateTotalIndentAmount();
 	}
+	
+	function updateTax(rowCount, baseAmt){
+		
+		
+		var totTaxValue = 0;
+		var taxList = [];
+		taxList = data[rowCount]["taxList"]
+		if(taxList != undefined){
+			for(var i=0;i<taxList.length;i++){
+				var taxType = taxList[i];
+				var taxPercentage = data[rowCount][taxType];
+				var taxValue = data[rowCount][taxType + "_AMT"];
+				if(taxPercentage){
+					if(baseAmt){
+						taxValue = baseAmt*(taxPercentage/100);
+					}
+				}
+				totTaxValue = totTaxValue + taxValue;
+				
+				data[rowCount][taxType + "_AMT"] = taxValue;
+			}
+		}
+		data[rowCount]["taxAmt"] = totTaxValue;
+	}
+	
+	function updatePayableAmount(row){
+		
+		var basicAmtVal = 0;
+		var taxAmtVal = 0;
+		var servChgVal = 0;
+		
+		var basicAmt = data[row]["amount"];
+		var taxAmt = data[row]["taxAmt"];
+		var servChg = data[row]["SERVICE_CHARGE_AMT"];
+		
+		if(basicAmt){
+			basicAmtVal = basicAmt;
+		}
+		if(taxAmt){
+			taxAmtVal = taxAmt;
+		}
+		if(servChg){
+			servChgVal = servChg;
+		}
+		
+		data[row]["totPayable"] = basicAmtVal + taxAmtVal + servChgVal;
+		grid.updateRow(row);
+	}
+	
 	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
          if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
@@ -1044,8 +1151,8 @@
 	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
 	   	  				
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
-	   	  				addServiceCharge(row);
+	   	  				updatePayableAmount(row);
+	   	  				//data[row]["totPayable"] = totalAmt + totalTaxAmt;
 	   	  				grid.updateRow(row);
 	   	  				
 	   	  				updateTotalIndentAmount();
@@ -1069,7 +1176,7 @@
 	   	  	data[row]["VAT_SALE"] = 0;
 	   	  	data[row]["VAT_SALE_AMT"] = 0;
 	   	  	
-	   	  	data[row]["totPayable"] = totalAmt;
+	   	  	//data[row]["totPayable"] = totalAmt;
 	   	  	
 			var taxList = [];
 			taxList.push("VAT_SALE");
@@ -1085,11 +1192,14 @@
 	   	  		
 	   	  		
 	   	  	$("#orderTaxType").val("Intra-State");
-	   	  				
-			addServiceCharge(row);
+	   	  	
+	   	  	updatePayableAmount(row);			
+			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
 	   	  	updateTotalIndentAmount();
+	   	  	
+	   	  	
 	    }			
 	}
 	

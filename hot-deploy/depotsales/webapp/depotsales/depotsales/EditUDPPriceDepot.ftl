@@ -206,6 +206,11 @@
 		var totalAmt = dataRow["amount"];
 		var serviceCharge = dataRow["SERVICE_CHARGE"];
 		var serviceChargeAmt = dataRow["SERVICE_CHARGE_AMT"];
+		
+		if(serviceChargeAmt){
+			totalAmt = totalAmt + serviceChargeAmt;
+		}
+		
 		var message = "";
 		var title = "";
 		var priceExists = "N";

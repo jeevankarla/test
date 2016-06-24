@@ -1279,7 +1279,7 @@ function fillPartyQuota(partyId){
 	
 	</div>
 	
-	<div class="bottom">
+	<div class="bottom" style="margin-top:25px;">
 		<div class="screenlet" >
 			<div class="grid-header" style="width:100%">
 				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
