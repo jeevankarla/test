@@ -34,27 +34,11 @@ under the License.
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-        	    <fo:block text-align="left" font-size="10pt" keep-together="always"  white-space-collapse="false">
-        			<fo:table>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/> 
-			            <fo:table-body>
-			                <fo:table-row>
-			                    <fo:table-cell number-columns-spanned="4">
-					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
-					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="10pt" white-space-collapse="false"> ${BOAddress?if_exists}</fo:block>
-					            <#--	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>-->
-					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${BOEmail?if_exists} </fo:block>
-					            </fo:table-cell>
-							</fo:table-row>
-			            </fo:table-body>
-			        </fo:table>
-        		</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
+				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
+				<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${BOEmail?if_exists} </fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                <fo:block>
 				    <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
