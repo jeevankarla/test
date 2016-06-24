@@ -391,7 +391,7 @@ context.externalOrderId = externalOrderId;
 		 tempMap.put("productId", eachInvoiceList.productId);
 		 tempMap.put("prodDescription", eachInvoiceList.description);
 		 tempMap.put("rateKg", eachInvoiceList.unitPrice);
-		 tempMap.put("amount", eachInvoiceList.amount);
+		// tempMap.put("amount", eachInvoiceList.amount);
 		 /*String seq = String.format("%05d", i);
 		 
 		 
@@ -470,7 +470,7 @@ context.externalOrderId = externalOrderId;
 			 
 		}
 		 
-		 
+		 tempMap.put("unit", unit);
 		 
 		 
 		    if(baleQty)
@@ -527,20 +527,18 @@ context.externalOrderId = externalOrderId;
 		  }
 		  
 		  
-		  
 		  if(scheme == "General"){
-			  double perAmt = (unit*2)/100;
 			  
-			  Debug.log("perAmt=============="+perAmt);
+			  sourcePercentage = (serviceAmt/(quantity*amount))*100;
+			  double perAmt = (eachInvoiceList.amount*sourcePercentage)/100;
 			  
-			  tempMap.put("unitPrice",(unit+perAmt));
+			  tempMap.put("amount",(eachInvoiceList.amount+perAmt));
 			  }else{
-			  tempMap.put("unit", unit);
-			  }
+			  tempMap.put("amount", eachInvoiceList.amount);
+		   }
 			  
 		  
 		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
-		
 		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 		  
 		 /* double mgpsQty = 0;
@@ -561,8 +559,6 @@ context.externalOrderId = externalOrderId;
 	context.finalDetails = finalDetails;
 	
 //}
-
-
 
 //==============Address Details===================
 
