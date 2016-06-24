@@ -21,7 +21,9 @@ under the License.
 <input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
 <input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
+<input type="hidden" name="paramEstimatedDeliveryThruDate" id="paramEstimatedDeliveryThruDate" value="${paramEstimatedDeliveryThruDate}">
 <input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
+<input type="hidden" name="tallyRefNO" id="tallyRefNO" value="${tallyRefNO}">
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
 <input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
@@ -34,9 +36,11 @@ under the License.
 var orderId = $("#paramOrderId").val();
 var paramFacilityId = $("#paramFacilityId").val();
 var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
+var paramEstimatedDeliveryThruDate = $("#paramEstimatedDeliveryThruDate").val();
 var paramStatusId = $("#paramStatusId").val();
 var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
+var tallyRefNO = $("#tallyRefNO").val();
 
 
 var displayedIndent = 0;
@@ -69,8 +73,7 @@ $(document).ready(function() {
            }
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
-	
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
      
@@ -140,7 +143,13 @@ function drawRow(rowData) {
     //Branch Name
     
      row.append($("<td>" + rowData.storeName + "</td>"));
-   
+     
+    // TallyRef No 
+     if(rowData.tallyRefNo != "NA" )
+     row.append($("<td>" + rowData.tallyRefNo + "</td>"));
+     else
+     row.append($("<td></td>"));
+     
     //party Name
     
      var partyNameCode = rowData.partyName+"["+rowData.partyId+"]";
@@ -410,6 +419,7 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
         <tr class="header-row-2">
           <td>Indent Id</td>
           <td>Branch Name</td>
+          <td>Tally Ref.NO</td>
           <td>Weaver Name</td>
           <td>Supplier Name</td>
           <td>Indent Date</td>
