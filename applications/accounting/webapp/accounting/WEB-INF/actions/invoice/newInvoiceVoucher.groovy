@@ -99,6 +99,9 @@ supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 context.deliveryChallanDate = deliveryChallanDate;
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+
+
+
 if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 	draftPoNum = orderSeqDetails.orderNo;
@@ -306,11 +309,35 @@ OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 			
 		}
 	   }
+	
+	
+	
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttributeList = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
+	C2E2Form = "";
+	
+	
+	if(OrderItemAttributeList){
+		for (eachAttr in OrderItemAttributeList) {
+			if(eachAttr.attrName == "checkCForm"){
+				C2E2Form = eachAttr.attrValue;
+				break;
+			}
+			else if(eachAttr.attrName == "checkE2Form"){
+				C2E2Form = eachAttr.attrValue;
+				break;
+			}
+		}
+	}
+	
+	context.C2E2Form = C2E2Form;
+	
 	}
 
 onbehalf = "";
-
-
 
 for (eachRole in OrderRoleList) {
 	

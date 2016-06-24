@@ -274,8 +274,6 @@ if(DstAddr){
 	allDetailsMap.put("DstAddr",destAddr);
 }
 
-
-
 //OrderHeaderNote
 orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId),EntityCondition.makeCondition("internalNote",EntityOperator.EQUALS,"N")],EntityOperator.AND)  , null, null, null, false );
 if(orderheadDetails){
@@ -314,6 +312,32 @@ exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperato
 orderAssc = EntityUtil.getFirst(delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false));
 
 toOrderId=orderAssc.toOrderId;
+
+
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, toOrderId));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+OrderItemAttributeList = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
+C2E2Form = "";
+
+
+if(OrderItemAttributeList){
+	for (eachAttr in OrderItemAttributeList) {
+		if(eachAttr.attrName == "checkCForm"){
+			C2E2Form = eachAttr.attrValue;
+			break;
+		}
+		else if(eachAttr.attrName == "checkE2Form"){
+			C2E2Form = eachAttr.attrValue;
+			break;
+		}
+	}
+}
+
+context.C2E2Form = C2E2Form;
+
+
+
 //indentSequenceNO
 OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , toOrderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){

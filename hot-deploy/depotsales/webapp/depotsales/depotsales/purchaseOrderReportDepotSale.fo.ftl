@@ -191,6 +191,9 @@ under the License.
       
        <#if allDetailsMap.get("total")?has_content> 
        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(allDetailsMap.get("total")+grandToT)?if_exists?string("##0.00")}</fo:block> </#if>
+	   
+	<!-- <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >${C2E2Form?if_exists} </fo:block> -->
+	   
 	   <#if parentMap?has_content>
 	      <#assign parent=parentMap.entrySet()>
 	      <#list parent as parentList>
@@ -380,7 +383,7 @@ under the License.
 			<fo:table-body>
                <fo:table-row>
 				  <fo:table-cell><fo:block text-align="left" font-size="11pt">3</fo:block></fo:table-cell>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Despatch Goods Through Registered Common Carriers Only</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Depatch Goods Through Bank Approved Transport</fo:block></fo:table-cell>
                </fo:table-row>
 	        </fo:table-body>
 	   </fo:table>
