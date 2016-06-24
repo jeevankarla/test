@@ -515,7 +515,9 @@
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-        	
+        	if ((data[args.row]["cottonUom"]) == undefined   ) {
+					data[args.row]["cottonUom"] = "KGs";
+				}
         	if (args.cell == 3) {
    				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
@@ -523,7 +525,7 @@
 				var uom = data[args.row]["cottonUom"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
 				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				
+				var quota = parseFloat(data[args.row]["quota"]);
 				var price = 0;
 
 				if(udp){
@@ -639,7 +641,7 @@
 				//updateCurrentQuota(row);
 				
 			}
-			if(args.cell == 5 || args.cell == 6 || args.cell == 7 ) {
+			if(args.cell == 5 || args.cell == 6) {
 				var row = args.row;
 				var prod = data[args.row]["cProductId"];
 				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
@@ -705,6 +707,71 @@
 			
 				//updateCurrentQuota(row);
 				
+			}
+			if(args.cell == 7 ) {
+				var row = args.row;
+				var prod = data[args.row]["cProductId"];
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var quantity = parseFloat(data[args.row]["quantity"]);
+				var uom = data[args.row]["cottonUom"];
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
+				var udp = data[args.row]['unitPrice'];
+				var kgprice = data[args.row]['KgunitPrice'];
+				var kgUnitPrice;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				if(isNaN(unitPrice)){
+					unitPrice = 0;
+				}
+
+				if(uom == "Bale"){
+					baleQty=quantity/(bundleWeight*40);
+				}
+				if(uom == "Half-Bale"){
+					baleQty=quantity/(bundleWeight*20);
+				}
+				if(uom == "Bundle"){
+					baleQty = quantity*bundleWeight;
+				}
+				
+				if(uom == "KGs"){				
+					baleQty = quantity;
+					bundleWeight=0;
+				}
+				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+				kgUnitPrice=price/bundleWeight;
+				
+				}
+				if(uom == "KGs" ){
+				kgUnitPrice=price;
+				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+
+				data[args.row]["KgunitPrice"] = kgUnitPrice;
+				data[args.row]["baleQuantity"] = baleQty;
+				data[args.row]["cottonUom"] = uom;
+				data[args.row]["bundleWeight"] = bundleWeight;
+				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+				var row = args.row;
+				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*kgUnitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
+				grid.updateRow(args.row);
+
 			}
 			if(args.cell == 8){
 				var kgprice = data[args.row]['KgunitPrice'];
@@ -804,14 +871,21 @@
 			}
 			
 			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
-			    updatedQty=parseFloat(data[args.row]["quantity"]);
-			    var quota = parseFloat(data[args.row]["quota"]);
-				if(updatedQty<=quota){
-				      data[args.row]["usedQuota"]=qty;
+			var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
+			   if(!isNaN(totalQuota)){
+				    var qty1= data[args.row]["quantity"];
+				    if(qty1<=totalQuota){
+				       data[args.row]["quota"]=totalQuota-qty1;
+				       data[args.row]["usedQuota"]=qty1;
+				       data[args.row]["warning"] = '';
 				    }
 				    else{
-				      data[args.row]["usedQuota"]=quota;
+				       data[args.row]["usedQuota"]=totalQuota;
+				       data[args.row]["quota"]=0;
+				       data[args.row]["warning"] = 'Quota Exceeded';
 				    }
+				    grid.updateRow(args.row);
+				}
 			}
 		
 		}); 
@@ -861,8 +935,10 @@
 					                	if(isNaN(qut)){
 											qut = 0;
 										}
-					                	data[args.row]["quota"] = qut;
+					                	data[args.row]["quota"] = 0;
 						       			data[args.row]['quantity'] =qut;
+						       			data[args.row]['usedQuota'] =qut;
+						       			data[args.row]['baleQuantity'] =qut;
 						       			utprice=data[currentrow]["unitPrice"];
 						       			amount=qut*utprice;
 						       			data[args.row]['amount'] = amount;

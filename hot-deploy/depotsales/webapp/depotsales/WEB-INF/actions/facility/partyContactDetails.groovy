@@ -136,6 +136,7 @@ partyType="";
 resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate));
 productCategoryQuotasMap = resultCtx.get("schemesMap");
 usedQuotaMap = resultCtx.get("usedQuotaMap");
+eligibleQuota = resultCtx.get("eligibleQuota");
 if(PartyClassificationDetails){
 	PartyClassificationDetails.each{ eachPartyClassificationDetails ->
 		partyClassificationGroupId=PartyClassificationDetails.get("partyClassificationGroupId");
@@ -182,7 +183,7 @@ if(PartyLoomDetails){
 	JSONObject partyLoomJSON = new JSONObject();
 	
 	partyLoomJSON.put("loomType",Desc);
-	partyLoomJSON.put("loomQuota",loomQuota);
+	partyLoomJSON.put("loomQuota",eligibleQuota.get(Desc));
 	partyLoomJSON.put("availableQuota",productCategoryQuotasMap.get(Desc));
 	partyLoomJSON.put("usedQuota",usedQuotaMap.get(Desc));
 	partyLoomJSON.put("loomQty",loomQty);

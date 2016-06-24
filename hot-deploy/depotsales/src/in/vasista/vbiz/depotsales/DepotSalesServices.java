@@ -6782,6 +6782,7 @@ public class DepotSalesServices{
 	   Map<String, Object> result = ServiceUtil.returnSuccess();
 	   Map<String, Object> productCategoryQuotamap = ServiceUtil.returnSuccess();
 	   Map<String, Object> usedQuotaMap = ServiceUtil.returnSuccess();
+	   Map<String, Object> eligibleQuotaMap = ServiceUtil.returnSuccess();
 	   List conditionList = FastList.newInstance();
 		String schemeId="TEN_PERCENT_MGPS";
 		String partyId=(String) context.get("partyId");
@@ -6894,6 +6895,7 @@ public class DepotSalesServices{
 						usedQuata=usedQuata.add((BigDecimal)partyQuotaBalanceHistory.get("usedQuota"));
 					}
 				}
+				eligibleQuotaMap.put(productCategoryId,availableQuata);
 				availableQuata=availableQuata.subtract(usedQuata);
 				usedQuotaMap.put(productCategoryId,usedQuata);
 				productCategoryQuotamap.put(productCategoryId,availableQuata);
@@ -6901,6 +6903,7 @@ public class DepotSalesServices{
 			}
 			result.put("schemesMap",productCategoryQuotamap);
 			result.put("usedQuotaMap",usedQuotaMap);
+			result.put("eligibleQuota",eligibleQuotaMap);
 		}
 		else{
 			// we need to insert SchemeTimePeriods

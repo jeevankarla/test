@@ -501,7 +501,9 @@
 	      	
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-        	
+        	if ((data[args.row]["cottonUom"]) == undefined   ) {
+					data[args.row]["cottonUom"] = "KGs";
+				}
 			if (args.cell == 1 || args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
