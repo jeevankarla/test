@@ -47,9 +47,26 @@ shipmentId = invoiceList.get("shipmentId");
 partyIdFrom = invoiceList.partyIdFrom;
 context.partyIdFrom = partyIdFrom;
 
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+
+FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
+
+
+
+isDepot = "";
+if(FacilityList)
+isDepot ="Y"
+else
+isDepot ="N"
+
+
+context.isDepot = isDepot;
 
 passNo = "";
-conditionList = [];
+conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -461,7 +478,6 @@ context.externalOrderId = externalOrderId;
 			else
 			tempMap.put("baleQty","");
 			
-			tempMap.put("unit", unit);
 			
 		    tempMap.put("quantity", quantity);
 		
@@ -492,6 +508,8 @@ context.externalOrderId = externalOrderId;
 			
 		  
 		 double serviceAmt = 0;
+		 double sourcePercentage = 0;
+		 
 		  if(scheme == "General"){
 			  
 			  conditionList.clear();
@@ -501,10 +519,26 @@ context.externalOrderId = externalOrderId;
 			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
 			  
-			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount
+			  if(invoiceInnerAdjItemList){
+			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount;
+			  //sourcePercentage = sourcePercentage+invoiceInnerAdjItemList[0].sourcePercentage;
+			  
+			  }
 		  }
 		  
-			
+		  
+		  
+		  if(scheme == "General"){
+			  double perAmt = (unit*2)/100;
+			  
+			  Debug.log("perAmt=============="+perAmt);
+			  
+			  tempMap.put("unitPrice",(unit+perAmt));
+			  }else{
+			  tempMap.put("unit", unit);
+			  }
+			  
+		  
 		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
 		
 		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
@@ -529,7 +563,6 @@ context.externalOrderId = externalOrderId;
 //}
 
 
-	
 
 //==============Address Details===================
 

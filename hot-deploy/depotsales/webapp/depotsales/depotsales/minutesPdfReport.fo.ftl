@@ -49,7 +49,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="10pt" white-space-collapse="false"> ${BOAddress?if_exists}</fo:block>
 					            <#--	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> VARANSI-221002 </fo:block>-->
-					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${BOEmail?if_exists} </fo:block>
+					            	<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${BOEmail?if_exists} <#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
@@ -154,7 +154,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("unitPrice")?has_content>${orderList.get("unitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
@@ -271,7 +271,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists?string("#0.00")} </fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("unitPrice")?has_content>${orderList.get("unitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
+					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
@@ -339,7 +339,7 @@ under the License.
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
 				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>
-				<fo:block>b) Total Sale Value     (Rs): ${purchaeTot?string("#0.00")} </fo:block>
+				<fo:block>b) Total Sale Value     (Rs): ${toTunitPrice?string("#0.00")} </fo:block>
 				<fo:block>c) Difference of the Sale</fo:block>
 				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: Nil</fo:block>
 				<fo:block>d) 0 days interest on the credit:</fo:block>
