@@ -152,3 +152,7 @@ if(UtilValidate.isNotEmpty(context.orderId)){
 	
 	
 }
+if("Y".equals(parameters.tallyRefsearch)){
+	parameters.orderId="";
+	parameters.tallyRefNo=parameters.refNo;
+}
