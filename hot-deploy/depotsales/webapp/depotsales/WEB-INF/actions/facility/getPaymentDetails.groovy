@@ -76,6 +76,7 @@ searchOrderId = parameters.orderId;
 
 facilityOrderId = parameters.orderId;
 facilityDeliveryDate = parameters.estimatedDeliveryDate;
+facilityDeliveryThruDate = parameters.estimatedDeliveryThruDate;
 productId = parameters.productId;
 facilityStatusId = parameters.statusId;
 facilityPartyId = parameters.partyId;
@@ -93,6 +94,18 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	facilityDateStart = UtilDateTime.getDayStart(transDate);
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
 }
+
+transThruDate = null;
+if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transThruDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
+	}
+	facilityDateEnd = UtilDateTime.getDayEnd(transThruDate);
+}
+
 
 JSONArray orderList=new JSONArray();
  List condList = [];

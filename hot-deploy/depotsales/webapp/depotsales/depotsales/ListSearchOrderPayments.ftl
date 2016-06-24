@@ -21,6 +21,7 @@ under the License.
 <input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
 <input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
+<input type="hidden" name="paramEstimatedDeliveryThruDate" id="paramEstimatedDeliveryThruDate" value="${paramEstimatedDeliveryThruDate}">
 <input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
@@ -33,6 +34,7 @@ under the License.
 var orderId = $("#paramOrderId").val();
 var paramFacilityId = $("#paramFacilityId").val();
 var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
+var paramEstimatedDeliveryThruDate = $("#paramEstimatedDeliveryThruDate").val();
 var paramStatusId = $("#paramStatusId").val();
 var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
@@ -60,7 +62,7 @@ $(document).ready(function() {
   function recursively_ajax(){
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
      

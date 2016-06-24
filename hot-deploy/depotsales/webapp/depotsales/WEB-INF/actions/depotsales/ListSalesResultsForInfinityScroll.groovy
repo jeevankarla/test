@@ -531,13 +531,14 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 salesChannel = parameters.salesChannelEnumId;
 
 
-
+tallyRefNO = "";
 paramOrderId = "";
 paramFacilityId = "";
 paramEstimatedDeliveryDate = "";
+paramEstimatedDeliveryThruDate = "";
 paramStatusId = "";
 paramBranch = "";
-indentDateSort = ""
+indentDateSort = "";
 indentOrderNo = parameters.orderNo;
 indentOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderNo", EntityOperator.EQUALS , indentOrderNo)  , UtilMisc.toSet("orderId"), null, null, false );
 if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
@@ -552,7 +553,11 @@ if(parameters.partyId)
 
 if(parameters.estimatedDeliveryDate)
    paramEstimatedDeliveryDate = parameters.estimatedDeliveryDate;
+ 
+if(parameters.estimatedDeliveryThruDate)
+   paramEstimatedDeliveryThruDate = parameters.estimatedDeliveryThruDate;
    
+     
 if(parameters.statusId)
    paramStatusId = parameters.statusId;
    
@@ -562,12 +567,17 @@ if(parameters.partyIdFrom)
 if(parameters.indentDateSort)
   indentDateSort = parameters.indentDateSort;
   
+if(parameters.indentDateSort)
+  tallyRefNO = parameters.tallyRefNO;
+
    
 context.paramOrderId = paramOrderId;
 context.paramFacilityId = paramFacilityId;
 context.paramEstimatedDeliveryDate = paramEstimatedDeliveryDate;
+context.paramEstimatedDeliveryThruDate = paramEstimatedDeliveryThruDate;
 context.paramStatusId = paramStatusId;
 context.paramBranch = paramBranch;
+context.tallyRefNO = tallyRefNO;
 context.indentDateSort = indentDateSort;
 BankList = delegator.findList("Bank", null, null, null, null, false);
 JSONArray BankListJSON = new JSONArray();

@@ -76,10 +76,15 @@ searchOrderId = parameters.orderId;
 
 facilityOrderId = parameters.orderId;
 facilityDeliveryDate = parameters.estimatedDeliveryDate;
+facilityDeliveryThruDate = parameters.estimatedDeliveryThruDate;
 productId = parameters.productId;
 facilityStatusId = parameters.statusId;
 facilityPartyId = parameters.partyId;
  screenFlag = parameters.screenFlag;
+ tallyRefNO = parameters.tallyRefNO;
+ 
+ 
+ Debug.log("facilityDeliveryDate================"+facilityDeliveryDate);
 
 facilityDateStart = null;
 facilityDateEnd = null;
@@ -94,6 +99,21 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
 }
 
+
+transThruDate = null;
+if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transThruDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
+	}
+	facilityDateEnd = UtilDateTime.getDayEnd(transThruDate);
+}
+
+
+
+
 JSONArray orderList=new JSONArray();
  List condList = [];
 
@@ -107,6 +127,10 @@ if(UtilValidate.isNotEmpty(searchOrderId)){
 if(UtilValidate.isNotEmpty(uniqueOrderIdsList)){
 	//condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
 }
+if(UtilValidate.isNotEmpty(tallyRefNO)){
+	condList.add(EntityCondition.makeCondition("tallyRefNo" ,EntityOperator.LIKE, "%"+tallyRefNO + "%"));
+}
+
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
 }
@@ -182,33 +206,13 @@ totalIndents = forIndentsCount.size();
 //resultList = result.listIt;
 }
 
-//orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high));
-
-
 
 orderHeader = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high)-Integer.valueOf(parameters.low));
 
 
-
-
-//orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
-
-//orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
-
-//orderHeader = EntityUtil.filterByCondition(orderHeader, cond);
-/*
-orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
-
-orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
-*/
-
 if(uniqueOrderIdsList)
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
 
-
-
-
-Debug.log("orderHeader==============="+orderHeader.size());
 
 //orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
 
@@ -318,6 +322,9 @@ orderHeader.each{ eachHeader ->
 
 	orderId = eachHeader.orderId;
 	
+	
+	
+	
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
@@ -335,6 +342,12 @@ orderHeader.each{ eachHeader ->
 	tempData.put("partyId", partyId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
+	
+	if(eachHeader.tallyRefNo)
+	 tempData.put("tallyRefNo", eachHeader.tallyRefNo);
+    else
+     tempData.put("tallyRefNo", "NA");
+	
 	orderNo ="NA";
 	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , null, null, null, false );
 	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
