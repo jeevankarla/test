@@ -213,6 +213,14 @@
       			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER"/>
       			</condition-list>
       		</entity-condition>
+      		<entity-condition entity-name="OrderAssoc" list="orderAssocList" >
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      		</entity-condition>
+      		<set field="toOrderId" value="${groovy: return(orderAssocList[0].toOrderId)}"/>
+      		<entity-one value-field="orderHeader" entity-name="OrderHeader">
+				<field-map field-name="orderId" from-field="toOrderId"/>
+			</entity-one>
+			<set field="tallyRefNo" from-field="orderHeader.tallyRefNo"/>
       		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
       		      		<set field="newSize" value="${orderItemsSize}" />
@@ -261,7 +269,8 @@
                 <parameter param-name="setItemStatus" value="Y" />
                  <parameter param-name="roleTypeId"  />
             </hyperlink>
-        </field>  -->
+        </field>  -->        
+        <field name="tallyRefNo" title="TallyRefNo"><display/></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
