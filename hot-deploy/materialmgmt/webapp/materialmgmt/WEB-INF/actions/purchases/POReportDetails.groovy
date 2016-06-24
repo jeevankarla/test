@@ -696,20 +696,12 @@ shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("ro
 shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
 shipToParty=EntityUtil.getFirst(shipToPartyRole);
 boPartyId = "";
-addressFlag = "Y";
-List hiddenPartyIds = ["INT12","INT49","INT55"];
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
-condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-billFromVendorDetails = delegator.findList("OrderRole", condition, null, null, null, false);
-billFromVendorDetails = EntityUtil.getFirst(billFromVendorDetails);
-if(UtilValidate.isNotEmpty(billFromVendorDetails)){
-	boPartyId = billFromVendorDetails.partyId;
-	if(hiddenPartyIds.contains(boPartyId)){
-	    addressFlag = "N";
-	}	
+addressFlag = "N";
+if(parameters.agencyAddress && "on".equals(parameters.agencyAddress)){
+	addressFlag="Y";
 }
+context.addressFlag=addressFlag;
+
 mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
 if(mailIdConfig){
 propertyValue=mailIdConfig.get("propertyValue");

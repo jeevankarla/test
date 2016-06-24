@@ -2224,6 +2224,12 @@
 									<include-form name="FindPurchaseOrder"
 										location="component://depotsales/widget/DepotSalesForms.xml" />
 								</screenlet>
+								<platform-specific>
+							       <html>
+								      <html-template
+									      location="component://depotsales/webapp/depotsales/depotsales/agencyAddressDetails.ftl" />
+							          </html>
+						        </platform-specific>
 								<screenlet title="Search-results">
 									<include-form name="listPurchaseOrders"
 										location="component://depotsales/widget/DepotSalesForms.xml" />
