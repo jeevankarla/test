@@ -305,7 +305,7 @@ under the License.
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
-				<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme <#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block>
+				<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10%<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme <#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block>
 				
 		        <#assign grandToT = 0>
 		        <#assign typeBase=typeBasedMap.entrySet()>
