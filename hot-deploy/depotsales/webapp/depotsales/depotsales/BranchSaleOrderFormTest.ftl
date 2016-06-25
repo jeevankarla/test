@@ -1416,7 +1416,7 @@ function fillPartyQuota(partyId){
 			<div class="grid-header" style="width:100%">
 				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
 				<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
-				<input type="button" class="buttonText" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+				<input type="button" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
 				<span style="float:right; margin-left: -5px;" id="totalAmount"></span>
 			</div>
 		    <div class="screenlet-body">
