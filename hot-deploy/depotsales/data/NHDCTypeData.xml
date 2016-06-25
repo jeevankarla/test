@@ -463,4 +463,7 @@ under the License.
    <StatusValidChange createdStamp="2016-03-09 12:02:11.0" createdTxStamp="2016-03-09 12:02:11.0" lastUpdatedStamp="2016-03-09 12:02:11.0" lastUpdatedTxStamp="2016-03-09 12:02:11.0" statusId="DRAFTPO_PROPOSAL" statusIdTo="APPROVE_LEVEL1" transitionName="Approve Order Level1"/> 
    <StatusValidChange createdStamp="2016-03-09 12:02:11.0" createdTxStamp="2016-03-09 12:02:11.0" lastUpdatedStamp="2016-03-09 12:02:11.0" lastUpdatedTxStamp="2016-03-09 12:02:11.0" statusId="DRAFTPO_PROPOSAL" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/> 
    <StatusItem createdStamp="2016-06-15 12:50:46.0" createdTxStamp="2016-06-15 12:50:46.0" lastUpdatedStamp="2016-06-15 12:50:46.0" lastUpdatedTxStamp="2016-06-15 12:50:46.0" statusCode="APPROVED" statusId="DRAFTPO_PROPOSAL" statusTypeId="ORDER_STATUS" description="Draft Proposal"/>
+
+   <OrderItemAssocType orderItemAssocTypeId="BackToBackOrder"/> 
+
 </entity-engine-xml>
