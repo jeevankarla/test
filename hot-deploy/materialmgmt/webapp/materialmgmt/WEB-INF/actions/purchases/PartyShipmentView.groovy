@@ -100,6 +100,8 @@ List conditionList=[];
 		
 		if(UtilValidate.isNotEmpty(OrderAss)){
 			salesOrder = OrderAss.get("toOrderId");
+			orderHeaders = delegator.findOne("OrderHeader", [orderId : salesOrder], false);
+			tempMap.put("tripNum",orderHeaders.tallyRefNo);
 			tempMap.put("orderId",OrderAss.get("toOrderId"));
 			orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , salesOrder)  , UtilMisc.toSet("orderNo"), null, null, false );
 			if(UtilValidate.isNotEmpty(orderHeaderSequences)){

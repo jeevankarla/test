@@ -227,8 +227,10 @@ function drawRow(rowData) {
     }
     
     if(rowData.POorder != "NA"){
-     var poReport = '<a class="buttontext" href="<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId='+rowData.POorder+'</@ofbizUrl>" target="_blank">PO Report</a>';
-      row.append($("<td>" +  poReport  +"</td>")); 
+    var poOrder= '\'' + rowData.POorder + '\'';;
+   	var showqtipmthod = "javascript:showAgencyAddress("+ poOrder + ")";
+    var PoReport ='<input type=button name="POReport" id=POReport value="PO Report" onclick="'+showqtipmthod+'">';
+	 row.append($("<td>" +  PoReport  +"</td>"));
     }else if(rowData.statusId == "ORDER_CANCELLED"){
 	  
 	      row.append($("<td>Order Cancelled</td>"));
