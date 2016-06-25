@@ -310,7 +310,7 @@
         </field>
         <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
-        <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field> 
@@ -405,6 +405,7 @@
                     </sub-hyperlink>
                 </display-entity>
             </field>
+            <field name="tripNum" title="Tally Ref. No."><display/></field>
             <!-- <field name="vehicleId" title="Vehicle No"><display/></field> -->
             <field name="billToPartyId"><hidden/></field>
             <field name="partyIdTo" ><hidden/></field>

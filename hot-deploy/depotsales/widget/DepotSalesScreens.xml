@@ -558,6 +558,12 @@
 												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
 										</html>
 									</platform-specific>
+									<platform-specific>
+							        <html>
+								      <html-template
+									      location="component://depotsales/webapp/depotsales/depotsales/agencyAddressDetails.ftl" />
+							          </html>
+						           </platform-specific>
 									<!-- <platform-specific>
 										<html>
 											<html-template
