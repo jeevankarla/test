@@ -233,6 +233,7 @@
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
          <attribute name="usedQuotaMap" type="Map" mode="OUT" optional="true"/>
+         <attribute name="eligibleQuota" type="Map" mode="OUT" optional="true"/>
     </service>
     <service name="getSchemeTimePeriodId" engine="java" auth="true" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getSchemeTimePeriodId">
