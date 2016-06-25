@@ -495,6 +495,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
 		newObj.put("remarks",remarks);
+		newObj.put("orderItemSeqId",eachItem.orderItemSeqId);
 		newObj.put("uom",uom);
 		newObj.put("bundleWght",bundleWght);
 		newObj.put("baleQty",baleQty);

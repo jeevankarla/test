@@ -2140,7 +2140,6 @@ public class DepotSalesServices{
 	  	String partyId = (String) context.get("partyId");
 	  	String tallyReferenceNo = (String) context.get("tallyRefNo");
 	  	
-	  	Debug.log("tallyReferenceNo===================="+tallyReferenceNo);
 	  	String contactMechId = (String) context.get("contactMechId");
 	  	String belowContactMechId = (String) context.get("belowContactMechId");
 	  	String transporterId = (String) context.get("transporterId");
@@ -2362,6 +2361,7 @@ public class DepotSalesServices{
 		String daysToStore = "";
 		List<GenericValue> productPriceTaxCalc = FastList.newInstance();
 		
+		int count = 0;
 		//int groupSeqCount = 1;
 		//String groupSequenceId = "";
 		BigDecimal orderGrandTotal = BigDecimal.ZERO;
@@ -2533,10 +2533,11 @@ public class DepotSalesServices{
 			}*/	
 			// Populate Shopping Cart With Items.
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
+			
 			ShoppingCartItem item = null;
 			try{
 				Map<String, Object> productQtyMap = FastMap.newInstance();
-				item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, basicPrice,
+				item = ShoppingCartItem.makeItem(count, productId, null, quantity, basicPrice,
 			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 				
@@ -2594,7 +2595,6 @@ public class DepotSalesServices{
 				
 				// Tax Handling
 				
-				Debug.log("size ====== ====== "+taxRateList.size());
 				for(int i=0; i<taxRateList.size(); i++){
 					Map taxMap = (Map) taxRateList.get(i);
 					if(  ((BigDecimal) taxMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
@@ -2623,9 +2623,9 @@ public class DepotSalesServices{
 				//item.setItemGroup(groupSequenceId, cart);
 				
 				//item.setTaxDetails(taxList);
-				cart.addItemToEnd(item);
+				int itemCartLocation = cart.addItemToEnd(item);
 				
-				
+				count++;
 				/*if(serviceCharge.compareTo(BigDecimal.ZERO)>0){
 					item = ShoppingCartItem.makeItem(Integer.valueOf(0), "SERVICE_CHARGE", null, quantity, serviceChargeAmt.divide(quantity),
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
@@ -2636,7 +2636,7 @@ public class DepotSalesServices{
 				}
 				groupSeqCount++;*/
 			if("N".equals(onBeHalfOf)){
-				String istemSeq=String.format("%05d", itemIndex);
+				String istemSeq=String.format("%05d", count);
 				if(UtilValidate.isNotEmpty(yarnUOM)){
 					productQtyMap.put("yarnUOM", yarnUOM.toString());
 				}

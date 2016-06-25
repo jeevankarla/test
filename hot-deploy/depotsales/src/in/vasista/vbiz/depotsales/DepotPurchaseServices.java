@@ -1156,6 +1156,7 @@ public class DepotPurchaseServices{
 					}
 				}
 				String productId = null;
+				String orderItemSeqId = null;
 				String batchNo = null;
 				String daysToStore = null;
 				String quantityStr = null;
@@ -1213,7 +1214,11 @@ public class DepotPurchaseServices{
 									"Missing product id");
 							return "error";
 						}
-
+						
+						if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+							orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
+						} 
+						
 						if (paramMap.containsKey("quantity" + thisSuffix)) {
 							quantityStr = (String) paramMap
 									.get("quantity" + thisSuffix);
@@ -1323,7 +1328,8 @@ public class DepotPurchaseServices{
 						productQtyMap.put("bedPercent", bedPercent);
 						productQtyMap.put("vatPercent", vatPercent);
 						productQtyMap.put("cstPercent", cstPercent);
-
+						productQtyMap.put("orderItemSeqId", orderItemSeqId);
+						
 						itemDetail.add(productQtyMap);
 
 					}//end of productQty check
@@ -1447,11 +1453,11 @@ public class DepotPurchaseServices{
 				}*/
 				
 				if(UtilValidate.isNotEmpty(orderId)){
-				Map<String, Object> orderAssocMap = FastMap.newInstance();
-				orderAssocMap.put("orderId", result.get("orderId"));
-				orderAssocMap.put("toOrderId", orderId);
-				orderAssocMap.put("userLogin", userLogin);
-				result = createOrderAssoc(dctx,orderAssocMap);
+					Map<String, Object> orderAssocMap = FastMap.newInstance();
+					orderAssocMap.put("orderId", result.get("orderId"));
+					orderAssocMap.put("toOrderId", orderId);
+					orderAssocMap.put("userLogin", userLogin);
+					result = createOrderAssoc(dctx,orderAssocMap);
 					if(ServiceUtil.isError(result)){
 						Debug.logError("Unable do Order Assoc: " + ServiceUtil.getErrorMessage(result), module);
 						request.setAttribute("_ERROR_MESSAGE_", "Unable do Order Assoc...! "+ServiceUtil.getErrorMessage(result));
@@ -1554,7 +1560,7 @@ public class DepotPurchaseServices{
 		String fileNo = (String)context.get("fileNo");
 		String quotationNo = (String)context.get("quotationNo");
 		String refNo = (String)context.get("refNo");
-		String orderId = "";		
+		String orderId = (String)context.get("orderId");	
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
@@ -1642,7 +1648,7 @@ public class DepotPurchaseServices{
 				String productId = "";
 				
 				String remarks = "";
-				
+				int count = 0;
 				for (Map<String, Object> prodQtyMap : productQtyList) {
 					List taxList=FastList.newInstance();
 					
@@ -1653,6 +1659,7 @@ public class DepotPurchaseServices{
 					BigDecimal vatAmount = BigDecimal.ZERO;
 					BigDecimal cstAmount = BigDecimal.ZERO;
 					BigDecimal cstPercent = BigDecimal.ZERO;
+					String orderItemSeqId = null;
 					/*BigDecimal bedAmount = BigDecimal.ZERO;
 					BigDecimal bedPercent = BigDecimal.ZERO;
 					BigDecimal bedcessPercent = BigDecimal.ZERO;
@@ -1689,6 +1696,9 @@ public class DepotPurchaseServices{
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 						cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
+						orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
 					}
 					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
 						bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
@@ -1774,14 +1784,21 @@ public class DepotPurchaseServices{
 					
 					
 					try{
-						int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, unitPrice,
+						
+						int itemIndx = cart.addItem(count, ShoppingCartItem.makeItem(count, productId, null, quantity, unitPrice,
 					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
-					
+						
 						item = cart.findCartItem(itemIndx);
 						
 						item.setOrderItemAttribute("remarks",remarks);
 						
+						if( (UtilValidate.isNotEmpty(orderItemSeqId)) && (UtilValidate.isNotEmpty(orderId))){
+							item.setAssociatedOrderId(orderId);
+							item.setAssociatedOrderItemSeqId(orderItemSeqId);
+							item.setOrderItemAssocTypeId("BackToBackOrder");
+						}
+						count++;
 						
 						//item.setTaxDetails(taxList);
 						

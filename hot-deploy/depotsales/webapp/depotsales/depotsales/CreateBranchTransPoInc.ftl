@@ -110,6 +110,7 @@
 			var remarks = parseFloat(data[rowCount]["remarks"]);
 			
 			dataMap["remarks_o_"+rowCount] = remarks;
+			dataMap["orderItemSeqId_o_"+rowCount] = data[rowCount]["orderItemSeqId"];
 			
 			dataMap["quantity_o_"+rowCount] = qty;
 			var unitPrice = data[rowCount]["unitPrice"];
@@ -211,18 +212,22 @@
 			
 			var remarks = data[rowCount]["remarks"];
 			
+			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
+			alert("orderItemSeqId = "+orderItemSeqId);
 			
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
 			//var bedPercent = data[rowCount]["bedPercent"];
 			
 		
-	 		if (!isNaN(qty)) {	 		
+	 		if (!isNaN(qty)) {	
+	 			var inputSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId); 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(inputSeqId));
 				
 				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
 				jQuery(formId).append(jQuery(inputPrice));
