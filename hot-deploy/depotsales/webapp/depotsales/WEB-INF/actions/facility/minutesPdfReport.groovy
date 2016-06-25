@@ -89,7 +89,7 @@ try{
 context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
 
-
+Debug.log("partyId==========="+partyId);
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
@@ -100,9 +100,9 @@ FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
 
 isDepot = "";
 if(FacilityList)
-isDepot ="Y"
+isDepot ="Y";
 else
-isDepot ="N"
+isDepot ="N";
 
 
 context.isDepot = isDepot;

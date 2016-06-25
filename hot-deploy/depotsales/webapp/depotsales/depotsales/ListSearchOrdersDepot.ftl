@@ -174,7 +174,7 @@ function drawRow(rowData) {
     row.append($("<td></td>"));
    }
 
-    var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">Minutes</a>';
+    var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
     
     row.append($("<td>" +  minutesReport  +"</td>"));  
 
@@ -289,6 +289,14 @@ function drawRow(rowData) {
     
        row.append($("<td></td>"));
     }
+    
+    
+ //   var indentHeadReport = '<a class="buttontext" href="<@ofbizUrl>indentHeadReport.csv?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">Indent Report</a>';
+    
+  //   row.append($("<td>" +  indentHeadReport  +"</td>"));
+    
+    
+    
     
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
@@ -431,6 +439,7 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
           <td>P&S Approvals</td>
           <td>PO Report</td>
           <td>Approve</td>
+         <#--> <td>Indent Report</td> -->
            <td>Cancel</td>
         </tr>
       </thead>
