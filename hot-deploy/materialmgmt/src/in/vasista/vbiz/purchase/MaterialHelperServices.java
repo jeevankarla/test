@@ -1336,7 +1336,12 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				
 				Map productItemMap = FastMap.newInstance();
 				BigDecimal unitPrice = BigDecimal.ZERO;
+				BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+			    BigDecimal bundleWeight = BigDecimal.ZERO;
+			    BigDecimal baleQty = BigDecimal.ZERO;
 				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
+				String remarks = "";
+				String yarnUOM= "";
 				BigDecimal bedInputAmount = null;
 				BigDecimal vatInputAmount = null;
 				BigDecimal cstInputAmount = null;
@@ -1348,6 +1353,21 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 					unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
+					remarks = (String)prodQtyMap.get("remarks");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
+					yarnUOM = (String)prodQtyMap.get("yarnUOM");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
+					bundleUnitPrice = (BigDecimal)prodQtyMap.get("bundleUnitPrice");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+					bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQty"))){
+					baleQty = (BigDecimal)prodQtyMap.get("baleQty");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
 					bedInputAmount = (BigDecimal)prodQtyMap.get("bedAmount");
@@ -1462,6 +1482,11 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				
 				productItemMap.put("productId", productId);
 				productItemMap.put("quantity", quantity);
+				productItemMap.put("bundleUnitPrice", bundleUnitPrice);
+				productItemMap.put("bundleWeight", bundleWeight);
+				productItemMap.put("baleQty", baleQty);
+				productItemMap.put("yarnUOM", yarnUOM);
+				productItemMap.put("remarks", remarks);
 				productItemMap.put("bedPercent", bedTaxPercent);
 				productItemMap.put("bedcessPercent", bedcessTaxPercent);
 				productItemMap.put("bedseccessPercent", bedseccessTaxPercent);

@@ -207,13 +207,32 @@
 			var cstPercent = data[rowCount]["cstPercent"];
 			var bedPercent = data[rowCount]["bedPercent"];
 			
+			
+			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
+			var yarnUOM = data[rowCount]["cottonUom"];
+			var bundleWeight = data[rowCount]["bundleWeight"];
+			var bundleUnitPrice = data[rowCount]["unitPrice"];
+			var remarks = data[rowCount]["remarks"];
+			var unitPrice = data[rowCount]["KgunitPrice"];			
+			
 		
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
+				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
+				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
+				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
+				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
+
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
-				
+				jQuery(formId).append(jQuery(inputRemarks));
+				jQuery(formId).append(jQuery(inputBaleQty));
+				jQuery(formId).append(jQuery(inputYarnUOM));
+				jQuery(formId).append(jQuery(inputBundleWeight));
+				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
+							
 				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
 				jQuery(formId).append(jQuery(inputPrice));
 				var inputVATPer = jQuery("<input>").attr("type", "hidden").attr("name", "vatPercent_o_" + rowCount).val(vatPercent);
@@ -528,9 +547,13 @@
         }
         var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:270, minWidth:270, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
-			{id:"quantity", name:"Qty(Kg)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"uomDescription", name:"UOM", field:"uomDescription", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
-			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:90, minWidth:90, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
+			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
+			{id:"unitPrice", name:"${uiLabelMap.UnitPrice} (Bundle)", field:"unitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
@@ -651,20 +674,10 @@
 				var bedPercent = parseFloat(data[args.row]["bedPercent"]);
 				var vatPercent = parseFloat(data[args.row]["vatPercent"]);
 				var cstPercent = parseFloat(data[args.row]["cstPercent"]);
-				var price = data[args.row]['unitPrice'];
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var baseAmount = qty*price;
-				var roundedAmount = qty*price;
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
 				
-				if(!isIncTax){
+				
+				
+				<#--if(!isIncTax){
 					if(isNaN(bedPercent)){
 						bedPercent = 0;
 					}
@@ -681,9 +694,65 @@
 					
 					roundedAmount = roundedAmount+amtBED+amtCST+amtVAT;
 				}
-				totalValue=roundedAmount;
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = baseAmount;
+				totalValue=roundedAmount;-->
+				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
+				var uom = data[args.row]["cottonUom"];
+				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
+				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
+				var udp = data[args.row]['unitPrice'];
+				var kgprice = data[args.row]['KgunitPrice'];
+				var kgUnitPrice;
+				if(udp){
+					var totalPrice = udp;
+					price = totalPrice;
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				
+				if(isNaN(baleQty)){
+					baleQty = 1;
+				}
+				if(isNaN(bundleWeight)){
+					qty = 0;
+				}
+				if(isNaN(unitPrice)){
+					unitPrice = 0;
+				}
+				
+				quantity = 0;
+				if(uom == "Bale"){
+					quantity = baleQty*bundleWeight*40;
+				}
+				if(uom == "Half-Bale"){
+					quantity = baleQty*bundleWeight*20;
+				}
+				if(uom == "Bundle"){
+					quantity = baleQty*bundleWeight;
+				}
+				
+				if(uom == "KGs"){				
+					quantity = baleQty;
+					bundleWeight=0;
+				}
+				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+				kgUnitPrice=price/bundleWeight;
+				
+				}
+				if(uom == "KGs" ){
+				kgUnitPrice=price;
+				}
+				if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+				}	
+				data[args.row]["KgunitPrice"] = kgUnitPrice;
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["baleQuantity"] = baleQty;
+				data[args.row]["cottonUom"] = uom;
+				data[args.row]["bundleWeight"] = bundleWeight;
+				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			
+				
 				grid.updateRow(args.row);
 				//updateInvoiceTotalAmount();
 			}
