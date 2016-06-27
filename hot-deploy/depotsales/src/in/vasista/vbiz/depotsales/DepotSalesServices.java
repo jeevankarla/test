@@ -2478,7 +2478,7 @@ public class DepotSalesServices{
 			BigDecimal totalPrice = BigDecimal.ZERO;
 				
 			// Scheme Calculation
-			List productCategoriesList = FastList.newInstance();
+			/*List productCategoriesList = FastList.newInstance();
 			List condsList = FastList.newInstance();
 		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
@@ -2492,7 +2492,7 @@ public class DepotSalesServices{
 				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 			}
-			BigDecimal quota = BigDecimal.ZERO;
+			BigDecimal quota = BigDecimal.ZERO;*/
 			// Get first productCategoriesList. We got productCategoryId here
 			/*if(onBeHalfOf.equals("N")){
 			if(schemeCategory.equals("MGPS_10Pecent")){
@@ -2792,6 +2792,9 @@ public class DepotSalesServices{
 			}catch(GenericEntityException e){
 				Debug.logError(e, "Failed to retrive orderItemDetail ", module);
 			}
+			 
+			Map onBehalfItemSeqQuotaMap = FastMap.newInstance();
+			 
 			 BigDecimal totalDiscount=BigDecimal.ZERO;
 			for (Map<String, Object> prodItemMap : indentItemProductList) {
 				String customerId = "";
@@ -2849,6 +2852,9 @@ public class DepotSalesServices{
 					orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
 				}
 				Debug.log("orderItemSeqId========IN=============="+orderItemSeqId);
+				
+				
+				
 				// Scheme Calculation
 							List productCategoriesList = FastList.newInstance();
 							List condsList = FastList.newInstance();
@@ -2921,18 +2927,27 @@ public class DepotSalesServices{
 								totalDiscount=totalDiscount.add(discountAmount);
 								
 								// creating order adjustment for direct 
-								 if("N".equals(onBeHalfOf)){
-										String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
-										GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-										UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
-								                "description", "10 Percent Subsidy on eligible product categories"));
-										try{
-											orderAdjustment.create();
-										}catch (GenericEntityException e) {
-											Debug.logError("Error in creating OrderAdjestments", module);
-											return ServiceUtil.returnError("Error in creating OrderAdjestments");
-										}
-									 }
+								if("N".equals(onBeHalfOf)){
+									String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+									GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+									UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+							                "description", "10 Percent Subsidy on eligible product categories"));
+									try{
+										orderAdjustment.create();
+									}catch (GenericEntityException e) {
+										Debug.logError("Error in creating OrderAdjestments", module);
+										return ServiceUtil.returnError("Error in creating OrderAdjestments");
+									}
+								 }
+								
+								BigDecimal itemQuotaDiscount = discountAmount;
+								if(UtilValidate.isNotEmpty(onBehalfItemSeqQuotaMap.get(orderItemSeqId))){
+									//BigDecimal itemQuotaDiscount = (BigDecimal) onBehalfItemSeqQuotaMap.get(orderItemSeqId);
+									itemQuotaDiscount = itemQuotaDiscount.add((BigDecimal) onBehalfItemSeqQuotaMap.get(orderItemSeqId));
+								}
+								onBehalfItemSeqQuotaMap.put(orderItemSeqId, itemQuotaDiscount);
+								
+								
 
 							}
 									
@@ -2972,16 +2987,26 @@ public class DepotSalesServices{
 				
 			}
 			 if("Y".equals(onBeHalfOf)){
-				String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
-				GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-				UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totalDiscount,
-		                "description", "10 Percent Subsidy on eligible product categories"));
-				try{
-					orderAdjustment.create();
-				}catch (GenericEntityException e) {
-					Debug.logError("Error in creating OrderAdjestments", module);
-					return ServiceUtil.returnError("Error in creating OrderAdjestments");
-				}
+				 
+				 
+				 for(Object itemSeq : onBehalfItemSeqQuotaMap.keySet()){
+				    	String itemSeqId = itemSeq.toString(); 
+				    	BigDecimal totDisQty = (BigDecimal) onBehalfItemSeqQuotaMap.get(itemSeqId); 
+				    	
+				    	String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+						UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",itemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totDisQty,
+				                "description", "10 Percent Subsidy on eligible product categories"));
+						try{
+							orderAdjustment.create();
+						}catch (GenericEntityException e) {
+							Debug.logError("Error in creating OrderAdjestments", module);
+							return ServiceUtil.returnError("Error in creating OrderAdjestments");
+						}	
+				    	
+				 }   	
+				 
+				
 			 }
 			 //updating grandtotal 
 			 GenericValue orderHeaderDetail = null;
