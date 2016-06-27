@@ -467,6 +467,7 @@ under the License.
         <description>Calculate the previously invoiced amount for an OrderAdjustment</description>
         <attribute name="orderAdjustment" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="invoicedTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="invoicedQty" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
 
     <service name="updateInvoiceItemType" engine="simple" default-entity-name="InvoiceItemType"

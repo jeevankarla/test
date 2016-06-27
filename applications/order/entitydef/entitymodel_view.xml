@@ -2214,6 +2214,7 @@ under the License.
         <alias entity-alias="OAB"  name="invoiceId"/>
         <alias entity-alias="OAB"  name="invoiceItemSeqId"/>
         <alias entity-alias="OAB"  name="amount"/>
+        <alias entity-alias="OAB"  name="quantity"/>
         <alias entity-alias="INV" name="invoiceStatusId" field="statusId"/>
 	    <alias entity-alias="INV" name="partyId"/>
 	     <view-link entity-alias="OAB" rel-entity-alias="INV">
