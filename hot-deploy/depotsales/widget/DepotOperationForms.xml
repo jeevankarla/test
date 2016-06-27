@@ -221,7 +221,7 @@
 				<field-map field-name="orderId" from-field="toOrderId"/>
 			</entity-one>
 			<set field="tallyRefNo" from-field="orderHeader.tallyRefNo"/>
-      		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+      		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/supplierPOSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
       		      		<set field="newSize" value="${orderItemsSize}" />
       		
