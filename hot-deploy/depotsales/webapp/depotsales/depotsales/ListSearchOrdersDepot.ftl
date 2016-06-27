@@ -69,6 +69,11 @@ $(document).ready(function() {
      
          if(typeof(orderIdFroApp) != 'undefined' && orderIdFroApp != ''){
            orderId = orderIdFroApp;
+           
+           // displayedIndent = 1;
+            
+           
+           
             $("#coreTable").find("tr:not(:first)").remove();
            }
     
@@ -91,9 +96,17 @@ $(document).ready(function() {
                           displayedIndent = displayedIndent+orderData.length;
                          $("#displayedIndent").html(displayedIndent);      
                         $('div#orderSpinn').html("");
+                         if(orderData.length < 3){
+                        document.body.style.overflow = 'hidden';
+                         $("#displayedIndent").html("1");
+                       }
                         $('div#blink').hide();
                         drawTable(orderData);   
                        }else{
+                       var rows = document.getElementById('coreTable').rows.length;
+                       if(rows < 3){
+                        document.body.style.overflow = 'hidden';
+                       }
                         $('div#orderSpinn').html("");
                          setInterval(blinker, 1000);
                         
@@ -450,5 +463,5 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
     </table>
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
-         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Orders..</span></div>
   
