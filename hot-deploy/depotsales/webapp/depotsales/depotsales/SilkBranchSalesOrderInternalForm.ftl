@@ -956,7 +956,10 @@
 				
 				if(lineQuota < 0){
 					data[i]["quota"] = 0;
-					data[i]["usedQuota"] = takenQty+lineQuota;
+					var finalUsedQuota = takenQty+lineQuota;
+					if(finalUsedQuota<0){
+					 data[i]["usedQuota"]=0;
+					}
 					if(schemeCategory == "MGPS_10Pecent"){
 						data[i]["warning"] = 'Quota Exceeded';
 					}
