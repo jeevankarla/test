@@ -120,12 +120,12 @@
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
-        <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
         <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
-        <field title="Indent Thru Date" name="estimatedDeliveryThruDate"><date-time/></field>
+        <field title="Indent Thru Date" name="estimatedDeliveryThruDate" position="2"><date-time/></field>
         
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
@@ -136,7 +136,7 @@
 	        		<option key="orderDate" description="Ascending"/>
 	        	</drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
