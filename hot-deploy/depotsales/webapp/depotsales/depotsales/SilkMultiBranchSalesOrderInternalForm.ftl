@@ -532,16 +532,20 @@
 				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				
 				updateTotalIndentAmount();
-				if(!isNaN(quota)){
-				    if(qty<=data[args.row]["usedQuota"]){
-				       var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
-				       data[args.row]["quota"]=totalQuota-qty;
-				       data[args.row]["usedQuota"]=qty;
+				 var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
+				if(!isNaN(totalQuota)){
+				     var qty1= data[args.row]["quantity"];
+				    if(qty1<=totalQuota){
+				       data[args.row]["quota"]=totalQuota-qty1;
+				       data[args.row]["usedQuota"]=qty1;
+				       data[args.row]["warning"] = '';
 				    }
 				    else{
-				      data[args.row]["usedQuota"]=qty;
+				     data[args.row]["usedQuota"]=totalQuota;
 				       data[args.row]["quota"]=0;
+				       data[args.row]["warning"] = 'Quota Exceeded';
 				    }
+				     grid.updateRow(args.row);
 				}
 				
 				
