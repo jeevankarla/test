@@ -46,7 +46,6 @@
 	partyCode = parameters.partyId;
 	roleTypeId = parameters.roleTypeId;
 	dctx = dispatcher.getDispatchContext();
-	
 	isLedgerCallFor="ArOnly";
 	if(parameters.isLedgerCallFor){
 		isLedgerCallFor=parameters.isLedgerCallFor;
@@ -456,37 +455,39 @@
 	TreeMap newMap = new TreeMap(partyDayWiseDetailMap);
 	uniquePartIds=[];
 	uniquePartIds= newMap.keySet();
-	openingBalanceMap = [:];
-	rolePartyIds.each{eachParty->
-		arOpeningBalance  =BigDecimal.ZERO;
-		apOpeningBalance  =BigDecimal.ZERO;
-		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:eachParty]));
-		if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
-			arOpeningBalance=arOpeningBalanceRes.get("openingBalance");
+		formatList.each{eachPartyIdFrom->
+		openingBalanceMap = [:];
+		rolePartyIds.each{eachParty->
+			arOpeningBalance  =BigDecimal.ZERO;
+			apOpeningBalance  =BigDecimal.ZERO;
+			arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:eachParty,partyIdFrom:eachPartyIdFrom]));
+			if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+				arOpeningBalance=arOpeningBalanceRes.get("openingBalance");
+			}
+			apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:eachParty,partyIdFrom:eachPartyIdFrom,isOBCallForAP:Boolean.TRUE]));
+			if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
+				apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
+			}
+			oB=arOpeningBalance-apOpeningBalance;
+			//debitValue=BigDecimal.ZERO;
+			//creditValue=BigDecimal.ZERO;
+			tempMap = [:];
+			if(oB>0){
+				debitValue=oB;
+				tempMap["debitValue"]=debitValue;
+			}
+	        if(oB<0){
+					   creditValue=(-1*oB);
+				       tempMap["creditValue"]=creditValue;
+			}	
+			tempOpeningBalanceMap = [:];
+			if(UtilValidate.isNotEmpty(tempMap)){
+				tempOpeningBalanceMap.putAll(tempMap);
+			}
+			openingBalanceMap.put(eachParty,tempOpeningBalanceMap);
 		}
-		apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:eachParty,isOBCallForAP:Boolean.TRUE]));
-		if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
-			apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
-		}
-		oB=arOpeningBalance-apOpeningBalance;
-		//debitValue=BigDecimal.ZERO;
-		//creditValue=BigDecimal.ZERO;
-		tempMap = [:];
-		if(oB>0){
-			debitValue=oB;
-			tempMap["debitValue"]=debitValue;
-		}
-        if(oB<0){
-				   creditValue=(-1*oB);
-			       tempMap["creditValue"]=creditValue;
-		}	
-		tempOpeningBalanceMap = [:];
-		if(UtilValidate.isNotEmpty(tempMap)){
-			tempOpeningBalanceMap.putAll(tempMap);
-		}
-		openingBalanceMap.put(eachParty,tempOpeningBalanceMap);
+		context.openingBalanceMap=openingBalanceMap;
 	}
-	context.openingBalanceMap=openingBalanceMap;
 	context.partyDayWiseDetailMap=newMap;
 	
 	
