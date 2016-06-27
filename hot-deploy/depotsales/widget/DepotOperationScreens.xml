@@ -563,7 +563,7 @@
                <set field="parameters.noConditionFind"  value="N"></set> 
             <!--    <set field="parameters.purposeTypeId" value="BRANCH_PURCHASE"></set>  -->
           <!--      <set field="parameters.salesChannelEnumId"  value="MATERIAL_PUR_CHANNEL"></set>  -->
-            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/supplierPOSearchFilter.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="SupplierMyPortalCommonDecorator" location="${parameters.mainDecoratorLocation}">
