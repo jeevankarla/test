@@ -108,6 +108,7 @@ public class GeneralLedgerServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String partyId = (String) context.get("partyId");
+		String partyIdFrom = (String) context.get("partyIdFrom");
 		Timestamp tillDate = (Timestamp) context.get("tillDate");
 		String purposeTypeId=(String)context.get("purposeTypeId");
 		List exprListForParameters = FastList.newInstance();
@@ -138,10 +139,12 @@ public class GeneralLedgerServices {
 			exprListForParameters.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
 			//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
 			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
 		}else{//no need to send  For AR
 			exprListForParameters.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
 			//conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
 			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
 		}
 		
 		if(UtilValidate.isNotEmpty(context.get("purposeTypeId"))){
@@ -246,8 +249,10 @@ public class GeneralLedgerServices {
 		exprList.clear();
 		if(isOBCallForAP){
 			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyId));
+			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
 		}else{//no need to send  For AR
 			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
+			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
 		}
 		//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
 		exprList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
@@ -277,8 +282,10 @@ public class GeneralLedgerServices {
 		exprList.clear();
 		if(isOBCallForAP){
 			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyId));
+			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
 		}else{//no need to send  For AR
 			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
+			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
 		}
 		//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
 		exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CHEQUE_PAYIN"));
