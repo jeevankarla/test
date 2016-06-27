@@ -192,6 +192,7 @@ under the License.
       <field name="orderAdjustmentId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
+      <field name="quantity" type="fixed-point"></field>
       <field name="amount" type="currency-amount"></field>
       <prim-key field="orderAdjustmentId"/>
       <prim-key field="invoiceId"/>

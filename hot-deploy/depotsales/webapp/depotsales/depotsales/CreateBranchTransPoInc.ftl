@@ -214,8 +214,6 @@
 			
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
-			alert("orderItemSeqId = "+orderItemSeqId);
-			
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
 			//var bedPercent = data[rowCount]["bedPercent"];

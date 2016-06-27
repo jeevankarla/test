@@ -7460,8 +7460,8 @@ public class DepotSalesServices{
    	
 	//	sales invoice generation based on shipment
 	
-	public static Map<String, Object> createBranchSaleInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
-	   
+	/*public static Map<String, Object> createBranchSaleInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
+		   
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -7584,6 +7584,291 @@ public class DepotSalesServices{
 	                
 	        	}
 	    	}
+	    	
+	    }
+	    
+	    String invoiceId = null;
+        // Raise Invoice for the unbilled items	    
+        Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
+        serviceContext.put("shipmentId",shipmentId);
+        try {
+            Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+            invoiceId = (String) servResult.get("invoiceId");
+        } catch (GenericServiceException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        
+        
+        if(UtilValidate.isNotEmpty(purposeTypeId)){
+        	 try{
+     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+     	    	invoice.set("purposeTypeId", purposeTypeId);
+    			invoice.store();
+     		} catch (Exception e) {
+     			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+                 Debug.logError(e, errMsg, module);
+                 return ServiceUtil.returnError(errMsg);
+     		}
+        }
+        
+        try{
+			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+			Debug.log("invoice========================="+invoice);
+			invoice.set("shipmentId", shipmentId);
+			invoice.store();
+			Debug.log("invoice========================="+invoice);
+		}catch (GenericEntityException e) {
+			Debug.logError("Error in updating shipment in invoice", module);
+			return ServiceUtil.returnError("Error in updating shipment in invoice");
+		}
+        
+        // Indentify the adjustments applied to purchase invoice and apply them to the sales invoice
+        
+        List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+		List<GenericValue> invoiceItemList =null;
+		try{
+	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
+		Debug.log("sales invoiceItemList ======"+invoiceItemList);
+        
+        for(int i=0; i<invoiceItemList.size(); i++){
+        	
+        	GenericValue eachItem = invoiceItemList.get(i);
+        	
+        	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+            createInvoiceItemContext.put("invoiceId",invoiceId);
+            createInvoiceItemContext.put("invoiceItemTypeId", eachItem.get("invoiceItemTypeId"));
+            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
+            createInvoiceItemContext.put("description", eachItem.get("description"));
+            createInvoiceItemContext.put("quantity",eachItem.get("quantity"));
+            createInvoiceItemContext.put("amount",eachItem.getBigDecimal("amount"));
+            createInvoiceItemContext.put("productId", eachItem.get("productId"));
+            createInvoiceItemContext.put("userLogin", userLogin);
+            try{
+            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+            	if(ServiceUtil.isError(createInvoiceItemResult)){
+            		String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
+                    Debug.logError(errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+          		}
+            } catch (Exception e) {
+            	String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+    		}
+        }
+        
+        
+        
+        
+        
+        BigDecimal invoiceAmount = BigDecimal.ZERO;
+        BigDecimal outstandingAmount = BigDecimal.ZERO;
+        BigDecimal paidAmount = BigDecimal.ZERO;
+        
+        try {
+			Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("userLogin", userLogin, "invoiceId",invoiceId));
+			if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+				Debug.logError(getInvoicePaymentInfoListResult.toString(),module);
+				return ServiceUtil.returnError(null, null, null,getInvoicePaymentInfoListResult);
+			}
+			Map invoicePaymentInfo = (Map) ((List) getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+			outstandingAmount = (BigDecimal) invoicePaymentInfo.get("outstandingAmount");
+			invoiceAmount = (BigDecimal) invoicePaymentInfo.get("amount");
+			paidAmount = (BigDecimal) invoicePaymentInfo.get("paidAmount");
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+        
+        //for Sent SMS 
+        String contactNumberTo = null;
+        String countryCode = null;
+        
+		Map<String, Object> getTelParams = FastMap.newInstance();
+    	getTelParams.put("partyId", billToPartyId);
+        getTelParams.put("userLogin", userLogin);    
+        try {
+	        Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+	        if (ServiceUtil.isError(serviceResult)) {
+	        	Debug.logError("Unable to get telephone number for party : " + ServiceUtil.getErrorMessage(result), module);
+				//request.setAttribute("_ERROR_MESSAGE_", "Problems while getting Telephone for: " + partyId);
+				//return "error";
+	        } 
+	        contactNumberTo = (String) serviceResult.get("contactNumber");
+	        countryCode = (String) serviceResult.get("countryCode");
+        } catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}    
+         
+        Debug.log("contactNumberTo = "+contactNumberTo);
+        Debug.log("contactNumberTo = "+contactNumberTo);
+        if(UtilValidate.isEmpty(contactNumberTo)){
+        	contactNumberTo = "9502532897";
+        }
+        //contactNumberTo = "9440625565";
+        if(UtilValidate.isNotEmpty(contactNumberTo)){
+        	 if(UtilValidate.isNotEmpty(countryCode)){
+        		 contactNumberTo = countryCode + contactNumberTo;
+        	 }
+        	 String grandTotalStr=String.valueOf(invoiceAmount.intValue());
+        	 String paidAmountStr=String.valueOf(paidAmount.intValue());
+        	 String balanceStr=String.valueOf(outstandingAmount.intValue());
+        	 String invoiceMsgToWeaver = UtilProperties.getMessage("ProductUiLabels", "InvoiceMsgToWeaver", locale);
+        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("orderId", orderId);
+        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("InvoiceValue", grandTotalStr);
+        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("advancePaid", paidAmountStr);
+        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("balancePayable", balanceStr);
+        	 invoiceMsgToWeaver = invoiceMsgToWeaver.replaceAll("invoiceNo", invoiceId);
+        	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+             sendSmsParams.put("contactNumberTo", contactNumberTo);
+             sendSmsParams.put("text", invoiceMsgToWeaver); 
+             try {
+            	 Map serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+	             if (ServiceUtil.isError(serviceResult)) {
+	            	 Debug.logError("Unable to Send SMS: " + ServiceUtil.getErrorMessage(result), module);
+	             }
+             } catch (Exception e) {
+     			Debug.logError(e, module);
+     			return ServiceUtil.returnError(e.toString());
+     		}    
+        }
+        
+        
+        result = ServiceUtil.returnSuccess("Sales Invoice Has been successfully created"+invoiceId);
+        result.put("invoiceId", invoiceId);
+        return result;
+	}*/
+	
+	public static Map<String, Object> createBranchSaleInvoice(DispatchContext ctx,Map<String, ? extends Object> context) {
+		   
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Locale locale = (Locale) context.get("locale");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String shipmentId = (String) context.get("shipmentId");
+	    String orderId = (String) context.get("orderId");
+	    String billToPartyId = (String) context.get("billToPartyId");
+	    String purchaseInvoiceId = (String) context.get("purchaseInvoiceId");
+	    List<GenericValue> items = null;
+	    try {
+	    	items = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, UtilMisc.toList("orderItemSeqId"), null, false);
+        } catch (GenericEntityException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+	    Debug.log("items ======"+items);
+	    if (items.size() == 0) {
+            Debug.logInfo("No items issued for shipments", module);
+            return ServiceUtil.returnSuccess();
+        }
+	    
+	    String purposeTypeId = null;
+	    try{
+	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", purchaseInvoiceId), false);
+	    	purposeTypeId = (String)invoice.get("purposeTypeId");
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
+	    
+	    
+	    
+	    List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM", "VAT_PUR", "CST_PUR")));
+		List<GenericValue> invoiceItemList =null;
+		try{
+	      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		} catch (Exception e) {
+			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+		}
+	    
+	    GenericValue orderHeader = null;
+	    try {
+	    	orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+	    } catch (GenericEntityException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+	    if (orderHeader == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingNoOrderHeader",locale));
+        }
+	    
+	    OrderReadHelper orh = new OrderReadHelper(orderHeader);
+	    
+	    
+	    List<GenericValue> salesOrderitems = null;
+	    try {
+	    	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("orderItemSeqId"), null, false);
+	    } catch (GenericEntityException e) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+	    
+	    List<GenericValue> toBillItems = FastList.newInstance();
+	    for (GenericValue receipt : items) {
+	    	String productId = (String) receipt.get("productId");
+	    	BigDecimal receiptQty = receipt.getBigDecimal("quantityAccepted");
+	    	
+	    	if(receiptQty.compareTo(BigDecimal.ZERO) > 0){
+	    	
+		    	String purOrderId = (String) receipt.get("orderId");
+		    	String purOrderItemSeqId = (String) receipt.get("orderItemSeqId");
+		    	
+		    	String salesOrderId = null;
+		    	String salesOrderItemSeqId = (String) receipt.get("orderItemSeqId");
+		    	
+		    	
+		    	List itemAssocCond = FastList.newInstance();
+		    	itemAssocCond.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, purOrderId));
+		    	itemAssocCond.add(EntityCondition.makeCondition("toOrderItemSeqId", EntityOperator.EQUALS, purOrderItemSeqId));
+		    	itemAssocCond.add(EntityCondition.makeCondition("orderItemAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		    	try {
+			    	List<GenericValue> orderItemAssoc = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition(itemAssocCond, EntityOperator.AND), null, null, null, false);
+					if(UtilValidate.isNotEmpty(orderItemAssoc)){
+						salesOrderId = (EntityUtil.getFirst(orderItemAssoc)).getString("orderId");
+						salesOrderItemSeqId = (EntityUtil.getFirst(orderItemAssoc)).getString("orderItemSeqId");
+					}
+		    	} catch (GenericEntityException e) {
+		            String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+		            Debug.logError(e, errMsg, module);
+		            return ServiceUtil.returnError(errMsg);
+		        }
+		    	
+		    	itemAssocCond.clear();
+		    	itemAssocCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, salesOrderId));
+		    	itemAssocCond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, salesOrderItemSeqId));
+	    		List<GenericValue> salesOrderProdItems = EntityUtil.filterByCondition(salesOrderitems, EntityCondition.makeCondition(itemAssocCond, EntityOperator.AND));
+	        	
+	    		GenericValue eachItem = EntityUtil.getFirst(salesOrderProdItems);
+	    	
+	    		BigDecimal itemQty = OrderReadHelper.getOrderItemQuantity(eachItem);
+        		BigDecimal billedQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(eachItem);
+        		BigDecimal billAvail = itemQty.subtract(billedQuantity);
+        		
+        		eachItem.set("quantity", billedQuantity.add(receiptQty));
+        		
+        		toBillItems.add(eachItem);
+        		
+	    	}
+	    	
 	    	
 	    }
 	    

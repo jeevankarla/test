@@ -496,10 +496,15 @@ public class InvoiceServices {
                 for (GenericValue adj : itemAdjustments) {
 
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
+                	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
                     BigDecimal adjAlreadyInvoicedAmount = null;
                     try {
                         Map<String, Object> checkResult = dispatcher.runSync("calculateInvoicedAdjustmentTotal", UtilMisc.toMap("orderAdjustment", adj));
                         adjAlreadyInvoicedAmount = (BigDecimal) checkResult.get("invoicedTotal");
+                        if(UtilValidate.isNotEmpty(checkResult.get("invoicedQty"))){
+                        	adjAlreadyInvoicedQty = (BigDecimal) checkResult.get("invoicedQty");
+                        }
+                        
                     } catch (GenericServiceException e) {
                         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCalculateInvoicedAdjustmentTotalService", locale);
                         Debug.logError(e, errMsg, module);
@@ -514,29 +519,88 @@ public class InvoiceServices {
                     if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
                         continue;
                     }
-
+                    
                     BigDecimal amount = ZERO;
-                    if (adj.get("amount") != null) {
-                        // pro-rate the amount
-                        // set decimals = 100 means we don't round this intermediate value, which is very important
-                        amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                        amount = amount.multiply(billingQuantity);
-                        // Tax needs to be rounded differently from other order adjustments
-                        if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
-                            amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
-                        } else {
+                    BigDecimal totalQuota =BigDecimal.ZERO;
+                    BigDecimal tenPercentAdjQty =BigDecimal.ZERO;
+                    if( (UtilValidate.isNotEmpty(adj.get("orderAdjustmentTypeId") )) &&    ( (adj.get("orderAdjustmentTypeId")).equals("TEN_PERCENT_SUBSIDY")  )  ){
+                    	
+                    	// Get Already Billed Qty
+                    	
+                    	
+                    	// Get Quota Quantity
+                    	
+                    	List detCondsList = FastList.newInstance();
+                    	detCondsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						detCondsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItem.getString("orderItemSeqId")));
+					  	
+						BigDecimal quota =BigDecimal.ZERO;
+						
+					  	try {
+							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(detCondsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
+							
+							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+									if(UtilValidate.isNotEmpty(OrderItemDetailValue.get("quotaQuantity"))){
+										quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+										totalQuota = totalQuota.add(quota);
+									}
+								}
+							}
+						  	
+					  	} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+						}
+                    	
+					  	
+					  	tenPercentAdjQty = totalQuota.subtract(adjAlreadyInvoicedQty);
+					  	if(billingQuantity.compareTo(tenPercentAdjQty) < 0){
+                        	tenPercentAdjQty = billingQuantity;
+                        }
+					  	
+                    	if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            
+                            amount = amount.multiply(tenPercentAdjQty);
+                            // Tax needs to be rounded differently from other order adjustments
+                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                            } else {
+                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                            }
+                        }
+                    }
+                    else{
+                    	
+                    	if (adj.get("amount") != null) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            amount = amount.multiply(billingQuantity);
+                            // Tax needs to be rounded differently from other order adjustments
+                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                            } else {
+                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                            }
+                        } else if (adj.get("sourcePercentage") != null) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            BigDecimal percent = adj.getBigDecimal("sourcePercentage");
+                            percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
+                            amount = billingAmount.multiply(percent);
+                            amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            amount = amount.multiply(billingQuantity);
                             amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
                         }
-                    } else if (adj.get("sourcePercentage") != null) {
-                        // pro-rate the amount
-                        // set decimals = 100 means we don't round this intermediate value, which is very important
-                        BigDecimal percent = adj.getBigDecimal("sourcePercentage");
-                        percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
-                        amount = billingAmount.multiply(percent);
-                        amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                        amount = amount.multiply(billingQuantity);
-                        amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                    	
                     }
+                    
+                    
+                    
                     if (amount.signum() != 0) {
                         Map<String, Object> createInvoiceItemAdjContext = FastMap.newInstance();
                         createInvoiceItemAdjContext.put("invoiceId", invoiceId);
@@ -591,6 +655,7 @@ public class InvoiceServices {
                         createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
                         createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
                         createOrderAdjustmentBillingContext.put("amount", amount);
+                        createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
                         createOrderAdjustmentBillingContext.put("userLogin", userLogin);
 
                         Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
@@ -3798,6 +3863,7 @@ public class InvoiceServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         BigDecimal invoicedTotal = ZERO;
+        BigDecimal invoicedQty = ZERO;
         List<GenericValue> invoicedAdjustments = null;
         try {
            // invoicedAdjustments = delegator.findByAnd("OrderAdjustmentBilling", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.getString("orderAdjustmentId")));
@@ -3813,8 +3879,12 @@ public class InvoiceServices {
         	if(UtilValidate.isNotEmpty(invoicedAdjustment.getBigDecimal("amount"))){
         		invoicedTotal = invoicedTotal.add(invoicedAdjustment.getBigDecimal("amount").setScale(DECIMALS, ROUNDING));
         	}
+        	if(UtilValidate.isNotEmpty(invoicedAdjustment.getBigDecimal("quantity"))){
+        		invoicedQty = invoicedQty.add(invoicedAdjustment.getBigDecimal("quantity").setScale(DECIMALS, ROUNDING));
+        	}
         }
         result.put("invoicedTotal", invoicedTotal);
+        result.put("invoicedQty", invoicedQty);
         return result;
     }
     
