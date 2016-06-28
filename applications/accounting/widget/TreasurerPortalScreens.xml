@@ -3117,7 +3117,8 @@
             	<set field="defaultOrganizationPartyId" value="${parameters.partyIdFrom}"/>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                                   
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/> 
-				 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+				<script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+				<set field="parameters.isPartyGroupInvoice" value="Y"/>
                 <set field="titleProperty" value="${arScreenTitle}"/>
                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">

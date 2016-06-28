@@ -2272,6 +2272,18 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
+		<menu-item name="accountReceivable" title="Account Receivable">
+		     <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="ArInvoices">
+				<parameter param-name="invoiceTypeId" value="MIS_INCOME_IN" />
+             	<parameter param-name="subTabButtonValue" value="OpeningBalance" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
 		<menu-item name="treasurerPayments" title="Search Payments">
 		     <condition>
 				<or>
@@ -3701,6 +3713,13 @@
              <link target="ArInvoices">
              	<parameter param-name="invoiceTypeId" value="FINANCE_IN" />
              	<parameter param-name="subTabButtonValue" value="Finance" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="OpeningBalance" title="Create Opening Balance">
+             <link target="ArInvoices">
+             	<parameter param-name="invoiceTypeId" value="OBINVOICE_IN" />
+             	<parameter param-name="subTabButtonValue" value="OpeningBalance" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>

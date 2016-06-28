@@ -496,10 +496,15 @@ public class InvoiceServices {
                 for (GenericValue adj : itemAdjustments) {
 
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
+                	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
                     BigDecimal adjAlreadyInvoicedAmount = null;
                     try {
                         Map<String, Object> checkResult = dispatcher.runSync("calculateInvoicedAdjustmentTotal", UtilMisc.toMap("orderAdjustment", adj));
                         adjAlreadyInvoicedAmount = (BigDecimal) checkResult.get("invoicedTotal");
+                        if(UtilValidate.isNotEmpty(checkResult.get("invoicedQty"))){
+                        	adjAlreadyInvoicedQty = (BigDecimal) checkResult.get("invoicedQty");
+                        }
+                        
                     } catch (GenericServiceException e) {
                         String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCalculateInvoicedAdjustmentTotalService", locale);
                         Debug.logError(e, errMsg, module);
@@ -514,29 +519,88 @@ public class InvoiceServices {
                     if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
                         continue;
                     }
-
+                    
                     BigDecimal amount = ZERO;
-                    if (adj.get("amount") != null) {
-                        // pro-rate the amount
-                        // set decimals = 100 means we don't round this intermediate value, which is very important
-                        amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                        amount = amount.multiply(billingQuantity);
-                        // Tax needs to be rounded differently from other order adjustments
-                        if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
-                            amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
-                        } else {
+                    BigDecimal totalQuota =BigDecimal.ZERO;
+                    BigDecimal tenPercentAdjQty =BigDecimal.ZERO;
+                    if( (UtilValidate.isNotEmpty(adj.get("orderAdjustmentTypeId") )) &&    ( (adj.get("orderAdjustmentTypeId")).equals("TEN_PERCENT_SUBSIDY")  )  ){
+                    	
+                    	// Get Already Billed Qty
+                    	
+                    	
+                    	// Get Quota Quantity
+                    	
+                    	List detCondsList = FastList.newInstance();
+                    	detCondsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						detCondsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItem.getString("orderItemSeqId")));
+					  	
+						BigDecimal quota =BigDecimal.ZERO;
+						
+					  	try {
+							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(detCondsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
+							
+							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+									if(UtilValidate.isNotEmpty(OrderItemDetailValue.get("quotaQuantity"))){
+										quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+										totalQuota = totalQuota.add(quota);
+									}
+								}
+							}
+						  	
+					  	} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+						}
+                    	
+					  	
+					  	tenPercentAdjQty = totalQuota.subtract(adjAlreadyInvoicedQty);
+					  	if(billingQuantity.compareTo(tenPercentAdjQty) < 0){
+                        	tenPercentAdjQty = billingQuantity;
+                        }
+					  	
+                    	if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            
+                            amount = amount.multiply(tenPercentAdjQty);
+                            // Tax needs to be rounded differently from other order adjustments
+                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                            } else {
+                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                            }
+                        }
+                    }
+                    else{
+                    	
+                    	if (adj.get("amount") != null) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            amount = amount.multiply(billingQuantity);
+                            // Tax needs to be rounded differently from other order adjustments
+                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                            } else {
+                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                            }
+                        } else if (adj.get("sourcePercentage") != null) {
+                            // pro-rate the amount
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            BigDecimal percent = adj.getBigDecimal("sourcePercentage");
+                            percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
+                            amount = billingAmount.multiply(percent);
+                            amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                            amount = amount.multiply(billingQuantity);
                             amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
                         }
-                    } else if (adj.get("sourcePercentage") != null) {
-                        // pro-rate the amount
-                        // set decimals = 100 means we don't round this intermediate value, which is very important
-                        BigDecimal percent = adj.getBigDecimal("sourcePercentage");
-                        percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
-                        amount = billingAmount.multiply(percent);
-                        amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                        amount = amount.multiply(billingQuantity);
-                        amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                    	
                     }
+                    
+                    
+                    
                     if (amount.signum() != 0) {
                         Map<String, Object> createInvoiceItemAdjContext = FastMap.newInstance();
                         createInvoiceItemAdjContext.put("invoiceId", invoiceId);
@@ -591,6 +655,7 @@ public class InvoiceServices {
                         createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
                         createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
                         createOrderAdjustmentBillingContext.put("amount", amount);
+                        createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
                         createOrderAdjustmentBillingContext.put("userLogin", userLogin);
 
                         Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
@@ -3798,6 +3863,7 @@ public class InvoiceServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         BigDecimal invoicedTotal = ZERO;
+        BigDecimal invoicedQty = ZERO;
         List<GenericValue> invoicedAdjustments = null;
         try {
            // invoicedAdjustments = delegator.findByAnd("OrderAdjustmentBilling", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.getString("orderAdjustmentId")));
@@ -3813,8 +3879,12 @@ public class InvoiceServices {
         	if(UtilValidate.isNotEmpty(invoicedAdjustment.getBigDecimal("amount"))){
         		invoicedTotal = invoicedTotal.add(invoicedAdjustment.getBigDecimal("amount").setScale(DECIMALS, ROUNDING));
         	}
+        	if(UtilValidate.isNotEmpty(invoicedAdjustment.getBigDecimal("quantity"))){
+        		invoicedQty = invoicedQty.add(invoicedAdjustment.getBigDecimal("quantity").setScale(DECIMALS, ROUNDING));
+        	}
         }
         result.put("invoicedTotal", invoicedTotal);
+        result.put("invoicedQty", invoicedQty);
         return result;
     }
     
@@ -5177,43 +5247,51 @@ public class InvoiceServices {
        			if(UtilValidate.isEmpty(invDate)){
        				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
        			}
-       			String shipmentId = (EntityUtil.getFirst(invoiceItems)).getString("shipmentId");
        			String partyId ="";
        			String prefix ="";
        			String orderId = "";
+       			String shipmentId = "";
        			GenericValue shipments = null;
        			List<GenericValue> orderAssoc = FastList.newInstance();
-       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
-       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
-        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-        			orderId = shipments.getString("primaryOrderId");
-           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
-                	prefix="PI";
-       			}
-       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
-       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
-       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-        			orderId = shipments.getString("primaryOrderId");
-                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
-                	prefix="SI";
-       			}
-       		    List condList = FastList.newInstance();
-                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
-				EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
-				List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+       			String invoiceParty = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+       			GenericValue obPartyDetails = delegator.findOne("Party", UtilMisc.toMap("partyId", invoiceParty), false);
+                String externalId = obPartyDetails.getString("externalId");
+       			shipmentId = (EntityUtil.getFirst(invoiceItems)).getString("shipmentId");
        			String indentTypeId = "D";
-                if(UtilValidate.isNotEmpty(orderRolesDetails)){
-                	indentTypeId = "O";
-                }
-       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
-                String boSequnce = partyBOs.getString("externalId");
-       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
-       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
-    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
-                String roSequnce = partyROs.getString("externalId");
+       			String boSequnce = "";
+       			String roSequnce ="";
+       			if(UtilValidate.isNotEmpty(shipmentId)){
+	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
+	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+	        			orderId = shipments.getString("primaryOrderId");
+	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	                	prefix="PI";
+	       			}
+	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+	        			orderId = shipments.getString("primaryOrderId");
+	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	                	prefix="SI";
+	       			}
+	       		    List condList = FastList.newInstance();
+	                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+					EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+	                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+	                	indentTypeId = "O";
+	                }
+	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+	                boSequnce = partyBOs.getString("externalId");
+	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
+	       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
+	    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
+	                roSequnce = partyROs.getString("externalId");
+       			}
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");
@@ -5290,6 +5368,20 @@ public class InvoiceServices {
     				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+boSequnce+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
     				delegator.createOrStore(billOfSale);
    			   }
+   			   if(invoiceItemTypeIds.contains("OBINVOICE_IN")){
+    				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+ 			    	billOfSale.put("billOfSaleTypeId", "OB_INV_SQUENCE");
+ 				    billOfSale.put("invoiceId", invoiceId);
+ 				    billOfSale.put("partyId", invoiceParty);
+ 				    billOfSale.put("finYearId", finYearId);
+ 				    billOfSale.put("invoiceDueDate", invDate);
+ 				    billOfSale.put("productCategoryId", "Y");
+ 				    delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+ 				    billOfSale.put("indentTypeId",indentTypeId);
+ 	                delegator.create(billOfSale);
+ 	                billOfSale.put("invoiceSequence", "OB"+externalId+"_"+invoiceId);
+   				    delegator.createOrStore(billOfSale);
+    			}
        			
        		}
         }catch(Exception e){

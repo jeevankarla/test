@@ -54,6 +54,7 @@ under the License.
         </required-permissions>
         <attribute name="invoiceAttrName" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceAttrValue" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNumber" type="String" mode="IN" optional="true"/>
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
         <attribute name="allowMultipleInvForPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
@@ -467,6 +468,7 @@ under the License.
         <description>Calculate the previously invoiced amount for an OrderAdjustment</description>
         <attribute name="orderAdjustment" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="invoicedTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="invoicedQty" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
 
     <service name="updateInvoiceItemType" engine="simple" default-entity-name="InvoiceItemType"
