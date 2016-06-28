@@ -465,5 +465,9 @@ under the License.
    <StatusItem createdStamp="2016-06-15 12:50:46.0" createdTxStamp="2016-06-15 12:50:46.0" lastUpdatedStamp="2016-06-15 12:50:46.0" lastUpdatedTxStamp="2016-06-15 12:50:46.0" statusCode="APPROVED" statusId="DRAFTPO_PROPOSAL" statusTypeId="ORDER_STATUS" description="Draft Proposal"/>
 
    <OrderItemAssocType orderItemAssocTypeId="BackToBackOrder"/> 
+   
+   <InvoiceItemType createdStamp="2016-06-28 12:16:24.0" createdTxStamp="2016-06-28 12:16:24.0" description="YARN SALE" invoiceItemTypeId="INV_FPROD_ITEM" lastUpdatedStamp="2016-06-28 12:19:49.0" lastUpdatedTxStamp="2016-06-28 12:19:49.0"/> 
+   <Enumeration createdStamp="2016-06-27 19:39:58.0" createdTxStamp="2016-06-27 19:39:58.0" description="Opening Balance Tenant Configurations" enumId="OB_INV_SQUENCE" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2016-06-27 19:39:58.0" lastUpdatedTxStamp="2016-06-27 19:39:58.0" sequenceId="1"/> 
+   
 
 </entity-engine-xml>
