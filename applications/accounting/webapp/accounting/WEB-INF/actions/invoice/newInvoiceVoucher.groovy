@@ -132,6 +132,8 @@ invoiceItemLevelAdjustments = [:];
 
 double totTaxAmount = 0;
 
+double mgpsAmt = 0;
+
 int i=0;
 for (eachList in invoiceItemList) {
 	
@@ -149,7 +151,7 @@ for (eachList in invoiceItemList) {
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
 		
-		  if(eachItem.description != "Service Charge"){
+		  if(eachItem.description != "Service Charge" && eachItem.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY"){
 		  tempMap = [:];
 		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
@@ -161,6 +163,9 @@ for (eachList in invoiceItemList) {
 		  totTaxAmount = totTaxAmount+eachItem.amount;
 		  
 		  itemAdjustList.add(tempMap);
+		  }
+		  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
+		  mgpsAmt = mgpsAmt+eachItem.amount;
 		  }
 	}
 	 }
@@ -178,6 +183,9 @@ context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
 
 context.totTaxAmount = totTaxAmount;
+
+context.mgpsAmt = mgpsAmt;
+
 
 
 orderAttrForPo = [];
@@ -598,6 +606,7 @@ panId="";
 tanId="";
 
 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+
 
 if(partyPostalAddress){
 	

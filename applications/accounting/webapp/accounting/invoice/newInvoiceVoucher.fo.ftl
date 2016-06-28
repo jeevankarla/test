@@ -362,7 +362,7 @@ under the License.
 								<#assign remainingAdjustMents = remainingAdjustMents+eachList.amount>
 				
 				<fo:block text-align="right"    font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Deduction
-				${mgpsAndTotalDeductions?if_exists?string("#0.00")}</fo:block>
+				${mgpsAmt?if_exists?string("#0.00")}</fo:block>
 				
 				</fo:table-cell>
 				
@@ -380,7 +380,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
-  				<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${(finalTOtal+totTaxAmount)?string("#0.00")}</fo:block>
+  				<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
