@@ -213,6 +213,12 @@
       			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER"/>
       			</condition-list>
       		</entity-condition>
+      		<entity-condition entity-name="OrderRole" list="orderSuppRoleList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="SUPPLIER_AGENT"/>
+      			</condition-list>
+      		</entity-condition>
       		<entity-condition entity-name="OrderAssoc" list="orderAssocList" >
       			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
       		</entity-condition>
@@ -237,7 +243,7 @@
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
-        <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+        <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, orderSuppRoleList[0].partyId, false);} - [${orderSuppRoleList[0].partyId}]"/></field>
         <field name="customerId" title="Agency"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, orderRoleList[0].partyId, false);} - [${orderRoleList[0].partyId}]"/></field>
 
        <!--  <field use-when="&quot;${orderTypeId}&quot; == &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
