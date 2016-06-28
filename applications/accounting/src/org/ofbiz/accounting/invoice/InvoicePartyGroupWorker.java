@@ -49,7 +49,7 @@ public class InvoicePartyGroupWorker {
         			null, null, null);	
 		}
 		// now check if these item types have corresponding rate types, else raise error
-		for (int i = 0; i < mapItems.size(); ++i) {		
+		/*for (int i = 0; i < mapItems.size(); ++i) {		
 			GenericValue mapItem = mapItems.get(i);
 			String itemType = mapItem.getString("invoiceItemTypeId");
 			List<GenericValue> rateTypes = delegator.findByAndCache("RateType",
@@ -59,7 +59,7 @@ public class InvoicePartyGroupWorker {
             			null, null, null);				
 			}
 			resultList.add(rateTypes.get(0));
-		}
+		}*/
 		
 		Map<String, Object> response = ServiceUtil.returnSuccess();
 	    response.put("rateTypes", resultList);	   

@@ -54,6 +54,7 @@ under the License.
         </required-permissions>
         <attribute name="invoiceAttrName" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceAttrValue" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNumber" type="String" mode="IN" optional="true"/>
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
         <attribute name="allowMultipleInvForPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
