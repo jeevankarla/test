@@ -304,20 +304,18 @@ function drawRow(rowData) {
     }
     
     
- //   var indentHeadReport = '<a class="buttontext" href="<@ofbizUrl>indentHeadReport.csv?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">Indent Report</a>';
-    
-  //   row.append($("<td>" +  indentHeadReport  +"</td>"));
-    
-    
-    
-    
+    if(rowData.statusId != "ORDER_APPROVED"){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="cancel" onclick="'+cancellorder+'">';
     
     row.append($("<td>" +  viewButton  +"</td>"));
+    }else{
     
+        row.append($("<td></td>"));
+    
+    }
     
     
     
