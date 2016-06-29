@@ -455,6 +455,15 @@
         <attribute name="purInvoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="transactionDate" type="String" mode="IN" optional="true"/> 
     </service>
+    <service name="createBackToBackOrderItemAssoc" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBackToBackOrderItemAssoc">
+        <description>createBackToBackOrderItemAssoc</description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="multiOrderAssocList" type="List" mode="OUT" optional="true"/>
+        <attribute name="noOrderAssocList" type="List" mode="OUT" optional="true"/>
+        <attribute name="missingPurOrderItems" type="List" mode="OUT" optional="true"/>
+        <attribute name="existingAssociations" type="List" mode="OUT" optional="true"/>
+        <attribute name="multiPurOrderItems" type="List" mode="OUT" optional="true"/>
+    </service>
     
 </services>
 
