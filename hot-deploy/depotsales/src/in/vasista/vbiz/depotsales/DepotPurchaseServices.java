@@ -78,6 +78,7 @@ public class DepotPurchaseServices{
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
 		String vehicleId = (String) request.getParameter("vehicleId");
+		String tallyrefNo = (String) request.getParameter("tallyrefNo");
 		String invoiceDateStr = (String) request.getParameter("invoiceDate");
 		String orderId = (String) request.getParameter("orderId");
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
@@ -131,6 +132,36 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+		
+		if(UtilValidate.isNotEmpty(tallyrefNo)){
+				  List conditionList = FastList.newInstance();
+		
+				  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+				  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
+				  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				  try{
+				  List  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
+				  
+				   if(UtilValidate.isNotEmpty(OrderAssocList)){
+		
+				  GenericValue OrderAssoc = EntityUtil.getFirst(OrderAssocList);
+				  String actualOrderId = (String)OrderAssoc.get("toOrderId");
+				  
+				  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", actualOrderId), false);
+		
+				  OrderHeader.set("tallyRefNo",tallyrefNo);
+				  OrderHeader.store();
+				 }
+				
+			}catch (Exception e) {
+				Debug.logError(e, "Problems While Updating Tally Ref No: " + tallyrefNo, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems While Updating Tally Ref No: " + tallyrefNo);
+				return "error";
+			}
+		}	
+		
+		
+		
 		List productQtyList = FastList.newInstance();
 		List invoiceAdjChargesList = FastList.newInstance();
 		List invoiceDiscountsList = FastList.newInstance();

@@ -72,7 +72,8 @@ if(branchId == "INT49" || branchId == "INT12" || branchId == "INT55")
 branchContext.put("branchId","INT12");
 else if(branchId == "INT8" || branchId == "INT20")
 branchContext.put("branchId","INT8");
-else
+
+
 branchContext.put("branchId",branchId);
 
 
@@ -763,7 +764,9 @@ allDetailsMap.put("companyFax",companyFax);
 
 
 
-partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , boPartyId)  , null, null, null, false );
+partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , branchId)  , null, null, null, false );
+
+
 if(UtilValidate.isNotEmpty(partyIdentification)){
 	tinNumber="";
 	tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));

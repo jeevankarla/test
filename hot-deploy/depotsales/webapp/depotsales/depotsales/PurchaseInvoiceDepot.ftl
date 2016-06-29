@@ -100,6 +100,22 @@ $(document).ready(function(){
 	          	</#if>
 	        </tr>
 	        <tr><td><br/></td></tr>
+	        <tr>
+	          <input type="hidden" name="isFormSubmitted"  value="YES" />
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Tally Reference No :</div></td>
+            	<#if tallyRefNo?exists && tallyRefNo?has_content>  
+		  	  	<input type="hidden" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo?if_exists}"/>  
+	          	<td valign='middle'>
+	            	<div class='tabletext h3'>${tallyRefNo?if_exists}         
+	            	</div>
+	          	</td>       
+	       	  <#else> 
+	          	  	<td valign='middle'>          
+	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
+	            	</td>
+	       	  </#if>
+	        </tr>
+	        <tr><td><br/></td></tr>
 	       	<tr>
 	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No:</div></td>
 				<#if vehicleId?exists && vehicleId?has_content>  
