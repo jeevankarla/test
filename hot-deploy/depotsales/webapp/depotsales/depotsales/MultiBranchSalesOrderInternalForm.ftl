@@ -514,381 +514,125 @@
 	      	
 	      	
 	    });
-        grid.onCellChange.subscribe(function(e,args) {
-        	if ((data[args.row]["cottonUom"]) == undefined   ) {
-					data[args.row]["cottonUom"] = "KGs";
-				}
-        	if (args.cell == 3) {
-   				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['KgunitPrice'];
-				var uom = data[args.row]["cottonUom"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var quota = parseFloat(data[args.row]["quota"]);
-				var price = 0;
+  	grid.onCellChange.subscribe(function(e,args) {
 
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-				var kgUnitPrice;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*price*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*price*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle"){				
-					roundedAmount = Math.round(baleQty*price);
-				}
-				if(uom != "KGs"){
-					kgUnitPrice=price/bundleWeight;	
-				}else{
-					kgUnitPrice=price;	
-				}			
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-				}	
-				
-				quantity = 0;
-				if(uom == "Bale"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "Bundle"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["unitPrice"] = kgUnitPrice;
-				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["totPayable"] =roundedAmount;
-				var row = args.row;
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
+	     setUndefinedValues(data[args.row]);
+		 grid.updateRow(args.row);
+		var prod = data[args.row]["cProductId"];
+		var quantity = parseFloat(data[args.row]["quantity"]);
+		var kgUnitPrice = data[args.row]['KgunitPrice'];
+		var uom = data[args.row]["cottonUom"];
+		var balQuty = parseFloat(data[args.row]["baleQuantity"]);
+		var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
+		var price = parseFloat(data[args.row]["unitPrice"]);
+		var amt = parseFloat(data[args.row]["amount"]);
 
-        	}
-			
-			if (args.cell == 4) {
-				var row = args.row;
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				
-				
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}
-				
-				quantity = 0;
-				if(uom == "Bale"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "Bundle"){
-					bundleWeight=4.54;
-					quantity = baleQty*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*unitPrice);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, (quantity*unitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				grid.updateRow(args.row);			
-				updateTotalIndentAmount();
-				//updateCurrentQuota(row);
-				
-			}
-			if(args.cell == 5 || args.cell == 6) {
-				var row = args.row;
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				var udp = data[args.row]['unitPrice'];
-				var kgprice = data[args.row]['KgunitPrice'];
-				var kgUnitPrice;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}
-				
-				quantity = 0;
-				if(uom == "Bale"){
-					quantity = baleQty*bundleWeight*40;
-				}
-				if(uom == "Half-Bale"){
-					quantity = baleQty*bundleWeight*20;
-				}
-				if(uom == "Bundle"){
-					quantity = baleQty*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					quantity = baleQty;
-					bundleWeight=0;
-				}
-				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				kgUnitPrice=price/bundleWeight;
-				
-				}
-				if(uom == "KGs" ){
-				kgUnitPrice=price;
-				}
-				if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-				}	
-				data[args.row]["KgunitPrice"] = kgUnitPrice;
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*kgUnitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				grid.updateRow(args.row);
-			
-				//updateCurrentQuota(row);
-				
-			}
-			if(args.cell == 7 ) {
-				var row = args.row;
-				var prod = data[args.row]["cProductId"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var quantity = parseFloat(data[args.row]["quantity"]);
-				var uom = data[args.row]["cottonUom"];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var unitPrice = parseFloat(data[args.row]["unitPrice"]);
-				var udp = data[args.row]['unitPrice'];
-				var kgprice = data[args.row]['KgunitPrice'];
-				var kgUnitPrice;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				
-				if(isNaN(baleQty)){
-					baleQty = 1;
-				}
-				if(isNaN(bundleWeight)){
-					qty = 0;
-				}
-				if(isNaN(unitPrice)){
-					unitPrice = 0;
-				}
-
-				if(uom == "Bale"){
-					baleQty=quantity/(bundleWeight*40);
-				}
-				if(uom == "Half-Bale"){
-					baleQty=quantity/(bundleWeight*20);
-				}
-				if(uom == "Bundle"){
-					baleQty = quantity*bundleWeight;
-				}
-				
-				if(uom == "KGs"){				
-					baleQty = quantity;
-					bundleWeight=0;
-				}
-				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				kgUnitPrice=price/bundleWeight;
-				
-				}
-				if(uom == "KGs" ){
-				kgUnitPrice=price;
-				}
-				if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-				}	
-
-				data[args.row]["KgunitPrice"] = kgUnitPrice;
-				data[args.row]["baleQuantity"] = baleQty;
-				data[args.row]["cottonUom"] = uom;
-				data[args.row]["bundleWeight"] = bundleWeight;
-				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#partyGeoId").val(), prod, row, (quantity*kgUnitPrice), $("#schemeCategory").val(), $("#orderTaxType").val());
-				grid.updateRow(args.row);
-
-			}
-			if(args.cell == 8){
-				var kgprice = data[args.row]['KgunitPrice'];
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var uom = data[args.row]["cottonUom"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var upb=0;
-				if(isNaN(kgprice)){
-					kgprice = 0;
-				}
-				if(isNaN(bundleWeight)){
-					bundleWeight = 0;
-				}
-				if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				upb=kgprice*bundleWeight;
-				
-				}
-				if(uom == "KGs" ){
-				upb=kgprice;
-				}
-				var roundedAmount;
-				if(uom == "Bale"){
-					roundedAmount = Math.round(baleQty*upb*40);
-				}
-				if(uom == "Half-Bale"){
-					roundedAmount = Math.round(baleQty*upb*20);
-				}
-				if(uom == "KGs" ||uom == "Bundle" ){				
-					roundedAmount = Math.round(baleQty*upb);
-				}
-				
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				data[args.row]["unitPrice"] = upb;
-				
-				
-				var row = args.row;
-				updatePayablePrice(row);
-				
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-				
-				
-			
-			
-			}
-			if(args.cell == 9){
-				var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);
-				var uom = data[args.row]["cottonUom"];
-				var baleQty = parseFloat(data[args.row]["baleQuantity"]);
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var amt = parseFloat(data[args.row]["amount"]);
-				var upb=0;
-				
-				var kgprice = 0;
-				
-				if(isNaN(bundleWeight)){
-					bundleWeight = 0;
-				}
-				var bunble=0;
-				if(uom == "Bale"){
-				
-				bunble=baleQty*40;
-				}
-				if(uom == "Half-Bale"){
-				bunble=baleQty*20;
-				}
-				if(uom == "Bundle" || uom == "KGs" ){
-				bunble=baleQty;
-				}
-				
-				
-				upb=amt/bunble;
-				kgprice=amt/qty;
-				
-				data[args.row]["KgunitPrice"] = kgprice;
-				data[args.row]["unitPrice"] = upb;
-				
-				
-				var row = args.row;
-				updatePayablePrice(row);
-				
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, price, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				grid.updateRow(args.row);
-				
-				updateTotalIndentAmount();
-				
-				
-			
-			
-			}
-			
-			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
-			var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
-			   if(!isNaN(totalQuota)){
-				    var qty1= data[args.row]["quantity"];
-				    if(qty1<=totalQuota){
-				       data[args.row]["quota"]=totalQuota-qty1;
-				       data[args.row]["usedQuota"]=qty1;
-				       data[args.row]["warning"] = '';
-				    }
-				    else{
-				       data[args.row]["usedQuota"]=totalQuota;
-				       data[args.row]["quota"]=0;
-				       data[args.row]["warning"] = 'Quota Exceeded';
-				    }
-				    grid.updateRow(args.row);
-				}
-			}
+		var roundedAmount =calculateBundlePrice(balQuty,uom,price);
+		if(args.cell != 8){
+		  if(uom!="KGs"){
+		   kgUnitPrice=price/bundleWeight;
+		  }
+		  else{
+		    kgUnitPrice=price;
+		  }
 		
-		}); 
+		 }
+
+		if (args.cell == 3) {
+
+		  if(isNaN(roundedAmount)){
+			roundedAmount = 0;
+		  }
+		  if(isNaN(kgUnitPrice)){
+			kgUnitPrice = 0;
+		  }	
+		  
+		  quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+		  data[args.row]["quantity"]=quantity;
+		  data[args.row]["KgunitPrice"] = kgUnitPrice;
+		  data[args.row]["amount"] = roundedAmount;
+		  data[args.row]["totPayable"] = roundedAmount;
+		  
+		}
+		else if(args.cell == 4){
+			quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+			
+			data[args.row]["KgunitPrice"] = kgUnitPrice;
+			data[args.row]["quantity"] = quantity;
+			data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+		
+		}
+		else if(args.cell == 5){
+		  quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+		  data[args.row]["quantity"] = quantity;
+		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+		}
+		else if(args.cell == 6){
+		
+		  data[args.row]["KgunitPrice"] = kgUnitPrice;
+		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+		
+		}
+		else if(args.cell == 7){
+		  baleQty=calculateKgs(quantity,uom,bundleWeight);
+		  data[args.row]["baleQuantity"]=baleQty;
+		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+		}
+		else if(args.cell == 8){
+		  var upb=0;
+		  if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+				upb=kgUnitPrice*bundleWeight;
+				}
+		  else if(uom == "KGs" ){
+				upb=kgUnitPrice;
+		 }
+		  var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
+		  data[args.row]["amount"] = roundedAmount;
+		  data[args.row]["unitPrice"] = upb;
+		}
+		else if(args.cell == 9){
+		    var upb=0;
+			var bundle=0;
+				if(uom == "Bale"){
+				bundle=balQuty*40;
+				}
+				if(uom == "Half-Bale"){
+				bundle=balQuty*20;
+				}
+		if(uom == "Bundle" || uom == "KGs" ){
+				bundle=balQuty;
+				}
+				upb=amt/bundle;
+				kgprice=amt/quantity;
+			data[args.row]["KgunitPrice"] = kgprice;
+			data[args.row]["unitPrice"] = upb;
+		}
+	  if(args.cell != 1 && args.cell != 2){
+		addServiceCharge(args.row);
+				
+		var taxAmt = data[args.row]["taxAmt"];
+				
+		var servChg = data[args.row]['SERVICE_CHARGE_AMT'];
+		if(servChg){
+			roundedAmount = roundedAmount + servChg;
+		}
+				
+		if(taxAmt != undefined && taxAmt != 0){
+			updateTax(args.row, roundedAmount);
+		}
+		else{
+			getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, args.row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
+		}
+		grid.updateRow(args.row);
+		updatePayablePrice(args.row)
+		updateTotalIndentAmount();
+		updateCurrentQuota(args);
+	 } 
+	 });
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
 			if (args.cell == 1 ) {
@@ -904,7 +648,10 @@
 	      		 	grid.updateRow(args.row);
 				   	
   		 		}
-  		 		if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
+
+   			}
+   			if (args.cell == 1 ) {
+   			   if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
   		 		  getCustomerDetails(args);
   		 		}
    			}
@@ -1305,4 +1052,102 @@
 	
 	
 	}	
+	
+		function updateCurrentQuota(args){
+	
+			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
+			var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
+			   if(!isNaN(totalQuota)){
+				    var qty1= data[args.row]["quantity"];
+				    if(qty1<=totalQuota){
+				       data[args.row]["quota"]=totalQuota-qty1;
+				       data[args.row]["usedQuota"]=qty1;
+				       data[args.row]["warning"] = '';
+				    }
+				    else{
+				       data[args.row]["usedQuota"]=totalQuota;
+				       data[args.row]["quota"]=0;
+				       data[args.row]["warning"] = 'Quota Exceeded';
+				    }
+				    grid.updateRow(args.row);
+				}
+			}
+	}
+	
+	 function calculateBundlePrice(balQuty,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			result = Math.round(balQuty*org2*40);
+		}
+		else if(uom == "Half-Bale"){
+		    result = Math.round(balQuty*org2*20);
+		}
+		else if(uom == "Bundle"||uom == "KGs"){				
+		    result = Math.round(balQuty*org2);
+		}
+		
+		return result;
+	 }
+	 
+	function calculateBundleWeight(balQuty,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			result = Math.round(balQuty*org2*40);
+		}
+		else if(uom == "Half-Bale"){
+		    result = Math.round(balQuty*org2*20);
+		}
+		else if(uom == "Bundle"){				
+		    result = Math.round(balQuty*org2);
+		}
+		else if(uom == "KGs"){				
+		    result = Math.round(balQuty);
+		}
+		return result;
+	 }
+	function calculateKgs(quantity,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			 result=quantity/(org2*40);
+			}
+		else if(uom == "Half-Bale"){
+				result=quantity/(org2*20);
+			}
+		else if(uom == "Bundle"){
+				result = quantity/org2;
+			}
+		else if(uom == "KGs"){				
+			result = quantity;
+		    }
+		return result;
+	 }
+	 function setUndefinedValues(row){
+	 if ((row["bundleWeight"]) == undefined   ) {
+			row["bundleWeight"] = 4.54;
+		}
+        if ((row["cottonUom"]) == undefined   ) {
+			row["cottonUom"] = "KGs";
+		}
+		if(isNaN(row['unitPrice'])){
+			row['unitPrice'] = 0;
+		 }
+		if(isNaN(row['KgunitPrice'])){
+			row['KgunitPrice'] = 0;
+		 }
+		if(isNaN(row["quantity"])){
+			row["quantity"] = 0;
+		 }
+		 if(isNaN(row["amount"])){
+			row["amount"] = 0;
+		 }
+		  if(isNaN(row["totPayable"])){
+			row["totPayable"] = 0;
+		 }
+		 if(isNaN(row["taxAmt"])){
+			row["taxAmt"] = 0;
+		 }
+		 if(isNaN(row["SERVICE_CHARGE_AMT"])){
+			row["SERVICE_CHARGE_AMT"] = 0;
+		 }
+	 }
 </script>			
