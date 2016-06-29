@@ -562,8 +562,8 @@ public class InvoiceServices {
                     	if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
                             // pro-rate the amount
                             // set decimals = 100 means we don't round this intermediate value, which is very important
-                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                            
+                            amount = adj.getBigDecimal("amount").divide(totalQuota, 100, ROUNDING);
+                            Debug.log("amount ========================="+amount);
                             amount = amount.multiply(tenPercentAdjQty);
                             // Tax needs to be rounded differently from other order adjustments
                             if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
