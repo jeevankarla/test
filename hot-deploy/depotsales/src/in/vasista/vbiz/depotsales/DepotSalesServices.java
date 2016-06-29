@@ -10425,7 +10425,147 @@ public class DepotSalesServices{
 	}
  	
  	
- 	
+ 	public static Map<String, Object> createBackToBackOrderItemAssoc(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Debug.log("userLogin ===================="+userLogin);
+		Map result = ServiceUtil.returnSuccess();
+		
+		List multiOrderAssocList = FastList.newInstance();
+		List noOrderAssocList = FastList.newInstance();
+		List missingPurOrderItems = FastList.newInstance();
+		List multiPurOrderItems = FastList.newInstance();
+		List existingAssociations = FastList.newInstance();
+				
+		List condList= FastList.newInstance();;
+        condList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
+        condList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.NOT_EQUAL,"ITEM_CANCELLED"));
+        
+		List<GenericValue> OrderHeaderAndItems = null;
+		try {
+			OrderHeaderAndItems = delegator.findList("OrderHeaderAndItems", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		
+		List<GenericValue> salesOrders = EntityUtil.filterByCondition(OrderHeaderAndItems, EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+		List<GenericValue> purchaseOrders = EntityUtil.filterByCondition(OrderHeaderAndItems, EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+		
+		List salesOrderIds = EntityUtil.getFieldListFromEntityList(salesOrders, "orderId", true);
+		Debug.log("salesOrderIds ===================="+salesOrderIds);
+		
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, salesOrderIds));
+		condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		
+		List<GenericValue> orderAssocList = null;
+		try {
+			orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		  
+		for(int i=0; i<salesOrderIds.size(); i++){
+			String salesOrderId = (String) salesOrderIds.get(i);
+			Debug.log("orderId ===================="+salesOrderId);
+			List<GenericValue> saleOrderAssocList = EntityUtil.filterByCondition(orderAssocList, EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, salesOrderId));
+			
+			if(UtilValidate.isEmpty(saleOrderAssocList)){
+				noOrderAssocList.add(salesOrderId);
+				continue;
+			}
+			if(saleOrderAssocList.size() > 1){
+				multiOrderAssocList.add(salesOrderId);
+				continue;
+			}
+			String purchaseOrderId = (String)((EntityUtil.getFirst(saleOrderAssocList)).get("orderId"));
+			
+			List<GenericValue> saleOrderItemList = EntityUtil.filterByCondition(salesOrders, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, salesOrderId));
+			
+			for(int j=0; j<saleOrderItemList.size(); j++){
+				GenericValue eachSalesItem = (GenericValue) saleOrderItemList.get(j);
+				String orderItemSeqId = (String)eachSalesItem.get("orderItemSeqId");
+				String productId = (String)eachSalesItem.get("productId");
+				BigDecimal quantity = (BigDecimal) eachSalesItem.get("quantity");
+				BigDecimal unitPrice = (BigDecimal) eachSalesItem.get("unitPrice");
+				
+				List assocCondList= FastList.newInstance();
+				assocCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
+				assocCondList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				assocCondList.add(EntityCondition.makeCondition("quantity", EntityOperator.EQUALS, quantity));
+				
+				List<GenericValue> purOrderItemList = EntityUtil.filterByCondition(purchaseOrders, EntityCondition.makeCondition(assocCondList, EntityOperator.AND));
+				
+				if(UtilValidate.isEmpty(purOrderItemList)){
+					missingPurOrderItems.add(eachSalesItem);
+					continue;
+				}
+				if(purOrderItemList.size() > 1){
+					multiPurOrderItems.add(eachSalesItem);
+					continue;
+				}
+				
+				GenericValue purchaseOrderAssocItem = EntityUtil.getFirst(purOrderItemList);
+				String toOrderItemSeqId = (String) purchaseOrderAssocItem.get("orderItemSeqId");
+				
+				assocCondList.clear();
+				assocCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, salesOrderId));
+				assocCondList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+				assocCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, purchaseOrderId));
+				assocCondList.add(EntityCondition.makeCondition("toOrderItemSeqId", EntityOperator.EQUALS, toOrderItemSeqId));
+				assocCondList.add(EntityCondition.makeCondition("orderItemAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+				
+				List<GenericValue> orderItemAssocExisting = null;
+				try {
+					orderItemAssocExisting = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition(assocCondList, EntityOperator.AND), null, null, null, false);
+				} catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+				}
+				
+				if(UtilValidate.isNotEmpty(orderItemAssocExisting)){
+					existingAssociations.add(eachSalesItem);
+					continue;
+				}
+						
+						
+						
+				GenericValue orderItemAssoc = delegator.makeValue("OrderItemAssoc");
+				orderItemAssoc.set("orderId", salesOrderId);
+				orderItemAssoc.set("orderItemSeqId", orderItemSeqId);
+				orderItemAssoc.set("toOrderId", purchaseOrderId);
+				orderItemAssoc.set("toOrderItemSeqId", toOrderItemSeqId);
+				orderItemAssoc.set("orderItemAssocTypeId", "BackToBackOrder");
+				orderItemAssoc.set("shipGroupSeqId", "_NA_");
+				orderItemAssoc.set("toShipGroupSeqId", "_NA_");
+				
+				try {
+					delegator.create(orderItemAssoc);
+				} catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to create orderItemAssoc ", module);
+					return ServiceUtil.returnError("Failed to  create orderItemAssoc " + e);
+				}
+			}
+			
+			
+			
+			
+		}
+		
+		
+		
+		result.put("multiOrderAssocList", multiOrderAssocList);
+        result.put("noOrderAssocList", noOrderAssocList);
+		result.put("missingPurOrderItems", missingPurOrderItems);
+        result.put("existingAssociations", existingAssociations);
+		result.put("multiPurOrderItems", multiPurOrderItems);
+        return result;
+		
+	}
  	
  	
  	
