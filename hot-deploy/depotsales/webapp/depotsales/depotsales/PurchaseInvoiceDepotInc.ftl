@@ -215,8 +215,13 @@
    			 }
 		});*/
 		var invoiceDate = $("#effectiveDate").val();
+		var tallyrefNo = $("#tallyrefNo").val();
+		
 		var invoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "invoiceDate").val(invoiceDate);
+		var tallyrefNoField=jQuery("<input>").attr("type", "hidden").attr("name", "tallyrefNo").val(tallyrefNo);
+		
 		jQuery(formId).append(jQuery(invoiceDateField));
+		jQuery(formId).append(jQuery(tallyrefNoField));
 		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();

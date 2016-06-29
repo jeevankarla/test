@@ -74,6 +74,27 @@
 			orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			
+		
+			exprCondList=[];
+			exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+			EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+			OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+			
+			actualOrderId = "";
+			tallyRefNo = "";
+			if(OrderAss){
+				
+				actualOrderId=OrderAss.toOrderId;
+				
+			}
+			
+			actualOrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", actualOrderId), false);
+			
+			tallyRefNo = actualOrderHeader.tallyRefNo;
+			
+			context.tallyRefNo = tallyRefNo;
+			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR",,"BILL_TO_CUSTOMER") ));
