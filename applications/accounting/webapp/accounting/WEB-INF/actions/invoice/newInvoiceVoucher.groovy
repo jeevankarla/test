@@ -87,11 +87,29 @@ estimatedShipCost = "";
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 orderId = shipmentList.get("primaryOrderId");
-deliveryChallanDate = shipmentList.get("deliveryChallanDate");
+
+deliveryChallanDate = "";
+
+if(shipmentList.get("deliveryChallanDate"))
+ deliveryChallanDate = shipmentList.get("deliveryChallanDate");
+
+ lrNumber = "";
+ if(shipmentList.get("lrNumber"))
 lrNumber = shipmentList.get("lrNumber");
+
+supplierInvoiceId ="";
+if(shipmentList.get("supplierInvoiceId"))
 supplierInvoiceId = shipmentList.get("supplierInvoiceId");
+
+carrierName = "";
+
+if(shipmentList.get("carrierName"))
 carrierName = shipmentList.get("carrierName");
+
+
 estimatedShipCost = shipmentList.get("estimatedShipCost");
+
+
 if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate"))){
 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
