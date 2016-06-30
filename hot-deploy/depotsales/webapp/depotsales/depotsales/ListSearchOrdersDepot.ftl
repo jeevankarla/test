@@ -440,7 +440,7 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
         <tr class="header-row-2">
           <td>Indent Id</td>
           <td>Branch Name</td>
-          <td>Tally Ref.NO</td>
+          <td>Tally PO.NO</td>
           <td>Weaver Name</td>
           <td>Supplier Name</td>
           <td>Indent Date</td>

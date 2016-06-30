@@ -136,7 +136,7 @@
 	        		<option key="orderDate" description="Ascending"/>
 	        	</drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+        <field name="statusId1" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
@@ -405,7 +405,7 @@
                     </sub-hyperlink>
                 </display-entity>
             </field>
-            <field name="tripNum" title="Tally Ref. No."><display/></field>
+            <field name="tripNum" title="Tally Po.No."><display/></field>
             <!-- <field name="vehicleId" title="Vehicle No"><display/></field> -->
             <field name="billToPartyId"><hidden/></field>
             <field name="partyIdTo" ><hidden/></field>
@@ -2452,7 +2452,42 @@
 
 	</form>
 
-    
+    <form name="salePurchaseReport" type="list" list-name="supplierMastersList" view-size="99999">
+<field name="invoiceId" title="invoiceId"><display/></field>
+<field name="invoiceDate" title="invoiceDate"><display/></field>
+<field name="invoiceAmount" title="invoiceAmount"><display/></field>
+<field name="at/OtherTax" title="at/OtherTax"><display/></field>
+<field name="schemeQty" title="schemeQty"><display/></field>
+<field name="subsidyAmt" title="subsidyAmt"><display/></field>
+<field name="userAgency" title="userAgency"><display/></field>
+<field name="cluster" title="cluster"><display/></field>
+<field name="District" title="District"><display/></field>
+<field name="branch" title="branch"><display/></field>
+<field name="sate" title="sate"><display/></field>
+<field name="AgencyType" title="PAN No"><display/></field>
+<field name="Depo" title="Depo"><display/></field>
+ <field name="scheme" title="scheme"><display/></field>
+<field name="orderNo" title="orderNo"><display/></field>
+<field name="indentDate" title="indentDate"><display/></field>
+<field name="custIndDate" title="custIndDate"><display/></field>
+<field name="advance" title="advance"><display/></field>
+<field name="cheque/dd" title="cheque/dd"><display/></field>
+<field name="tallyBillAmt" title="tallyBillAmt"><display/></field>
+<field name="supplierName" title="supplierName"><display/></field>
+<field name="millState" title="millState"><display/></field>
+<field name="source" title="source"><display/></field>
+<field name="poOrderId" title="poOrderId"><display/></field>
+<field name="poorderDate" title="poorderDate"><display/></field>
+<field name="destAddr" title="destAddr"><display/></field>
+<field name="ProductCategoryId" title="ProductCategoryId"><display/></field>
+<field name="itemDescription" title="itemDescription"><display/></field>
+<field name="ledgerName" title="ledgerName"><display/></field>
+<field name="purchaseQuantity" title="purchaseQuantity"><display/></field>
+<field name="salesQuantity" title="ledgerName"><display/></field>
+<field name="ledgerName" title="ledgerName"><display/></field>
+<field name="rate" title="rate"><display/></field>
+
+    </form>
     
     
         
