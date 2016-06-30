@@ -47,7 +47,19 @@ context.branchList = formatList;
  
  Debug.log("supplierFilteredOrderIds===================="+supplierFilteredOrderIds);
  
- 
+ // To filter based on Branch
+ if(parameters.partyIdFrom){
+	 branchCondList = [];
+	 if(UtilValidate.isNotEmpty(supplierFilteredOrderIds)){
+		 branchCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, supplierFilteredOrderIds));
+	 }
+	 branchCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+	 branchCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyIdFrom));
+	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(branchCondList, EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(orderRoleList)){
+		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
+	 }
+ }
 if(UtilValidate.isEmpty(parameters.productId)){
 	
 	
