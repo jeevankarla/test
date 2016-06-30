@@ -334,7 +334,7 @@
 			<widgets>
 				<section>
 					<widgets>
-						<include-form name="CustomerMastersCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+						<include-form name="salePurchaseReport" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
 			</widgets>
