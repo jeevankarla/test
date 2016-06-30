@@ -74,8 +74,8 @@ under the License.
 			   <fo:table-column column-width="100pt"/>               
 				   <fo:table-body>
 				       <fo:table-row>
-				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">P.O.NO: &#160;&#160;&#160;&#160;<#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
-				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;&#160;&#160;TallyRef.No:${tallyRefNo?if_exists}</fo:block></fo:table-cell>       		
+				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">P.O.NO:<#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
+				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;Tally PO.No:${tallyRefNo?if_exists}</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left" keep-together="always" font-size="11pt" number-columns-spanned="2" >&#160;&#160;P.O.DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
