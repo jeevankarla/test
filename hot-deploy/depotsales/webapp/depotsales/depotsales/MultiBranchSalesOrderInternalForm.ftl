@@ -493,29 +493,15 @@
             	return false;
             }
         });
-        
-                
+       
     	grid.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;  
-      		var custId= item['customerName'];
-      		var splited = (((custId.split("["))[1]).split("]"))[0];
-      		var productLabel = item['cProductName']; 
-      		item['productNameStr'] = productLabel;
-      		var custmerID=indcustomerLabelPsbNumMap[custId];
-      		item['customerId'] = splited;
-      		item['psbNumber'] = partyPsbNumber[custmerID];
-      		item['cProductId'] = productLabelIdMap[productLabel];  
-      		grid.invalidateRow(data.length);
-      		data.push(item);
-      		grid.updateRowCount();
-      		grid.render();
+      		setCustomerId(args.item);
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
-	      	
-	      	
+    	    setCustomerIdOnCustomerChange(args.item,args);
 	    });
   	grid.onCellChange.subscribe(function(e,args) {
-
+		  
 	     setUndefinedValues(data[args.row]);
 		 grid.updateRow(args.row);
 		var prod = data[args.row]["cProductId"];
@@ -1150,4 +1136,31 @@
 			row["SERVICE_CHARGE_AMT"] = 0;
 		 }
 	 }
+	 
+	 function setCustomerId(item){
+      		var custId= item['customerName'];
+      		var splited = (((custId.split("["))[1]).split("]"))[0];
+      		var productLabel = item['cProductName']; 
+      		item['productNameStr'] = productLabel;
+      		var custmerID=indcustomerLabelPsbNumMap[custId];
+      		item['customerId'] = splited;
+      		item['psbNumber'] = partyPsbNumber[custmerID];
+      		item['cProductId'] = productLabelIdMap[productLabel];  
+      		grid.invalidateRow(data.length);
+      		data.push(item);
+      		grid.updateRowCount();
+      		grid.render();
+
+}
+
+ function setCustomerIdOnCustomerChange(item,orgs){
+
+ 			 if(orgs.cell==1 && item!= undefined){
+ 			   var custId= item['customerName'];
+      		   var splited = (((custId.split("["))[1]).split("]"))[0];
+      		   data[orgs.row]['customerId'] = splited;
+ 			 }
+      		
+}
+	 
 </script>			
