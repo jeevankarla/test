@@ -55,6 +55,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
 
+
 import java.util.Iterator;
 
 
@@ -134,24 +135,24 @@ public class DepotPurchaseServices{
 		}
 		
 		if(UtilValidate.isNotEmpty(tallyrefNo)){
-				  List conditionList = FastList.newInstance();
+				 /* List conditionList = FastList.newInstance();
 		
 				  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
 				  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
 				  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				  try{
-				  List  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
+	*/			  try{
+				 // List  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
 				  
-				   if(UtilValidate.isNotEmpty(OrderAssocList)){
+				   //if(UtilValidate.isNotEmpty(OrderAssocList)){
 		
-				  GenericValue OrderAssoc = EntityUtil.getFirst(OrderAssocList);
-				  String actualOrderId = (String)OrderAssoc.get("toOrderId");
+				 // GenericValue OrderAssoc = EntityUtil.getFirst(OrderAssocList);
+				  //String actualOrderId = (String)OrderAssoc.get("toOrderId");
 				  
-				  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", actualOrderId), false);
+				  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
 		
 				  OrderHeader.set("tallyRefNo",tallyrefNo);
 				  OrderHeader.store();
-				 }
+				// }
 				
 			}catch (Exception e) {
 				Debug.logError(e, "Problems While Updating Tally Ref No: " + tallyrefNo, module);
@@ -873,7 +874,7 @@ public class DepotPurchaseServices{
 				String invoiceId = (String)result.get("invoiceId");
 				
 				Map itemSeqMap = FastMap.newInstance();
-				
+				int i=0;
 				for (Map<String, Object> prodQtyMap : productQtyList) {
 					
 					String productId = "";
@@ -954,6 +955,29 @@ public class DepotPurchaseServices{
 					}
 					String invItemSeqId = (String) result.get("invoiceItemSeqId");
 					
+					
+					GenericValue shipmentRece = (GenericValue)shipmentReceipts.get(i);
+					String orderItemSeqNo = (String)shipmentRece.get("orderItemSeqId");
+					
+					Map<String, Object> createOrderItemBillingContext = FastMap.newInstance();
+	                createOrderItemBillingContext.put("invoiceId", invoiceId);
+	                createOrderItemBillingContext.put("invoiceItemSeqId", invItemSeqId);
+	                createOrderItemBillingContext.put("orderId", orderId);
+	                createOrderItemBillingContext.put("orderItemSeqId", orderItemSeqNo);
+	               /* //createOrderItemBillingContext.put("itemIssuanceId", itemIssuanceId);
+	                createOrderItemBillingContext.put("quantity", billingQuantity);
+	                createOrderItemBillingContext.put("amount", billingAmount);
+*/	                createOrderItemBillingContext.put("userLogin", userLogin);
+	               /* if ((shipmentReceipt != null) && (shipmentReceipt.getString("receiptId") != null)) {
+	                    createOrderItemBillingContext.put("shipmentReceiptId", shipmentReceipt.getString("receiptId"));
+	                }*/
+
+	                Map<String, Object> createOrderItemBillingResult = dispatcher.runSync("createOrderItemBilling", createOrderItemBillingContext);
+	                if (ServiceUtil.isError(createOrderItemBillingResult)) {
+	                	Debug.logError("Error creating OrderItem Billing", module);	
+						return ServiceUtil.returnError("Error creating OrderItem Billing");
+	                }
+					
 					itemSeqMap.put(productId, invItemSeqId);
 					
 					if(UtilValidate.isNotEmpty(vatItemCtx)){
@@ -990,7 +1014,11 @@ public class DepotPurchaseServices{
 							inventoryItem.store();
 						}
 					}
+					
+					i++;
 				}
+				
+				
 				
 				for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
 					

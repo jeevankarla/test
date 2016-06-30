@@ -57,6 +57,7 @@
 			
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
+			
 			poValue = 0;
 			if(orderHeader){
 				poValue = orderHeader.grandTotal;
@@ -81,8 +82,10 @@
 			EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 			OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 			
+			//Debug.log("orderId=================="+orderId);
+			
 			actualOrderId = "";
-			tallyRefNo = "";
+			/*tallyRefNo = "";
 			if(OrderAss){
 				
 				actualOrderId=OrderAss.toOrderId;
@@ -93,7 +96,7 @@
 			
 			tallyRefNo = actualOrderHeader.tallyRefNo;
 			
-			context.tallyRefNo = tallyRefNo;
+			context.tallyRefNo = tallyRefNo;*/
 			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
