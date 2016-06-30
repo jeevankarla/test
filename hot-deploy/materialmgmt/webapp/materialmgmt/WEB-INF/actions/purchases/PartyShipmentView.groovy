@@ -21,6 +21,7 @@ List branchIds = [];
 		
 		formatMap = [:];
 		formatMap.put("storeName",eachList.get("storeName"));
+		formatMap.put("productStoreName",eachList.get("storeName"));
 		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
 		formatList.addAll(formatMap);
 		branchIds.add(eachList.get("payToPartyId"));
