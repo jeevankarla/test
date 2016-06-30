@@ -2796,6 +2796,7 @@ public class DepotSalesServices{
 			Map onBehalfItemSeqQuotaMap = FastMap.newInstance();
 			 
 			 BigDecimal totalDiscount=BigDecimal.ZERO;
+			 Map onBehalfPrdQuotaMap = FastMap.newInstance();
 			for (Map<String, Object> prodItemMap : indentItemProductList) {
 				String customerId = "";
 				//BigDecimal basicPrice = BigDecimal.ZERO;
@@ -2926,6 +2927,15 @@ public class DepotSalesServices{
 								}
 								totalDiscount=totalDiscount.add(discountAmount);
 								
+								if((UtilValidate.isNotEmpty(onBehalfPrdQuotaMap)) && (UtilValidate.isNotEmpty(onBehalfPrdQuotaMap.get(prodId)))){
+									BigDecimal tempDsc = BigDecimal.ZERO;
+									tempDsc=(BigDecimal) onBehalfPrdQuotaMap.get(prodId);
+									tempDsc=tempDsc.add(discountAmount);
+									onBehalfPrdQuotaMap.put(prodId,tempDsc);
+								}
+								else{
+									onBehalfPrdQuotaMap.put(prodId,discountAmount);
+								}
 								// creating order adjustment for direct 
 								if("N".equals(onBeHalfOf)){
 									String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
@@ -2987,9 +2997,26 @@ public class DepotSalesServices{
 				
 			}
 			 if("Y".equals(onBeHalfOf)){
+				 for(GenericValue eachItem : orderItemValue){
+					 if(UtilValidate.isNotEmpty(onBehalfPrdQuotaMap.get(eachItem.get("productId")))){
+				    	BigDecimal totDisQty = (BigDecimal) onBehalfPrdQuotaMap.get(eachItem.get("productId")); 
+				    	//Debug.log("totDisQty====================="+totDisQty);
+				    	String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+						UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",eachItem.get("orderItemSeqId"),"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totDisQty,
+				                "description", "10 Percent Subsidy on eligible product categories"));
+						try{
+							orderAdjustment.create();
+						}catch (GenericEntityException e) {
+							Debug.logError("Error in creating OrderAdjestments", module);
+							return ServiceUtil.returnError("Error in creating OrderAdjestments");
+						}	
+				    	
+					 }
 				 
 				 
-				 for(Object itemSeq : onBehalfItemSeqQuotaMap.keySet()){
+				 }
+				 /*for(Object itemSeq : onBehalfItemSeqQuotaMap.keySet()){
 				    	String itemSeqId = itemSeq.toString(); 
 				    	BigDecimal totDisQty = (BigDecimal) onBehalfItemSeqQuotaMap.get(itemSeqId); 
 				    	
@@ -3004,7 +3031,7 @@ public class DepotSalesServices{
 							return ServiceUtil.returnError("Error in creating OrderAdjestments");
 						}	
 				    	
-				 }   	
+				 } */  	
 				 
 				
 			 }
