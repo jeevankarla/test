@@ -103,7 +103,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<input type="submit" value="CSV" onClick="javascript:appendParams('productMasters', '<@ofbizUrl>ProductMasters.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
           </tr>
-        <#-->   <tr class="alternate-row">
+           <tr class="alternate-row">
       	   <form id="salesPurchaseReport" name="salesPurchaseReport" method="post" action="<@ofbizUrl>indentHeadReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Sales and Purchase Report</td>
              <td width="10%">&nbsp;From<input  type="text" size="15pt" id="salesPurchaseReportFRO" readonly  name="partyfromDate"/></td>
@@ -116,9 +116,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>
 			  <td></td>
-             <td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+             <td width="5%"><input type="submit" value="CSV" class="buttontext"/></td>
            </form>
-        </tr> -->
+        </tr> 
           <tr class="alternate-row">
 			<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Sale Book Report Detail</td>
