@@ -465,5 +465,13 @@
         <attribute name="multiPurOrderItems" type="List" mode="OUT" optional="true"/>
     </service>
     
+    <service name="addTaxToPurchaseOrder" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="addTaxToPurchaseOrder">
+        <description>addTaxToPurchaseOrder</description>
+        <attribute name="orderList" type="List" mode="IN" optional="true"/>
+        
+        <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    
 </services>
 
