@@ -469,5 +469,14 @@ under the License.
    <InvoiceItemType createdStamp="2016-06-28 12:16:24.0" createdTxStamp="2016-06-28 12:16:24.0" description="YARN SALE" invoiceItemTypeId="INV_FPROD_ITEM" lastUpdatedStamp="2016-06-28 12:19:49.0" lastUpdatedTxStamp="2016-06-28 12:19:49.0"/> 
    <Enumeration createdStamp="2016-06-27 19:39:58.0" createdTxStamp="2016-06-27 19:39:58.0" description="Opening Balance Tenant Configurations" enumId="OB_INV_SQUENCE" enumTypeId="TENANTCONF_TYPE" lastUpdatedStamp="2016-06-27 19:39:58.0" lastUpdatedTxStamp="2016-06-27 19:39:58.0" sequenceId="1"/> 
    
+	
+   <OrderAdjustmentType orderAdjustmentTypeId="ADDITIONAL_CHARGES" description="Additional Charges"/> 
+	
+
+	<OrderAdjustmentType orderAdjustmentTypeId="INSURANCE_CHGS" parentTypeId="ADDITIONAL_CHARGES" description="Insurance Charges"/> 
+	<OrderAdjustmentType orderAdjustmentTypeId="PACKING_FORWARDIG" parentTypeId="ADDITIONAL_CHARGES" description="Packing And Forwarding Charges"/>
+	<OrderAdjustmentType orderAdjustmentTypeId="OTHER_CHARGES" parentTypeId="ADDITIONAL_CHARGES" description="Other Charges"/> 	
+	<OrderAdjustmentType orderAdjustmentTypeId="CESS" parentTypeId="ADDITIONAL_CHARGES" description="Cess"/> 
+
 
 </entity-engine-xml>

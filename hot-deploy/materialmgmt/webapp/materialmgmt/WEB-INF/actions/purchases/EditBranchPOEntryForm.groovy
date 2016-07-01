@@ -500,7 +500,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("bundleWght",bundleWght);
 		newObj.put("baleQty",baleQty);
 		newObj.put("cProductId",eachItem.productId);
-		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
+		newObj.put("cProductName", prodDetail.description);
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);

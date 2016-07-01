@@ -703,18 +703,18 @@ function populateData(){
 									</div>
 			             		</div>
 			             		<br/>
-								<#--<center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center>	-->
+								<center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center>	
 								<br/>		             		
 							</div>
 							
-							<#--<div class="screenlet-title-bar" id="titleScreen">
+							<div class="screenlet-title-bar" id="titleScreen">
 								<div class="grid-header" style="width:80%">
 									<label>Other Charges</label>
 								</div>
 								<div id="myGrid2" style="width:80%;height:150px;">
 									<div class="grid-header" style="width:80%">
 								</div>
-							</div>-->
+							</div>
 						</div>
 					</div>
 				</div>
