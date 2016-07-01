@@ -5963,5 +5963,23 @@ public class InvoiceServices {
         
 	        result.put("AcctgTransAndEntries", AcctgTransAndEntries);
 	        return result;
-    }	
+    }
+	
+	public static String getInvoiceSequence(Delegator delegator, String invoiceId) {
+        GenericValue invSeqObject = null;
+        try {
+			List<GenericValue> invoiceSeqList = delegator.findList("BillOfSaleInvoiceSequence", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(invoiceSeqList)){
+				invSeqObject = EntityUtil.getFirst(invoiceSeqList);
+			}
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error finding BillOfSaleInvoiceSequence in getInvoiceSequence", module);
+        }
+        if (invSeqObject == null || invSeqObject.getString("invoiceSequence") == null) {
+            return invoiceId;
+        } else {
+            return invSeqObject.getString("invoiceSequence");
+        }
+    }
+	
 }
