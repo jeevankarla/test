@@ -10567,6 +10567,263 @@ public class DepotSalesServices{
 		
 	}
  	
+ 	public static Map<String, Object> addTaxToPurchaseOrder(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+		List orderList = FastList.newInstance();
+		Debug.log("orderList ========= 111 ==============="+orderList);
+		//BigDecimal vatPercent = (BigDecimal) context.get("vatPercent");
+		
+		orderList.add("WS10753");
+		orderList.add("WS10798");
+		orderList.add("WS10807");
+		orderList.add("WS10815");
+		orderList.add("WS10817");
+		orderList.add("WS10819");
+		orderList.add("WS10825");
+		orderList.add("WS10827");
+		orderList.add("WS11594");
+		orderList.add("WS10853");
+		orderList.add("WS10859");
+		orderList.add("WS10867");
+		orderList.add("WS10954");
+		orderList.add("WS10869");
+		orderList.add("WS10875");
+		orderList.add("WS11340");
+		orderList.add("WS11337");
+		orderList.add("WS10906");
+		orderList.add("WS11074");
+		orderList.add("WS11005");
+		orderList.add("WS11008");
+		orderList.add("WS11010");
+		orderList.add("WS11021");
+		orderList.add("WS11068");
+		orderList.add("WS11070");
+		orderList.add("WS11072");
+		orderList.add("WS11395");
+		orderList.add("WS11081");
+		orderList.add("WS11085");
+		orderList.add("WS11293");
+		orderList.add("WS11291");
+		orderList.add("WS11099");
+		orderList.add("WS11107");
+		orderList.add("WS11111");
+		orderList.add("WS11113");
+		orderList.add("WS11115");
+		orderList.add("WS11117");
+		orderList.add("WS11121");
+		orderList.add("WS11123");
+		orderList.add("WS11125");
+		orderList.add("WS11127");
+		orderList.add("WS11163");
+		orderList.add("WS11169");
+		orderList.add("WS11175");
+		orderList.add("WS11183");
+		orderList.add("WS11188");
+		orderList.add("WS11597");
+		orderList.add("WS11281");
+		orderList.add("WS11283");
+		orderList.add("WS11285");
+		orderList.add("WS11287");
+		orderList.add("WS11289");
+		orderList.add("WS11297");
+		orderList.add("WS11404");
+		orderList.add("WS11299");
+		orderList.add("WS11301");
+		orderList.add("WS11303");
+		orderList.add("WS11305");
+		orderList.add("WS11307");
+		orderList.add("WS11309");
+		orderList.add("WS11311");
+		orderList.add("WS11313");
+		orderList.add("WS11315");
+		orderList.add("WS11317");
+		orderList.add("WS11319");
+		orderList.add("WS11321");
+		orderList.add("WS11323");
+		orderList.add("WS11415");
+		orderList.add("WS11419");
+		orderList.add("WS11422");
+		orderList.add("WS11430");
+		orderList.add("WS11436");
+		orderList.add("WS11440");
+		orderList.add("WS11445");
+		orderList.add("WS11450");
+		orderList.add("WS11453");
+		orderList.add("WS11457");
+		orderList.add("WS11460");
+		orderList.add("WS11464");
+		orderList.add("WS11471");
+		orderList.add("WS11473");
+		orderList.add("WS11479");
+		orderList.add("WS11485");
+		orderList.add("WS11488");
+		orderList.add("WS11490");
+		orderList.add("WS11492");
+		orderList.add("WS11502");
+		orderList.add("WS11504");
+		orderList.add("WS11506");
+		orderList.add("WS11510");
+		orderList.add("WS11512");
+		orderList.add("WS11516");
+		orderList.add("WS11518");
+		orderList.add("WS11522");
+		orderList.add("WS11590");
+		orderList.add("WS11581");
+		orderList.add("WS11583");
+		orderList.add("WS10801");
+		orderList.add("WS12333");
+		orderList.add("WS12330");
+		orderList.add("WS12909");
+		orderList.add("WS12884");
+		orderList.add("WS12496");
+		orderList.add("WS12252");
+		orderList.add("WS12836");
+		orderList.add("WS12561");
+		orderList.add("WS12641");
+		orderList.add("WS12643");
+		orderList.add("WS12566");
+		orderList.add("WS12635");
+		orderList.add("WS12475");
+		orderList.add("WS12960");
+		orderList.add("WS12974");
+		orderList.add("WS12954");
+		orderList.add("WS12938");
+		orderList.add("WS12928");
+		orderList.add("WS12942");
+		orderList.add("WS12922");
+		orderList.add("WS12915");
+		orderList.add("WS12547");
+		orderList.add("WS12842");
+		orderList.add("WS12846");
+		orderList.add("WS12866");
+		orderList.add("WS12859");
+		orderList.add("WS12254");
+		orderList.add("WS12257");
+		orderList.add("WS12895");
+		orderList.add("WS12904");
+		orderList.add("WS12870");
+		orderList.add("WS12233");
+		orderList.add("WS12240");
+		orderList.add("WS12890");
+		orderList.add("WS12243");
+		orderList.add("WS12479");
+		orderList.add("WS12491");
+		orderList.add("WS12501");
+		orderList.add("WS12505");
+		orderList.add("WS12533");
+		orderList.add("WS12540");
+		orderList.add("WS12293");
+		orderList.add("WS12302");
+		orderList.add("WS12312");
+		orderList.add("WS12830");
+		orderList.add("WS12834");
+		orderList.add("WS12828");
+		orderList.add("WS12826");
+		orderList.add("WS12820");
+		orderList.add("WS12818");
+		orderList.add("WS12805");
+		orderList.add("WS12807");
+		orderList.add("WS12814");
+		orderList.add("WS12816");
+		orderList.add("WS12264");
+		orderList.add("WS12270");
+		orderList.add("WS12276");
+		orderList.add("WS12698");
+		orderList.add("WS12288");
+		orderList.add("WS12614");
+		orderList.add("WS12579");
+		orderList.add("WS12587");
+		orderList.add("WS12594");
+		orderList.add("WS12600");
+		orderList.add("WS12322");
+		orderList.add("WS13143");
+		orderList.add("WS12324");
+		orderList.add("WS13153");
+		orderList.add("WS13139");
+		orderList.add("WS13128");
+		orderList.add("WS13141");
+		orderList.add("WS13145");
+		orderList.add("WS12326");
+		orderList.add("WS13073");
+		orderList.add("WS13070");
+		orderList.add("WS13114");
+		orderList.add("WS13097");
+		orderList.add("WS13059");
+		orderList.add("WS13050");
+		orderList.add("WS13064");
+		orderList.add("WS13083");
+		orderList.add("WS13092");
+		orderList.add("WS13046");
+		orderList.add("WS13068");
+		orderList.add("WS12337");
+		orderList.add("WS13023");
+		orderList.add("WS13025");
+		orderList.add("WS13031");
+		orderList.add("WS13033");
+		orderList.add("WS12608");
+		orderList.add("WS12486");
+
+		
+		Debug.log("orderList ========== 222 =============="+orderList);
+		
+		String orderAdjustmentId = null;
+		for(int i=0; i<orderList.size(); i++){
+			String orderId = (String)orderList.get(i);
+			Debug.log("orderId ========================"+orderId);
+			List<GenericValue> items = null;
+			try{
+	  			items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			}catch(GenericEntityException ex){
+	  			Debug.log("Problem in fetching orderItems");
+	  		}	
+			
+			Debug.log("items ========================"+items);
+	  			
+	  			
+	  			for (GenericValue item : items) {
+	  				Debug.log("item ========================"+item);
+	  				String orderItemSeqId = item.getString("orderItemSeqId");
+	  				BigDecimal qty=item.getBigDecimal("quantity");
+	  				BigDecimal unitPrice=item.getBigDecimal("unitPrice");
+	  				
+	  				Map<String, Object> createOrderAdjustmentContext = FastMap.newInstance();
+	  				createOrderAdjustmentContext.put("orderId", orderId);
+	  				createOrderAdjustmentContext.put("orderItemSeqId", orderItemSeqId);
+	  		        createOrderAdjustmentContext.put("orderAdjustmentTypeId", "VAT_PUR");
+	  		        createOrderAdjustmentContext.put("description", "Value Added Tax On Purchase");
+	  		        createOrderAdjustmentContext.put("sourcePercentage", new BigDecimal("5.25"));
+	  		        createOrderAdjustmentContext.put("amount", qty.multiply( unitPrice.add( unitPrice.multiply(new BigDecimal("0.0525"))    )   ) );
+	  		        createOrderAdjustmentContext.put("userLogin", userLogin);
+	  		        try {
+	  		            Map<String, Object> createOrderAdjustmentResult = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentContext);
+	  		          Debug.log("createOrderAdjustmentResult  ================="+createOrderAdjustmentResult);
+	  		            orderAdjustmentId = (String) createOrderAdjustmentResult.get("orderAdjustmentId");
+	  		        } catch (GenericServiceException e) {
+	  		            Debug.logError(e, "Problems Creating Order Adjustment", module);
+	  		            return ServiceUtil.returnError("Problems Creating Order Adjustment");
+	  		        }
+	  			}
+	  		
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		result.put("orderAdjustmentId", orderAdjustmentId);
+        
+        return result;
+		
+	}
  	
  	
  	
