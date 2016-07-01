@@ -10824,7 +10824,7 @@ public class DepotSalesServices{
 	  		        createOrderAdjustmentContext.put("orderAdjustmentTypeId", "VAT_PUR");
 	  		        createOrderAdjustmentContext.put("description", "Value Added Tax On Purchase");
 	  		        createOrderAdjustmentContext.put("sourcePercentage", new BigDecimal("5.25"));
-	  		        createOrderAdjustmentContext.put("amount", qty.multiply( unitPrice.add( unitPrice.multiply(new BigDecimal("0.0525"))    )   ) );
+	  		        createOrderAdjustmentContext.put("amount", qty.multiply( unitPrice.multiply(new BigDecimal("0.0525"))       ) );
 	  		        createOrderAdjustmentContext.put("userLogin", userLogin);
 	  		        try {
 	  		            Map<String, Object> createOrderAdjustmentResult = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentContext);
