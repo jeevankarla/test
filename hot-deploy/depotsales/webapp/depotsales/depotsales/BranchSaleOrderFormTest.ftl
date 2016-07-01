@@ -285,8 +285,15 @@
 			  		}
 	    			
 	    			var transporterId = $("#transporterId").val();
+	    			var tallyReferenceNo = $("#tallyReferenceNo").val();
+	    			
+	    			
 			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+			         var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
+					
+					
 					jQuery(indententryinit).append(jQuery(transporte));
+					jQuery(indententryinit).append(jQuery(tallyReferenceNo));
 					
 	    			$('#indententryinit').submit();
 	    			return false;   
@@ -797,6 +804,13 @@ function fillPartyQuota(partyId){
       	}
 	 	
 	 	
+	 	function tallyRefMethod(){
+           	  	
+          var tallyReferenceNo = $("#tallyReferenceNo").val();  	  	
+          $("#ediTallyRefNo").val(tallyReferenceNo);  
+        
+        }
+	 	
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -1113,15 +1127,15 @@ function fillPartyQuota(partyId){
 			        	</#if>
 			        	
 			        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
-			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if tallyReferenceNo?exists && tallyReferenceNo?has_content>  
-					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyReferenceNo?if_exists}"/>  
+							<#if tallyRefNumber?exists && tallyRefNumber?has_content>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${tallyReferenceNo}               
+				                      <input type="text" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyRefNumber?if_exists}" onblur=tallyRefMethod() />
+				                      <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
+				                      
+				                        
 				            		</div>
 				          		</td>       
-				          	</#if>
 				    	<#else>
 							<#if parameters.tallyReferenceNo?exists && parameters.tallyReferenceNo?has_content>  
 					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>  
@@ -1132,12 +1146,12 @@ function fillPartyQuota(partyId){
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo"/>
+				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo" onblur=tallyRefMethod() />
+				          			 <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
 				          		</td>
 				          		
 				          	</#if>
-			        	</#if>
-						
+						</#if>
 	               	</tr>
 	               	<tr>
 	               		<td>&nbsp;</td>

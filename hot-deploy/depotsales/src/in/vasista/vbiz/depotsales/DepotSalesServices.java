@@ -1505,6 +1505,7 @@ public class DepotSalesServices{
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String referenceNo = (String) request.getParameter("referenceNo");
 		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
+		String ediTallyRefNo = (String) request.getParameter("ediTallyRefNo");
 		Debug.log("referenceNo ===="+referenceNo);
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
@@ -2030,6 +2031,7 @@ public class DepotSalesServices{
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("referenceNo", referenceNo);
 		processOrderContext.put("tallyRefNo", tallyReferenceNo);
+		processOrderContext.put("ediTallyRefNo", ediTallyRefNo);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);
@@ -2139,6 +2141,7 @@ public class DepotSalesServices{
 	  	String partyGeoId = (String) context.get("partyGeoId");
 	  	String partyId = (String) context.get("partyId");
 	  	String tallyReferenceNo = (String) context.get("tallyRefNo");
+	  	String ediTallyRefNo = (String) context.get("ediTallyRefNo");
 	  	
 	  	String contactMechId = (String) context.get("contactMechId");
 	  	String belowContactMechId = (String) context.get("belowContactMechId");
@@ -3042,7 +3045,11 @@ public class DepotSalesServices{
 					BigDecimal grandTotal = BigDecimal.ZERO;
 				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
 				     orderHeaderDetail.set("grandTotal", grandTotal.add(totalDiscount));
+				      if(UtilValidate.isNotEmpty(tallyReferenceNo))	 
 				     orderHeaderDetail.set("tallyRefNo",tallyReferenceNo);
+				     else  if(UtilValidate.isNotEmpty(ediTallyRefNo))	
+				      orderHeaderDetail.set("tallyRefNo",ediTallyRefNo);
+				     
 				     orderHeaderDetail.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);

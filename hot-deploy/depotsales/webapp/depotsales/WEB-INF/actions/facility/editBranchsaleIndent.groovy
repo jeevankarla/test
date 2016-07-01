@@ -24,6 +24,7 @@
 	
 	partyId = parameters.partyId;
 	
+	tallyReferenceNo = "";
 	context.partyId=parameters.partyId;
 	conditionList=[];
 	if(parameters.partyId){
@@ -130,6 +131,10 @@
 	dctx = dispatcher.getDispatchContext();
 	effectiveDate = parameters.effectiveDate;
 	changeFlag=parameters.changeFlag;
+	
+	Debug.log("changeFlag====1454121545============"+changeFlag);
+	
+	
 	subscriptionProdList = [];
 	displayGrid = true;
 	effDateDayBegin="";
@@ -137,6 +142,17 @@
 	
 	effDateDayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+	
+	tallyRefNumber = orderHeader.get("tallyRefNo");
+	
+	Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
+	
+	context.tallyRefNumber=tallyRefNumber;
+	
+	context.changeFlag = changeFlag;
+	
+	
+	
 	if(UtilValidate.isNotEmpty(orderHeader)){
 		effDateDayBegin=orderHeader.estimatedDeliveryDate;
 	}
@@ -166,6 +182,8 @@
 			suppPartyName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, suplierPartyId, false);
 		}
 	}
+	
+	Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
 	context.suplierPartyId=suplierPartyId;
 	context.suplierPartyName=suppPartyName;
 	parameters.suplierPartyId=suplierPartyId;
@@ -457,6 +475,8 @@
 		
 		
 	}
+	
+	Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
 	context.dataJSON = orderItemsJSON;
 	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
 	

@@ -2471,6 +2471,9 @@
 			<field name="indentDate" title="indentDate"><display/></field>
 			<field name="custIndDate" title="custIndDate"><display/></field>
 			<field name="advance" title="advance"><display/></field>
+			<field name="paidAmt" title="advance"><display/></field>
+			<field name="appliedAmt" title="advance"><display/></field>
+			<field name="balance" title="advance"><display/></field>
 			<field name="cheque/dd" title="cheque/dd"><display/></field>
 			<field name="tallyBillAmt" title="tallyBillAmt"><display/></field>
 			<field name="supplierName" title="supplierName"><display/></field>
