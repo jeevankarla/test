@@ -28,6 +28,11 @@ import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 orderId = parameters.orderId;
+orderNo = "";
+if(UtilValidate.isNotEmpty(parameters.orderNo)){
+	orderNo = parameters.orderNo;
+}
+context.orderNo = orderNo;
 dctx = dispatcher.getDispatchContext();
 
 supplierId = "";
