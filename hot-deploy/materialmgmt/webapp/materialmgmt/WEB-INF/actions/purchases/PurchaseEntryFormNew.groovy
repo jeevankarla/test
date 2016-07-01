@@ -140,7 +140,8 @@ if(displayGrid){
 
 paymentTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","FEE_PAYMENT_TERM"));
 deliveryTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","DELIVERY_TERM"));
-otherTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","OTHERS"));
+//otherTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","OTHERS"));
+otherTerms = delegator.findByAnd("OrderAdjustmentType",UtilMisc.toMap("parentTypeId","ADDITIONAL_CHARGES"));
 
 JSONArray paymentTermsJSON = new JSONArray();
 JSONArray deliveryTermsJSON = new JSONArray();
@@ -168,12 +169,12 @@ JSONObject otherTermsLabelIdJSON=new JSONObject();
 
 otherTerms.each{eachItem ->
 	newObj = new JSONObject();
-	newObj.put("value",eachItem.termTypeId);
-	newObj.put("label",eachItem.termTypeId +" [ " +eachItem.description+"]");
+	newObj.put("value",eachItem.orderAdjustmentTypeId);
+	newObj.put("label",eachItem.orderAdjustmentTypeId +" [ " +eachItem.description+"]");
 	otherTermsJSON.add(newObj);
 	
-	otherTermsLabelJSON.put(eachItem.termTypeId, eachItem.description);
-	otherTermsLabelIdJSON.put(eachItem.termTypeId +" [ " +eachItem.description+"]", eachItem.termTypeId);
+	otherTermsLabelJSON.put(eachItem.orderAdjustmentTypeId, eachItem.description);
+	otherTermsLabelIdJSON.put(eachItem.orderAdjustmentTypeId +" [ " +eachItem.description+"]", eachItem.orderAdjustmentTypeId);
 	
 }
 

@@ -1167,7 +1167,8 @@ public class DepotPurchaseServices{
 		Timestamp effectiveDate = UtilDateTime.nowTimestamp();
 		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-		List<Map> itemDetail = FastList.newInstance();;
+		List<Map> itemDetail = FastList.newInstance();
+		List<Map> otherChargesList = FastList.newInstance();
 		Timestamp orderDate = UtilDateTime.nowTimestamp();
 		BigDecimal grandTotal =BigDecimal.ZERO;
 		Map resultMap = FastMap.newInstance();
@@ -1232,6 +1233,77 @@ public class DepotPurchaseServices{
 				  
 					Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 					String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+					
+					
+					String termTypeInput= (String) paramMap.get("otherTermId" + thisSuffix);
+					if (UtilValidate.isNotEmpty(termTypeInput)) {
+						String otherTermId = "";
+						String applicableTo = "ALL";
+						String termValueStr = "";
+						String termDaysStr = "";
+						String description = "";
+						String uomId = "INR";
+						BigDecimal termValue = BigDecimal.ZERO;
+						BigDecimal termDays = BigDecimal.ZERO;
+						
+						if (paramMap.containsKey("otherTermId" + thisSuffix)) {
+							otherTermId = (String) paramMap.get("otherTermId" + thisSuffix);
+						}
+						
+						if (paramMap.containsKey("applicableTo" + thisSuffix)) {
+							applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
+						}
+						if (paramMap.containsKey("adjustmentValue" + thisSuffix)) {
+							termValueStr = (String) paramMap.get("adjustmentValue" + thisSuffix);
+						}
+						
+						if (paramMap.containsKey("termDays" + thisSuffix)) {
+							termDaysStr = (String) paramMap.get("termDays" + thisSuffix);
+						}
+						if (paramMap.containsKey("description" + thisSuffix)) {
+							description = (String) paramMap.get("description" + thisSuffix);
+						}
+						if (paramMap.containsKey("uomId" + thisSuffix)) {
+							uomId = (String) paramMap.get("uomId" + thisSuffix);
+						}
+						if(UtilValidate.isNotEmpty(termValueStr)){
+							try {
+								termValue = new BigDecimal(termValueStr);
+							} catch (Exception e) {
+								Debug.logError(e, "Problems parsing term value string: " + termValueStr, module);
+								request.setAttribute("_ERROR_MESSAGE_", "Problems parsing term value string: " + termValueStr);
+								return "error";
+							}
+						}
+						if(UtilValidate.isNotEmpty(termDaysStr)){
+							try {
+								termDays = new BigDecimal(termDaysStr);
+							} catch (Exception e) {
+								Debug.logError(e, "Problems parsing term days string: " + termDaysStr, module);
+								request.setAttribute("_ERROR_MESSAGE_", "Problems parsing term days string: " + termDaysStr);
+								return "error";
+							}
+						}
+						
+						if(UtilValidate.isNotEmpty(otherTermId) && termValue.compareTo(BigDecimal.ZERO)>0){
+							Map otherChargesDetail = FastMap.newInstance();
+							otherChargesDetail.put("otherTermId", otherTermId);
+							otherChargesDetail.put("adjustmentValue", termValue);
+							otherChargesDetail.put("applicableTo", applicableTo);
+							otherChargesDetail.put("termDays", termDays);
+							otherChargesDetail.put("uomId", uomId);
+							otherChargesDetail.put("description", description);
+							otherChargesList.add(otherChargesDetail);
+						}
+					}
+					
+					
+					
+					
+					
+					
+					
+					
 					
 					String productInput= (String) paramMap.get("productId" + thisSuffix);
 					//invoke if only not empty
@@ -1412,7 +1484,7 @@ public class DepotPurchaseServices{
 				}else{
 					effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				}
-			
+				
 				Map processOrderContext = FastMap.newInstance();
 
 				//String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
@@ -1429,6 +1501,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("partyId", partyId);
 				processOrderContext.put("grandTotal", grandTotal);
 				processOrderContext.put("otherTerms", otherTermDetail);
+				processOrderContext.put("otherChargesList", otherChargesList);
 				processOrderContext.put("adjustmentDetail", adjustmentDetail);
 				processOrderContext.put("billFromPartyId", partyId);
 				processOrderContext.put("issueToDeptId", "");
@@ -1580,6 +1653,7 @@ public class DepotPurchaseServices{
 	  	String shipToPartyId = (String) context.get("shipToPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
 	  	List<Map> termsList = (List)context.get("termsList");
+	  	List<Map> otherChargesList = (List) context.get("otherChargesList");
 	  	List<Map> otherChargesAdjustment = (List)context.get("adjustmentDetail");
 	  	List<Map> otherTermDetail = (List)context.get("otherTerms");
 	  	String incTax = (String)context.get("incTax");
@@ -1680,6 +1754,7 @@ public class DepotPurchaseServices{
 				
 				String remarks = "";
 				int count = 0;
+				BigDecimal totalBasicAmount = BigDecimal.ZERO;
 				for (Map<String, Object> prodQtyMap : productQtyList) {
 					List taxList=FastList.newInstance();
 					
@@ -1831,6 +1906,37 @@ public class DepotPurchaseServices{
 						}
 						count++;
 						
+						totalBasicAmount = totalBasicAmount.add(quantity.multiply(unitPrice));
+						
+						for(Map chargesMap : otherChargesList){
+
+							Map chgDetailMap = FastMap.newInstance();
+							
+							BigDecimal adjustmentValue = (BigDecimal) chargesMap.get("adjustmentValue");
+							BigDecimal adjAmt = (BigDecimal) chargesMap.get("adjustmentValue");
+							if(UtilValidate.isNotEmpty(chargesMap.get("uomId")) && chargesMap.get("uomId").equals("PERCENT")){
+								chgDetailMap.put("sourcePercentage",adjustmentValue);
+								adjAmt = (adjustmentValue.divide(new BigDecimal("100"))).multiply(unitPrice);
+							}
+							adjAmt = adjAmt.multiply(quantity);
+							
+							if(UtilValidate.isNotEmpty(chargesMap.get("applicableTo")) && !chargesMap.get("applicableTo").equals("ALL")){
+								if(chargesMap.get("applicableTo").equals(productId)){
+									
+									chgDetailMap.put("orderAdjustmentTypeId",chargesMap.get("otherTermId"));
+									chgDetailMap.put("description",chargesMap.get("otherTermId"));
+									chgDetailMap.put("amount",adjAmt);
+									//chgDetailMap.put("taxAuthGeoId", "IND");
+									
+									GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", chgDetailMap);
+					 				item.addAdjustment(orderAdjustment);
+									
+					 				unitListPrice.add(adjAmt);
+					 				otherChargesList.remove(chargesMap);
+								}
+							}
+							
+						}
 						//item.setTaxDetails(taxList);
 						
 						for(int i=0; i<taxList.size(); i++){
@@ -1842,6 +1948,9 @@ public class DepotPurchaseServices{
 				 				unitListPrice.add((BigDecimal) taxMap.get("amount"));
 							}
 						}
+						
+						
+						
 						
 						item.setListPrice(unitListPrice);
 		    		
@@ -1948,6 +2057,40 @@ public class DepotPurchaseServices{
 				  	}
 				}
 				
+				//List wholeAdjustmentList = FastList.newInstance();
+				//wholeAdjustmentList.addAll(otherChargesList);
+				
+				for(Map chargesMap : otherChargesList){
+
+					Map chgDetailMap = FastMap.newInstance();
+					
+					BigDecimal adjustmentValue = (BigDecimal) chargesMap.get("adjustmentValue");
+					BigDecimal adjAmt = (BigDecimal) chargesMap.get("adjustmentValue");
+					if(UtilValidate.isNotEmpty(chargesMap.get("uomId")) && chargesMap.get("uomId").equals("PERCENT")){
+						chgDetailMap.put("sourcePercentage",adjustmentValue);
+						adjAmt = (adjustmentValue.divide(new BigDecimal("100"))).multiply(totalBasicAmount);
+					}
+					chgDetailMap.put("orderId",orderId);
+					chgDetailMap.put("orderAdjustmentTypeId",chargesMap.get("otherTermId"));
+					chgDetailMap.put("description",chargesMap.get("otherTermId"));
+					chgDetailMap.put("amount",adjAmt);
+					chgDetailMap.put("userLogin",userLogin);
+					//chgDetailMap.put("taxAuthGeoId", "IND");
+					Map adjResultMap=FastMap.newInstance();
+					try{
+			  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",chgDetailMap);  		  		 
+			  	 		if (ServiceUtil.isError(adjResultMap)) {
+			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+			  	 			Debug.logError(errMsg , module);
+			  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+			  	 		}
+			  	 	}catch (Exception e) {
+			  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+				  		return adjResultMap;			  
+				  	}
+					otherChargesList.remove(chargesMap);
+				}
+				
 				Map resetTotalCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 				resetTotalCtx.put("orderId", orderId);
 				Map resetMap=FastMap.newInstance();
@@ -1984,9 +2127,9 @@ public class DepotPurchaseServices{
 				
 				//update PurposeType
 				try{
-				GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-				orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
-				orderHeaderPurpose.store();
+					GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+					orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
+					orderHeaderPurpose.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
