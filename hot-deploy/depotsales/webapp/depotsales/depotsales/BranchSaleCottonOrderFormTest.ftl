@@ -729,7 +729,12 @@
       
       	}
 	 	
-	 	
+	 	function tallyRefMethod(){
+           	  	
+          var tallyReferenceNo = $("#tallyReferenceNo").val();  	  	
+          $("#ediTallyRefNo").val(tallyReferenceNo);  
+        
+        }
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -1011,16 +1016,14 @@
 	               	<tr>
 		       			<td>&nbsp;</td>
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
-			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-							<#if tallyReferenceNo?exists && tallyReferenceNo?has_content>  
-					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyReferenceNo?if_exists}"/>  
+							<#if tallyRefNumber?exists && tallyRefNumber?has_content>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
-				               			${tallyReferenceNo}               
+				                      <input type="text" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyRefNumber?if_exists}" onblur=tallyRefMethod() />
+				                      <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
 				            		</div>
 				          		</td>       
-				          	</#if>
-				    	<#else>
+	    	                 <#else>
 							<#if parameters.tallyReferenceNo?exists && parameters.tallyReferenceNo?has_content>  
 					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>  
 				          		<td valign='middle'>
@@ -1030,10 +1033,9 @@
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo"/>
-				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo" onblur=tallyRefMethod() />
+				          			 <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
 				          		</td>
-				          		
 				          	</#if>
 			        	</#if>
 	               	</tr>	

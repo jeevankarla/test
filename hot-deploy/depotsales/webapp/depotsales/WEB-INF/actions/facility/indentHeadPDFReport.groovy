@@ -393,7 +393,9 @@ if(contactMechesDetails){
 	orderHeaderSequencesfilter = EntityUtil.filterByCondition(orderHeaderSequences, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 	
 	
-	Debug.log("orderHeaderSequencesfilter================"+orderHeaderSequencesfilter);
+	
+	
+	//Debug.log("orderHeaderSequencesfilter================"+orderHeaderSequencesfilter);
 	
 	orderNo ="NA";
 	if(UtilValidate.isNotEmpty(orderHeaderSequencesfilter)){
@@ -411,6 +413,76 @@ if(contactMechesDetails){
 	}
 	
 	
+	//=============================advance Payment=============================================
+	
+	conditonList = [];
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, actualOrderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+	double paidAmt = 0;
+	
+	paymentIdsOfIndentPayment = [];
+	
+	if(OrderPaymentPreference){
+	
+	orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+ 
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+	conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+	
+	paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
+	
+	
+	for (eachPayment in PaymentList) {
+		paidAmt = paidAmt+eachPayment.get("amount");
+	}
+	
+  }
+	
+	
+	double appliedAmt = 0;
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,actualOrderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+	
+	invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
+	
+	if(invoiceIds){
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
+	
+		for (eachList in PaymentApplicationList) {
+			 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
+				appliedAmt = appliedAmt+eachList.amountApplied;
+		}
+	}
+	
+	
+//==============================All Taxes==================================================	
+	
+	double altaxAmt = 0;
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
+
+	if(OrderAdjustment){
+	for (eachAdjment in OrderAdjustment) {
+		
+		if(eachAdjment.orderAdjustmentTypeId != "TEN_PERCENT_SUBSIDY"){
+			altaxAmt = altaxAmt +Double.valueOf( eachAdjment.amount);
+		}
+	}
+	}
+	
+//================================================================	
+	
 	Debug.log("invoiceItemList================="+invoiceItemList.size());
 	
 	double invoAmt = 0;
@@ -426,9 +498,9 @@ if(contactMechesDetails){
 		   
 		   tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 		   
-		   tempMap.put("at/OtherTax", "--");
+		   tempMap.put("at/OtherTax", altaxAmt);
 		   
-		   Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
+		 //  Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
 		   
 		   Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
 		   
@@ -446,8 +518,8 @@ if(contactMechesDetails){
 		   itemOrderId  = OrderItemBilling[0].orderId;
 		   orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
 		   }
-		   Debug.log("itemOrderId============="+itemOrderId);
-		   Debug.log("orderItemSeqId============="+orderItemSeqId);
+		 //  Debug.log("itemOrderId============="+itemOrderId);
+		 //  Debug.log("orderItemSeqId============="+orderItemSeqId);
 		   
 		   
 		   conditionList.clear();
@@ -491,7 +563,7 @@ if(contactMechesDetails){
 			
 			tempMap.put("cluster", "");
 			
-			tempMap.put("District", shipingAdd.get("state"));
+			tempMap.put("District", shipingAdd.get("city"));
 			
 			tempMap.put("branch", groupName);
 			
@@ -515,7 +587,13 @@ if(contactMechesDetails){
 			
 			tempMap.put("custIndDate", "");
 		    
-			tempMap.put("advance", "");
+			tempMap.put("advance", paidAmt);
+			
+			tempMap.put("appliedAmt", appliedAmt);
+			
+			tempMap.put("balance", paidAmt-appliedAmt);
+			
+			tempMap.put("advance", paidAmt);
 			
 			tempMap.put("cheque/dd", "");
 			

@@ -248,6 +248,9 @@
 			var cfcId = $("#cfcs").val();
 			var orderMessage = $("#orderMessage").val();
 			var schemeCategory = $("#schemeCategory").val();
+			var transporterId = $("#transporterId").val();
+			 var tallyReferenceNo = $("#tallyReferenceNo").val();
+				var ediTallyRefNo = $("#ediTallyRefNo").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
 			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
@@ -263,6 +266,9 @@
 			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
+			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
+			
 			
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
@@ -284,6 +290,9 @@
 			jQuery(formId).append(jQuery(schemeCategoryObj));
 			jQuery(formId).append(jQuery(partyGeo));
 			jQuery(formId).append(jQuery(transporterId));
+			jQuery(formId).append(jQuery(tallyReferenceNo));
+			jQuery(formId).append(jQuery(ediTallyRefNo));			
+			
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
