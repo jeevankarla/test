@@ -18,6 +18,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<style>
+.scrollup {
+    width: 35px;
+    height: 35px;
+    position: fixed;
+    bottom: 50px;
+    right: 70px;
+    display: none;
+    text-indent: 300px;
+    background: url('/images/arrow66.png') no-repeat;
+    background-color: lightblue;
+}
+
+
+</style>
+
+
 <input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
 <input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
@@ -56,6 +73,56 @@ $(document).ready(function() {
                     
     	}
 });
+
+
+//========================page Top======================
+
+ $(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            //$('.scrollup').fadeIn();
+              //$('.scrollup').fadeOut(5000);
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+
+    $('.scrollup').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
+
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 37:
+            //alert('left');
+            break;
+        case 38:{
+            $('.scrollup').fadeIn();
+             var scroll = $(window).scrollTop();
+             if(scroll < 50)
+             $('.scrollup').fadeOut();
+            break;
+            }
+        case 39:
+           // alert('right');
+            break;
+        case 40:{
+              $('.scrollup').fadeOut();
+            break;
+              }
+          }
+};
+
+
+//================================================
+
+
+
+
+
 	recursively_ajax();
 });
 
@@ -127,8 +194,8 @@ function drawRow(rowData) {
     
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
     
-    row.append($("<td>" + indentDate + "</td>"));
-    row.append($("<td>" + rowData.orderTotal + "</td>"));
+    row.append($("<td align=right>" + indentDate + "</td>"));
+    row.append($("<td align=right>" + rowData.orderTotal + "</td>"));
 
     //For Indent View
     
@@ -136,7 +203,7 @@ function drawRow(rowData) {
     var orderCustomMethod = "javascript:fetchOrderInformation("+ orderParam + ")";
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="view Order" onclick="'+orderCustomMethod+'">';
     
-    row.append($("<td>" +  viewButton  +"</td>"));
+    row.append($("<td align=center>" +  viewButton  +"</td>"));
    
    //For indent Payment
    
@@ -146,20 +213,20 @@ function drawRow(rowData) {
     var methodParam = '\'' + rowData.orderId + '\',\'' + rowData.partyId+'\','+partyName+','+rowData.orderTotal+','+rowData.balance;
     var customMethod = "javascript:showPaymentEntryForIndentPayment("+ methodParam + ")";
     var inputbox ='<input type=button name="Payment" id=Payment value="Indent Payment" onclick="'+customMethod+'">';
-    row.append($("<td>" +  inputbox  +"</td>"));
+    row.append($("<td align=center>" +  inputbox  +"</td>"));
     }else{
     row.append($("<td></td>"));
     }
     
     if(rowData.orderTotal != rowData.balance)
     {
-     row.append($("<td>Payment Realized</td>"));
+     row.append($("<td align=right>Payment Realized</td>"));
     }else if(rowData.balance == 0){
-     row.append($("<td>Payment Not Received</td>"));
+     row.append($("<td align=right>Payment Received</td>"));
     }else{
-     row.append($("<td>Payment Received</td>"));
+     row.append($("<td align=right>Payment Not Received</td>"));
     }
-    row.append($("<td>" + rowData.paidAmt + "</td>"));
+    row.append($("<td align=right>" + rowData.paidAmt + "</td>"));
     
     $("#totIndents").html("<h10>"+rowData.totalIndents+"</h10>");
 
@@ -217,7 +284,7 @@ function drawRow(rowData) {
  
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
-     <font color="blue">Search:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
+     <font color="blue">Search In Displaying Indents:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
         <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Displayed Indents : <label  align="center" id="displayedIndent"style="color: blue" ></label> </div>
 
   <form name="listOrders" id="listOrders"   method="post" >
@@ -257,4 +324,4 @@ function drawRow(rowData) {
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
          <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
-  
+        <a href="#" class="scrollup">Top</a>
