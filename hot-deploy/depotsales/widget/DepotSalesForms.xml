@@ -136,7 +136,7 @@
 	        		<option key="orderDate" description="Ascending"/>
 	        	</drop-down>
         </field>
-        <field name="statusId1" title="${uiLabelMap.CommonStatus}" position="2">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
@@ -1413,7 +1413,7 @@
 				<field name="passbookId" title="Passbook Number"><display/></field> 
 			    </form>
       <form name="FindOrderPaymentSeach" title="" type="single" target="orderPayment" header-row-style="header-row" default-table-style="basic-table">
-        <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
+          <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
            <drop-down no-current-selected-key="SALES_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
@@ -1426,21 +1426,23 @@
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
-        <field name="orderNo" title="sequenceId"><text-find/></field>
-         <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
-        <field title="Indent Thru Date" name="estimatedDeliveryThruDate"><date-time/></field>
-         <field name="indentDateSort">
+        <field name="tallyRefNO" title="Tally Ref No"><text/></field>
+        <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
+        <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field title="Indent Thru Date" name="estimatedDeliveryThruDate" position="2"><date-time/></field>
+        
+        <!-- <field name="sequenceId"><text-find/></field> -->
+      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="indentDateSort">
 	        	<drop-down allow-empty="false">
 	        		<option key="-orderDate" description="Descending"/>
 	        		<option key="orderDate" description="Ascending"/>
 	        	</drop-down>
         </field>
-        <!-- <field name="sequenceId"><text-find/></field> -->
-      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
-        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
@@ -1448,8 +1450,8 @@
 	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
 	        	</drop-down>
         </field>
-         <field name="findPoFlag"><hidden value="Y"/></field>  
-     	    <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="findPoFlag"><hidden value="Y"/></field>  
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
