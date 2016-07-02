@@ -188,21 +188,24 @@ if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==
 	
 resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 
-fieldsToSelect = ["orderId"] as Set;
-forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
-
-totalIndents = forIndentsCount.size();
+	if(!uniqueOrderIdsList){
+    	fieldsToSelect = ["orderId"] as Set;
+	   forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
+	
+	   totalIndents = forIndentsCount.size();
+	}
 
 }
 else{
 //result = dispatcher.runSync("performFind", UtilMisc.toMap("entityName", "OrderHeader", "inputFields", inputFields,"orderBy",dateSort, "userLogin", userLogin));
 resultList = delegator.find("OrderHeader", cond, null, null, payOrderBy, null);
 
+if(!uniqueOrderIdsList){
 fieldsToSelect = ["orderId"] as Set;
 forIndentsCount = delegator.find("OrderHeader", cond, null, fieldsToSelect, null, null);
 
 totalIndents = forIndentsCount.size();
-
+}
 //resultList = result.listIt;
 }
 
