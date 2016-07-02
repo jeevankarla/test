@@ -27,7 +27,7 @@ under the License.
     display: none;
     text-indent: 300px;
     background: url('/images/arrow66.png') no-repeat;
-    background-color: lightblue;
+    background-color: orange;
 }
 
 
@@ -160,6 +160,9 @@ document.onkeydown = function(e) {
                         document.body.style.overflow = 'hidden';
                          $("#displayedIndent").html("1");
                        }
+                        if(displayedIndent <=20)
+                          $("#totIndents").html("<h10>"+orderData[0].totalIndents+"</h10>");
+                        
                         $('div#blink').hide();
                         drawTable(orderData);   
                        }else{
@@ -376,10 +379,6 @@ function drawRow(rowData) {
         row.append($("<td></td>"));
     
     }
-    
-    
-    
-    $("#totIndents").html("<h10>"+rowData.totalIndents+"</h10>");
 
 }
 

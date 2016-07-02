@@ -28,7 +28,7 @@ under the License.
     display: none;
     text-indent: 300px;
     background: url('/images/arrow66.png') no-repeat;
-    background-color: lightblue;
+    background-color: orange;
 }
 
 
@@ -42,6 +42,7 @@ under the License.
 <input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
+<input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
 
 
 <script type="text/javascript">
@@ -147,6 +148,10 @@ document.onkeydown = function(e) {
                         $('div#orderSpinn').html("");
                          displayedIndent = displayedIndent+orderData.length;
                          $("#displayedIndent").html(displayedIndent);
+                         
+                         if(displayedIndent <=20)
+                          $("#totIndents").html("<h10>"+orderData[0].totalIndents+"</h10>");
+                         
                         $('div#blink').hide();
                         drawTable(orderData);   
                        }else{
@@ -228,7 +233,6 @@ function drawRow(rowData) {
     }
     row.append($("<td align=right>" + rowData.paidAmt + "</td>"));
     
-    $("#totIndents").html("<h10>"+rowData.totalIndents+"</h10>");
 
 }
 
