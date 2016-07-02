@@ -197,6 +197,10 @@
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
+			var orderItemSeqId;
+			if(data[rowCount]["orderItemSeqId"]){
+			orderItemSeqId=data[rowCount]["orderItemSeqId"];
+			}
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
@@ -218,6 +222,7 @@
 		
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
+				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
@@ -225,7 +230,8 @@
 				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 
-				jQuery(formId).append(jQuery(inputProd));				
+				jQuery(formId).append(jQuery(inputProd));
+				jQuery(formId).append(jQuery(inputorderItemSeqId));				
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -702,6 +708,7 @@
 				var udp = data[args.row]['unitPrice'];
 				var kgprice = data[args.row]['KgunitPrice'];
 				var kgUnitPrice;
+				var price;
 				if(udp){
 					var totalPrice = udp;
 					price = totalPrice;

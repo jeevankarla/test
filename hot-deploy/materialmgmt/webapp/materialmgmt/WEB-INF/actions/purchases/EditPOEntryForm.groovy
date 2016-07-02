@@ -38,6 +38,7 @@ purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding
 
 orderEditParamMap = [:];
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	orderInfoDetail = [:];
@@ -255,15 +256,37 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
 		newObj.put("cProductId",eachItem.productId);
+		newObj.put("orderItemSeqId",eachItem.orderItemSeqId);
 		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);
-		uomId=prodDetail.quantityUomId;
-		unitDetails = delegator.findOne("Uom",["uomId":uomId],false);		
-		if(unitDetails){
-			uomDescription = unitDetails.abbreviation;
-			newObj.put("uomDescription",uomDescription);
+		//uomId=prodDetail.quantityUomId;
+		//unitDetails = delegator.findOne("Uom",["uomId":uomId],false);	
+		remarks="";
+		uom="";
+		baleQty=0;
+		bundleWght=0;
+		bundleUnitPrice=0;
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+		if(UtilValidate.isNotEmpty(orderItemDtl)){
+			remarks = (orderItemDtl.get(0)).get("remarks");
+			uom = (orderItemDtl.get(0)).get("Uom");
+			baleQty = (orderItemDtl.get(0)).get("baleQuantity");
+			bundleWght=(orderItemDtl.get(0)).get("bundleWeight");
+			bundleUnitPrice=(orderItemDtl.get(0)).get("bundleUnitPrice");
+			if(uom==null){
+				uom="KGs";
+			}
+			
 		}
-		newObj.put("unitPrice",eachItem.unitPrice);
+		newObj.put("KgunitPrice",eachItem.unitPrice);
+		newObj.put("KgunitPrice",eachItem.unitPrice);
+		newObj.put("remarks",remarks);
+		newObj.put("bundleWeight",bundleWght);
+		newObj.put("baleQuantity",baleQty);
+		newObj.put("cottonUom",uom);
+		newObj.put("unitPrice",bundleUnitPrice);
 		newObj.put("amount", amount);
 		if(eachItem.bedPercent){
 			newObj.put("bedPercent", bedTaxPercent);

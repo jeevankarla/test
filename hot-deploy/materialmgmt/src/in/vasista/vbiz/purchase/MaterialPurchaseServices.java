@@ -2324,6 +2324,14 @@ public class MaterialPurchaseServices {
 			beganTransaction = TransactionUtil.begin(7200);
 		
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			try{
+				List<GenericValue> orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(orderItemDetails)){
+					delegator.removeAll(orderItemDetails);
+				}
+			}catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive orderItemDetail ", module);
+			}
 			BigDecimal totalBedAmount = BigDecimal.ZERO;
 			BigDecimal totalBedCessAmount = BigDecimal.ZERO;
 			BigDecimal totalBedSecCessAmount = BigDecimal.ZERO;
@@ -2350,14 +2358,31 @@ public class MaterialPurchaseServices {
 				BigDecimal bedcessAmount = BigDecimal.ZERO;
 				BigDecimal bedseccessAmount = BigDecimal.ZERO;
 				BigDecimal bedseccessPercent = BigDecimal.ZERO;
+				String orderItemSeqId="";
+				String customerId = "";
+				//BigDecimal basicPrice = BigDecimal.ZERO;
+				String prodId="";
+				BigDecimal budlWeight=BigDecimal.ZERO;
+				BigDecimal budlUnitPrice=BigDecimal.ZERO;
+				BigDecimal blQuantity=BigDecimal.ZERO;
+				BigDecimal Kgquantity=BigDecimal.ZERO;
+				BigDecimal prdPrice=BigDecimal.ZERO;
+				String Uom="";
+				String specification="";
 				
 				
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 					productId = (String)prodQtyMap.get("productId");
 				}
-				
-				List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-				
+				List<GenericValue> orderItem =null;
+
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
+					orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
+					 orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+				}else{
+					orderItem=EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+
+				}
 				
 				if(UtilValidate.isNotEmpty(orderItem)){
 					orderItemValue = EntityUtil.getFirst(orderItem);
@@ -2422,6 +2447,55 @@ public class MaterialPurchaseServices {
 				orderItemValue.set("changeByUserLoginId", userLogin.getString("userLoginId"));
 				orderItemValue.set("changeDatetime", UtilDateTime.nowTimestamp());
 				orderItemValue.store();
+				
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
+					specification = (String)prodQtyMap.get("remarks");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQty"))){
+					blQuantity =(BigDecimal)  prodQtyMap.get("baleQty");
+				}
+				
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
+					budlUnitPrice = (BigDecimal)(prodQtyMap.get("bundleUnitPrice"));
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+					Kgquantity =  (BigDecimal)(prodQtyMap.get("quantity"));
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
+					Uom = (String)prodQtyMap.get("yarnUOM");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+					budlWeight =  (BigDecimal)prodQtyMap.get("bundleWeight");
+				}
+				
+				
+	        	Map<String, Object> orderItemDetail = FastMap.newInstance();
+				orderItemDetail.put("orderId",orderId);
+				orderItemDetail.put("orderItemSeqId",orderItemSeqId);
+				orderItemDetail.put("userLogin",userLogin);
+				orderItemDetail.put("partyId",billFromPartyId);
+				orderItemDetail.put("unitPrice",unitPrice);
+				orderItemDetail.put("Uom",Uom);
+				orderItemDetail.put("productId",productId);
+				orderItemDetail.put("baleQuantity",blQuantity);
+				orderItemDetail.put("bundleWeight",budlWeight);
+				orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
+				orderItemDetail.put("remarks",specification);
+				orderItemDetail.put("quotaQuantity",BigDecimal.ZERO);
+				orderItemDetail.put("quantity",Kgquantity);
+				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+	
+				try{
+					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
+			        if (ServiceUtil.isError(resultMap)) {
+			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+			        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
+			        }
+				}catch(Exception e){
+			  		Debug.logError(e, "Error in Order Item Detail, module");
+			  		return ServiceUtil.returnError( "Error in Order Item Detail");
+			  	}
+				
 			}
 			
 			List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
@@ -3467,6 +3541,7 @@ public class MaterialPurchaseServices {
 			for (int i = 0; i < rowCount; i++) {
 				
 				String productId = "";
+				String orderItemSeqId="";
 		        String quantityStr = "";
 				String unitPriceStr = "";
 				String baleQtyStr = "";
@@ -3488,6 +3563,9 @@ public class MaterialPurchaseServices {
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
 					productId = (String) paramMap.get("productId" + thisSuffix);
+				}
+				if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+					orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
 				}
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
@@ -3557,7 +3635,7 @@ public class MaterialPurchaseServices {
 				}
 				if(UtilValidate.isNotEmpty(baleQtyStr)){
 					try {
-						baleQty = new BigDecimal(unitPriceStr);
+						baleQty = new BigDecimal(baleQtyStr);
 					} catch (Exception e) {
 						Debug.logError(e, "Problems parsing unit price string: " + baleQtyStr, module);
 						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing unit price string: " + baleQtyStr);
@@ -3600,6 +3678,7 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(productId) && unitPrice.compareTo(BigDecimal.ZERO)>0 && quantity.compareTo(BigDecimal.ZERO)>0){
 					Map productDetail = FastMap.newInstance();
 					productDetail.put("productId", productId);
+					productDetail.put("orderItemSeqId", orderItemSeqId);
 					productDetail.put("quantity", quantity);
 					productDetail.put("unitPrice", unitPrice);
 					productDetail.put("bundleUnitPrice", bundleUnitPrice);
