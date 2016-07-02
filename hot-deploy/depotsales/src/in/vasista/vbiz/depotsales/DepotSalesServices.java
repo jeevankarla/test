@@ -2800,7 +2800,7 @@ public class DepotSalesServices{
 			 
 			 BigDecimal totalDiscount=BigDecimal.ZERO;
 			 Map onBehalfPrdQuotaMap = FastMap.newInstance();
-			for (Map<String, Object> prodItemMap : indentItemProductList) {
+			 for (Map<String, Object> prodItemMap : indentItemProductList) {
 				String customerId = "";
 				//BigDecimal basicPrice = BigDecimal.ZERO;
 				String prodId="";
@@ -2939,6 +2939,7 @@ public class DepotSalesServices{
 								else{
 									onBehalfPrdQuotaMap.put(prodId,discountAmount);
 								}
+								
 								// creating order adjustment for direct 
 								if("N".equals(onBeHalfOf)){
 									String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
@@ -7802,7 +7803,6 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-	    Debug.log("items ======"+items);
 	    if (items.size() == 0) {
             Debug.logInfo("No items issued for shipments", module);
             return ServiceUtil.returnSuccess();
@@ -7856,6 +7856,8 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
         }
 	    
+	    Map orderAssocMap = FastMap.newInstance();
+	    
 	    List<GenericValue> toBillItems = FastList.newInstance();
 	    for (GenericValue receipt : items) {
 	    	String productId = (String) receipt.get("productId");
@@ -7885,6 +7887,8 @@ public class DepotSalesServices{
 		            Debug.logError(e, errMsg, module);
 		            return ServiceUtil.returnError(errMsg);
 		        }
+		    	
+		    	orderAssocMap.put(purOrderItemSeqId, salesOrderItemSeqId);
 		    	
 		    	itemAssocCond.clear();
 		    	itemAssocCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, salesOrderId));
@@ -7932,6 +7936,7 @@ public class DepotSalesServices{
      		}
         }
         
+        
        /* try{
 			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 			Debug.log("invoice========================="+invoice);
@@ -7961,8 +7966,53 @@ public class DepotSalesServices{
         for(int i=0; i<invoiceItemList.size(); i++){
         	
         	GenericValue eachItem = invoiceItemList.get(i);
-        	
         	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+        	
+        	String parentInvoiceItemSeqId = (String) eachItem.get("parentInvoiceItemSeqId");
+            
+        	if(UtilValidate.isNotEmpty(parentInvoiceItemSeqId)){
+        		
+        		conditionList.clear();
+        		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
+        		conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeqId));
+        		
+        		List<GenericValue> OrderItemBillingList = null;
+ 		  		try{
+ 		  			OrderItemBillingList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+ 		 		} catch (GenericEntityException e) {
+ 		 			Debug.logError(e, module);
+ 		    		return ServiceUtil.returnError("Error in fetching Order Item billing :" + orderId);
+ 			    }
+ 		  		
+ 		  		if(UtilValidate.isNotEmpty(OrderItemBillingList)){
+ 		 			String poItemSeqId = OrderItemBillingList.get(0).getString("orderItemSeqId");
+ 		 			String soItemSeqId = (String) orderAssocMap.get(poItemSeqId);
+ 		 			if(UtilValidate.isNotEmpty(soItemSeqId)){
+ 		 				
+ 		 				conditionList.clear();
+ 		        		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+ 		        		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, soItemSeqId));
+ 		 				List<GenericValue> soItemBillingList = null;
+ 		 		  		try{
+ 		 		  			soItemBillingList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+ 		 		  			if(UtilValidate.isNotEmpty(soItemBillingList)){
+ 		 		  				String soInvoiceItemSeqId = soItemBillingList.get(0).getString("invoiceItemSeqId");
+ 		 		  				if(UtilValidate.isNotEmpty(soItemBillingList)){
+ 		 		  					createInvoiceItemContext.put("parentInvoiceItemSeqId", soInvoiceItemSeqId);
+ 		 		  				}
+ 		 		  			}
+ 		 		  		
+ 		 		  		} catch (GenericEntityException e) {
+ 		 		 			Debug.logError(e, module);
+ 		 		    		return ServiceUtil.returnError("Error in fetching Order Item billing :" + orderId);
+ 		 			    }
+ 		 			}
+ 		 			
+ 		 		}
+ 		 		
+ 			}
+        	
+        	
             createInvoiceItemContext.put("invoiceId",invoiceId);
             createInvoiceItemContext.put("invoiceItemTypeId", eachItem.get("invoiceItemTypeId"));
             createInvoiceItemContext.put("parentInvoiceId", invoiceId);
@@ -7984,10 +8034,6 @@ public class DepotSalesServices{
                 return ServiceUtil.returnError(errMsg);
     		}
         }
-        
-        
-        
-        
         
         BigDecimal invoiceAmount = BigDecimal.ZERO;
         BigDecimal outstandingAmount = BigDecimal.ZERO;
