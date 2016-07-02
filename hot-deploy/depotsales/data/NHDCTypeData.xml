@@ -291,6 +291,7 @@ under the License.
 	<InvoiceItemType invoiceItemTypeId="OTHER_DISCOUNT" parentTypeId="DISCOUNTS" description="Other Discounts"/> 
 	<InvoiceItemType invoiceItemTypeId="QTY_DISCOUNT" parentTypeId="DISCOUNTS" description="Quantity Discounts"/> 
 	
+	<InvoiceItemType invoiceItemTypeId="CESS" parentTypeId="ADDITIONAL_CHARGES" description="Cess"/> 
 	<InvoiceItemType invoiceItemTypeId="INSURANCE_CHGS" parentTypeId="ADDITIONAL_CHARGES" description="Insurance Charges"/> 
 	<InvoiceItemType invoiceItemTypeId="PACKING_FORWARDIG" parentTypeId="ADDITIONAL_CHARGES" description="Packing And Forwarding Charges"/>
 	<InvoiceItemType invoiceItemTypeId="OTHER_CHARGES" parentTypeId="ADDITIONAL_CHARGES" description="Other Charges"/> 

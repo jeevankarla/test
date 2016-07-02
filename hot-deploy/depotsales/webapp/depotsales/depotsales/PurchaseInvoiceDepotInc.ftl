@@ -754,7 +754,7 @@
 			autoEdit: true,
             secondaryHeaderRowHeight: 25
 		};
-			  
+		  
 		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
         grid2.setSelectionModel(new Slick.CellSelectionModel()); 
      
@@ -848,7 +848,7 @@
 		
 		grid2.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data2[args.row] != null) {
-				var itemType = data2[args.row]["invoiceItemTypeId"];
+        		var itemType = data2[args.row]["invoiceItemTypeId"];
 			}
 			
 		});
@@ -1037,7 +1037,7 @@
 		 if(partyId){
 		    gridShowCall();
 		 	setupGrid1();
-		 	setupGrid2();
+		 	//setupGrid2();
 		 	setupGrid3();
 		 	updateInvoiceTotalAmount();
 		 }else{ 

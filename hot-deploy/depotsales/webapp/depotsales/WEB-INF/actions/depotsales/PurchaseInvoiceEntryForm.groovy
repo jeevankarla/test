@@ -367,31 +367,32 @@
 				tempMap = [:];
 				adjTypeId = eachOdrAdj.orderAdjustmentTypeId;
 				applicableTo = eachOdrAdj.orderItemSeqId;
-				if(eachOdrAdj.orderItemSeqId && eachOdrAdj.orderItemSeqId == "_NA_"){
+				
+				if(UtilValidate.isNotEmpty(applicableTo)){
+					orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, applicableTo));
+					orderItemGv = EntityUtil.getFirst(orderItem);
+					
+					product = delegator.findOne("Product", UtilMisc.toMap("productId", orderItemGv.get("productId")), false);
+					applicableTo = product.get("description");
+				}
+				else{
 					applicableTo = "ALL";
 				}
+				
 				totalAdjAmt = BigDecimal.ZERO;
-				shipmentReceipts.each{ eachItem ->
-					String productId = eachItem.productId;
-					qty = eachItem.quantityAccepted;
-					if(adjPerUnit.get(productId)){
-						prodAdjs = adjPerUnit.get(productId);
-						if(prodAdjs && prodAdjs.get(adjTypeId)){
-							unitAdjPrice = prodAdjs.get(adjTypeId);
-							totalAdjAmt = totalAdjAmt.add(unitAdjPrice.multiply(qty));
-						}
-					}
+				if(eachOdrAdj.get("amount")){
+					totalAdjAmt = eachOdrAdj.get("amount");
 				}
 				
 				JSONObject newObj = new JSONObject();
 				newObj.put("invoiceItemTypeId", adjTypeId);
+				newObj.put("applicableTo", applicableTo);
 				newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
-				if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_DISC_BASIC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
-					adjustmentJSON.add(newObj);
-				}
+				adjustmentJSON.add(newObj);
 				
 				
 			}
+			
 			
 			context.adjustmentJSON = adjustmentJSON;
 		}
