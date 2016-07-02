@@ -304,7 +304,11 @@ function drawRow(rowData) {
     }
     
     
-    if(rowData.statusId != "ORDER_APPROVED"){
+    var hasPermission = false;
+    <#if security.hasPermission("INDENT_CANCEL", session)>
+    	hasPermission = true;
+    </#if>
+    if(rowData.statusId != "ORDER_APPROVED" || hasPermission){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
