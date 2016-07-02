@@ -120,7 +120,7 @@ $( "#lrDate" ).datepicker({
 					  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId}"/>  
 				          		<td valign='middle'>
 				            		<div class='tabletext h3'>
-				               			${orderId}             
+				               			<#if orderNo?has_content>${orderNo}<#else>${orderId}</#if>             
 				            		</div>
 				          		</td>       
 				       		<#else>

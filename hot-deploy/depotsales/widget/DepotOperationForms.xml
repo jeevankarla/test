@@ -296,6 +296,7 @@
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
         <field use-when="(&quot;${newSize}&quot;!=&quot;${size}&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Dispatch Goods" widget-style="buttontext" >	 <hyperlink target="raiseDepotTransGRN" description="Dispatch Goods">
         	 	<parameter param-name="orderId"/>
+        	 	<parameter param-name="orderNo"/>
         	 	<!-- <parameter param-name="vehicleId"/> -->
             </hyperlink>
          </field>
