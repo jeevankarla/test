@@ -64,7 +64,7 @@ under the License.
 				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DATE</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Particulars</fo:block>  
+				            	<fo:block keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Tally Ref. No.</fo:block>  
 				            </fo:table-cell>
 				             <fo:table-cell>
 				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice</fo:block> 
@@ -163,9 +163,15 @@ under the License.
                     	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="left">${eachDay}</fo:block>
 	                	 </fo:table-cell>
-	                	 <fo:table-cell>
-                    	    <fo:block font-size="11pt" text-align="left">${eachLedger.description}</fo:block>
-	                	 </fo:table-cell>
+	                	  <#if eachLedger.referenceNumber?has_content>
+		                	 <fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left">${eachLedger.referenceNumber}</fo:block>
+		                	 </fo:table-cell>
+		                 <#else> 	 
+		                     <fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false">&#xA;</fo:block>
+		                	 </fo:table-cell>
+		                 </#if> 
 	                	 <#if eachLedger.invoiceId?has_content>
 		                	 <fo:table-cell>
 	                    	    <fo:block font-size="11pt" text-align="left">${eachLedger.invoiceId}</fo:block>

@@ -238,6 +238,7 @@
 		innerMap["description"]=invoice.invoiceMessage;
 		innerMap["invoiceDate"]=invoice.invoiceDate;
 		innerMap["invoiceId"]=invoice.invoiceId;
+		innerMap["referenceNumber"]=invoice.referenceNumber;
 		innerMap["invoiceSequenceId"]="";
 		innerMap["tinNumber"]="";
 		innerMap["vchrType"]="";
