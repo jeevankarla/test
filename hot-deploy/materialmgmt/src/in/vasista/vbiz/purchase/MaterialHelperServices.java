@@ -1342,11 +1342,15 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
 				String remarks = "";
 				String yarnUOM= "";
+				String orderItemSeqId="";
 				BigDecimal bedInputAmount = null;
 				BigDecimal vatInputAmount = null;
 				BigDecimal cstInputAmount = null;
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 					productId = (String)prodQtyMap.get("productId");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
+					orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 					quantity = (BigDecimal)prodQtyMap.get("quantity");
@@ -1481,6 +1485,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 				
 				productItemMap.put("productId", productId);
+				productItemMap.put("orderItemSeqId", orderItemSeqId);
 				productItemMap.put("quantity", quantity);
 				productItemMap.put("bundleUnitPrice", bundleUnitPrice);
 				productItemMap.put("bundleWeight", bundleWeight);

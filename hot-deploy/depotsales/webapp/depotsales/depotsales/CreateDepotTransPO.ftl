@@ -607,7 +607,7 @@ function makeDatePicker(fromDateId ,thruDateId){
            </section>-->
            <#-- Working area-->
            
-           <h3>Payment Terms</h3>
+           <#--<h3>Payment Terms</h3>
 		          <section>
 			          <fieldset>
 			            <table cellpadding="15" cellspacing="15" class='h2'>
@@ -634,7 +634,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							         	<#--<td align="center">Term Days</td>
 							          	<td align="center">Term Value</td>
 							          	<td align="center">UOM</td>-->
-							          	<td align="center">Description</td>
+							          	<#--<td align="center">Description</td>
 							    	</tr>
 							    	<#if orderId?exists && orderPayTermInfo?has_content>
 							    		<#assign rowCount = 0>
@@ -662,7 +662,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								            			
 								            		</select>
 								            	</td>-->
-								            	<td>
+								            	<#--<td>
 								                	<input type="textarea" cols="40" rows="5" maxlength="255" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" />
 								            	</td>
 									    	</tr>
@@ -685,7 +685,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						            			<option value="PERCENT">Percent</option>
 						            		</select>
 						            	</td>-->
-						            	<td>
+						            	<#--><td>
 						                	<input type="textarea" name="paymentTermDescription_o_0" value="" maxlength="255"/>
 						            	</td>
 							    	</tr>
@@ -695,7 +695,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						  </tr>
 					  </table>
 					</fieldset>
-                 </section>
+                 </section>-->
                  <h3>Delivery Terms</h3>
 		         <section>
 			          <fieldset>
@@ -735,7 +735,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </td>
 								 </tr>
 								 -->
-				                <tr>
+				                <#--<tr>
 							       <td><table cellspacing="15"><tr>
 							           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 2.5px;"/>  </td>
 							        	<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 2.5px;"/></td>
@@ -749,7 +749,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						         	<#--<td align="center">Term Days</td>
 						          	<td align="center">Term Value</td>
 						          	<td align="center">UOM</td>-->
-						          	<td align="center">Description</td>
+						          	<#--<td align="center">Description</td>
 							    </tr>
 							    <#if orderId?exists && orderShipTermInfo?has_content>
 						    		<#assign rowCount = 0>
@@ -777,17 +777,17 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            			
 							            		</select>
 							            	</td>-->
-							            	<td>
+							            	<#--<td>
 							                	<input type="textarea" name="deliveryTermDescription_o_${rowCount}" value="${eachShipTerm.get("description")?if_exists}" maxlength="255"/>
 							            	</td>
-								    	</tr>
-								    	<#assign rowCount = rowCount+1>
+								    	</tr>-->
+								    	<#--<#assign rowCount = rowCount+1>
 							    	</#list>
 							    <#else>
 								    <tr>
 								        <td>
 							        		<select id='delTermDes' name="deliveryTermTypeId_o_0" class='flexselect' ></select>
-								        </td>
+								        </td>-->
 							            <#--<td>
 							                <input type="text" name="deliveryTermDays_o_0" value="" size="10"/>
 							            </td>
@@ -800,11 +800,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 						            			<option value="PERCENT">Percent</option>
 						            		</select>
 						            	</td>-->
-						            	<td>
+						            	<#--><td>
 						                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
 						            	</td>
 								    </tr>
-								 </#if> 
+								 </#if> -->
 							</table>
           				     </td>
 						        </tr>
