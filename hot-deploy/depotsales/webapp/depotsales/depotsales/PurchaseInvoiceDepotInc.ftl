@@ -844,13 +844,18 @@
         		if (args.cell == 1) {
         			updateInvoiceTotalAmount();
         		}
+        		if (args.cell == 2) {
+	        		updateInvoiceTotalAmount();
+	        	}
 		}); 
 		
 		grid2.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data2[args.row] != null) {
         		var itemType = data2[args.row]["invoiceItemTypeId"];
 			}
-			
+			if (args.cell == 2) {
+        		updateInvoiceTotalAmount();
+        	}
 		});
 		
 		grid2.onValidationError.subscribe(function(e, args) {
@@ -977,9 +982,12 @@
     	});
         
         grid3.onCellChange.subscribe(function(e,args) {
-        		if (args.cell == 1) {
-        			updateInvoiceTotalAmount();
-        		}
+    		if (args.cell == 1) {
+    			updateInvoiceTotalAmount();
+    		}
+    		if (args.cell == 2) {
+        		updateInvoiceTotalAmount();
+        	}
 		}); 
 		
 		grid3.onActiveCellChanged.subscribe(function(e,args) {

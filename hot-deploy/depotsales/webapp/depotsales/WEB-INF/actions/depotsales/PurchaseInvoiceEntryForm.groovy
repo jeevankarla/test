@@ -1,24 +1,24 @@
 	
-	import org.ofbiz.base.util.*;
-	import org.ofbiz.entity.Delegator;
-	import org.ofbiz.entity.util.EntityUtil;
-	import org.ofbiz.entity.condition.EntityCondition;
-	import org.ofbiz.entity.condition.EntityOperator;
-	import net.sf.json.JSONObject;
-	import net.sf.json.JSONArray;
-	import javolution.util.FastMap;
-	import java.sql.Timestamp;
-	import org.ofbiz.base.util.UtilDateTime;
-	import java.text.SimpleDateFormat;
-	import java.text.ParseException;
-	import org.ofbiz.service.ServiceUtil;
-	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-	import in.vasista.vbiz.byproducts.ByProductServices;
-	import org.ofbiz.product.product.ProductWorker;
-	import in.vasista.vbiz.facility.util.FacilityUtil;
-	import in.vasista.vbiz.purchase.MaterialHelperServices;
-	import in.vasista.vbiz.purchase.PurchaseStoreServices;
-	import java.math.RoundingMode;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import javolution.util.FastMap;
+import java.sql.Timestamp;
+import org.ofbiz.base.util.UtilDateTime;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import org.ofbiz.service.ServiceUtil;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import in.vasista.vbiz.byproducts.ByProductServices;
+import org.ofbiz.product.product.ProductWorker;
+import in.vasista.vbiz.facility.util.FacilityUtil;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
+import in.vasista.vbiz.purchase.PurchaseStoreServices;
+import java.math.RoundingMode;
 	
 	purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
 	purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
@@ -371,27 +371,35 @@
 				adjTypeId = eachOdrAdj.orderAdjustmentTypeId;
 				applicableTo = eachOdrAdj.orderItemSeqId;
 				
-				if(UtilValidate.isNotEmpty(applicableTo)){
-					orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, applicableTo));
-					orderItemGv = EntityUtil.getFirst(orderItem);
-					
-					product = delegator.findOne("Product", UtilMisc.toMap("productId", orderItemGv.get("productId")), false);
-					applicableTo = product.get("description");
+							
+				if(UtilValidate.isEmpty(applicableTo) || applicableTo == "_NA_"){
+					applicableTo = "ALL";
 				}
 				else{
-					applicableTo = "ALL";
+					originalOrderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", applicableTo));
+					applicableTo = originalOrderItem.get("itemDescription");
 				}
 				
 				totalAdjAmt = BigDecimal.ZERO;
-				if(eachOdrAdj.get("amount")){
-					totalAdjAmt = eachOdrAdj.get("amount");
+				shipmentReceipts.each{ eachItem ->
+					String productId = eachItem.productId;
+					qty = eachItem.quantityAccepted;
+					if(adjPerUnit.get(productId)){
+						prodAdjs = adjPerUnit.get(productId);
+						if(prodAdjs && prodAdjs.get(adjTypeId)){
+							unitAdjPrice = prodAdjs.get(adjTypeId);
+							totalAdjAmt = totalAdjAmt.add(unitAdjPrice.multiply(qty));
+						}
+					}
 				}
 				
 				JSONObject newObj = new JSONObject();
 				newObj.put("invoiceItemTypeId", adjTypeId);
 				newObj.put("applicableTo", applicableTo);
 				newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
-				adjustmentJSON.add(newObj);
+				if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_DISC_BASIC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
+					adjustmentJSON.add(newObj);
+				}
 				
 				
 			}
