@@ -1999,6 +1999,7 @@ under the License.
         <field use-when="invoiceTypeId!=null&amp;&amp;invoiceTypeId.equals(&quot;OBINVOICE_IN&quot;)"  position="2" name="referenceNumber" title="TallyRefNo."><text size="30"/></field>
         <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
+        <field position="2" name="invoiceDate" required-field="true"><date-time/></field>
         <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
          -->
          <!-- <field position="1" name="roleTypeId" >
