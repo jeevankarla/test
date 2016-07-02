@@ -17,6 +17,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<style>
+.scrollup {
+    width: 35px;
+    height: 35px;
+    position: fixed;
+    bottom: 50px;
+    right: 70px;
+    display: none;
+    text-indent: 300px;
+    background: url('/images/arrow66.png') no-repeat;
+    background-color: lightblue;
+}
+
+
+</style>
+
 
 <input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
@@ -59,6 +75,53 @@ $(document).ready(function() {
                     
     	}
 });
+
+
+//========================page Top======================
+
+ $(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            //$('.scrollup').fadeIn();
+              //$('.scrollup').fadeOut(5000);
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+
+    $('.scrollup').click(function () {
+        $("html, body").animate({111
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
+
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 37:
+            //alert('left');
+            break;
+        case 38:{
+            $('.scrollup').fadeIn();
+             var scroll = $(window).scrollTop();
+             if(scroll < 50)
+             $('.scrollup').fadeOut();
+            break;
+            }
+        case 39:
+           // alert('right');
+            break;
+        case 40:{
+              $('.scrollup').fadeOut(5000);
+            break;
+              }
+          }
+};
+
+
+//================================================
+
+
 	recursively_ajax();
 });
 
@@ -466,4 +529,4 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
          <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Orders..</span></div>
-  
+         <a href="#" class="scrollup">Top</a>
