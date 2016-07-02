@@ -777,12 +777,13 @@
 	
 	function setupGrid2() {
         withAdjColumns = [
-			{id:"adjustmentTypeId", name:"Term Type", field:"adjustmentTypeId", width:250, minWidth:250, cssClass:"cell-title", regexMatcher:"contains",availableTags: otherTermsTags, editor: AutoCompleteEditor,sortable:false , formatter: adjustmentTermFormatter, toolTip:"Other Adjustment Type"},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:150, minWidth:150, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
-			{id:"adjValue", name:"Value", field:"adjValue", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Value"},
-			{id:"uomId", name:"Rs/Percent", field:"uomId", width:80, minWidth:80, options: "INR,PERCENT", editor: SelectCellEditor, sortable:false, align:"right", toolTip:"Unit Of Measure"},
-			{id:"termDays", name:"Term Days", field:"termDays", width:80, minWidth:80, editor:IntegerCellEditor, sortable:false, align:"right", toolTip:"Term Days"},
+			{id:"adjustmentTypeId", name:"Adjustment Type", field:"adjustmentTypeId", width:250, minWidth:250, cssClass:"cell-title", regexMatcher:"contains",availableTags: otherTermsTags, editor: AutoCompleteEditor,sortable:false , formatter: adjustmentTermFormatter, toolTip:"Other Adjustment Type"},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:350, minWidth:350, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjValue", name:"Value", field:"adjValue", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Value"},
+			{id:"uomId", name:"Rs/Percent", field:"uomId", width:100, minWidth:100, options: "INR,PERCENT", editor: SelectCellEditor, sortable:false, align:"right", toolTip:"Unit Of Measure"}
+			<#--{id:"termDays", name:"Term Days", field:"termDays", width:80, minWidth:80, editor:IntegerCellEditor, sortable:false, align:"right", toolTip:"Term Days"},
 			{id:"description", name:"Description", field:"description", width:200, minWidth:200, editor:LongTextCellEditor, sortable:false, align:"right", toolTip:"Term Description"},
+			-->
 		];
 		
 		var options2 = {

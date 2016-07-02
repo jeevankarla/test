@@ -708,11 +708,11 @@ function populateData(){
 							</div>
 							
 							<div class="screenlet-title-bar" id="titleScreen">
-								<div class="grid-header" style="width:80%">
+								<div class="grid-header" style="width:67%">
 									<label>Other Charges</label>
 								</div>
-								<div id="myGrid2" style="width:80%;height:150px;">
-									<div class="grid-header" style="width:80%">
+								<div id="myGrid2" style="width:67%;height:150px;">
+									<div class="grid-header" style="width:67%">
 								</div>
 							</div>
 						</div>
