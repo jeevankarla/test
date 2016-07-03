@@ -76,16 +76,7 @@ $(document).ready(function() {
 
 //========================page Top======================
 
- $(window).scroll(function () {
-        if ($(this).scrollTop() > 100) {
-            //$('.scrollup').fadeIn();
-              //$('.scrollup').fadeOut(5000);
-        } else {
-            $('.scrollup').fadeOut();
-        }
-    });
-
-    $('.scrollup').click(function () {
+     $('.scrollup').click(function () {
         $("html, body").animate({
             scrollTop: 0
         }, 600);
@@ -114,6 +105,31 @@ document.onkeydown = function(e) {
               }
           }
 };
+
+$(function(){
+    var _top = $(window).scrollTop();
+    var _direction;
+    $(window).scroll(function(){
+        var _cur_top = $(window).scrollTop();
+        if(_top < _cur_top)
+        {
+            _direction = 'down';
+             $('.scrollup').fadeOut();
+        }
+        else
+        {
+            _direction = 'up';
+            var scroll = $(window).scrollTop();
+            if(scroll < 50)
+             $('.scrollup').fadeOut();
+             else
+             $('.scrollup').fadeIn();
+            
+        }
+        _top = _cur_top;
+        //console.log(_direction);
+    });
+});
 
 
 //================================================
