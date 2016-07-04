@@ -148,6 +148,10 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
 invoiceItemLevelAdjustments = [:];
 
+
+Debug.log("invoiceAdjItemList==============="+invoiceAdjItemList);
+
+
 double totTaxAmount = 0;
 
 double mgpsAmt = 0;
@@ -164,6 +168,11 @@ for (eachList in invoiceItemList) {
 	
 	// Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
 	
+	
+	
+	Debug.log("invoiceInnerAdjItemList==============="+invoiceInnerAdjItemList);
+	
+	
 	 itemAdjustList = [];
 	  
 	 if(invoiceInnerAdjItemList){
@@ -172,13 +181,16 @@ for (eachList in invoiceItemList) {
 		  if(eachItem.description != "Service Charge" && eachItem.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY"){
 		  tempMap = [:];
 		  
+		  Debug.log("eachItem.amount==============="+eachItem.amount);
+		  
+		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
 		  tempMap.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
 		  tempMap.put("description", eachItem.description);
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  
-		  totTaxAmount = totTaxAmount+eachItem.amount;
+		  totTaxAmount = totTaxAmount+(eachItem.amount*eachItem.quantity);
 		  
 		  itemAdjustList.add(tempMap);
 		  }
@@ -187,6 +199,9 @@ for (eachList in invoiceItemList) {
 		  }
 	}
 	 }
+	 
+	 
+	 Debug.log("totTaxAmount==============="+totTaxAmount);
 	 
 	if(itemAdjustList){
 		invoiceItemLevelAdjustments.put(i, itemAdjustList);
@@ -230,6 +245,7 @@ branchId = "INT12";
 else if(branchId == "INT8" || branchId == "INT16" || branchId == "INT20" || branchId == "INT21" || branchId == "INT22" || branchId == "INT44")
 branchId = "INT8";
 
+Debug.log("branchId=================="+branchId);
 
 branchContext.put("branchId",branchId);
 BOAddress="";
@@ -264,6 +280,8 @@ context.grandTotal = grandTotal;
 
 actualOrderId = "";
 destination = "";
+
+Debug.log("grandTotal=================="+grandTotal);
 
 
 if(UtilValidate.isNotEmpty(orderAttrForPo)){
@@ -301,6 +319,14 @@ if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	orderNo= orderSquences.orderNo;
 	context.indentNo = orderNo;
 }
+
+
+
+Debug.log("indentOrderSequences=================="+indentOrderSequences);
+
+
+Debug.log("orderHeaderSequences=================="+orderHeaderSequences);
+
 
 OrderHeader = [];
 OrderRoleList = [];
