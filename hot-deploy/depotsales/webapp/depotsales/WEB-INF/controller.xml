@@ -800,7 +800,7 @@
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
-        <response name="error" type="view" value="processIndentPortalBranchSales"/>
+        <response name="error" type="view" value="IndentPortalOrderPayment"/>
     </request-map>
      <request-map uri="createDepotSalesShipmentContent">
         <security auth="true" https="true"/>
