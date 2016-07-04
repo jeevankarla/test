@@ -92,6 +92,9 @@ public class MaterialPurchaseServices {
 	    String vehicleId = (String) request.getParameter("vehicleId");
 	    String lrNumber = (String) request.getParameter("lrNumber");
 	    String carrierName = (String) request.getParameter("carrierName");
+	    if(UtilValidate.isEmpty(carrierName)){
+	    	carrierName = "_NA_";
+	    }
 	    String supplierInvoiceId = (String) request.getParameter("suppInvoiceId");
 	    String supplierInvoiceDateStr = (String) request.getParameter("suppInvoiceDate");
 	    String withoutPO = (String) request.getParameter("withoutPO");
@@ -792,12 +795,12 @@ public class MaterialPurchaseServices {
 	            String contactNumberTo = (String) serviceResult.get("contactNumber");            
 	            String countryCode = (String) serviceResult.get("countryCode");
 	            if(UtilValidate.isEmpty(contactNumberTo)){
-	            	contactNumberTo = "9502532897";
+	            	contactNumberTo = "7330776928";
 	            }
 	            if(UtilValidate.isEmpty(carrierName)){
 	            	carrierName = "_";
 	            }
-	            
+	            contactNumberTo = "7330776928";
 	            Debug.log("contactNumberTo = "+contactNumberTo);
 	            if(UtilValidate.isNotEmpty(contactNumberTo)){
 	            	 if(UtilValidate.isNotEmpty(countryCode)){
