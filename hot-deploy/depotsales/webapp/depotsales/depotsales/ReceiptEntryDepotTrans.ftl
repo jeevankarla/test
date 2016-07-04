@@ -356,7 +356,7 @@ $( "#lrDate" ).datepicker({
 		 		 <#if orderId?exists && orderId?has_content>
 		 		           <#assign OrderHeaderDetails = delegator.findOne("OrderHeader", {"orderId" :orderId}, true)>
 		 		
-		 			<label><font color="green">Dispatch Items Entry   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Order Value:</font> &#160;&#160;<font color="blue">${OrderHeaderDetails.grandTotal?if_exists?string("##0.00")}</font></label>
+		 			<label id="grandTot"><font color="green">Dispatch Items Entry   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Order Value:</font> &#160;&#160;<font color="blue">${OrderHeaderDetails.grandTotal?if_exists?string("##0.00")}</font></label>
 		 			<#else>
 		 			<label>Dispatch Items Entry   </label>
 		 			</#if>

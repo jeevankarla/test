@@ -425,7 +425,22 @@
       		grid.updateRowCount();
       		grid.render();
     	});
+    	    	
+    	var grandTOT = 0;
         grid.onCellChange.subscribe(function(e,args) {
+        
+        for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{ 
+			var quantity = data[rowCount]["quantity"];
+			var unitPrice = data[rowCount]["unitPrice"];
+			grandTOT = grandTOT+quantity*unitPrice;
+		}
+        
+        $("#grandTot").html("<font color=green>Dispatch Items Entry   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Order Value:</font> &#160;&#160;<font color=blue>"+grandTOT+"</font>");
+        
+        grandTOT = 0;
+        
+        
 			if (args.cell == 1 || args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];

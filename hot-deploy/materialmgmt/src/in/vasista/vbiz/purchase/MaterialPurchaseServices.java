@@ -176,8 +176,8 @@ public class MaterialPurchaseServices {
 		  	}
 	  	}
 	  	
-	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
-	  /*	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
+	  	Timestamp deliveryChallanDate=null;
+	  	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
 	  		try {
 	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
 	  			deliveryChallanDate = new java.sql.Timestamp(dateSdf.parse(deliveryChallanDateStr).getTime());
@@ -186,7 +186,9 @@ public class MaterialPurchaseServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}
-	  	}*/
+	  	}else{
+		  	 deliveryChallanDate=UtilDateTime.nowTimestamp();
+	  	}
 	  	BigDecimal poValue = BigDecimal.ZERO;
 	  	boolean beganTransaction = false;
 		try{

@@ -338,8 +338,8 @@ under the License.
 				<fo:block text-align="left"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#assign remainingAdjustMents = remainingAdjustMents+eachList.amount>
-				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${eachList.amount?string("#0.00")}</#if></fo:block>
+				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.amount*eachList.quantity)>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.amount*eachList.quantity)?string("#0.00")}</#if></fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 			</#list>
@@ -359,7 +359,6 @@ under the License.
 				</fo:table-cell>
 				
 				<fo:table-cell number-columns-spanned="2">
-								<#assign remainingAdjustMents = remainingAdjustMents+eachList.amount>
 				
 				<fo:block text-align="right"    font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Deduction
 				${mgpsAmt?if_exists?string("#0.00")}</fo:block>
