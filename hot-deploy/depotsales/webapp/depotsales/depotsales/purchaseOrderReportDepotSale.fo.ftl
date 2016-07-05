@@ -182,6 +182,9 @@ under the License.
         <#assign grandToT = 0>
         <#assign typeBase=typeBasedMap.entrySet()>
 	      <#list typeBase as typeBaseList>
+	        <#if typeBaseList.getKey()== "Central Sales Tax On Purchase">
+	             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">INTERSTATE C to E1 TRANSACTION</fo:block>
+	        </#if>     
 	       <#assign typeOFListValues=typeBaseList.getValue().entrySet()>
 	        <#list typeOFListValues as eaValue>
 	         <#assign grandToT = grandToT+eaValue.getValue()>
