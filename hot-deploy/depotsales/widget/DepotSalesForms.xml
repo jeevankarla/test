@@ -914,7 +914,7 @@
 		</field> -->
 		<field name="statusId" title="${uiLabelMap.CommonStatus}"
 			position="2">
-			<drop-down allow-empty="true">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
@@ -943,7 +943,7 @@
 		</field> -->
 		<field name="statusId" title="${uiLabelMap.CommonStatus}"
 			position="2">
-			<drop-down allow-empty="true">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
