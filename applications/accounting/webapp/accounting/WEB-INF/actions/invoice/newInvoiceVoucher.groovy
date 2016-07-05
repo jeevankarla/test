@@ -156,6 +156,9 @@ double totTaxAmount = 0;
 
 double mgpsAmt = 0;
 
+Debug.log("invoiceItemList==============="+invoiceItemList);
+
+
 int i=0;
 for (eachList in invoiceItemList) {
 	
@@ -453,6 +456,9 @@ context.externalOrderId = externalOrderId;
 	
 	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 	
+	Debug.log("invoiceItemList==============="+invoiceItemList);
+	
+	
 	double grandTotal = 0;
 	if(invoiceItemList){
 	
@@ -643,7 +649,10 @@ context.externalOrderId = externalOrderId;
 	
 	context.grandTotal = Math.round(grandTotal);
 	context.finalDetails = finalDetails;
+
+	Debug.log("finalDetails==============="+finalDetails);
 	
+		
 //}
 
 //==============Address Details===================
