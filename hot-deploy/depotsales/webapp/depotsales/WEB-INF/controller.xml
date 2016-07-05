@@ -422,11 +422,24 @@
        <response name="error" type="view" value="MaterialInvoiceInit"/>
      </request-map>
      
+      <request-map uri="MaterialSalesInvoiceInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialSalesInvoiceInit"/>
+       <response name="error" type="view" value="MaterialSalesInvoiceInit"/>
+     </request-map>
+     
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
+     </request-map>
+     
+      <request-map uri="processNewSalesInvoice">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewDepotSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
+       <response name="error" type="view" value="DepotSalesInvoice"/>
      </request-map>
      
      <request-map uri="processSalesInvoice">
@@ -1978,6 +1991,7 @@
     <view-map name="PurchageOrderOverView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PurchageOrderOverView"/>
     <view-map name="MRRreportDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
+    <view-map name="MaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesInvoiceInit"/>
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
     <view-map name="StockPositionDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockPositionDepotSales"/>
