@@ -350,6 +350,7 @@
             		</condition-list>
             	</entity-condition>
             	<set field="purchaseInvoiceId" value="${invoicesstatusList[0].invoiceId}"/>
+            	<set field="purchaseInvoiceStatusId" value="${invoicesstatusList[0].statusId}"/>
             	<entity-condition entity-name="Invoice" list="salesInvoiceStatusList">
             		<condition-list combine="and">
             			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
@@ -358,6 +359,7 @@
             		</condition-list>
             	</entity-condition>
             	<set field="salesInvoiceId" value="${salesInvoiceStatusList[0].invoiceId}"/>
+            	<set field="salesInvoiceStatusId" value="${salesInvoiceStatusList[0].statusId}"/>
             	<set field="purchaseInvoiceSize" value="${groovy: invoicesstatusList.size();}"/>
             	<set field="salesInvoiceSize" value="${groovy: salesInvoiceStatusList.size();}"/>
             	<entity-condition entity-name="ShipmentReceipt" list="shipmentReceiptList">
@@ -472,15 +474,26 @@
             <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
 	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
 	        </field> -->
-            <field name="invStatus" title="Approval" widget-style="buttontext" use-when="(!salesInvoiceSize.equals(&quot;0&quot;)) &amp;&amp; (!salesInvoiceSize.equals(&quot;0&quot;))" >
+            <!-- <field name="invStatus" title="Approval" widget-style="buttontext" use-when="(!salesInvoiceSize.equals(&quot;0&quot;)) &amp;&amp; (!salesInvoiceSize.equals(&quot;0&quot;))" >
 	            <hyperlink  target-type="plain" description="Approve Invoice"  target="javascript:QCApprovalBranchSalesAndInvApproveQTip('${shipmentId}','${partyIdTo}','${partyName}', '${salesInvoiceId}', '${purchaseInvoiceId}');"></hyperlink>
 	            
-	            <!-- <hyperlink target="approveInvoices" description="Approve Invoice">
+	            <hyperlink target="approveInvoices" description="Approve Invoice">
                     <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
-                </hyperlink> -->
+                </hyperlink>
+	        </field> -->
+	         <field name="purchaseInvoiceStatusId" title="Pur Invoice Approval" widget-style="buttontext" use-when="(purchaseInvoiceId !=null) &amp;&amp;(purchaseInvoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))" >
+	             <hyperlink  target-type="plain" description="Approve Invoice"  target="javascript:QCApprovalBranchSalesAndInvApproveQTip('${shipmentId}','${partyIdTo}','${partyName}','${purchaseInvoiceId}');"></hyperlink>
 	        </field>
-            <field name="invStatus" title="Invoice Approval" use-when="statusId.equals(&quot;GOODS_RECEIVED&quot;)" >
+	        <field name="purchaseInvoiceStatusId" title="Pur Invoice Approval" use-when="(purchaseInvoiceStatusId !=null)&amp;&amp;purchaseInvoiceStatusId.equals(&quot;INVOICE_READY&quot;)" >
+	            <display description="Approved"></display>
+	        </field>
+            <field name="salesInvoiceStatusId" title="Sales Invoice Approval" widget-style="buttontext" use-when="(salesInvoiceId !=null) &amp;&amp;(salesInvoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))" >
+	             <hyperlink target="approveSalesInvoice" description="Approve Invoice">
+                    <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
+                </hyperlink>
+	        </field>
+	        <field name="salesInvoiceStatusId" title="Sales Invoice Approval" use-when="(salesInvoiceStatusId !=null)&amp;&amp;salesInvoiceStatusId.equals(&quot;INVOICE_READY&quot;)" >
 	            <display description="Approved"></display>
 	        </field>
             <field name="cancelGRN" widget-style="buttontext" title="Cancel Ship" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
