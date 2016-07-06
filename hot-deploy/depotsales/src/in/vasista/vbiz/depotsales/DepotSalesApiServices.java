@@ -403,6 +403,96 @@ public class DepotSalesApiServices{
     	return result;
     } 
  	
- 	
-	
+    public static Map<String, Object> getWeaverPayments(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+  		String partyIdFrom = (String) context.get("partyId");
+  		String paramPaymentId = (String) context.get("paymentId");
+		List paymentSearchResultsList = FastList.newInstance();
+
+				
+		List condList= FastList.newInstance();
+		condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+		if(UtilValidate.isNotEmpty(paramPaymentId))
+		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paramPaymentId));
+		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+		
+		List<GenericValue> paymentList = null;
+		try {
+			paymentList = delegator.findList("Payment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive paymentList ", module);
+			return ServiceUtil.returnError("Failed to retrive paymentList " + e);
+		}
+		 
+    	List paymentIds = EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
+    	List paymentApplicationList =  FastList.newInstance();
+    	try {
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,paymentIds));
+		 paymentApplicationList = delegator.findList("PaymentApplication", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+    	} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+			return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+		}
+		
+		for (int i=0; i<paymentList.size(); i++) {
+			
+			Map tempMap = FastMap.newInstance();
+			GenericValue eachPaymentList = (GenericValue) paymentList.get(i);
+			String paymentId = (String) eachPaymentList.get("paymentId");
+			BigDecimal paymentAmt = eachPaymentList.getBigDecimal("amount");
+			List eachpaymentApplication = EntityUtil.filterByCondition(paymentApplicationList, EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
+			BigDecimal appliedAmt = BigDecimal.ZERO;
+
+	        if(UtilValidate.isNotEmpty(eachpaymentApplication)){
+	        	
+	        	for (int j=0; j<eachpaymentApplication.size(); j++) {
+	        		
+	        		GenericValue eachPaymentAppList = (GenericValue) eachpaymentApplication.get(j);
+	    	        BigDecimal amountApplied = eachPaymentAppList.getBigDecimal("amountApplied");
+	        		appliedAmt = appliedAmt.add(amountApplied);
+
+	        	}
+	            	
+	        	if(paymentAmt.doubleValue() != appliedAmt.doubleValue()){
+	        		
+	        		tempMap.put("paymentId",paymentId);
+	        		tempMap.put("paidAmount",eachPaymentList.get("amount"));
+	        		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
+	        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+	        		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
+	        		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
+	        		tempMap.put("statusId",eachPaymentList.get("statusId"));
+	        		
+	        		paymentSearchResultsList.add(tempMap);
+	        	}
+	        }else{
+	        	
+	        	tempMap.put("paymentId",paymentId);
+        		tempMap.put("paidAmount",eachPaymentList.get("amount"));
+        		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
+        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentDate"));
+        		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
+        		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
+        		tempMap.put("statusId",eachPaymentList.get("statusId"));
+        		
+        		paymentSearchResultsList.add(tempMap);
+	        	
+	        }
+		}
+
+		Map paymentSearchResults = FastMap.newInstance();
+		paymentSearchResults.put("paymentSearchResultsList",paymentSearchResultsList);
+
+		result.put("paymentSearchResults",paymentSearchResults);
+		
+        return result;
+		
+	}
 }
