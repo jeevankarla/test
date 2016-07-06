@@ -521,9 +521,12 @@
 		var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
 		var price = parseFloat(data[args.row]["unitPrice"]);
 		var amt = parseFloat(data[args.row]["amount"]);
-
-		var roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
-		
+		var roundedAmount=0;
+		if( uom == "KGs" ){
+			 roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
+		}else{
+			 roundedAmount =calculateBundlePrice(balQuty,uom,price);
+		}
 
 		if (args.cell == 3) {
 
@@ -552,12 +555,14 @@
 		}
 		else if(args.cell == 5){
 		  quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+		  kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
+		  data[args.row]["KgunitPrice"] = kgUnitPrice;
 		  data[args.row]["quantity"] = quantity;
 		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 		}
 		else if(args.cell == 6){
-			 kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
+		  kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
 		  data[args.row]["KgunitPrice"] = kgUnitPrice;
 		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
@@ -571,8 +576,13 @@
 		}
 		else if(args.cell == 8){
 		  var upb=0;
+		  var roundedAmount=0;
 	      upb=reverseCalculationKGToBundle(bundleWeight,kgUnitPrice);
-		  var roundedAmount=calculateBundlePrice(balQuty,uom,kgUnitPrice);
+	      if( uom == "KGs" ){
+		   		roundedAmount=calculateBundlePrice(balQuty,uom,kgUnitPrice);
+			}else{
+			 	roundedAmount=calculateBundlePrice(balQuty,uom,upb);
+			}
 		  data[args.row]["amount"] = roundedAmount;
 		  data[args.row]["unitPrice"] = upb;
 		}
@@ -669,7 +679,7 @@
 						       			data[args.row]['quantity'] =qut;
 						       			data[args.row]['usedQuota'] =qut;
 						       			data[args.row]['baleQuantity'] =qut;
-						       			utprice=data[currentrow]["KgunitPrice"];
+						       			utprice=data[currentrow]["unitPrice"];
 						       			amount=qut*utprice;
 						       			data[args.row]['amount'] = amount;
 						      		 	grid.updateRow(args.row);
