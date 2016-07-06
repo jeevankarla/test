@@ -4745,8 +4745,8 @@ catch(Exception e){
 		     if(UtilValidate.isNotEmpty(cstNumber)){
 		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
 		   	 }
-		     if(UtilValidate.isNotEmpty(partyIdentificationTypeId)){
-		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CUST_CLASSIFICATION","idValue",partyIdentificationTypeId,"partyId",partyId,"userLogin", context.get("userLogin")));
+		     if(UtilValidate.isNotEmpty(partyClassificationTypeId)){
+		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CUST_CLASSIFICATION","idValue",partyClassificationTypeId,"partyId",partyId,"userLogin", context.get("userLogin")));
 		   	 }
 		     
         }catch(GenericServiceException e){
