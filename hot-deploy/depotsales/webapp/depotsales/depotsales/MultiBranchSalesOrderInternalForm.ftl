@@ -523,15 +523,7 @@
 		var amt = parseFloat(data[args.row]["amount"]);
 
 		var roundedAmount =calculateBundlePrice(balQuty,uom,price);
-		if(args.cell != 8){
-		  if(uom!="KGs"){
-		   kgUnitPrice=price/bundleWeight;
-		  }
-		  else{
-		    kgUnitPrice=price;
-		  }
 		
-		 }
 
 		if (args.cell == 3) {
 
@@ -565,7 +557,7 @@
 		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 		}
 		else if(args.cell == 6){
-		
+			 kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
 		  data[args.row]["KgunitPrice"] = kgUnitPrice;
 		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
@@ -579,12 +571,7 @@
 		}
 		else if(args.cell == 8){
 		  var upb=0;
-		  if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-				upb=kgUnitPrice*bundleWeight;
-				}
-		  else if(uom == "KGs" ){
-				upb=kgUnitPrice;
-		 }
+	      upb=reverseCalculationKGToBundle(bundleWeight,kgUnitPrice);
 		  var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
 		  data[args.row]["amount"] = roundedAmount;
 		  data[args.row]["unitPrice"] = upb;
@@ -1081,6 +1068,16 @@
 		    result = Math.round(balQuty*org2);
 		}
 		
+		return result;
+	 }
+	 function reverseCalculationBundleToKG(bundleWeight,bundlePrice){
+	  var result=0;
+		result=bundlePrice/bundleWeight;
+		return result;
+	 }
+	 function reverseCalculationKGToBundle(bundleWeight,kgPrice){
+	  var result=0;
+		result=kgPrice*bundleWeight;
 		return result;
 	 }
 	 
