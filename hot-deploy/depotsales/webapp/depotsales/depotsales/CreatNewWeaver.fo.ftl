@@ -302,7 +302,7 @@ function datepick()	{
 						   <td>
 						    <select name="partyClassificationTypeId" id="partyClassificationTypeId" onchange="setFeilds()">
 				              <#list partyClassList as partyClas>
-	                            <option value="${partyClas.partyClassificationTypeId}"  >${partyClas.description}</option>
+	                            <option value="${partyClas.partyClassificationGroupId}">${partyClas.description}</option>	
 	                          </#list>
 				            </select>
 				            </td>
