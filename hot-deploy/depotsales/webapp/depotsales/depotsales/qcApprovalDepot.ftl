@@ -145,7 +145,7 @@
 		Alert(message, title);
 	};
 	
-	function QCApprovalBranchSalesAndInvApproveQTip(shipmentId,partyIdTo,partyName,saleInvoiceId, purInvoiceId) {	
+	function QCApprovalBranchSalesAndInvApproveQTip(shipmentId,partyIdTo,partyName,purInvoiceId) {	
 		var message = "";
 		message += "<form action='acceptShipmentAndApproveInvoice' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
 		
@@ -153,7 +153,7 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>User Agency:</td><td align='left' width='50%'>"+partyName+"   ["+partyIdTo+"]</td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='partyId' name='partyId' value='"+partyIdTo+"'/></td></tr>";
 		
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='saleInvoiceId' name='saleInvoiceId' value='"+saleInvoiceId+"'/></td></tr>";
+		<#--- message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='saleInvoiceId' name='saleInvoiceId' value='"+saleInvoiceId+"'/></td></tr>";-->
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='purInvoiceId' name='purInvoiceId' value='"+purInvoiceId+"'/></td></tr>";
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Transaction Date:</td><td align='left' width='50%'><input type='text' name='transactionDate' id='transactionDate' onmouseover='datepick()'></td></tr>";

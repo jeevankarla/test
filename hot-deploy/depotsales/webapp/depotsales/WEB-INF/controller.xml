@@ -448,6 +448,12 @@
        <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
        <response name="error" type="request-redirect-noparam" value="DepotSalesInvoice"/>
      </request-map>
+      <request-map uri="approveSalesInvoice">
+       <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="approveSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="request-redirect-noparam" value="DepotSalesInvoice"/>
+     </request-map>
      
      <request-map uri="FindMaterialInvoices">
         <security auth="true" https="true"/>

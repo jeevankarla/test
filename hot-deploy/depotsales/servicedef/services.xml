@@ -451,7 +451,7 @@
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="saleInvoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="saleInvoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="purInvoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="transactionDate" type="String" mode="IN" optional="true"/> 
     </service>

@@ -10462,23 +10462,38 @@ public class DepotSalesServices{
 	    		Debug.logError(e, "Failed to update shipment status " + shipmentId, module);
 	    		return ServiceUtil.returnError("Failed to update shipment status " + shipmentId + ": " + e);          	
 	        }
-			
-			Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", saleInvoiceId);
-            invoiceCtx.put("userLogin", userLogin);
-	   	 	invoiceCtx.put("statusId", "INVOICE_READY");
-	   	 	invoiceCtx.put("statusDate", transactionDate);
-	   	 	try{
-            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-             	if (ServiceUtil.isError(invoiceResult)) {
-             		Debug.logError(invoiceResult.toString(), module);
-                    return ServiceUtil.returnError(null, null, null, invoiceResult);
-                }	             	
-            }catch(GenericServiceException e){
-             	 Debug.logError(e, e.toString(), module);
-                 return ServiceUtil.returnError(e.toString());
-            } 
-	   	 	
+			if(UtilValidate.isNotEmpty(saleInvoiceId)){
+				Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", saleInvoiceId);
+	            invoiceCtx.put("userLogin", userLogin);
+		   	 	invoiceCtx.put("statusId", "INVOICE_READY");
+		   	 	invoiceCtx.put("statusDate", transactionDate);
+		   	 	try{
+	            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+	             	if (ServiceUtil.isError(invoiceResult)) {
+	             		Debug.logError(invoiceResult.toString(), module);
+	                    return ServiceUtil.returnError(null, null, null, invoiceResult);
+	                }	             	
+	            }catch(GenericServiceException e){
+	             	 Debug.logError(e, e.toString(), module);
+	                 return ServiceUtil.returnError(e.toString());
+	            } 
+			} 	
 		   	Map<String, Object> purInvoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", purInvoiceId);
+		   	purInvoiceCtx.put("userLogin", userLogin);
+		   	purInvoiceCtx.put("statusId", "INVOICE_APPROVED");
+		   	purInvoiceCtx.put("statusDate", transactionDate);
+	   	 	try{
+	   	 		Map<String, Object> purInvoiceResult = dispatcher.runSync("setInvoiceStatus",purInvoiceCtx);
+	   	 		if (ServiceUtil.isError(purInvoiceResult)) {
+	   	 			Debug.logError(purInvoiceResult.toString(), module);
+	   	 			return ServiceUtil.returnError(null, null, null, purInvoiceResult);
+	   	 		}	             	
+	        }catch(GenericServiceException e){
+	          	Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+	        } 
+	   	    purInvoiceCtx.clear();
+	   		purInvoiceCtx.put("invoiceId", purInvoiceId);
 		   	purInvoiceCtx.put("userLogin", userLogin);
 		   	purInvoiceCtx.put("statusId", "INVOICE_READY");
 		   	purInvoiceCtx.put("statusDate", transactionDate);
@@ -10904,8 +10919,51 @@ public class DepotSalesServices{
         return result;
 		
 	}
- 	
- 	
- 	
-	
+ 	public static String approveSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		String salInvoiceId = (String) request.getParameter("salesInvoiceId");
+ 		Timestamp transactionDate=null;
+ 		transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		Map<String, Object> salInvoiceCtx  = UtilMisc.<String, Object>toMap("invoiceId", salInvoiceId);
+	   	salInvoiceCtx .put("userLogin", userLogin);
+	   	salInvoiceCtx .put("statusId", "INVOICE_APPROVED");
+	   	salInvoiceCtx .put("statusDate", transactionDate);
+   	 	try{
+   	 		Map<String, Object> salInvoiceResult = dispatcher.runSync("setInvoiceStatus",salInvoiceCtx );
+   	 		if (ServiceUtil.isError(salInvoiceResult)) {
+   	 		    Debug.logError("Unable to Approve Sales Invoice: " + ServiceUtil.getErrorMessage(salInvoiceResult), module);
+		        request.setAttribute("_ERROR_MESSAGE_", "Unable to Approve Sales Invoice  For InvoiceId :" + salInvoiceId);
+		        return "error";
+   	 		} 	             	
+        }catch(GenericServiceException e){
+        	 Debug.logError(e, "Error Occured in Approving Sales Invoice: ", module);
+			 request.setAttribute("_ERROR_MESSAGE_", "Error Occured in Approving Sales Invoice ");
+			 return "error";
+        } 
+   	    salInvoiceCtx .clear();
+   		salInvoiceCtx .put("invoiceId", salInvoiceId);
+	   	salInvoiceCtx .put("userLogin", userLogin);
+	   	salInvoiceCtx .put("statusId", "INVOICE_READY");
+	   	salInvoiceCtx .put("statusDate", transactionDate);
+   	 	try{
+   	 		Map<String, Object> salInvoiceResult = dispatcher.runSync("setInvoiceStatus",salInvoiceCtx );
+   	 		if (ServiceUtil.isError(salInvoiceResult)) {
+   	 		     Debug.logError("Unable to Approve Sales Invoice: " + ServiceUtil.getErrorMessage(salInvoiceResult), module);
+			     request.setAttribute("_ERROR_MESSAGE_", "Unable to Approve Sales Invoice  For InvoiceId :" + salInvoiceId);
+			     return "error";
+   	 		}	             	
+        }catch(GenericServiceException e){
+        	  Debug.logError(e, "Error Occured in Approving Sales Invoice: ", module);
+			  request.setAttribute("_ERROR_MESSAGE_", "Error Occured in Approving Sales Invoice ");
+			  return "error";
+        } 
+   	    request.setAttribute("_EVENT_MESSAGE_", "Approvd Sales Invoice successfully");
+   	    return "success";
+ 	}	
 }
