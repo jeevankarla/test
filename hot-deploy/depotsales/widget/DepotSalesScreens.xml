@@ -544,7 +544,7 @@
 							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                     	 <container style="button-bar">
-											<link target="SilkBranchSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
+											<link target="CottonBranchSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
 											</link>
 										</container>
                                     </decorator-section>
