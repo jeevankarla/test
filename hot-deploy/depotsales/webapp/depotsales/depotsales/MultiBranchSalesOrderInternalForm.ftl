@@ -522,7 +522,7 @@
 		var price = parseFloat(data[args.row]["unitPrice"]);
 		var amt = parseFloat(data[args.row]["amount"]);
 
-		var roundedAmount =calculateBundlePrice(balQuty,uom,price);
+		var roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
 		
 
 		if (args.cell == 3) {
@@ -572,7 +572,7 @@
 		else if(args.cell == 8){
 		  var upb=0;
 	      upb=reverseCalculationKGToBundle(bundleWeight,kgUnitPrice);
-		  var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
+		  var roundedAmount=calculateBundlePrice(balQuty,uom,kgUnitPrice);
 		  data[args.row]["amount"] = roundedAmount;
 		  data[args.row]["unitPrice"] = upb;
 		}
@@ -597,7 +597,7 @@
 		addServiceCharge(args.row);
 				
 		var taxAmt = data[args.row]["taxAmt"];
-				
+		roundedAmount=data[args.row]["amount"];
 		var servChg = data[args.row]['SERVICE_CHARGE_AMT'];
 		if(servChg){
 			roundedAmount = roundedAmount + servChg;
@@ -610,7 +610,7 @@
 			getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, args.row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
 		}
 		grid.updateRow(args.row);
-		updatePayablePrice(args.row)
+		updatePayablePrice(args.row);
 		updateTotalIndentAmount();
 		updateCurrentQuota(args);
 	 } 
@@ -624,8 +624,9 @@
 		       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
 		       		data[args.row]['cProductName'] = data[currentrow-1]["cProductName"];
 		       		data[args.row]['remarks'] = data[currentrow-1]["remarks"];
-		       		//data[args.row]['amount'] = data[currentrow-1]["amount"];
+		       		data[args.row]['amount'] = data[currentrow-1]["amount"];
 		       		data[args.row]['unitPrice'] = data[currentrow-1]["unitPrice"];
+				   	data[args.row]['KgunitPrice'] = data[currentrow-1]["KgunitPrice"];
 				   	
 	      		 	grid.updateRow(args.row);
 				   	
@@ -668,7 +669,7 @@
 						       			data[args.row]['quantity'] =qut;
 						       			data[args.row]['usedQuota'] =qut;
 						       			data[args.row]['baleQuantity'] =qut;
-						       			utprice=data[currentrow]["unitPrice"];
+						       			utprice=data[currentrow]["KgunitPrice"];
 						       			amount=qut*utprice;
 						       			data[args.row]['amount'] = amount;
 						      		 	grid.updateRow(args.row);
