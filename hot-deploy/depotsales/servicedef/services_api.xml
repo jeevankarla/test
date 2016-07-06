@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>DepotSales Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+   	<service name="getWeaverIndents" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getWeaverIndents">
+        <description>List Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <!-- <attribute name="branchList" type="java.util.List" mode="IN" optional="true"/> -->
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="tallyRefNO" type="String" mode="IN" optional="true"/>
+        <attribute name="orderNo" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedDeliveryDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedDeliveryThruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="indentDateSort" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+        
+        <attribute type="Map" mode="OUT" name="indentSearchResults" optional="true"/>
+    </service>
+    
+    
+    
+</services>
+
