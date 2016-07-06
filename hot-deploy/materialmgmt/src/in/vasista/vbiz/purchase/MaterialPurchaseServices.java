@@ -4537,26 +4537,6 @@ catch(Exception e){
 	  		return ServiceUtil.returnError(e.toString());
   		}
         
-        //Create PartyClassification===============
-        
-        
-        Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
-        inPartyMapClass.put("partyClassificationGroupId", partyClassificationTypeId);
-        inPartyMapClass.put("partyId", partyId);
-		try{            	
-			Map resultMap = dispatcher.runSync("createPartyClassification", inPartyMapClass);
-			if (ServiceUtil.isError(resultMap)) {
-					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
-					Debug.logError(errMsg , module);
-					return ServiceUtil.returnError(errMsg);
-             }
-			partyId = (String)resultMap.get("partyId");
-			
-        }catch (GenericServiceException e) {
-         Debug.logError(e, module);
-         return ServiceUtil.returnError("Service Exception: " + e.getMessage());
-      }
-
         
 		 // Create Postal Address And Contact Mech Purpose
         inMap.clear();
@@ -4628,6 +4608,23 @@ catch(Exception e){
 	  		return ServiceUtil.returnError(e.toString());
   		}
         
+        //Create PartyClassification===============
+        Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+        inPartyMapClass.put("partyClassificationGroupId", partyClassificationTypeId);
+        inPartyMapClass.put("partyId", partyId);
+		try{            	
+			Map resultMap = dispatcher.runSync("createPartyClassification", inPartyMapClass);
+			if (ServiceUtil.isError(resultMap)) {
+					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+					Debug.logError(errMsg , module);
+					return ServiceUtil.returnError(errMsg);
+             }
+			//partyId = (String)resultMap.get("partyId");
+			
+        }catch (GenericServiceException e) {
+         Debug.logError(e, module);
+         return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+      }
         
         // create landLine number
         inMap.clear();
