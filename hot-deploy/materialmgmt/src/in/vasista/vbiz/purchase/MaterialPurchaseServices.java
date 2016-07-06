@@ -4521,6 +4521,7 @@ catch(Exception e){
 	  		}
 
 		}
+		
 		 // Create Party Role
         inMap.clear();
         inMap.put("userLogin", userLogin);
@@ -4535,6 +4536,28 @@ catch(Exception e){
 	  		Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
   		}
+        
+        //Create PartyClassification===============
+        
+        
+        Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+        inPartyMapClass.put("partyClassificationGroupId", partyClassificationTypeId);
+        inPartyMapClass.put("partyId", partyId);
+		try{            	
+			Map resultMap = dispatcher.runSync("createPartyClassification", inPartyMapClass);
+			if (ServiceUtil.isError(resultMap)) {
+					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+					Debug.logError(errMsg , module);
+					return ServiceUtil.returnError(errMsg);
+             }
+			partyId = (String)resultMap.get("partyId");
+			
+        }catch (GenericServiceException e) {
+         Debug.logError(e, module);
+         return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+      }
+
+        
 		 // Create Postal Address And Contact Mech Purpose
         inMap.clear();
         String postalContactId = null;
@@ -4663,10 +4686,7 @@ catch(Exception e){
 		     if(UtilValidate.isNotEmpty(cstNumber)){
 		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
 		   	 }
-		     if(UtilValidate.isNotEmpty(partyClassificationTypeId)){
-		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CUST_CLASSIFICATION","idValue",partyClassificationTypeId,"partyId",partyId,"userLogin", context.get("userLogin")));
-		   	 }
-		     
+		    
         }catch(GenericServiceException e){
 	  		Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
