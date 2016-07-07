@@ -495,4 +495,64 @@ public class DepotSalesApiServices{
         return result;
 		
 	}
+    
+    public static Map<String, Object> getSuppliers(DispatchContext ctx,Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+    	String partyId = (String) context.get("partyId");
+    	String partyTypeId = (String) context.get("partyTypeId");
+    	String roleTypeId = (String) context.get("roleTypeId");
+    	String groupName = (String) context.get("groupName");
+    	List conditionList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(partyId)){
+        	conditionList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.LIKE, "%"+partyId+"%"));
+        }
+        if(UtilValidate.isNotEmpty(partyTypeId)){
+        	conditionList.add(EntityCondition.makeCondition("partyTypeId" ,EntityOperator.EQUALS, partyTypeId));
+        }
+        else{
+        	conditionList.add(EntityCondition.makeCondition("partyTypeId" ,EntityOperator.EQUALS,"PARTY_GROUP"));
+        }
+        if(UtilValidate.isNotEmpty(roleTypeId)){
+        	conditionList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, roleTypeId));
+        }
+        else{
+        	conditionList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS,"SUPPLIER"));
+        }
+        if(UtilValidate.isNotEmpty(groupName)){
+        	conditionList.add(EntityCondition.makeCondition("groupName" ,EntityOperator.LIKE, "%"+groupName+"%"));
+        }
+        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED"), 
+					EntityOperator.OR, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null)));
+        EntityListIterator partyListIter = null;
+		try {
+			partyListIter = delegator.find("PartyRoleDetailAndPartyDetail", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to get suppliersList ", module);
+			return ServiceUtil.returnError("Failed to get suppliersList " + e);
+		}
+		GenericValue eachParty = null;
+		Map suppliersMap = FastMap.newInstance();
+		while( partyListIter != null && (eachParty = partyListIter.next()) != null) {
+			Map partyDetail = FastMap.newInstance();
+			partyDetail.put("partyId",eachParty.get("partyId"));
+			partyDetail.put("groupName",eachParty.get("groupName"));
+			partyDetail.put("roleTypeId",eachParty.get("roleTypeId"));
+			partyDetail.put("partyTypeId",eachParty.get("partyTypeId"));
+			suppliersMap.put(eachParty.get("partyId"),partyDetail);
+		}
+		if (partyListIter != null) {
+            try {
+            	partyListIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+		result.put("suppliersMap",suppliersMap);
+		result.put("suppliersMapSize",Integer.valueOf(suppliersMap.size()));
+        return result;
+    }
+    
 }
