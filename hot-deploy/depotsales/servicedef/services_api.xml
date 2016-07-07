@@ -32,6 +32,16 @@
         <attribute type="Map" mode="OUT" name="paymentSearchResults" optional="true"/>
     </service>
     
+    <service name="getSuppliers" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getSuppliers">
+        <description>List Suppliers</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute type="Map" mode="OUT" name="suppliersMap" optional="true"/>
+        <attribute type="Integer" mode="OUT" name="suppliersMapSize" optional="true"/>
+    </service>
     
 </services>
 
