@@ -713,13 +713,7 @@
 		for (i = 0; i < data3.length; i++) {
 		   if(!isNaN(data3[i]["adjAmount"])){
 		   		var termType = data3[i]["invoiceItemTypeId"];
-		   		if(termType == "COGS_DISC" || termType == "COGS_DISC_ATR"){
-		   			totalAmount -= data3[i]["adjAmount"];
-		   		}
-		   		else{
-		   			totalAmount += data3[i]["adjAmount"];
-		   		}
-				
+		   		totalAmount -= data3[i]["adjAmount"];
 		   }
 		}
 		
