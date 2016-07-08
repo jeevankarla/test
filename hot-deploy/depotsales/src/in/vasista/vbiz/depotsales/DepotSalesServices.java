@@ -7818,7 +7818,7 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
 		}
 	    
-	    
+	    Debug.log("purposeTypeId=================="+purposeTypeId);
 	    
 	    List conditionList = FastList.newInstance();
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
@@ -7832,6 +7832,9 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
 		}
 	    
+	    Debug.log("invoiceItemList=================="+invoiceItemList);
+
+		
 	    GenericValue orderHeader = null;
 	    try {
 	    	orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -7840,6 +7843,10 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+	    
+	    Debug.log("orderHeader=================="+orderHeader);
+
+	    
 	    if (orderHeader == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingNoOrderHeader",locale));
         }
@@ -7855,6 +7862,9 @@ public class DepotSalesServices{
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+	    
+	    Debug.log("salesOrderitems=================="+salesOrderitems);
+
 	    
 	    Map orderAssocMap = FastMap.newInstance();
 	    
@@ -7910,6 +7920,11 @@ public class DepotSalesServices{
 	    	
 	    }
 	    
+	    
+	    Debug.log("salesOrderitems========toBillItems========="+salesOrderitems);
+
+	    
+	    
 	    String invoiceId = null;
         // Raise Invoice for the unbilled items	    
         Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
@@ -7917,6 +7932,9 @@ public class DepotSalesServices{
         try {
             Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
             invoiceId = (String) servResult.get("invoiceId");
+            
+    	    Debug.log("invoiceId========toBillItems========="+invoiceId);
+
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
             Debug.logError(e, errMsg, module);
@@ -7936,6 +7954,9 @@ public class DepotSalesServices{
      		}
         }
         
+
+	    Debug.log("purposeTypeId========toBillItems========="+purposeTypeId);
+
         
        /* try{
 			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
@@ -8023,6 +8044,10 @@ public class DepotSalesServices{
             createInvoiceItemContext.put("userLogin", userLogin);
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+            	
+        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
+
+            	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
             		String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
                     Debug.logError(errMsg, module);

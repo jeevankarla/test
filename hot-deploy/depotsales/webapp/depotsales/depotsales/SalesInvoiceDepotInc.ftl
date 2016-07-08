@@ -119,6 +119,7 @@
 			var ExcisePer = data[rowCount]["ExcisePercent"];
 			var bedCessPer = data[rowCount]["bedCessPercent"];
 			var bedSecCessPer = data[rowCount]["bedSecCessPercent"];
+			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
 		
 	 		if (!isNaN(qty)) {	 		
@@ -139,6 +140,8 @@
 				jQuery(formId).append(jQuery(inputBedCess));
 				var inputBedSecCess = jQuery("<input>").attr("type", "hidden").attr("name", "bedSecCess_o_" + rowCount).val(bedSecCess);
 				jQuery(formId).append(jQuery(inputBedSecCess));
+				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "oritemseq_o_" + rowCount).val(orderItemSeqId);
+				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				
 				//percentages
 				
