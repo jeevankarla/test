@@ -351,6 +351,8 @@ if(shipments){
 			
 			JSONObject newObj = new JSONObject();
 			newObj.put("cProductId",OrderItem[0].productId);
+			newObj.put("orderItemSeqId",OrderItem[0].orderItemSeqId);
+			
 			
 			productName = ""
 			prod=delegator.findOne("Product",[productId:OrderItem[0].productId],false);

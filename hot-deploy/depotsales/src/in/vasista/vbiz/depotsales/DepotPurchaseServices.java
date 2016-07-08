@@ -56,6 +56,7 @@ import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
 
 
+
 import java.util.Iterator;
 
 
@@ -553,11 +554,14 @@ public class DepotPurchaseServices{
 			}
 		}	
 		
-		
+		Debug.log("orderItems======2232============="+orderItems);
+
 		
 		List productQtyList = FastList.newInstance();
 		List invoiceAdjChargesList = FastList.newInstance();
 		List invoiceDiscountsList = FastList.newInstance();
+		
+	    List<GenericValue> toBillItems = FastList.newInstance();
 		
 		String applicableTo = "ALL";
 		String applicableToDisc = "ALL";
@@ -584,6 +588,7 @@ public class DepotPurchaseServices{
 			
 			String VatPercentStr=null;
 			String CSTPercentStr=null;
+			String orderItemSeq = null;
 			
 			BigDecimal vatPercent=BigDecimal.ZERO;
 			BigDecimal cstPercent=BigDecimal.ZERO; 
@@ -713,6 +718,9 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
+				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
+					orderItemSeq = (String) paramMap.get("oritemseq" + thisSuffix);
+				}
 				
 				try {
 					quantity = new BigDecimal(quantityStr);
@@ -798,12 +806,65 @@ public class DepotPurchaseServices{
 				prodQtyMap.put("bedPercent", BigDecimal.ZERO);
 				productQtyList.add(prodQtyMap);
 			}
+			
+			//=====================================================================================
+			
+			
+			List<GenericValue> salesOrderitems = null;
+			
+			 try {
+				     List itemAssocCond = FastList.newInstance();
+			    	itemAssocCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			    	itemAssocCond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeq));
+			    	itemAssocCond.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		    		
+			      	salesOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition(itemAssocCond, EntityOperator.AND), null, UtilMisc.toList("orderItemSeqId"), null, false);
+			    } catch (GenericEntityException e) {
+			    	/* Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(salesOrderitems), module);
+			  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(salesOrderitems));
+	*/		  			return "error";
+		        }
+			
+	 		GenericValue eachItem = EntityUtil.getFirst(salesOrderitems);
+	 		
+	 		if(UtilValidate.isNotEmpty(quantity))
+	 		eachItem.set("quantity", quantity);
+	 		if(UtilValidate.isNotEmpty(uPrice))
+	 		eachItem.set("unitPrice", uPrice);
+	 		
+	        Debug.log("eachItem==============="+eachItem);
+	        
+	 		toBillItems.add(eachItem);
+			
 		}//end row count for loop
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
+		
+		Debug.log("productQtyList==================="+productQtyList);
+
+		Debug.log("orderId=============="+orderId);
+		
+		
+		
+		//Timestamp nowTimeStamp = 
+		  //String invoiceId = null;
+		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", UtilDateTime.nowTimestamp(), "userLogin", userLogin);
+          serviceContext.put("shipmentId",shipmentId);
+          try {
+               result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+              String invoiceId1 = (String) result.get("invoiceId");
+              
+              Debug.log("result==============="+result);
+              Debug.log("invoiceId1==============="+invoiceId1);
+          } catch (GenericServiceException e) {
+              
+              Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(result), module);
+  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
+  			return "error";
+        }
 		
 		// Get Purpose type based on product
 		
@@ -833,7 +894,7 @@ public class DepotPurchaseServices{
 		if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			processInvoiceContext.put("isDisableAcctg", isDisableAcctg);
 		}
-		result = createDepotSalesInvoice(dctx, processInvoiceContext);
+		//result = createDepotSalesInvoice(dctx, processInvoiceContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
@@ -1270,6 +1331,9 @@ public class DepotPurchaseServices{
 				
 				String invoiceId = (String)result.get("invoiceId");
 				
+				
+				Debug.log("invoiceId======================"+invoiceId);
+				
 				Map itemSeqMap = FastMap.newInstance();
 				int i=0;
 				for (Map<String, Object> prodQtyMap : productQtyList) {
@@ -1377,6 +1441,9 @@ public class DepotPurchaseServices{
 					
 					itemSeqMap.put(productId, invItemSeqId);
 					
+					Debug.log("invItemSeqId========invItemSeqId=============="+invItemSeqId);
+
+					
 					if(UtilValidate.isNotEmpty(vatItemCtx)){
 						vatItemCtx.put("invoiceId", invoiceId);
 						vatItemCtx.put("parentInvoiceId", invoiceId);
@@ -1388,12 +1455,20 @@ public class DepotPurchaseServices{
 							return ServiceUtil.returnError("Error creating Invoice item for Item : VAT PUR");
 						}
 					}
+					
+					Debug.log("vatItemCtx========vatItemCtx=============="+vatItemCtx);
+
+					
 					if(UtilValidate.isNotEmpty(cstItemCtx)){
 						cstItemCtx.put("invoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
 						cstItemCtx.put("userLogin", userLogin);
 						result = dispatcher.runSync("createInvoiceItem", cstItemCtx);
+						
+						Debug.log("result========cstItemCtx=============="+result);
+
+						
 						if (ServiceUtil.isError(result)) {
 							Debug.logError("Error creating Invoice item for Item: CST PUR", module);	
 							return ServiceUtil.returnError("Error creating Invoice item for Item: CST PUR");
@@ -1415,7 +1490,8 @@ public class DepotPurchaseServices{
 					i++;
 				}
 				
-				
+				Debug.log("result========cstItemCtx=============="+result);
+
 				
 				for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
 					
