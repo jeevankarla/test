@@ -1095,16 +1095,16 @@
 	function calculateBundleWeight(balQuty,uom,org2){
 	  var result=0;
 	    if(uom == "Bale"){
-			result = Math.round(balQuty*org2*40);
+			result = balQuty*org2*40;
 		}
 		else if(uom == "Half-Bale"){
-		    result = Math.round(balQuty*org2*20);
+		    result = balQuty*org2*20;
 		}
 		else if(uom == "Bundle"){				
-		    result = Math.round(balQuty*org2);
+		    result = balQuty*org2;
 		}
 		else if(uom == "KGs"){				
-		    result = Math.round(balQuty);
+		    result = balQuty;
 		}
 		return result;
 	 }
