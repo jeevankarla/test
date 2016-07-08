@@ -25,7 +25,7 @@ under the License.
 <script type="text/javascript">
 
 	var voucherPaymentMethodTypeMap = ${StringUtil.wrapString(voucherPaymentMethodJSON)!'{}'};
-	var paymentMethodList;
+	var paymentMethodList = [];
 /*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -351,6 +351,28 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
         massInvoicePayments(form);
         
     }
+	        
+	function confirmInvoiceCancel(invoiceId) {
+        var msg = "You want to cancel this invoice "+invoiceId+" ?";
+    	var agree = confirm(msg);
+    	if (agree) {
+        	showCancelInvoiceQtip(invoiceId);
+    	}
+    	return false;
+	}	
+	function showCancelInvoiceQtip(invoiceId){
+		var invoiceId = invoiceId;
+     	var message = "";
+            message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='cancelSalesInvoice' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+      		message += "<tr class='h2'><td align='left' class='h5' width='60%'>Invoice Id:</td><td align='left'  width='90%'>"+invoiceId+"</td></tr>";
+  			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'>"	
+  			message += "<input type='hidden' id='invId' name='invoiceId' value='"+invoiceId+"' >"
+  			message += "<input class='h4' type='text' id='cancelComments' name='cancelComments' required /><input class='h4' type='hidden' id='statusId' name='statusId' value='INVOICE_CANCELLED' /></td></tr>";
+ 		    message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
+		    message +=	"</table></form></body></html>";		    
+		var title = "Reason for cancel";
+    	Alert(message, title);
+	}
 	
 	
 	
@@ -414,6 +436,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <#--> <td>AR Payment</td>--> 
           <td>Payment Advice</td>
           <td>Invoice voucher</td>
+          <td>Cancel</td>
          <#--> <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>-->
         </tr>
       </thead>
@@ -484,8 +507,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if>
               
-              
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
+              <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
+              
             <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>

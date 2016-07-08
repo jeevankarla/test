@@ -1883,6 +1883,25 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseInvoiceDetailsPDFReport"/>
     </request-map>
+        
+    <request-map uri="cancelPurchaseInvoice">
+        <security https="true" auth="true"/>
+        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotPurchaseInvoice">
+            <redirect-parameter name="invoiceTypeId" value="PURCHASE_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotPurchaseInvoice"/>
+    </request-map>
+    <request-map uri="cancelSalesInvoice">
+        <security https="true" auth="true"/>
+        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotSalesInvoice">
+            <redirect-parameter name="invoiceTypeId" value="SALES_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotSalesInvoice"/>
+    </request-map>
+    
+    
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
