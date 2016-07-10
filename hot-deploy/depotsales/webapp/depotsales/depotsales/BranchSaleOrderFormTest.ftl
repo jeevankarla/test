@@ -105,6 +105,18 @@
 		    background-color: #3e8e41;
 		}
 		
+		.labelItemHeader {
+	    	font-size: 13px;
+	    	background:#B0C0E0;
+	    	color: white;
+	    	border: .8px solid green;
+	    	border-radius: 5px; 
+	    	font-size: 11px;
+	    	line-height:1.5em;
+	    	padding: .5x 7px;
+	    	display: inline-block;
+	    	text-align: right;
+		}
 		
 	</style>
 	
@@ -1427,11 +1439,14 @@ function fillPartyQuota(partyId){
 	
 	<div class="bottom" style="margin-top:25px;">
 		<div class="screenlet" >
-			<div class="grid-header" style="width:100%">
+			<div class="grid-header" style="margin-left:auto; margin-right:0;">
 				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
 				<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
-				<input type="button" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
-				<span style="float:right; margin-left: -5px;" id="totalAmount"></span>
+				<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+				<label style="float:left" id="itemsSelected" class="labelItemHeader"></label>
+				<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
+				<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>
+				<label style="float:left" id="totalPayable" class="labelItemHeader"></label>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>

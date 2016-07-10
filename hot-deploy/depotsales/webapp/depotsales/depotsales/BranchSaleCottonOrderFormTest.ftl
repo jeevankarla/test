@@ -7,7 +7,7 @@
 	    	font-size: 13px;
 		}
 		.form-style-8{
-		    max-width: 650px;
+		    max-width: 680px;
 		    max-height: 200px;
 		    max-right: 10px;
 		    margin-top: 10px;
@@ -67,12 +67,74 @@
     		padding: 10px;
     		color: black;
 		} 
+		
+		.loomTypes td {
+		    text-align: left;
+		}
+		
+		//.button3 {background-color: #008CBA;} /* Blue */
+		
+		.button2 {
+			background-color:  #008CBA; /* Blue */
+		    border: .8px solid green;
+		    color: white;
+		    padding: .5x 7px;
+		    text-align: center;
+		    text-decoration: none;
+		    display: inline-block;
+		    font-size: 10px;
+		    cursor: pointer;
+		    float: left;
+		    border-radius: 5px;
+		}   
+		.button2:hover {
+		    background-color: #3e8e41;
+		}
+		
+		input[type=button] {
+			color: white;
+		    padding: .5x 7px;
+		    background:#008CBA;
+		    border: .8px solid green;
+		    border:0 none;
+		    cursor:pointer;
+		    -webkit-border-radius: 5px;
+		    border-radius: 5px; 
+		}
+		input[type=button]:hover {
+		    background-color: #3e8e41;
+		}
+		
+		.labelItemHeader {
+	    	font-size: 13px;
+	    	background:#B0C0E0;
+	    	color: white;
+	    	border: .8px solid green;
+	    	border-radius: 5px; 
+	    	font-size: 11px;
+	    	line-height:1.5em;
+	    	padding: .5x 7px;
+		}
+		
 	</style>
 	
 	<script type="text/javascript">
 			var supplierAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};	
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
-
+		function getQotaByManuval(){
+			var selectedDate= $('#effectiveDate').val();
+			var effDate=Date.parse(selectedDate);
+			var targetDate=Date.parse("04/01/2016");
+			if(effDate<targetDate && $('#schemeCategory').val()=="MGPS_10Pecent"){
+				if($('#manualQuota').val()==undefined){
+					var externalQupta="<label id='manualQuotaLabel' name='manualQuotaLabel'>Quota</label><input type='text' id='manualQuota' name='manualQuota' />"
+		 			$('#effectiveDateTd').append(externalQupta);
+		   		}
+			} else{
+		    	$("#manualQuota").remove();
+		    	$("#manualQuotaLabel").remove();
+		 	}
+		}
 		$(document).ready(function(){
 			 $("#open_popup").click(function(){
                	getShipmentAddress();
@@ -84,7 +146,7 @@
            	 });
            
 			 $("#societyfield").hide();
-			 	fillPartyData();
+			 	fillPartyData($('#partyId').val());
 			 	$("#editServChgButton").hide();
 			if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
@@ -93,18 +155,27 @@
 	  				var scPerc = $('#serviceChargePercent').val();
 	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
-	  		} 	
+	  		}
+	  		
+           	  		
+	  		 	
 			$( "#effectiveDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
+				changeYear : true,
+				//changeDate : true,
 				//minDate: new Date(),
 				maxDate: 14,
 				onSelect: function( selectedDate ) {
 					$( "#effectiveDate" ).datepicker("option", selectedDate);
-				    fillPartyData();
+					fillPartyData($('#partyId').val());
 				}
+				
 			});
+			
+			
+			
 			$( "#orderDate" ).datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
@@ -115,18 +186,18 @@
 					$( "#orderDate" ).datepicker("option", selectedDate);
 				}
 			});
-			$( "#indentReceivedDate" ).datepicker({
+			$("#indentReceivedDate").datepicker({
 				dateFormat:'d MM, yy',
 				changeMonth: true,
 				numberOfMonths: 1,
 				changeYear: true,
 				//minDate: new Date(),
 				//maxDate: 14,
+				//maxDate: new Date(),
 				onSelect: function( selectedDate ) {
-					$( "#indentReceivedDate" ).datepicker("option", selectedDate);
+   		         	$( "#indentReceivedDate" ).datepicker("option", selectedDate);
 					
-					
-					 var rmonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+   		            var rmonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
                     var ryear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
                     var date = $("#indentReceivedDate").datepicker( 'getDate' );
    		            var vdate = date.toString();
@@ -149,7 +220,9 @@
                         alertForDate();
                     }
                     
-				}
+                    
+                
+                }
 			});
 			
 			$( "#chequeDate" ).datepicker({
@@ -220,8 +293,15 @@
 			  		}
 	    			
 	    			var transporterId = $("#transporterId").val();
+	    			var tallyReferenceNo = $("#tallyReferenceNo").val();
+	    			
+	    			
 			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
+			         var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
+					
+					
 					jQuery(indententryinit).append(jQuery(transporte));
+					jQuery(indententryinit).append(jQuery(tallyReferenceNo));
 					
 	    			$('#indententryinit').submit();
 	    			return false;   
@@ -300,10 +380,9 @@
 	         }
 	    }
 	    
-		function fillPartyData(){
-					var partyId = $('[name=partyId]').val();
-		
-				       	  				 if( partyId != undefined && partyId != ""){
+		function fillPartyData(partyId){
+
+			if( partyId != undefined && partyId != ""){
 			$('.partyLoom').remove();
 				var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
 	      	$.ajax({
@@ -329,40 +408,42 @@
 		       	  				  var cottonLooms=0;
 		       	  				  var WoolLooms=0;
 		       	  				  var obj ={};
-		       	  				  var objQuota ={};
-		       	  				  var  objAvailableQuota ={};
-		       	  				  var objUsedQuota ={};
+		       	  				   var objQuota ={};
+		       	  				    var  objAvailableQuota ={};
+		       	  				     var objUsedQuota ={};
 		       	  				 // alert(JSON.stringify(LoomDetails));
+		       	  				  
 		       	  				  $.each(LoomList, function(key, item){
-		       	  				  obj [item.loomType]=0;
-		       	  				   objQuota[item.loomType]=0;
-		       	  				   objAvailableQuota[item.loomType]=0;
-		       	  				   objUsedQuota[item.loomType]=0;
+		       	  				  	obj [item.loomType]=0;
+		       	  				  	objQuota[item.loomType]=0;
+		       	  				  	objAvailableQuota[item.loomType]=0;
+		       	  				   	objUsedQuota[item.loomType]=0;
+		       	  				  	
 		       	  				  	for(var i=0 ; i<LoomDetails.length ; i++){
 			       	  				  if(LoomDetails[i].loomType==item.loomType){
-			       	  				 		 obj [item.loomType] = LoomDetails[i].loomQty;
-			       	  				 		 objQuota [item.loomType] = LoomDetails[i].loomQuota; 
-			       	  				 		  objAvailableQuota [item.loomType] = LoomDetails[i].availableQuota; 
-          									    objUsedQuota [item.loomType] = LoomDetails[i].usedQuota; 
-          									  
-			       	  				 	}			       	  				 	
-		       	  				  	}
-		       	  				  });		       	  				   
+			       	  				 	 obj [item.loomType] = LoomDetails[i].loomQty;
+          								 objQuota [item.loomType] = LoomDetails[i].loomQuota; 
+          								 objAvailableQuota [item.loomType] = LoomDetails[i].availableQuota; 
+          								 objUsedQuota [item.loomType] = LoomDetails[i].usedQuota; 
+			       	  				  }			       	  				 	
+		       	  				    }
+		       	  				  
+								  });		       	  				   
 		       	  				  var tableElement;
 		       	  				  var totLooms = 0;
 		       	  				  
-		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="green">Loom Type</font></td>';
-		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">No.Looms</font></td>';
-		       	  				   tableElement += '<td width="20%" align="left" class="label"><font color="green">Elg.Quota</font></td>';
-		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="green">Bal.Quota</font></td>';
-		       	  				  tableElement += '<td width="20%" align="left" class="label"><font color="green">UsedQuota</font></td></tr>';
+		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" class="label"><font color="green">Loom Type</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">No.Looms</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Elg.Quota(Per Month)</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Bal.Quota(Inc Advance)</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">UsedQuota</font></td></tr>';
 		       	  				   
-		       	  				 $.each(LoomList, function(key, item){
-		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" align="left" class="label"><font color="blue">'+item.loomType+'</font></td>';
-		       	  				    tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+obj[item.loomType]+'</font></td>';
-		       	  				 	tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td>';
-		       	  				 	 tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objAvailableQuota[item.loomType]+'</font></td>';
-		       	  		            tableElement += '<td width="20%" align="left" class="label"><font color="blue">'+objUsedQuota[item.loomType]+'</font></td></tr>';
+		       	  				  $.each(LoomList, function(key, item){
+		       	  				    tableElement += '<tr class="partyLoom"><td width="20%" class="label"><font color="blue">'+item.desc+'</font></td>';
+		       	  				    tableElement += '<td width="20%" class="label"><font color="blue">'+obj[item.loomType]+'</font></td>';
+		       	  				    tableElement += '<td width="20%" class="label"><font color="blue">'+objQuota[item.loomType]+'</font></td>';
+		       	  				    tableElement += '<td width="20%" class="label"><font color="blue">'+objAvailableQuota[item.loomType]+'</font></td>';
+		       	  		            tableElement += '<td width="20%" class="label"><font color="blue">'+objUsedQuota[item.loomType]+'</font></td></tr>';
 		       	  				 	totLooms = totLooms+parseInt(obj[item.loomType]);
 		       	  				     
 		       	  				 });
@@ -414,16 +495,17 @@
 										    		if(transprotersList.length != 0){
 										     			var transporterJSON = ${StringUtil.wrapString(transprotersList)!'[]'};
 														$(document).ready(function(){
-										             		$("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
-														});
-										   			}
-					               				}
-					               			}							
-										});
-									}
+										             	$("#transporterId").autocomplete({ source: transprotersList }).keydown(function(e){});     
+													});
+										   		}
+					               			}
+					               		}							
+									});
+							
+								}
 							  
-	       	  					}
-	      				}
+	       	  				}
+	      			}
 	               
 	          	} ,
 	         	error: function() {
@@ -629,13 +711,14 @@
 	      			},
 	      			select: function(e, ui) {
 			        	$('span#partyTooltip').html('<label>'+ui.item.label+'</label>');
+			        	fillPartyData(ui.item.value);
 			        	fillPartyQuota(ui.item.value);
 			        }
 					
 			  });	
 		 }
-	 	function fillPartyQuota(partyId){
-
+	 	
+function fillPartyQuota(partyId){
 	if( partyId != undefined && partyId != ""){
 				var dataString="partyId="+partyId;
 	      	$.ajax({
@@ -648,7 +731,7 @@
 	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
 	       	  		 alert(result["_ERROR_MESSAGE_"]);
 	          			}else{ 
-	       	  				  contactDetails =result["quotaJson"];
+	          			      contactDetails =result["quotaJson"];
 	       	  				  SchemeList=contactDetails["SchemeList"];
 	       	  				  var tableElement="";
 	       	  				  
@@ -666,7 +749,6 @@
 	         	 });
 	         	 }
 	        }
-	 	
 	 	var orderAddres;
 
       	function getShipmentAddress(){
@@ -729,12 +811,14 @@
       
       	}
 	 	
+	 	
 	 	function tallyRefMethod(){
            	  	
           var tallyReferenceNo = $("#tallyReferenceNo").val();  	  	
           $("#ediTallyRefNo").val(tallyReferenceNo);  
         
         }
+	 	
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -755,7 +839,7 @@
 				</div>
 		     </div>
       
-    		<div class="screenlet-body">
+    		<div class="screenlet-body" >
     		  <#assign frmAction="BranchSalesOrder">
 	    <#if parameters.formAction?has_content>
 	    	    <#assign frmAction=parameters.formAction>
@@ -788,9 +872,8 @@
 				          		</td>       
 				          		
 				          		<#if parameters.cfcs?exists && parameters.cfcs?has_content>  
-				          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>CFC:<font color="red">*</font></div></td>
+				          			<td align='left' valign='middle' nowrap="nowrap" colspan="5"><div class='h3'>CFC:<font color="red">*</font></div>
 						  	  		<input type="hidden" name="cfcs" id="cfcs" value="${parameters.cfcs?if_exists}"/>  
-					          		<td valign='middle'>
 					            		<div><font color="green">
 					               			${parameters.cfcs}           
 					            		</div>
@@ -799,7 +882,7 @@
 				          		
 				          		
 				          	<#else>
-				          		<td valign='middle'>
+				          		<td valign='middle' colspan="5">
 				          			<input type="text" name="productStoreId" id="productStoreId"/>
 				          			<span class="tooltip" id="branchName"></span>
 				          			<label class='CFC_TD' style='display:none;'><b>CFC:</label>
@@ -858,7 +941,7 @@
 						 	<#if party?exists && party?has_content>  
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
 					  	  		<input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/>
-				          		<td valign='middle' colspan="2">
+				          		<td valign='middle' colspan="6">
 				            		<div ><font color="green">
 				            		    <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :party.partyId,"partyIdentificationTypeId":"PSB_NUMBER"}, true)?if_exists>
          								<#assign passBookDetails=partyIdentification?if_exists>
@@ -866,18 +949,17 @@
 				            		</div>
 				          		</td>       
 				       		<#else>               
-				          		<td valign='middle'>
-                 					<#-- <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupEmpanelledPartyName"/>
-				          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />-->
+				          		<td valign='middle' colspan="6">
 				          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
 				          		</td>
-				          		<#--<td colspan="2"><span class="tooltip" id="partyName"></td></span></td>-->
-			        			<#--<td><span class="tooltip">Input party code and press Enter</span></td>-->
 				          	</#if>
 			        	</#if>
 						
 	               	</tr>
 	               	
+	               	<tr>
+	               		<td>&nbsp;</td>
+	               	</tr>
 	               	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
@@ -899,7 +981,22 @@
 		          				</select>
 		          			</td>
 		       			</#if>
-		       		</tr>	
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
+		       			<#if parameters.schemeCategory?exists && parameters.schemeCategory?has_content>  
+			  	  			<input type="hidden" name="schemeCategory" id="schemeCategory" value="${parameters.schemeCategory?if_exists}"/>  
+		          			<td valign='middle'>
+		            			<div><font color="green"><#if parameters.schemeCategory == "MGPS_10Pecent">MGPS + 10% <#else>${parameters.schemeCategory?if_exists}</#if></div>
+		          			</td>       	
+		       			<#else>      	         
+		          			<td valign='middle'>
+		          				<select name="schemeCategory" id="schemeCategory" class='h3'  style="width:162px">
+		          						          					
+		          				</select>
+		          			</td>
+		       			</#if>
+		       		</tr>
+		       		
+		       		<#--	
 	               	<tr>
 		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SchemeCategory}:</div></td>
@@ -910,13 +1007,13 @@
 		          			</td>       	
 		       			<#else>      	         
 		          			<td valign='middle'>
-		          				<select name="schemeCategory" id="schemeCategory" class='h3' style="width:162px">
-		          					      					
+		          				<select name="schemeCategory" id="schemeCategory" class='h3'  style="width:162px">
+		          						          					
 		          				</select>
 		          			</td>
 		       			</#if>
 		       		</tr>	
-		       		<#--
+		       		
 					<tr>
 					<td>&nbsp;</td>
 					<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentTaxType}:</div></td>
@@ -935,6 +1032,9 @@
 		       			</#if>
 	               	</tr>
 	               	-->	
+	               	
+	               	
+	               	
                     <tr>  
 		       	  		<td>&nbsp;</td>
 		       	  		<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.IndentDate}:</div></td>
@@ -953,16 +1053,36 @@
 					        </#if>
 			          		<#if effectiveDate?exists && effectiveDate?has_content>  
 				  	  			<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
+				  	  		<#if manualQuota?exists && manualQuota?has_content>
+				  	  			<input type="hidden" name="manualQuota" id="manualQuota" value="${manualQuota}"/>
+				  	  		</#if>
 				          		<td align='left' valign='middle'>
 				            		<div><font color="green">${effectiveDate}         
 				            		</div>
 				          		</td>       
 			       	  		<#else> 
-				          		<td valign='left'>          
+				          		<td valign='left' id='effectiveDateTd'>          
 				            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 				            	</td>
 			       	  		</#if>
+			       	  		
+		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
+							<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Recd Date by NHDC:</div></td>
+							<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
+				  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
+				   				<td valign='middle'>
+									<div ><font color="green">${indentReceivedDate}         
+									</div>
+				   				</td>  
+							<#else> 
+				 				<td valign='left'>          
+									<input class='h3' type="text" name="indentReceivedDate" id="indentReceivedDate" value="${defaultEffectiveDate}"/>    
+				 				</td>
+							</#if>
+						</#if>
 		       	  </tr>	
+		       	  
+		       	  <#--
                       <tr>
 		       			<td>&nbsp;</td>
 		       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
@@ -981,6 +1101,9 @@
 						</#if>
                        <td>&nbsp;</td>
 	               	</tr>
+	               	
+	               	-->
+	               	
 	               	<tr>
 		       	  		
 		       			<td>&nbsp;</td>
@@ -1010,20 +1133,18 @@
 				          		
 				          	</#if>
 			        	</#if>
-						
-	               	</tr>	            
-	               	
-	               	<tr>
-		       			<td>&nbsp;</td>
-		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
+			        	
+			        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
 							<#if tallyRefNumber?exists && tallyRefNumber?has_content>  
 				          		<td valign='middle'>
 				            		<div><font color="green">
 				                      <input type="text" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyRefNumber?if_exists}" onblur=tallyRefMethod() />
 				                      <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
+				                      
+				                        
 				            		</div>
 				          		</td>       
-	    	                 <#else>
+				    	<#else>
 							<#if parameters.tallyReferenceNo?exists && parameters.tallyReferenceNo?has_content>  
 					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>  
 				          		<td valign='middle'>
@@ -1036,12 +1157,44 @@
 				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo" onblur=tallyRefMethod() />
 				          			 <input type="hidden" name="ediTallyRefNo" id="ediTallyRefNo" />  
 				          		</td>
+				          		
+				          	</#if>
+						</#if>
+	               	</tr>
+	               	<tr>
+	               		<td>&nbsp;</td>
+	               	</tr>	
+	               	<#--	         
+	               	<tr>
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'> Tally Reference No :</div></td>
+			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
+							<#if tallyReferenceNo?exists && tallyReferenceNo?has_content>  
+					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${tallyReferenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${tallyReferenceNo}               
+				            		</div>
+				          		</td>       
+				          	</#if>
+				    	<#else>
+							<#if parameters.tallyReferenceNo?exists && parameters.tallyReferenceNo?has_content>  
+					  	  		<input type="hidden" name="tallyReferenceNo" id="tallyReferenceNo" value="${parameters.tallyReferenceNo?if_exists}"/>  
+				          		<td valign='middle'>
+				            		<div><font color="green">
+				               			${parameters.tallyReferenceNo}              
+				            		</div>
+				          		</td>       
+				          	<#else>
+				          		<td valign='middle'>
+				          			<input type="text" name="tallyReferenceNo" id="tallyReferenceNo"/>
+				          		</td>
+				          		
 				          	</#if>
 			        	</#if>
-	               	</tr>	
-	               	
+	               	</tr>	               
+	               	-->      	
 	               	<tr>
-		       	  		
 		       			<td>&nbsp;</td>
 		       			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
 			          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -1071,6 +1224,19 @@
 			        	</#if>
 						
 	               	</tr>
+	               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
+					<tr>
+					</tr>
+					<#else>
+	               		<tr>
+		       	  		<td>&nbsp;</td>
+		       			<td>&nbsp;</td>
+		       			<td align='left' valign='middle' nowrap="nowrap">
+		       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
+		       			</td>
+	               		
+						</tr>
+	               	</#if>
 	                 <#--	
 	               	<tr>
 	               		<td>&nbsp;</td>
@@ -1082,7 +1248,8 @@
 	               		<td>&nbsp;</td>
 	               		<td><span class="tooltip">Input party code and press Enter</span></td>
 	               	</tr>
-	               	-->   
+	               	-->  
+	               	
 	      		</table>
 	    	<div id="sOFieldsDiv" >
 		</div> 
@@ -1104,7 +1271,7 @@
 		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${parameters.supplierGeoId?if_exists}"/>
 		<input type="hidden" name="serviceChargePercent" id="serviceChargePercent" value="${parameters.serviceChargePercent?if_exists}"/>
 		<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
-		
+		<input type="hidden" name="manualQuota" id="manualQuota" value="${parameters.manualQuota?if_exists}" />
 		<br>
 	</form>    
 		</div>
@@ -1112,19 +1279,26 @@
 	</div>
 
 	<div class="righthalf">
-		<div class="screenlet" >
-			<div class="screenlet-title-bar">
-         		<div class="grid-header" style="width:100%">
-					<label>Customer Details</label>
+		<div class="screenlet">
+			<div class="grid-header" style="width:100%">
+	 			<label>Customer Details</label>
+	 			<input type="button" id="open_popup" class="buttonText" value="View Delivery Address"  />
+	 			<input type="button" class="buttonText" value="Edit Delivery Address" onclick="javascript:manualAddress();" />
+	 			<#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
+    				<input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
+    			<#else>
+    				<input type="text"  id="transporterId" name="transporterId" placeholder="Select Transporter"/>   
+				</#if>
+	 			<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>-->
 			</div>
-		</div>
-		<div class="screenlet-body">
+    		<div class="screenlet-body">
 				 <form  name="partyDetails" id="partyDetails">
-				 	 <hr class="style17"></hr>
+				 	  	<hr class="style17"></hr>
 	      				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				 	  		<#if parameters.custName?exists && parameters.custName?has_content> 
 		               		 <tr>
 			       				<td width="15%" keep-together="always" align="left"><font color="green"><b>   PartyName       : </b></font></td><td width="85%"><font color="blue"><b>${parameters.custName}</b></font></td>
+			       			
 			       			</tr>
 			       			<#else>
 		               		
@@ -1148,7 +1322,8 @@
 						     <table id ="addressTable"><tbody></tbody></table>
 						     <a href="#" id="close_popup">Close</a>
 						</div>
-						    
+						  
+						<#--    
 					    <table width="100%">
 					    	<tr>
 					    
@@ -1163,73 +1338,71 @@
 								</td>		 	 	   
 				 	 	 	</tr>
 				 	 	</table>
+				 	 	--> 
 				 	 	 
 				 	 	<hr class="style18"></hr>
 				 	  	<table width="100%" border="2" cellspacing="0" cellpadding="0">
-					 	<tr>
-						<td width="60%">
-		      				<table width="100%" border="1" border-style="solid">
-			               
-				       			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
-				       			 <tr>
-				       				<td width="30%" keep-together="always"><font color="green">PassBook: </font></td><td width="85%"><font color="blue"><b>${parameters.psbNo}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="30%" keep-together="always"><font color="green">PassBook: </font></td><td width="85%"> <label  align="left" id="psbNo" style="color: blue"></label></td>
-				       			</tr>
-				       			</#if>
-				       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
-				       			<tr>
-				       				<td width="20%"><font color="green">IssueDate: </font></td><td width="50%"><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="20%"><font color="green">IssueDate: </font></td><td width="50%"><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
-				       			</tr>
-				       			</#if>
-				       			
-				       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
-				       			<tr>
-				       				<td width="20%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="35%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
-				       			</tr>
-				       			</#if>-->
-				       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
-				       			<tr>
-				       				<td width="20%"><font color="green">${uiLabelMap.Depot}: </font></td><td width="50%"><font color="blue"><b> ${parameters.Depo}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="20%"><font color="green">${uiLabelMap.Depot}: </font></td> <td width="50%"><label  align="left" id="Depo" style="color: blue"></label></td>
-				       			</tr>
-				       			</#if>
-				       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
-				       			<tr>
-				       				<td width="20%"><font color="green">DOA: </font></td><td width="50%"><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="20%"><font color="green">DOA: </font></td><td width="50%"><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
-				       			</tr>
-				       			</#if>
-				       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
-				       			<tr>
-				       				<td width="25%"><font color="green">partyType: </font></td><td width="50%"><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
-				       			</tr>
-				       			<#else>
-				       			<tr>
-				       				<td width="25%"><font color="green">partyType: </font></td><td width="50%"><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
-				       			</tr>
-				       			</#if>
-				       			<tr>
-				       				<td width="25%"><font color="green">Total Looms: </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
-				       			</tr>
-				       		</table>
-			       		</td>
+					 		<tr>
+								<td width="100%">
+				      				<table width="100%" border="1" border-style="solid">
+					               
+					               		<tr>
+					               			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+					               				<td keep-together="always"><font color="green"><b>PassBook: </font></td><td><font color="blue"><b>${parameters.psbNo}</b></font></td>
+					               			<#else>
+							       				<td keep-together="always"><font color="green"><b>PassBook: </font></td><td> <label  align="left" id="psbNo" style="color: blue"></label></td>
+							       			</#if>
+							       			
+							       			<#if parameters.issueDate?exists && parameters.issueDate?has_content> 
+							       				<td><font color="green"><b>IssueDate: </font></td><td ><font color="blue"><b> ${parameters.issueDate?if_exists}</b></font></td>
+							       			<#else>
+							       				<td ><font color="green"><b>IssueDate: </font></td><td ><font color="blue"><label  align="left" id="issueDate" style="color: blue"></label></font></td>
+							       			</#if>
+							       			
+							       			<#if parameters.partyType?exists && parameters.partyType?has_content> 
+							       				<td><font color="green"><b>partyType: </font></td><td><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
+							       			<#else>
+							       				<td><font color="green"><b>partyType: </font></td><td><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
+							       			</#if>
+					               		</tr>
+					               
+					               
+						       			<tr>
+							       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
+							       				<td><font color="green"><b>${uiLabelMap.Depot}: </font></td><td><font color="blue"><b> ${parameters.Depo}</b></font></td>
+							       			<#else>
+							       				<td><font color="green"><b>${uiLabelMap.Depot}: </font></td> <td><label  align="left" id="Depo" style="color: blue"></label></td>
+							       			</#if>
+							       			<#if parameters.DOA?exists && parameters.DOA?has_content> 
+							       				<td ><font color="green"><b>DOA: </font></td><td><font color="blue"><b> ${parameters.DAO?if_exists}</b></font></td>
+							       			<#else>
+							       				<td ><font color="green"><b>DOA: </font></td><td><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
+							       			</#if>
+						       				<td><font color="green"><b>Total Looms: </font></td><td><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+						       			</tr>
+						       			
+						       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
+						       			<tr>
+						       				<td width="20%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <font color="blue"><b>${parameters.postalCode}</b></font></td>
+						       			</tr>
+						       			<#else>
+						       			<tr>
+						       				<td width="35%" keep-together="always"><font color="green">postal Code: </font></td><td width="85%"> <label  align="left" id="postalCode" style="color: blue"></label></td>
+						       			</tr>
+						       			</#if>-->
+						       			
+						       			
+						       			<#--
+						       			<tr>
+						       				<td width="25%"><font color="green">Total Looms: </font></td><td width="50%"><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+						       			</tr>
+						       			-->
+						       		</table>
+					       		</td>
+			       		
+			       			</tr>
+			       	<#--
+			       	<tr>
 			       		<td width="40%">
 			       			<table width="100%" id="loomTypes" border="10%" cellspacing="1" cellpadding="2">
 			       				<tr>
@@ -1239,9 +1412,14 @@
 			       			</table>
 			       		</td>
 			       	</tr>
-			       			
-			     </table>
-			     <hr class="style18"></hr>
+			       	-->		
+			     		</table>
+			     	<hr class="style18"></hr>
+			     	<table width="100%" id="loomTypes" class="loomTypes" border="10%" cellspacing="1" cellpadding="2">
+	       				<tr align="left">
+	       				</tr>
+	       			</table>
+	       			<hr class="style18"></hr>
 		       	</form>
 				
 		</div>     
@@ -1255,12 +1433,16 @@
 	
 	</div>
 	
-	<div class="bottom">
+	<div class="bottom" style="margin-top:25px;">
 		<div class="screenlet" >
-			<div class="grid-header" style="width:100%">
-				<span style="float:left; margin-left:-300px;" id="serviceCharge" class="serviceCharge"></span>
-				<a style="float:left; margin-left:-80px;" href="javascript:changeServiceChargePercent()" class="buttontext" id="editServChgButton">Edit Service Charge</a>
-				<span style="float:right; margin-left: -5px;" id="totalAmount"></span>
+			<div class="grid-header" style="margin-left:auto; margin-right:0;">
+				<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
+				<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
+				<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+				<label style="float:left" id="itemsSelected" class="labelItemHeader"></label>
+				<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
+				<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>
+				<label style="float:left" id="totalPayable" class="labelItemHeader"></label>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
