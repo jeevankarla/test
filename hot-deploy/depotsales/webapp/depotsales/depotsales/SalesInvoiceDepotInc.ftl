@@ -74,6 +74,13 @@
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	//var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var data = ${StringUtil.wrapString(invoiceItemsJSON)!'[]'};
+	
+	var data3 = ${StringUtil.wrapString(invoiceDiscountJSON)!'[]'};
+	
+	var data4 = ${StringUtil.wrapString(invoiceAdditionalJSON)!'[]'};
+	
+	
+	
 	var data2 = ${StringUtil.wrapString(adjustmentJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
@@ -120,6 +127,7 @@
 			var bedCessPer = data[rowCount]["bedCessPercent"];
 			var bedSecCessPer = data[rowCount]["bedSecCessPercent"];
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
+			var purchaseInvoiceId = data[rowCount]["purchaseInvoiceId"];
 			
 		
 	 		if (!isNaN(qty)) {	 		
@@ -142,6 +150,10 @@
 				jQuery(formId).append(jQuery(inputBedSecCess));
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "oritemseq_o_" + rowCount).val(orderItemSeqId);
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
+				var inputpurchaseInvoiceId = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseInv_o_" + rowCount).val(purchaseInvoiceId);
+				jQuery(formId).append(jQuery(inputpurchaseInvoiceId));
+				
+				
 				
 				//percentages
 				
@@ -219,12 +231,17 @@
 		});*/
 		var invoiceDate = $("#effectiveDate").val();
 		var tallyrefNo = $("#tallyrefNo").val();
+		var purchaseInvoiceId = $("#purchaseInvoiceId").val();
+		
+		
 		
 		var invoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "invoiceDate").val(invoiceDate);
 		var tallyrefNoField=jQuery("<input>").attr("type", "hidden").attr("name", "tallyrefNo").val(tallyrefNo);
+		var purchaseInvoiceIdField=jQuery("<input>").attr("type", "hidden").attr("name", "purchaseInvoiceId").val(purchaseInvoiceId);
 		
 		jQuery(formId).append(jQuery(invoiceDateField));
 		jQuery(formId).append(jQuery(tallyrefNoField));
+		jQuery(formId).append(jQuery(purchaseInvoiceIdField));
 		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();
@@ -758,7 +775,7 @@
             secondaryHeaderRowHeight: 25
 		};
 			  
-		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
+		grid2 = new Slick.Grid("#myGrid2", data4, withAdjColumns, options2);
         grid2.setSelectionModel(new Slick.CellSelectionModel()); 
      
 		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid2, options2);
@@ -878,7 +895,7 @@
 	function setupGrid3() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
+			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId",cssClass:"readOnlyColumnClass", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
 			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:315, minWidth:315, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
 			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"}
@@ -983,6 +1000,9 @@
         		if (args.cell == 1) {
         			updateInvoiceTotalAmount();
         		}
+        		
+        		
+        		
 		}); 
 		
 		grid3.onActiveCellChanged.subscribe(function(e,args) {
