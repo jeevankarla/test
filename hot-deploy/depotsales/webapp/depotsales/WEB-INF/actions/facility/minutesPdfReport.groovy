@@ -582,16 +582,16 @@ context.Scheam =Scheam;
 				
 				double serviceAmount = 0;
 				double sourcePercentage = 0;
+				
 				 if(scheme == "General"){
 					 
 					 conditionList.clear();
 					 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 					 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-					 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 					 condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					 OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
-		 
-					 if(OrderAdjustment[0]){
+					 
+					 /*if(OrderAdjustment[0]){
 					 if(UtilValidate.isNotEmpty(OrderAdjustment[0].orderAdjustmentTypeId))
 					 {
 					 if(OrderAdjustment[0].orderAdjustmentTypeId == "SERVICE_CHARGE"){
@@ -603,9 +603,29 @@ context.Scheam =Scheam;
 					 } 
 					 
 					 }
+					*/ 
+					 
+					 if(OrderAdjustment){
+					 
+					 for (eachAdjust in OrderAdjustment) {
+						
+						 if(eachAdjust.orderAdjustmentTypeId == "SERVICE_CHARGE"){
+							 if(eachAdjust.amount){
+							   serviceAmount=eachAdjust.amount;
+							   sourcePercentage = eachAdjust.sourcePercentage;
+							 }
+						}
+						 
+					}
+					 
+				 }
+					 
+					 
+					 
 					 
 				 }
 				
+				 
 				 
 				for (eachOrderItem in OrderItemDetail) {
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
@@ -633,7 +653,6 @@ context.Scheam =Scheam;
 				/*if(eachOrderItem.quotaQuantity)
 				  quotaQuantity = Double.valueOf(eachOrderItem.quotaQuantity);*/
 				  
-				  Debug.log("scheme================"+scheme);
 				  
 				  if(scheme != "General"){
 					  if(quantity > quotaQuantity)
