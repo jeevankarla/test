@@ -4,20 +4,29 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastMap;
+
 import java.sql.Timestamp;
+
 import org.ofbiz.base.util.UtilDateTime;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+
 import org.ofbiz.service.ServiceUtil;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+
 import org.ofbiz.product.product.ProductWorker;
+
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
+
 import java.math.RoundingMode;
 
 purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
@@ -43,7 +52,7 @@ if(shipments){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_REJECTED")));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
 	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoice = delegator.findList("Invoice", condition1, null, null, null, false);
 	
@@ -51,10 +60,49 @@ if(shipments){
 	
 	primaryOrderId = shipments.primaryOrderId;
 	
-	Debug.log("shipments======================="+shipments);
+	invoiceLists = EntityUtil.getFirst(invoice);
+	
+	purchaceInvoiceId = invoiceLists.invoiceId
+	
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaceInvoiceId));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM", "VAT_PUR", "CST_PUR")));
+	List<GenericValue> invoiceItemList =null;
+   
+	 invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	
+	 
+     JSONArray invoiceDiscountJSON = new JSONArray();
+	 JSONArray invoiceAdditionalJSON = new JSONArray();
+		invoiceItemList.each{eachItem ->
+			
+			
+			JSONObject newObj = new JSONObject();
+			newObj.put("invoiceItemTypeId",eachItem.invoiceItemTypeId);
+			newObj.put("applicableTo",eachItem.description);
+			newObj.put("adjAmount",eachItem.amount);
+			newObj.put("discQty",eachItem.quantity);
+			
+			if(eachItem.amount > 0)
+			invoiceAdditionalJSON.add(newObj);
+			else
+			invoiceDiscountJSON.add(newObj);
+			
+		}
+			
+		context.invoiceDiscountJSON = invoiceDiscountJSON;
+		context.invoiceAdditionalJSON = invoiceAdditionalJSON;
+	 Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
+	 
+	
+	
+	context.purchaceInvoiceId = purchaceInvoiceId;
+	
+	Debug.log("purchaceInvoiceId======================="+purchaceInvoiceId);
 	Debug.log("orderId======================="+orderId);
 	
-	if(!invoice && orderId){
+	//if(!invoice && orderId){
 		
 		orderedInvoice = Boolean.FALSE;
 		
@@ -431,7 +479,7 @@ if(shipments){
 		}
 		Debug.log("adjustmentJSON============="+adjustmentJSON);
 		//context.adjustmentJSON = adjustmentJSON;
-	}
+	//}
 }
 context.invoiceItemsJSON = invoiceItemsJSON;
 

@@ -50,6 +50,9 @@ $(document).ready(function(){
 	      <table width="60%"  border="0" cellspacing="0" cellpadding="0">  
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />
+	          
+	          <input type="hidden" id="purchaseInvoiceId" name="purchaseInvoiceId"  value="${purchaceInvoiceId}" />
+	          
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
 	          <#if effectiveDate?exists && effectiveDate?has_content>  
 		  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
