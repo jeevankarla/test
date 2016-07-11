@@ -2270,6 +2270,9 @@ under the License.
       <field name="availableToPromiseDiff" type="fixed-point"></field>
       <field name="accountingQuantityDiff" type="fixed-point"></field>
       <field name="unitCost" type="fixed-point"></field>
+      <field name="uom" type="comment"></field>
+      <field name="bundleWeight" type="fixed-point"></field>
+      <field name="bundleUnitPrice" type="currency-amount"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="custRequestId" type="id"></field>

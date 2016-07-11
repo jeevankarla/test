@@ -2629,9 +2629,8 @@ public class MaterialPurchaseServices {
 			return ServiceUtil.returnError("negative value not allowed");
 		}
 		try{
-			
+			List condList = FastList.newInstance();
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
-			
 			GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId), false);
 			BigDecimal origReceiptQty=BigDecimal.ZERO;
 			origReceiptQty = shipmentItem.getBigDecimal("quantity");
@@ -2646,13 +2645,27 @@ public class MaterialPurchaseServices {
 			shipmentReceipt.store();
 			
 			String inventoryItemId = shipmentReceipt.getString("inventoryItemId");
-			
+			String orderId = shipmentReceipt.getString("orderId");
+			String orderItemSeqId = shipmentReceipt.getString("orderItemSeqId");
+			condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+			List<GenericValue> orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+			GenericValue orderItemDets = EntityUtil.getFirst(orderItemDetails);
+            String uom = orderItemDets.getString("Uom");
+            BigDecimal bundleWeight =BigDecimal.ZERO;
+            bundleWeight = orderItemDets.getBigDecimal("bundleWeight");
+            BigDecimal bundleUnitPrice =BigDecimal.ZERO;
+            bundleUnitPrice = orderItemDets.getBigDecimal("bundleUnitPrice");
+
 			Map createInvDetail = FastMap.newInstance();
 			createInvDetail.put("shipmentId", shipmentId);
 			createInvDetail.put("shipmentItemSeqId", shipmentItemSeqId);
 			createInvDetail.put("userLogin", userLogin);
 			createInvDetail.put("inventoryItemId", inventoryItemId);
 			createInvDetail.put("receiptId", receiptId);
+			createInvDetail.put("uom", uom);
+			createInvDetail.put("bundleWeight", bundleWeight);
+			createInvDetail.put("bundleUnitPrice", bundleUnitPrice);
 			createInvDetail.put("quantityOnHandDiff", rejectedQty.negate());
 			createInvDetail.put("availableToPromiseDiff", rejectedQty.negate());
 			result = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
