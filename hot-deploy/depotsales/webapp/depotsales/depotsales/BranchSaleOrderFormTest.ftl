@@ -229,7 +229,38 @@
 			 $('#suplierPartyId').keypress(function (e) { 
 				$("#suplierPartyId").autocomplete({ source: supplierAutoJson , select: function( event, ui ) {
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
-				} });	
+					
+					var suppId = ui.item.value;
+					
+			 if(suppId.length != 0){
+
+	             	var dataJson = {"supplierId": suppId};
+				jQuery.ajax({
+                	url: 'getSupplierAddress',
+                	type: 'POST',
+                	data: dataJson,
+                	dataType: 'json',
+               		success: function(result){
+						if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    	alert("Error in order Items");
+						}else{
+						 var suplierAddresList = result["suplierAddresList"];
+						      var suppAddress=suplierAddresList[0].address1+",";
+						           if(suplierAddresList[0].address2)
+		       	  				   suppAddress +=suplierAddresList[0].address2+",";
+		       	  				   if(suplierAddresList[0].city)
+		       	  				   suppAddress +=suplierAddresList[0].city;
+		       	  				      $("#supplierAddress").html("<h4>"+suppAddress+"</h4>");
+                 		}	
+                 	
+                 	}							
+		      	});
+		      	
+		      	}
+					
+				} 
+				
+				});	
 				if (e.keyCode === 13){
 				
 					calculateTaxApplicability();
@@ -811,6 +842,7 @@ function fillPartyQuota(partyId){
         
         }
 	 	
+	 	
 	</script>
 	
 	<#assign changeRowTitle = "Changes">   
@@ -1208,12 +1240,15 @@ function fillPartyQuota(partyId){
 				          		</td>       
 				          	<#else>
 				          		<td valign='middle'>
-				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
+				          			<input type="text" name="suplierPartyId" id="suplierPartyId"  />
 				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
 				          		</td>
 				          		
 				          	</#if>
 			        	</#if>
+			        	
+			        	
+			        	<td width="15%" keep-together="always" align="left"><font color="green" ><b> Supplier Address : </b></font></td><td width="20%"> <label  align="left" id="supplierAddress" style="color: blue"></label></td>
 						
 	               	</tr>
 	               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
