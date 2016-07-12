@@ -555,4 +555,69 @@ public class DepotSalesApiServices{
         return result;
     }
     
+    public static Map<String, Object> getProducts(DispatchContext ctx,Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+    	Timestamp salesDate = UtilDateTime.nowTimestamp();
+		if (!UtilValidate.isEmpty(context.get("salesDate"))) {
+			salesDate = (Timestamp) context.get("salesDate");
+		}
+		Timestamp dayBegin = UtilDateTime.getDayStart(salesDate);
+		String productId = (String) context.get("productId");
+		String primaryProductCategoryId = (String) context.get("primaryProductCategoryId");
+		String productName = (String) context.get("productName");
+		
+		List conditionList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(productId)){
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
+		}
+		else{
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, "_NA_"));
+		}
+		if(UtilValidate.isNotEmpty(primaryProductCategoryId)){
+			conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId",EntityOperator.LIKE, "%"+primaryProductCategoryId+"%"));
+		}
+		if(UtilValidate.isNotEmpty(productName)){
+			conditionList.add(EntityCondition.makeCondition("productName",EntityOperator.LIKE, "%"+productName+"%"));
+		}
+		conditionList.add(EntityCondition.makeCondition("isVirtual",EntityOperator.NOT_EQUAL, "Y"));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate",EntityOperator.EQUALS, null), EntityOperator.OR,
+				EntityCondition.makeCondition("salesDiscontinuationDate",EntityOperator.GREATER_THAN, dayBegin)));
+		EntityListIterator productListIter = null;
+		try {
+			productListIter = delegator.find("Product", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to get products List ", module);
+			return ServiceUtil.returnError("Failed to get products List " + e);
+		}
+		GenericValue eachProduct = null;
+		Map productsMap = FastMap.newInstance();
+		while(productListIter != null && (eachProduct = productListIter.next()) != null) {
+			Map productDetail = FastMap.newInstance();
+			productDetail.put("productId",eachProduct.get("productId"));
+			productDetail.put("productTypeId",eachProduct.get("productTypeId"));
+			productDetail.put("primaryProductCategoryId",eachProduct.get("primaryProductCategoryId"));
+			productDetail.put("internalName",eachProduct.get("internalName"));
+			productDetail.put("brandName",eachProduct.get("brandName"));
+			productDetail.put("productName",eachProduct.get("productName"));
+			productDetail.put("description",eachProduct.get("description"));
+			productDetail.put("quantityUomId",eachProduct.get("quantityUomId"));
+			productDetail.put("quantityIncluded",eachProduct.get("quantityIncluded"));
+			productsMap.put(eachProduct.get("productId"),productDetail);
+		}
+		if (productListIter != null) {
+            try {
+            	productListIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+		result.put("productsMap",productsMap);
+		result.put("productsMapSize",Integer.valueOf(productsMap.size()));
+        return result;
+    }
+    
 }
