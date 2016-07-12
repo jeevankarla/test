@@ -262,7 +262,7 @@
 		       	  				   suppAddress +=suplierAddresList[0].address2+",";
 		       	  				   if(suplierAddresList[0].city)
 		       	  				   suppAddress +=suplierAddresList[0].city;
-		       	  				       $("#supplierAddress").html("<marquee><h4>"+suppAddress+"</h4></marquee>");
+		       	  				       $("#supplierAddress").html("<h4>"+suppAddress+"</h4>");
                  		}	
                  	
                  	}							
