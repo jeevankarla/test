@@ -146,7 +146,7 @@ $(function(){
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
-	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
     jQuery.ajax({
                 url: 'getPaymentDetails',

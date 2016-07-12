@@ -156,7 +156,7 @@ $(function(){
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
-	 $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
     jQuery.ajax({
                 url: 'getIndentListingDetails',
@@ -448,7 +448,7 @@ function drawRow(rowData) {
 
 function forApprove(orderId,statusId,partyId){
 
-$('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+$('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
 
    var response;
   $("#FindTankerSalesOrder_orderId").val(orderId);
@@ -465,7 +465,7 @@ $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">')
     
     var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
     
-     $('div#orderSpinn').html('<img src="/images/gears.gif" height="70" width="70">');
+     $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
     
     jQuery.ajax({
                 url: 'approveOrdersAjax',
