@@ -142,9 +142,28 @@
 	    	createSaleIndent.indentAmount.value=indentAmt;
 	    }
 	}
-	 
- 	
-	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, productStoreId) {
+	function calculateKgs(quantity,uom,org2){
+	   var uom =uom.value;
+	   var quantity = quantity.value;
+	   var org2 =org2.value;
+	   var result=0;
+	    if(uom == "Bale"){
+			 result=quantity*(org2*40);
+			}
+		else if(uom == "Half-Bale"){
+				result=quantity*(org2*20);
+			}
+		else if(uom == "Bundle"){
+				result = quantity*org2;
+			}
+		else if(uom == "KGs"){				
+			result = quantity;
+		    }		    
+		$("#quantity").val(result);
+		return result;
+	 }
+	 	 	   
+	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, productStoreId, uom, bundleWeight,bundleUnitPrice) {
 		var message = "";
 		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='createSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
 		
@@ -153,8 +172,17 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Bill to Party:</td><td align='left' width='70%'><input class='h3' type='text' id='partyId' name='partyId' onclick='javascript:autoCompletePartyId();' size='13'/><span align='right' id='partyTooltip'></span></td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Scheme Category:</td><td align='left' width='70%'><select name='schemeCategory' id='schemeCategory' onchange='getQuota(this)' class='h3' style='width:162px'></select></td></tr>";
 		message +=  "<tr id='quotatr' style='display:none' class='h3'><td align='left'  class='h3' width='50%'>Available Quota:</td><td align='left' width='70%'><input class='h3' type='text' id='quota' readonly name='quota' size='13'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Qty(Nos):</td><td align='left' width='50%'><input class='h3' type='text' id='baleQuantity' name='baleQuantity' value='' onblur='calculateKgs(baleQuantity,uom,bundleWeight);'/></tr>";
+		message +="<tr class='h3'><td align='left' class='h3' width='60%'>UOM :</td><td align='left' width='60%'><select name='uom' id='uom'  class='h4' onchange='calculateKgs(baleQuantity,uom,bundleWeight);'>"+
+						"<option value="+uom+" selected>"+uom+"</option>"+
+						"<option value='Bale'>Bale</option>"+
+						"<option value='Half-Bale'>Half-Bale</option>"+
+						"<option value='Bundle'>Bundle</option>"+
+					    "</select></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Bundle Weight():</td><td align='left' width='50%'><input class='h3' type='text' readonly id='bundleWeight' name='bundleWeight' value='"+bundleWeight+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Unit Price(Bundle):</td><td align='left' width='50%'><input class='h3' type='text' readonly id='bundleUnitPrice' name='bundleUnitPrice' value='"+bundleUnitPrice+"'/></td> </tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Unit Cost:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='unitCost' name='unitCost' value='"+unitCost+"'/></td><input type='hidden'  id='disableAcctgFlag' name='disableAcctgFlag' value='Y'/><input type='hidden'  id='inventoryItemId' name='inventoryItemId' value='"+inventoryItemId+"'/></tr>";
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Quantity:</td><td align='left' width='50%'><input class='h3' type='text' id='quantity' name='quantity' value='' onBlur='showTotalAmount(quantity , unitCost, quantityOnHandTotal)'/></td><input type='hidden'  id='salesChannel' name='salesChannel' value='WEB_SALES_CHANNEL'/></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Quantity:</td><td align='left' width='50%'><input class='h3' type='text' id='quantity' name='quantity'/></td><input type='hidden'  id='salesChannel' name='salesChannel' value='WEB_SALES_CHANNEL'/></tr>";
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Total Indent Amount:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='indentAmount' name='indentAmount' value=''/></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
