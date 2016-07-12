@@ -225,6 +225,42 @@
 			 $('#suplierPartyId').keypress(function (e) { 
 				$("#suplierPartyId").autocomplete({ source: supplierAutoJson , select: function( event, ui ) {
 					$('span#suplierPartyName').html('<label>'+ui.item.label+'</label>');
+					
+			var suppId = ui.item.value;
+					
+			 if(suppId.length != 0){
+
+	             	var dataJson = {"supplierId": suppId};
+				jQuery.ajax({
+                	url: 'getSupplierAddress',
+                	type: 'POST',
+                	data: dataJson,
+                	dataType: 'json',
+               		success: function(result){
+						if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    	alert("Error in order Items");
+						}else{
+						 var suplierAddresList = result["suplierAddresList"];
+						      var suppAddress=suplierAddresList[0].address1+",";
+						           if(suplierAddresList[0].address2)
+		       	  				   suppAddress +=suplierAddresList[0].address2+",";
+		       	  				   if(suplierAddresList[0].city)
+		       	  				   suppAddress +=suplierAddresList[0].city;
+		       	  				       $("#supplierAddress").html("<font size=5>"+suppAddress+"</font>");
+		       	  				        $("#suplierAdd").val(suppAddress);
+		       	  				         
+							             $("p label").hover(function(){
+							           $(this).animate({fontSize: "15px"}, 300)
+							          }, function() {
+							         $(this).animate({fontSize: "10"}, 300)  
+							          })
+							 }	
+                 	}							
+		      	});
+		      	
+		      	}
+				
+					
 				} });	
 				if (e.keyCode === 13){
 				
@@ -1087,10 +1123,20 @@
 				          		<td valign='middle'>
 				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
 				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+				          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
 				          		</td>
 				          		
 				          	</#if>
 			        	</#if>
+						
+						
+						<#if parameters.suplierAdd?exists && parameters.suplierAdd?has_content>  
+			        	  <td width="10%" keep-together="always" align="left"><b> Supplier Address : </b></td><td width="50%"> <label  align="left" id="supplierAddress" style="color: green">${parameters.suplierAdd}</label></td>
+						<#else>
+						  <td width="10%" keep-together="always" align="left"><font color="green" ><b> Supplier Address : </b></font></td><td width="50%"> <p><label  align="left" id="supplierAddress" style="color: blue"></label><p></td>
+						  <input type="hidden" name="suplierAdd" id="suplierAdd" />  
+						</#if>
+						
 						
 	               	</tr>
 	               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
@@ -1101,7 +1147,7 @@
 		       	  		<td>&nbsp;</td>
 		       			<td>&nbsp;</td>
 		       			<td align='left' valign='middle' nowrap="nowrap">
-		       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
+		       					
 		       			</td>
 	               		
 						</tr>
