@@ -262,7 +262,7 @@
 		       	  				   suppAddress +=suplierAddresList[0].address2+",";
 		       	  				   if(suplierAddresList[0].city)
 		       	  				   suppAddress +=suplierAddresList[0].city;
-		       	  				      $("#supplierAddress").html("<h4>"+suppAddress+"</h4>");
+		       	  				       $("#supplierAddress").html("<marquee><h4>"+suppAddress+"</h4></marquee>");
                  		}	
                  	
                  	}							
@@ -1260,7 +1260,7 @@ function fillPartyQuota(partyId){
 			        	</#if>
 			        	
 			        	
-			        	<td width="15%" keep-together="always" align="left"><font color="green" ><b> Supplier Address : </b></font></td><td width="20%"> <label  align="left" id="supplierAddress" style="color: blue"></label></td>
+			        	<td width="10%" keep-together="always" align="left"><font color="green" ><b> Supplier Address : </b></font></td><td width="50%"> <label  align="left" id="supplierAddress" style="color: blue"></label></td>
 						
 	               	</tr>
 	               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>

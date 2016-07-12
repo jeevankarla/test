@@ -154,21 +154,32 @@ context.paymentRefNumList = paymentRefNumList;
 totAmt = 0;
 
 
-if(UtilValidate.isNotEmpty(orderPreferenceIds)){
-
+/*if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 conditonList = [];
 conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN, orderPreferenceIds));
 conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"PMNT_VOID"));
 cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
-
   if(UtilValidate.isNotEmpty(PaymentList)){
    for (eachPayment in PaymentList) {
 	   totAmt = totAmt+eachPayment.amount;
 	  }
    }
-
  }
+*/
+
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("partyId", partyId);
+try{
+ resultCtx = dispatcher.runSync("getWeaverPayments", inputCtx);
+ partyPayments = (resultCtx.paymentSearchResults).paymentSearchResultsList;
+ for (eachPayment in partyPayments) {
+	 totAmt = totAmt+eachPayment.balanceAmount;
+	}
+}catch(Exception e){}
+
+
 
 balanceAmt = 0;
 context.totAmt=totAmt;
