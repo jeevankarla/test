@@ -168,6 +168,8 @@ orderHeader.each{ eachHeader ->
 	}else{
 		tempData.put("orderId", eachHeader.orderId);
 	}
+	
+	tempData.put("actualOrderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	tempData.put("statusId", eachHeader.statusId);
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
@@ -329,12 +331,13 @@ JSONObject eachPaymentOrderMap = new JSONObject();
 for (eachList in orderList) {
 
 	   condtList = [];
-	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.orderId));
+	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.actualOrderId));
 	   cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 	   OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
 	   getFirstOrderPayment = EntityUtil.getFirst(OrderPaymentPreference);
 	   
 	   orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+	   
 	   
 	  if(UtilValidate.isNotEmpty(orderPreferenceIds)){
 	   
@@ -472,5 +475,8 @@ basedList.addAll(allValues);
 context.orderList = basedList.reverse();
 
 context.orderListSize = orderList.size();
+
+
+
 
 //context.partyOBMap = partyOBMap;
