@@ -367,7 +367,7 @@ under the License.
               	</#if>
               	
               	<#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED">
-              		<td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.orderId}','${eachOrder.partyId}');"/></td>
+              		<td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.actualOrderId}','${eachOrder.partyId}');"/></td>
               	<#else>
               	<td></td>
               	</#if>
