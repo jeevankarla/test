@@ -50,7 +50,7 @@
 	
 	.btn {
 	    color:#08233e;
-	    font:8em Futura, â€˜Century Gothicâ€™, AppleGothic, sans-serif;
+	    font:8em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
 	    font-size:100%;
 	    font-weight: bold;
 	    padding:14px;
@@ -78,6 +78,8 @@
 	}
 	
 </style>			
+	
+<#include "EditUDPPriceDepot.ftl"/>		
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -166,12 +168,16 @@
 			var bundleUnitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
 			var unitPrice = data[rowCount]["KgunitPrice"];			
+			var taxAmt = data[rowCount]["taxAmt"];
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
+			
+			var checkE2Form = data[rowCount]["checkE2Form"];
+			var applicableTaxType = data[rowCount]["applicableTaxType"];
+			var checkCForm = data[rowCount]["checkCForm"];
 			var usedQuota = data[rowCount]["usedQuota"];
 			
-			
-			
+			$("#orderTaxType").val(applicableTaxType);
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
@@ -184,11 +190,15 @@
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
-				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
+				
+				var inputCheckE2Form = jQuery("<input>").attr("type", "hidden").attr("name", "checkE2Form_o_" + rowCount).val(checkE2Form);
+				var inputApplicableTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTaxType_o_" + rowCount).val(applicableTaxType);
+				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
 				var inputUsedQuota = jQuery("<input>").attr("type", "hidden").attr("name", "usedQuota_o_" + rowCount).val(usedQuota);
+				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputcustomerId));				
@@ -197,10 +207,15 @@
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
-				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
+				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
+				
+				jQuery(formId).append(jQuery(inputCheckE2Form));
+				jQuery(formId).append(jQuery(inputApplicableTaxType));
+				jQuery(formId).append(jQuery(inputCheckCForm));
 				jQuery(formId).append(jQuery(inputUsedQuota));
+				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
 					jQuery(formId).append(jQuery(batchNum));
@@ -224,6 +239,9 @@
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
 				}
+				
+				var taxList = [];
+				taxList = data[rowCount]["taxList"];
    			}
 			
    			<#if changeFlag?exists && changeFlag != "EditDepotSales">
@@ -249,9 +267,12 @@
 			var cfcId = $("#cfcs").val();
 			var orderMessage = $("#orderMessage").val();
 			var schemeCategory = $("#schemeCategory").val();
+			var contactMechId = $("#contactMechId").val();
 			var transporterId = $("#transporterId").val();
-			    var tallyReferenceNo = $("#tallyReferenceNo").val();
-				var ediTallyRefNo = $("#ediTallyRefNo").val();
+			var tallyReferenceNo = $("#tallyReferenceNo").val();
+			var ediTallyRefNo = $("#ediTallyRefNo").val();
+			
+			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
 			var societyParty = jQuery("<input>").attr("type", "hidden").attr("name", "societyPartyId").val(societyPartyId);
@@ -266,6 +287,7 @@
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			var schemeCategoryObj = jQuery("<input>").attr("type", "hidden").attr("name", "schemeCategory").val(schemeCategory);
 			var partyGeo = jQuery("<input>").attr("type", "hidden").attr("name", "partyGeoId").val(partyGeoId);
+			var contactMechId = jQuery("<input>").attr("type", "hidden").attr("name", "belowContactMechId").val(contactMechId);
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
@@ -290,9 +312,12 @@
 			jQuery(formId).append(jQuery(disableAcctgFlag));
 			jQuery(formId).append(jQuery(schemeCategoryObj));
 			jQuery(formId).append(jQuery(partyGeo));
+			jQuery(formId).append(jQuery(contactMechId));
 			jQuery(formId).append(jQuery(transporterId));
 			jQuery(formId).append(jQuery(tallyReferenceNo));
-			jQuery(formId).append(jQuery(ediTallyRefNo));			
+			jQuery(formId).append(jQuery(ediTallyRefNo));
+			
+			
 			
 		</#if>
 		
@@ -398,9 +423,10 @@
 					return '<a href="#" class="button" onclick="clickCustomerDetails('+row+')" value="View">View</a>'; 
  				}
  			},
- 			{id:"quotaAvbl", name:"AvailableQuota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
+			{id:"quotaAvbl", name:"AvailableQuota(In Kgs)", field:"quota", width:50, minWidth:50, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
 
 		];
+		
 		var selectedDate= $('#effectiveDate').val();
 		var effDate=Date.parse(selectedDate);
 		var targetDate=Date.parse("04/01/2016");
@@ -412,14 +438,13 @@
 		  {id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}];
 		}
 		columns= columns1.concat(columns2);
-
-		var data_view = new Slick.Data.DataView();
-		grid = new Slick.Grid("#myGrid1", data, columns,options);
-		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
+			
+			var data_view = new Slick.Data.DataView();
+			grid = new Slick.Grid("#myGrid1", data, columns,options);
+			var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
 		
 		
-		
-		var options = {
+			var options = {
 			editable: true,		
 			forceFitColumns: false,			
 			enableCellNavigation: true,
@@ -430,7 +455,7 @@
 		};
 		
 
-		grid = new Slick.Grid("#myGrid1", data,columns, options);
+		grid = new Slick.Grid("#myGrid1", data, columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 		
@@ -502,48 +527,49 @@
             	return false;
             }
         });
-       
+        
+                
     	grid.onAddNewRow.subscribe(function (e, args) {
       		setCustomerId(args.item);
     	});
     	grid.onBeforeEditCell.subscribe(function(e,args) {
     	    setCustomerIdOnCustomerChange(args.item,args);
 	    });
-  	grid.onCellChange.subscribe(function(e,args) {
+        grid.onCellChange.subscribe(function(e,args) {
 		  
-	     setUndefinedValues(data[args.row]);
-		 grid.updateRow(args.row);
-		var prod = data[args.row]["cProductId"];
-		var quantity = parseFloat(data[args.row]["quantity"]);
-		var kgUnitPrice = data[args.row]['KgunitPrice'];
-		var uom = data[args.row]["cottonUom"];
-		var balQuty = parseFloat(data[args.row]["baleQuantity"]);
-		var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
-		var price = parseFloat(data[args.row]["unitPrice"]);
-		var amt = parseFloat(data[args.row]["amount"]);
-		var roundedAmount=0;
-		if( uom == "KGs" ){
-			 roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
-		}else{
-			 roundedAmount =calculateBundlePrice(balQuty,uom,price);
-		}
+	     	setUndefinedValues(data[args.row]);
+		 	grid.updateRow(args.row);
+			var prod = data[args.row]["cProductId"];
+			var quantity = parseFloat(data[args.row]["quantity"]);
+			var kgUnitPrice = data[args.row]['KgunitPrice'];
+			var uom = data[args.row]["cottonUom"];
+			var balQuty = parseFloat(data[args.row]["baleQuantity"]);
+			var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
+			var price = parseFloat(data[args.row]["unitPrice"]);
+			var amt = parseFloat(data[args.row]["amount"]);
+			var roundedAmount=0;
+			if( uom == "KGs" ){
+			 	roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
+			}else{
+			 	roundedAmount =calculateBundlePrice(balQuty,uom,price);
+			}
 
-		if (args.cell == 3) {
+			if (args.cell == 3) {
 
-		  if(isNaN(roundedAmount)){
-			roundedAmount = 0;
-		  }
-		  if(isNaN(kgUnitPrice)){
-			kgUnitPrice = 0;
-		  }	
+		  		if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+		  		}
+		  		if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+		  		}	
 		  
-		  quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-		  data[args.row]["quantity"]=quantity;
-		  data[args.row]["KgunitPrice"] = kgUnitPrice;
-		  data[args.row]["amount"] = roundedAmount;
-		  data[args.row]["totPayable"] = roundedAmount;
+		  		quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+		  		data[args.row]["quantity"]=quantity;
+		  		data[args.row]["KgunitPrice"] = kgUnitPrice;
+		  		data[args.row]["amount"] = roundedAmount;
+		  		data[args.row]["totPayable"] = roundedAmount;
 		  
-		}
+			}
 		else if(args.cell == 4){
 			quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 			
@@ -622,7 +648,7 @@
 		grid.updateRow(args.row);
 		updatePayablePrice(args.row);
 		updateTotalIndentAmount();
-		updateCurrentQuota(args);
+		//updateCurrentQuota(args);
 	 } 
 	 });
 		
@@ -730,6 +756,7 @@
 		//updateProductTotalAmount();
 		
 		mainGrid = grid;
+		
 	}
 		
 	jQuery(function(){
@@ -780,7 +807,7 @@
 			$( "#indententryinit" ).validate();
 		});	
 		
-	});	
+	});		
 	 
 	
 	
@@ -810,19 +837,35 @@
 	
 	function updateTotalIndentAmount(){
 		var totalAmount = 0;
+		var totalDiscount = 0;
+		var totalPayable = 0;
 		for (i = 0; i < data.length; i++) {
 			totalAmount += data[i]["totPayable"];
+			var quotaApplicable = data[i]["usedQuota"];
+			var exMillPrice = data[i]["unitPrice"];
+			if(isNaN(quotaApplicable)){
+				quotaApplicable = 0;
+			}
+			if(isNaN(exMillPrice)){
+				exMillPrice = 0;
+			}
+			totalDiscount = totalDiscount + (quotaApplicable*exMillPrice/10);
 		}
 		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 		var dispText = "";
 		if(amt > 0 ){
-			dispText = "<b>  [Indent Amt: Rs " +  amt + "]</b>";
+			dispText = "<b>&nbsp;  Value: Rs " +  amt + "&nbsp;</b>";
 		}
 		else{
-			dispText = "<b>  [Indent Amt: Rs 0 ]</b>";
+			dispText = "<b>&nbsp;  Value: Rs 0 &nbsp;</b>";
 		}
 		
+		totalPayable = totalAmount - totalDiscount;
+		
 		jQuery("#totalAmount").html(dispText);
+		jQuery("#itemsSelected").html("<b> &nbsp; Selected: "+data.length+" &nbsp; </b>");
+		jQuery("#totalDiscount").html("<b> &nbsp; Subsidy: Rs "+totalDiscount+" &nbsp; </b>");
+		jQuery("#totalPayable").html("<b> &nbsp; Payable: Rs "+totalPayable+" &nbsp; </b>");
 		
 	}
 	
@@ -851,7 +894,10 @@
 				
 				if(lineQuota < 0){
 					data[i]["quota"] = 0;
-					data[i]["usedQuota"] = takenQty+lineQuota;
+					var finalUsedQuota = takenQty+lineQuota;
+					if(finalUsedQuota<0){
+					 data[i]["usedQuota"]=0;
+					}
 					if(schemeCategory == "MGPS_10Pecent"){
 						data[i]["warning"] = 'Quota Exceeded';
 					}
@@ -867,7 +913,6 @@
 		}
 	}
 	
-	
 	function addServiceCharge(row){
 		var serviceChargePercent = $("#serviceChargePercent").val();
 		var serviceChargeAmt = 0;
@@ -878,7 +923,7 @@
 		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
 		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
 		
-		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
+		//data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
 	}
 	
 	function updateServiceChargeAmounts(){
@@ -889,15 +934,69 @@
 				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
 				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
 				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+				
+				updateTax(i, (basicAmt + serviceChargeAmt));
+				
 				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
+				
 				grid.updateRow(i);
 			}
 		}
+		
 		updateTotalIndentAmount();
 	}
 	
+	function updateTax(rowCount, baseAmt){
+		
+		
+		var totTaxValue = 0;
+		var taxList = [];
+		taxList = data[rowCount]["taxList"]
+		if(taxList != undefined){
+			for(var i=0;i<taxList.length;i++){
+				var taxType = taxList[i];
+				var taxPercentage = data[rowCount][taxType];
+				var taxValue = data[rowCount][taxType + "_AMT"];
+				if(taxPercentage){
+					if(baseAmt){
+						taxValue = baseAmt*(taxPercentage/100);
+					}
+				}
+				totTaxValue = totTaxValue + taxValue;
+				
+				data[rowCount][taxType + "_AMT"] = taxValue;
+			}
+		}
+		data[rowCount]["taxAmt"] = totTaxValue;
+	}
+	
+	function updatePayableAmount(row){
+		
+		var basicAmtVal = 0;
+		var taxAmtVal = 0;
+		var servChgVal = 0;
+		
+		var basicAmt = data[row]["amount"];
+		var taxAmt = data[row]["taxAmt"];
+		var servChg = data[row]["SERVICE_CHARGE_AMT"];
+		
+		if(basicAmt){
+			basicAmtVal = basicAmt;
+		}
+		if(taxAmt){
+			taxAmtVal = taxAmt;
+		}
+		if(servChg){
+			servChgVal = servChg;
+		}
+		
+		data[row]["totPayable"] = basicAmtVal + taxAmtVal + servChgVal;
+		grid.updateRow(row);
+	}
+	
+	
 	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
+         if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
 	         $.ajax({
 	        	type: "POST",
 	         	url: "calculateTaxesByGeoId",
@@ -956,7 +1055,6 @@
 	   	  				//var taxList = [];
 	   	  				taxList.push("VAT_SALE");
 	   	  				taxList.push("CST_SALE");
-	   	  				
 	   	  				if(taxType == "Intra-State"){
 	   	  					data[row]["VAT_SALE"] = vatPercent;
 	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
@@ -994,8 +1092,8 @@
 	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
 	   	  				
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
-	   	  				addServiceCharge(row);
+	   	  				updatePayableAmount(row);
+	   	  				//data[row]["totPayable"] = totalAmt + totalTaxAmt;
 	   	  				grid.updateRow(row);
 	   	  				
 	   	  				updateTotalIndentAmount();
@@ -1008,8 +1106,44 @@
 	      	 		alert(result["_ERROR_MESSAGE_"]);
 	     	 	}
 	    	});
-	    }
+	    }	
+	    else{
+	    	data[row]["VAT_SURCHARGE"] = 0;
+			data[row]["VAT_SURCHARGE_AMT"] = 0;
+			
+			data[row]["CST_SALE"] = 0;
+	   	  	data[row]["CST_SALE_AMT"] = 0;
+	   	  	
+	   	  	data[row]["VAT_SALE"] = 0;
+	   	  	data[row]["VAT_SALE_AMT"] = 0;
+	   	  	
+	   	  	//data[row]["totPayable"] = totalAmt;
+	   	  	
+			var taxList = [];
+			taxList.push("VAT_SALE");
+	   	  	taxList.push("CST_SALE");
+	   	  	taxList.push("VAT_SURCHARGE");
+	   	  	
+	   	  	var vatSurchargeList = [];		
+			vatSurchargeList.push("VAT_SURCHARGE");
+			
+			data[row]["taxList"] = taxList;
+			data[row]["vatSurchargeList"] = vatSurchargeList;
+			data[row]["taxAmt"] = 0;
+	   	  		
+	   	  		
+	   	  	$("#orderTaxType").val("Intra-State");
+	   	  	
+	   	  	updatePayableAmount(row);			
+			//addServiceCharge(row);
+	   	  	grid.updateRow(row);
+	   	  	
+	   	  	updateTotalIndentAmount();
+	   	  	
+	   	  	
+	    }			
 	}
+	
 	function getCustomerDetails(args){
 	    var currentrow=args.row;
 	    var partyId=data[args.row]['customerId']
@@ -1022,31 +1156,24 @@
 	           	 dataType: 'json',
 	           	 async: false,
 	        	 success: function(result) {
-	              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-	       	  		 alert(result["_ERROR_MESSAGE_"]);
-	          			}else{
-	       	  				  contactDetails =result["partyJSON"];
-	       	  				 if( contactDetails != undefined && contactDetails != ""){
-	       	  						
-					                customerContactList[partyId]=contactDetails;
-					                
-				   					}
+	             	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	       	  		 	alert(result["_ERROR_MESSAGE_"]);
+	          		 }else{
+	       	  			contactDetails =result["partyJSON"];
+	       	  			if( contactDetails != undefined && contactDetails != ""){
+	       	  				customerContactList[partyId]=contactDetails;
+						}
 						      		 	
-					               }
-					             } ,
-					             error: function() {
-				            	 	alert(result["_ERROR_MESSAGE_"]);
-				            	 }
+				 	}
+				} ,
+				error: function() {
+					alert(result["_ERROR_MESSAGE_"]);
+				}
 				            	
-					        }); 				
-							
-							
-			      	 }
-	
-	
-	}	
-	
-		function updateCurrentQuota(args){
+			}); 				
+		}
+	}
+	function updateCurrentQuota(args){
 	
 			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
 			var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
@@ -1153,31 +1280,27 @@
 			row["SERVICE_CHARGE_AMT"] = 0;
 		 }
 	 }
-	 
-	 function setCustomerId(item){
-      		var custId= item['customerName'];
+	function setCustomerId(item){
+      	var custId= item['customerName'];
+      	var splited = (((custId.split("["))[1]).split("]"))[0];
+      	var productLabel = item['cProductName']; 
+      	item['productNameStr'] = productLabel;
+      	var custmerID=indcustomerLabelPsbNumMap[custId];
+      	item['customerId'] = splited;
+      	item['psbNumber'] = partyPsbNumber[custmerID];
+      	item['cProductId'] = productLabelIdMap[productLabel];  
+      	grid.invalidateRow(data.length);
+      	data.push(item);
+      	grid.updateRowCount();
+      	grid.render();
+	}
+
+ 	function setCustomerIdOnCustomerChange(item,orgs){
+		if(orgs.cell==1 && item!= undefined){
+ 			var custId= item['customerName'];
       		var splited = (((custId.split("["))[1]).split("]"))[0];
-      		var productLabel = item['cProductName']; 
-      		item['productNameStr'] = productLabel;
-      		var custmerID=indcustomerLabelPsbNumMap[custId];
-      		item['customerId'] = splited;
-      		item['psbNumber'] = partyPsbNumber[custmerID];
-      		item['cProductId'] = productLabelIdMap[productLabel];  
-      		grid.invalidateRow(data.length);
-      		data.push(item);
-      		grid.updateRowCount();
-      		grid.render();
-
-}
-
- function setCustomerIdOnCustomerChange(item,orgs){
-
- 			 if(orgs.cell==1 && item!= undefined){
- 			   var custId= item['customerName'];
-      		   var splited = (((custId.split("["))[1]).split("]"))[0];
-      		   data[orgs.row]['customerId'] = splited;
- 			 }
-      		
-}
-	 
+      		data[orgs.row]['customerId'] = splited;
+ 		}
+    }
+	
 </script>			
