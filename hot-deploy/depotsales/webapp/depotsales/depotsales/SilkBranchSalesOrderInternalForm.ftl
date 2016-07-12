@@ -282,6 +282,7 @@
 			var tallyReferenceNo = $("#tallyReferenceNo").val();
 			var ediTallyRefNo = $("#ediTallyRefNo").val();
 			
+			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
@@ -302,7 +303,7 @@
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
 			
-			
+			alert(tallyReferenceNo);
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -326,8 +327,6 @@
 			jQuery(formId).append(jQuery(transporterId));
 			jQuery(formId).append(jQuery(tallyReferenceNo));
 			jQuery(formId).append(jQuery(ediTallyRefNo));
-			
-			
 			
 		</#if>
 		

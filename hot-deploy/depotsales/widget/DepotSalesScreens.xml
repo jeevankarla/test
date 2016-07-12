@@ -481,6 +481,7 @@
 				<set field="branchGeoId" from-field="parameters.branchGeoId" />
 				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
 				<set field="referenceNo" from-field="parameters.referenceNo" />
+				<set field="suplierAdd" from-field="parameters.suplierAdd" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/AdhocIndentFormDepot.groovy" />
 				<script
@@ -4848,6 +4849,7 @@
 				<set field="tallyReferenceNo" from-field="parameters.tallyReferenceNo" />
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
+				<set field="suplierAdd" from-field="parameters.suplierAdd" />
 				<set field="manualQuota" from-field="parameters.manualQuota" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
@@ -5029,6 +5031,9 @@
 				<set field="tallyReferenceNo" from-field="parameters.tallyReferenceNo" />
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
+				<set field="suplierAdd" from-field="parameters.suplierAdd" />
+				
+				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
 				<!-- <script
