@@ -1685,7 +1685,7 @@
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="unitCost"><hidden/></field>
         <field name="Sale" title="Sale Indent" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}');"></hyperlink>
+             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}');"></hyperlink>
         </field>
         <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>

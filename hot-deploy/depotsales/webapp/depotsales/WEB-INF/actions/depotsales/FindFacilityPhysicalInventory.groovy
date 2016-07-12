@@ -129,7 +129,23 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.inventoryItemId));
 		
 		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", iter.inventoryItemId), false);
-		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , iter.inventoryItemId));
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		inventoryItemDetails = delegator.findList("InventoryItemDetail",  cond,null, null, null, false );
+		String uom ="";
+		bundleWeight =0;
+		bundleUnitPrice =0;
+		if(UtilValidate.isNotEmpty(inventoryItemDetails)){
+		   inventoryItemDetails = EntityUtil.getFirst(inventoryItemDetails);
+		   uom =inventoryItemDetails.uom;
+		   bundleWeight = inventoryItemDetails.bundleWeight;
+		   bundleUnitPrice = inventoryItemDetails.bundleUnitPrice;
+		}
+		row.putAt("uom", uom);
+		row.putAt("bundleWeight", bundleWeight);
+		row.putAt("bundleUnitPrice", bundleUnitPrice);
 		inventoryProdStore = EntityUtil.filterByCondition(productStoreList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, inventoryItem.facilityId));
 		
 		shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
