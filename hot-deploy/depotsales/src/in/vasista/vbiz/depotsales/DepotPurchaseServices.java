@@ -134,14 +134,14 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
-		
+/*		
 		if(UtilValidate.isNotEmpty(tallyrefNo)){
-				 /* List conditionList = FastList.newInstance();
+				  List conditionList = FastList.newInstance();
 		
 				  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
 				  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
 				  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	*/			  try{
+				  try{
 				 // List  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
 				  
 				   //if(UtilValidate.isNotEmpty(OrderAssocList)){
@@ -161,7 +161,7 @@ public class DepotPurchaseServices{
 				return "error";
 			}
 		}	
-		
+		*/
 		
 		
 		List productQtyList = FastList.newInstance();
@@ -455,6 +455,7 @@ public class DepotPurchaseServices{
 		processInvoiceContext.put("userLogin", userLogin);
 		processInvoiceContext.put("productQtyList", productQtyList);
 		processInvoiceContext.put("partyId", partyId);
+		processInvoiceContext.put("tallyrefNo", tallyrefNo);
 		processInvoiceContext.put("purposeTypeId", purposeTypeId);
 		processInvoiceContext.put("vehicleId", vehicleId);
 		processInvoiceContext.put("orderId", orderId);
@@ -1459,6 +1460,8 @@ public class DepotPurchaseServices{
 		  	String orderId = (String) context.get("orderId");
 		  	String isDisableAcctg = (String) context.get("isDisableAcctg");
 		  	String shipmentId = (String) context.get("shipmentId");
+		  	String tallyrefNo = (String) context.get("tallyrefNo");
+		  	
 		  	Debug.log("#####context#########"+context);
 		  	boolean beganTransaction = false;
 		  	String currencyUomId = "INR";
@@ -1534,6 +1537,8 @@ public class DepotPurchaseServices{
 				input.put("userLogin", userLogin);
 		        input.put("invoiceTypeId", "PURCHASE_INVOICE");        
 		        input.put("partyIdFrom", partyId);	
+		        if(UtilValidate.isNotEmpty(tallyrefNo))
+		        input.put("referenceNumber", tallyrefNo);	
 		        input.put("statusId", "INVOICE_IN_PROCESS");	
 		        input.put("currencyUomId", currencyUomId);
 		        input.put("invoiceDate", invoiceDate);

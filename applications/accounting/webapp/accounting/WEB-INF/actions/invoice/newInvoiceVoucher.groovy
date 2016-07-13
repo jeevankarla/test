@@ -231,6 +231,20 @@ OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 
 tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+PurchaseOrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+
+purInvoiceId = "";
+if(PurchaseOrderItemBilling){
+	purInvoiceId = PurchaseOrderItemBilling[0].invoiceId;
+	purInvoiceList = delegator.findOne("Invoice",[invoiceId : purInvoiceId] , false);
+	if(purInvoiceList.referenceNumber)
+	tallyRefNo = purInvoiceList.referenceNumber;
+}
+
 context.tallyRefNo = tallyRefNo;
 
 productStoreId = OrderHeaderList.get("productStoreId");
