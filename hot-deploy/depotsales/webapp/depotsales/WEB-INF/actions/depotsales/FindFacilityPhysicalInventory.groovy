@@ -175,6 +175,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
     }
     context.physicalInventory = physicalInventoryCombined;
 }
+
+
+
 if(UtilValidate.isNotEmpty(isInventorySales)){
 	dctx = dispatcher.getDispatchContext();
 	JSONObject partyNameObj = new JSONObject();
@@ -183,20 +186,25 @@ if(UtilValidate.isNotEmpty(isInventorySales)){
 	//get Parties to make SalesOrder
 	JSONArray billToPartyIdsJSON = new JSONArray();
 	inputMap.put("roleTypeId", "EMPANELLED_CUSTOMER");
-	Map partyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
-	billToPartyDetailsList = partyDetailsMap.get("partyDetails");
-	billToPartyDetailsList.each{eachParty ->
+	//Map partyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
+	
+	//Debug.log("partyDetailsMap===================="+partyDetailsMap);
+	
+	//billToPartyDetailsList = partyDetailsMap.get("partyDetails");
+	/*billToPartyDetailsList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();
 		partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
 		newPartyObj.put("value",eachParty.partyId);
 		newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
 		partyNameObj.put(eachParty.partyId,partyName);
 		billToPartyIdsJSON.add(newPartyObj);
-	}
+	}*/
+	
+	partyDetailsMap = [];
+	
 	context.billToPartyIdsJSON = billToPartyIdsJSON;
 }
-
-facilityList = delegator.findList("Facility", null, null, null, null, false);
+/*facilityList = delegator.findList("Facility", null, null, null, null, false);
 context.facilityList = facilityList;
-
+*/
 
