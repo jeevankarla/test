@@ -142,7 +142,7 @@
 	    	createSaleIndent.indentAmount.value=indentAmt;
 	    }
 	}
-	function calculateKgs(quantity,uom,org2){
+	function calculateKgs(quantity,uom,org2,quantityStr,unitCostStr){
 	   var uom =uom.value;
 	   var quantity = quantity.value;
 	   var org2 =org2.value;
@@ -160,6 +160,21 @@
 			result = quantity;
 		    }		    
 		$("#quantity").val(result);
+		var quantity = quantityStr.value;
+		var unitCost = unitCostStr.value;		
+		unitCost = unitCost.replace(/[^0-9\.]/g, '');
+		createSaleIndent.unitCost.value=unitCost;
+		var qtyOnHand = quantityOnHandTotal.value;
+		if(qtyOnHand-quantity < 0 ){
+			alert("Indenting Quantity Cannot Exceed Inventory.!");
+			createSaleIndent.quantity.value='';
+			createSaleIndent.indentAmount.value='';
+			document.createSaleIndent.quantity.focus();
+		}
+		else{
+			var indentAmt = result*unitCost;
+	    	createSaleIndent.indentAmount.value=indentAmt;
+	    }
 		return result;
 	 }
 	 	 	   
@@ -172,7 +187,7 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Bill to Party:</td><td align='left' width='70%'><input class='h3' type='text' id='partyId' name='partyId' onclick='javascript:autoCompletePartyId();' size='13'/><span align='right' id='partyTooltip'></span></td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Scheme Category:</td><td align='left' width='70%'><select name='schemeCategory' id='schemeCategory' onchange='getQuota(this)' class='h3' style='width:162px'></select></td></tr>";
 		message +=  "<tr id='quotatr' style='display:none' class='h3'><td align='left'  class='h3' width='50%'>Available Quota:</td><td align='left' width='70%'><input class='h3' type='text' id='quota' readonly name='quota' size='13'/></td></tr>";
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Qty(Nos):</td><td align='left' width='50%'><input class='h3' type='text' id='baleQuantity' name='baleQuantity' value='' onblur='calculateKgs(baleQuantity,uom,bundleWeight);'/></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Qty(Nos):</td><td align='left' width='50%'><input class='h3' type='text' id='baleQuantity' name='baleQuantity' value='' onblur='calculateKgs(baleQuantity,uom,bundleWeight,unitCost,quantityOnHandTotal);'/></tr>";
 		message +="<tr class='h3'><td align='left' class='h3' width='60%'>UOM :</td><td align='left' width='60%'><select name='uom' id='uom'  class='h4' onchange='calculateKgs(baleQuantity,uom,bundleWeight);'>"+
 						"<option value="+uom+" selected>"+uom+"</option>"+
 						"<option value='Bale'>Bale</option>"+
