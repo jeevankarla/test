@@ -190,6 +190,7 @@
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputBundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
@@ -202,6 +203,7 @@
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputcustomerId));				
+				jQuery(formId).append(jQuery(inputBundleUnitPrice));				
 				jQuery(formId).append(jQuery(inputBaleQty));
 				jQuery(formId).append(jQuery(inputYarnUOM));
 				jQuery(formId).append(jQuery(inputBundleWeight));
