@@ -1196,7 +1196,7 @@
 		<div class="screenlet">
 			<div class="grid-header" style="width:100%">
 	 			<label>Customer Details</label>
-	 			<input type="button" id="open_popup" class="buttonText" value="View Delivery Address"  />
+	 			<input type="button" id="open_popup" class="buttonText" value="Delivery Address"  />
 	 			<input type="button" class="buttonText" value="Edit Delivery Address" onclick="javascript:manualAddress();" />
 	 			<#if parameters.transporterId?exists && parameters.transporterId?has_content> <font color="black"><b>Transpoter        : </b></font> <font color="green"><b>${parameters.transporterId}</b></font>  
     				<input type="hidden" name="transporterId" id="transporterId" value="${parameters.transporterId?if_exists}" />
