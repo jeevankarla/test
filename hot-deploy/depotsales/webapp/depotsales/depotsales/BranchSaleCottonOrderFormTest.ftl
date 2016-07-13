@@ -1253,6 +1253,7 @@ function fillPartyQuota(partyId){
 				          	<#else>
 				          		<td valign='middle'>
 				          			<input type="text" name="suplierPartyId" id="suplierPartyId"/>
+				          			<span  align="left" id="suplierPartyName" style="color: green"></span>
 				          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
 				          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
 				          		</td>
