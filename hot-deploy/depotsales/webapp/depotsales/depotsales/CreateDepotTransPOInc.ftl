@@ -96,8 +96,8 @@
 		var isIncTax = $('#incTax').is(':checked');
 		var dataMap = {};
 		var totAmt = 0;			
-		for (var rowCount=0; rowCount < data.length; ++rowCount)
-		{ 
+		 for (var rowCount=0; rowCount < data.length; ++rowCount)
+		 { 
 			
 			
 			 totAmt = totAmt+data[rowCount]["amount"];

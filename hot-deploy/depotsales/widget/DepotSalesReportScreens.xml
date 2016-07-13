@@ -165,7 +165,7 @@
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POReportDepotDetails.groovy"/> 
 			</actions>
-			<widgets>
+			<widgets> 
 				<section>
 					<widgets>
 						<platform-specific>
