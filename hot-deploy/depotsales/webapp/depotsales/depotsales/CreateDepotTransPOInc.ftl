@@ -95,10 +95,12 @@
 		
 		var isIncTax = $('#incTax').is(':checked');
 		var dataMap = {};
-					
-		for (var rowCount=0; rowCount < data.length; ++rowCount)
-		{ 
+		var totAmt = 0;			
+		 for (var rowCount=0; rowCount < data.length; ++rowCount)
+		 { 
 			
+			
+			 totAmt = totAmt+data[rowCount]["amount"];
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -119,6 +121,7 @@
 		
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{
+		
 			var otherTermId = data2[rowCount]["adjustmentTypeId"];
 			dataMap["otherTermId_o_"+rowCount] = otherTermId;
 			var applicableToLabel = data2[rowCount]["applicableTo"];
@@ -149,6 +152,7 @@
 			dataMap["description_o_"+rowCount] = description;
 		}
 		
+		
 		if(isIncTax){
 			dataMap["incTax"] = "Y";
 		}
@@ -165,7 +169,7 @@
                var grandTotal = result["grandTotal"];
                var dspTotal = Math.round(grandTotal);
                var dspMsg = "Rs. "+dspTotal;
-               $("#totalPOAmount").html(dspMsg);
+               $("#totalPOAmount").html(totAmt);
             },
             error: function (xhr, textStatus, thrownError){
 				alert("record not found :: Error code:-  "+xhr.status);
@@ -525,7 +529,11 @@
     		}
     		 
 		}
-		var amt = parseFloat(Math.round((totalAmt) * 100) / 100);
+		//var amt = parseFloat(Math.round((totalAmt) * 100) / 100);
+		
+		var amt = parseFloat(Math.round(totalAmt));
+		
+		alert(amt);
 			
 		if(amt > 0 ){
 			var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
@@ -533,7 +541,7 @@
 		else{
 			var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
 		}
-		//jQuery("#totalAmount").html(dispText);
+		jQuery("#totalAmount").html(dispText);
     }
 	
 	function quantityValidator(value ,item) {
@@ -820,7 +828,9 @@
 			for (i = 0; i < data.length; i++) {
 				totalAmount += data[i]["amount"];
 			}
-			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			//var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			
+			var amt = parseFloat(Math.round(totalAmount));
 			if(amt > 0 ){
 				var dispText = "<b> [Total PO Value: Rs" +  amt + "]</b>";
 			}
