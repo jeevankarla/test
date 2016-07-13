@@ -1455,6 +1455,12 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
     </service>
+    <service name="createBranchSalesTransactionsFlow" engine="java" default-entity-name="BranchSaleTransactionHeader"
+            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleTransEntriesFlow" auth="true">
+        <description>Create a new Party Relationship type</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
+    </service>
     
     <!--     party loom service -->
  	<service name="createPartyLoom" engine="simple"

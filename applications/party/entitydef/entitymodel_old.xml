@@ -100,4 +100,82 @@ under the License.
       <field name="issuingAuthority" type="long-varchar"></field>
       <prim-key field="sNo"/>
     </entity>
+    
+    <entity entity-name="BranchSaleTransactionHeader"
+             package-name="org.ofbiz.party.party"
+             title="Branch sale Transactions Entity">
+      <field name="sNo" type="id-ne"></field>
+      <field name="effectiveDate" type="date-time"></field>
+      <field name="shipmentTypeId" type="id"></field>
+      <field name="salesChannel" type="id"></field>
+      <field name="suplierPartyId" type="id-ne"></field>
+      <field name="societyPartyId" type="id-ne"></field>
+      <field name="billingType" type="short-varchar"></field>
+      <field name="orderTaxType" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="disableAcctgFlag" type="short-varchar"></field>
+      <field name="schemeCategory" type="id-ne"></field>
+      <field name="orderTypeId" type="id"></field>
+      <field name="tallyRefNo" type="id-ne"></field>
+      <field name="paymentTypeId" type="id"></field>
+      <field name="paymentMethodTypeId" type="id"></field>
+      <field name="finAccountId" type="id-ne"></field>
+      <field name="paymentDate" type="date-time"></field>
+      <field name="depositDate" type="date-time"></field>     
+      <field name="amount" type="currency-amount"></field>
+      <field name="inFavourOf" type="long-varchar"></field>
+      <field name="paymentRefNum" type="long-varchar"></field>
+      <field name="issuingAuthority" type="long-varchar"></field>
+      <field name="serviceChrgPercentage" type="fixed-point"></field>
+      
+      <prim-key field="sNo"/>
+		<relation type="one" fk-name="BR_SPTY" title="suplierPartyId"
+			rel-entity-name="Party">
+			<key-map field-name="suplierPartyId" rel-field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="BR_SOPTY" title="societyPartyId"
+			rel-entity-name="Party">
+			<key-map field-name="societyPartyId" rel-field-name="partyId" />
+		</relation>
+    </entity>
+    
+    
+    <entity entity-name="BranchSaleTransactionItem" package-name="org.ofbiz.party.party"
+		title="Branch sale Transactions Item Entity">
+		<field name="sNo" type="id-ne"></field>
+		<field name="sNoItemSeqId" type="id-ne"></field>
+		<field name="partyId" type="id-ne" />
+		<field name="productId" type="id"></field>
+		<field name="uom" type="description"></field>
+		<field name="baleQuantity" type="fixed-point"></field>
+		<field name="bundleWeight" type="fixed-point"></field>
+		<field name="KgQuantity" type="fixed-point"></field>
+		<field name="remarks" type="description"></field>
+		<field name="bundleUnitPrice" type="fixed-point" ></field>
+		<field name="KgUnitPrice" type="fixed-point" ></field>
+		<field name="vatPercentage" type="fixed-point"></field>
+		<field name="cstPercentage" type="fixed-point"></field>
+		<field name="vatSubcharge" type="fixed-point"></field>
+		<field name="POvatPercentage" type="fixed-point"></field>
+		<field name="POcstPercentage" type="fixed-point"></field>
+		<field name="POvatSubcharge" type="fixed-point"></field>
+      	<field name="amount" type="fixed-point"></field>
+		<prim-key field="sNo" />
+		<prim-key field="sNoItemSeqId" />
+		<relation type="one" fk-name="BRANCH_ITM_sNo"
+			rel-entity-name="BranchSaleTransactionHeader">
+			<key-map field-name="sNo" />
+		</relation>
+		<relation type="one" fk-name="BRANCH_ITM_PROD"
+			rel-entity-name="Product">
+			<key-map field-name="productId" />
+		</relation>
+		<relation type="one" fk-name="BRANCH_ITM_PTY" title="customerId"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" rel-field-name="partyId" />
+		</relation>
+	</entity>
+    
+    
+    
 </entitymodel>
