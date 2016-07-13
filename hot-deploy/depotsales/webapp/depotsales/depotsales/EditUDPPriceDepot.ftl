@@ -125,6 +125,34 @@
 	
 	    dataRow = gridRow;
 		var  partyId= dataRow["customerId"];
+		if(customerContactList[partyId] == undefined){
+		 	if(dataRow["customerId"] != "undefined"){
+				var dataString="partyId=" + partyId+"&effectiveDate="+$("#effectiveDate").val() ;
+		      	$.ajax({
+		             type: "POST",
+		             url: "getpartyContactDetails",
+		           	 data: dataString ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {
+		             	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+		       	  		 	alert(result["_ERROR_MESSAGE_"]);
+		          		 }else{
+		       	  			contactDetails =result["partyJSON"];
+		       	  			if( contactDetails != undefined && contactDetails != ""){
+		       	  				customerContactList[partyId]=contactDetails;
+							}
+							      		 	
+					 	}
+					} ,
+					error: function() {
+						alert(result["_ERROR_MESSAGE_"]);
+					}
+					            	
+				}); 				
+			}
+		}
+		
 		var customerContactDetails=customerContactList[partyId];
 	    var message="";
 	    var LoomDetails=customerContactDetails["LoomDetails"];
