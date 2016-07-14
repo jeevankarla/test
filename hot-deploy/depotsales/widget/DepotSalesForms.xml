@@ -1562,7 +1562,7 @@
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
-        <field name="refrenceNo" title="poRef. No	"><text-find/></field>
+        <field name="refrenceNo" title="PORef.No"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
 <!--         <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
@@ -1660,6 +1660,7 @@
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
 <!--         <field name="primaryOrderId" title="PO no"><text-find/></field> -->
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="referenceNo" title="PORef.No"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
         <field name="facilityId" title="Facility"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
@@ -1676,6 +1677,7 @@
         <field name="shipmentTypeId" title="shipment Type"><display-entity entity-name="ShipmentType" key-field-name="shipmentTypeId" description="${description}"></display-entity></field>
         <field name="facilityName" title="Depot"><display></display></field>
         <field name="partyName" title="Supplier"><display></display></field>
+        <field name="poRefNum" title="PORef.No"><display></display></field>
         <field name="fromPartyId"><hidden/></field>
         <field name="productStoreId"><hidden/></field>
         <field name="estimatedShipDate" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>

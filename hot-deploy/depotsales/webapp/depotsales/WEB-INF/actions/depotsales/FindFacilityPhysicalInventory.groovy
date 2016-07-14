@@ -44,6 +44,12 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
     if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
 	}
+	if(UtilValidate.isNotEmpty(parameters.referenceNo)){
+		poReferNumDetails = delegator.findList("OrderAttribute",EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS , parameters.referenceNo)  , UtilMisc.toSet("orderId"), null, null, false );
+		poReferNumDetails = EntityUtil.getFirst(poReferNumDetails);
+		orderId = poReferNumDetails.orderId;
+		conditionList.add(EntityCondition.makeCondition("primaryOrderId",EntityOperator.EQUALS,orderId));
+	}
 	/*if(UtilValidate.isNotEmpty(parameters.primaryOrderId)){
 		conditionList.add(EntityCondition.makeCondition("primaryOrderId",EntityOperator.EQUALS,parameters.primaryOrderId));
 	}*/
@@ -159,6 +165,12 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
 			row.putAt("fromPartyId", shipment.partyIdFrom);
+			poRefNum = "";
+			orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
+			if(UtilValidate.isNotEmpty(orderAttributes)){
+				poRefNum=orderAttributes.attrValue;
+			}
+			row.putAt("poRefNum", poRefNum);
 			row.putAt("facilityId", inventoryItem.facilityId);
 			if(UtilValidate.isNotEmpty(inventoryProdStore)){
 				row.putAt("productStoreId", (inventoryProdStore.get(0)).get("productStoreId"));
