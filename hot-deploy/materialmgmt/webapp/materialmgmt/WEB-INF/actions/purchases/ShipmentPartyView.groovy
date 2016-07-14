@@ -44,6 +44,12 @@ List conditionList=[];
 			shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, primaryOrderId));
 		}
 	}
+	if(UtilValidate.isNotEmpty(parameters.refrenceNo)){
+		poReferNumDetails = delegator.findList("OrderAttribute",EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS , parameters.refrenceNo)  , UtilMisc.toSet("orderId"), null, null, false );
+		poReferNumDetails = EntityUtil.getFirst(poReferNumDetails);
+		orderId = poReferNumDetails.orderId;
+		shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId));
+	}
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
@@ -95,6 +101,12 @@ List conditionList=[];
 		    tempMap.put("salesOrder",shipment.primaryOrderId);
 		}
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
+		poRefNum = "";
+		orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
+		if(UtilValidate.isNotEmpty(orderAttributes)){
+			poRefNum=orderAttributes.attrValue;
+		}
+		tempMap.putAt("poRefNum", poRefNum);
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyId", shipment.partyIdFrom);
 			
