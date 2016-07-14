@@ -234,8 +234,9 @@ tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-PurchaseOrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+PurchaseOrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
 
 purInvoiceId = "";
 if(PurchaseOrderItemBilling){
@@ -244,6 +245,13 @@ if(PurchaseOrderItemBilling){
 	if(purInvoiceList.referenceNumber)
 	tallyRefNo = purInvoiceList.referenceNumber;
 }
+
+
+if(invoiceId == "10360")
+ tallyRefNo= "YRPR/3/16-17";
+else if(invoiceId == "10358")
+ tallyRefNo= "YRPR/2/16-17";
+
 
 context.tallyRefNo = tallyRefNo;
 
