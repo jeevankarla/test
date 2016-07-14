@@ -159,7 +159,11 @@
 		rolePartyIds = EntityUtil.getFieldListFromEntityList(otherPartyRoles, "partyId", true);
 	}
 	if(UtilValidate.isNotEmpty(partyCode)){
-		List otherPartyRoles=delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyCode),UtilMisc.toSet("partyId"),UtilMisc.toList("partyId"),null,false);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId));
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyCode));
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		List otherPartyRoles=delegator.findList("PartyRole",condition,null,UtilMisc.toList("partyId"),null,false);
 		rolePartyIds = EntityUtil.getFieldListFromEntityList(otherPartyRoles, "partyId", true);
 	}
 	if((UtilValidate.isNotEmpty(branchId)) && (roleTypeId == "EMPANELLED_CUSTOMER")){
@@ -197,7 +201,7 @@
 	if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
 		conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 		conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
-		}
+	}
 	if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 		conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 		conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
