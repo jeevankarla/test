@@ -478,6 +478,7 @@ under the License.
 	<OrderAdjustmentType orderAdjustmentTypeId="PACKING_FORWARDIG" parentTypeId="ADDITIONAL_CHARGES" description="Packing And Forwarding Charges"/>
 	<OrderAdjustmentType orderAdjustmentTypeId="OTHER_CHARGES" parentTypeId="ADDITIONAL_CHARGES" description="Other Charges"/> 	
 	<OrderAdjustmentType orderAdjustmentTypeId="CESS" parentTypeId="ADDITIONAL_CHARGES" description="Cess"/> 
-
+	
+	<OrderAdjustmentType createdStamp="2014-09-21 20:55:49.0" createdTxStamp="2014-09-21 20:55:48.0" description="Cess On Purchase" hasTable="N" lastUpdatedStamp="2014-09-21 20:55:49.0" lastUpdatedTxStamp="2014-09-21 20:55:48.0" orderAdjustmentTypeId="CESS_PUR" parentTypeId="PURCHASE_TAX"/>
 
 </entity-engine-xml>

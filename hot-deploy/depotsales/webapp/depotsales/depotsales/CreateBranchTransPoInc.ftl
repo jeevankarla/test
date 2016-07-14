@@ -119,6 +119,8 @@
 			dataMap["vatPercent_o_"+rowCount] = vatPercent;
 			var cstPercent = data[rowCount]["cstPercent"];
 			dataMap["cstPercent_o_"+rowCount] = cstPercent;
+			var cessPercent = data[rowCount]["cessPercent"];
+			dataMap["cessPercent_o_"+rowCount] = cessPercent;
 			//var bedPercent = data[rowCount]["bedPercent"];
 			//dataMap["bedPercent_o_"+rowCount] = bedPercent;
 		}
@@ -216,6 +218,7 @@
 			
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
+			var cessPercent = data[rowCount]["cessPercent"];
 			//var bedPercent = data[rowCount]["bedPercent"];
 			
 		
@@ -234,7 +237,10 @@
 				
 				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_" + rowCount).val(cstPercent);
 				jQuery(formId).append(jQuery(inputCSTPer));
-
+				
+				var inputCESSPer = jQuery("<input>").attr("type", "hidden").attr("name", "cessPercent_o_" + rowCount).val(cessPercent);
+				jQuery(formId).append(jQuery(inputCESSPer));
+				
 				var remarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				jQuery(formId).append(jQuery(remarks));
                  
@@ -461,6 +467,7 @@
     			var unitPrice = 0;
     			var qty = 0;
     			//var bedPercent = 0;
+    			var cessPercent = 0;
     			var vatPercent = 0;
     			var cstPercent = 0;
     			
@@ -474,6 +481,10 @@
 				//if(!isNaN(data[i]["bedPercent"])){
 				//	bedPercent = data[i]["bedPercent"];
 			   	//}
+			   	
+			   	if(!isNaN(data[i]["cessPercent"])){
+					cessPercent = data[i]["cessPercent"];
+			   	}
 					  
 				if(!isNaN(data[i]["vatPercent"])){
 					vatPercent = data[i]["vatPercent"];
@@ -486,7 +497,8 @@
     			
 					var basicPrice = parseFloat(Math.round( ((qty*unitPrice) * 100) / 100 ));
 					//var bedAmt = parseFloat(Math.round(((basicPrice*(bedPercent/100)) * 100) / 100));
-					var basePrice = basicPrice;
+					var cessAmt = parseFloat(Math.round(((basicPrice*(cessPercent/100)) * 100) / 100));
+					var basePrice = basicPrice + cessAmt;
 					var vatAmt = parseFloat(Math.round(((basePrice*(vatPercent/100)) * 100) / 100));
 					var cstAmt = parseFloat(Math.round(((basePrice*(cstPercent/100)) * 100) / 100));
 					itemTotal = basePrice+vatAmt+cstAmt;
@@ -513,6 +525,10 @@
     					taxStrpAmt = baseCstStrpAmt;
     				}
     				
+    				//cessAmt = parseFloat(Math.round((taxStrpAmt*(/100)) * 100) / 100);
+    				//newUnitPrice = taxStrpAmt-cessAmt;
+    				//data[i]["unitPrice"] = newUnitPrice;
+    				
     				//bedAmt = parseFloat(Math.round((taxStrpAmt*(bedPercent/100)) * 100) / 100);
     				//newUnitPrice = taxStrpAmt-bedAmt;
     				//data[i]["unitPrice"] = newUnitPrice;
@@ -532,7 +548,7 @@
 		else{
 			var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
 		}
-		//jQuery("#totalAmount").html(dispText);
+		jQuery("#totalAmount").html(dispText);
     }
 	
 	function quantityValidator(value ,item) {
@@ -556,6 +572,7 @@
 			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
 			{id:"unitPrice", name:"Basic Unit Price in Kgs", field:"unitPrice", width:90, minWidth:90, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
+			{id:"cessPercent", name:"CESS (%)", field:"cessPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Cess Percentage", editor:FloatCellEditor},
 			<#--{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", editor:FloatCellEditor},-->
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
 			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
@@ -665,7 +682,7 @@
     	    var totalValue=0;
         	
         	var isIncTax = $('#incTax').is(':checked');
-        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 3 || args.cell == 5 || args.cell == 6) {
+        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 3 || args.cell == 5 || args.cell == 6 || args.cell == 7) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				//var uomId = productUOMMap[prod];
@@ -675,6 +692,8 @@
 				//var bedPercent = parseFloat(data[args.row]["bedPercent"]);
 				var vatPercent = parseFloat(data[args.row]["vatPercent"]);
 				var cstPercent = parseFloat(data[args.row]["cstPercent"]);
+				var cessPercent = parseFloat(data[args.row]["cessPercent"]);
+				
 				var price = data[args.row]['unitPrice'];
 				if(isNaN(price)){
 					price = 0;
@@ -696,7 +715,13 @@
 					
 					//var entryValue = roundedAmount+amtBED;
 					
-					var entryValue = roundedAmount;
+					
+					
+					if(isNaN(cessPercent)){
+						cessPercent = 0;
+					}
+					var amtCESS = Math.round((roundedAmount*cessPercent)/100);
+					var entryValue = roundedAmount+amtCESS;
 					
 					if(isNaN(cstPercent)){
 						cstPercent = 0;
