@@ -77,7 +77,7 @@
             </hyperlink>
         </field> -->
         <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="poReport" widget-style="buttontext">
-            <hyperlink target="PurchaseOrderViewDepotSales.pdf" description="Report" target-window="_blank">
+            <hyperlink target="PurchaseOrderViewDEPOT.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>

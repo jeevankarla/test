@@ -644,6 +644,13 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDF"/>
     </request-map>
+    
+     <request-map uri="PurchaseOrderViewDEPOT.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderViewDepot"/>
+    </request-map>
+    
+    
      <request-map uri="arcOrder.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ArcOrderPDF"/>
@@ -1218,6 +1225,13 @@
       <request-map uri="realizeStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="realizeStatus"/>
+        <response name="success" type="view" value="orderPayment"/>
+        <response name="error" type="view" value="orderPayment"/>
+    </request-map>
+    
+     <request-map uri="raiseSalesInvoiceForDepotSales">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="raiseSalesInvoiceForDepotSales"/>
         <response name="success" type="view" value="orderPayment"/>
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
@@ -2062,6 +2076,9 @@
     <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
+   
+   <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
+   
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
