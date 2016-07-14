@@ -11081,27 +11081,26 @@ public class DepotSalesServices{
 					        eachProductTaxMap.put("vatSubcharge",POvatSubcharge);
 							Debug.log("==================================666=================");
 							BigDecimal serviceChargeAmt=BigDecimal.ZERO;
-							BigDecimal charges=BigDecimal.ZERO;
+							BigDecimal prodBaseAmount = unitPrice.multiply(quantity);
 							if (UtilValidate.isNotEmpty(serviceChrgPercentage)){
-								serviceChargeAmt = (serviceChrgPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)).multiply(unitPrice.multiply(quantity));
-						        BigDecimal unitpriceservice=serviceChrgPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
-						        charges=(unitpriceservice.multiply(unitPrice)).add(unitPrice);
-								if ((UtilValidate.isNotEmpty(vatPercentage)) && (vatPercentage.compareTo(BigDecimal.ZERO) > 0)) {
-									 Map vatTaxRateMap = FastMap.newInstance();
-									 vatTaxRateMap.put("orderAdjustmentTypeId","VAT_SALE");
-									 vatTaxRateMap.put("sourcePercentage",vatPercentage);
-									 vatTaxRateMap.put("amount",charges.multiply(vatPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)));
-									 vatTaxRateMap.put("taxAuthGeoId", "");
-									 taxRateList.add(vatTaxRateMap);
-			  					}
-						        if ((UtilValidate.isNotEmpty(cstPercentage)) && (cstPercentage.compareTo(BigDecimal.ZERO) > 0)) {
-									 Map cstTaxRateMap = FastMap.newInstance();
-									 cstTaxRateMap.put("orderAdjustmentTypeId","CST_SALE");
-									 cstTaxRateMap.put("sourcePercentage",cstPercentage);
-									 cstTaxRateMap.put("amount",charges.multiply(cstPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)));
-									 cstTaxRateMap.put("taxAuthGeoId", "");
-									 taxRateList.add(cstTaxRateMap);
-			  					}
+								serviceChargeAmt = (serviceChrgPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)).multiply(prodBaseAmount);
+							}
+							BigDecimal taxBaseAmount = serviceChargeAmt.add(prodBaseAmount); 
+							if ((UtilValidate.isNotEmpty(vatPercentage)) && (vatPercentage.compareTo(BigDecimal.ZERO) > 0)) {
+								Map vatTaxRateMap = FastMap.newInstance();
+								vatTaxRateMap.put("orderAdjustmentTypeId","VAT_SALE");
+								vatTaxRateMap.put("sourcePercentage",vatPercentage);
+								vatTaxRateMap.put("amount",taxBaseAmount.multiply(vatPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)));
+								vatTaxRateMap.put("taxAuthGeoId", "");
+								taxRateList.add(vatTaxRateMap);
+							 }
+							if ((UtilValidate.isNotEmpty(cstPercentage)) && (cstPercentage.compareTo(BigDecimal.ZERO) > 0)) {
+								Map cstTaxRateMap = FastMap.newInstance();
+								cstTaxRateMap.put("orderAdjustmentTypeId","CST_SALE");
+								cstTaxRateMap.put("sourcePercentage",cstPercentage);
+								cstTaxRateMap.put("amount",taxBaseAmount.multiply(cstPercentage.divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP)));
+								cstTaxRateMap.put("taxAuthGeoId", "");
+								taxRateList.add(cstTaxRateMap);
 							}
 							/*taxRateMap.put("orderAdjustmentTypeId",taxType);
 							taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
