@@ -149,14 +149,12 @@ invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, En
 invoiceItemLevelAdjustments = [:];
 
 
-Debug.log("invoiceAdjItemList==============="+invoiceAdjItemList);
 
 
 double totTaxAmount = 0;
 
 double mgpsAmt = 0;
 
-Debug.log("invoiceItemList==============="+invoiceItemList);
 
 
 int i=0;
@@ -173,7 +171,6 @@ for (eachList in invoiceItemList) {
 	
 	
 	
-	Debug.log("invoiceInnerAdjItemList==============="+invoiceInnerAdjItemList);
 	
 	
 	 itemAdjustList = [];
@@ -183,8 +180,6 @@ for (eachList in invoiceItemList) {
 		
 		  if(eachItem.description != "Service Charge" && eachItem.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY"){
 		  tempMap = [:];
-		  
-		  Debug.log("eachItem.amount==============="+eachItem.amount);
 		  
 		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
@@ -203,8 +198,6 @@ for (eachList in invoiceItemList) {
 	}
 	 }
 	 
-	 
-	 Debug.log("totTaxAmount==============="+totTaxAmount);
 	 
 	if(itemAdjustList){
 		invoiceItemLevelAdjustments.put(i, itemAdjustList);
@@ -233,21 +226,34 @@ tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
 
 conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, null, false);
+
+purInvoiceId = "";
+
+if(shipmentListForPOInvoiceId)
+ purInvoiceId = shipmentListForPOInvoiceId[0].invoiceId;
+
+ 
+/*conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 PurchaseOrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+*/
 
-purInvoiceId = "";
-if(PurchaseOrderItemBilling){
-	purInvoiceId = PurchaseOrderItemBilling[0].invoiceId;
+if(purInvoiceId){
 	purInvoiceList = delegator.findOne("Invoice",[invoiceId : purInvoiceId] , false);
 	if(purInvoiceList.referenceNumber)
 	tallyRefNo = purInvoiceList.referenceNumber;
 }
 
 
-if(invoiceId == "10360")
+/*if(invoiceId == "10360")
  tallyRefNo= "YRPR/3/16-17";
 else if(invoiceId == "10358")
  tallyRefNo= "YRPR/2/16-17";
@@ -257,7 +263,7 @@ else if(invoiceId == "10391")
 tallyRefNo= "YRPR/5/16-17";
 else if(invoiceId == "10390")
 tallyRefNo= "YRPR/4/16-17";
-
+*/
 context.tallyRefNo = tallyRefNo;
 
 productStoreId = OrderHeaderList.get("productStoreId");
@@ -275,7 +281,6 @@ branchId = "INT12";
 else if(branchId == "INT8" || branchId == "INT16" || branchId == "INT20" || branchId == "INT21" || branchId == "INT22" || branchId == "INT44")
 branchId = "INT8";
 
-Debug.log("branchId=================="+branchId);
 
 branchContext.put("branchId",branchId);
 BOAddress="";
@@ -311,7 +316,6 @@ context.grandTotal = grandTotal;
 actualOrderId = "";
 destination = "";
 
-Debug.log("grandTotal=================="+grandTotal);
 
 
 if(UtilValidate.isNotEmpty(orderAttrForPo)){
@@ -350,12 +354,6 @@ if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	context.indentNo = orderNo;
 }
 
-
-
-Debug.log("indentOrderSequences=================="+indentOrderSequences);
-
-
-Debug.log("orderHeaderSequences=================="+orderHeaderSequences);
 
 
 OrderHeader = [];
@@ -483,15 +481,12 @@ context.externalOrderId = externalOrderId;
 	
 	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 	
-	Debug.log("invoiceItemList==============="+invoiceItemList);
-	
 	
 	double grandTotal = 0;
 	if(invoiceItemList){
 	
 		
 		List productIds = EntityUtil.getFieldListFromEntityList(invoiceItemList, "productId", true);
-		
 		
 		
 		for(eachProd in productIds)
@@ -677,8 +672,6 @@ context.externalOrderId = externalOrderId;
 	context.grandTotal = Math.round(grandTotal);
 	context.finalDetails = finalDetails;
 
-	Debug.log("finalDetails==============="+finalDetails);
-	
 		
 //}
 
