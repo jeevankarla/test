@@ -2360,6 +2360,7 @@ public class DepotPurchaseServices{
 				String quantityStr = null;
 				String basicPriceStr = null;
 				String vatPriceStr = null;
+				String cessPriceStr = null;
 				String bedPriceStr = null;
 				String cstPriceStr = null;
 				String unitPriceStr = null;
@@ -2371,15 +2372,18 @@ public class DepotPurchaseServices{
 				BigDecimal unitPrice = BigDecimal.ZERO;
 				BigDecimal vatPrice = BigDecimal.ZERO;
 				BigDecimal bedPrice = BigDecimal.ZERO;
+				BigDecimal cessPrice = BigDecimal.ZERO;
 				BigDecimal serviceTaxPrice = BigDecimal.ZERO;
 				//percentage fields
 				String bedPercentStr = null;
+				String cessPercentStr = null;
 				String vatPercentStr = null;
 				String cstPercentStr = null;
 				String tcsPercentStr = null;
 				String serviceTaxPercentStr = null;
 				
 				BigDecimal bedPercent=BigDecimal.ZERO;
+				BigDecimal cessPercent=BigDecimal.ZERO;
 				BigDecimal vatPercent=BigDecimal.ZERO;
 				BigDecimal cstPercent=BigDecimal.ZERO;
 				BigDecimal tcsPercent=BigDecimal.ZERO;
@@ -2535,6 +2539,10 @@ public class DepotPurchaseServices{
 							bedPercentStr = (String) paramMap.get("bedPercent"
 									+ thisSuffix);
 						}
+						if (paramMap.containsKey("cessPercent" + thisSuffix)) {
+							bedPercentStr = (String) paramMap.get("cessPercent"
+									+ thisSuffix);
+						}
 						if (paramMap.containsKey("vatPercent" + thisSuffix)) {
 							vatPercentStr = (String) paramMap.get("vatPercent"
 									+ thisSuffix);
@@ -2561,6 +2569,9 @@ public class DepotPurchaseServices{
 							if (UtilValidate.isNotEmpty(bedPriceStr)) {
 								bedPrice = new BigDecimal(bedPriceStr);
 							}
+							if (UtilValidate.isNotEmpty(cessPriceStr)) {
+								cessPrice = new BigDecimal(cessPriceStr);
+							}
 							if (UtilValidate.isNotEmpty(vatPriceStr)) {
 								vatPrice = new BigDecimal(vatPriceStr);
 							}
@@ -2568,6 +2579,9 @@ public class DepotPurchaseServices{
 
 							if (UtilValidate.isNotEmpty(bedPercentStr)) {
 								bedPercent = new BigDecimal(bedPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(cessPercentStr)) {
+								cessPercent = new BigDecimal(cessPercentStr);
 							}
 							if (UtilValidate.isNotEmpty(vatPercentStr)) {
 								vatPercent = new BigDecimal(vatPercentStr);
@@ -2592,9 +2606,11 @@ public class DepotPurchaseServices{
 						productQtyMap.put("unitListPrice", unitPrice);
 						productQtyMap.put("basicPrice", basicPrice);
 						productQtyMap.put("bedPrice", bedPrice);
+						productQtyMap.put("cessPrice", bedPrice);
 						productQtyMap.put("cstPrice", cstPrice);
 						productQtyMap.put("vatPrice", vatPrice);
 						productQtyMap.put("bedPercent", bedPercent);
+						productQtyMap.put("cessPercent", bedPercent);
 						productQtyMap.put("vatPercent", vatPercent);
 						productQtyMap.put("cstPercent", cstPercent);
 						productQtyMap.put("orderItemSeqId", orderItemSeqId);
@@ -2939,6 +2955,8 @@ public class DepotPurchaseServices{
 					BigDecimal vatAmount = BigDecimal.ZERO;
 					BigDecimal cstAmount = BigDecimal.ZERO;
 					BigDecimal cstPercent = BigDecimal.ZERO;
+					//BigDecimal cessAmount = BigDecimal.ZERO;
+					BigDecimal cessPercent = BigDecimal.ZERO;
 					String orderItemSeqId = null;
 					/*BigDecimal bedAmount = BigDecimal.ZERO;
 					BigDecimal bedPercent = BigDecimal.ZERO;
@@ -2965,15 +2983,18 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
 						unitListPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
 					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("cessPercent"))){
+						cessPercent = (BigDecimal)prodQtyMap.get("cessPercent");
+					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
 						vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
 						vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
 					}
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
 						cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
-					}
+					}*/
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 						cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
 					}
@@ -3034,9 +3055,27 @@ public class DepotPurchaseServices{
 			    		taxDetailMap.put("percentage", bedseccessPercent);
 			    		taxList.add(taxDetailMap);
 					}*/
+					
+					
+					BigDecimal basePrice = BigDecimal.ZERO;
+					BigDecimal itemAmount = quantity.multiply(unitPrice);
+					
+					basePrice = itemAmount;
+					if(cessPercent.compareTo(BigDecimal.ZERO)>0){
+						BigDecimal cessAmount = (itemAmount.multiply(cessPercent)).divide(new BigDecimal("100"));
+						basePrice = itemAmount.add(cessAmount);
+						
+						Map taxDetailMap = FastMap.newInstance();
+		        		taxDetailMap.put("orderAdjustmentTypeId","CESS_PUR");
+		        		taxDetailMap.put("sourcePercentage",cessPercent);
+		        		taxDetailMap.put("amount",cessAmount);
+						//taxDetailMap.put("taxAuthGeoId", partyGeoId);
+			    		taxList.add(taxDetailMap);
+					}
+					
 					if(vatPercent.compareTo(BigDecimal.ZERO)>0){
 		        		
-		        		vatAmount = ((quantity.multiply(unitPrice)).multiply(vatPercent)).divide(new BigDecimal("100"));
+		        		vatAmount = ((basePrice).multiply(vatPercent)).divide(new BigDecimal("100"));
 		        		
 		        		Map taxDetailMap = FastMap.newInstance();
 		        		taxDetailMap.put("orderAdjustmentTypeId","VAT_PUR");
@@ -3047,7 +3086,7 @@ public class DepotPurchaseServices{
 					}
 					if(cstPercent.compareTo(BigDecimal.ZERO)>0){
 						
-						cstAmount = ((quantity.multiply(unitPrice)).multiply(cstPercent)).divide(new BigDecimal("100"));
+						cstAmount = ((basePrice).multiply(cstPercent)).divide(new BigDecimal("100"));
 						
 		        		Map taxDetailMap = FastMap.newInstance();
 		        		taxDetailMap.put("orderAdjustmentTypeId","CST_PUR");
