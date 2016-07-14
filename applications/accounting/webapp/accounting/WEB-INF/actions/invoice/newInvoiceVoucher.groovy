@@ -251,7 +251,12 @@ if(invoiceId == "10360")
  tallyRefNo= "YRPR/3/16-17";
 else if(invoiceId == "10358")
  tallyRefNo= "YRPR/2/16-17";
-
+else if(invoiceId == "10362")
+ tallyRefNo= "YRPR/6/16-17";
+else if(invoiceId == "10391")
+tallyRefNo= "YRPR/5/16-17";
+else if(invoiceId == "10390")
+tallyRefNo= "YRPR/4/16-17";
 
 context.tallyRefNo = tallyRefNo;
 
