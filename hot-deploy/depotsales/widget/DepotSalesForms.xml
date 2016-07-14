@@ -1562,6 +1562,7 @@
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="refrenceNo" title="poRef. No	"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
 <!--         <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
@@ -1620,6 +1621,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+         <field name="poRefNum" title="poRef. No"><display/></field>
 <!--         <field name="vehicleId" title="Vehicle No"><display/></field> -->
         <field name="depoPartyName" title="Vehicle No"><hidden/></field>
         <field name="partyIdTo" title="Vehicle No"><hidden/></field>
