@@ -11108,52 +11108,54 @@ public class DepotSalesServices{
 							taxRateMap.put("amount",BigDecimal.ZERO);
 							taxRateMap.put("taxAuthGeoId", partyGeoId);
 							taxRateList.add(taxRateMap);*/
-					        Debug.log("productId=============="+productId+"=baleQuantity======"+baleQuantity);
-					        if (UtilValidate.isNotEmpty(consolMap.get(productId))){
-								
-								BigDecimal tempbaleqty=BigDecimal.ZERO;
-								BigDecimal tempquantity=BigDecimal.ZERO;
-								BigDecimal tempbundleWeight=BigDecimal.ZERO;
-								Map tempconsolMap=(Map)consolMap.get(productId);
-								Debug.log("tempconsolMap=========================="+tempconsolMap);
-								tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
-								tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
-								tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
-								Debug.log("tempquantity=========================="+tempquantity+"=tempbaleqty======"+tempbaleqty+"=tempbundleWeight====="+tempbundleWeight);
-								tempconsolMap.put("quantity",tempquantity);
-								tempconsolMap.put("baleQuantity",tempbaleqty);
-								tempconsolMap.put("bundleWeight",tempbundleWeight);
-							}else{
-								Map tempconsolMap= FastMap.newInstance();
-								tempconsolMap.put("productId", productId);
-								tempconsolMap.put("quantity", quantity);
-								//tempconsolMap.put("customerId", customerId);
-								tempconsolMap.put("remarks", remarks);
-								tempconsolMap.put("baleQuantity", baleQuantity);
-								tempconsolMap.put("bundleWeight", bundleWeight);
-								tempconsolMap.put("bundleUnitPrice", bundleUnitPrice.toString());				
-								tempconsolMap.put("yarnUOM", yarnUOM);
-								tempconsolMap.put("baleQuantity", baleQuantity);
-								tempconsolMap.put("bundleWeight", bundleWeight);
-								tempconsolMap.put("bundleUnitPrice", bundleUnitPrice.toString());				
-								tempconsolMap.put("yarnUOM", yarnUOM);
-								tempconsolMap.put("batchNo", "");
-								tempconsolMap.put("daysToStore", "");
-								tempconsolMap.put("basicPrice", unitPrice);
-								Debug.log("taxRateList==========================="+taxRateList);
-								tempconsolMap.put("taxRateList", taxRateList);
-								tempconsolMap.put("serviceCharge", serviceChrgPercentage);
-								tempconsolMap.put("serviceChargeAmt", serviceChargeAmt);
-								tempconsolMap.put("cstPercent", cstPercentage);
-								tempconsolMap.put("vatPercent", vatPercentage);
-								tempconsolMap.put("serviceTaxPrice", serviceChargeAmt);
-						        productPOTaxMap.put(productId,eachProductTaxMap);
-	
-								/*tempconsolMap.put("applicableTaxType", applicableTaxType);
-								tempconsolMap.put("checkE2Form", checkE2Form);
-								tempconsolMap.put("checkCForm", checkCForm);
-								tempconsolMap.put("quotaAvbl", quotaAvbl);*/
-								consolMap.put(productId,tempconsolMap);						
+							if(billingType.equals("onBehalfOf")){
+								Debug.log("productId=============="+productId+"=baleQuantity======"+baleQuantity);
+						        if (UtilValidate.isNotEmpty(consolMap.get(productId))){
+									
+									BigDecimal tempbaleqty=BigDecimal.ZERO;
+									BigDecimal tempquantity=BigDecimal.ZERO;
+									BigDecimal tempbundleWeight=BigDecimal.ZERO;
+									Map tempconsolMap=(Map)consolMap.get(productId);
+									Debug.log("tempconsolMap=========================="+tempconsolMap);
+									tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
+									tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
+									tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
+									Debug.log("tempquantity=========================="+tempquantity+"=tempbaleqty======"+tempbaleqty+"=tempbundleWeight====="+tempbundleWeight);
+									tempconsolMap.put("quantity",tempquantity);
+									tempconsolMap.put("baleQuantity",tempbaleqty);
+									tempconsolMap.put("bundleWeight",tempbundleWeight);
+								}else{
+									Map tempconsolMap= FastMap.newInstance();
+									tempconsolMap.put("productId", productId);
+									tempconsolMap.put("quantity", quantity);
+									//tempconsolMap.put("customerId", customerId);
+									tempconsolMap.put("remarks", remarks);
+									tempconsolMap.put("baleQuantity", baleQuantity);
+									tempconsolMap.put("bundleWeight", bundleWeight);
+									tempconsolMap.put("bundleUnitPrice", bundleUnitPrice.toString());				
+									tempconsolMap.put("yarnUOM", yarnUOM);
+									tempconsolMap.put("baleQuantity", baleQuantity);
+									tempconsolMap.put("bundleWeight", bundleWeight);
+									tempconsolMap.put("bundleUnitPrice", bundleUnitPrice.toString());				
+									tempconsolMap.put("yarnUOM", yarnUOM);
+									tempconsolMap.put("batchNo", "");
+									tempconsolMap.put("daysToStore", "");
+									tempconsolMap.put("basicPrice", unitPrice);
+									Debug.log("taxRateList==========================="+taxRateList);
+									tempconsolMap.put("taxRateList", taxRateList);
+									tempconsolMap.put("serviceCharge", serviceChrgPercentage);
+									tempconsolMap.put("serviceChargeAmt", serviceChargeAmt);
+									tempconsolMap.put("cstPercent", cstPercentage);
+									tempconsolMap.put("vatPercent", vatPercentage);
+									tempconsolMap.put("serviceTaxPrice", serviceChargeAmt);
+							        productPOTaxMap.put(productId,eachProductTaxMap);
+		
+									/*tempconsolMap.put("applicableTaxType", applicableTaxType);
+									tempconsolMap.put("checkE2Form", checkE2Form);
+									tempconsolMap.put("checkCForm", checkCForm);
+									tempconsolMap.put("quotaAvbl", quotaAvbl);*/
+									consolMap.put(productId,tempconsolMap);						
+								}
 							}
 					        productQtyMap.put("productId", productId);
 							productQtyMap.put("quantity", quantity);
@@ -11189,18 +11191,20 @@ public class DepotSalesServices{
 							productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
 			*/
 							indentItemProductList.add(productQtyMap);
+							indentProductList.add(productQtyMap);
 							productIds.add(productId);
 		    		      }
 		    		  }
-		    	  
-		    		  Iterator eachProductIter = consolMap.entrySet().iterator();
-		 	       	 
-		 	       	 while (eachProductIter.hasNext()) {
-		 	       		Map.Entry entry = (Entry)eachProductIter.next();
-		 				//String productId = (String)entry.getKey();
-		 				Map eachproductMap=(Map)entry.getValue();
-		 				indentProductList.add(eachproductMap);
-		 			}		
+		    		  if(billingType.equals("onBehalfOf")){
+		    				indentProductList.clear();
+		    				Iterator eachProductIter = consolMap.entrySet().iterator();
+		    		       	 while (eachProductIter.hasNext()) {
+		    		       		Map.Entry entry = (Entry)eachProductIter.next();
+		    					//String productId = (String)entry.getKey();
+		    					Map eachproductMap=(Map)entry.getValue();
+		    					indentProductList.add(eachproductMap);
+		    				}			
+		    			}
 		 	       	processOrderContext.put("userLogin", userLogin);
 		 			processOrderContext.put("onBeHalfOf", "Y");
 		 			processOrderContext.put("schemeCategory", schemeCategory);
