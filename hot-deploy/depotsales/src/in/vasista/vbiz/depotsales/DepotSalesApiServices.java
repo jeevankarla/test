@@ -440,6 +440,8 @@ public class DepotSalesApiServices{
 			return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
 		}
 		
+    	 if(UtilValidate.isNotEmpty(paymentList)){
+    	
 		for (int i=0; i<paymentList.size(); i++) {
 			
 			Map tempMap = FastMap.newInstance();
@@ -465,6 +467,24 @@ public class DepotSalesApiServices{
 	        		tempMap.put("paidAmount",eachPaymentList.get("amount"));
 	        		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
 	        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+	        		
+	        		
+	        		
+	        		String menthodType = "";
+	        		try {
+	        			condList.clear();
+	        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
+	        			condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+	        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+	        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
+	        		
+	        		} catch (GenericEntityException e) {
+	        				Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+	        				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+	        			}
+	        		
+	        		tempMap.put("menthodTypeDescription",menthodType);
+	        		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
 	        		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
 	        		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
 	        		tempMap.put("statusId",eachPaymentList.get("statusId"));
@@ -477,7 +497,23 @@ public class DepotSalesApiServices{
         		tempMap.put("paidAmount",eachPaymentList.get("amount"));
         		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
         		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
-        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentDate"));
+        		
+        		
+        		String menthodType = "";
+        		try {
+        			condList.clear();
+        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
+        			condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
+        		
+        		} catch (GenericEntityException e) {
+        				Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+        				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+        			}
+        		
+        		tempMap.put("menthodTypeDescription",menthodType);
+        		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
         		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
         		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
         		tempMap.put("statusId",eachPaymentList.get("statusId"));
@@ -486,6 +522,8 @@ public class DepotSalesApiServices{
 	        	
 	        }
 		}
+		
+    }
 
 		Map paymentSearchResults = FastMap.newInstance();
 		paymentSearchResults.put("paymentSearchResultsList",paymentSearchResultsList);
