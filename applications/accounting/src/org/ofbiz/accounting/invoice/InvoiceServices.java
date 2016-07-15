@@ -5238,6 +5238,8 @@ public class InvoiceServices {
 	       		}
        		}
        		Timestamp invDate=null;
+   			Debug.log("invoiceId================"+invoiceId);
+
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
        			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
@@ -5260,6 +5262,8 @@ public class InvoiceServices {
        			String indentTypeId = "D";
        			String boSequnce = "";
        			String roSequnce ="";
+       			
+       			Debug.log("shipmentId================"+shipmentId);
        			if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");

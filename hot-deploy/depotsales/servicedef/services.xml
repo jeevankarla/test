@@ -136,6 +136,13 @@
         <attribute name="allStatus" type="List" mode="IN" optional="true"/>
         <attribute name="paymentStatus" type="List" mode="IN" optional="true"/>
     </service>
+    
+    <service name="raiseSalesInvoiceForDepotSales" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="raiseSalesInvoiceForDepotSales">
+        <description>raise Sales Invoice For DepotSales</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
      <service name="preferenceCancel" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="preferenceCancel">
         <description>Issue Products to Order</description>
         <attribute name="preferenceIds" type="List" mode="IN" optional="false"/>

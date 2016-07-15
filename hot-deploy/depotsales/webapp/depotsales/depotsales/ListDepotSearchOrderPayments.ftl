@@ -39,8 +39,11 @@ under the License.
 		
 	}
     function realizestatus(orderId){
+    
+         alert(orderId);
+    
 		var formId = "#" + "realizeStatus";
-		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "paymentPreferenceId").val(orderId);
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		jQuery(formId).append(jQuery(param1));
         jQuery(formId).submit();
     }
@@ -168,7 +171,7 @@ under the License.
 		action="cancelIUSTransferOrder"
 	</#if>>
 </form>
-<form name="realizeStatus" id="realizeStatus" method="post" action="realizeStatus"> 
+<form name="realizeStatus" id="realizeStatus" method="post" action="raiseSalesInvoiceForDepotSales"> 
 </form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
 	
@@ -220,6 +223,7 @@ under the License.
            <td>Payment Status</td>
           <#--> <td>Advance Payments</td> -->
              <td>Received Amount</td>
+             <td>Sales Invoice</td>
             <#-- <td>Indent Status</td>-->
         <#--  <td>Edit</td>
           <td>Generate PO</td> -->
@@ -284,7 +288,8 @@ under the License.
            
                  <td>${eachOrder.paidAmt?if_exists}</td>
            
-              
+           
+              <td><input type="button" name="salesInvoice" id="salesInvoice" value="SalesInvoice" onclick="javascript: realizestatus('${eachOrder.orderId}');"/></td>
            
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>

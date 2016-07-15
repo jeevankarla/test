@@ -1232,8 +1232,8 @@
      <request-map uri="raiseSalesInvoiceForDepotSales">
         <security https="true" auth="true"/>
         <event type="service" invoke="raiseSalesInvoiceForDepotSales"/>
-        <response name="success" type="view" value="orderPayment"/>
-        <response name="error" type="view" value="orderPayment"/>
+        <response name="success" type="view" value="FindSalesIndentPayment"/>
+        <response name="error" type="view" value="FindSalesIndentPayment"/>
     </request-map>
     
      <request-map uri="preferenceCancel">
