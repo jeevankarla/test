@@ -69,6 +69,7 @@ import org.json.JSONObject;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 
+
 import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -11693,5 +11694,83 @@ public class DepotSalesServices{
 	        return ServiceUtil.returnSuccess();
  	}
 
+	
+	
+	
+    public static Map<String, Object> raiseSalesInvoiceForDepotSales(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+  		String orderId = (String) context.get("orderId");
+  		Locale locale = (Locale) context.get("locale");
+
+  		Debug.log("orderId================"+orderId);
+  		
+		Timestamp effectiveDate=UtilDateTime.nowTimestamp();
+			Map<String, Object> createInvoice = FastMap.newInstance();
+
+  		/*try{
+  		createInvoice = dispatcher.runSync("createInvoiceForOrder", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));
+    	if (ServiceUtil.isError(result)) {
+    		Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
+        	return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
+        }
+    	
+  		}catch (Exception e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString()); 
+        }
+  		
+  		*/
+  		
+  		
+  		 try {
+             List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+             
+       		Debug.log("orderItems================"+orderItems);
+
+             if (orderItems.size() > 0) {
+                 context.put("billItems", orderItems);
+                 context.put("orderId", orderId);
+                 //context.put("purposeTypeId", orderId);
+             }
+              createInvoice = dispatcher.runSync("createInvoiceForOrder", context);
+         }
+         catch (GenericServiceException e) {
+             String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
+             Debug.logError (e, errMsg, module);
+             return ServiceUtil.returnError(errMsg);
+         } catch (GenericEntityException e) {
+             String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
+             Debug.logError(e, errMsg, module);
+             return ServiceUtil.returnError(errMsg);
+         }
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+    	
+    	Debug.log("result invoiceId  #################################"+result);
+  		
+    	String invoiceId = (String)createInvoice.get("invoiceId");
+  		
+         result.put("invoiceId", invoiceId);
+         return result;
+  	}
+	
+	
+	
 
 }
