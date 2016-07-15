@@ -43,5 +43,16 @@
         <attribute type="Integer" mode="OUT" name="suppliersMapSize" optional="true"/>
     </service>
     
+    <service name="getProducts" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getProducts">
+        <description>Get list of Products</description>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="primaryProductCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="productName" type="String" mode="IN" optional="true"/>
+        <attribute name="salesDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute type="Map" mode="OUT" name="productsMap" optional="true"/>
+        <attribute type="Integer" mode="OUT" name="productsMapSize" optional="true"/>
+    </service>
+    
 </services>
 
