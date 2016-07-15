@@ -67,10 +67,10 @@ under the License.
 				<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<fo:block text-align="rght"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
-				<fo:block text-align="rght"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
-				<fo:block text-align="rght"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
-				<fo:block text-align="rght"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
@@ -79,17 +79,13 @@ under the License.
 				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
-			   <fo:table-row white-space-collapse="false">
-			       <fo:table-cell >
-				       <fo:block text-align="left" keep-together="always"   font-size="11pt" >Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}  </fo:block>
-				  </fo:table-cell>
-			</fo:table-row>
 		</fo:table-body>
 	</fo:table>
 	</fo:block>
+		<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}  </fo:block>
         <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          <fo:block>     
-    <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed"  font-size="10pt"> 
+    <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed" font-size="10pt"> 
 	<fo:table-column column-width="5%"/>
 	<fo:table-column column-width="17%"/>
 	<fo:table-column column-width="10%"/>
