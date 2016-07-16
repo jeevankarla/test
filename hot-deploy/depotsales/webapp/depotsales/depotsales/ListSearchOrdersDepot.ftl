@@ -58,6 +58,9 @@ var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 var tallyRefNO = $("#tallyRefNO").val();
 
+var reload = "";
+
+
 
 var displayedIndent = 0;
 var uniqueOrderIdsList = [];
@@ -171,11 +174,11 @@ $(function(){
                         if(orderData.length != 0){
                           displayedIndent = displayedIndent+orderData.length;
                          $("#displayedIndent").html(displayedIndent);      
-                        $('div#orderSpinn').html("");
+                         $('div#orderSpinn').html("");
                          if(orderData.length < 3){
-                        document.body.style.overflow = 'hidden';
-                         $("#displayedIndent").html("1");
-                       }
+                           document.body.style.overflow = 'hidden';
+                           $("#displayedIndent").html("1");
+                         }
                         if(displayedIndent <=20)
                           $("#totIndents").html("<h10>"+orderData[0].totalIndents+"</h10>");
                         
@@ -185,6 +188,14 @@ $(function(){
                        var rows = document.getElementById('coreTable').rows.length;
                        if(rows < 3){
                         document.body.style.overflow = 'hidden';
+                          var pathname = window.location.pathname; // Returns path only
+                          var url      = window.location.href;     // Returns full URL
+                         
+                         if(url.length < 100)  
+                           window.location.href =url+"?orderId="+orderId;
+                         else
+                           window.location.href =url+"&orderId="+orderId;
+                       
                        }
                         $('div#orderSpinn').html("");
                          setInterval(blinker, 1000);
