@@ -119,9 +119,9 @@ function datepick()	{
                  	  	var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
                 		if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
 		                 	    var adrNum=$('#USER_ADHNUMBER').val();
-					             		  if( (adrNum).length < 1 ) {
+					             		  if( (adrNum).length < 12 ) {
 											 $('#USER_ADHNUMBER').css('background', 'red');
-											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Adhar Number.</font></div>");
+											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Valid Adhar Number.</font></div>");
 											 setTimeout(function () {
 											        $('#USER_ADHNUMBER').css('background', 'white').focus(); 
 											        $('.ADHRLabel').remove();
