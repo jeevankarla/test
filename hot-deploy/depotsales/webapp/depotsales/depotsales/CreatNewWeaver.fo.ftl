@@ -29,6 +29,12 @@ function datepick()	{
 	        //    $('#transactionDate').val(onlyDate);
 	        //},
 	        changeMonth: false,
+			numberOfMonths: 1});
+			$( "#passBookIssueDate" ).datetimepicker({
+			dateFormat:'yy-mm-dd',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
+	        changeMonth: false,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
 	}		
@@ -51,6 +57,9 @@ function datepick()	{
 			      $('#salutation').hide();
 				  $('#USER_ADHNUMBER').hide();
 			      $('#ADHLABEL').hide();
+			      $('#passBookIssueDate').hide();
+			      $('#issueDatelabel').hide();
+			       
       	      $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -119,13 +128,13 @@ function datepick()	{
                  	  	var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
                 		if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
 		                 	    var adrNum=$('#USER_ADHNUMBER').val();
-					             		  if( (adrNum).length < 12 ) {
+					             		  if( (adrNum).length != 12 ) {
 											 $('#USER_ADHNUMBER').css('background', 'red');
-											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Valid Adhar Number.</font></div>");
+											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Valid Adhar Number (Must Be 12 Digits).</font></div>");
 											 setTimeout(function () {
 											        $('#USER_ADHNUMBER').css('background', 'white').focus(); 
 											        $('.ADHRLabel').remove();
-											     	}, 800);
+											     	}, 1000);
 										  	return false;
 									  	 }
 		               		 }
@@ -230,7 +239,17 @@ function datepick()	{
                    });
  
 }
+ function passBookIssueDateVal(input){
+ 		var passBookNo=$('#passBook').val();
+		if( (passBookNo).length > 1 ) {
+			    $('#issueDatelabel').show();
+			    $('#passBookIssueDate').show();
+		}else{
+			   $('#issueDatelabel').hide();
+			   $('#passBookIssueDate').hide();
+		}
 
+}
 
     $(document).ready(function(){
     
@@ -575,7 +594,11 @@ function datepick()	{
 					       <tr>
 						 <td class="label"><b> PassBook :</b></td>
 				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  />
+        		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  onblur="javascript:passBookIssueDateVal(this);"/>
+          				</td>
+          				 <td class="label" id="issueDatelabel"><b> PassBook IssueDate:</b></td>
+				        <td>
+        		 			<input type="text" name="passBookIssueDate" id="passBookIssueDate" onmouseover='datepick()' />
           				</td>
 				        </tr>
 				     <#list AllLoomDetails as eachloom>
