@@ -54,5 +54,36 @@
         <attribute type="Integer" mode="OUT" name="productsMapSize" optional="true"/>
     </service>
     
+    <service name="createBranchSalesIndent" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="createBranchSalesIndent">
+        <description>List Suppliers</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="supplierPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="indentItems" type="List" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNo" type="String" mode="IN" optional="true"/>
+        <attribute name="tallyReferenceNo" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="transporterId" type="String" mode="IN" optional="true"/>
+        <attribute name="manualQuota" type="String" mode="IN" optional="true"/>
+        <attribute name="cfcId" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="orderTaxType" type="String" mode="IN" optional="true"/>
+        <attribute name="schemeCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="billingType" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="partyGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="PONumber" type="String" mode="IN" optional="true"/>
+        <attribute name="orderMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="salesChannel" type="String" mode="IN" optional="true"/>
+        
+        <attribute type="Map" mode="OUT" name="indentResults" optional="true"/>
+    </service>
+    
 </services>
 
