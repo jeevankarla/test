@@ -967,6 +967,7 @@ public class DepotSalesServices{
 						try {
 							Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 							quota=(BigDecimal)resultMapquota.get("quota");
+							
 						} catch (Exception e) {
 							Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 							return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
@@ -2126,6 +2127,9 @@ public class DepotSalesServices{
 		return "success";
 	}
    	public static Map<String, Object> processBranchSalesOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
+   		
+   		
+   		
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2906,6 +2910,8 @@ public class DepotSalesServices{
 										try {
 											Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 											quota=(BigDecimal)resultMapquota.get("quota");
+											Debug.log("quota=========3333==============="+quota);
+
 										} catch (Exception e) {
 											Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 											return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
@@ -7794,8 +7800,13 @@ public class DepotSalesServices{
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String shipmentId = (String) context.get("shipmentId");
 	    String orderId = (String) context.get("orderId");
+	    String invoiceDateStr = (String) context.get("invoiceDate");
 	    String billToPartyId = (String) context.get("billToPartyId");
 	    String purchaseInvoiceId = (String) context.get("purchaseInvoiceId");
+	    
+	    
+	 //   Debug.log("invoiceDateStr=================="+invoiceDateStr);
+
 	    List<GenericValue> items = null;
 	    try {
 	    	items = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, UtilMisc.toList("orderItemSeqId"), null, false);
@@ -7809,6 +7820,28 @@ public class DepotSalesServices{
             return ServiceUtil.returnSuccess();
         }
 	    
+	    
+	    
+	    Timestamp invoiceDate = null;
+
+	    if (UtilValidate.isNotEmpty(invoiceDateStr)) { //2011-12-25 18:09:45
+		   	 SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");             
+		   	 try {
+		   		invoiceDate = new java.sql.Timestamp(sdf.parse(invoiceDateStr).getTime());
+		   	 } catch (ParseException e) {
+		   	   Debug.logError(e, "Cannot parse date string: " + invoiceDateStr, module);
+		   	 } catch (NullPointerException e) {
+		   	 Debug.logError(e, "Cannot parse date string: " + invoiceDateStr, module);
+		   	 }
+		 }else{
+			 
+			 invoiceDate = UtilDateTime.nowTimestamp();
+			 
+		 }
+			    
+	    
+	    
+	    
 	    String purposeTypeId = null;
 	    try{
 	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", purchaseInvoiceId), false);
@@ -7819,7 +7852,10 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
 		}
 	    
-	    Debug.log("purposeTypeId=================="+purposeTypeId);
+	 //   Debug.log("invoiceDateStr=================="+invoiceDateStr);
+	    
+	  //  Debug.log("purposeTypeId=================="+purposeTypeId);
+
 	    
 	    List conditionList = FastList.newInstance();
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
@@ -7833,7 +7869,7 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
 		}
 	    
-	    Debug.log("invoiceItemList=================="+invoiceItemList);
+	   // Debug.log("invoiceItemList=================="+invoiceItemList);
 
 		
 	    GenericValue orderHeader = null;
@@ -7845,7 +7881,7 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
         }
 	    
-	    Debug.log("orderHeader=================="+orderHeader);
+	 //   Debug.log("orderHeader=================="+orderHeader);
 
 	    
 	    if (orderHeader == null) {
@@ -7864,7 +7900,7 @@ public class DepotSalesServices{
             return ServiceUtil.returnError(errMsg);
         }
 	    
-	    Debug.log("salesOrderitems=================="+salesOrderitems);
+	  //  Debug.log("salesOrderitems=================="+salesOrderitems);
 
 	    
 	    Map orderAssocMap = FastMap.newInstance();
@@ -7922,7 +7958,7 @@ public class DepotSalesServices{
 	    }
 	    
 	    
-	    Debug.log("salesOrderitems========toBillItems========="+salesOrderitems);
+	 ///   Debug.log("salesOrderitems========toBillItems========="+salesOrderitems);
 
 	    
 	    
@@ -7930,11 +7966,13 @@ public class DepotSalesServices{
         // Raise Invoice for the unbilled items	    
         Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
         serviceContext.put("shipmentId",shipmentId);
+        serviceContext.put("eventDate",invoiceDate);
+        
         try {
             Map<String, Object> servResult = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
             invoiceId = (String) servResult.get("invoiceId");
             
-    	    Debug.log("invoiceId========toBillItems========="+invoiceId);
+    	//    Debug.log("invoiceId========toBillItems========="+invoiceId);
 
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
@@ -7956,7 +7994,7 @@ public class DepotSalesServices{
         }
         
 
-	    Debug.log("purposeTypeId========toBillItems========="+purposeTypeId);
+	 //   Debug.log("purposeTypeId========toBillItems========="+purposeTypeId);
 
         
        /* try{
@@ -8046,7 +8084,7 @@ public class DepotSalesServices{
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
             	
-        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
+        	//    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
 
             	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
@@ -11724,9 +11762,9 @@ public class DepotSalesServices{
   		
   		*/
   		
-  		
-  		 try {
-             List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+			 
+  		/* try {
+            
              
        		Debug.log("orderItems================"+orderItems);
 
@@ -11745,10 +11783,35 @@ public class DepotSalesServices{
              String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
              Debug.logError(e, errMsg, module);
              return ServiceUtil.returnError(errMsg);
-         }
-  		
-  		
-  		
+         }*/
+			List<GenericValue> orderItems =null;
+			 try {
+			
+			 orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+			 } catch (Exception e) {
+		            
+	        	 String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
+	             Debug.logError (e, errMsg, module);
+	             return ServiceUtil.returnError(errMsg);
+	      }
+			
+			 try {
+			
+  		Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", orderItems, "eventDate", UtilDateTime.nowTimestamp(), "userLogin", userLogin);
+        //serviceContext.put("shipmentId",shipmentId);
+       
+             result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+            String invoiceId1 = (String) result.get("invoiceId");
+            
+            Debug.log("result==============="+result);
+            Debug.log("invoiceId1==============="+invoiceId1);
+        } catch (GenericServiceException e) {
+            
+        	 String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
+             Debug.logError (e, errMsg, module);
+             return ServiceUtil.returnError(errMsg);
+      }
+		
   		
   		
   		
