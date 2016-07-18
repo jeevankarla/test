@@ -209,7 +209,7 @@
 	JSONObject usedQuotaForExistingProd = new JSONObject();
 	
 	JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
-	
+	JSONObject partyUsedQuotaJSON = new JSONObject();
 	partyOrderIds = EntityUtil.getFieldListFromEntityList(partyOrders, "orderId", true);
 	if(partyOrderIds){
 		
@@ -327,19 +327,19 @@
 			baleQty=eachItem.baleQuantity;
 			remrk=eachItem.remarks;
 			wieverName="";
-			wieverId=eachItem.partyId;
+			weaverId=eachItem.partyId;
 			psbNo="";
 			
-			if(wieverId){
-				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+			if(weaverId){
+				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", weaverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 				if(partyIdentification){
 					psbNo = partyIdentification.get("idValue");
 				}
-				wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
+				wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, weaverId, false);
 			}
 			bundleWeight=eachItem.bundleWeight;
 			newObj.put("customerName",wieverName+"["+psbNo+"]");
-			newObj.put("customerId",wieverId);
+			newObj.put("customerId",weaverId);
 			newObj.put("remarks",remrk);
 			
 			newObj.put("psbNumber",psbNo);
@@ -387,14 +387,15 @@
 					amount=eachItem.unitPrice*eachItem.quantity;
 				}
 				
-				quotaResultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", wieverId));
+				quotaResultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", weaverId));
 	    		weaverQuotasMap = quotaResultCtx.get("schemesMap");
 				weaverUsedQuotaMap= quotaResultCtx.get("usedQuotaMap");
 				
 				weaverQuota = 0;
 				
+				schemeCategoryId = null;
 				if(productQuotaDetails){
-					schemeCatId = (productQuotaDetails.get(0)).get("productCategoryId");
+					schemeCategoryId = (productQuotaDetails.get(0)).get("productCategoryId");
 					if(weaverQuotasMap.containsKey(schemeCatId)){
 						if(UtilValidate.isNotEmpty(weaverQuotasMap.get(schemeCatId))){
 							weaverQuota = weaverQuotasMap.get(schemeCatId);
@@ -404,6 +405,32 @@
 				}
 				
 				newObj.put("quota",weaverQuota);
+				
+				if(UtilValidate.isNotEmpty(schemeCategoryId)){
+					
+					JSONObject tempPartyObj = new JSONObject();
+					JSONObject tempSchemeCatObj = new JSONObject();
+					if(UtilValidate.isNotEmpty(partyUsedQuotaJSON.get(weaverId))){
+						tempPartyObj = partyUsedQuotaJSON.get(weaverId);
+						if(UtilValidate.isNotEmpty(tempPartyObj.get(schemeCategoryId))){
+							tempSchemeCatObj = tempPartyObj.get(schemeCategoryId);
+							orderUsedQuota = tempSchemeCatObj.get("orderUsedQuota");
+							orderUsedQuota = orderUsedQuota + usedQuota;
+							tempSchemeCatObj.put("orderUsedQuota", orderUsedQuota);
+						}
+						else{
+							tempSchemeCatObj.put("orderUsedQuota", usedQuota);
+						}
+					}
+					else{
+						tempSchemeCatObj.put("orderUsedQuota", usedQuota);
+					}
+					
+					tempPartyObj.put(schemeCategoryId, tempSchemeCatObj);
+					partyUsedQuotaJSON.put(weaverId,tempPartyObj);
+					
+				}
+				
 				//newObj.put("usedQuota",20);
 			}else{
 				newObj.put("unitPrice",eachItem.unitPrice);
@@ -492,7 +519,7 @@
 	Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
 	context.dataJSON = orderItemsJSON;
 	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
-	
+	context.partyUsedQuotaJSON = partyUsedQuotaJSON;
 	
 	
 	
