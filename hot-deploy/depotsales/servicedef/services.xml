@@ -292,6 +292,7 @@
         <description>Issue Products to Order</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceDate" type="String" mode="IN" optional="true"/>
         <attribute name="billToPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="purchaseInvoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>

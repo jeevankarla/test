@@ -65,6 +65,15 @@
 			changeMonth: true,
 			maxDate:0,
 			numberOfMonths: 1});
+			
+	   $( "#invoiceDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			showSecond: true,
+			changeMonth: true
+			
+		       });		
+			
+			
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
@@ -140,6 +149,34 @@
 					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
 					"</select></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Accept' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		title = "<center>Accept Shipment<center><br />";
+		message += "</table></form>";
+		Alert(message, title);
+	};
+	
+	
+	function raiseSalesInvoiceFromBranch(shipmentId,partyIdTo,partyName,orderId,billToPartyId,purchaseInvoiceId) {	
+		var message = "";
+		message += "<form action='processSalesInvoice' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ShipmentId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='shipmentId' name='shipmentId' value='"+shipmentId+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>User Agency:</td><td align='left' width='50%'>"+partyName+"   ["+partyIdTo+"]</td></tr>";
+
+	   
+	    message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='orderId' name='orderId' value='"+orderId+"'/></td></tr>";
+	    
+	     message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='partyIdTo' name='partyIdTo' value='"+partyIdTo+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='billToPartyId' name='billToPartyId' value='"+billToPartyId+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='purchaseInvoiceId' name='purchaseInvoiceId' value='"+purchaseInvoiceId+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Invoice Date:</td><td align='left' width='50%'><input type='text' name='invoiceDate' id='invoiceDate' onmouseover='datepick()'></td></tr>";
+		
+		//message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Department :</td><td align='left' width='50%'><select name='partyId' id='partyId'  class='h4'>"+
+					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
+					"</select></td></tr>";
+		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		title = "<center>Accept Shipment<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
