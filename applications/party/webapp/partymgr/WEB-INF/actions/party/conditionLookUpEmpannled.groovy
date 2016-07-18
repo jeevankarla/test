@@ -65,6 +65,7 @@ if(roleTypeId != null){
 		if(partyClassificationGroupId != null){
 		conditionFields.partyClassificationGroupId=partyClassificationGroupId;
 		}
+		conditionFields.partyIdentificationTypeId=["PSB_NUMER","REGISTRATION_NUMBER"];
 		if(parameters.partyIdentificationTypeId != null){
 		conditionFields.partyIdentificationTypeId=parameters.partyIdentificationTypeId;
 		}		
