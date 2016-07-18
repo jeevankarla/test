@@ -2774,6 +2774,8 @@ public class MaterialPurchaseServices {
 		  	}
 	  	}
 	  	String primaryOrderId = "";
+	    BigDecimal totalDiscount=BigDecimal.ZERO;
+
 	  	try{
 	  		//
 		  	for (int i = 0; i < rowCount; i++) {
@@ -2861,6 +2863,284 @@ public class MaterialPurchaseServices {
 			  		return "error";
 		        }
 				orderItem.store();
+				
+				
+				
+				
+			List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				
+			String Scheam = "";
+			String onBeHalfOf = "";
+			
+			for (GenericValue eachAttr : orderAttr) {
+				if(eachAttr.get("attrName") == "SCHEME_CAT"){
+					Scheam =  (String)eachAttr.get("attrValue");
+				}
+				if(eachAttr.get("attrName") == "ON_BEHALF_OF"){
+					onBeHalfOf =  (String)eachAttr.get("attrValue");
+				}
+			}
+				
+			
+			  List condLIst = FastList.newInstance();
+	    	   condLIst.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	    	   condLIst.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+				EntityCondition condExpr1 = EntityCondition.makeCondition(condLIst, EntityOperator.AND);
+				List<GenericValue> orderRoles = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+			
+				
+				GenericValue orderRolesList = EntityUtil.getFirst(orderRoles);
+
+				String partyId = (String)orderRolesList.getString("partyId");
+				
+			
+			List schemeCategoryIds = FastList.newInstance();
+		  	try{
+		  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+		  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+		   	}catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive ProductCategory"+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive ProductCategory");	
+		  		return "error";
+			}
+			
+			// Scheme Calculation
+			List productCategoriesList = FastList.newInstance();
+			List condsList = FastList.newInstance();
+		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+		  	/*condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));*/
+			try {
+				List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+				productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+			} catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive ProductCategory"+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive ProductCategory");	
+		  		return "error";
+				
+			}
+			BigDecimal quota = BigDecimal.ZERO;
+			// Get first productCategoriesList. We got productCategoryId here
+			if(Scheam.equals("MGPS_10Pecent")){
+				Timestamp targetDate =null;
+				try {
+					SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMMMM, yyyy");  
+					targetDate = new java.sql.Timestamp(sdf1.parse("01 APRIL, 2016").getTime());
+				} catch (Exception e) {
+					Debug.logError("Failed to retrive ProductCategory"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive ProductCategory");	
+			  		return "error";
+				}
+				Timestamp supplyDate = UtilDateTime.nowTimestamp();
+				if(targetDate.compareTo(supplyDate)==1){
+					quota=amendedQuantity;
+				//	quota=manualQuota.subtract(quotaAvbl);
+				//	manualQuota=manualQuota.subtract(quota);
+				}else{
+					String schemeId="TEN_PERCENT_MGPS";
+					if(UtilValidate.isNotEmpty(productCategoriesList)){
+						String productCategoryId=(String)productCategoriesList.get(0);
+						
+						Map partyBalanceHistoryContext = FastMap.newInstance();
+						partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",amendedQuantity,"userLogin", userLogin);
+						
+						if(UtilValidate.isNotEmpty(partyId)){
+							partyBalanceHistoryContext.put("partyId",partyId);
+						}
+								
+						try {
+							Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+							quota=(BigDecimal)resultMapquota.get("quota");
+							Debug.log("quota=========3333==============="+quota);
+
+						} catch (Exception e) {
+							Debug.logError("Failed to retrive PartyQuotaBalanceHistory"+orderId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive PartyQuotaBalanceHistory");	
+					  		return "error";
+						}
+					}
+					
+				}
+			}	
+			BigDecimal discountAmount = BigDecimal.ZERO;
+			BigDecimal quotaQuantity=BigDecimal.ZERO;
+
+			if(quota.compareTo(BigDecimal.ZERO)>0){
+				
+				// Have to get these details from schemes. Temporarily hard coding it.
+				BigDecimal schemePercent = new BigDecimal("10");
+				BigDecimal percentModifier = schemePercent.movePointLeft(2);
+				quotaQuantity=quota;
+				if(amendedQuantity.compareTo(quota)>0){
+					discountAmount = ((quota.multiply(amendedPrice)).multiply(percentModifier)).negate();
+					quotaQuantity=quota;
+				}
+				else{
+					discountAmount = ((amendedQuantity.multiply(amendedPrice)).multiply(percentModifier)).negate();
+					quotaQuantity=amendedQuantity;
+				}
+				totalDiscount=totalDiscount.add(discountAmount);
+				
+				/*if((UtilValidate.isNotEmpty(onBehalfPrdQuotaMap)) && (UtilValidate.isNotEmpty(onBehalfPrdQuotaMap.get(prodId)))){
+					BigDecimal tempDsc = BigDecimal.ZERO;
+					tempDsc=(BigDecimal) onBehalfPrdQuotaMap.get(prodId);
+					tempDsc=tempDsc.add(discountAmount);
+					onBehalfPrdQuotaMap.put(prodId,tempDsc);
+				}
+				else{
+					onBehalfPrdQuotaMap.put(prodId,discountAmount);
+				}*/
+				
+				// creating order adjustment for direct 
+				if("N".equals(onBeHalfOf)){
+					String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
+					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+					UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",orderItemSeqId,"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+			                "description", "10 Percent Subsidy on eligible product categories"));
+					try{
+						orderAdjustment.create();
+					}catch (GenericEntityException e) {
+						Debug.logError("Error in creating OrderAdjestments"+orderId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Error in creating OrderAdjestments");	
+				  		return "error";
+					}
+				 }
+				
+				/*BigDecimal itemQuotaDiscount = discountAmount;
+				if(UtilValidate.isNotEmpty(onBehalfItemSeqQuotaMap.get(orderItemSeqId))){
+					//BigDecimal itemQuotaDiscount = (BigDecimal) onBehalfItemSeqQuotaMap.get(orderItemSeqId);
+					itemQuotaDiscount = itemQuotaDiscount.add((BigDecimal) onBehalfItemSeqQuotaMap.get(orderItemSeqId));
+				}
+				//onBehalfItemSeqQuotaMap.put(orderItemSeqId, itemQuotaDiscount);
+*/
+			}
+					
+				/*//Debug.log("quotaQuantity====================="+quotaQuantity);
+				
+				//orderItemDetail.put("",);
+				orderItemDetail.put("orderId",orderId);
+				orderItemDetail.put("orderItemSeqId",orderItemSeqId);
+				orderItemDetail.put("userLogin",userLogin);
+				orderItemDetail.put("partyId",customerId);
+				orderItemDetail.put("unitPrice",prdPrice);
+				orderItemDetail.put("discountAmount",discountAmount);
+				orderItemDetail.put("Uom",Uom);
+				orderItemDetail.put("productId",prodId);
+				orderItemDetail.put("baleQuantity",blQuantity);
+				orderItemDetail.put("bundleWeight",budlWeight);
+				orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
+				orderItemDetail.put("remarks",specification);
+				orderItemDetail.put("quotaQuantity",quotaQuantity);
+				orderItemDetail.put("quantity",Kgquantity);
+				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+				
+				try{
+					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
+				    
+				    if (ServiceUtil.isError(resultMap)) {
+				    	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+				    	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
+				    }
+				}catch(Exception e){
+						Debug.logError(e, "Error in Order Item Detail, module");
+						return ServiceUtil.returnError( "Error in Order Item Detail");
+					}*/
+				
+
+
+
+				
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+				/*List condExpr = FastList.newInstance();
+	        	condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	        	condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+	        	EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+	        	List<GenericValue> OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
+				*/
+
+				
+			/*	for(GenericValue orderItemDetail : OrderItemDetail){
+					
+					    orderItemDetail.set("orderId",orderId);
+						orderItemDetail.set("orderItemSeqId",orderItemSeqId);
+						orderItemDetail.set("userLogin",userLogin);
+						//orderItemDetail.set("partyId",customerId);
+						orderItemDetail.set("unitPrice",amendedPrice);
+						orderItemDetail.set("discountAmount",discountAmount);
+						orderItemDetail.set("Uom",Uom);
+						orderItemDetail.set("productId",prodId);
+						orderItemDetail.set("baleQuantity",blQuantity);
+						orderItemDetail.set("bundleWeight",budlWeight);
+						orderItemDetail.set("bundleUnitPrice",budlUnitPrice);
+						orderItemDetail.set("remarks",specification);
+						orderItemDetail.set("quotaQuantity",quotaQuantity);
+						orderItemDetail.set("quantity",amendedQuantity);
+						orderItemDetail.set("changeUserLogin",userLogin.getString("userLoginId"));
+						orderItemDetail.store();
+					
+				}*/
+
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				//updating OrderItemAttribute 
 				String baleQuantityStr = null;
 				String yarnUOMStr = null;

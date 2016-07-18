@@ -40,8 +40,6 @@ under the License.
 	}
     function realizestatus(orderId){
     
-         alert(orderId);
-    
 		var formId = "#" + "realizeStatus";
 		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		jQuery(formId).append(jQuery(param1));
@@ -288,8 +286,12 @@ under the License.
            
                  <td>${eachOrder.paidAmt?if_exists}</td>
            
+                <#if (eachOrder.salesButton) == "Y" >
+               <td><input type="button" name="salesInvoice" id="salesInvoice" value="SalesInvoice" onclick="javascript: realizestatus('${eachOrder.orderId}');"/></td>
+                <#else>
+                <td>${(eachOrder.salesNo)?if_exists}</td>
+                </#if>
            
-              <td><input type="button" name="salesInvoice" id="salesInvoice" value="SalesInvoice" onclick="javascript: realizestatus('${eachOrder.orderId}');"/></td>
            
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>

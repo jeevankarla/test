@@ -2588,6 +2588,132 @@
 	</screen>
 	
 	
+	<screen name="DepotSalesInvoiceView">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Sales Invoices" />
+				<set field="filterByDate" value="true" />
+				<service service-name="performFind" result-map="result">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="InvoiceAndType" />
+					<field-map field-name="orderBy" value="invoiceDate DESC" />
+				</service>
+				<set field="invoices" from-field="result.listIt" />
+				<set field="tabButtonItem" value="salesInvoiceView" />
+				<set field="tabButtonItem5" value="" />
+				<set field="tabButtonItem2" value="" />
+				<set field="invoiceTypeId" value="SALES_INVOICE" />
+				<script
+					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
+			</actions>
+			<widgets>
+			
+			<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    					<decorator-section name="body">
+    						
+						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
+						<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
+							/> -->
+						<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="menu-bar">
+										<container style="button-bar">
+											<!-- <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" 
+												style="buttontext create"/> --> <!-- NewPurchaseInvoice -->
+											<!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext 
+												create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link> 
+												<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter 
+												param-name="prefPaymentMethodTypeId" value="BANK"/></link> <link target="partyFinanHistory" 
+												text="Party Financial History" style="buttontext create"></link> -->
+											<!-- <link target="CreateAPInvoice" text="Create Cash Voucher" 
+												style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" 
+												value="CASH"></parameter> <parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> <link 
+												target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" 
+												> <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter> 
+												<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> -->
+											<link target="partyFinanHistory" text="Party Financial History"
+												style="buttontext create"></link>
+										</container>
+									</decorator-section>
+									<decorator-section name="search-options">
+										<include-form name="FindSalesApInvoicesForDepot"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="Invoices List">
+											<section>
+												<condition>
+													<not>
+														<if-empty field="invoices" />
+													</not>
+												</condition>
+												<widgets>
+													<link text="${uiLabelMap.AccountingExportAsCsv}"
+														style="buttontext" target="InvoiceSearchResultsCsv.csv">
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId" />
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op" />
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId" />
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic" />
+														<parameter param-name="description_op"
+															from-field="parameters.description_op" />
+														<parameter param-name="description" from-field="parameters.description" />
+														<parameter param-name="description_ic"
+															from-field="parameters.description_ic" />
+														<parameter param-name="invoiceTypeId"
+															from-field="parameters.invoiceTypeId" />
+														<parameter param-name="statusId" from-field="parameters.statusId" />
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom" />
+														<parameter param-name="partyId" from-field="parameters.partyId" />
+														<parameter param-name="invoiceDate_fld0_value"
+															from-field="parameters.invoiceDate_fld0_value" />
+														<parameter param-name="invoiceDate_fld0_op"
+															from-field="parameters.invoiceDate_fld0_op" />
+														<parameter param-name="invoiceDate_fld1_value"
+															from-field="parameters.invoiceDate_fld1_value" />
+														<parameter param-name="invoiceDate_fld1_op"
+															from-field="parameters.invoiceDate_fld1_op" />
+														<parameter param-name="dueDate_fld0_value"
+															from-field="parameters.dueDate_fld0_value" />
+														<parameter param-name="dueDate_fld0_op"
+															from-field="parameters.dueDate_fld0_op" />
+														<parameter param-name="dueDate_fld1_value"
+															from-field="parameters.dueDate_fld1_value" />
+														<parameter param-name="dueDate_fld1_op"
+															from-field="parameters.dueDate_fld1_op" />
+													</link>
+												</widgets>
+											</section>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://accounting/webapp/accounting/invoice/massPayments.ftl" />
+												</html>
+											</platform-specific>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSaleListView.ftl" />
+												</html>
+											</platform-specific>
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
 	<screen name="DepotPurchaseInvoice">
 		<section>
 			<actions>
