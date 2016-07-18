@@ -105,6 +105,7 @@
 	var grid2;
 	var withAdjColumns;
 	
+	var partyUsedQuotaJSON = ${StringUtil.wrapString(partyUsedQuotaJSON)!'{}'};
 	var productQuotaJSON = ${StringUtil.wrapString(productQuotaJSON)!'{}'};
 	var productCategoryJSON = ${StringUtil.wrapString(productCategoryJSON)!'{}'};
 	
@@ -637,6 +638,7 @@
    				var currentrow=args.row;
    				if(data[currentrow] != undefined && data[currentrow]["cProductId"] != undefined){
 		       		var prod=data[currentrow]["cProductId"];
+		       		var custId = data[args.row]['customerId']; 
 				   	var qut=0;
 				   	if(data[args.row]['customerId'] != "undefined"){
 				   		var dataString = {"partyId": data[args.row]['customerId'],
@@ -659,6 +661,20 @@
 					                	if(isNaN(qut)){
 											qut = 0;
 										}
+										var pervUsedQuota = 0;
+										var productCategory = productCategoryJSON[prod];
+										if(productCategory != 'undefined' && productCategory != null){
+											if(partyUsedQuotaJSON[custId] != 'undefined' && partyUsedQuotaJSON[custId] != null){
+												var schemeUsedQuotaObj = partyUsedQuotaJSON[custId];
+												if(schemeUsedQuotaObj[productCategory] != 'undefined' && schemeUsedQuotaObj[productCategory] != null){
+													pervUsedQuota = schemeUsedQuotaObj[productCategory]["orderUsedQuota"];
+												}
+												
+											}
+										}
+										
+										qut = qut + pervUsedQuota;
+										
 					                	data[args.row]["quota"] = 0;
 						       			data[args.row]['quantity'] =qut;
 						       			data[args.row]['usedQuota'] =qut;
@@ -667,6 +683,9 @@
 						       			data[args.row]['amount'] = amount;
 						      		 	grid.updateRow(args.row);
 						      		 	//data[args.row]["remarks"].gotoCell();
+						      		 	
+						      		 	
+						      		 	
 						      		 	
 						      		 	
 						      		 	var row = args.row;
