@@ -294,7 +294,7 @@ public class MaterialPurchaseServices {
 			
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
-	        newEntity.set("estimatedShipDate", receiptDate);
+	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 	        }else{
