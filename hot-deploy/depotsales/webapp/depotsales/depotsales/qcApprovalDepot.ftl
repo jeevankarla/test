@@ -177,7 +177,7 @@
 					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
 					"</select></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		title = "<center>Accept Shipment<center><br />";
+		title = "<center>Sales Invoice<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};
