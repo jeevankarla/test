@@ -3857,6 +3857,8 @@ public class DepotSalesServices{
 		}
 		
 		try{
+			unitCostStr=unitCostStr.replace(",", "");
+			quantityStr=quantityStr.replace(",", "");
 			if(UtilValidate.isNotEmpty(unitCostStr)){
 				unitCost = new BigDecimal(unitCostStr);
 			}
