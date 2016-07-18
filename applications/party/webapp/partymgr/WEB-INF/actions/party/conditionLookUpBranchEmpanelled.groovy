@@ -73,7 +73,7 @@
 				conditionFields.partyIdFrom=partyIdFrom;
 			}	
 			
-			//conditionFields.partyIdentificationTypeId="PSB_NUMER";
+			   conditionFields.partyIdentificationTypeId=["PSB_NUMER","REGISTRATION_NUMBER"];
 			
 				conditionFields.roleTypeId=roleTypeId;
 				if(partyClassificationGroupId != null){
