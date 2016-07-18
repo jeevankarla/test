@@ -458,7 +458,7 @@
             <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]"></display>
             </field>
-             <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+         <!--    <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                 <hyperlink target="processSalesInvoice" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
                     <parameter param-name="orderId" value="${orderId}"/>
@@ -467,7 +467,12 @@
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
                     
                 </hyperlink>
-            </field>
+            </field>-->
+            
+              <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+                 <hyperlink  target-type="plain" description="Sales Invoice"  target="javascript:raiseSalesInvoiceFromBranch('${shipmentId}','${partyIdTo}','${partyName}','${orderId}','${billToPartyId}','${purchaseInvoiceId}');"></hyperlink>
+            </field> 
+            
             <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
             </field>
