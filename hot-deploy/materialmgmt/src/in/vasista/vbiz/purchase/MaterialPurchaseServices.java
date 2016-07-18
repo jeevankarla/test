@@ -4520,6 +4520,7 @@ catch(Exception e){
 		String partyClassificationTypeId = (String) context.get("partyClassificationTypeId");
         String Depot= (String) context.get("Depot");
         String daoDateStr= (String) context.get("daoDate");
+        String passBookIssueDateStr= (String) context.get("passBookIssueDate");
         String firstName= (String) context.get("firstName");
         String midName= (String) context.get("midName");
         String lastName= (String) context.get("lastName");
@@ -4765,7 +4766,22 @@ catch(Exception e){
 		       	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
 		  	  }
 		     if(UtilValidate.isNotEmpty(passBook)){
-		        dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"userLogin", context.get("userLogin")));
+		    	 Timestamp issueDate = null;
+		    	 if(UtilValidate.isNotEmpty(context.get("passBookIssueDate"))){
+		    			SimpleDateFormat SimpleDF1 = new SimpleDateFormat("dd:mm:yyyy hh:mm");
+					 if(UtilValidate.isNotEmpty(passBookIssueDateStr)){
+				  		try {
+				  			issueDate = new java.sql.Timestamp(SimpleDF1.parse(passBookIssueDateStr).getTime());
+					  	} catch (ParseException e) {
+					  		Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
+					  	} catch (NullPointerException e) {
+				  			Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
+					  	}
+				  	}
+				 }else{
+					 issueDate= UtilDateTime.nowTimestamp();
+				 }
+		        dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"issueDate",issueDate,"userLogin", context.get("userLogin")));
 		 	  }else{
 			    dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue","_NA_","partyId",partyId,"userLogin", context.get("userLogin")));
 		 	  }
