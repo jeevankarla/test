@@ -186,7 +186,8 @@ $(function(){
                         drawTable(orderData);   
                        }else{
                        var rows = document.getElementById('coreTable').rows.length;
-                       if(rows < 3){
+                       
+                       if(rows < 3 && typeof(orderIdFroApp) != 'undefined' && orderIdFroApp != ''){
                         document.body.style.overflow = 'hidden';
                           var pathname = window.location.pathname; // Returns path only
                           var url      = window.location.href;     // Returns full URL
