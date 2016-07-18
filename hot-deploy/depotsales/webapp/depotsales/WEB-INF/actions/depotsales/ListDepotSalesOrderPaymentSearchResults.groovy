@@ -252,10 +252,17 @@ orderHeader.each{ eachHeader ->
 	
   }
 	
-	conditonList.clear();
+	/*conditonList.clear();
 	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
 	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+*/	
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditonList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+
 	
 	invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
 	
@@ -276,6 +283,25 @@ orderHeader.each{ eachHeader ->
 	grandTOT = eachHeader.getBigDecimal("grandTotal");
 	balance = grandTOT-paidAmt;
 	tempData.put("balance", balance);
+	
+	
+	if(!OrderItemBillingList){
+	tempData.put("salesButton", "Y");
+	}else{
+		billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , OrderItemBillingList[0].invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+		
+		invoiceSequence = "";
+		
+		if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+			invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+			invoiceSequence = invoiceSeqDetails.invoiceSequence;
+		}else{
+			invoiceSequence = OrderItemBillingList[0].invoiceId;
+		}
+		tempData.put("salesButton", "N");
+		
+		tempData.put("salesNo", invoiceSequence);
+	}
 	
 	
 	

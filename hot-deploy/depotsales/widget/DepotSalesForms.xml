@@ -469,13 +469,13 @@
                 </hyperlink>
             </field>-->
             
-              <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+              <field name="raiseSalesInvoice"  title="Sales Invoice" widget-style="buttontext" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                  <hyperlink  target-type="plain" description="Sales Invoice"  target="javascript:raiseSalesInvoiceFromBranch('${shipmentId}','${partyIdTo}','${partyName}','${orderId}','${billToPartyId}','${purchaseInvoiceId}');"></hyperlink>
             </field> 
             
-            <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
+              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
-            </field>
+            </field> 
             <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
 	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
 	        </field> -->
@@ -952,6 +952,35 @@
 	
 	  <form name="FindSalesApInvoices" type="single" target="DepotSalesInvoice" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
+	
+	  <form name="FindSalesApInvoicesForDepot" type="single" target="DepotSalesInvoiceView" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
 		<!-- <field name="invoiceTypeId" position="2">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="InvoiceType" description="${description}">

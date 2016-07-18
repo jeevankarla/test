@@ -216,6 +216,8 @@ import java.math.RoundingMode;
 				otherCharges.add(tempMap);
 			}
 			
+			
+			
 			productQty = [];
 			orderItems.each{ eachItem ->
 				tempMap = [:];
@@ -235,6 +237,9 @@ import java.math.RoundingMode;
 					vatPercent = eachItem.vatPercent;
 				}
 				tempMap.put("unitPrice", eachItem.unitPrice);
+				
+				Debug.log("unitPrice=============="+eachItem.unitPrice);
+				
 				tempMap.put("bedPercent", bedPercent);
 				tempMap.put("cstPercent", cstPercent);
 				tempMap.put("vatPercent", vatPercent);
@@ -256,6 +261,8 @@ import java.math.RoundingMode;
 			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR")));
 			cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 			taxDetails = delegator.findList("OrderAdjustment", cond, null, null, null, false);
+			
+			
 			
 			shipmentReceipts.each{ eachItem ->
 				
@@ -284,7 +291,15 @@ import java.math.RoundingMode;
 					addAmt = addAmt+insuranceAmt;
 				}
 				qty = eachItem.quantityAccepted;
-				ordItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				
+				
+				condExpr.clear();
+				condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+				condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+				cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+	
+				ordItem = EntityUtil.filterByCondition(orderItems, cond);
+				
 				orderItem = EntityUtil.getFirst(ordItem);
 				
 				prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
@@ -327,6 +342,9 @@ import java.math.RoundingMode;
 				newObj.put("cProductId",eachItem.productId);
 				newObj.put("cProductName",prodValue.description);
 				newObj.put("quantity",qty);
+				
+				Debug.log("unitPrice==============="+unitPrice);
+				
 				newObj.put("UPrice", unitPrice);
 				newObj.put("amount", amount);
 				newObj.put("VatPercent", vatPercent);

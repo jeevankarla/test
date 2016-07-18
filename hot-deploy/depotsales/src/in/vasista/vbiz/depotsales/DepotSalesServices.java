@@ -11799,35 +11799,38 @@ public class DepotSalesServices{
 			
   		Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", orderItems, "eventDate", UtilDateTime.nowTimestamp(), "userLogin", userLogin);
         //serviceContext.put("shipmentId",shipmentId);
+  		//serviceContext.put("purposeTypeId","DEPOT_YARN_SALE");
        
-             result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
-            String invoiceId1 = (String) result.get("invoiceId");
+  		  createInvoice = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+          //  String invoiceId1 = (String) result.get("invoiceId");
             
-            Debug.log("result==============="+result);
-            Debug.log("invoiceId1==============="+invoiceId1);
+          //  Debug.log("result==============="+result);
+         //   Debug.log("invoiceId1==============="+invoiceId1);
         } catch (GenericServiceException e) {
             
         	 String errMsg = UtilProperties.getMessage(resource,"AccountingEntityDataProblemCreatingInvoiceFromOrderItems",UtilMisc.toMap("reason",e.toString()),(Locale) context.get("locale"));
              Debug.logError (e, errMsg, module);
              return ServiceUtil.returnError(errMsg);
       }
-		
   		
+    	//Debug.log("result invoiceId  #################################"+result);
   		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-    	
-    	Debug.log("result invoiceId  #################################"+result);
-  		
-    	String invoiceId = (String)createInvoice.get("invoiceId");
-  		
+    	  String invoiceId = (String)createInvoice.get("invoiceId");
+    	  
+    	  
+    	  try{
+   	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+   	    	invoice.set("purposeTypeId", "DEPOT_YARN_SALE");
+  			invoice.store();
+   		} catch (Exception e) {
+   			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
+               Debug.logError(e, errMsg, module);
+               return ServiceUtil.returnError(errMsg);
+   		}
+    	  
+    	  
+    	  
+    	  result = ServiceUtil.returnSuccess("Sales Invoice Has been successfully created"+invoiceId);
          result.put("invoiceId", invoiceId);
          return result;
   	}

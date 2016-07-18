@@ -711,6 +711,11 @@
         <response name="success" type="view" value="DepotSalesInvoice"/>
     </request-map>
     
+     <request-map uri="DepotSalesInvoiceView">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesInvoiceView"/>
+    </request-map>
+    
      <request-map uri="createApDepotApPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
@@ -1232,8 +1237,8 @@
      <request-map uri="raiseSalesInvoiceForDepotSales">
         <security https="true" auth="true"/>
         <event type="service" invoke="raiseSalesInvoiceForDepotSales"/>
-        <response name="success" type="view" value="FindSalesIndentPayment"/>
-        <response name="error" type="view" value="FindSalesIndentPayment"/>
+        <response name="success" type="view" value="DepotSalesInvoiceView"/>
+        <response name="error" type="view" value="DepotSalesInvoiceView"/>
     </request-map>
     
      <request-map uri="preferenceCancel">
@@ -2092,6 +2097,9 @@
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
    	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
+   	
+   	<view-map name="DepotSalesInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoiceView"/>
+   	
    	
    	<view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
    	<view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
