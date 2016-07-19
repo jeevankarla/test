@@ -13,6 +13,8 @@ import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.party.party.PartyHelper;
+
 
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -97,6 +99,12 @@ for (eachItem in orderItems) {
 	orderDetail.put("productId", eachItem.productId);
 	GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",eachItem.productId),false);
 	String	desc=(String)product.get("description");
+	
+	String partyName = PartyHelper.getPartyName(delegator, eachItem.partyId, false);
+	
+	
+	orderDetail.put("orderType",orderType);
+	orderDetail.put("partyName",partyName);
 	orderDetail.put("prductName",desc);
 	orderDetail.put("quantity", eachItem.quantity);
 	orderDetail.put("unitPrice", eachItem.unitPrice.setScale(2,0));

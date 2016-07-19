@@ -218,8 +218,9 @@ function drawRow(rowData) {
 
     //For Indent View
     
+    var partyName = "'" + rowData.partyName + "'";
     var orderParam = '\'' + rowData.orderId + '\'';
-    var orderCustomMethod = "javascript:fetchOrderInformation("+ orderParam + ")";
+    var orderCustomMethod = "javascript:fetchOrderInformation("+ orderParam + ","+partyName+")";
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="view Order" onclick="'+orderCustomMethod+'">';
     
     row.append($("<td align=center>" +  viewButton  +"</td>"));

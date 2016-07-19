@@ -1358,6 +1358,7 @@
 				<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
 				<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>
 				<label style="float:left" id="totalPayable" class="labelItemHeader"></label>
+				<label style="float:left" id="totalQtyKgs" class="labelItemHeader"></label>
 			</div>
 		    <div class="screenlet-body">
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
