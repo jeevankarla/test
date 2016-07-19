@@ -979,4 +979,140 @@ public class DepotSalesApiServices{
   		return result;  
 		
 	}
+    
+    public static Map<String, Object> getWeaverDetails(DispatchContext ctx,Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		String partyId = (String) context.get("partyId");
+		Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+		String partyName = "";
+		String partyType = "";
+		String passBookNo = "";
+		String issueDate = "";
+		String isDepot = "NO";
+		String DOA = "";
+		BigDecimal totalLooms = BigDecimal.ZERO;
+		
+		Map inputMap = FastMap.newInstance();
+		Map addressMap = FastMap.newInstance();
+		inputMap.put("partyId", partyId);
+		inputMap.put("userLogin", userLogin);
+		try{
+			addressMap  = dispatcher.runSync("getPartyPostalAddress", inputMap);
+		} catch(Exception e){
+			Debug.logError("Not a valid party", module);
+			return ServiceUtil.returnError("Not a valid party");
+		}
+		
+		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		try{
+			GenericValue partyIdentification = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+			if(UtilValidate.isEmpty(partyIdentification)){
+				Debug.logError("Not a valid party", module);
+				return ServiceUtil.returnError("Not a valid party");
+			}
+			passBookNo = partyIdentification.getString("idValue");
+			issueDate = partyIdentification.getString("issueDate");
+		}catch(GenericEntityException e){
+			Debug.logError("Not a valid party", module);
+			return ServiceUtil.returnError("Not a valid party");
+		}
+		
+		try {
+            List<GenericValue> facility = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+            if(UtilValidate.isNotEmpty(facility)){
+            	GenericValue facilityDetail = EntityUtil.getFirst(facility);
+            	isDepot = "YES";
+            	DOA = UtilDateTime.toDateString(facilityDetail.getTimestamp("openedDate"),"dd-MM-yyyy");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+		
+		
+		try {
+            List<GenericValue> partyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+            if(UtilValidate.isNotEmpty(partyClassification)){
+            	GenericValue partyDetail = EntityUtil.getFirst(partyClassification);
+            	GenericValue partyClassificationGroup = delegator.findOne("PartyClassificationGroup",UtilMisc.toMap("partyClassificationGroupId", partyDetail.getString("partyClassificationGroupId")), false);
+            	if(UtilValidate.isNotEmpty(partyClassificationGroup)){
+            		partyType = partyClassificationGroup.getString("description");
+            	}
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+		
+		
+		List<GenericValue> loomTypes = null;	
+		try {
+			loomTypes = delegator.findList("LoomType",null,null,null,null,false);
+		} catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+		List<GenericValue> partyLoomDetails = null;
+		try {
+			partyLoomDetails = delegator.findList("PartyLoom",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId),null,null,null,false);
+		} catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+		
+		Map resultCtx = FastMap.newInstance();
+		Map productCategoryQuotasMap = FastMap.newInstance();
+		Map usedQuotaMap = FastMap.newInstance();
+		Map eligibleQuota = FastMap.newInstance();
+		try {
+			resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",effectiveDate));
+		} catch(Exception e){
+			Debug.logError("Problem while getting Quota details with:"+partyId, module);
+			return ServiceUtil.returnError("Problem while getting Quota details with partyId:"+partyId);
+		}
+		productCategoryQuotasMap = (Map)resultCtx.get("schemesMap");
+		usedQuotaMap = (Map)resultCtx.get("usedQuotaMap");
+		eligibleQuota = (Map)resultCtx.get("eligibleQuota");
+		
+		
+		Map loomDetails = FastMap.newInstance();
+		for(GenericValue eachLoomType:loomTypes){
+			String loomTypeId = eachLoomType.getString("loomTypeId");
+			String description = eachLoomType.getString("description");
+			BigDecimal loomQty = BigDecimal.ZERO;
+			BigDecimal loomQuota = BigDecimal.ZERO;
+			BigDecimal avlQuota = BigDecimal.ZERO;
+			BigDecimal usedQuota = BigDecimal.ZERO;
+			List<GenericValue> filteredPartyLooms = EntityUtil.filterByCondition(partyLoomDetails,EntityCondition.makeCondition("loomTypeId",EntityOperator.EQUALS,loomTypeId));
+			for(GenericValue eachPartyLoom:filteredPartyLooms){
+				loomQty = eachPartyLoom.getBigDecimal("quantity");
+				totalLooms = totalLooms.add(loomQty);
+			}
+			loomQuota = (BigDecimal) eligibleQuota.get(loomTypeId);
+			avlQuota = (BigDecimal) productCategoryQuotasMap.get(loomTypeId);
+			usedQuota = (BigDecimal) usedQuotaMap.get(loomTypeId);
+			Map loomDetailMap = FastMap.newInstance();
+			loomDetailMap.put("loomTypeId",loomTypeId);
+			loomDetailMap.put("description",description);
+			loomDetailMap.put("loomQty",loomQty);
+			loomDetailMap.put("loomQuota",loomQuota);
+			loomDetailMap.put("avlQuota",avlQuota);
+			loomDetailMap.put("usedQuota",usedQuota);
+			loomDetails.put(eachLoomType.getString("loomTypeId"),loomDetailMap);
+		}
+		
+		Map resultMap = FastMap.newInstance();
+		resultMap.put("partyId",partyId);
+		resultMap.put("partyName",partyName);
+		resultMap.put("addressMap",addressMap);
+		resultMap.put("partyType",partyType);
+		resultMap.put("passBookNo",passBookNo);
+		resultMap.put("issueDate",issueDate);
+		resultMap.put("isDepot",isDepot);
+		resultMap.put("DOA",DOA);
+		resultMap.put("loomDetails",loomDetails);
+		resultMap.put("totalLooms",totalLooms);
+		result.put("weaverDetails",resultMap);
+		return result;
+    }
+    
 }
