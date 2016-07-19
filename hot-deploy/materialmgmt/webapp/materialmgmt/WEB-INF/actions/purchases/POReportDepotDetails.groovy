@@ -358,16 +358,40 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	
 
 // party Address
-	List conlist=[];
+
+conditionList=[];
+
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR","SHIP_TO_CUSTOMER")));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
+shipToCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SHIP_TO_CUSTOMER")],EntityOperator.AND);
+shipToPartyRole=EntityUtil.filterByCondition(orderRoles,shipToCondition);
+shipToParty=EntityUtil.getFirst(shipToPartyRole);
+shipingPartyId="";
+if(UtilValidate.isNotEmpty(shipToParty)){
+	shipingPartyId=shipToParty.partyId;
+	}
+
+supplierDtl=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPPLIER_AGENT")],EntityOperator.AND);
+supplierDtlRole=EntityUtil.filterByCondition(orderRoles,supplierDtl);
+supplierDtls=EntityUtil.getFirst(supplierDtlRole);
+fromPartyId="";
+
+if(UtilValidate.isNotEmpty(supplierDtls)){
+	fromPartyId=supplierDtls.partyId;
+	}
+
+	/*List conlist=[];
 	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
 	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 	vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
-	vendorDetail=EntityUtil.getFirst(vendorDetails);
-	fromPartyId="";
-	if(UtilValidate.isNotEmpty(vendorDetail)){
+	vendorDetail=EntityUtil.getFirst(vendorDetails);*/
+
+	/*if(UtilValidate.isNotEmpty(vendorDetail)){
 	fromPartyId=vendorDetail.partyId;
-	}
+	}*/
 	   if(UtilValidate.isNotEmpty(fromPartyId)){
 		 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
 		   address1="";address2="";city="";postalCode="";
@@ -410,14 +434,43 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 				context.fromPartyTinNo=fromPartyTinNo;
 			}
  }
-
+	 shipingAdd=[:];
+	   if(UtilValidate.isNotEmpty(shipingPartyId)){
+		   partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:shipingPartyId, userLogin: userLogin]);
+			 address1="";address2="";city="";postalCode="";
+			  if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
+				 if(partyPostalAddress.address1){
+			 address1=partyPostalAddress.address1;
+			 shipingAdd.put("address1",address1);
+				 }
+				 if(partyPostalAddress.address2){
+			 address2=partyPostalAddress.address2;
+			 shipingAdd.put("address2",address2);
+				  }
+				 if(partyPostalAddress.city){
+			 city=partyPostalAddress.city;
+			 shipingAdd.put("city",city);
+				  }
+				 if(partyPostalAddress.postalCode){
+			 postalCode=partyPostalAddress.postalCode;
+			 shipingAdd.put("postalCode",postalCode);
+				  }
+			   }
+			  partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: fromPartyId, userLogin: userLogin]);
+			  phoneNumber = "";
+			  if (partyTelephone != null && partyTelephone.contactNumber != null) {
+				  phoneNumber = partyTelephone.contactNumber;
+			  }
+			  shipingAdd.put("phoneNumber", phoneNumber);	  
+   }
 	   
 	   Debug.log("allDetailsMap================="+allDetailsMap);	   
 
+context.shipingAdd=shipingAdd;
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
 context.orderTermList=orderTermList;
-
+context.addressFlag="Y";
 bedAmount=0;
 vatAmount=0;
 cstAmount=0;
