@@ -85,5 +85,13 @@
         <attribute type="Map" mode="OUT" name="indentResults" optional="true"/>
     </service>
     
+    <service name="getWeaverDetails" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getWeaverDetails">
+        <description>Get Weaver Details</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute type="Map" mode="OUT" name="weaverDetails" optional="true"/>
+    </service>
+    
 </services>
 
