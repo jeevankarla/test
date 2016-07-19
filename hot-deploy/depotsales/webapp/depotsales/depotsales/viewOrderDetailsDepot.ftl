@@ -683,8 +683,11 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 	
 		
     
-    function fetchOrderInformation(order) {
+    function fetchOrderInformation(order,partyName) {
 		orderId = order;
+		
+		partyName = partyName;
+		
 		var dataJson = {"orderId": orderId};
 		showSpinner();
 		jQuery.ajax({
@@ -700,7 +703,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 						orderData = result["orderInformationDetails"];
 						
 						
-						showOrderInformation();
+						showOrderInformation(partyName);
 						
                		}
                	}							
@@ -708,19 +711,32 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 	}
 	
     
-    function showOrderInformation() {
+    function showOrderInformation(partyName) {
 		var message = "";
 		var title = "";
 		if(orderData != undefined){
 			var orderAmt = 0;
 			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			
+			var orderType = orderData[0].orderType;
+			
+			if(orderType == "onbehalfof")
+			message += "<thead><td align='center' class='h3'>Customer Name</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			else
 			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			
+			
 			for (i = 0; i < orderData.length; ++i) {
+			
+			    if(orderType == "onbehalfof")
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].partyName + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	else
 			  	message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	
 			  	orderAmt = orderAmt+orderData[i].payableAmt;
 			}
 			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
-			title = "<center>Order : " + orderId + "<center><br /> Total Order Value = "+ orderAmt +" ";
+			title = "<center>Order : " + orderId + "  <br>Party Name : " +partyName+ "<center><br /> Total Order Value = "+ orderAmt +" ";
 			message += "</table>";
 			Alert(message, title);
 		}

@@ -877,10 +877,15 @@
 		var totalAmount = 0;
 		var totalDiscount = 0;
 		var totalPayable = 0;
+		var totalQuantity = 0;
+		
 		for (i = 0; i < data.length; i++) {
 			totalAmount += data[i]["totPayable"];
 			var quotaApplicable = data[i]["usedQuota"];
 			var exMillPrice = data[i]["unitPrice"];
+			
+			totalQuantity += data[i]["quantity"];
+			
 			if(isNaN(quotaApplicable)){
 				quotaApplicable = 0;
 			}
@@ -904,6 +909,7 @@
 		jQuery("#itemsSelected").html("<b> &nbsp; Selected: "+data.length+" &nbsp; </b>");
 		jQuery("#totalDiscount").html("<b> &nbsp; Subsidy: Rs "+totalDiscount+" &nbsp; </b>");
 		jQuery("#totalPayable").html("<b> &nbsp; Payable: Rs "+totalPayable+" &nbsp; </b>");
+		jQuery("#totalQtyKgs").html("<b> &nbsp; Quantity(Kgs): "+totalQuantity+" &nbsp; </b>");
 		
 	}
 	

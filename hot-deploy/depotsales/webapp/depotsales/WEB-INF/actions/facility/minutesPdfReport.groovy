@@ -174,9 +174,12 @@ inputCtx.put("partyId", partyId);
 try{
  resultCtx = dispatcher.runSync("getWeaverPayments", inputCtx);
  partyPayments = (resultCtx.paymentSearchResults).paymentSearchResultsList;
+ 
+ if(partyPayments){
  for (eachPayment in partyPayments) {
 	 totAmt = totAmt+eachPayment.balanceAmount;
 	}
+ }
 }catch(Exception e){}
 
 
