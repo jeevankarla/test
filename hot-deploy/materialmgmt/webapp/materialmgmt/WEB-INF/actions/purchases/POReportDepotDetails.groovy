@@ -40,7 +40,7 @@ context.signature=signature;
 orderDetailsList=[];
 allDetailsMap=[:];
 orderTermList=[];
-
+branchId="";
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
 allDetailsMap["grandTotal"]=BigDecimal.ZERO;
@@ -50,6 +50,43 @@ orderDesctioption="";
 if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
 	orderDesctioption=orderHeader.orderName;
+	productStoreId = orderHeader.productStoreId;
+	
+	if (productStoreId) {
+		productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
+		branchId=productStore.payToPartyId;
+	}
+	//get Report Header
+	branchContext=[:];
+	if(branchId == "INT12" || branchId == "INT49" || branchId == "INT55")
+	branchId = "INT12";
+	else if(branchId == "INT8" || branchId == "INT16" || branchId == "INT20" || branchId == "INT21" || branchId == "INT22" || branchId == "INT44")
+	branchId = "INT8";
+	branchContext.put("branchId",branchId);
+	BOAddress="";
+	BOEmail="";
+	try{
+		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem in BO Header ", module);
+			return ServiceUtil.returnError("Problem in fetching financial year ");
+		}
+		if(resultCtx.get("boHeaderMap")){
+			boHeaderMap=resultCtx.get("boHeaderMap");
+			if(boHeaderMap.get("header0")){
+				BOAddress=boHeaderMap.get("header0");
+			}
+			if(boHeaderMap.get("header1")){
+				BOEmail=boHeaderMap.get("header1");
+			}
+		}
+		
+	}catch(GenericServiceException e){
+		Debug.logError(e, module);
+		return ServiceUtil.returnError(e.getMessage());
+	}
+	context.BOAddress=BOAddress;
+	context.BOEmail=BOEmail;	
 	context.hasPermission = true;
 	context.canViewInternalDetails = true;
 	if(UtilValidate.isNotEmpty(orderHeader)){
@@ -89,17 +126,39 @@ if(UtilValidate.isNotEmpty(orderId)){
 
 		  //to get company details
 
-//tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
-//tinDetails=EntityUtil.getFirst(tinCstDetails);
-//tinNumber="";cstNumber="";kstNumber="";
-//if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
-//	tinNumber=tinDetails.tinNumber;
-//	allDetailsMap.put("tinNumber",tinNumber);
-//}
-//if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
-//	cstNumber=tinDetails.cstNumber;
-//	allDetailsMap.put("cstNumber",cstNumber);
-//}
+
+partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , branchId)  , null, null, null, false );
+
+if(UtilValidate.isNotEmpty(partyIdentification)){
+	tinNumber="";
+	tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(tinDetails)){
+		tinDetails=EntityUtil.getFirst(tinDetails);
+		tinNumber=tinDetails.idValue;
+		allDetailsMap.put("tinNumber",tinNumber);
+	}
+	cstNumber="";
+	cstDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+	if(UtilValidate.isNotEmpty(cstDetails)){
+	    cstDetails=EntityUtil.getFirst(cstDetails);
+	    cstNumber=cstDetails.idValue;
+	    allDetailsMap.put("cstNumber",cstNumber);
+	}
+	cinNumber="";
+	cinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(cinDetails)){
+	    cinDetails=EntityUtil.getFirst(cinDetails);
+	    cinNumber=cinDetails.idValue;
+	    allDetailsMap.put("cinNumber",cinNumber);
+	}
+	panNumber="";
+	panDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+	if(UtilValidate.isNotEmpty(panDetails)){
+		panDetails=EntityUtil.getFirst(panDetails);
+		panNumber=panDetails.idValue;
+		allDetailsMap.put("panNumber",panNumber);
+	}
+}
 
 mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
 if(mailIdConfig){
@@ -393,6 +452,8 @@ if(UtilValidate.isNotEmpty(supplierDtls)){
 	fromPartyId=vendorDetail.partyId;
 	}*/
 	   if(UtilValidate.isNotEmpty(fromPartyId)){
+		   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+		   allDetailsMap.put("partyName",partyName);
 		 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
 		   address1="";address2="";city="";postalCode="";
 			if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
@@ -436,6 +497,8 @@ if(UtilValidate.isNotEmpty(supplierDtls)){
  }
 	 shipingAdd=[:];
 	   if(UtilValidate.isNotEmpty(shipingPartyId)){
+		   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+		   shipingAdd.put("partyName",partyName);
 		   partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:shipingPartyId, userLogin: userLogin]);
 			 address1="";address2="";city="";postalCode="";
 			  if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {

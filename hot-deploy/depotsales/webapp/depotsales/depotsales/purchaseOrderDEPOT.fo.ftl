@@ -105,6 +105,7 @@ under the License.
       	 <fo:block font-weight="bold" keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TO </fo:block>
        <#-->  <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${supppartyName}</fo:block>       --> 
          <#if allDetailsMap?has_content>
+        <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${allDetailsMap.partyName?if_exists},</fo:block>
         <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true"  font-size="12pt"  >${allDetailsMap.address1?if_exists}</fo:block>
         <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${allDetailsMap.address2?if_exists} </fo:block> 
 	  	<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false"  font-size="12pt" >${allDetailsMap.city?if_exists} </fo:block> 
