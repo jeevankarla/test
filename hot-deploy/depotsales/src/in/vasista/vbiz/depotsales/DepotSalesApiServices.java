@@ -474,7 +474,7 @@ public class DepotSalesApiServices{
 	        		try {
 	        			condList.clear();
 	        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
-	        			condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+	        			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
 	        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
 	        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
 	        		
@@ -503,7 +503,7 @@ public class DepotSalesApiServices{
         		try {
         			condList.clear();
         			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
-        			condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+        			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
         			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
         			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
         		
