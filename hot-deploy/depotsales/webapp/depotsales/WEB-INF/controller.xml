@@ -442,6 +442,14 @@
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
      </request-map>
      
+     
+     <request-map uri="processDepotPurchaseInvoice">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotSalesPurchaseInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
+       <response name="error" type="view" value="DepotPurchaseInvoice"/>
+     </request-map>
+     
       <request-map uri="processNewSalesInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewDepotSalesInvoice" global-transaction="true"/>
