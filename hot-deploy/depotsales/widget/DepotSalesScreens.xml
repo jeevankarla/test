@@ -1612,6 +1612,49 @@
 		</section>
 	</screen>
 
+
+    <screen name="PurchaseDepotInvoiceInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/PurchaseDepotInvoiceDepot.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+    
+
 	<screen name="PurchaseInvoiceEntry">
 		<section>
 			<actions>
@@ -4194,7 +4237,7 @@
 									value="" />
 							</condition>
 							<widgets>
-								<include-screen name="PurchaseInvoiceInner" />
+								<include-screen name="PurchaseDepotInvoiceInner" />
 							</widgets>
 						</section>
 						<section>
@@ -4203,7 +4246,7 @@
 									value="YES" />
 							</condition>
 							<widgets>
-								<include-screen name="PurchaseInvoiceEntry" />
+								<include-screen name="PurchaseDepotInvoiceEntry" />
 							</widgets>
 						</section>
 					</decorator-section>
