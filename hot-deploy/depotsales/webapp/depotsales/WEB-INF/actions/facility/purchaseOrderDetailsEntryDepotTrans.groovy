@@ -108,8 +108,14 @@ if(orderId){
 		}else{
 		newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		}
+		orderItemAttribute = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId", orderId,"orderItemSeqId",eachItem.orderItemSeqId,"attrName","remarks"), false);
+		String remarks ="";
+		if(UtilValidate.isNotEmpty(orderItemAttribute)){
+			remarks = orderItemAttribute.attrValue;
+		} 		
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		newObj.put("orderItemSeqId",eachItem.orderItemSeqId);
+		newObj.put("remarks",remarks);
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		disptchQty=eachItem.quantity-receivedQty

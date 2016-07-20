@@ -101,7 +101,7 @@
 		{ 
 			var productId = data[rowCount]["cProductId"];
 			var orderItemSeqId  = data[rowCount]["orderItemSeqId"];		
-						
+			var remarks = data[rowCount]["remarks"];			
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
@@ -319,6 +319,7 @@
 			<#else>
 				var columns = [
 					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
+					{id:"remarks", name:"Specification", field:"remarks", width:80, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 					<#--{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator}, -->
 					{id:"quantity", name:"Dispatch Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
