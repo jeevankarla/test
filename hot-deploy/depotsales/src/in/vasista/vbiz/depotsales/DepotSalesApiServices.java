@@ -579,6 +579,18 @@ public class DepotSalesApiServices{
 			partyDetail.put("groupName",eachParty.get("groupName"));
 			partyDetail.put("roleTypeId",eachParty.get("roleTypeId"));
 			partyDetail.put("partyTypeId",eachParty.get("partyTypeId"));
+			
+			Map inputMap = FastMap.newInstance();
+			Map addressMap = FastMap.newInstance();
+			inputMap.put("partyId", eachParty.get("partyId"));
+			inputMap.put("userLogin", userLogin);
+			try{
+				addressMap  = dispatcher.runSync("getPartyPostalAddress", inputMap);
+			} catch(Exception e){
+				Debug.logError("Not a valid party", module);
+			}
+			partyDetail.put("addressMap",addressMap);
+			
 			suppliersMap.put(eachParty.get("partyId"),partyDetail);
 		}
 		if (partyListIter != null) {
