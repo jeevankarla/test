@@ -177,7 +177,7 @@ under the License.
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				        
 				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				       <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if></fo:block>
+				       <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0")}%)</#if></fo:block>
 				       
 				       </#if>
 				        </#list>

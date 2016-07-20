@@ -181,10 +181,24 @@ for (eachList in invoiceItemList) {
 		  if(eachItem.description != "Service Charge" && eachItem.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY"){
 		  tempMap = [:];
 		  
-		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
 		  tempMap.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
-		  tempMap.put("description", eachItem.description);
+		  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"){
+			  invoiceItemTypes = delegator.findOne("InvoiceItemType",[invoiceItemTypeId : eachItem.invoiceItemTypeId] , false);
+			  tempMap.put("description", invoiceItemTypes.description);
+			  orderItemBillings = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachItem.invoiceId), null, null, null, false);
+			  orderItemBillings = EntityUtil.getFirst(orderItemBillings);
+			  conditionList.clear();
+			  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderItemBillings.orderId));
+			  conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, eachItem.invoiceItemTypeId));
+			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			  orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
+			  orderAdjustments = EntityUtil.getFirst(orderAdjustments);
+			  tempMap.put("percentage", orderAdjustments.sourcePercentage);
+			  
+		  }else{
+		       tempMap.put("description", eachItem.description);
+		  }	   
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  

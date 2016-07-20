@@ -446,6 +446,7 @@ under the License.
 	<InvoiceItemType description="VAT SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" parentTypeId="TAX_SALE"/> 
 	<InvoiceItemType description="TEN PERCENT SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY"/> 
 	
+	<InvoiceItemTypeMap invoiceItemMapKey="CST_SALE" invoiceItemTypeId="CST_SALE" invoiceTypeId="SALES_INVOICE"/> 
 	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SALE" invoiceItemTypeId="VAT_SALE" invoiceTypeId="SALES_INVOICE"/> 
 	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" invoiceTypeId="SALES_INVOICE"/> 
 	
