@@ -153,7 +153,6 @@ invoiceItemLevelAdjustments = [:];
 
 
 
-
 double totTaxAmount = 0;
 
 double mgpsAmt = 0;
