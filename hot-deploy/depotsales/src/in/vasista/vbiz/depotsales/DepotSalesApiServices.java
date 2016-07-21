@@ -620,6 +620,28 @@ public class DepotSalesApiServices{
 		String primaryProductCategoryId = (String) context.get("primaryProductCategoryId");
 		String productName = (String) context.get("productName");
 		
+		List<GenericValue> productCategory = null;
+		Map<String,String> productCategoryMap = FastMap.newInstance();
+		try {
+			productCategory = delegator.findList("ProductCategory", null, null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrieve productCategory List ", module);
+			return ServiceUtil.returnError("Failed to retrieve productCategory List " + e);
+		}
+		if(UtilValidate.isNotEmpty(productCategory)){
+			for(GenericValue eachCategory:productCategory){
+				productCategoryMap.put(eachCategory.getString("productCategoryId"),eachCategory.getString("primaryParentCategoryId"));
+			}
+		}		
+		
+		List<GenericValue> productCategoryAndMember = null;
+	  	try{
+	  		productCategoryAndMember = delegator.findList("ProductCategoryAndMember",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), null, null, null, false);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductCategory ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+		}
+		
 		List conditionList = FastList.newInstance();
 		if(UtilValidate.isNotEmpty(productId)){
 			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
@@ -646,6 +668,21 @@ public class DepotSalesApiServices{
 		GenericValue eachProduct = null;
 		Map productsMap = FastMap.newInstance();
 		while(productListIter != null && (eachProduct = productListIter.next()) != null) {
+			Map schemeCategoryMap = FastMap.newInstance();
+			String  primaryParentCategoryId = "";
+			if(UtilValidate.isNotEmpty(eachProduct.get("primaryProductCategoryId"))){
+				primaryParentCategoryId = (String)productCategoryMap.get(eachProduct.get("primaryProductCategoryId"));
+			}
+			List<GenericValue> filteredProds = EntityUtil.filterByCondition(productCategoryAndMember,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,eachProduct.get("productId")));
+			if(UtilValidate.isNotEmpty(filteredProds)){
+				for(GenericValue eachValue:filteredProds){
+					Map schemeDetail = FastMap.newInstance();
+					schemeDetail.put("productCategoryId",eachValue.getString("productCategoryId"));
+					schemeDetail.put("categoryName",eachValue.getString("categoryName"));
+					schemeDetail.put("description",eachValue.getString("description"));
+					schemeCategoryMap.put(eachValue.getString("productCategoryId"),schemeDetail);
+				}
+			}
 			Map productDetail = FastMap.newInstance();
 			productDetail.put("productId",eachProduct.get("productId"));
 			productDetail.put("productTypeId",eachProduct.get("productTypeId"));
@@ -656,6 +693,8 @@ public class DepotSalesApiServices{
 			productDetail.put("description",eachProduct.get("description"));
 			productDetail.put("quantityUomId",eachProduct.get("quantityUomId"));
 			productDetail.put("quantityIncluded",eachProduct.get("quantityIncluded"));
+			productDetail.put("primaryParentCategoryId",primaryParentCategoryId);
+			productDetail.put("schemeCategoryMap",schemeCategoryMap);
 			productsMap.put(eachProduct.get("productId"),productDetail);
 		}
 		if (productListIter != null) {
