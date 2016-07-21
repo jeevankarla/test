@@ -5134,6 +5134,7 @@ catch(Exception e){
 		inMap.put("partyIdFrom",partyIdFrom);
 		inMap.put("partyIdTo",partyId);
 		inMap.put("roleTypeIdFrom","ORGANIZATION_UNIT");
+		inMap.put("partyRelationshipTypeId","BRANCH_CUSTOMER");
 		inMap.put("roleTypeIdTo",roleTypeId);
         inMap.put("fromDate", UtilDateTime.nowTimestamp());
         try {
