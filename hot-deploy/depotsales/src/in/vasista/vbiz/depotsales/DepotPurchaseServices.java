@@ -495,7 +495,7 @@ public class DepotPurchaseServices{
 		List invoices = FastList.newInstance(); 
 		String vehicleId = (String) request.getParameter("vehicleId");
 		String tallyrefNo = (String) request.getParameter("tallyrefNo");
-		String invoiceDateStr = (String) request.getParameter("invoiceDate");
+		String invoiceDateStr = (String) request.getParameter("effectiveDate");
 		Debug.log("invoiceDateStr===================="+invoiceDateStr);
 		String orderId = (String) request.getParameter("orderId");
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
