@@ -974,7 +974,7 @@ public class DepotPurchaseServices{
 	
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
-		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", UtilDateTime.nowTimestamp(), "userLogin", userLogin);
+		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin);
           serviceContext.put("shipmentId",shipmentId);
           try {
                result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
