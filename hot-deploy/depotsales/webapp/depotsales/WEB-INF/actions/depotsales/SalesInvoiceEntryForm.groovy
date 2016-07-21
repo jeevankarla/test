@@ -81,7 +81,10 @@ if(shipments){
 			JSONObject newObj = new JSONObject();
 			newObj.put("invoiceItemTypeId",eachItem.invoiceItemTypeId);
 			newObj.put("applicableTo",eachItem.description);
-			newObj.put("adjAmount",eachItem.amount);
+			
+			//Debug.log("eachItem.amount============="+eachItem.amount);
+			
+			newObj.put("adjAmount",Math.abs((eachItem.amount*eachItem.quantity)));
 			newObj.put("discQty",eachItem.quantity);
 			
 			if(eachItem.amount > 0)
@@ -93,14 +96,16 @@ if(shipments){
 			
 		context.invoiceDiscountJSON = invoiceDiscountJSON;
 		context.invoiceAdditionalJSON = invoiceAdditionalJSON;
-	 Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
+	// Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
+	 
+	// Debug.log("invoiceAdditionalJSON======================="+invoiceAdditionalJSON);
 	 
 	
 	
 	context.purchaceInvoiceId = purchaceInvoiceId;
 	
-	Debug.log("purchaceInvoiceId======================="+purchaceInvoiceId);
-	Debug.log("orderId======================="+orderId);
+	//Debug.log("purchaceInvoiceId======================="+purchaceInvoiceId);
+	//Debug.log("orderId======================="+orderId);
 	
 	//if(!invoice && orderId){
 		
@@ -326,6 +331,11 @@ if(shipments){
 			orderId = OrderItemAssoc[0].orderId;
 			
 			orderItemSeqId = OrderItemAssoc[0].orderItemSeqId;
+			
+			
+			Debug.log("orderId===================="+orderId);
+			
+			Debug.log("orderItemSeqId===================="+orderItemSeqId);
 			
 			condExpr.clear();
 			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));

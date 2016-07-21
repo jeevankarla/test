@@ -77,11 +77,11 @@
 	
 	var data3 = ${StringUtil.wrapString(invoiceDiscountJSON)!'[]'};
 	
-	var data4 = ${StringUtil.wrapString(invoiceAdditionalJSON)!'[]'};
+	var data2 = ${StringUtil.wrapString(invoiceAdditionalJSON)!'[]'};
 	
 	
 	
-	var data2 = ${StringUtil.wrapString(adjustmentJSON)!'[]'};
+	//var data2 = ${StringUtil.wrapString(adjustmentJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
@@ -175,6 +175,8 @@
 				
    			}
 		}
+		
+		
 		
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{ 
@@ -775,7 +777,7 @@
             secondaryHeaderRowHeight: 25
 		};
 			  
-		grid2 = new Slick.Grid("#myGrid2", data4, withAdjColumns, options2);
+		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
         grid2.setSelectionModel(new Slick.CellSelectionModel()); 
      
 		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid2, options2);
