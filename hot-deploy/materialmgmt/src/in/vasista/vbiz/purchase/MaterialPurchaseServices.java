@@ -2977,7 +2977,6 @@ public class MaterialPurchaseServices {
 			
             Debug.log("actualQty=========3333==============="+actualQty);
 
-			
             Debug.log("updateQuta=========3333==============="+updateQuta);
 
 			if(Scheam.equals("MGPS_10Pecent")){
@@ -2988,8 +2987,6 @@ public class MaterialPurchaseServices {
 				
 				Timestamp supplyDate = UtilDateTime.nowTimestamp();
 				
-				Map partyBalanceHistoryContext = FastMap.newInstance();
-				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId","C02108","productCategoryId","COTTON_UPTO40","dateTimeStamp", supplyDate,"quantity",amendedQuantity,"userLogin", userLogin);
 				
 				
                 Map<String,Object>  productCategoryQuotasMap = FastMap.newInstance();
@@ -3000,7 +2997,100 @@ public class MaterialPurchaseServices {
 				
 				Debug.log("productCategoryQuotasMap=========3333==============="+productCategoryQuotasMap);
                 Debug.log("partyBalanceQuota=========3333==============="+partyBalanceQuota);
+                
+                int updateQuotaSign = updateQuta.signum();
+                
+                Debug.log("updateQuotaSign=========3333==============="+updateQuotaSign);
+
+                
+                if(updateQuta.compareTo(BigDecimal.ZERO)>0 && partyBalanceQuota.compareTo(BigDecimal.ZERO)>0){
+                Map partyBalanceHistoryContext = FastMap.newInstance();
+				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId","C02108","productCategoryId","COTTON_UPTO40","dateTimeStamp", supplyDate,"quantity",updateQuta,"userLogin", userLogin);
 				
+                
+                try {
+					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+					//quota=(BigDecimal)resultMapquota.get("quota");
+					
+					//Debug.log("quota=====Used====3333==============="+quota);
+
+					
+				} catch (Exception e) {
+					Debug.logError("Failed to retrive PartyQuotaBalanceHistory"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive PartyQuotaBalanceHistory");	
+			  		return "error";
+				}
+				
+                }else if(updateQuotaSign == -1){
+                
+                	condsList.clear();
+    				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+    				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+    				try{
+    					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+    					Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
+    					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+    				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
+    				    
+    				    
+    				    
+    				    if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
+    						 	
+    						for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
+
+    							condsList.clear();
+    							condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+    							if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
+    								condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+    							}
+    						  	BigDecimal quota =BigDecimal.ZERO;
+    						  	try {
+    								List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
+
+    								if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+    									for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+    										if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+    											quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+    										  	Map partyBalanceHistoryContext = FastMap.newInstance();
+    										  	partyId=(String)OrderItemDetailValue.get("partyId");
+    										  	partyBalanceHistoryContext = UtilMisc.toMap("partyId","C02108","orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",Scheam,"quota",updateQuta, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
+    										  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+    		
+    										}
+    									}
+    								}
+    							  	
+    						  	} catch (GenericEntityException e) {
+    						  		Debug.logError("Failed to  cancelPartyQuotaBalanceHistory"+orderId, module);
+    								request.setAttribute("_ERROR_MESSAGE_", "Failed to cancelPartyQuotaBalanceHistory");	
+    						  		return "error";
+    							}
+    						}
+    					}
+    				    
+    				    
+    				}catch (Exception e) {
+    					Debug.logError("Failed to retrive OrderAdjustment"+orderId, module);
+    					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderAdjustment");	
+    			  		return "error";
+    				}
+    				
+    			}
+                	
+                	
+                	
+                Map<String, Object> resultCtx1 = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", "C02108","effectiveDate",supplyDate,"productCategoryId",productCategoryId));
+				Map productCategoryQuotasMap1 = (Map) resultCtx1.get("schemesMap");
+				
+				BigDecimal partyBalanceQuota1 = (BigDecimal) productCategoryQuotasMap1.get(productCategoryId);
+		
+				Debug.log("partyBalanceQuota1=====Used====3333==============="+partyBalanceQuota1);
+
+                
+                
+                
+                
+                
 				/*List condsList = FastList.newInstance();
 			  	condsList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
 			  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
