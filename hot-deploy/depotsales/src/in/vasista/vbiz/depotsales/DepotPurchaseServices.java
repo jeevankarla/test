@@ -57,6 +57,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 
 
 
+
 import java.util.Iterator;
 
 
@@ -554,13 +555,13 @@ public class DepotPurchaseServices{
 			Debug.logError(e, module);
 		}
 		
-		if(UtilValidate.isNotEmpty(tallyrefNo)){
-				 /* List conditionList = FastList.newInstance();
+	/*	if(UtilValidate.isNotEmpty(tallyrefNo)){
+				  List conditionList = FastList.newInstance();
 		
 				  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
 				  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
 				  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	*/			  try{
+				  try{
 				 // List  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
 				  
 				   //if(UtilValidate.isNotEmpty(OrderAssocList)){
@@ -579,7 +580,7 @@ public class DepotPurchaseServices{
 				request.setAttribute("_ERROR_MESSAGE_", "Problems While Updating Tally Ref No: " + tallyrefNo);
 				return "error";
 			}
-		}	
+		}	*/
 		
 		Debug.log("orderItems======2232============="+orderItems);
 
@@ -1030,6 +1031,27 @@ public class DepotPurchaseServices{
 		
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		
+		
+	    purposeTypeId = "YARN_SALE";
+		
+	    if(UtilValidate.isNotEmpty(purposeTypeId)){
+       	 try{
+    	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+    	    	invoice.set("purposeTypeId", purposeTypeId);
+    	    	if(UtilValidate.isNotEmpty(tallyrefNo))
+    	    	invoice.set("referenceNumber", tallyrefNo);
+    	    	
+   			invoice.store();
+    		} catch (Exception e) {
+    	       Debug.logError(e, "Error in fetching InvoiceItem ", module);
+   			  request.setAttribute("_ERROR_MESSAGE_", "Error in populating invoice purpose :" + purchaseInvoiceId+"....! ");
+   				return "error";
+    		}
+
+	    }
+		
+		
 		
 	///	Debug.log("invoiceId==================="+invoiceId);
 		
