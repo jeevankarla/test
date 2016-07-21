@@ -469,13 +469,37 @@
                 </hyperlink>
             </field>-->
             
-              <field name="raiseSalesInvoice"  title="Sales Invoice" widget-style="buttontext" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+           <!--    <field name="raiseSalesInvoice"  title="Sales Invoice" widget-style="buttontext" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                  <hyperlink  target-type="plain" description="Sales Invoice"  target="javascript:raiseSalesInvoiceFromBranch('${shipmentId}','${partyIdTo}','${partyName}','${orderId}','${billToPartyId}','${purchaseInvoiceId}');"></hyperlink>
             </field> 
             
               <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
-            </field> 
+            </field>  -->
+            
+            
+            <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+               <!--  <hyperlink target="processSalesInvoice" description="Sales Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
+                    <parameter param-name="partyId" from-field="partyId"/>
+                    <parameter param-name="billToPartyId" from-field="partyId"/>
+                    <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
+                    
+                </hyperlink> -->
+                 <hyperlink target="MaterialSalesInvoiceInit" description="Sales Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="partyIdTo"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
+                </hyperlink>
+            </field>
+            
+             <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
+                <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
+            </field>
+            
+            
+            
             <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
 	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
 	        </field> -->

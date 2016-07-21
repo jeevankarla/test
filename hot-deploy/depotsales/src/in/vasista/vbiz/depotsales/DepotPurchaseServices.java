@@ -495,7 +495,7 @@ public class DepotPurchaseServices{
 		List invoices = FastList.newInstance(); 
 		String vehicleId = (String) request.getParameter("vehicleId");
 		String tallyrefNo = (String) request.getParameter("tallyrefNo");
-		String invoiceDateStr = (String) request.getParameter("effectiveDate");
+		String invoiceDateStr = (String) request.getParameter("invoiceDate");
 		Debug.log("invoiceDateStr===================="+invoiceDateStr);
 		String orderId = (String) request.getParameter("orderId");
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
@@ -511,7 +511,7 @@ public class DepotPurchaseServices{
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		if (UtilValidate.isNotEmpty(invoiceDateStr)) { //2011-12-25 18:09:45
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");             
 			try {
 				invoiceDate = new java.sql.Timestamp(sdf.parse(invoiceDateStr).getTime());
 			} catch (ParseException e) {
