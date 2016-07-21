@@ -897,6 +897,7 @@ under the License.
         	<field-map field-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
         	<field-map field-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
             <field-map field-name="partyIdTo" from-field="parameters.partyIdTo"/>
+            <field-map field-name="partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
             <field-map field-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
         </entity-and>  
         <!-- Create the PartyRole -->
