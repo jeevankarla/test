@@ -35,7 +35,7 @@ $(document).ready(function(){
 </script>
 <#assign changeRowTitle = "Changes">                
 
-<#include "SalesInvoiceDepotInc.ftl"/>
+<#include "SalesEditInvoiceDepotInc.ftl"/>
 
 <div class="full">
 	
@@ -51,13 +51,15 @@ $(document).ready(function(){
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />
 	          
-	          <input type="hidden" id="purchaseInvoiceId" name="purchaseInvoiceId"  value="${purchaceInvoiceId}" />
+	          
+	          <input type="hidden" id="invoiceId" name="invoiceId"  value="${invoiceId}" />
+	          
 	          
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
-	          <#if effectiveDate?exists && effectiveDate?has_content>  
-		  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
+	          <#if invoDate?exists && invoDate?has_content>  
+		  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>  
 	          	<td valign='middle'>
-	            	<div class='tabletext h3'>${effectiveDate}         
+	            	<div class='tabletext h3'>${invoDate}         
 	            	</div>
 	          	</td>       
 	       	  <#else> 
@@ -117,19 +119,24 @@ $(document).ready(function(){
 	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
 	            	</td>
 	       	  </#if> -->
-	       	  
+	       	  <#if tallyRefNo?exists && tallyRefNo?has_content>  
 	       	  <td valign='middle'>          
+	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
+	            	</td>
+	            	<#else>
+	            	<td valign='middle'>          
 	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" />           		
 	            	</td>
+	            	</#if>
 	       	  
 	        </tr>
 	        <tr><td><br/></td></tr>
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No:</div></td>
-				<#if vehicleId?exists && vehicleId?has_content>  
-		  	  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>  
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>invoiceId</div></td>
+				<#if invoiceId?exists && invoiceId?has_content>  
+		  	  		<input type="hidden" name="invoiceId" id="invoiceId" value="${invoiceId?if_exists}"/>  
 	          		<td valign='middle'>
-	            		<div class='tabletext h3'>${vehicleId?if_exists}</div> 
+	            		<div class='tabletext h3'>${invoiceId?if_exists}</div> 
 	          		</td>       
 	          	</#if>
 	        </tr> 
@@ -196,8 +203,8 @@ $(document).ready(function(){
 					</div>
 				</div>
 				</div>
-				<#assign formAction ='processNewSalesInvoice'>	
-				<#if partyId?exists>
+				<#assign formAction ='processEditSalesInvoice'>	
+				<#if invoiceId?exists>
 			    	<div align="center">
 			    		<h3>
 			    		<input type="submit" style="padding:.4em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>

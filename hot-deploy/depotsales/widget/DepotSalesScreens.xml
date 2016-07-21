@@ -1822,7 +1822,133 @@
 		</section>
 	</screen>
     
+    <screen name="MaterialSalesEditInvoiceInit">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Material Invoice Entry" />
+				<set field="tabButtonItem" value="FindGRNReceipts" />
+				<set field="tabButtonItem2" value="MaterialEditInvoiceInit" />
+				<set field="shipmentId" from-field="parameters.shipmentId" />
+				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/editBranchSalesInvoice.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BranchTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="editSalesMenu"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesEditInvoiceInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesEditInvoiceEntry" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
+   <screen name="SalesEditInvoiceInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/SalesEditInvoiceDepot.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="SalesEditInvoiceEntry">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="productCatageoryId" from-field="parameters.productCatageoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+   
 
 	<screen name="FindMaterialInvoices">
 		<section>
