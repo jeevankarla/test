@@ -41,7 +41,7 @@ $(document).ready(function(){
 	
 		<div class="screenlet-title-bar">
 	         <div class="grid-header" style="width:100%">
-				<label>Purchase Invoice Entry </label>
+				<label>Sales Invoice Entry </label>
 			</div>
 	     </div>
 	      
@@ -134,7 +134,7 @@ $(document).ready(function(){
 	          	</#if>
 	        </tr> 
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Purchase Order No:</div></td>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Sales Order No:</div></td>
 				<#if orderId?exists && orderId?has_content>  
 		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>  
 	          		<td valign='middle'>
@@ -167,7 +167,7 @@ $(document).ready(function(){
 	<div class="screenlet">
 	    <div class="screenlet-title-bar">
 	 		<div class="grid-header" style="width:100%">
-				<label>Purchase Items</label><span id="totalAmount"></span>
+				<label>Sales Items</label><span id="totalAmount"></span>
 			</div>
 			 <div class="screenlet-body" id="FieldsDIV" >
 				<div id="myGrid1" style="width:100%;height:200px;">

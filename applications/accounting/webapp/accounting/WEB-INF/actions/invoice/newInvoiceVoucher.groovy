@@ -40,6 +40,9 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 }
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
+
+tallySalesNo = invoiceList.get("referenceNumber");
+
 context.partyId = partyId;
 invoiceDate = invoiceList.get("invoiceDate");
 context.invoiceDate = invoiceDate;
@@ -265,6 +268,10 @@ if(purInvoiceId){
 	if(purInvoiceList.referenceNumber)
 	tallyRefNo = purInvoiceList.referenceNumber;
 }
+
+
+if(tallySalesNo)
+tallyRefNo = tallySalesNo;
 
 
 /*if(invoiceId == "10360")
