@@ -1261,9 +1261,9 @@
 			<link target="IndentPortal"></link>
 		</menu-item>
 		
-		<menu-item name="IndentReceitGoodsMain" title="${uiLabelMap.ReceiptOfGoods}">
+		<!-- <menu-item name="IndentReceitGoodsMain" title="${uiLabelMap.ReceiptOfGoods}">
 			<link target="IndentorFindGRNShipments"></link>
-		</menu-item>
+		</menu-item> -->
 		
       </menu>
       
