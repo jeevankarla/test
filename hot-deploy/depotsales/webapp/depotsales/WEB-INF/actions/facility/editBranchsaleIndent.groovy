@@ -338,7 +338,7 @@
 				wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, weaverId, false);
 			}
 			bundleWeight=eachItem.bundleWeight;
-			newObj.put("customerName",wieverName+"["+psbNo+"]");
+			newObj.put("customerName",wieverName+"["+weaverId+"]");
 			newObj.put("customerId",weaverId);
 			newObj.put("remarks",remrk);
 			
