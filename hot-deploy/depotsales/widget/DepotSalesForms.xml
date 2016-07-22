@@ -976,6 +976,7 @@
 	
 	  <form name="FindSalesApInvoices" type="single" target="DepotSalesInvoice" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<field name="purposeTypeId"><hidden value="YARN_SALE"/></field>
 		<!-- <field name="invoiceTypeId" position="2">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="InvoiceType" description="${description}">
