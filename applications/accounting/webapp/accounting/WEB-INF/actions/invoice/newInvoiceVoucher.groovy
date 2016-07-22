@@ -19,6 +19,8 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.party.party.PartyHelper;
 
+import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.party.contact.ContactMechWorker;
 
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -92,6 +94,10 @@ shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 orderId = shipmentList.get("primaryOrderId");
 
 deliveryChallanDate = "";
+
+Debug.log("shipmentList================"+shipmentList);
+
+
 
 if(shipmentList.get("deliveryChallanDate"))
  deliveryChallanDate = shipmentList.get("deliveryChallanDate");
@@ -705,10 +711,10 @@ postalCode="";
 panId="";
 tanId="";
 
-partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+partyPostalAddress = dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 
 
-if(partyPostalAddress){
+if(partyPostalAddress.address1){
 	
    if(partyPostalAddress.address1){
 	   address1=partyPostalAddress.address1;
@@ -741,14 +747,43 @@ if(partyPostalAddress){
    tempMap.put("key2",postalCode);
    finalAddresList.add(tempMap);
    
+}else{
+		contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
+		partyPostalAddress = contactMench.postalAddress;
+		
+		if(partyPostalAddress[0].address1){
+			address1=partyPostalAddress[0].address1;
+		}
+		tempMap=[:];
+		tempMap.put("key1","Road / Street / Lane");
+		tempMap.put("key2",address1);
+		finalAddresList.add(tempMap);
+		if(partyPostalAddress[0].address2){
+			address2=partyPostalAddress[0].address2;
+		}
+		tempMap=[:];
+		tempMap.put("key1","Area / Locality");
+		tempMap.put("key2",address2);
+		finalAddresList.add(tempMap);
+		if(partyPostalAddress[0].city){
+			city=partyPostalAddress[0].city;
+		}
+		tempMap=[:];
+		tempMap.put("key1","Town / District / City");
+		tempMap.put("key2",city);
+		finalAddresList.add(tempMap);
+		
+		if(partyPostalAddress[0].postalCode){
+			postalCode=partyPostalAddress[0].postalCode;
+		}
+		tempMap=[:];
+		tempMap.put("key1","PIN Code");
+		tempMap.put("key2",postalCode);
+		finalAddresList.add(tempMap);
 }
 
 context.finalAddresList = finalAddresList;
 //============================================================
-
-
-//============================on beHalf================
-
 
 //def forOnbeHalf(){
 	OrderItemAttributeList = [];
