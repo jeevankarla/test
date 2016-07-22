@@ -246,7 +246,7 @@
 			category=eachCatId;
 			productCategoryJSON.add(eachCatId);
 		}
-		
+		Debug.log("category==================="+category);
 		if(category.contains("SILK")){
 			catType="Silk";
 		}else if(category.contains("COTTON") || category.contains("HANK")){
