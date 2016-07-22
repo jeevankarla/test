@@ -572,7 +572,7 @@
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
-                <set field="parameters.ownerPartyId" value="Company"/>
+<!--                 <set field="parameters.ownerPartyId" value="Company"/> -->
                 <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/>
                 <set field="noConditionFind" value="Y"/>
                 <!-- <field name="noConditionFind"><hidden value="Y"/> -->
@@ -580,6 +580,7 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> --> 
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
