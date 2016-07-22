@@ -2156,7 +2156,7 @@
 			<link target="DepositTransfer">
 			</link>
 		 </menu-item>   -->
-		 <menu-item name="IncomingAdvances" title="Advances Received">
+		 <menu-item name="IncomingAdvances" title="On Account Received">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2165,7 +2165,7 @@
 			<link target="IncomingAdvancesReceived">
 			</link>
 		 </menu-item>
-		 <menu-item name="OutgoingAdvances" title="Advances Paid">
+		 <menu-item name="OutgoingAdvances" title="On Account Paid">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
