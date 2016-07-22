@@ -285,7 +285,7 @@ else if(invoiceId == "10390")
 tallyRefNo= "YRPR/4/16-17";
 */
 context.tallyRefNo = tallyRefNo;
-
+allDetailsMap = [:];
 productStoreId = OrderHeaderList.get("productStoreId");
 branchId="";
 if (productStoreId) {
@@ -293,6 +293,38 @@ if (productStoreId) {
 	branchId=productStore.payToPartyId;
 	
 }
+partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , branchId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(partyIdentification)){
+	tinNumber="";
+	tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(tinDetails)){
+		tinDetails=EntityUtil.getFirst(tinDetails);
+		tinNumber=tinDetails.idValue;
+		allDetailsMap.put("tinNumber",tinNumber);
+	}
+	cstNumber="";
+	cstDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+	if(UtilValidate.isNotEmpty(cstDetails)){
+		cstDetails=EntityUtil.getFirst(cstDetails);
+		cstNumber=cstDetails.idValue;
+		allDetailsMap.put("cstNumber",cstNumber);
+	}
+	cinNumber="";
+	cinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(cinDetails)){
+		cinDetails=EntityUtil.getFirst(cinDetails);
+		cinNumber=cinDetails.idValue;
+		allDetailsMap.put("cinNumber",cinNumber);
+	}
+	panNumber="";
+	panDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PAN_NUMBER"));
+	if(UtilValidate.isNotEmpty(panDetails)){
+		panDetails=EntityUtil.getFirst(panDetails);
+		panNumber=panDetails.idValue;
+		allDetailsMap.put("panNumber",panNumber);
+	}
+}
+context.allDetailsMap= allDetailsMap;
 //get Report Header
 branchContext=[:];
 
