@@ -1353,7 +1353,7 @@ under the License.
                 <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
             </entity-one>
             <set field="partyGroupName" from-field="partyGroup.groupName"/>
-            <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${defaultOrganizationPartyId}"/>
+<!--             <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${defaultOrganizationPartyId}"/> -->
             <entity-condition entity-name="PaymentMethodAndFinAccount" list="paymentMethodAndFinAccounts">
                 <condition-list>
                     <condition-expr field-name="partyId" from-field="paymentPartyId"/>
@@ -1366,7 +1366,7 @@ under the License.
         <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'newPayment'),(document.NewPaymentOut.submit())">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
