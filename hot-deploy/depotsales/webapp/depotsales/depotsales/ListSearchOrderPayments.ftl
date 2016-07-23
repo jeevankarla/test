@@ -44,6 +44,8 @@ under the License.
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
 <input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
 
+<input type="hidden" name="viewClicked" id="viewClicked" >
+
 
 <script type="text/javascript">
 
@@ -144,6 +146,9 @@ $(function(){
   function recursively_ajax(){
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
+           if($("#viewClicked").val() == "YES")
+             orderId = '';
+           
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');

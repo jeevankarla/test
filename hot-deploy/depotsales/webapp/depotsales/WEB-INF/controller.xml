@@ -142,7 +142,15 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    <request-map uri="approveOrdersAjax">
+    <request-map uri="approveOrderreload">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
+        <response name="success" type="view" value="processOrdersBranchSales"/>
+        <response name="error" type="view" value="processOrdersBranchSales"/>
+    </request-map>
+    
+    
+       <request-map uri="approveOrdersAjax">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
         <response name="success" type="request" value="json"/>
