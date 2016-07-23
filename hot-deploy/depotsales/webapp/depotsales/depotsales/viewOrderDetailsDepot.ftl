@@ -714,6 +714,10 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
     function showOrderInformation(partyName) {
 		var message = "";
 		var title = "";
+		
+		
+		$("#viewClicked").val("YES");
+		
 		if(orderData != undefined){
 			var orderAmt = 0;
 			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;

@@ -297,8 +297,16 @@ public class DepotPurchaseServices{
 
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
 				
+				
+			//	Debug.log("invoiceItemDiscTypeId======3232========="+invoiceItemDiscTypeId);
+
+				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
+					
+					//Debug.log("discQty======1223========="+discQty);
+
+					
 					if(discQty.compareTo(BigDecimal.ONE)>0){
 						adjDiscAmt = adjDiscAmt.divide(discQty);
 						adjQty = discQty;
@@ -312,6 +320,9 @@ public class DepotPurchaseServices{
 				invItemMap.put("uomId", "INR");
 				invItemMap.put("applicableTo", applicableToDisc);
 				invoiceDiscountsList.add(invItemMap);	
+				
+				//Debug.log("adjDiscAmt======1223========="+adjDiscAmt);
+
 			}
 			
 			//Debug.log("invoiceDiscountsList====231==========="+invoiceDiscountsList);
