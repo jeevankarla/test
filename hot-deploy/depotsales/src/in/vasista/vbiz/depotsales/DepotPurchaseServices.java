@@ -314,17 +314,25 @@ public class DepotPurchaseServices{
 				invoiceDiscountsList.add(invItemMap);	
 			}
 			
-		//	Debug.log("invoiceDiscountsList==============="+invoiceDiscountsList);
+			//Debug.log("invoiceDiscountsList====231==========="+invoiceDiscountsList);
 
 			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
 			}
 			
+			
+			//Debug.log("invoiceDiscountsList========1212======="+invoiceDiscountsList);
+
+			
 			if(UtilValidate.isNotEmpty(productId)){
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
+				
+				//Debug.log("quantityStr========1212======="+quantityStr);
+
+				
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
@@ -333,20 +341,35 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("UPrice" + thisSuffix)) {
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
+				
+			//	Debug.log("unitPriceStr========1212======="+unitPriceStr);
+
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
 				}
+				
+				//Debug.log("vatStr========1212======="+vatStr);
+
 				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
 				}
 				
+			//	Debug.log("cstStr========1212======="+cstStr);
+
+				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
 				}
+				
+				//Debug.log("VatPercentStr========1212======="+VatPercentStr);
+
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
+				
+				//Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
+
 				
 				try {
 					quantity = new BigDecimal(quantityStr);
@@ -355,6 +378,10 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
+				
+				//Debug.log("quantity========1212======="+quantity);
+
+				
 				try {
 					if (!unitPriceStr.equals("")) {
 						uPrice = new BigDecimal(unitPriceStr);
@@ -364,6 +391,10 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
 					return "error";
 				} 
+				
+				//Debug.log("uPrice========1212======="+uPrice);
+
+				
 				try {
 					if (!vatStr.equals("")) {
 						vat = new BigDecimal(vatStr);
@@ -373,6 +404,8 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VAT string: " + vatStr);
 					return "error";
 				}
+				
+			//	Debug.log("vatStr========1212======="+vatStr);
 				
 				try {
 					if (!cstStr.equals("")) {
@@ -384,6 +417,9 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
+				//Debug.log("cstStr========1212======="+cstStr);
+
+				
 				//percenatges population
 				try {
 					if (!VatPercentStr.equals("")) {
@@ -394,6 +430,10 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VatPercent string: " + VatPercentStr);
 					return "error";
 				}
+				
+			//	Debug.log("vatPercent========1212======="+vatPercent);
+
+				
 				try {
 					if (!CSTPercentStr.equals("")) {
 						cstPercent = new BigDecimal(CSTPercentStr);
@@ -403,6 +443,11 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 					return "error";
 				}
+				
+				
+			//	Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
+
+				
 			}
 			GenericValue orderItemValue = null;
 
@@ -433,6 +478,9 @@ public class DepotPurchaseServices{
 				productQtyList.add(prodQtyMap);
 			}
 		}//end row count for loop
+		
+		//Debug.log("productQtyList========1212======="+productQtyList);
+
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
@@ -442,15 +490,26 @@ public class DepotPurchaseServices{
 		// Get Purpose type based on product
 		
 		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
+
+		
+		Debug.log("invProdId========1212======="+invProdId);
+
 		
 		try{
 	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
 	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
+	  		
+			Debug.log("purposeTypeId========1212======="+purposeTypeId);
+
+	  		
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
 			return "error";
 	  	}
+		
+		
+
 		
 		Map processInvoiceContext = FastMap.newInstance();
 		processInvoiceContext.put("userLogin", userLogin);
@@ -476,6 +535,10 @@ public class DepotPurchaseServices{
 		}
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		
+		Debug.log("invoiceId========1212======="+invoiceId);
+
+		
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 		
 		return "success";
