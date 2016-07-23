@@ -668,7 +668,7 @@
 			<set field="isDisbursement"
 				value="${bsh:if(payment!=void)return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(payment)}" />
 		</actions>
-		<menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}"
+		<!-- <menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}"
 			widget-style="buttontext create">
 			<condition>
 				<and>
@@ -680,7 +680,7 @@
 				</and>
 			</condition>
 			<link target="newPayment" />
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToSend"
 			title="${uiLabelMap.AccountingPaymentTabStatusToSent}">
 			<condition>
