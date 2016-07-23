@@ -123,7 +123,7 @@ under the License.
                 <!-- it might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->                
                 <set field="searchFields" value="[partyId, idValue, firstName, middleName, lastName, groupName]"/>
                 <!-- optional: fields to display in the given order, default is searchFields -->
-                <set field="displayFields" value="[firstName, lastName, groupName]"/>
+                <set field="displayFields" value="[firstName, middleName, lastName, groupName]"/>
                 
                 <!-- optional: additional entity condition (named andCondition) added to search query -->
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/StatusCondition.groovy"/>

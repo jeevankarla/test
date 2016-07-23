@@ -381,7 +381,7 @@
 				if("Bundle".equals(yarnUOM) || "KGs".equals(yarnUOM)){
 					noOfBundles=baleQty;
 				}
-				if(eachItem.bundleUnitPrice){
+				if( !("KGs".equals(yarnUOM)) && eachItem.bundleUnitPrice){
 					amount=eachItem.bundleUnitPrice*noOfBundles;
 				}else{
 					amount=eachItem.unitPrice*eachItem.quantity;
