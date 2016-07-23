@@ -10019,7 +10019,10 @@ public class DepotSalesServices{
 				Debug.logError("Not a valid product category. "+primaryProductCategoryId, module);
 				return ServiceUtil.returnError("Not a valid product category. "+primaryProductCategoryId);
 			}
-			productCategoryTypeId = (String) productCategory.get("productCategoryTypeId");
+			if(UtilValidate.isNotEmpty(productCategory.get("productCategoryTypeId"))){
+				productCategoryTypeId = (String) productCategory.get("productCategoryTypeId");
+	   	    }
+			
 		}catch(GenericEntityException e){
 			Debug.logError(e, "Not a valid product category. "+primaryProductCategoryId, module);
 			return ServiceUtil.returnError("Not a valid product category. "+primaryProductCategoryId + e);
