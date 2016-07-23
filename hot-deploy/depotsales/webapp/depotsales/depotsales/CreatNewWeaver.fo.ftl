@@ -128,7 +128,7 @@ function datepick()	{
                  	  	var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
                 		if(partyClassificationTypeId == "INDIVIDUAL_WEAVERS"){
 		                 	    var adrNum=$('#USER_ADHNUMBER').val();
-					             		  if( (adrNum).length != 12 ) {
+					             		  if((adrNum) && ((adrNum).length != 12 )) {
 											 $('#USER_ADHNUMBER').css('background', 'red');
 											  jQuery('#USER_ADHNUMBER').after("<div class='ADHRLabel'><font color='red'>Please Enter Valid Adhar Number (Must Be 12 Digits).</font></div>");
 											 setTimeout(function () {
