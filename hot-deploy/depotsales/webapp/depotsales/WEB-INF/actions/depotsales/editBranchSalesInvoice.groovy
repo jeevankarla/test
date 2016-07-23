@@ -118,7 +118,7 @@ invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, fal
 
 
 invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
-invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_FPROD_ITEM","INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR")));
+invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
 
 
 
