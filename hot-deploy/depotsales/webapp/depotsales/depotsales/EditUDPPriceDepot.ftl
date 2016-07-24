@@ -82,11 +82,14 @@
 				    $('input[type=radio][name=checkCForm]').change(function() {
 				        if (this.value == 'CST_NOCFORM') {
 				           $('.CST').hide();
-				           $('.VAT').show();
+				           $('.VAT').hide();
+				           $('.CST_VAT').show();
+				           
 				        }
 				        else if (this.value == 'CST_CFORM') {
 				           $('.VAT').hide();
 				           $('.CST').show();
+				           $('.CST_VAT').hide();
 				        }
 				    });
 				    
@@ -94,10 +97,12 @@
 				        if (this.value == 'E2_FORM') {
 				           $('.VAT').hide();
 				           $('.CST').show();
+				           $('.CST_VAT').hide();
 				        }
 				        else{
 				           $('.VAT').show();
 				           $('.CST').hide();
+				           $('.CST_VAT').hide();
 				        }
 				    });
 				    
@@ -346,6 +351,8 @@
 				if(checkCForm == "CST_CFORM"){
 					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					
 					
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
@@ -354,22 +361,44 @@
 						
 						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
-				}
-				if(checkCForm == "CST_NOCFORM"){
-					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
-					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 					
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
 						var taxPercentage = dataRow[taxType];
 						var taxValue = dataRow[taxType + "_AMT"];
 						
-						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST_VAT' style='display:none;'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+				}
+				if(checkCForm == "CST_NOCFORM"){
+					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
 				}
 				if(checkCForm == 'undefined' || checkCForm == null){
 					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 					
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
@@ -377,6 +406,16 @@
 						var taxValue = dataRow[taxType + "_AMT"];
 						
 						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST_VAT' style='display:none;'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
 				}
 				
@@ -388,6 +427,8 @@
 				if(checkE2Form == "E2_FORM"){
 					message += "<tr class='CST'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 					message += "<tr class='VAT' style='display:none;'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
 						var taxPercentage = dataRow[taxType];
@@ -395,11 +436,22 @@
 						
 						message += "<tr class='VAT' style='display:none;'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST_VAT' style='display:none;'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
 				}
 				
 				if(checkE2Form == "NO_E2_FORM"){
 					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
 						var taxPercentage = dataRow[taxType];
@@ -407,17 +459,37 @@
 						
 						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST_VAT' style='display:none;'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
 				}
 				
 				if(checkE2Form == 'undefined' || checkE2Form == null){
 					message += "<tr class='CST' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_SALE' value='"+cstSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_SALE_AMT' value='"+cstSaleAmt+"' readOnly></td></tr>";
 					message += "<tr class='VAT'><td align='left'>Vat Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='VAT_SALE' id='VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='VAT_SALE_AMT' id='VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
+					message += "<tr class='CST_VAT' style='display:none;'><td align='left'>Cst Sale %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='CST_SALE' id='CST_VAT_SALE' value='"+vatSale+"' onblur='javascript:adjustAmount(this,"+totalAmt+");'/></td><td align='left'> Amt: </td><td><input type='text' name='CST_SALE_AMT' id='CST_VAT_SALE_AMT' value='"+vatSaleAmt+"' readOnly></td></tr>";
 					for(var i=0;i<vatSurchargeList.length;i++){
 						var taxType = vatSurchargeList[i];
 						var taxPercentage = dataRow[taxType];
 						var taxValue = dataRow[taxType + "_AMT"];
 						
 						message += "<tr class='VAT'><td align='left'>"+taxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+taxType+"' id='"+taxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+taxType+"_AMT' id='"+taxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
+					}
+					
+					for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = dataRow[taxType];
+						var taxValue = dataRow[taxType + "_AMT"];
+						
+						var cstTaxType = taxType.replace("VAT", "CST");
+						
+						message += "<tr class='CST_VAT' style='display:none;'><td align='left'>"+cstTaxType+" %: </td><td><input type='number' max='100' step='.5' size='6' width='50px' name='"+cstTaxType+"' id='"+cstTaxType+"' value='"+taxPercentage+"' onblur='javascript:adjustSurcharge(this,CST_VAT_SALE_AMT);'/></td><td align='left'> Amt: </td><td><input type='text' name='"+cstTaxType+"_AMT' id='"+cstTaxType+"_AMT' value='"+taxValue+"' readOnly></td></tr>";
 					}
 				}
 				
@@ -444,7 +516,13 @@
 		var totalAmt = dataRow["amount"];
 		$("#taxTable tr :input:visible").each(function () {
 		    var id = this.id;
+		    alert("id = "+id);
 		    if(id != 'undefined' && id != null && id.length){
+		    	var virtualId = id;
+		    	if (id.indexOf("CST_VAT") >= 0){
+		    		virtualId = virtualId.replace("CST_VAT", "CST");
+		    	}
+		    	alert("id "+id);
 		    	if (id.indexOf("_AMT") >= 0){
 			    	var taxValue = $('#'+id).val();
 			    	dataRow[id] = taxValue;
@@ -520,6 +598,18 @@
 						var taxPercentage = $('#'+taxType).val();
 						var surchargeValue = taxPercentage * taxValue/100;
 						$('#'+taxType + '_AMT').val(surchargeValue);
+					}
+			 	}
+		 	}
+		 	
+		 	if(taxPercItemId == "CST_VAT_SALE"){
+		 		if(vatSurchargeList != 'undefined' && vatSurchargeList != null && vatSurchargeList.length){
+		 			for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var cstTaxType = taxType.replace("VAT", "CST");
+						var taxPercentage = $('#'+cstTaxType).val();
+						var surchargeValue = taxPercentage * taxValue/100;
+						$('#'+cstTaxType + '_AMT').val(surchargeValue);
 					}
 			 	}
 		 	}

@@ -32,7 +32,8 @@ under the License.
     <OrderAdjustmentType orderAdjustmentTypeId="TEN_PERCENT_SUBSIDY" parentTypeId="MGPS_SCHEME" description="10 percent subsidy" hasTable="N"/>
     
     <OrderAdjustmentType orderAdjustmentTypeId="SERVICE_CHARGE" description="Service Charge" hasTable="N"/>	
-    <OrderAdjustmentType orderAdjustmentTypeId="VAT_SURCHARGE" description="Surcharge on VAT" hasTable="N"/>	
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_SURCHARGE" description="Surcharge on VAT" hasTable="N"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CST_SURCHARGE" description="Surcharge on CST" hasTable="N"/>	
     
      <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="COTTON_40ABOVE" productCategoryId="COTTON_40ABOVE"  description="Cotton 40 Above Scheme"/> 
    	 <LoomType createdStamp="2015-11-23 14:01:08.0" createdTxStamp="2015-11-23 14:01:08.0" lastUpdatedStamp="2015-11-23 14:01:08.0" lastUpdatedTxStamp="2015-11-23 14:01:08.0" loomTypeId="COTTON_UPTO40" productCategoryId="COTTON_UPTO40"  description="Cotton Upto 40 Scheme"/> 
@@ -444,11 +445,13 @@ under the License.
 	
 
 	<InvoiceItemType description="VAT SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" parentTypeId="TAX_SALE"/> 
+	<InvoiceItemType description="CST SURCHARGE" invoiceItemTypeId="CST_SURCHARGE" parentTypeId="TAX_SALE"/> 
 	<InvoiceItemType description="TEN PERCENT SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY"/> 
 	
 	<InvoiceItemTypeMap invoiceItemMapKey="CST_SALE" invoiceItemTypeId="CST_SALE" invoiceTypeId="SALES_INVOICE"/> 
 	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SALE" invoiceItemTypeId="VAT_SALE" invoiceTypeId="SALES_INVOICE"/> 
 	<InvoiceItemTypeMap invoiceItemMapKey="VAT_SURCHARGE" invoiceItemTypeId="VAT_SURCHARGE" invoiceTypeId="SALES_INVOICE"/> 
+	<InvoiceItemTypeMap invoiceItemMapKey="CST_SURCHARGE" invoiceItemTypeId="CST_SURCHARGE" invoiceTypeId="SALES_INVOICE"/>
 	
 	<InvoiceItemTypeMap invoiceItemMapKey="TEN_PERCENT_SUBSIDY" invoiceItemTypeId="TEN_PERCENT_SUBSIDY" invoiceTypeId="SALES_INVOICE"/> 
 	
