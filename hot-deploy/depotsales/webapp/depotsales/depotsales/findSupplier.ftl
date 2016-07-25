@@ -72,13 +72,13 @@ under the License.
               <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
             </td>
           </tr>
-          <tr>
+          <#---<tr>
             <td class="label">${uiLabelMap.VendorId}</td>
             <td><input type="text" name="partyId" value="${parameters.partyId?if_exists}"/></td>
-          </tr>
+          </tr> -->
           <tr>
-            <td class="label">${uiLabelMap.GroupName}</td>
-            <td><input type="text" name="groupName" value="${parameters.groupName?if_exists}"/></td>
+            <td class="label">${uiLabelMap.Supplier}</td>
+            <td><@htmlTemplate.lookupField size="10" maxlength="22" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPartyName" /></td>
           </tr>
            <tr>
                <td class="label">${uiLabelMap.RoleType}</td>
