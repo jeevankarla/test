@@ -99,8 +99,6 @@ condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUAL
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 
 
-
-
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom"] as Set;
@@ -165,18 +163,12 @@ for (eachInvoice in invoice) {
 	
 	 
 	invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
-
-	
-	
-	
 	
 	PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
 	
 	groupName = "";
 	if(PartyGroup)
 	  groupName = PartyGroup.groupName;
-	  
-	  
 	
 	shipmentList = delegator.findOne("Shipment",[shipmentId : eachInvoice.shipmentId] , false);
 	primaryOrderId = shipmentList.get("primaryOrderId");
@@ -481,7 +473,28 @@ if(contactMechesDetails){
 	}
 	}
 	
-//================================================================	
+//==============================ten Per==================================	
+	
+	
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
+	
+	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	
+	InvoiceItemAdjustment = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+	
+	double tenPerAmt = 0;
+	for (eachAdjment in InvoiceItemAdjustment) {
+		
+		if(eachAdjment.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
+			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
+		}
+	}
+	
+	
+//=============================================	
+	
 	
 	Debug.log("invoiceItemList================="+invoiceItemList.size());
 	
@@ -504,11 +517,13 @@ if(contactMechesDetails){
 		   
 		   Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
 		   
-		   conditionList = [];
+		   
+		   conditionList.clear();
 		   conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
 		   conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		   OrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
 		   
 		      //OrderItemBilling = EntityUtil.filterByCondition(OrderItemBilling, cond);
 		   itemOrderId = "";
@@ -555,13 +570,14 @@ if(contactMechesDetails){
 			 tenPerQty = quantity;
 		   }
 		   
-		   tempMap.put("subsidyAmt", tenPerQty*eachItem.amount);
+		  
 		   
-		  	   
 		   
 			tempMap.put("userAgency", partyName);
 			
 			tempMap.put("cluster", "");
+			
+			tempMap.put("subsidyAmt", tenPerAmt);
 			
 			tempMap.put("District", shipingAdd.get("city"));
 			
@@ -634,8 +650,10 @@ if(contactMechesDetails){
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, poOrderItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			POrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+			POrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+			
  
 			poInvoiceId = "";
 			poInvoiceItemSeqId = "";

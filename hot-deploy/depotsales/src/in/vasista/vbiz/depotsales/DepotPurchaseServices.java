@@ -17,6 +17,7 @@ import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.order.order.OrderReadHelper;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -210,18 +211,18 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
 				invoiceItemTypeId = (String) paramMap.get("invoiceItemTypeId" + thisSuffix);
 			}
-		//	Debug.log("invoiceItemTypeId==============="+invoiceItemTypeId);
+			Debug.log("invoiceItemTypeId==============="+invoiceItemTypeId);
 
 			if (paramMap.containsKey("applicableTo" + thisSuffix)) {
 				applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
 			}
-			//Debug.log("applicableTo==============="+applicableTo);
+			Debug.log("applicableTo==============="+applicableTo);
 
 			if (paramMap.containsKey("adjAmt" + thisSuffix)) {
 				adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
 			}
 			
-			//Debug.log("adjAmtStr==============="+adjAmtStr);
+			Debug.log("adjAmtStr==============="+adjAmtStr);
 
 			if(UtilValidate.isNotEmpty(adjAmtStr)){
 				try {
@@ -233,7 +234,7 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			//Debug.log("adjAmt==============="+adjAmt);
+			Debug.log("adjAmt==============="+adjAmt);
 
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
 				Map invItemMap = FastMap.newInstance();
@@ -244,31 +245,31 @@ public class DepotPurchaseServices{
 				invoiceAdjChargesList.add(invItemMap);	
 			}
 			
-			//Debug.log("invoiceAdjChargesList==============="+invoiceAdjChargesList);
+			Debug.log("invoiceAdjChargesList==============="+invoiceAdjChargesList);
 			
 			if (paramMap.containsKey("invoiceItemTypeDiscId" + thisSuffix)) {
 				invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
 			}
-			//Debug.log("invoiceItemDiscTypeId==============="+invoiceItemDiscTypeId);
+			Debug.log("invoiceItemDiscTypeId==============="+invoiceItemDiscTypeId);
 
 			if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
 				applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
 			}
 
-		//	Debug.log("applicableToDisc==============="+applicableToDisc);
+			Debug.log("applicableToDisc==============="+applicableToDisc);
 
 			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
 				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
 			}
 			
-		//	Debug.log("adjAmtDiscStr==============="+adjAmtDiscStr);
+			Debug.log("adjAmtDiscStr==============="+adjAmtDiscStr);
 
 			
 			if (paramMap.containsKey("discQty" + thisSuffix)) {
 				discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
 			}
 			
-		//	Debug.log("discQtyStr==============="+discQtyStr);
+			Debug.log("discQtyStr==============="+discQtyStr);
 
 			
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
@@ -281,7 +282,7 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-		//	Debug.log("adjDiscAmt==============="+adjDiscAmt);
+			Debug.log("adjDiscAmt==============="+adjDiscAmt);
 
 			if(UtilValidate.isNotEmpty(discQtyStr)){
 				try {
@@ -298,13 +299,13 @@ public class DepotPurchaseServices{
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
 				
 				
-			//	Debug.log("invoiceItemDiscTypeId======3232========="+invoiceItemDiscTypeId);
+				Debug.log("invoiceItemDiscTypeId======3232========="+invoiceItemDiscTypeId);
 
 				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
 					
-					//Debug.log("discQty======1223========="+discQty);
+					Debug.log("discQty======1223========="+discQty);
 
 					
 					if(discQty.compareTo(BigDecimal.ONE)>0){
@@ -321,11 +322,11 @@ public class DepotPurchaseServices{
 				invItemMap.put("applicableTo", applicableToDisc);
 				invoiceDiscountsList.add(invItemMap);	
 				
-				//Debug.log("adjDiscAmt======1223========="+adjDiscAmt);
+				Debug.log("adjDiscAmt======1223========="+adjDiscAmt);
 
 			}
 			
-			//Debug.log("invoiceDiscountsList====231==========="+invoiceDiscountsList);
+			Debug.log("invoiceDiscountsList====231==========="+invoiceDiscountsList);
 
 			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -333,7 +334,7 @@ public class DepotPurchaseServices{
 			}
 			
 			
-			//Debug.log("invoiceDiscountsList========1212======="+invoiceDiscountsList);
+			Debug.log("invoiceDiscountsList========1212======="+invoiceDiscountsList);
 
 			
 			if(UtilValidate.isNotEmpty(productId)){
@@ -341,7 +342,7 @@ public class DepotPurchaseServices{
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
 				
-				//Debug.log("quantityStr========1212======="+quantityStr);
+				Debug.log("quantityStr========1212======="+quantityStr);
 
 				
 				if(UtilValidate.isEmpty(quantityStr)){
@@ -353,33 +354,33 @@ public class DepotPurchaseServices{
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
 				
-			//	Debug.log("unitPriceStr========1212======="+unitPriceStr);
+				Debug.log("unitPriceStr========1212======="+unitPriceStr);
 
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
 				}
 				
-				//Debug.log("vatStr========1212======="+vatStr);
+				Debug.log("vatStr========1212======="+vatStr);
 
 				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
 				}
 				
-			//	Debug.log("cstStr========1212======="+cstStr);
+				Debug.log("cstStr========1212======="+cstStr);
 
 				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
 				}
 				
-				//Debug.log("VatPercentStr========1212======="+VatPercentStr);
+				Debug.log("VatPercentStr========1212======="+VatPercentStr);
 
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
 				
-				//Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
+				Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
 
 				
 				try {
@@ -390,7 +391,7 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				//Debug.log("quantity========1212======="+quantity);
+				Debug.log("quantity========1212======="+quantity);
 
 				
 				try {
@@ -403,7 +404,7 @@ public class DepotPurchaseServices{
 					return "error";
 				} 
 				
-				//Debug.log("uPrice========1212======="+uPrice);
+				Debug.log("uPrice========1212======="+uPrice);
 
 				
 				try {
@@ -416,7 +417,7 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-			//	Debug.log("vatStr========1212======="+vatStr);
+				Debug.log("vatStr========1212======="+vatStr);
 				
 				try {
 					if (!cstStr.equals("")) {
@@ -428,7 +429,7 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				//Debug.log("cstStr========1212======="+cstStr);
+				Debug.log("cstStr========1212======="+cstStr);
 
 				
 				//percenatges population
@@ -442,7 +443,7 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-			//	Debug.log("vatPercent========1212======="+vatPercent);
+				Debug.log("vatPercent========1212======="+vatPercent);
 
 				
 				try {
@@ -456,7 +457,7 @@ public class DepotPurchaseServices{
 				}
 				
 				
-			//	Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
+				Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
 
 				
 			}
@@ -490,7 +491,7 @@ public class DepotPurchaseServices{
 			}
 		}//end row count for loop
 		
-		//Debug.log("productQtyList========1212======="+productQtyList);
+		Debug.log("productQtyList========1212======="+productQtyList);
 
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
@@ -1021,8 +1022,11 @@ public class DepotPurchaseServices{
 				if(UtilValidate.isNotEmpty(salesOrderitems)){
 					eachItem = EntityUtil.getFirst(salesOrderitems);
 					
+					BigDecimal billedQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(eachItem);
+
+					
 					if(UtilValidate.isNotEmpty(quantity))
-					eachItem.set("quantity", quantity);
+					eachItem.set("quantity", quantity.add(billedQuantity));
 					if(UtilValidate.isNotEmpty(uPrice))
 					eachItem.set("unitPrice", uPrice);
 						
