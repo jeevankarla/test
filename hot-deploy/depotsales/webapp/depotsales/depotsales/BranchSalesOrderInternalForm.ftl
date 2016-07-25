@@ -1081,12 +1081,22 @@
 	   	  				
 	   	  				data[row]["VAT_SURCHARGE"] = 0;
 						data[row]["VAT_SURCHARGE_AMT"] = 0;
+						
+						data[row]["CST_SURCHARGE"] = 0;
+						data[row]["CST_SURCHARGE_AMT"] = 0;
 	   	  				
 	   	  				var totalTaxAmt = 0;
+	   	  				
+	   	  				var cstSurchargeList = [];
 	   	  				var vatSurchargeList = [];
 	   	  				var taxList = [];
+	   	  				
+	   	  				cstSurchargeList.push("CST_SURCHARGE");
+	   	  				alert("cstSurchargeList = 1111111 "+JSON.stringify(vatSurchargeList));
+	   	  				
 	   	  				vatSurchargeList.push("VAT_SURCHARGE");
 	   	  				taxList.push("VAT_SURCHARGE");
+	   	  				taxList.push("CST_SURCHARGE");
 	   	  				
 	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
 	   	  					var taxItem = vatSurcharges[i];
@@ -1095,11 +1105,17 @@
 							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
 							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
 							
-							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
+							totalTaxAmt += surchargeAmt;
+	   	  				}
+	   	  				
+	   	  				for(var i=0 ; i<cstSurcharges.length ; i++){
+	   	  					var taxItem = cstSurcharges[i];
+							var surchargeAmt = 0;
+							surchargeAmt = (taxItem.taxPercentage) * ( (cstPercent) * totalAmt/100)/100;
+							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
+							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
 							
 							totalTaxAmt += surchargeAmt;
-							
-							//taxList.push(taxItem.taxAuthorityRateTypeId);
 	   	  				}
 	   	  				
 	   	  				var totalAmount = 0;
@@ -1146,14 +1162,16 @@
 						-->
 	   	  				
 	   	  				data[row]["taxList"] = taxList;
+	   	  				
+	   	  				alert("vatSurchargeList "+JSON.stringify(vatSurchargeList));
+						alert("cstSurchargeList "+JSON.stringify(cstSurchargeList));
+	   	  				
 	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
+	   	  				data[row]["cstSurchargeList"] = cstSurchargeList;
 	   	  				data[row]["taxAmt"] = totalTaxAmt;
 	   	  				
+	   	  				updatePayableAmount(row);
 	   	  				//data[row]["totPayable"] = totalAmt + totalTaxAmt;
-	   	  				//addServiceCharge(row);
-	   	  				
-	   	  				updatePayableAmount(row);	
-	   	  				
 	   	  				grid.updateRow(row);
 	   	  				
 	   	  				updateTotalIndentAmount();
@@ -1171,6 +1189,9 @@
 	    	data[row]["VAT_SURCHARGE"] = 0;
 			data[row]["VAT_SURCHARGE_AMT"] = 0;
 			
+			data[row]["CST_SURCHARGE"] = 0;
+			data[row]["CST_SURCHARGE_AMT"] = 0;
+			
 			data[row]["CST_SALE"] = 0;
 	   	  	data[row]["CST_SALE_AMT"] = 0;
 	   	  	
@@ -1183,24 +1204,30 @@
 			taxList.push("VAT_SALE");
 	   	  	taxList.push("CST_SALE");
 	   	  	taxList.push("VAT_SURCHARGE");
+	   	  	taxList.push("CST_SURCHARGE");
 	   	  	
 	   	  	var vatSurchargeList = [];		
 			vatSurchargeList.push("VAT_SURCHARGE");
 			
+			var cstSurchargeList = [];		
+			cstSurchargeList.push("CST_SURCHARGE");
+			
 			data[row]["taxList"] = taxList;
 			data[row]["vatSurchargeList"] = vatSurchargeList;
+			data[row]["cstSurchargeList"] = cstSurchargeList;
 			data[row]["taxAmt"] = 0;
 	   	  		
 	   	  		
 	   	  	$("#orderTaxType").val("Intra-State");
 	   	  	
-	   	  	updatePayableAmount(row);	
-	   	  				
+	   	  	updatePayableAmount(row);			
 			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
 	   	  	updateTotalIndentAmount();
-	    }			
+	   	  	
+	   	  	
+	    }					
 	} 
  function calculateBundlePrice(balQuty,uom,org2){
 	  var result=0;

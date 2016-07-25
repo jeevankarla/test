@@ -6616,12 +6616,20 @@ public class DepotSalesServices{
 
 	}
 	public static Map<String, Object> createPartyQuotaBalanceHistory(DispatchContext dctx, Map context) {
+		
+		
+		
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String productCategoryId =(String) context.get("productCategoryId");
 		String schemeId=(String) context.get("schemeId");
 		String partyId=(String) context.get("partyId");
+		
+		Debug.log("QUOTA BALANCE HISTORY =========================");
+		Debug.log("partyId ================="+partyId);
+		Debug.log("productCategoryId ==========="+productCategoryId);
+		
 		Timestamp dateTimeStamp=(Timestamp) context.get("dateTimeStamp");
 		BigDecimal quota = BigDecimal.ZERO;
 		BigDecimal quantity=(BigDecimal)context.get("quantity");
