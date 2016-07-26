@@ -69,6 +69,7 @@ import org.json.JSONObject;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.party.party.PartyHelper;
+
 import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -759,7 +760,7 @@ public class DepotSalesApiServices{
 		
 		Timestamp effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		
-		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+		/*if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
 			try {
 				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
@@ -772,7 +773,7 @@ public class DepotSalesApiServices{
 		}
 		else{
 			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-		}
+		}*/
 		if (UtilValidate.isNotEmpty(manualQuotaStr) && !(manualQuotaStr.equals("NaN"))) {
 			manualQuota =new BigDecimal(manualQuotaStr);
 		}
@@ -790,9 +791,9 @@ public class DepotSalesApiServices{
 			Debug.logError("Not a valid party", module);
 			return ServiceUtil.returnError("Not a valid party");
 		}
-		if(UtilValidate.isNotEmpty(context.get("estimatedDeliveryDate"))) {
+		/*if(UtilValidate.isNotEmpty(context.get("estimatedDeliveryDate"))) {
 			effectiveDate = (Timestamp) context.get("estimatedDeliveryDate");
-		}
+		}*/
 		
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context.get("indentItems");
 		Debug.log("indentItems ==================="+indentItems);
@@ -811,43 +812,88 @@ public class DepotSalesApiServices{
 		for (int i = 0; i < indentItems.size(); ++i) {
 			Map productQtyMap = FastMap.newInstance();
 			Map indentItem = indentItems.get(i);
-			
+			Debug.log("indentItem ==================="+indentItem);
 			BigDecimal quantity = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("quantity"))){
-				quantity =  (BigDecimal) indentItem.get("quantity");
+				String quantityStr = (String) indentItem.get("quantity");
+				try {
+					quantity = new BigDecimal(quantityStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing quantity string: "+ quantityStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ quantityStr);
+				}
 			}
 			
 			BigDecimal baleQuantity = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("baleQuantity"))){
-				baleQuantity =  (BigDecimal) indentItem.get("baleQuantity");
+				String baleQuantityStr =  (String) indentItem.get("baleQuantity");
+				try {
+					baleQuantity = new BigDecimal(baleQuantityStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing quantity string: "+ baleQuantityStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ baleQuantityStr);
+				}
 			}
 			
 			BigDecimal bundleWeight = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("bundleWeight"))){
-				bundleWeight =  (BigDecimal) indentItem.get("bundleWeight");
+				String bundleWeightStr =  (String) indentItem.get("bundleWeight");
+				try {
+					bundleWeight = new BigDecimal(bundleWeightStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing bundleWeight string: "+ bundleWeightStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ bundleWeightStr);
+				}
 			}
 			
 			BigDecimal bundleUnitPrice = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("bundleUnitPrice"))){
-				bundleUnitPrice =  (BigDecimal) indentItem.get("bundleUnitPrice");
+				String bundleUnitPriceStr =  (String) indentItem.get("bundleUnitPrice");
+				try {
+					bundleUnitPrice = new BigDecimal(bundleUnitPriceStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing bundleUnitPrice string: "+ bundleUnitPriceStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ bundleUnitPriceStr);
+				}
 			}
 			
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("basicPrice"))){
-				basicPrice =  (BigDecimal) indentItem.get("basicPrice");
+				String basicPriceStr =  (String) indentItem.get("basicPrice");
+				try {
+					basicPrice = new BigDecimal(basicPriceStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing basicPrice string: "+ basicPriceStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ basicPriceStr);
+				}
 			}
 			
 			BigDecimal serviceCharge = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("serviceCharge"))){
-				serviceCharge =  (BigDecimal) indentItem.get("serviceCharge");
+				String serviceChargeStr =  (String) indentItem.get("serviceCharge");
+				try {
+					serviceCharge = new BigDecimal(serviceChargeStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing serviceCharge string: "+ serviceChargeStr, module);
+					return ServiceUtil.returnError("Problems parsing quantity string: "+ serviceChargeStr);
+				}
 			}
 			
 			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("serviceChargeAmt"))){
-				serviceChargeAmt =  (BigDecimal) indentItem.get("serviceChargeAmt");
+				String serviceChargeAmtStr =  (String) indentItem.get("serviceChargeAmt");
+				try {
+					serviceChargeAmt = new BigDecimal(serviceChargeAmtStr);
+				} catch (Exception e) {
+					Debug.logError(e, "Problems parsing serviceChargeAmt string: "+ serviceChargeAmtStr, module);
+					return ServiceUtil.returnError("Problems parsing serviceChargeAmt string: "+ serviceChargeAmtStr);
+				}
 			}
 			
 			String productId = (String)indentItem.get("productId");
+			Debug.log("productId ==================="+productId);
+			Debug.log("quantity ==================="+quantity);
+			Debug.log("basicPrice ==================="+basicPrice);
 			
 			//consolidation logic
 			if (UtilValidate.isNotEmpty(indentItem.get("customerId"))) {
@@ -924,6 +970,10 @@ public class DepotSalesApiServices{
 			}			
 		}
 		
+		
+		Debug.log("indentItemProductList ==================="+indentItemProductList);
+		Debug.log("indentProductList ==================="+indentProductList);
+		
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("onBeHalfOf", onBeHalfOf);
 		processOrderContext.put("schemeCategory", schemeCategory);
@@ -957,6 +1007,7 @@ public class DepotSalesApiServices{
 		try{
 			//in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)
 			svcResult = in.vasista.vbiz.depotsales.DepotSalesServices.processBranchSalesOrder(ctx, processOrderContext);
+			Debug.log("svcResult ==================="+svcResult);
 			if(ServiceUtil.isError(svcResult)){
 				Debug.logError("Unable to generate order  For party :" + partyId, module);
 				return ServiceUtil.returnError("Unable to generate order  For party :" + partyId);
