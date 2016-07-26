@@ -151,8 +151,11 @@ dateSort = parameters.indentDateSort;
 else
 dateSort = "-orderDate";
 
+if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	dateSort = "-createdStamp";
+}
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-List<String> payOrderBy = UtilMisc.toList(dateSort,"-orderId");
+List<String> payOrderBy = UtilMisc.toList(dateSort);
 
 resultList = [];
 forIndentsCount = [];
