@@ -2171,6 +2171,8 @@ public class DepotSalesServices{
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
 		}
+		
+		Debug.log("partyId =========="+partyId);
 		List conditionList = FastList.newInstance();
 		if(UtilValidate.isNotEmpty(orderId)){
 			
@@ -2308,7 +2310,7 @@ public class DepotSalesServices{
 			Debug.logError(e, "Failed to retrive ProductCategory ", module);
 			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 		}
-	  	
+	  	Debug.log("schemeCategoryIds =========="+schemeCategoryIds);
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
@@ -2395,7 +2397,7 @@ public class DepotSalesServices{
 			
 			//groupSequenceId = String.format("%02d", Integer.parseInt(groupSequenceId + groupSeqCount));
 			//cart.addItemGroup("PROD_ASSOC_GRP", groupSequenceId);
-			
+			Debug.log("productId =========="+prodQtyMap.get("productId"));
 			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceCharge"))){
 				serviceCharge = (BigDecimal)prodQtyMap.get("serviceCharge");
@@ -2541,7 +2543,7 @@ public class DepotSalesServices{
 			}*/	
 			// Populate Shopping Cart With Items.
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
-			
+			Debug.log("cart ==========");
 			ShoppingCartItem item = null;
 			try{
 				Map<String, Object> productQtyMap = FastMap.newInstance();
@@ -2576,7 +2578,7 @@ public class DepotSalesServices{
 					item.setOrderItemAttribute("checkCForm",checkCForm);
 				}
 				
-				
+				Debug.log("in cart ==========");
 				/*if(quota.compareTo(BigDecimal.ZERO)>0){
 					
 					// Have to get these details from schemes. Temporarily hard coding it.
@@ -2602,9 +2604,10 @@ public class DepotSalesServices{
 				}*/
 				
 				// Tax Handling
-				
+				Debug.log("in tax ==========");
 				for(int i=0; i<taxRateList.size(); i++){
 					Map taxMap = (Map) taxRateList.get(i);
+					
 					if(  ((BigDecimal) taxMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxMap);
 		 				item.addAdjustment(orderAdjustment);
@@ -2612,7 +2615,7 @@ public class DepotSalesServices{
 		 				totalPrice=totalPrice.add((BigDecimal) taxMap.get("amount"));
 					}
 				}
-				
+				Debug.log("serviceChargeAmt ==========");
 				// Service Charge
 				if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -2626,7 +2629,7 @@ public class DepotSalesServices{
 				item.setListPrice(totalPrice);
 				
 				orderGrandTotal=orderGrandTotal.add(totalPrice);
-				
+				Debug.log("orderGrandTotal =========="+orderGrandTotal);
 				//Debug.log("groupSequenceId =============="+groupSequenceId);
 				//item.setItemGroup(groupSequenceId, cart);
 				
@@ -2693,6 +2696,7 @@ public class DepotSalesServices{
 		//if orderId empty call createOrder other wise editOrder
 		if(UtilValidate.isEmpty(orderId)){
 			orderCreateResult = checkout.createOrder(userLogin);
+			Debug.log("orderCreateResult =========="+orderCreateResult);
 		}else{
 			cart.setOrderId(orderId);
 			checkout = new CheckOutHelper(dispatcher, delegator, cart);
