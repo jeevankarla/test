@@ -724,6 +724,7 @@ public class DepotSalesApiServices{
 		Map resultMap = FastMap.newInstance();
 		
 		String effectiveDateStr = (String) context.get("effectiveDate");
+		Debug.log("effectiveDateStr ==================="+effectiveDateStr);
 		String productStoreId = (String) context.get("productStoreId");
 		String referenceNo = (String) context.get("referenceNo");
 		String tallyReferenceNo = (String) context.get("tallyReferenceNo");
@@ -762,6 +763,7 @@ public class DepotSalesApiServices{
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
 			try {
 				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+				Debug.log("effectiveDate ==================="+effectiveDate);
 			} catch (ParseException e) {
 				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
 			} catch (NullPointerException e) {
@@ -793,6 +795,7 @@ public class DepotSalesApiServices{
 		}
 		
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context.get("indentItems");
+		Debug.log("indentItems ==================="+indentItems);
 		String infoString = "processChangeIndent:: indentItems: " + indentItems;
 		Debug.logInfo(infoString, module);
 		if (indentItems.isEmpty()) {
