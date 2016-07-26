@@ -1079,7 +1079,6 @@
 	   	  				var taxList = [];
 	   	  				
 	   	  				cstSurchargeList.push("CST_SURCHARGE");
-	   	  				alert("cstSurchargeList = 1111111 "+JSON.stringify(vatSurchargeList));
 	   	  				
 	   	  				vatSurchargeList.push("VAT_SURCHARGE");
 	   	  				taxList.push("VAT_SURCHARGE");
@@ -1149,9 +1148,6 @@
 						-->
 	   	  				
 	   	  				data[row]["taxList"] = taxList;
-	   	  				
-	   	  				alert("vatSurchargeList "+JSON.stringify(vatSurchargeList));
-						alert("cstSurchargeList "+JSON.stringify(cstSurchargeList));
 	   	  				
 	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
 	   	  				data[row]["cstSurchargeList"] = cstSurchargeList;
