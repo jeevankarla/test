@@ -910,17 +910,20 @@
 			<option key="BANK" description="Bank Voucher" ></option>
 			</drop-down>
 		</field> -->
+		<field name="partyIdFrom" title="Supplier"  use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
+        <field name="partyId" title="${uiLabelMap.Customer}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)"><lookup target-form-name="LookupBranchCustomers"/></field> 
 		<field name="partyId" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="invoiceSequence"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="invoiceTypeId"><display/></field>
