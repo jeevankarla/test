@@ -205,7 +205,18 @@
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
-    
+     <view-entity entity-name="OrderAdjustmentAndBilling"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Adjustment and Billing">
+      <member-entity entity-alias="OAB" entity-name="OrderAdjustmentBilling"/>
+      <member-entity entity-alias="OA" entity-name="OrderAdjustment"/>
+      <alias-all entity-alias="OAB"/>
+      <alias-all entity-alias="OA"/>
+      <view-link entity-alias="OAB" rel-entity-alias="OA">
+        <key-map field-name="orderAdjustmentId"/>
+      </view-link>
+    </view-entity>
     <extend-entity entity-name="ProductCategoryAttribute">
       <field name="attrTypeId" type="id-ne"></field>
       <field name="attrCode" type="short-varchar"></field>
