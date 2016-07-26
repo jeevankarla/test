@@ -847,15 +847,15 @@ public class DepotSalesApiServices{
 				}
 			}
 			
-			BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+			String bundleUnitPrice = null;
 			if(UtilValidate.isNotEmpty( indentItem.get("bundleUnitPrice"))){
-				String bundleUnitPriceStr =  (String) indentItem.get("bundleUnitPrice");
-				try {
+				bundleUnitPrice =  (String) indentItem.get("bundleUnitPrice");
+				/*try {
 					bundleUnitPrice = new BigDecimal(bundleUnitPriceStr);
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing bundleUnitPrice string: "+ bundleUnitPriceStr, module);
 					return ServiceUtil.returnError("Problems parsing quantity string: "+ bundleUnitPriceStr);
-				}
+				}*/
 			}
 			
 			BigDecimal basicPrice = BigDecimal.ZERO;
