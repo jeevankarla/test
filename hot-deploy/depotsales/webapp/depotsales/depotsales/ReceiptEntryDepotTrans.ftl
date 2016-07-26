@@ -1,6 +1,32 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
+
+<style type="text/css">
+	.form-style-8{
+		   	 max-width: 1500px;
+		   	 max-height: 500px;
+		   	 max-right: 10px;
+		   	 margin-top: 10px;
+			 margin-bottom: -15px;
+		     padding: 15px;
+		     box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+		     border-radius: 20px;
+		     border: 1px solid #305A72;
+		}
+		.form-style-7{
+		   	 max-width: 1500px;
+		   	 max-height: 500px;
+		   	 max-right: 10px;
+		   	 margin-top: 10px;
+			 margin-bottom: -15px;
+		     padding: 15px;
+		     background-color: Thistle;
+		     box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+		     border-radius: 20px;
+		     border: 1px solid #305A72;
+		}
+</style>	
 <script type="text/javascript">
 	
 	function datetimepick(){
@@ -79,9 +105,7 @@ $( "#lrDate" ).datepicker({
 <#assign changeRowTitle = "Changes">                
 <#include "ReceiptEntryDepotTransInc.ftl"/>
 
-<div class="full">
-	<div class="lefthalf">
-		<div class="screenlet">
+		<div class="full" style="width:100%">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
 					<label><font color="green">Dispatch Header </font></label>
@@ -90,25 +114,15 @@ $( "#lrDate" ).datepicker({
       
     		<div class="screenlet-body">
      
-      			<form method="post" name="indententryinit" action="<@ofbizUrl>SupplierDispatchEntry</@ofbizUrl>" id="indententryinit">  
-			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+      			<form method="post" class="form-style-8" name="indententryinit" action="<@ofbizUrl>SupplierDispatchEntry</@ofbizUrl>" id="indententryinit">  
+			    	<table width="100%">
+			    	<tr>
+				        <td width="50%">
+			    	<table  border="0" cellspacing="0" cellpadding="0">
 				        <tr>
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <#-- ><td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Dispatch Date:</div></td>
-					        <td>&nbsp;</td>
-					        <#if effectiveDate?exists && effectiveDate?has_content>  
-						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${effectiveDate}         
-					            	</div>
-					          	</td>   
-					       	<#else> 
-					        	<td valign='middle'>          
-					            	<input class='h3' type="text" name="effectiveDate" id="effectiveDate" onmouseover="datetimepick()" value="${defaulteffectiveDate}"/>           		
-					            </td>   
-					       	  </#if> -->
 					  	</tr>
 	    				<tr><td><br/></td></tr>
 	    				<tr>
@@ -130,15 +144,7 @@ $( "#lrDate" ).datepicker({
 										<#assign flag = true>                
 				          			</#if>
 				          			</td>
-				          		<#--	<#if flag == true>
-				          			<td class='tabletext h3'>
-				          			 Without PO:<input type="checkbox" name="withoutPO" id="withoutPO" value="Y" onclick="toggleSupplier(this)"/>
-				          			</td>
-				          			<#else>
-				          			<td>	NO PO
-				          			   <input type="hidden" name="withoutPO" id="withoutPO" value="${withoutPO}"/>
-				          			</td>
-				          			</#if>-->
+				          		
 				          	</#if>
 				        </tr>
 				      	<#if supplierId?has_content>
@@ -296,7 +302,6 @@ $( "#lrDate" ).datepicker({
 					            </td>
 				       	  </#if>
 					  	</tr>
-					  	  <tr><td><br/></td></tr>
                         <tr>
                           <td>&nbsp;</td>
                           <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
@@ -305,7 +310,6 @@ $( "#lrDate" ).datepicker({
                                   <input class="h3" type="text" name="freightCharges" id="freightCharges" />
                               </td>
                           </tr>
-					  	<tr><td><br/></td></tr>
 						<tr>
 				          <td>&nbsp;</td>
 				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Remarks: </div></td>
@@ -323,7 +327,6 @@ $( "#lrDate" ).datepicker({
 				          </#if>
 		          			
 				        </tr>
-				        <tr><td><br/></td></tr>
 				        <#--<tr>
 				         	  <td>&nbsp;</td>
 					          <td>&nbsp;</td>
@@ -338,6 +341,89 @@ $( "#lrDate" ).datepicker({
 				                <input type="hidden" name="allowedGraterthanTheOrdered" id="allowedGraterthanTheOrdered" value="N"/>  
 		          			</td>
 				        </tr>
+				        
+	    			</table>
+	    			</td>
+	    			<td border="1">
+	    			<#if ShipmentReceipt?has_content>
+	    				<table  class="form-style-7">
+				      	  <tr>
+				      	  
+				      		  <td align="center" colspan="5">
+				       			<font ><b><u> Shipment History</u></b></font>
+				       		 </td>
+	    				 </tr>
+	    				 <tr>
+	    				 	<td width="10%">
+								<b>ShipmentId</b>	    						 
+			    			</td>
+	    					<td width="10%">
+								<b>Product</b>	    						 
+			    			</td>
+			    			<td width="10%">
+								<b>Accepted Quantity</b>    						 
+			    			</td>
+			    			<td width="10%">
+			    				<b>Status</b>
+			    			</td>
+			    			<td width="10%">
+			    				<b>Invoice No</b>
+			    			</td>
+			    			<td width="10%">
+			    				<b>LR No</b>
+			    			</td>
+			    			<td width="10%">
+								<b>Entry by </b>  						 
+			    			</td>
+	    				 </tr>
+	    				 <#assign totalQty=0>
+	    				 <#list ShipmentReceipt as eachShipment>
+	    				 	  <#assign ShipmentDetail = delegator.findOne("Shipment", {"shipmentId" : eachShipment.get("shipmentId")}, true)?if_exists/>
+	    				 
+	    				 <tr>
+	    				 	<td width="10%">
+	    						 ${eachShipment.get("shipmentId")}
+	    						 
+			    			</td>
+	    					<td width="10%">
+	    						<#assign product = delegator.findOne("Product", {"productId" : eachShipment.get("productId")}, true)?if_exists/>
+	    					
+	    						 ${product.get("brandName")?if_exists}
+	    						 
+			    			</td>
+			    			<td width="10%">
+	    						 ${eachShipment.get("quantityAccepted")?if_exists}
+	    						<#assign totalQty=totalQty+eachShipment.get("quantityAccepted")>
+			    			</td>
+			    			<td width="10%">
+	    						<#if "SR_RECEIVED"==eachShipment.get("statusId")>Received<#else>${eachShipment.get("statusId")}</#if>
+	    						 
+			    			</td>
+			    			<td width="10%">
+	    						 ${ShipmentDetail.get("supplierInvoiceId")?if_exists}
+	    						 
+			    			</td>
+			    			<td width="10%">
+	    						 ${ShipmentDetail.get("lrNumber")?if_exists}
+	    						 
+			    			</td>
+			    			
+			    			<td width="10%">
+	    						 ${eachShipment.get("receivedByUserLoginId")}
+	    						 
+			    			</td>
+			    			
+	    				 </tr>
+	    				 </#list>
+	    				  <tr>
+	    				 	<td width="10%" colspan="4" align="center">
+	    				 		<b>Total Quantity Shipped Till Now : ${totalQty?if_exists}</b>
+	    				 	</td>
+	    				  </tr>
+	    				</table>
+	    			</#if>
+	    			</td>
+	    			</tr>
 	    			</table>
 				</form>
 				<br/>
@@ -347,9 +433,7 @@ $( "#lrDate" ).datepicker({
 			</form>
     		</div>
 		</div>
-	</div>
 
-	<div class="righthalf">
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
@@ -361,7 +445,7 @@ $( "#lrDate" ).datepicker({
 		 			<label>Dispatch Items Entry   </label>
 		 			</#if>
 				</div>
-				<div id="myGrid1" style="width:100%;height:350px;"></div>
+				<div id="myGrid1" style="width:100%;height:200px;"></div>
 			  
 				<#assign formAction ='processDepotTransReceiptItems'>			
 				<#if orderId?exists>
@@ -372,9 +456,7 @@ $( "#lrDate" ).datepicker({
 			    	</div>     
 				</#if>  
 			</div>
-		</div>     
 	</div>
-</div>
 <script type="application/javascript">
     var partyAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
     
