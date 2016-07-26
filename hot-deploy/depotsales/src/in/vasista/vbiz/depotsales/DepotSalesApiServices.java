@@ -757,7 +757,7 @@ public class DepotSalesApiServices{
 		
 		Map processOrderContext = FastMap.newInstance();
 		
-		Timestamp effectiveDate=null;
+		Timestamp effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		
 		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
