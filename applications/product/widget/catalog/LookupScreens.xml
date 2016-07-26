@@ -31,6 +31,7 @@ under the License.
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="entityName" value="Product"/>
                 <set field="searchFields" value="[productId, brandName, internalName]"/>
+                <set field="displayFields" value="[productId, brandName]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
