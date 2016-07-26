@@ -63,6 +63,9 @@ if(orderId){
 		return;
 	}
 
+	ShipmentReceipt = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	context.ShipmentReceipt=ShipmentReceipt;
+	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	//conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
