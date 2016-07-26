@@ -2371,6 +2371,8 @@ public class DepotSalesServices{
 		String daysToStore = "";
 		List<GenericValue> productPriceTaxCalc = FastList.newInstance();
 		
+		Debug.log("productQtyList =================="+productQtyList);
+		
 		int count = 0;
 		//int groupSeqCount = 1;
 		//String groupSequenceId = "";
@@ -2378,6 +2380,7 @@ public class DepotSalesServices{
 		List directIndentProductList = FastList.newInstance();
 		int itemIndex=productQtyList.size();
 		for (Map<String, Object> prodQtyMap : productQtyList) {
+			Debug.log("prodQtyMap =================="+prodQtyMap);
 			String customerId = "";
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal taxPercent = BigDecimal.ZERO;
@@ -2402,64 +2405,82 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceCharge"))){
 				serviceCharge = (BigDecimal)prodQtyMap.get("serviceCharge");
 			}
+			Debug.log("prodQtyMap ======1111============");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceChargeAmt"))){
 				serviceChargeAmt = (BigDecimal)prodQtyMap.get("serviceChargeAmt");
 			}
+			Debug.log("prodQtyMap ========2222==========");
 			List taxRateList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
+			Debug.log("prodQtyMap ======33333============");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxRateList"))){
 				taxRateList = (List)prodQtyMap.get("taxRateList");
 			}
+			Debug.log("prodQtyMap ========4444==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("customerId"))){
 				customerId = (String)prodQtyMap.get("customerId");
 			}
+			Debug.log("prodQtyMap =======5555===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
 				remarks = (String)prodQtyMap.get("remarks");
 			}
+			Debug.log("prodQtyMap =========666666=========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
 				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
 			}
+			Debug.log("prodQtyMap ==========77777========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
 				bundleUnitPrice = (String)prodQtyMap.get("bundleUnitPrice");
 			}
+			Debug.log("prodQtyMap ==========8888========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 				 quantity = (BigDecimal)prodQtyMap.get("quantity");
 			}
+			Debug.log("prodQtyMap ========999999==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
 				yarnUOM = (String)prodQtyMap.get("yarnUOM");
 			}
+			Debug.log("prodQtyMap =======11111===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("applicableTaxType"))){
 				applicableTaxType = (String)prodQtyMap.get("applicableTaxType");
 			}
+			Debug.log("prodQtyMap =======222222===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkE2Form"))){
 				checkE2Form = (String)prodQtyMap.get("checkE2Form");
 			}
+			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkCForm"))){
 				checkCForm = (String)prodQtyMap.get("checkCForm");
 			}
-			
+			Debug.log("prodQtyMap ==========44444========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
 				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 			}
+			Debug.log("prodQtyMap =================="+prodQtyMap);
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
 				batchNo = (String)prodQtyMap.get("batchNo");
 				batchNumExists = true;
 			}
+			Debug.log("prodQtyMap ========666666==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("daysToStore"))){
 				daysToStore = (String)prodQtyMap.get("daysToStore");
 				daysToStoreExists = true;
 			}
+			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
 				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
 			}
+			Debug.log("prodQtyMap =========77777=========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
 				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
 			}
+			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quotaAvbl"))){
 				quotaAvbl = (BigDecimal)prodQtyMap.get("quotaAvbl");
 			}
+			Debug.log("prodQtyMap ========999999= =========");
 				
 			//add percentages
 			BigDecimal vatPercent=BigDecimal.ZERO;
