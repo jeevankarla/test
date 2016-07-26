@@ -3,6 +3,7 @@ import java.text.DateFormat;
 
 import in.vasista.vbiz.depotsales.DepotPurchaseServices;
 import in.vasista.vbiz.depotsales.DepotHelperServices;
+import in.vasista.vbiz.depotsales.DepotSalesServices;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -1003,7 +1004,7 @@ public class DepotSalesApiServices{
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
 		processOrderContext.put("manualQuota", manualQuota);
 		Map svcResult = FastMap.newInstance(); 
-		
+		Debug.log("processOrderContext ==================="+processOrderContext);
 		try{
 			//in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)
 			svcResult = in.vasista.vbiz.depotsales.DepotSalesServices.processBranchSalesOrder(ctx, processOrderContext);
