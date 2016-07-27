@@ -1508,7 +1508,6 @@ public class DepotSalesServices{
 		String referenceNo = (String) request.getParameter("referenceNo");
 		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
 		String ediTallyRefNo = (String) request.getParameter("ediTallyRefNo");
-		Debug.log("referenceNo ===="+referenceNo);
 		String contactMechId = (String) request.getParameter("contactMechId");
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
 		String transporterId = (String) request.getParameter("transporterId");
@@ -1643,7 +1642,6 @@ public class DepotSalesServices{
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "error";
 		}
-		Debug.log("paramMap ============ "+paramMap);
 		List productIds = FastList.newInstance();
 		List indentProductList = FastList.newInstance();
 		List indentItemProductList = FastList.newInstance();
@@ -1886,11 +1884,9 @@ public class DepotSalesServices{
 						BigDecimal tempquantity=BigDecimal.ZERO;
 						BigDecimal tempbundleWeight=BigDecimal.ZERO;
 						Map tempconsolMap=(Map)consolMap.get(productId);
-						Debug.log("tempconsolMap=========================="+tempconsolMap);
 						tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
 						tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
 						tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
-						Debug.log("tempquantity=========================="+tempquantity+"=tempbaleqty======"+tempbaleqty+"=tempbundleWeight====="+tempbundleWeight);
 						tempconsolMap.put("quantity",tempquantity);
 						tempconsolMap.put("baleQuantity",tempbaleqty);
 						tempconsolMap.put("bundleWeight",tempbundleWeight);
@@ -2128,8 +2124,6 @@ public class DepotSalesServices{
 	}
    	public static Map<String, Object> processBranchSalesOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
    		
-   		Debug.log("processBranchSalesOrder ==========================");
-   		
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2172,7 +2166,6 @@ public class DepotSalesServices{
 			return ServiceUtil.returnError("partyId is empty");
 		}
 		
-		Debug.log("partyId =========="+partyId);
 		List conditionList = FastList.newInstance();
 		if(UtilValidate.isNotEmpty(orderId)){
 			
@@ -2310,7 +2303,6 @@ public class DepotSalesServices{
 			Debug.logError(e, "Failed to retrive ProductCategory ", module);
 			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 		}
-	  	Debug.log("schemeCategoryIds =========="+schemeCategoryIds);
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
@@ -2371,8 +2363,6 @@ public class DepotSalesServices{
 		String daysToStore = "";
 		List<GenericValue> productPriceTaxCalc = FastList.newInstance();
 		
-		Debug.log("productQtyList =================="+productQtyList);
-		
 		int count = 0;
 		//int groupSeqCount = 1;
 		//String groupSequenceId = "";
@@ -2380,7 +2370,6 @@ public class DepotSalesServices{
 		List directIndentProductList = FastList.newInstance();
 		int itemIndex=productQtyList.size();
 		for (Map<String, Object> prodQtyMap : productQtyList) {
-			Debug.log("prodQtyMap =================="+prodQtyMap);
 			String customerId = "";
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal taxPercent = BigDecimal.ZERO;
@@ -2400,87 +2389,67 @@ public class DepotSalesServices{
 			
 			//groupSequenceId = String.format("%02d", Integer.parseInt(groupSequenceId + groupSeqCount));
 			//cart.addItemGroup("PROD_ASSOC_GRP", groupSequenceId);
-			Debug.log("productId =========="+prodQtyMap.get("productId"));
 			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceCharge"))){
 				serviceCharge = (BigDecimal)prodQtyMap.get("serviceCharge");
 			}
-			Debug.log("prodQtyMap ======1111============");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceChargeAmt"))){
 				serviceChargeAmt = (BigDecimal)prodQtyMap.get("serviceChargeAmt");
 			}
-			Debug.log("prodQtyMap ========2222==========");
 			List taxRateList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
-			Debug.log("prodQtyMap ======33333============");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxRateList"))){
 				taxRateList = (List)prodQtyMap.get("taxRateList");
 			}
-			Debug.log("prodQtyMap ========4444==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("customerId"))){
 				customerId = (String)prodQtyMap.get("customerId");
 			}
-			Debug.log("prodQtyMap =======5555===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
 				remarks = (String)prodQtyMap.get("remarks");
 			}
-			Debug.log("prodQtyMap =========666666=========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
 				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
 			}
-			Debug.log("prodQtyMap ==========77777========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
 				bundleUnitPrice = (String)prodQtyMap.get("bundleUnitPrice");
 			}
-			Debug.log("prodQtyMap ==========8888========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 				 quantity = (BigDecimal)prodQtyMap.get("quantity");
 			}
-			Debug.log("prodQtyMap ========999999==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
 				yarnUOM = (String)prodQtyMap.get("yarnUOM");
 			}
-			Debug.log("prodQtyMap =======11111===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("applicableTaxType"))){
 				applicableTaxType = (String)prodQtyMap.get("applicableTaxType");
 			}
-			Debug.log("prodQtyMap =======222222===========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkE2Form"))){
 				checkE2Form = (String)prodQtyMap.get("checkE2Form");
 			}
-			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("checkCForm"))){
 				checkCForm = (String)prodQtyMap.get("checkCForm");
 			}
-			Debug.log("prodQtyMap ==========44444========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
 				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 			}
-			Debug.log("prodQtyMap =================="+prodQtyMap);
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
 				batchNo = (String)prodQtyMap.get("batchNo");
 				batchNumExists = true;
 			}
-			Debug.log("prodQtyMap ========666666==========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("daysToStore"))){
 				daysToStore = (String)prodQtyMap.get("daysToStore");
 				daysToStoreExists = true;
 			}
-			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
 				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
 			}
-			Debug.log("prodQtyMap =========77777=========");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
 				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
 			}
-			Debug.log("prodQtyMap ==================");
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quotaAvbl"))){
 				quotaAvbl = (BigDecimal)prodQtyMap.get("quotaAvbl");
 			}
-			Debug.log("prodQtyMap ========999999= =========");
 				
 			//add percentages
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -2564,7 +2533,6 @@ public class DepotSalesServices{
 			}*/	
 			// Populate Shopping Cart With Items.
 			// If ordered quantity is more than the available quota, we will split the cart items into two. one with quota qty and rest in other cart item.
-			Debug.log("cart ==========");
 			ShoppingCartItem item = null;
 			try{
 				Map<String, Object> productQtyMap = FastMap.newInstance();
@@ -2599,7 +2567,6 @@ public class DepotSalesServices{
 					item.setOrderItemAttribute("checkCForm",checkCForm);
 				}
 				
-				Debug.log("in cart ==========");
 				/*if(quota.compareTo(BigDecimal.ZERO)>0){
 					
 					// Have to get these details from schemes. Temporarily hard coding it.
@@ -2625,7 +2592,6 @@ public class DepotSalesServices{
 				}*/
 				
 				// Tax Handling
-				Debug.log("in tax ==========");
 				for(int i=0; i<taxRateList.size(); i++){
 					Map taxMap = (Map) taxRateList.get(i);
 					
@@ -2636,7 +2602,6 @@ public class DepotSalesServices{
 		 				totalPrice=totalPrice.add((BigDecimal) taxMap.get("amount"));
 					}
 				}
-				Debug.log("serviceChargeAmt ==========");
 				// Service Charge
 				if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
@@ -2650,7 +2615,6 @@ public class DepotSalesServices{
 				item.setListPrice(totalPrice);
 				
 				orderGrandTotal=orderGrandTotal.add(totalPrice);
-				Debug.log("orderGrandTotal =========="+orderGrandTotal);
 				//Debug.log("groupSequenceId =============="+groupSequenceId);
 				//item.setItemGroup(groupSequenceId, cart);
 				
@@ -2717,7 +2681,6 @@ public class DepotSalesServices{
 		//if orderId empty call createOrder other wise editOrder
 		if(UtilValidate.isEmpty(orderId)){
 			orderCreateResult = checkout.createOrder(userLogin);
-			Debug.log("orderCreateResult =========="+orderCreateResult);
 		}else{
 			cart.setOrderId(orderId);
 			checkout = new CheckOutHelper(dispatcher, delegator, cart);
@@ -2885,9 +2848,6 @@ public class DepotSalesServices{
 		        	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
 					orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
 				}
-				Debug.log("orderItemSeqId========IN=============="+orderItemSeqId);
-				
-				
 				
 				// Scheme Calculation
 							List productCategoriesList = FastList.newInstance();
@@ -2935,8 +2895,6 @@ public class DepotSalesServices{
 										try {
 											Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 											quota=(BigDecimal)resultMapquota.get("quota");
-											Debug.log("quota=========3333==============="+quota);
-
 										} catch (Exception e) {
 											Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
 											return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
@@ -6406,7 +6364,6 @@ public class DepotSalesServices{
 				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
 				try{
 					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-					Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
 					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
 					if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
@@ -6650,10 +6607,6 @@ public class DepotSalesServices{
 		String productCategoryId =(String) context.get("productCategoryId");
 		String schemeId=(String) context.get("schemeId");
 		String partyId=(String) context.get("partyId");
-		
-		Debug.log("QUOTA BALANCE HISTORY =========================");
-		Debug.log("partyId ================="+partyId);
-		Debug.log("productCategoryId ==========="+productCategoryId);
 		
 		Timestamp dateTimeStamp=(Timestamp) context.get("dateTimeStamp");
 		BigDecimal quota = BigDecimal.ZERO;
@@ -7298,10 +7251,6 @@ public class DepotSalesServices{
         String partyId = (String) context.get("partyId");
         String payToPartyId = null;
         
-        Debug.log("productStoreId = ========"+productStoreId);
-        Debug.log("supplierPartyId = ========"+supplierPartyId);
-        Debug.log("partyId = ========"+partyId);
-        
         try{
         	GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
 			if(UtilValidate.isNotEmpty(productStore)){
@@ -7333,11 +7282,6 @@ public class DepotSalesServices{
         if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
         	branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
         }
-        
-        Debug.log("partyGeoId = ========"+partyGeoId);
-        Debug.log("supplierGeoId = ========"+supplierGeoId);
-        Debug.log("branchGeoId = ========"+branchGeoId);
-        
         
         if( (UtilValidate.isNotEmpty(partyGeoId)) && (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
         	if(partyGeoId.equals(branchGeoId)){
@@ -7381,7 +7325,6 @@ public class DepotSalesServices{
         geoIdsMap.put("titleTransferEnumId", titleTransferEnumId);
         geoIdsMap.put("taxType", taxType);
         geoIdsMap.put("checkForE2Form", checkForE2Form);
-        Debug.log("geoIdsMap = ========"+geoIdsMap);
 		result.put("geoIdsMap", geoIdsMap);
         return result;
     }
@@ -7466,7 +7409,6 @@ public class DepotSalesServices{
 		vatCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.EQUALS, "VAT_SALE"));
 		vatCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
 		List vatTaxes = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(vatCondList, EntityOperator.AND));
-		Debug.log("vatTaxes ============"+vatTaxes);
 		if(UtilValidate.isNotEmpty(vatTaxes)){
 			vatPercent = (BigDecimal)(EntityUtil.getFirst(vatTaxes)).get("taxPercentage");
 		}
@@ -7476,8 +7418,6 @@ public class DepotSalesServices{
 		vatCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "VAT_SALE"));
 		try {
 			List vatSurcharges = delegator.findList("TaxAuthorityRateType", EntityCondition.makeCondition(vatCondList, EntityOperator.AND), null, null, null, false);
-			Debug.log("vatSurcharges ============"+vatSurcharges);
-			
 			if(UtilValidate.isNotEmpty(vatSurcharges)){
 				vatCondList.clear();
 				vatCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(vatSurcharges, "taxAuthorityRateTypeId", true)));
@@ -7496,7 +7436,6 @@ public class DepotSalesServices{
 		cstCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.EQUALS, "CST_SALE"));
 		cstCondList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
 		List cstTaxes = EntityUtil.filterByCondition(taxAuthProdCatList, EntityCondition.makeCondition(cstCondList, EntityOperator.AND));
-		Debug.log("cstTaxes ============"+cstTaxes);
 		if(UtilValidate.isNotEmpty(cstTaxes)){
 			cstPercent = (BigDecimal)(EntityUtil.getFirst(cstTaxes)).get("taxPercentage");
 		}
@@ -7506,7 +7445,6 @@ public class DepotSalesServices{
 		cstCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "CST_SALE"));
 		try {
 			List cstSurcharges = delegator.findList("TaxAuthorityRateType", EntityCondition.makeCondition(cstCondList, EntityOperator.AND), null, null, null, false);
-			Debug.log("cstSurcharges ============"+cstSurcharges);
 			if(UtilValidate.isNotEmpty(cstSurchargeList)){
 				cstCondList.clear();
 				cstCondList.add(EntityCondition.makeCondition("taxAuthorityRateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(cstSurcharges, "taxAuthorityRateTypeId", true)));
@@ -7519,13 +7457,6 @@ public class DepotSalesServices{
 			return ServiceUtil.returnError("Failed to retrive TaxAuthorityRateType " + e);
 		}
 		
-		
-		
-		Debug.log("vatPercent ============"+vatPercent);
-		Debug.log("cstPercent ============"+cstPercent);
-		
-		Debug.log("taxPercentage ============"+taxPercentage);
-		Debug.log("taxAuthProdCatList ============"+taxAuthProdCatList);
 		result.put("vatPercent", vatPercent);
 		result.put("vatSurcharges", vatSurchargeList);
 		result.put("cstSurcharges", cstSurchargeList);
@@ -8417,19 +8348,10 @@ public class DepotSalesServices{
 				
 		 String amount = (BrachTrans.getBigDecimal("amount")).toString();
 	        BigDecimal receivedAmount =  BrachTrans.getBigDecimal("amount");
-
-	        Debug.log("======================bundleWeight=================="+amount);
-
 	        String paymentTypeId = (String) BrachTrans.get("paymentTypeId");
-	        Debug.log("======================quantity=================="+paymentTypeId);
-
 	        Timestamp paymentDate = (Timestamp) BrachTrans.getTimestamp("paymentDate");
 	        Timestamp depositDate = (Timestamp) BrachTrans.getTimestamp("depositDate");
-
-	        Debug.log("======================paymentDate=================="+paymentDate);
-
 			String inFavourOf = (String) BrachTrans.get("inFavourOf");
-	        Debug.log("======================inFavourOf=================="+inFavourOf);
 			String paymentRefNum = (String) BrachTrans.get("paymentRefNum");
 			String issuingAuthority = (String) BrachTrans.get("issuingAuthority");
 			String paymentDateStr=UtilDateTime.toDateString(paymentDate, "dd/MM/yyyy");
@@ -8455,7 +8377,6 @@ public class DepotSalesServices{
 				}catch(Exception e){
 					Debug.logError(e, module);
 				}
-				Debug.log("result================payment================"+result);
 				List<GenericValue> orderPaymentPreferences = null;
                 try {
                     orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
@@ -8497,7 +8418,6 @@ public class DepotSalesServices{
 	
 	                }
       			}
-				Debug.log("paymentId================payment================"+paymentId);
 				if(UtilValidate.isNotEmpty(paymentId)){
 						//payment deposit into bank
 						Map paymentDepositContext = FastMap.newInstance();
@@ -8537,10 +8457,8 @@ public class DepotSalesServices{
 				             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 				         }
 						
-						Debug.log("paymentDepositResult======================"+paymentDepositResult);
 						String finAccountTransId=(String)paymentDepositResult.get("finAccountTransId");
 						
-						Debug.log("finAccountTransId======================"+finAccountTransId);
 						if(UtilValidate.isNotEmpty(finAccountTransId)){
 							//payment deposit into bank
 							Map paymentReconsileContext = FastMap.newInstance();
@@ -8566,8 +8484,6 @@ public class DepotSalesServices{
 					        	 Debug.logError(e , module);
 					             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
 					         }
-							
-							Debug.log("paymentReconsileResult======================"+paymentReconsileResult);
 						}
 						
 		            	
@@ -8694,7 +8610,6 @@ public class DepotSalesServices{
 							Debug.logError("Unable to generate Purchase order: "+orderId+"=" + ServiceUtil.getErrorMessage(result), module);
 							return ServiceUtil.returnError(null, null, null,result);
 						}
-						Debug.log("result======================"+result);
 						PoOrderId=(String)result.get("orderId");;
 					}
 				}catch(GenericEntityException e){
@@ -8948,14 +8863,12 @@ public class DepotSalesServices{
 								        newEntity.set("createdDate", nowTimeStamp);
 								        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 								        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-								        Debug.log("newEntity========================="+newEntity);
 							            delegator.createSetNextSeqId(newEntity);            
 							            shipmentId = (String) newEntity.get("shipmentId");
 							            if(UtilValidate.isEmpty(shipmentId)){
 							            	Debug.logError("Problem creating shipment for orderId :"+orderId, module);
 							     			return ServiceUtil.returnError("Problem creating shipment for orderId :"+orderId);
 							            }
-							            Debug.log("shipmentId==================="+shipmentId);
 							            if(UtilValidate.isNotEmpty(shipmentId)){
 							            	//Debug.log("quantityStr======="+quantityStr);
 							            	GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
@@ -8972,7 +8885,6 @@ public class DepotSalesServices{
 							            		TransactionUtil.rollback();
 							            	}
 							            	String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
-							            	Debug.log("shipmentItemSeqId==========================="+shipmentItemSeqId);
 							            	List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "00001"));
 							            	GenericValue ordItm = null;
 							            	String orderItemSeqId="";
@@ -9082,8 +8994,6 @@ public class DepotSalesServices{
 						
 											salesInvoiceMap.put("shipmentId",shipmentId);
 											//salesInvoiceMap.put("partyId",supplierId);
-											Debug.log("orderId==========================="+orderId);				
-						
 											salesInvoiceMap.put("orderId",orderId);
 											salesInvoiceMap.put("userLogin",userLogin);
 											salesInvoiceMap.put("billToPartyId",partyId);
@@ -9095,14 +9005,12 @@ public class DepotSalesServices{
 												return ServiceUtil.returnError(null, null, null,saleInoiceResult);
 				
 											}
-											Debug.log("saleInoiceResult==========================="+saleInoiceResult);				
 												
 										// raising purchase invoice
 										Map purchaseInvoiceMap = FastMap.newInstance();
 					
 										purchaseInvoiceMap.put("shipmentId",shipmentId);
 										//salesInvoiceMap.put("partyId",supplierId);
-										Debug.log("PoOrderId==========================="+PoOrderId);				
 					
 										purchaseInvoiceMap.put("orderId",PoOrderId);
 										purchaseInvoiceMap.put("userLogin",userLogin);
@@ -9115,7 +9023,6 @@ public class DepotSalesServices{
 							            	return ServiceUtil.returnError(null, null, null,purInoiceResult);
 			
 							            }
-										Debug.log("purInoiceResult======purchase====================="+purInoiceResult);	
 											
 							    
 							}
@@ -9191,8 +9098,6 @@ public class DepotSalesServices{
    	    		Debug.logError(e, module);
    			}
         	
-   	    	Debug.log("cfcList ================"+cfcList);
-   	    	
         	condList.clear();
         	
         	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(depotsList, "facilityId", true)));
@@ -9210,7 +9115,6 @@ public class DepotSalesServices{
    			}
         	
         }
-        Debug.log("branchCfcList ================"+branchCfcList);
         //result.put("ownerPartyId", ownerPartyId);
 		result.put("cfcList", branchCfcList);
         return result;
@@ -9554,7 +9458,6 @@ public class DepotSalesServices{
 		        if(UtilValidate.isNotEmpty(purchaseOrderId)){
 			  		
 			  		result = DepotHelperServices.getOrderItemAndTermsMapForCalculation(ctx, UtilMisc.toMap("userLogin", userLogin, "orderId", purchaseOrderId));
-					Debug.log("resultMap==============11======================"+result);
 
 			  		if (ServiceUtil.isError(result)) {
 		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
@@ -9570,9 +9473,6 @@ public class DepotSalesServices{
 		  	 			return ServiceUtil.returnError(" Error While getting getMaterialItemValuationDetails !"+errMsg);
 					}
 					List<Map> itemDetails = (List)result.get("itemDetail");
-									
-					
-					
 			  	}
 	  	 		
 	  	 		
@@ -9611,10 +9511,6 @@ public class DepotSalesServices{
 		String partyId = (String)context.get("partyId");
 		String numberOfCattle = (String)context.get("numberOfCattle");
 		String loomTypeId = (String)context.get("loomTypeId");
-		
-		Debug.log("partyId=========================="+partyId);
-		Debug.log("numberOfCattle=========================="+numberOfCattle);
-		Debug.log("loomTypeId=========================="+loomTypeId);
 		
 		try{
 		
@@ -10153,7 +10049,6 @@ public class DepotSalesServices{
    			Debug.logError(e, "Not a valid productCategoryId", module);
    			return ServiceUtil.returnError("Not a valid productCategoryId" + e);
 		}
-		Debug.log("productList ========="+productList.size());
 		
    	    result.put("productList",productList);
    	    return result;
@@ -10397,7 +10292,6 @@ public class DepotSalesServices{
 		        if(UtilValidate.isNotEmpty(purchaseOrderId)){
 			  		
 			  		result = DepotHelperServices.getOrderItemAndTermsMapForCalculation(ctx, UtilMisc.toMap("userLogin", userLogin, "orderId", purchaseOrderId));
-					Debug.log("resultMap==============11======================"+result);
 
 			  		if (ServiceUtil.isError(result)) {
 		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
@@ -10627,7 +10521,6 @@ public class DepotSalesServices{
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		Debug.log("userLogin ===================="+userLogin);
 		Map result = ServiceUtil.returnSuccess();
 		
 		List multiOrderAssocList = FastList.newInstance();
@@ -10652,7 +10545,6 @@ public class DepotSalesServices{
 		List<GenericValue> purchaseOrders = EntityUtil.filterByCondition(OrderHeaderAndItems, EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
 		
 		List salesOrderIds = EntityUtil.getFieldListFromEntityList(salesOrders, "orderId", true);
-		Debug.log("salesOrderIds ===================="+salesOrderIds);
 		
 		condList.clear();
 		condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, salesOrderIds));
@@ -10668,7 +10560,6 @@ public class DepotSalesServices{
 		  
 		for(int i=0; i<salesOrderIds.size(); i++){
 			String salesOrderId = (String) salesOrderIds.get(i);
-			Debug.log("orderId ===================="+salesOrderId);
 			List<GenericValue> saleOrderAssocList = EntityUtil.filterByCondition(orderAssocList, EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, salesOrderId));
 			
 			if(UtilValidate.isEmpty(saleOrderAssocList)){
@@ -10772,7 +10663,6 @@ public class DepotSalesServices{
 		Map result = ServiceUtil.returnSuccess();
 		
 		List orderList = FastList.newInstance();
-		Debug.log("orderList ========= 111 ==============="+orderList);
 		//BigDecimal vatPercent = (BigDecimal) context.get("vatPercent");
 		
 		orderList.add("WS10753");
@@ -10965,25 +10855,17 @@ public class DepotSalesServices{
 		orderList.add("WS12608");
 		orderList.add("WS12486");
 
-		
-		Debug.log("orderList ========== 222 =============="+orderList);
-		
 		String orderAdjustmentId = null;
 		for(int i=0; i<orderList.size(); i++){
 			String orderId = (String)orderList.get(i);
-			Debug.log("orderId ========================"+orderId);
 			List<GenericValue> items = null;
 			try{
 	  			items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			}catch(GenericEntityException ex){
 	  			Debug.log("Problem in fetching orderItems");
 	  		}	
-			
-			Debug.log("items ========================"+items);
-	  			
 	  			
 	  			for (GenericValue item : items) {
-	  				Debug.log("item ========================"+item);
 	  				String orderItemSeqId = item.getString("orderItemSeqId");
 	  				BigDecimal qty=item.getBigDecimal("quantity");
 	  				BigDecimal unitPrice=item.getBigDecimal("unitPrice");
@@ -10998,7 +10880,6 @@ public class DepotSalesServices{
 	  		        createOrderAdjustmentContext.put("userLogin", userLogin);
 	  		        try {
 	  		            Map<String, Object> createOrderAdjustmentResult = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentContext);
-	  		          Debug.log("createOrderAdjustmentResult  ================="+createOrderAdjustmentResult);
 	  		            orderAdjustmentId = (String) createOrderAdjustmentResult.get("orderAdjustmentId");
 	  		        } catch (GenericServiceException e) {
 	  		            Debug.logError(e, "Problems Creating Order Adjustment", module);
@@ -11108,14 +10989,12 @@ public class DepotSalesServices{
 					  salesChannel = (String)BrachTrans.getString("salesChannel");
 					  String supplierPartyId = (String) BrachTrans.get("suplierPartyId");
 					  String tallyRefNo = (String) BrachTrans.get("tallyRefNo");
-					  Debug.log("==================================1111=================");
 					  String societyPartyId = (String) BrachTrans.get("societyPartyId");
 					  String productStoreId = (String) BrachTrans.get("productStoreId");
 					  String orderTaxType = (String) BrachTrans.getString("orderTaxType");
 					  String disableAcctgFlag = (String) BrachTrans.getString("disableAcctgFlag");
 					  String schemeCategory = (String) BrachTrans.get("schemeCategory");
 					  BigDecimal serviceChrgPercentage = (BigDecimal) BrachTrans.get("serviceChrgPercentage");
-					  Debug.log("==================================2222=================");
 					  String orderTypeId ="";
 					  if(UtilValidate.isNotEmpty(BrachTrans.get("orderTypeId"))){
 							 orderTypeId = (String) BrachTrans.get("orderTypeId");
@@ -11130,7 +11009,6 @@ public class DepotSalesServices{
 							productSubscriptionTypeId = "CASH";      	
 				      }
 		    		  BranchSaleTransactionItems = delegator.findList("BranchSaleTransactionItem", EntityCondition.makeCondition("sNo", EntityOperator.EQUALS, sNo), null,null, null, false);
-		    		  Debug.log("==================================333=================");
 		    		  Map productPOTaxMap=FastMap.newInstance();
 		    		  if (BranchSaleTransactionItems != null) {
 		    		    for(GenericValue BrachOrderItem: BranchSaleTransactionItems) {
@@ -11145,7 +11023,6 @@ public class DepotSalesServices{
 		    				BigDecimal quantity = (BigDecimal) BrachOrderItem.get("KgQuantity");
 		    				BigDecimal unitPrice = (BigDecimal) BrachOrderItem.get("KgUnitPrice");
 					        BigDecimal bundleUnitPrice = (BigDecimal) BrachOrderItem.get("bundleUnitPrice");
-							Debug.log("==================================4444=================");
 					        BigDecimal vatPercentage = (BigDecimal) BrachOrderItem.get("vatPercentage");
 					        BigDecimal cstPercentage = (BigDecimal) BrachOrderItem.get("cstPercentage");
 					        BigDecimal vatSubcharge = (BigDecimal) BrachOrderItem.get("vatSubcharge");
@@ -11156,7 +11033,6 @@ public class DepotSalesServices{
 					        eachProductTaxMap.put("vatPercentage",POvatPercentage);
 					        eachProductTaxMap.put("cstPercentage",POcstPercentage);
 					        eachProductTaxMap.put("vatSubcharge",POvatSubcharge);
-							Debug.log("==================================666=================");
 							BigDecimal serviceChargeAmt=BigDecimal.ZERO;
 							BigDecimal prodBaseAmount = unitPrice.multiply(quantity);
 							if (UtilValidate.isNotEmpty(serviceChrgPercentage)){
@@ -11185,18 +11061,15 @@ public class DepotSalesServices{
 							taxRateMap.put("taxAuthGeoId", partyGeoId);
 							taxRateList.add(taxRateMap);*/
 							if(billingType.equals("onBehalfOf")){
-								Debug.log("productId=============="+productId+"=baleQuantity======"+baleQuantity);
 						        if (UtilValidate.isNotEmpty(consolMap.get(productId))){
 									
 									BigDecimal tempbaleqty=BigDecimal.ZERO;
 									BigDecimal tempquantity=BigDecimal.ZERO;
 									BigDecimal tempbundleWeight=BigDecimal.ZERO;
 									Map tempconsolMap=(Map)consolMap.get(productId);
-									Debug.log("tempconsolMap=========================="+tempconsolMap);
 									tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
 									tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
 									tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
-									Debug.log("tempquantity=========================="+tempquantity+"=tempbaleqty======"+tempbaleqty+"=tempbundleWeight====="+tempbundleWeight);
 									tempconsolMap.put("quantity",tempquantity);
 									tempconsolMap.put("baleQuantity",tempbaleqty);
 									tempconsolMap.put("bundleWeight",tempbundleWeight);
@@ -11217,7 +11090,6 @@ public class DepotSalesServices{
 									tempconsolMap.put("batchNo", "");
 									tempconsolMap.put("daysToStore", "");
 									tempconsolMap.put("basicPrice", unitPrice);
-									Debug.log("taxRateList==========================="+taxRateList);
 									tempconsolMap.put("taxRateList", taxRateList);
 									tempconsolMap.put("serviceCharge", serviceChrgPercentage);
 									tempconsolMap.put("serviceChargeAmt", serviceChargeAmt);
@@ -11317,7 +11189,6 @@ public class DepotSalesServices{
 		 				}
 		 			
 			 			orderId = (String)result.get("orderId");
-			 			Debug.log("orderId=================="+orderId);
 			 			if(UtilValidate.isEmpty(orderId)){
 			 				Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
 			 				return ServiceUtil.returnError("Unable to generate order  For party :" + societyPartyId);
@@ -11421,7 +11292,6 @@ public class DepotSalesServices{
 		 					}catch(Exception e){
 		 						Debug.logError(e, module);
 		 					}
-		 					Debug.log("result================payment================"+result);
 		 					List<GenericValue> orderPaymentPreferences = null;
 		 	                try {
 		 	                    orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
@@ -11463,7 +11333,6 @@ public class DepotSalesServices{
 		 		
 		 		                }*/
 		 	      			}
-		 					Debug.log("paymentId================payment================"+paymentId);
 		 					/*if(UtilValidate.isNotEmpty(paymentId)){
 		 							//payment deposit into bank
 		 							Map paymentDepositContext = FastMap.newInstance();
@@ -11601,7 +11470,6 @@ public class DepotSalesServices{
 			 								tempMap.put("cstPercent",prdTaxDetailMap.get("cstPercentage"));
 			 								//tempMap.put("unitPrice",prdTaxDetailMap.get());
 		 								}
-		 						        Debug.log("productPOTaxMap================="+productPOTaxMap);
 		 								itemDetail.add(tempMap);
 		 								String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
 		 								orderItemSeq.put(productId, orderItemSeqId);
@@ -11669,7 +11537,6 @@ public class DepotSalesServices{
 		 								Debug.logError("Unable to generate Purchase order: "+orderId+"=" + ServiceUtil.getErrorMessage(result), module);
 		 								return ServiceUtil.returnError(null, null, null,result);
 		 							}
-		 							Debug.log("result======================"+result);
 		 							PoOrderId=(String)result.get("orderId");;
 		 						}
 		 					}catch(GenericEntityException e){
@@ -11784,8 +11651,6 @@ public class DepotSalesServices{
   		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
   		String orderId = (String) context.get("orderId");
   		Locale locale = (Locale) context.get("locale");
-
-  		Debug.log("orderId================"+orderId);
   		
 		Timestamp effectiveDate=UtilDateTime.nowTimestamp();
 			Map<String, Object> createInvoice = FastMap.newInstance();

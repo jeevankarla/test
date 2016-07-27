@@ -2,8 +2,10 @@ package in.vasista.vbiz.depotsales;
 import java.text.DateFormat;
 
 import in.vasista.vbiz.depotsales.DepotPurchaseServices;
+
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.accounting.util.UtilAccounting;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -37,6 +39,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import java.util.Iterator;
+
 import org.ofbiz.entity.util.EntityListIterator;
 
 
@@ -156,7 +159,6 @@ public class DepotHelperServices{
         if(UtilValidate.isNotEmpty(partyList)){
         	// Get all branch Society
         	List condList =FastList.newInstance();
-        	//Debug.log("partyList======================================"+partyList);
    	    	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,EntityUtil.getFieldListFromEntityList(partyList, "partyIdTo", true)));
    	    	condList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
    	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("closedDate", EntityOperator.EQUALS, null),EntityOperator.OR,
@@ -168,8 +170,6 @@ public class DepotHelperServices{
    	    		Debug.logError(e, module);
    			}
         	
-   	    	Debug.log("societyList ================"+societyList);
-   	    	        	
         }
 		result.put("societyList", societyList);
 		result.put("partyList", partyList);
@@ -472,7 +472,6 @@ public class DepotHelperServices{
 	  		  		Debug.logError(errMsg , module);
 	  		  		return ServiceUtil.returnError(errMsg);
 	  		  	}
-				Debug.log("quoteId #################"+quoteId);
 			}
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
@@ -1835,6 +1834,67 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	  return resultMap;
 	  
 	 }
+  
+  
+  	public static Map<String, Object> updateOrderStatusToComplete(DispatchContext dctx, Map<String, ? extends Object> context) {
+  	
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();   
+		Map resultMap = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		List<GenericValue> purchaseOrderList = FastList.newInstance();
+		List purchaseOrdersList = FastList.newInstance();
+		List condList =FastList.newInstance();
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_COMPLETED"));
+		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+	    try{
+	    	purchaseOrderList = delegator.findList("OrderHeader", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId"), null, null, false);
+	    	purchaseOrdersList = EntityUtil.getFieldListFromEntityList(purchaseOrderList, "orderId", true);
+	    }catch (GenericEntityException e) {
+			// TODO: handle exception
+	    	Debug.logError(e, module);
+		}
+	    
+	    List salesOrderIdsList = FastList.newInstance();
+	    condList.clear();
+		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, purchaseOrdersList));
+		condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	    try{
+	    	List orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("toOrderId"), null, null, false);
+	    	salesOrderIdsList = EntityUtil.getFieldListFromEntityList(orderAssocList, "toOrderId", true);
+	    }catch (GenericEntityException e) {
+			// TODO: handle exception
+	    	Debug.logError(e, module);
+		}
+	    
+		/*List salesOrdersList = FastList.newInstance();
+		List condList =FastList.newInstance();
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"));
+		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, salesOrderIdsList));
+	    try{
+	    	purchaseOrderList = delegator.findList("OrderHeader", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId", "statusId"), null, null, false);
+	    	purchaseOrdersList = EntityUtil.getFieldListFromEntityList(purchaseOrderList, "orderId", true);
+	    }catch (GenericEntityException e) {
+			// TODO: handle exception
+	    	Debug.logError(e, module);
+		}*/
+	    
+	    for(int i=0; i<salesOrderIdsList.size(); i++){
+	    	String orderId = (String) salesOrderIdsList.get(i);
+	    	Map<String, Object> serviceApprResult = null;
+	        try {
+	        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "userLogin", userLogin));
+	        } catch (GenericServiceException e) {
+	            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+	        if (ServiceUtil.isError(serviceApprResult)) {
+	            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceApprResult));
+	        }
+	    }
+	    return resultMap;
+  	}
 
 
     

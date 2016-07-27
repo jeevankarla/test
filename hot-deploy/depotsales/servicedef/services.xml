@@ -479,7 +479,10 @@
         
         <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="updateOrderStatusToComplete" engine="java"
+                location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="updateOrderStatusToComplete" auth="false">
+        <attribute name="purchaseOrderId" mode="IN" type="String" optional="true"/>
+    </service>
     
 </services>
 
