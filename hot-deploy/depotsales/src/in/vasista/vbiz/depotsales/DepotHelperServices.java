@@ -1868,20 +1868,25 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    	Debug.logError(e, module);
 		}
 	    
-		/*List salesOrdersList = FastList.newInstance();
-		List condList =FastList.newInstance();
-		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"));
+	    List approvedSalesOrderIdsList = FastList.newInstance();
+		List salesOrdersList = FastList.newInstance();
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
 		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, salesOrderIdsList));
 	    try{
-	    	purchaseOrderList = delegator.findList("OrderHeader", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId", "statusId"), null, null, false);
-	    	purchaseOrdersList = EntityUtil.getFieldListFromEntityList(purchaseOrderList, "orderId", true);
+	    	salesOrdersList = delegator.findList("OrderHeader", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId", "statusId"), null, null, false);
+	    	approvedSalesOrderIdsList = EntityUtil.getFieldListFromEntityList(salesOrdersList, "orderId", true);
 	    }catch (GenericEntityException e) {
 			// TODO: handle exception
 	    	Debug.logError(e, module);
-		}*/
+		}
 	    
 	    for(int i=0; i<salesOrderIdsList.size(); i++){
 	    	String orderId = (String) salesOrderIdsList.get(i);
+	    	if(!approvedSalesOrderIdsList.contains(orderId)){
+	    		continue;
+	    	}
+	    	
 	    	Map<String, Object> serviceApprResult = null;
 	        try {
 	        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "userLogin", userLogin));
