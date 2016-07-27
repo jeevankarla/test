@@ -1220,7 +1220,7 @@ public class DepotSalesApiServices{
 			Map tempMap = FastMap.newInstance();
 			tempMap.put("productStoreId",eachProdStore.getString("productStoreId"));
 			tempMap.put("storeName",eachProdStore.getString("storeName"));
-			tempMap.put("storeName",eachProdStore.getString("storeName"));
+			tempMap.put("companyName",eachProdStore.getString("companyName"));
 			tempMap.put("title",eachProdStore.getString("title"));
 			tempMap.put("payToPartyId",eachProdStore.getString("payToPartyId"));
 			
