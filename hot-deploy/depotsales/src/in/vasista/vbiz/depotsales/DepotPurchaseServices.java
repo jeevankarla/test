@@ -211,19 +211,15 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
 				invoiceItemTypeId = (String) paramMap.get("invoiceItemTypeId" + thisSuffix);
 			}
-			Debug.log("invoiceItemTypeId==============="+invoiceItemTypeId);
 
 			if (paramMap.containsKey("applicableTo" + thisSuffix)) {
 				applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
 			}
-			Debug.log("applicableTo==============="+applicableTo);
 
 			if (paramMap.containsKey("adjAmt" + thisSuffix)) {
 				adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
 			}
 			
-			Debug.log("adjAmtStr==============="+adjAmtStr);
-
 			if(UtilValidate.isNotEmpty(adjAmtStr)){
 				try {
 					adjAmt = new BigDecimal(adjAmtStr);
@@ -234,8 +230,6 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			Debug.log("adjAmt==============="+adjAmt);
-
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
 				Map invItemMap = FastMap.newInstance();
 				invItemMap.put("adjustmentTypeId", invoiceItemTypeId);
@@ -245,32 +239,21 @@ public class DepotPurchaseServices{
 				invoiceAdjChargesList.add(invItemMap);	
 			}
 			
-			Debug.log("invoiceAdjChargesList==============="+invoiceAdjChargesList);
-			
 			if (paramMap.containsKey("invoiceItemTypeDiscId" + thisSuffix)) {
 				invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
 			}
-			Debug.log("invoiceItemDiscTypeId==============="+invoiceItemDiscTypeId);
 
 			if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
 				applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
 			}
 
-			Debug.log("applicableToDisc==============="+applicableToDisc);
-
 			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
 				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
 			}
 			
-			Debug.log("adjAmtDiscStr==============="+adjAmtDiscStr);
-
-			
 			if (paramMap.containsKey("discQty" + thisSuffix)) {
 				discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
 			}
-			
-			Debug.log("discQtyStr==============="+discQtyStr);
-
 			
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
@@ -282,8 +265,6 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			Debug.log("adjDiscAmt==============="+adjDiscAmt);
-
 			if(UtilValidate.isNotEmpty(discQtyStr)){
 				try {
 					discQty = new BigDecimal(discQtyStr);
@@ -294,19 +275,10 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			Debug.log("discQty==============="+discQty);
-
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
-				
-				
-				Debug.log("invoiceItemDiscTypeId======3232========="+invoiceItemDiscTypeId);
-
 				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
-					
-					Debug.log("discQty======1223========="+discQty);
-
 					
 					if(discQty.compareTo(BigDecimal.ONE)>0){
 						adjDiscAmt = adjDiscAmt.divide(discQty);
@@ -321,29 +293,16 @@ public class DepotPurchaseServices{
 				invItemMap.put("uomId", "INR");
 				invItemMap.put("applicableTo", applicableToDisc);
 				invoiceDiscountsList.add(invItemMap);	
-				
-				Debug.log("adjDiscAmt======1223========="+adjDiscAmt);
-
 			}
-			
-			Debug.log("invoiceDiscountsList====231==========="+invoiceDiscountsList);
-
 			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
 			}
 			
-			
-			Debug.log("invoiceDiscountsList========1212======="+invoiceDiscountsList);
-
-			
 			if(UtilValidate.isNotEmpty(productId)){
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
-				
-				Debug.log("quantityStr========1212======="+quantityStr);
-
 				
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
@@ -354,34 +313,21 @@ public class DepotPurchaseServices{
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
 				
-				Debug.log("unitPriceStr========1212======="+unitPriceStr);
-
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
 				}
-				
-				Debug.log("vatStr========1212======="+vatStr);
-
 				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
 				}
 				
-				Debug.log("cstStr========1212======="+cstStr);
-
-				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
 				}
 				
-				Debug.log("VatPercentStr========1212======="+VatPercentStr);
-
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
-				
-				Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
-
 				
 				try {
 					quantity = new BigDecimal(quantityStr);
@@ -390,9 +336,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
-				
-				Debug.log("quantity========1212======="+quantity);
-
 				
 				try {
 					if (!unitPriceStr.equals("")) {
@@ -404,9 +347,6 @@ public class DepotPurchaseServices{
 					return "error";
 				} 
 				
-				Debug.log("uPrice========1212======="+uPrice);
-
-				
 				try {
 					if (!vatStr.equals("")) {
 						vat = new BigDecimal(vatStr);
@@ -417,8 +357,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				Debug.log("vatStr========1212======="+vatStr);
-				
 				try {
 					if (!cstStr.equals("")) {
 						cst = new BigDecimal(cstStr);
@@ -428,9 +366,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
 					return "error";
 				}
-				
-				Debug.log("cstStr========1212======="+cstStr);
-
 				
 				//percenatges population
 				try {
@@ -443,9 +378,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				Debug.log("vatPercent========1212======="+vatPercent);
-
-				
 				try {
 					if (!CSTPercentStr.equals("")) {
 						cstPercent = new BigDecimal(CSTPercentStr);
@@ -455,11 +387,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 					return "error";
 				}
-				
-				
-				Debug.log("CSTPercentStr========1212======="+CSTPercentStr);
-
-				
 			}
 			GenericValue orderItemValue = null;
 
@@ -491,8 +418,6 @@ public class DepotPurchaseServices{
 			}
 		}//end row count for loop
 		
-		Debug.log("productQtyList========1212======="+productQtyList);
-
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
@@ -503,25 +428,14 @@ public class DepotPurchaseServices{
 		
 		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
 
-		
-		Debug.log("invProdId========1212======="+invProdId);
-
-		
 		try{
 	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
 	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
-	  		
-			Debug.log("purposeTypeId========1212======="+purposeTypeId);
-
-	  		
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
 			return "error";
 	  	}
-		
-		
-
 		
 		Map processInvoiceContext = FastMap.newInstance();
 		processInvoiceContext.put("userLogin", userLogin);
@@ -548,9 +462,6 @@ public class DepotPurchaseServices{
 		
 		String invoiceId =  (String)result.get("invoiceId");
 		
-		Debug.log("invoiceId========1212======="+invoiceId);
-
-		
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 		
 		return "success";
@@ -571,7 +482,6 @@ public class DepotPurchaseServices{
 		String vehicleId = (String) request.getParameter("vehicleId");
 		String tallyrefNo = (String) request.getParameter("tallyrefNo");
 		String invoiceDateStr = (String) request.getParameter("invoiceDate");
-		Debug.log("invoiceDateStr===================="+invoiceDateStr);
 		String orderId = (String) request.getParameter("orderId");
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
 		String partyIdFrom = "";
@@ -598,8 +508,6 @@ public class DepotPurchaseServices{
 		else{
 			invoiceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
-		
-		Debug.log("invoiceDate==================="+invoiceDate);
 		
 		if (partyId == "") {
 			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
@@ -657,11 +565,6 @@ public class DepotPurchaseServices{
 			}
 		}	*/
 		
-		Debug.log("orderItems======2232============="+orderItems);
-
-		Debug.log("rowCount======2232============="+rowCount);
-
-		
 		List productQtyList = FastList.newInstance();
 		List<Map> invoiceAdjChargesList = FastList.newInstance();
 		List<Map> invoiceDiscountsList = FastList.newInstance();
@@ -712,21 +615,14 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
 				invoiceItemTypeId = (String) paramMap.get("invoiceItemTypeId" + thisSuffix);
 			}
-			Debug.log("invoiceItemTypeId======2232============="+invoiceItemTypeId);
 
 			if (paramMap.containsKey("applicableTo" + thisSuffix)) {
 				applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
 			}
 			
-			Debug.log("applicableTo======2232============="+applicableTo);
-
-			
 			if (paramMap.containsKey("adjAmt" + thisSuffix)) {
 				adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
 			}
-			
-			Debug.log("adjAmtStr======2232============="+adjAmtStr);
-
 			
 			if(UtilValidate.isNotEmpty(adjAmtStr)){
 				try {
@@ -737,9 +633,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 			}
-			
-			Debug.log("adjAmt======2232============="+adjAmt);
-
 			
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
 				Map<String, Object> invItemMap = FastMap.newInstance();
@@ -755,29 +648,17 @@ public class DepotPurchaseServices{
 				invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
 			}
 			
-			Debug.log("invoiceItemDiscTypeId======2232============="+invoiceItemDiscTypeId);
-
-			
 			if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
 				applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
 			}
-			
-			Debug.log("applicableToDisc======2232============="+applicableToDisc);
-
 			
 			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
 				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
 			}
 			
-			Debug.log("adjAmtDiscStr======2232============="+adjAmtDiscStr);
-
-			
 			if (paramMap.containsKey("discQty" + thisSuffix)) {
 				discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
 			}
-			
-			Debug.log("discQtyStr======2232============="+discQtyStr);
-
 			
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
@@ -789,10 +670,6 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			
-			Debug.log("adjDiscAmt======2232============="+adjDiscAmt);
-
-			
 			if(UtilValidate.isNotEmpty(discQtyStr)){
 				try {
 					discQty = new BigDecimal(discQtyStr);
@@ -803,9 +680,6 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			Debug.log("discQtyStr======2232============="+discQtyStr);
-
-			
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
 				
 				BigDecimal adjQty = BigDecimal.ONE;
@@ -815,8 +689,6 @@ public class DepotPurchaseServices{
 						adjQty = discQty;
 					}
 				}
-				
-				Debug.log("adjQty======2232============="+adjQty);
 
 				Map<String, Object> invItemMap = FastMap.newInstance();
 				invItemMap.put("adjustmentTypeId", invoiceItemDiscTypeId);
@@ -838,16 +710,10 @@ public class DepotPurchaseServices{
 				orderItemSeqIdList.add(orderItemSeqId);
 			}
 			
-			Debug.log("productId======2232============="+productId);
-
-			
 			if(UtilValidate.isNotEmpty(productId)){
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
-				
-				Debug.log("quantityStr======2232============="+quantityStr);
-
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
@@ -857,42 +723,25 @@ public class DepotPurchaseServices{
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
 				
-				Debug.log("unitPriceStr======2232============="+unitPriceStr);
-
-				
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
 				}
-				
-				Debug.log("vatStr======2232============="+vatStr);
-
 				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
 				}
 				
-				Debug.log("cstStr======2232============="+cstStr);
-
-				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
 				}
-				
-				Debug.log("VatPercentStr======2232============="+VatPercentStr);
-
 				
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
 				
-				Debug.log("CSTPercentStr======2232============="+CSTPercentStr);
-
-				
 				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
 					orderItemSeq = (String) paramMap.get("oritemseq" + thisSuffix);
 				}
-
-				Debug.log("orderItemSeq======2232============="+orderItemSeq);
 
 				try {
 					quantity = new BigDecimal(quantityStr);
@@ -901,7 +750,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
-				Debug.log("quantity======2232============="+quantity);
 
 				try {
 					if (!unitPriceStr.equals("")) {
@@ -912,8 +760,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
 					return "error";
 				} 
-				
-				Debug.log("uPrice======2232============="+uPrice);
 
 				try {
 					if (!vatStr.equals("")) {
@@ -924,7 +770,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VAT string: " + vatStr);
 					return "error";
 				}
-				Debug.log("vat======2232============="+vat);
 
 				try {
 					if (!cstStr.equals("")) {
@@ -935,7 +780,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
 					return "error";
 				}
-				Debug.log("cst======2232============="+cst);
 
 				//percenatges population
 				try {
@@ -948,8 +792,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				Debug.log("vatPercent======2232============="+vatPercent);
-				
 				try {
 					if (!CSTPercentStr.equals("")) {
 						cstPercent = new BigDecimal(CSTPercentStr);
@@ -959,8 +801,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 					return "error";
 				}
-				
-				Debug.log("cstPercent======2232============="+cstPercent);
 			}
 			GenericValue orderItemValue = null;
 
@@ -993,13 +833,6 @@ public class DepotPurchaseServices{
 			
 			//=====================================================================================
 
-			Debug.log("orderId======2232============="+orderId);
-
-			Debug.log("orderItemSeq======2232============="+orderItemSeq);
-
-			Debug.log("productId======2232============="+productId);
-
-			
 			List<GenericValue> salesOrderitems = null;
 			
 			 try {
@@ -1014,8 +847,6 @@ public class DepotPurchaseServices{
 			  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(salesOrderitems));
 	*/		  			return "error";
 		        }
-			
-				Debug.log("salesOrderitems======2232============="+salesOrderitems);
 
 				GenericValue eachItem = null;
 			 
@@ -1036,19 +867,11 @@ public class DepotPurchaseServices{
 			
 		}//end row count for loop
 		
-        Debug.log("toBillItems==============="+toBillItems);
-
-		
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
-		
-		
-		Debug.log("orderId=============="+orderId);
-		
-		
 	
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
@@ -1057,9 +880,6 @@ public class DepotPurchaseServices{
           try {
                result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
               String invoiceId1 = (String) result.get("invoiceId");
-              
-              Debug.log("result==============="+result);
-              Debug.log("invoiceId1==============="+invoiceId1);
           } catch (GenericServiceException e) {
               
               Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(result), module);
@@ -1103,10 +923,6 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
 			return "error";
 		}
-		
-		Debug.log("result==================="+result);
-
-		
 		
 		String invoiceId =  (String)result.get("invoiceId");
 		
@@ -1243,13 +1059,6 @@ public class DepotPurchaseServices{
     		}
         }*/
 		
-		Debug.log("invoiceAdjChargesList============"+invoiceAdjChargesList);
-		
-		Debug.log("invoiceDiscountsList============"+invoiceDiscountsList);
-		
-		
-		
-		
 		if(UtilValidate.isNotEmpty(invoiceAdjChargesList)){
         for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
 			
@@ -1274,9 +1083,6 @@ public class DepotPurchaseServices{
             createInvoiceItemContext.put("userLogin", userLogin);
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-            	
-        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
-
             	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
             		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
@@ -1323,10 +1129,6 @@ public class DepotPurchaseServices{
             createInvoiceItemContext.put("userLogin", userLogin);
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-            	
-        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
-
-            	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
             		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
                     Debug.logError(errMsg, module);
@@ -1584,7 +1386,6 @@ public class DepotPurchaseServices{
 		String invoiceId = (String) request.getParameter("invoiceId");
 		String tallyrefNo = (String) request.getParameter("tallyrefNo");
 		String invoiceDateStr = (String) request.getParameter("invoiceDate");
-		Debug.log("invoiceDateStr===================="+invoiceDateStr);
 		String orderId = (String) request.getParameter("orderId");
 		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
 		String partyIdFrom = "";
@@ -1592,9 +1393,6 @@ public class DepotPurchaseServices{
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
 		
 		String purposeTypeId = "YARN_SALE";
-		
-		Debug.log("tallyrefNo===================="+tallyrefNo);
-
 	  
 		Timestamp invoiceDate = null;
 		Timestamp suppInvDate = null;
@@ -1614,8 +1412,6 @@ public class DepotPurchaseServices{
 		else{
 			invoiceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
-		
-		Debug.log("invoiceDate==================="+invoiceDate);
 		
 		if (partyId == "") {
 			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
@@ -1698,21 +1494,14 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
 				invoiceItemTypeId = (String) paramMap.get("invoiceItemTypeId" + thisSuffix);
 			}
-			Debug.log("invoiceItemTypeId======2232============="+invoiceItemTypeId);
 
 			if (paramMap.containsKey("applicableTo" + thisSuffix)) {
 				applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
 			}
 			
-			Debug.log("applicableTo======2232============="+applicableTo);
-
-			
 			if (paramMap.containsKey("adjAmt" + thisSuffix)) {
 				adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
 			}
-			
-			Debug.log("adjAmtStr======2232============="+adjAmtStr);
-
 			
 			if(UtilValidate.isNotEmpty(adjAmtStr)){
 				try {
@@ -1723,9 +1512,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 			}
-			
-			Debug.log("adjAmt======2232============="+adjAmt);
-
 			
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
 				Map<String, Object> invItemMap = FastMap.newInstance();
@@ -1741,29 +1527,17 @@ public class DepotPurchaseServices{
 				invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
 			}
 			
-			Debug.log("invoiceItemDiscTypeId======2232============="+invoiceItemDiscTypeId);
-
-			
 			if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
 				applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
 			}
-			
-			Debug.log("applicableToDisc======2232============="+applicableToDisc);
-
 			
 			if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
 				adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
 			}
 			
-			Debug.log("adjAmtDiscStr======2232============="+adjAmtDiscStr);
-
-			
 			if (paramMap.containsKey("discQty" + thisSuffix)) {
 				discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
 			}
-			
-			Debug.log("discQtyStr======2232============="+discQtyStr);
-
 			
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
@@ -1775,10 +1549,6 @@ public class DepotPurchaseServices{
 				}
 			}
 			
-			
-			Debug.log("adjDiscAmt======2232============="+adjDiscAmt);
-
-			
 			if(UtilValidate.isNotEmpty(discQtyStr)){
 				try {
 					discQty = new BigDecimal(discQtyStr);
@@ -1788,10 +1558,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 			}
-			
-			Debug.log("discQtyStr======2232============="+discQtyStr);
-
-			
 			if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
 				
 				BigDecimal adjQty = BigDecimal.ONE;
@@ -1801,9 +1567,6 @@ public class DepotPurchaseServices{
 						adjQty = discQty;
 					}
 				}
-				
-				Debug.log("adjQty======2232============="+adjQty);
-
 				Map<String, Object> invItemMap = FastMap.newInstance();
 				invItemMap.put("adjustmentTypeId", invoiceItemDiscTypeId);
 				invItemMap.put("amount", adjDiscAmt);
@@ -1812,7 +1575,6 @@ public class DepotPurchaseServices{
 				invItemMap.put("applicableTo", applicableToDisc);
 				invoiceDiscountsList.add(invItemMap);	
 			}
-			
 			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
@@ -1824,16 +1586,10 @@ public class DepotPurchaseServices{
 				orderItemSeqIdList.add(orderItemSeqId);
 			}
 			
-			Debug.log("productId======2232============="+productId);
-
-			
 			if(UtilValidate.isNotEmpty(productId)){
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
-				
-				Debug.log("quantityStr======2232============="+quantityStr);
-
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
@@ -1842,44 +1598,21 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("UPrice" + thisSuffix)) {
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
-				
-				Debug.log("unitPriceStr======2232============="+unitPriceStr);
-
-				
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
 				}
-				
-				Debug.log("vatStr======2232============="+vatStr);
-
-				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
 				}
-				
-				Debug.log("cstStr======2232============="+cstStr);
-
-				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
 				}
-				
-				Debug.log("VatPercentStr======2232============="+VatPercentStr);
-
-				
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
 				}
-				
-				Debug.log("CSTPercentStr======2232============="+CSTPercentStr);
-
-				
 				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
 					orderItemSeq = (String) paramMap.get("oritemseq" + thisSuffix);
 				}
-
-				Debug.log("orderItemSeq======2232============="+orderItemSeq);
-
 				try {
 					quantity = new BigDecimal(quantityStr);
 				} catch (Exception e) {
@@ -1887,7 +1620,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
-				Debug.log("quantity======2232============="+quantity);
 
 				try {
 					if (!unitPriceStr.equals("")) {
@@ -1898,8 +1630,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
 					return "error";
 				} 
-				
-				Debug.log("uPrice======2232============="+uPrice);
 
 				try {
 					if (!vatStr.equals("")) {
@@ -1910,7 +1640,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VAT string: " + vatStr);
 					return "error";
 				}
-				Debug.log("vat======2232============="+vat);
 
 				try {
 					if (!cstStr.equals("")) {
@@ -1921,7 +1650,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
 					return "error";
 				}
-				Debug.log("cst======2232============="+cst);
 
 				//percenatges population
 				try {
@@ -1934,8 +1662,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				Debug.log("vatPercent======2232============="+vatPercent);
-				
 				try {
 					if (!CSTPercentStr.equals("")) {
 						cstPercent = new BigDecimal(CSTPercentStr);
@@ -1945,8 +1671,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 					return "error";
 				}
-				
-				Debug.log("cstPercent======2232============="+cstPercent);
 			}
 			GenericValue orderItemValue = null;
 
@@ -1979,13 +1703,6 @@ public class DepotPurchaseServices{
 			
 			//=====================================================================================
 
-			Debug.log("orderId======2232============="+orderId);
-
-			Debug.log("orderItemSeq======2232============="+orderItemSeq);
-
-			Debug.log("productId======2232============="+productId);
-
-			
 			List<GenericValue> salesOrderitems = null;
 			
 			 try {
@@ -2000,8 +1717,6 @@ public class DepotPurchaseServices{
 			  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(salesOrderitems));
 	*/		  			return "error";
 		        }
-			
-				Debug.log("salesOrderitems======2232============="+salesOrderitems);
 
 				GenericValue eachItem = null;
 			 
@@ -2018,11 +1733,6 @@ public class DepotPurchaseServices{
 			}
 			
 		}//end row count for loop
-		
-        Debug.log("toBillItems==============="+toBillItems);
-
-		
-		Debug.log("orderId=============="+orderId);
 	
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
@@ -2043,9 +1753,6 @@ public class DepotPurchaseServices{
 		
 		// Get Purpose type based on product
 		
-		
-		Debug.log("invoiceDate=============="+invoiceDate);
-		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
        	 try{
     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
@@ -2062,10 +1769,6 @@ public class DepotPurchaseServices{
     		}
 
 	    }
-		
-		Debug.log("invoiceAdjChargesList============"+invoiceAdjChargesList);
-		Debug.log("invoiceDiscountsList============"+invoiceDiscountsList);
-		
 		
 		List conditionList = FastList.newInstance();
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
@@ -2112,9 +1815,6 @@ public class DepotPurchaseServices{
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
             	
-        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
-
-            	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
             		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
                     Debug.logError(errMsg, module);
@@ -2156,10 +1856,6 @@ public class DepotPurchaseServices{
             createInvoiceItemContext.put("userLogin", userLogin);
             try{
             	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-            	
-        	    Debug.log("createInvoiceItemResult========toBillItems========="+createInvoiceItemResult);
-
-            	
             	if(ServiceUtil.isError(createInvoiceItemResult)){
             		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
                     Debug.logError(errMsg, module);
@@ -2212,20 +1908,11 @@ public class DepotPurchaseServices{
 			return "error";
 		}
 		
-		Debug.log("invoiceList========================"+invoiceList);
-		
-		Debug.log("shipment========================"+shipment);
-		
 		String partyId = (String)shipment.getString("partyIdTo");
 		
 		String shipmentId = (String)shipment.getString("shipmentId");
 		
 		String primaryOrderId = (String)shipment.getString("primaryOrderId");
-		
-		Debug.log("primaryOrderId========================"+primaryOrderId);
-		
-		Debug.log("partyId========================"+partyId);
-
 		
 		if(UtilValidate.isNotEmpty(shipment) && shipment.equals("SHIPMENT_CANCELLED")){
 			Debug.logError("Unable to generate Shipment: " + ServiceUtil.getErrorMessage(result), module);
@@ -2252,7 +1939,6 @@ public class DepotPurchaseServices{
 					GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
 					partyIdFrom = custOrderRole.getString("partyId");
 				}
-				Debug.log("partyIdFrom====================="+partyIdFrom);
 	           createInvoiceContext.put("partyIdFrom", partyIdFrom);
 	           createInvoiceContext.put("shipmentId", shipmentId);
 	           createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
@@ -2279,8 +1965,6 @@ public class DepotPurchaseServices{
 	          
 	           String invoiceId = (String) createInvoiceResult.get("invoiceId");
 	           
-	           Debug.log("invoiceId========================"+invoiceId);
-	           
 	//invoiceitemmmmm
 	           
 	           List conditionList = FastList.newInstance();
@@ -2296,14 +1980,10 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				
-				Debug.log("invoiceItemList======================"+invoiceItemList);
-				
 				for (int i = 0; i < invoiceItemList.size(); i++) {
 					
 				
 					GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
-					
-					Debug.log("TotalAmount========="+eachInvoiceList.getBigDecimal("amount"));
 					
 			  grandTotal = grandTotal.add(eachInvoiceList.getBigDecimal("amount").multiply(eachInvoiceList.getBigDecimal("quantity")));
 	           Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
@@ -2333,9 +2013,6 @@ public class DepotPurchaseServices{
 					return "error";
 				}
 				}
-	       
-
-		   Debug.log("invoiceItemList======================Success");
 	           
 	           String nextStatusId = "INVOICE_READY";
 	           try {
@@ -2350,7 +2027,6 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + invoiceId);
 					return "error";
 				}
-	           Debug.log("invoiceId=============2222==========="+invoiceId);
 	           
 	            nextStatusId = "INVOICE_APPROVED";
 	           try {
@@ -2417,10 +2093,6 @@ public class DepotPurchaseServices{
 			
 			BigDecimal balance = grandTotal.subtract(paidAmount);
 		   
-			Debug.log("grantTotal========"+grandTotal);
-			Debug.log("paidAmount========"+paidAmount);
-			Debug.log("balance========"+balance);
-			
 			 //for Sent SMS 
 			
 			Map<String, Object> getTelParams = FastMap.newInstance();
@@ -2510,7 +2182,6 @@ public class DepotPurchaseServices{
 		  	String shipmentId = (String) context.get("shipmentId");
 		  	String tallyrefNo = (String) context.get("tallyrefNo");
 		  	
-		  	Debug.log("#####context#########"+context);
 		  	boolean beganTransaction = false;
 		  	String currencyUomId = "INR";
 			Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -2605,9 +2276,6 @@ public class DepotPurchaseServices{
 				}
 				
 				String invoiceId = (String)result.get("invoiceId");
-				
-				
-				Debug.log("invoiceId======================"+invoiceId);
 				
 				Map itemSeqMap = FastMap.newInstance();
 				int i=0;
@@ -2716,9 +2384,6 @@ public class DepotPurchaseServices{
 					
 					itemSeqMap.put(productId, invItemSeqId);
 					
-					Debug.log("invItemSeqId========invItemSeqId=============="+invItemSeqId);
-
-					
 					if(UtilValidate.isNotEmpty(vatItemCtx)){
 						vatItemCtx.put("invoiceId", invoiceId);
 						vatItemCtx.put("parentInvoiceId", invoiceId);
@@ -2731,18 +2396,12 @@ public class DepotPurchaseServices{
 						}
 					}
 					
-					Debug.log("vatItemCtx========vatItemCtx=============="+vatItemCtx);
-
-					
 					if(UtilValidate.isNotEmpty(cstItemCtx)){
 						cstItemCtx.put("invoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceId", invoiceId);
 						cstItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
 						cstItemCtx.put("userLogin", userLogin);
 						result = dispatcher.runSync("createInvoiceItem", cstItemCtx);
-						
-						Debug.log("result========cstItemCtx=============="+result);
-
 						
 						if (ServiceUtil.isError(result)) {
 							Debug.logError("Error creating Invoice item for Item: CST PUR", module);	
@@ -2765,9 +2424,6 @@ public class DepotPurchaseServices{
 					i++;
 				}
 				
-				Debug.log("result========cstItemCtx=============="+result);
-
-				
 				for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
 					
 					String adjustmentTypeId = "";
@@ -2779,16 +2435,10 @@ public class DepotPurchaseServices{
 						invoiceItemCtx.put("invoiceItemTypeId", adjustmentTypeId);
 					}
 					
-					Debug.log("adjustmentTypeId========cstItemCtx=============="+adjustmentTypeId);
-
-					
 					if(UtilValidate.isNotEmpty(adjustMap.get("amount"))){
 						amount = (BigDecimal)adjustMap.get("amount");
 						invoiceItemCtx.put("amount", amount);
 					}
-					
-					Debug.log("amount========cstItemCtx=============="+amount);
-
 					
 					if(UtilValidate.isNotEmpty(adjustmentTypeId) && !(amount.compareTo(BigDecimal.ZERO) == 0)){
 						invoiceItemCtx.put("invoiceId", invoiceId);
@@ -2801,8 +2451,6 @@ public class DepotPurchaseServices{
 							if( UtilValidate.isNotEmpty(itemSeqMap.get(applicableTo))) {
 								String seqId = (String)itemSeqMap.get(applicableTo);
 								invoiceItemCtx.put("parentInvoiceItemSeqId", seqId);
-								Debug.log("seqId========cstItemCtx=============="+seqId);
-
 							}
 						}
 
@@ -2933,40 +2581,28 @@ public class DepotPurchaseServices{
 	  	String orderId = (String) context.get("orderId");
 	  	String isDisableAcctg = (String) context.get("isDisableAcctg");
 	  	String shipmentId = (String) context.get("shipmentId");
-	  	Debug.log("#####context#########"+context);
 	  	boolean beganTransaction = false;
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		String partyId="Company";
         List<GenericValue> orderParty = null;  
 
-		Debug.log("invoiceDate==========333333========="+invoiceDate);
-
-        
-        
 		try {
 			orderParty = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_FROM_VENDOR"));
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
 
-		Debug.log("orderParty==========333333========="+orderParty);
-
 		if (UtilValidate.isNotEmpty(orderParty)) {
 			GenericValue custOrderRole = EntityUtil.getFirst(orderParty);
 			partyId = custOrderRole.getString("partyId");
 		}
-		
-		Debug.log("partyId==========333333========="+partyId);
 		
 		if (UtilValidate.isEmpty(partyIdFrom)) {
 			Debug.logError("Cannot create invoice without partyId: "+ partyIdFrom, module);
 			return ServiceUtil.returnError("partyId is empty");
 		}
 		
-		Debug.log("partyIdFrom==========333333========="+partyIdFrom);
-
-
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
 			
@@ -2977,10 +2613,6 @@ public class DepotPurchaseServices{
 			
 			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
 
-			
-			Debug.log("shipment==========333333========="+shipment);
-
-			
 			if(UtilValidate.isNotEmpty(shipment) && shipment.equals("SHIPMENT_CANCELLED")){
 				Debug.logError("Cannot create invoice for cancelled shipment", module);
 				return ServiceUtil.returnError("Cannot create invoice for cancelled shipment");
@@ -2994,8 +2626,6 @@ public class DepotPurchaseServices{
 				Debug.logError("GRN not found for the shipment: "+shipmentId, module);
 				return ServiceUtil.returnError("GRN not found for the shipment: "+shipmentId);
 			}
-			
-			Debug.log("shipmentReceipts==========333333========="+shipmentReceipts);
 
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -3003,18 +2633,10 @@ public class DepotPurchaseServices{
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_EQUAL, "SALES_INVOICE"));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> invoices = delegator.findList("Invoice", condition, null, null, null, false);
-			
-			Debug.log("invoices==========111111========="+invoices);
-
 			/*if(UtilValidate.isNotEmpty(invoices)){
 				Debug.logError("Invoices already generated for shipment : "+shipmentId, module);
 				return ServiceUtil.returnError("Invoices already generated for shipment : "+shipmentId);
 			}*/
-
-			
-			Debug.log("invoices==========333333========="+invoices);
-
-			
 			
 			/*Map resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQtyList, "otherCharges", invoiceAdjChargesList, "userLogin", userLogin, "incTax", ""));
 			if(ServiceUtil.isError(resultCtx)){
@@ -3027,8 +2649,6 @@ public class DepotPurchaseServices{
 			//List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
 			
 			//invoiceDiscountsList
-			
-			Debug.log("invoiceDate==========333333========="+invoiceDate);
 
 			Map input = FastMap.newInstance();
 			input.put("userLogin", userLogin);
@@ -3053,11 +2673,6 @@ public class DepotPurchaseServices{
 			
 			String invoiceId = (String)result.get("invoiceId");
 
-
-			
-			Debug.log("invoiceId==========333333========="+invoiceId);
-
-			
 			Map itemSeqMap = FastMap.newInstance();
 			int i=0;
 			for (Map<String, Object> prodQtyMap : productQtyList) {
@@ -3814,19 +3429,14 @@ public class DepotPurchaseServices{
 			    }
 
 			try{
-				Debug.log("address1================="+address1);
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION");
 					resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
 					
-					Debug.log("resultContatMap================="+resultContatMap);
-
 					if (ServiceUtil.isError(resultContatMap)) {
 						Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
 		            }
 					contactMechId = (String) resultContatMap.get("contactMechId");
-
-					Debug.log("contactMechId================="+contactMechId);
 
 					Object tempInput = "SHIPPING_LOCATION";
 					input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyIdTo, "contactMechPurposeTypeId", tempInput);
@@ -3836,8 +3446,6 @@ public class DepotPurchaseServices{
 		            }
 					partyIdTo = (String) resultContatMap.get("partyId"); 
 					
-					Debug.log("partyIdTo================="+partyIdTo);
-
 				 }else{
 					 
 					 try {
@@ -4489,7 +4097,6 @@ public class DepotPurchaseServices{
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 				List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-				Debug.log("orderAssocList ==============="+orderAssocList);
 				if(UtilValidate.isNotEmpty(orderAssocList)){
 					salesOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
 				}
@@ -4617,7 +4224,6 @@ public class DepotPurchaseServices{
 			orderApprovalMessageToWeaver = orderApprovalMessageToWeaver.replaceAll("poNumber", orderId);
 			orderApprovalMessageToWeaver = orderApprovalMessageToWeaver.replaceAll("orderId", salesOrderId);
 			orderApprovalMessageToWeaver = orderApprovalMessageToWeaver.replaceAll("supplierName", suppName);
-			Debug.log("orderApprovalMessageToWeaver =============="+orderApprovalMessageToWeaver);
 			
 			// send sms to weaver
 			List<GenericValue> corl = null;
@@ -4685,7 +4291,6 @@ public class DepotPurchaseServices{
             orderApprovalMessageToSupplier = orderApprovalMessageToSupplier.replaceAll("orderId", orderId);
             orderApprovalMessageToSupplier = orderApprovalMessageToSupplier.replaceAll("societyName", customerName);
             orderApprovalMessageToSupplier = orderApprovalMessageToSupplier.replaceAll("material", smsContent);
-			Debug.log("orderApprovalMessageToSupplier =============="+orderApprovalMessageToSupplier);
 			
             // send sms to supplier
             
@@ -4793,15 +4398,12 @@ public class DepotPurchaseServices{
     					//prodCatTaxCtx.put("taxAuthorityRateTypeId", orderTaxType);
     				  	try{
     				  		Map resultCtx = dispatcher.runSync("calculateTaxesByGeoId",prodCatTaxCtx);  	
-    				  		Debug.log("resultCtx =========="+resultCtx);
     				  		
     				  		if(supplierGeoId.equals(branchGeoId)){
     				  			vatPercent = (BigDecimal) resultCtx.get("vatPercent");
-        				  		Debug.log("vatPercent =========="+vatPercent);
     				  		}
     				  		else{
     				  			cstPercent = (BigDecimal) resultCtx.get("cstPercent");
-        				  		Debug.log("cstPercent =========="+cstPercent);
     				  		}
     				  		
     				  	}catch (GenericServiceException e) {
@@ -4881,13 +4483,7 @@ public class DepotPurchaseServices{
 		       		
 			    	productSummaryMap.put(productId,productDetailsMap);
                
-			    	//Debug.log("prdQuantity============================================"+prdQuantity);
-			    	//Debug.log("prdAmount============================================"+prdAmount);               
-               
                }
-		    	//Debug.log("productSummaryMap============================================"+productSummaryMap);
-                //smsContent = smsContent +" For future enquiries quote the P.O number.";
-                //Debug.log("smsContent================================"+smsContent);
 			}catch(GenericEntityException ex){
 				Debug.log("Problem in fetching orderItems");
 			}
