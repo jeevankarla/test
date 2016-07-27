@@ -650,7 +650,7 @@ under the License.
         <response name="error" type="view" value="EditPaymentGatewayConfig"/>
     </request-map>
     
-     <request-map uri="fetchPaymentTypes">
+    <request-map uri="fetchPaymentTypes">
        <security https="true" auth="true"/>
        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="fetchPaymentTypes.groovy"/>
        <response name="success" type="request" value="json"/>

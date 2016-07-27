@@ -2000,7 +2000,7 @@
                                 <screenlet title="New Incoming Advance">
                                     <include-form name="NewOutgoingAdvancesPaid" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
-                                <platform-specific>
+                             <platform-specific>
                                    <html><html-template location="component://accounting/webapp/accounting/reports/onAccountPaymentType.ftl"/></html>
                            </platform-specific>
                             </widgets>

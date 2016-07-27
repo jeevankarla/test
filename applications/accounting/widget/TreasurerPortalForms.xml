@@ -1378,7 +1378,7 @@ under the License.
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
-               <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >

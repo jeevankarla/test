@@ -4,7 +4,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
