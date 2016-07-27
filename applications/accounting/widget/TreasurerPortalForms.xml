@@ -1220,8 +1220,10 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="transactionDate" position="2" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>       
         <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
@@ -2083,6 +2085,7 @@ under the License.
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
         <field position="1" name="amount"><text/></field>
+        <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field>
         <field name="paymentRefNum"><text-find ignore-case="true"/></field>
         <!--<field name="paymentGatewayResponseId"><text/></field>-->
         <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
@@ -2110,6 +2113,7 @@ under the License.
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="comments"><display/></field>
+        <field name="tallyRefNo"><display/></field>
         <field name="cancelComments" title="Reason For Voided"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
