@@ -649,6 +649,13 @@ under the License.
         <response name="success" type="view" value="EditPaymentGatewayConfig"/>
         <response name="error" type="view" value="EditPaymentGatewayConfig"/>
     </request-map>
+    
+    <request-map uri="fetchPaymentTypes">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="fetchPaymentTypes.groovy"/>
+       <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>    
+    </request-map> 
     <request-map uri="UpdatePaymentGatewayConfigClearCommerce">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePaymentGatewayConfigClearCommerce"/>
