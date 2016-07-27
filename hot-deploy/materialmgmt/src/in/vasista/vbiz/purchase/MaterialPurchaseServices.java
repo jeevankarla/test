@@ -5184,19 +5184,21 @@ catch(Exception e){
 		     if(UtilValidate.isNotEmpty(panId)){
 		       	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
 		  	  }
+		     Timestamp issueDate = null;
 		     if(UtilValidate.isNotEmpty(passBook)){
-		    	 Timestamp issueDate = null;
 		    	 if(UtilValidate.isNotEmpty(context.get("passBookIssueDate"))){
-		    			SimpleDateFormat SimpleDF1 = new SimpleDateFormat("dd:mm:yyyy hh:mm");
-					 if(UtilValidate.isNotEmpty(passBookIssueDateStr)){
-				  		try {
-				  			issueDate = new java.sql.Timestamp(SimpleDF1.parse(passBookIssueDateStr).getTime());
-					  	} catch (ParseException e) {
-					  		Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
-					  	} catch (NullPointerException e) {
-				  			Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
-					  	}
-				  	}
+		    		  SimpleDateFormat SimpleDF1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+					  if(UtilValidate.isNotEmpty(passBookIssueDateStr)){
+					  		try {
+					  			issueDate = new java.sql.Timestamp(SimpleDF1.parse(passBookIssueDateStr).getTime());
+
+						  	} catch (ParseException e) {
+						  		Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
+						  	} catch (NullPointerException e) {
+					  			Debug.logError(e, "Cannot parse date string: " + passBookIssueDateStr, module);
+						  	}
+				  	   }
 				 }else{
 					 issueDate= UtilDateTime.nowTimestamp();
 				 }
