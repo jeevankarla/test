@@ -1206,6 +1206,27 @@ public class DepotSalesApiServices{
 			loomDetails.put(eachLoomType.getString("loomTypeId"),loomDetailMap);
 		}
 		
+		Map customerBranch = FastMap.newInstance();
+		try {
+			customerBranch = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId));
+		} catch(Exception e){
+			Debug.logError("Problem while getting Customer Branch details with:"+partyId, module);
+			return ServiceUtil.returnError("Problem while getting Customer Branch details with partyId:"+partyId);
+		}
+		List<GenericValue> productStoreList = (List)customerBranch.get("productStoreList");
+
+		Map customerBranchMap = FastMap.newInstance();
+		for(GenericValue eachProdStore:productStoreList){
+			Map tempMap = FastMap.newInstance();
+			tempMap.put("productStoreId",eachProdStore.getString("productStoreId"));
+			tempMap.put("storeName",eachProdStore.getString("storeName"));
+			tempMap.put("storeName",eachProdStore.getString("storeName"));
+			tempMap.put("title",eachProdStore.getString("title"));
+			tempMap.put("payToPartyId",eachProdStore.getString("payToPartyId"));
+			
+			customerBranchMap.put(eachProdStore.getString("productStoreId"),tempMap);
+		}
+		
 		Map resultMap = FastMap.newInstance();
 		resultMap.put("partyId",partyId);
 		resultMap.put("partyName",partyName);
@@ -1217,7 +1238,9 @@ public class DepotSalesApiServices{
 		resultMap.put("DOA",DOA);
 		resultMap.put("loomDetails",loomDetails);
 		resultMap.put("totalLooms",totalLooms);
+		resultMap.put("customerBranchMap",customerBranchMap);
 		result.put("weaverDetails",resultMap);
+		
 		return result;
     }
     
