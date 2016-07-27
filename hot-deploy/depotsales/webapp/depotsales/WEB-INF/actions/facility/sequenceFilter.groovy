@@ -12,10 +12,9 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
-String invoiceId = "";
 if(UtilValidate.isNotEmpty(parameters.invoiceSequence)){
 	invoiceSequence = parameters.invoiceSequence;
 	billOfSaleInvoiceSequence = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceSequence", EntityOperator.EQUALS , invoiceSequence)  , null, null, null, false );
 	invoiceId=EntityUtil.getFirst(billOfSaleInvoiceSequence).invoiceId;
+	parameters.invoiceId=invoiceId;
 }
-parameters.invoiceId=invoiceId;
