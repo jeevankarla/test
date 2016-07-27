@@ -1367,7 +1367,7 @@ under the License.
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'newPayment'),(document.NewPaymentOut.submit())">
+        <field position="1" name="organizationPartyId" id-name="organizationPartyId"  parameter-name="partyIdFrom" event="onchange"  action="javascript:paymentMethodType();">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
@@ -1378,7 +1378,7 @@ under the License.
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
-                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+               <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
@@ -1391,8 +1391,10 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="transactionDate" position="2" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
         <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="chequeInFavour" position="2"><text size="50"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
