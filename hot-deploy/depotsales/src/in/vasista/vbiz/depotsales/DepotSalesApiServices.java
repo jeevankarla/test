@@ -741,6 +741,9 @@ public class DepotSalesApiServices{
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
 		}
+		if(UtilValidate.isEmpty(productStoreId)){
+			productStoreId = "PANIPAT";
+		}
 		String orderTaxType = (String) context.get("orderTaxType");
 		String schemeCategory = (String) context.get("schemeCategory");
 		String billingType = (String) context.get("billingType");
