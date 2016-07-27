@@ -581,6 +581,8 @@
 		<field name="partyId" type="id"></field>
 		<field name="glReconciliationId" type="id"></field>
 		<field name="transactionDate" type="date-time"></field>
+		<field name="tallyRefDate" type="date-time"></field>
+		<field name="tallyRefNo" type="id-ne"></field>
 		<field name="entryDate" type="date-time"></field>
 		<field name="amount" type="currency-amount"></field>
 		<field name="paymentId" type="id-ne"></field>
@@ -3358,6 +3360,7 @@
 		<field name="currencyUomId" type="id"></field>
 		<field name="paymentSequenceId" type="description"></field>
 		<field name="comments" type="comment"></field>
+		<field name="tallyRefNo" type="id-ne"></field>
 		<field name="cancelComments" type="long-varchar"></field>
 		<field name="cancelDate" type="date-time"></field><!-- Cheque bounce date -->
 		<field name="chequeReturns" type="indicator"><description>If this Payment is Cancelled because of cheque Bounce then check this flag.</description></field>
