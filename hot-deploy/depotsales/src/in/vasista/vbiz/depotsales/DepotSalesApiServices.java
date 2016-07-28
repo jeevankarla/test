@@ -1247,4 +1247,36 @@ public class DepotSalesApiServices{
 		return result;
     }
     
+    public static Map<String, Object> cancelIndent(DispatchContext ctx,Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess("Indent successfully Cancelled");
+		String partyId = (String) context.get("partyId");
+		String orderId = (String) context.get("orderId");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		
+		Map inputMap = FastMap.newInstance();
+		inputMap.put("userLogin", userLogin);
+		inputMap.put("partyId", partyId);
+		inputMap.put("orderId", orderId);
+		if(UtilValidate.isNotEmpty(salesChannelEnumId)){
+			inputMap.put("salesChannelEnumId", salesChannelEnumId);
+		}
+		
+		try{
+			result  = dispatcher.runSync("cancelIndentOrder", inputMap);
+		} catch(Exception e){
+			Debug.logError("Problem occured while Cancelling Indent with: "+partyId, module);
+			return ServiceUtil.returnError("Problem while Cancelling Indent with: "+partyId);
+		}
+		
+		if (ServiceUtil.isError(result)) {
+			String errMsg = ServiceUtil.getErrorMessage(result);
+			Debug.logError(errMsg, module);
+			return ServiceUtil.returnError(errMsg);
+        }
+		return result;
+    }
+    
 }
