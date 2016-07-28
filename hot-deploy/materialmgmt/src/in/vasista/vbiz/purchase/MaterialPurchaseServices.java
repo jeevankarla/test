@@ -294,7 +294,7 @@ public class MaterialPurchaseServices {
 			
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
-	        newEntity.set("estimatedShipDate", receiptDate);
+	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 	        }else{
@@ -618,7 +618,25 @@ public class MaterialPurchaseServices {
 					
 				}
 			}
-			
+			GenericValue orderHeaderDetails = null;
+			orderHeaderDetails = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+	        String statusId = orderHeaderDetails.getString("statusId");
+	        if(statusId.equals("ORDER_COMPLETED")){
+				List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+				String toOrderId ="";
+				if(UtilValidate.isNotEmpty(orderAssoc)){
+					toOrderId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+				}
+	        	Map statusCtx = FastMap.newInstance();
+	 			statusCtx.put("statusId", statusId);
+	 			statusCtx.put("orderId", toOrderId);
+	 			statusCtx.put("userLogin", userLogin);
+	 			Map resultCtx = OrderServices.setOrderStatus(dctx, statusCtx);
+	 			if (ServiceUtil.isError(resultCtx)) {
+	 				Debug.logError("Order set status failed for orderId: " + orderId, module);
+	 				return "error";
+	 			} 
+	        }
 	if(UtilValidate.isNotEmpty(hideQCflow)&&("Y".equals(hideQCflow))){
 				
 			Map inputMap = FastMap.newInstance();
@@ -644,7 +662,6 @@ public class MaterialPurchaseServices {
 			inputMap.put("quantityAccepted",shipmentReceipt.get("quantityAccepted"));
 			inputMap.put("userLogin",userLogin);
 			resultMap = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
-			
 			if (ServiceUtil.isError(resultMap)) {
 				Debug.logWarning("There was an error while Accepting in QC: " + ServiceUtil.getErrorMessage(resultMap), module);
 				request.setAttribute("_ERROR_MESSAGE_", "There was an error Accepting in QC: " + ServiceUtil.getErrorMessage(resultMap));	
@@ -758,8 +775,6 @@ public class MaterialPurchaseServices {
 				//request.setAttribute("_ERROR_MESSAGE_", "Could not get date from OrderRole" );
 				//return "error";
 			}
-			Debug.log("customerId==========="+customerId);
-	
 		}
 
 		String shipmentMessageToWeaver = UtilProperties.getMessage("ProductUiLabels", "ShipmentMessageToWeaver", locale);
@@ -770,17 +785,9 @@ public class MaterialPurchaseServices {
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("estimatedReadyDate", lrDateStr);
-		
-		
-		
-		Debug.log("shipmentMessageToWeaver =============="+shipmentMessageToWeaver);
-		
-		
-		//Debug.log("smsContent==========="+smsContent);
 		if(UtilValidate.isNotEmpty(customerId)){
 			String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,supplierId, false);
 			Map<String, Object> getTelParams = FastMap.newInstance();
-			//Debug.log("customerId========================="+customerId);
 			if(UtilValidate.isEmpty(customerName)){
 				customerName=supplierId;
 			}
@@ -1157,7 +1164,6 @@ public class MaterialPurchaseServices {
 	  		  		Debug.logError(errMsg , module);
 	  		  		return ServiceUtil.returnError(errMsg);
 				}
-				Debug.log("#####resultCtx#########"+resultCtx);
 				List<Map> itemDetails = (List)resultCtx.get("itemDetail");
 				List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
 				Map input = FastMap.newInstance();
@@ -1963,7 +1969,6 @@ public class MaterialPurchaseServices {
 	        	Map<String, Object> orderItemDetail = FastMap.newInstance();
 				String orderItemSeqId="";
 				orderItemSeqId=(String)prodItemMap.get("orderItemSeqId");
-				Debug.log("orderItemSeqId========IN=============="+orderItemSeqId);
 				BigDecimal quotaQuantity = BigDecimal.ZERO;
 				BigDecimal discountAmount = BigDecimal.ZERO;
 				orderItemDetail.put("orderId",orderId);
@@ -2858,10 +2863,6 @@ public class MaterialPurchaseServices {
 				orderItemChange.put("changeTypeEnumId", "ODR_ITM_AMEND");
 				orderItemChange.put("orderId", orderId);
 				orderItemChange.put("orderItemSeqId", orderItemSeqId);
-				
-				
-				Debug.log("amendedQuantity======2121========="+amendedQuantity);
-				
 				if(amendedQuantity.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("quantity", amendedQuantity);
 					orderItem.set("quantity", amendedQuantity);
@@ -2908,12 +2909,6 @@ public class MaterialPurchaseServices {
 				onBeHalfOf = (String) onbeha.get("attrValue");
 			}
 			
-				
-			Debug.log("Scheam================="+Scheam);
-			
-			Debug.log("onBeHalfOf================="+onBeHalfOf);
-
-			
 			  List condLIst = FastList.newInstance();
 	    	   condLIst.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	    	   condLIst.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
@@ -2953,16 +2948,8 @@ public class MaterialPurchaseServices {
 		  		return "error";
 				
 			}
-			
-			Debug.log("productCategoriesList=========3333==============="+productCategoriesList);
-
 			//BigDecimal balanceQuota = BigDecimal.ZERO;
 			// Get first productCategoriesList. We got productCategoryId here
-			
-			Debug.log("Scheam=========3333==============="+Scheam);
-			
-			
-			
 			BigDecimal actualQty = BigDecimal.ZERO;
 			
 			BigDecimal updateQuta = BigDecimal.ZERO;
@@ -2974,11 +2961,6 @@ public class MaterialPurchaseServices {
 			BigDecimal partyBalanceQuota = BigDecimal.ZERO;
 			
 			updateQuta = amendedQuantity.subtract(actualQty);
-			
-            Debug.log("actualQty=========3333==============="+actualQty);
-
-            Debug.log("updateQuta=========3333==============="+updateQuta);
-
 			if(Scheam.equals("MGPS_10Pecent")){
 				
 				
@@ -2994,15 +2976,7 @@ public class MaterialPurchaseServices {
 				productCategoryQuotasMap = (Map) resultCtx.get("schemesMap");
 				
 				partyBalanceQuota = (BigDecimal) productCategoryQuotasMap.get(productCategoryId);
-				
-				Debug.log("productCategoryQuotasMap=========3333==============="+productCategoryQuotasMap);
-                Debug.log("partyBalanceQuota=========3333==============="+partyBalanceQuota);
-                
                 int updateQuotaSign = updateQuta.signum();
-                
-                Debug.log("updateQuotaSign=========3333==============="+updateQuotaSign);
-
-                
                 if(updateQuta.compareTo(BigDecimal.ZERO)>0 && partyBalanceQuota.compareTo(BigDecimal.ZERO)>0){
                 Map partyBalanceHistoryContext = FastMap.newInstance();
 				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId","C02108","productCategoryId","COTTON_UPTO40","dateTimeStamp", supplyDate,"quantity",updateQuta,"userLogin", userLogin);
@@ -3028,7 +3002,6 @@ public class MaterialPurchaseServices {
     				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
     				try{
     					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-    					Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
     					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
     				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
     				    
@@ -3083,14 +3056,6 @@ public class MaterialPurchaseServices {
 				Map productCategoryQuotasMap1 = (Map) resultCtx1.get("schemesMap");
 				
 				BigDecimal partyBalanceQuota1 = (BigDecimal) productCategoryQuotasMap1.get(productCategoryId);
-		
-				Debug.log("partyBalanceQuota1=====Used====3333==============="+partyBalanceQuota1);
-
-                
-                
-                
-                
-                
 				/*List condsList = FastList.newInstance();
 			  	condsList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
 			  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
