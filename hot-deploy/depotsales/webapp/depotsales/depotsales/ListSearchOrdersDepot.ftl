@@ -128,7 +128,7 @@ $(function(){
              else
              $('.scrollup').fadeIn();
             
-        }
+        } 
         _top = _cur_top;
         //console.log(_direction);
     });

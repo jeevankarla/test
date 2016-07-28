@@ -180,7 +180,7 @@ if(facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || 
 		branchbillFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
 		
 		branchbasedIds = EntityUtil.getFieldListFromEntityList(branchbillFromVendorOrderRoles, "orderId", true);
-		
+		   
 		//orderHeaderbefo = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,branchbasedIds));
 	

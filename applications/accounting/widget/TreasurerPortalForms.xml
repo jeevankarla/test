@@ -21,7 +21,7 @@ under the License.
    <form name="ListFinAccountsAlt" type="list" separate-columns="true" default-entity-name="FinAccount" list-name="listIt" paginate-target="FindFinAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="FinAccount"/>
                 <field-map field-name="orderBy" value="finAccountId"/>

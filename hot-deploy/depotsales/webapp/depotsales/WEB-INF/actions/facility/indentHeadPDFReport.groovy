@@ -611,7 +611,7 @@ if(contactMechesDetails){
 				 }
 			}
 			
-			
+			    
 			double tenPerQty = 0;
 			tenPerQty = schemeQQQty;
 			tempMap.put("schemeQty", schemeQQQty);
