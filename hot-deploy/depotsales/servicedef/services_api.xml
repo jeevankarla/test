@@ -93,5 +93,14 @@
         <attribute type="Map" mode="OUT" name="weaverDetails" optional="true"/>
     </service>
     
+    <service name="cancelIndent" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="cancelIndent">
+        <description>Cancel Indent</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+        <attribute type="Map" mode="OUT" name="weaverDetails" optional="true"/>
+    </service>
+    
 </services>
 
