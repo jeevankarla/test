@@ -499,6 +499,8 @@ if(contactMechesDetails){
 	Debug.log("invoiceItemList================="+invoiceItemList.size());
 	
 	double invoAmt = 0;
+	
+	double grandTotal = 0;
 	for (eachItem in invoiceItemList) {
 		
 		   tempMap = [:];
@@ -524,52 +526,148 @@ if(contactMechesDetails){
 		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-		   
-		      //OrderItemBilling = EntityUtil.filterByCondition(OrderItemBilling, cond);
-		   itemOrderId = "";
-		   orderItemSeqId = "";
-		   Debug.log("OrderItemBilling============="+OrderItemBilling);
-		   if(OrderItemBilling[0]){			
-		   itemOrderId  = OrderItemBilling[0].orderId;
-		   orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
+		  
+		
+		 		 
+		 itemOrderId  = OrderItemBilling[0].orderId;
+		 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
+		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
+	
+		 
+	
+		 quantity = eachItem.quantity;
+		 amount = eachItem.amount;
+		
+		 double baleQty = 0; 
+		 double unit = 0;
+		 double quotaQuantity = 0;
+	  
+		 for (eachOrderItemDetail in OrderItemDetail) {
+		
+			 if(eachOrderItemDetail.baleQuantity)
+			 baleQty = baleQty+Double.valueOf(eachOrderItemDetail.baleQuantity);
+			 
+			 
+			 if(eachOrderItemDetail.unitPrice)
+			 unit = unit+Double.valueOf(eachOrderItemDetail.unitPrice);
+			 
+			 
+			 if(eachOrderItemDetail.quotaQuantity)
+			 quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItemDetail.quotaQuantity);
+			 
+		}
+		 
+		 tempMap.put("unit", unit);
+		 
+		 
+		    if(baleQty)
+			tempMap.put("baleQty",baleQty);
+			else
+			tempMap.put("baleQty","");
+			
+			
+		   tempMap.put("quantity", eachItem.quantity);
+		
+		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
+			
+			
+			//==============scheme Quantity===============
+			
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
+			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			invoiceInnerAdjItemList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
+	   
+			double schemeQQQty = 0;
+			if(invoiceInnerAdjItemList){
+				
+				 invoiceIdAdj = invoiceInnerAdjItemList[0].invoiceId; 
+				 invoiceItemSeqIdAdj = invoiceInnerAdjItemList[0].invoiceItemSeqId;
+				 
+				 
+				 conditionList.clear();
+				 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdAdj));
+				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdAdj));
+				 conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				 OrderAdjustmentAndBilling = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
+	 
+				 if(OrderAdjustmentAndBilling[0])
+				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
+				
+			}
+			
+			
+			double tenPerQty = 0;
+			tenPerQty = schemeQQQty;
+			tempMap.put("schemeQty", schemeQQQty);
+			
+			//=====================================================================
+			
+			/*if(quantity > quotaQuantity)
+			{
+			  tempMap.put("schemeQty", quotaQuantity);
+			  tenPerQty = quotaQuantity;
+			}
+			else
+			{
+			  tempMap.put("schemeQty", quantity);
+			  tenPerQty = quantity;
+			}*/
+		
+		/*if(UtilValidate.isNotEmpty(schemeAmt))
+		  tempMap.put("schemeQty", Double.valueOf(schemeAmt));
+		else
+		  tempMap.put("schemeQty", 0);
+*/		  
+		  
+		  if(scheme == "General")
+		  tempMap.put("mgpsQty", 0);
+		  else
+		  tempMap.put("mgpsQty", quantity-tenPerQty);
+			
+		  
+		 double serviceAmt = 0;
+		 double sourcePercentage = 0;
+		 
+		  if(scheme == "General"){
+			  
+			  conditionList.clear();
+			  conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
+			  conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
+			  conditionList.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS,"Service Charge"));
+			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
+			  
+			  if(invoiceInnerAdjItemList){
+			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount;
+			  //sourcePercentage = sourcePercentage+invoiceInnerAdjItemList[0].sourcePercentage;
+			  
+			  }
+		  }
+		  
+		  
+		  if(scheme == "General"){
+			  
+			  sourcePercentage = (serviceAmt/(quantity*amount))*100;
+			  double perAmt = (eachItem.amount*sourcePercentage)/100;
+			  
+			  tempMap.put("amount",(eachItem.amount+perAmt));
+			  }else{
+			  tempMap.put("amount", eachItem.amount);
 		   }
-		 //  Debug.log("itemOrderId============="+itemOrderId);
-		 //  Debug.log("orderItemSeqId============="+orderItemSeqId);
-		   
-		   
-		   conditionList.clear();
-		   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
-		   conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
-		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		   //OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
-  
-		   OrderItemDetail = EntityUtil.filterByCondition(OrderItemDetail, cond);
-		   
-		   Debug.log("OrderItemDetail============="+OrderItemDetail.size());
-		   
-		   
-		   double quotaQuantity = 0;
-		   
-		   if(OrderItemDetail[0])
-		   quotaQuantity = OrderItemDetail[0].quotaQuantity;
-		   
-		   double quantity = Double.valueOf(eachItem.quantity);
-		   double tenPerQty = 0;
-		   
-		   Debug.log("quantity============="+quantity);
-		   Debug.log("quotaQuantity============="+quotaQuantity);
-		   
-		   if(quantity > quotaQuantity)
-		   {
-			 tempMap.put("schemeQty", quotaQuantity);
-			 tenPerQty = quotaQuantity;
-		   }
-		   else
-		   {
-			 tempMap.put("schemeQty", quantity);
-			 tenPerQty = quantity;
-		   }
-		   
+			  
+		  
+		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
+		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 		  
 		   
 		   

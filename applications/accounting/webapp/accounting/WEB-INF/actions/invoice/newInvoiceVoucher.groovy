@@ -581,11 +581,14 @@ context.externalOrderId = externalOrderId;
 		 
 		// String seq = String.format("%05d", i);
 		 
-		 conditionList.clear();
-		 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-		 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachInvoiceList.invoiceItemSeqId));
-		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		 OrderItemBilling = delegator.findList("OrderItemBilling", cond, null, null, null, false);
+		 
+		   conditionList.clear();
+		   conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+		   conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachInvoiceList.invoiceItemSeqId));
+		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+		  
 		
 		 		 
 		 itemOrderId  = OrderItemBilling[0].orderId;
@@ -654,9 +657,45 @@ context.externalOrderId = externalOrderId;
 		    tempMap.put("quantity", quantity);
 		
 		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
-			double tenPerQty = 0;
 			
-			if(quantity > quotaQuantity)
+			
+			//==============scheme Quantity===============
+			
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachInvoiceList.invoiceItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
+	   
+			double schemeQQQty = 0;
+			if(invoiceInnerAdjItemList){
+				
+				 invoiceIdAdj = invoiceInnerAdjItemList[0].invoiceId; 
+				 invoiceItemSeqIdAdj = invoiceInnerAdjItemList[0].invoiceItemSeqId;
+				 
+				 
+				 conditionList.clear();
+				 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdAdj));
+				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdAdj));
+				 conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				 OrderAdjustmentAndBilling = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
+	 
+				 if(OrderAdjustmentAndBilling[0])
+				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
+				
+			}
+			
+			
+			double tenPerQty = 0;
+			tenPerQty = schemeQQQty;
+			tempMap.put("schemeQty", schemeQQQty);
+			
+			//=====================================================================
+			
+			/*if(quantity > quotaQuantity)
 			{
 			  tempMap.put("schemeQty", quotaQuantity);
 			  tenPerQty = quotaQuantity;
@@ -665,7 +704,7 @@ context.externalOrderId = externalOrderId;
 			{
 			  tempMap.put("schemeQty", quantity);
 			  tenPerQty = quantity;
-			}
+			}*/
 		
 		/*if(UtilValidate.isNotEmpty(schemeAmt))
 		  tempMap.put("schemeQty", Double.valueOf(schemeAmt));
