@@ -128,7 +128,7 @@ $(function(){
              else
              $('.scrollup').fadeIn();
             
-        }
+        } 
         _top = _cur_top;
         //console.log(_direction);
     });
@@ -180,7 +180,7 @@ $(function(){
                          $("#displayedIndent").html(displayedIndent);      
                          $('div#orderSpinn').html("");
                          if(orderData.length < 3){
-                           document.body.style.overflow = 'hidden';
+                          // document.body.style.overflow = 'hidden';
                            $("#displayedIndent").html("1");
                          }
                         if(displayedIndent <=20)

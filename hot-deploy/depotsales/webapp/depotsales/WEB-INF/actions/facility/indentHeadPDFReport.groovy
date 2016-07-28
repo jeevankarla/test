@@ -459,7 +459,7 @@ if(contactMechesDetails){
 //==============================All Taxes==================================================	
 	
 	double altaxAmt = 0;
-	conditionList.clear();
+	/*conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
@@ -471,7 +471,7 @@ if(contactMechesDetails){
 			altaxAmt = altaxAmt +Double.valueOf( eachAdjment.amount);
 		}
 	}
-	}
+	}*/
 	
 //==============================ten Per==================================	
 	
@@ -489,6 +489,9 @@ if(contactMechesDetails){
 		
 		if(eachAdjment.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
+		}else{
+		   
+		    altaxAmt = altaxAmt+Double.valueOf( eachAdjment.amount);
 		}
 	}
 	
@@ -513,7 +516,7 @@ if(contactMechesDetails){
 		   
 		   tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 		   
-		   tempMap.put("at/OtherTax", altaxAmt);
+		   tempMap.put("altaxAmt", altaxAmt);
 		   
 		 //  Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
 		   
@@ -587,6 +590,7 @@ if(contactMechesDetails){
 			invoiceInnerAdjItemList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 	   
 			double schemeQQQty = 0;
+			double schemeAMMMt = 0;
 			if(invoiceInnerAdjItemList){
 				
 				 invoiceIdAdj = invoiceInnerAdjItemList[0].invoiceId; 
@@ -600,12 +604,14 @@ if(contactMechesDetails){
 				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				 OrderAdjustmentAndBilling = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
 	 
-				 if(OrderAdjustmentAndBilling[0])
+				 if(OrderAdjustmentAndBilling[0]){
 				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
+				 schemeAMMMt = OrderAdjustmentAndBilling[0].amount;
 				
+				 }
 			}
 			
-			
+			    
 			double tenPerQty = 0;
 			tenPerQty = schemeQQQty;
 			tempMap.put("schemeQty", schemeQQQty);
@@ -675,7 +681,7 @@ if(contactMechesDetails){
 			
 			tempMap.put("cluster", "");
 			
-			tempMap.put("subsidyAmt", tenPerAmt);
+			tempMap.put("subsidyAmt", schemeAMMMt);
 			
 			tempMap.put("District", shipingAdd.get("city"));
 			

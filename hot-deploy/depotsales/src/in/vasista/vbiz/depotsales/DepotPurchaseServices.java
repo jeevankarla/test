@@ -71,7 +71,7 @@ public class DepotPurchaseServices{
 
    public static final String module = DepotPurchaseServices.class.getName();
    
-   
+      
 	public static String processDepotPurchaseInvoice(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

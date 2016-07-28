@@ -21,7 +21,7 @@ under the License.
    <form name="ListFinAccountsAlt" type="list" separate-columns="true" default-entity-name="FinAccount" list-name="listIt" paginate-target="FindFinAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="FinAccount"/>
                 <field-map field-name="orderBy" value="finAccountId"/>
@@ -2050,7 +2050,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
         <field name="paymentSequenceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+       <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>  -->
         <field name="comments"><text-find ignore-case="true"/></field>
         <!-- <field name="paymentMethodTypeId">
             <drop-down allow-empty="true">
