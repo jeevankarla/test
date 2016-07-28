@@ -279,9 +279,10 @@ public class DepotPurchaseServices{
 				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
-					
-					if(discQty.compareTo(BigDecimal.ONE)>0){
-						adjDiscAmt = adjDiscAmt.divide(discQty);
+					if(discQty.doubleValue()>0){
+						//adjDiscAmt = adjDiscAmt.divide(discQty);
+						double tempAdjAmt = adjDiscAmt.doubleValue()/discQty.doubleValue();
+						adjDiscAmt = new BigDecimal(tempAdjAmt);
 						adjQty = discQty;
 					}
 				}
@@ -684,8 +685,10 @@ public class DepotPurchaseServices{
 				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
-					if(discQty.compareTo(BigDecimal.ONE)>0){
-						adjDiscAmt = adjDiscAmt.divide(discQty);
+					if(discQty.doubleValue()>0){
+						//adjDiscAmt = adjDiscAmt.divide(discQty);
+						double tempAdjAmt = adjDiscAmt.doubleValue()/discQty.doubleValue();
+						adjDiscAmt = new BigDecimal(tempAdjAmt);
 						adjQty = discQty;
 					}
 				}
@@ -1562,8 +1565,10 @@ public class DepotPurchaseServices{
 				
 				BigDecimal adjQty = BigDecimal.ONE;
 				if(UtilValidate.isNotEmpty(discQty)){
-					if(discQty.compareTo(BigDecimal.ONE)>0){
-						adjDiscAmt = adjDiscAmt.divide(discQty);
+					if(discQty.doubleValue()>0){
+						//adjDiscAmt = adjDiscAmt.divide(discQty);
+						double tempAdjAmt = adjDiscAmt.doubleValue()/discQty.doubleValue();
+						adjDiscAmt = new BigDecimal(tempAdjAmt);
 						adjQty = discQty;
 					}
 				}
@@ -1729,7 +1734,6 @@ public class DepotPurchaseServices{
 					eachItem.set("unitPrice", uPrice);
 						
 					toBillItems.add(eachItem);
-        
 			}
 			
 		}//end row count for loop
