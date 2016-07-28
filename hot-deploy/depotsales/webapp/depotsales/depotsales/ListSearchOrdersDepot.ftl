@@ -315,7 +315,7 @@ function drawRow(rowData) {
     var partyId = '\'' + rowData.partyId + '\'';
     
      
-     if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED"){
+     if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED"){
     var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
     
     var buutonName;
@@ -342,7 +342,7 @@ function drawRow(rowData) {
    else if(rowData.statusId == "ORDER_CANCELLED"){
        row.append($("<td>Order Cancelled</td>"));
   }
-   else if(rowData.statusId == "APPROVE_LEVEL3" || rowData.statusId == "ORDER_APPROVED"){
+   else if(rowData.statusId == "APPROVE_LEVEL3" || rowData.statusId == "ORDER_APPROVED" || rowData.statusId == "ORDER_COMPLETED"){
         row.append($("<td>P&S Approved</td>"));
     }else{
        row.append($("<td></td>"));
