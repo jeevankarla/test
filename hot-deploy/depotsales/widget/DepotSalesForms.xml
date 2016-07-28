@@ -2537,7 +2537,7 @@
 			<field name="invoiceId" title="invoiceId"><display/></field>
 			<field name="invoiceDate" title="invoiceDate"><display/></field>
 			<field name="invoiceAmount" title="invoiceAmount"><display/></field>
-			<field name="at/OtherTax" title="at/OtherTax"><display/></field>
+			<field name="altaxAmt" title="at/OtherTax"><display/></field>
 			<field name="schemeQty" title="schemeQty"><display/></field>
 			<field name="subsidyAmt" title="subsidyAmt"><display/></field>
 			<field name="userAgency" title="userAgency"><display/></field>

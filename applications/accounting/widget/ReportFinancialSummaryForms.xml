@@ -1078,14 +1078,16 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="facilityId" title="Booth Id"><display/></field>
+        <!-- <field name="facilityId" title="Booth Id"><display/></field>  -->
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem"/></field>
         <field name="comments"><display/></field>
+         <field name="tallyRefNo" title="Tally Reference Number"><display/></field>
         <field name="cancelComments" title="Reason For Voided"><display/></field>
        <field name="partyIdFrom"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdFrom, false);}[${partyIdFrom}]"/> </field>
     	<field name="partyIdTo"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);}[${partyIdTo}]"/></field>       
         <field name="paymentDate"><display/></field>
+        <field name="transactionDate" title="Tally Reference Date"><display/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>
