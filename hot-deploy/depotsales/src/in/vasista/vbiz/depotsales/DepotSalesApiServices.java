@@ -386,6 +386,60 @@ public class DepotSalesApiServices{
 	    	BigDecimal grandTOT = eachHeader.getBigDecimal("grandTotal");
 	    	BigDecimal balance = grandTOT.subtract(paidAmt);
 	    	tempData.put("balance", balance);
+	    		    	
+	    	conditonList.clear();
+	    	conditonList.add(EntityCondition.makeCondition("orderId" , EntityOperator.EQUALS, eachOrderId));
+	    	conditonList.add(EntityCondition.makeCondition("orderItemTypeId" , EntityOperator.EQUALS, "PRODUCT_ORDER_ITEM"));
+	    	conditonList.add(EntityCondition.makeCondition("productId" , EntityOperator.NOT_EQUAL, null));
+	    	List orderItems = FastList.newInstance();
+	    	try{
+	    		List<GenericValue> orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(conditonList, EntityOperator.AND), null, null, null ,false);
+	    		if(UtilValidate.isNotEmpty(orderItemList)){
+	    			for(GenericValue eachItem:orderItemList){
+		    			Map itemDetailMap = FastMap.newInstance();
+		    			BigDecimal quantity = BigDecimal.ZERO;
+		    			BigDecimal unitPrice = BigDecimal.ZERO;
+		    			BigDecimal vatPercent = BigDecimal.ZERO;
+		    			BigDecimal vatAmount = BigDecimal.ZERO;	
+		    			BigDecimal cstPercent = BigDecimal.ZERO;
+		    			BigDecimal cstAmount = BigDecimal.ZERO;
+		    			itemDetailMap.put("productId",eachItem.getString("productId"));
+		    			itemDetailMap.put("itemDescription",eachItem.getString("itemDescription"));
+		    			itemDetailMap.put("orderItemSeqId",eachItem.getString("orderItemSeqId"));
+		    			itemDetailMap.put("orderItemTypeId",eachItem.getString("orderItemTypeId"));
+		    			itemDetailMap.put("statusId",eachItem.getString("statusId"));
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("quantity"))){
+		    				quantity = eachItem.getBigDecimal("quantity");
+		    			}
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("unitPrice"))){
+		    				unitPrice = eachItem.getBigDecimal("unitPrice");
+		    			}
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("vatPercent"))){
+		    				vatPercent = eachItem.getBigDecimal("vatPercent");
+		    			}
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("vatAmount"))){
+		    				vatAmount = eachItem.getBigDecimal("vatAmount");
+		    			}
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("cstPercent"))){
+		    				cstPercent = eachItem.getBigDecimal("cstPercent");
+		    			}
+		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("cstAmount"))){
+		    				cstAmount = eachItem.getBigDecimal("cstAmount");
+		    			}
+		    			itemDetailMap.put("quantity",quantity);
+		    			itemDetailMap.put("unitPrice",unitPrice);
+		    			itemDetailMap.put("vatPercent",vatPercent);
+		    			itemDetailMap.put("vatAmount",vatAmount);
+		    			itemDetailMap.put("cstPercent",cstPercent);
+		    			itemDetailMap.put("cstAmount",cstAmount);
+		    			orderItems.add(itemDetailMap);
+		    		}
+	    		}
+	    	} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+	    	tempData.put("orderItemsList", orderItems);	    	
+	    	
 	    	orderList.add(tempData);
 	    }
 		
@@ -397,7 +451,7 @@ public class DepotSalesApiServices{
             }
         }
         
-        Debug.log("orderList =========== "+orderList);
+        //Debug.log("orderList =========== "+orderList);
 		Map result = FastMap.newInstance();  
     	Map orderDetailsMap = FastMap.newInstance();  
     	orderDetailsMap.put("orderList", orderList);
