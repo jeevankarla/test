@@ -220,6 +220,13 @@ public class DepotSalesApiServices{
 			Debug.logError(e, module);
 		}
         
+        List<GenericValue> statusItemList = null;
+	  	try{
+	  		statusItemList = delegator.findList("StatusItem",EntityCondition.makeCondition("statusTypeId",EntityOperator.IN, UtilMisc.toList("ORDER_STATUS", "ORDER_ITEM_STATUS")), null, null, null, false);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive StatusItem ", module);
+			return ServiceUtil.returnError("Failed to retrive StatusItem " + e);
+		}
         List orderList = FastList.newInstance();  
         GenericValue eachHeader; 
         while( orderHeaderList != null && (eachHeader = orderHeaderList.next()) != null) {
@@ -320,7 +327,8 @@ public class DepotSalesApiServices{
 	    	tempData.put("orderNo", eachOrderNo);
 	    	tempData.put("orderId", eachOrderId);
 	    	tempData.put("orderDate", String.valueOf(eachHeader.get("estimatedDeliveryDate")).substring(0,10));
-	    	tempData.put("statusId", eachHeader.get("statusId"));
+	    	GenericValue filteredOrderStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+	    	tempData.put("statusId", filteredOrderStatus.getString("description"));
     	
 	    	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 	    		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
@@ -407,7 +415,8 @@ public class DepotSalesApiServices{
 		    			itemDetailMap.put("itemDescription",eachItem.getString("itemDescription"));
 		    			itemDetailMap.put("orderItemSeqId",eachItem.getString("orderItemSeqId"));
 		    			itemDetailMap.put("orderItemTypeId",eachItem.getString("orderItemTypeId"));
-		    			itemDetailMap.put("statusId",eachItem.getString("statusId"));
+		    			GenericValue filteredItemStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+		    			itemDetailMap.put("statusId", filteredItemStatus.getString("description"));
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("quantity"))){
 		    				quantity = eachItem.getBigDecimal("quantity");
 		    			}
@@ -426,12 +435,12 @@ public class DepotSalesApiServices{
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("cstAmount"))){
 		    				cstAmount = eachItem.getBigDecimal("cstAmount");
 		    			}
-		    			itemDetailMap.put("quantity",quantity);
-		    			itemDetailMap.put("unitPrice",unitPrice);
-		    			itemDetailMap.put("vatPercent",vatPercent);
-		    			itemDetailMap.put("vatAmount",vatAmount);
-		    			itemDetailMap.put("cstPercent",cstPercent);
-		    			itemDetailMap.put("cstAmount",cstAmount);
+		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
+		    			itemDetailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
+		    			itemDetailMap.put("vatPercent",vatPercent.setScale(decimals, rounding));
+		    			itemDetailMap.put("vatAmount",vatAmount.setScale(decimals, rounding));
+		    			itemDetailMap.put("cstPercent",cstPercent.setScale(decimals, rounding));
+		    			itemDetailMap.put("cstAmount",cstAmount.setScale(decimals, rounding));
 		    			orderItems.add(itemDetailMap);
 		    		}
 	    		}
@@ -645,6 +654,25 @@ public class DepotSalesApiServices{
 			} catch(Exception e){
 				Debug.logError("Not a valid party", module);
 			}
+			String contactNumber = "";
+			try{
+				Map<String, Object> getTelParams = FastMap.newInstance();
+	        	getTelParams.put("partyId", eachParty.get("partyId"));
+				Map<String, Object> serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+	            if (ServiceUtil.isError(serviceResult)) {
+	            	 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	            } 
+	            if(UtilValidate.isNotEmpty(serviceResult.get("contactNumber"))){
+	            	contactNumber = (String) serviceResult.get("contactNumber");
+	            	/*if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
+	            		contactNumber = (String) serviceResult.get("countryCode") +" "+ (String) serviceResult.get("contactNumber");
+	            	}*/
+	            }
+			}
+            catch (Exception e) {
+				Debug.logError(e, "Error fetching contact number from getPartyTelephone service", module);
+			}
+			partyDetail.put("contactNumber",contactNumber);
 			partyDetail.put("addressMap",addressMap);
 			
 			suppliersMap.put(eachParty.get("partyId"),partyDetail);
