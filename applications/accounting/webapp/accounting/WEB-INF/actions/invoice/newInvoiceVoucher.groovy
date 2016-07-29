@@ -88,10 +88,14 @@ supplierInvoiceId = "";
 supplierInvoiceDate = "";
 carrierName = "";
 estimatedShipCost = "";
+estimatedShipDate = "";
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 orderId = shipmentList.get("primaryOrderId");
+
+estimatedShipDate = shipmentList.get("estimatedShipDate");
+
 
 deliveryChallanDate = "";
 
@@ -142,6 +146,7 @@ context.lrNumber = lrNumber;
 context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
 context.passNo = passNo;
+context.estimatedShipDate = estimatedShipDate;
 
 
 
