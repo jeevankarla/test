@@ -165,7 +165,7 @@ double totalIndents = 0
 
 //Debug.log("facilityPartyId=================="+facilityPartyId);
 
-if(facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()==1){
+if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()==1) && (UtilValidate.isEmpty(facilityOrderId))){
 
 	
 	custCondList = [];

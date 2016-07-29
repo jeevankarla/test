@@ -45,7 +45,7 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 		  fromDate = new java.sql.Timestamp(sdf.parse(partyfromDate).getTime());
 		  
 		   } catch (ParseException e) {
-			   Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+			   //Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			   }
 	 
   }
@@ -56,31 +56,55 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 		 
 		 thruDate = new java.sql.Timestamp(sdf.parse(partythruDate).getTime());
 	 } catch (ParseException e) {
-		 Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+		 //Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		  }
   }
   
   daystart = UtilDateTime.getDayStart(fromDate);
   dayend = UtilDateTime.getDayEnd(thruDate);
   
-  Debug.log("daystart==================="+daystart);
+  //Debug.log("daystart==================="+daystart);
   
-  Debug.log("dayend==================="+dayend);
+  //Debug.log("dayend==================="+dayend);
   
-  Debug.log("branchId==================="+branchId);
+  //Debug.log("branchId==================="+branchId);
+  
+  branchList = [];
   
   condListb = [];
+  condListb.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId));
+  condListb.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+  condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
   
-  condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+  PartyRole = delegator.findList("PartyRole", condListb,UtilMisc.toSet("roleTypeId"), null, null, false);
+  
+  if(PartyRole){
+	    condListb = [];
+	  condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+	  condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	  cond = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	  
+	  PartyRelationship = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdTo"), null, null, false);
+	  
+	  branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+  }else{
+  
+  branchList.add(branchId);
+  }
+  
+  //Debug.log("branchList================"+branchList);
+  condListb = [];
+  
+  condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
  
   if(partyId)
    condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
   
   condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
   condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-  condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+  cond = EntityCondition.makeCondition(condListb, EntityOperator.AND);
   
-  PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+  PartyRelationship = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdTo"), null, null, false);
   
   weaversList =EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
   
@@ -92,14 +116,23 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
   PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
   
   finalList = [];
-   for (eachWeaver in weaversList) {
+  quotaList = ["availableQuota","usedQuota","eligibleQuota"];
+  
+ 
+  
+  for (eachWeaver in weaversList) {
+ 
+	  int i = 0;
+	 quotaList.each{ eachType->
+  
+  
 	
 	   
 	   tempMap = [:];
 	   
 	   partyName = PartyHelper.getPartyName(delegator, eachWeaver, false);
 	   
-	   Debug.log("partyName==================="+partyName);
+	   //Debug.log("partyName==================="+partyName);
 	   
 	   conditionList.clear();
 	   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachWeaver));
@@ -189,11 +222,75 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 	   usedQuotaMap = resultCtx.get("usedQuotaMap");
 	   eligibleQuota = resultCtx.get("eligibleQuota");
 	   
-	   Debug.log("productCategoryQuotasMap==============="+productCategoryQuotasMap);
+	  //Debug.log("productCategoryQuotasMap================"+productCategoryQuotasMap);
 	   
-	   quotaList = [];
+	   availableQuotaUP = productCategoryQuotasMap.get("COTTON_UPTO40");
+	   availableQuotaAbove40 = productCategoryQuotasMap.get("COTTON_40ABOVE");
+	   availableSILK_YARN = productCategoryQuotasMap.get("SILK_YARN");
+	   availableWOOLYARN_10STO39NM = productCategoryQuotasMap.get("WOOLYARN_10STO39NM");
+	   availableWOOLYARN_40SNMABOVE = productCategoryQuotasMap.get("WOOLYARN_40SNMABOVE");
+	   availableWOOLYARN_BELOW10NM = productCategoryQuotasMap.get("WOOLYARN_BELOW10NM");
 	   
-	   conditionList.clear();
+	   
+	   usedQuotaUP = usedQuotaMap.get("COTTON_UPTO40");
+	   usedQuotaAbove40 = usedQuotaMap.get("COTTON_40ABOVE");
+	   usedSILK_YARN = usedQuotaMap.get("SILK_YARN");
+	   usedWOOLYARN_10STO39NM = usedQuotaMap.get("WOOLYARN_10STO39NM");
+	   usedWOOLYARN_40SNMABOVE = usedQuotaMap.get("WOOLYARN_40SNMABOVE");
+	   usedWOOLYARN_BELOW10NM = usedQuotaMap.get("WOOLYARN_BELOW10NM");
+	   
+	   
+	   eligibleQuotaUP = eligibleQuota.get("COTTON_UPTO40");
+	   eligibleQuotaAbove40 = eligibleQuota.get("COTTON_40ABOVE");
+	   eligibleSILK_YARN = eligibleQuota.get("SILK_YARN");
+	   eligibleWOOLYARN_10STO39NM = eligibleQuota.get("WOOLYARN_10STO39NM");
+	   eligibleWOOLYARN_40SNMABOVE = eligibleQuota.get("WOOLYARN_40SNMABOVE");
+	   eligibleWOOLYARN_BELOW10NM = eligibleQuota.get("WOOLYARN_BELOW10NM");
+	   
+	   if(i == 0){
+	   tempMap.put("COTTON_UPTO40","Available Quota ="+Math.round(availableQuotaUP));
+	   tempMap.put("COTTON_40ABOVE","Available Quota ="+Math.round(availableQuotaAbove40));
+	   tempMap.put("SILK_YARN","Available Quota ="+Math.round(availableSILK_YARN));
+	   tempMap.put("WOOLYARN_10STO39NM","Available Quota ="+Math.round(availableWOOLYARN_10STO39NM));
+	   tempMap.put("WOOLYARN_40SNMABOVE","Available Quota ="+Math.round(availableWOOLYARN_40SNMABOVE));
+	   tempMap.put("WOOLYARN_BELOW10NM","Available Quota ="+Math.round(availableWOOLYARN_BELOW10NM));
+	   
+	   }
+	   if(i == 1){
+		   
+		   tempMap.put("partyId", "");
+		   tempMap.put("partyName", "");
+		   tempMap.put("passbookno", "");
+		   tempMap.put("state", "");
+		   tempMap.put("district", "");
+		   
+	   tempMap.put("COTTON_UPTO40","Qualized Quota ="+Math.round(usedQuotaUP));
+	   tempMap.put("COTTON_40ABOVE","Qualized Quota ="+Math.round(usedQuotaAbove40));
+	   tempMap.put("SILK_YARN","Qualized Quota ="+Math.round(usedSILK_YARN));
+	   tempMap.put("WOOLYARN_10STO39NM","Qualized Quota ="+Math.round(usedWOOLYARN_10STO39NM));
+	   tempMap.put("WOOLYARN_40SNMABOVE","Qualized Quota ="+Math.round(usedWOOLYARN_40SNMABOVE));
+	   tempMap.put("WOOLYARN_BELOW10NM","Qualized Quota ="+Math.round(usedWOOLYARN_BELOW10NM));
+
+	   
+	   }
+	   if(i == 2){
+
+		   tempMap.put("partyId", "");
+		   tempMap.put("partyName", "");
+		   tempMap.put("passbookno", "");
+		   tempMap.put("state", "");
+		   tempMap.put("district", "");
+		   
+	   tempMap.put("COTTON_UPTO40","Balance Quota ="+Math.round(eligibleQuotaUP));
+	   tempMap.put("COTTON_40ABOVE","Balance Quota ="+Math.round(eligibleQuotaAbove40));
+	   tempMap.put("SILK_YARN","Balance Quota ="+Math.round(eligibleSILK_YARN));
+	   tempMap.put("WOOLYARN_10STO39NM","Balance Quota ="+Math.round(eligibleWOOLYARN_10STO39NM));
+	   tempMap.put("WOOLYARN_40SNMABOVE","Balance Quota ="+Math.round(eligibleWOOLYARN_40SNMABOVE));
+	   tempMap.put("WOOLYARN_BELOW10NM","Balance Quota ="+Math.round(eligibleWOOLYARN_BELOW10NM));
+	   }
+	  
+	   
+/*	   conditionList.clear();
 	   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachWeaver));
 	   condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	   PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
@@ -210,12 +307,12 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 		   conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
 		   condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		   LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,null,null,null,false));
-		   //Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+		   ////Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 		   if(LoomTypeDetails){
 			   type=LoomTypeDetails.loomTypeId;
-			   /*if(LoomTypeDetails.description){
+			   if(LoomTypeDetails.description){
 			   Desc=LoomTypeDetails.description
-			   }*/
+			   }
 			   Desc +=type;
 		   }
 		    partyLoom = [:];
@@ -226,22 +323,24 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 		   partyLoom.put("usedQuota",usedQuotaMap.get(Desc));
 		   partyLoom.put("loomQty",loomQty);
 		   quotaList.add(partyLoom)
-		   
-		  
 		   }
-	   }
+	   }*/
 	   
 	   //tempMap.put("loomDetails",quotaList);
-	   
 	   //tempMap.put("loomDetails",quotaList);
+	  // //Debug.log("usedQuotaMap==============="+usedQuotaMap);
+	   ////Debug.log("eligibleQuota==============="+eligibleQuota);
+	  // tempMap.put("COTTON_UPTO40", condListb)
 	   
-	  // Debug.log("usedQuotaMap==============="+usedQuotaMap);
-	   //Debug.log("eligibleQuota==============="+eligibleQuota);
 	   
 	   
 	   finalList.add(tempMap);
+	   i++;
 }
-  
+   
+  }
+//Debug.log("finalList==============="+finalList);
+
    context.finalList = finalList;
-   //Debug.log("finalList====================="+finalList);
+   ////Debug.log("finalList====================="+finalList);
    
