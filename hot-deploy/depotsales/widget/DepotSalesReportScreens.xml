@@ -155,6 +155,7 @@
 			<widgets>
 				<section>
 					<widgets>
+					  <include-form name="partyAbstractDetailHeading" location="component://depotsales/widget/DepotSalesForms.xml" /> 
 						<include-form name="partyAbstractDetailCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>

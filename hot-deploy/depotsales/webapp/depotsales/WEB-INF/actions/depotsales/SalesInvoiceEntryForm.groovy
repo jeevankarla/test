@@ -36,7 +36,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.
 condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 invoice = delegator.findList("Invoice", condition1, null, null, null, false);
 if(UtilValidate.isNotEmpty(invoice)){
-	Debug.logError("Sales Invoice Already Created with invoiceId :"+invoice[0].invoiceId,"");
+	//Debug.logError("Sales Invoice Already Created with invoiceId :"+invoice[0].invoiceId,"");
 	context.errorMessage = "Sales Invoice Already Created with invoiceId :"+invoice[0].invoiceId;
 	return "error";
 }
@@ -93,7 +93,7 @@ if(shipments){
 			newObj.put("invoiceItemTypeId",eachItem.invoiceItemTypeId);
 			newObj.put("applicableTo",eachItem.description);
 			
-			//Debug.log("eachItem.amount============="+eachItem.amount);
+			////Debug.log("eachItem.amount============="+eachItem.amount);
 			
 			newObj.put("adjAmount",Math.abs((eachItem.amount*eachItem.quantity)));
 			newObj.put("discQty",eachItem.quantity);
@@ -107,16 +107,16 @@ if(shipments){
 			
 		context.invoiceDiscountJSON = invoiceDiscountJSON;
 		context.invoiceAdditionalJSON = invoiceAdditionalJSON;
-	// Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
+	// //Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
 	 
-	// Debug.log("invoiceAdditionalJSON======================="+invoiceAdditionalJSON);
+	// //Debug.log("invoiceAdditionalJSON======================="+invoiceAdditionalJSON);
 	 
 	
 	
 	context.purchaceInvoiceId = purchaceInvoiceId;
 	
-	//Debug.log("purchaceInvoiceId======================="+purchaceInvoiceId);
-	//Debug.log("orderId======================="+orderId);
+	////Debug.log("purchaceInvoiceId======================="+purchaceInvoiceId);
+	////Debug.log("orderId======================="+orderId);
 	
 	//if(!invoice && orderId){
 		
@@ -135,7 +135,7 @@ if(shipments){
 		}
 		
 		conditionList.clear();
-		if(orderId){
+		if(primaryOrderId){
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 		}
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -143,7 +143,7 @@ if(shipments){
 		condition2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		shipmentReceipts = delegator.findList("ShipmentReceipt", condition2, null, null, null, false);
 		
-		Debug.log("shipmentReceipts======================="+shipmentReceipts);
+		//Debug.log("shipmentReceipts======================="+shipmentReceipts);
 		
 		
 		orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
@@ -156,7 +156,7 @@ if(shipments){
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 		
-		//Debug.log("orderId=================="+orderId);
+		////Debug.log("orderId=================="+orderId);
 		
 		/*tallyRefNo = "";
 		if(OrderAss){
@@ -203,11 +203,11 @@ if(shipments){
 		//adjIds = EntityUtil.getFieldListFromEntityList(invoiceItemAdjs, "invoiceItemTypeId", true);
 		
 		invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
-		Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+		//Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 		additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 		dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
-		Debug.log("additionalChgs =========="+additionalChgs);
-		Debug.log("dicounts =========="+dicounts);
+		//Debug.log("additionalChgs =========="+additionalChgs);
+		//Debug.log("dicounts =========="+dicounts);
 		
 		// Other Charges
 		
@@ -344,9 +344,9 @@ if(shipments){
 			orderItemSeqId = OrderItemAssoc[0].orderItemSeqId;
 			
 			
-			Debug.log("orderId===================="+orderId);
+			//Debug.log("orderId===================="+orderId);
 			
-			Debug.log("orderItemSeqId===================="+orderItemSeqId);
+			//Debug.log("orderItemSeqId===================="+orderItemSeqId);
 			
 			condExpr.clear();
 			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -379,8 +379,15 @@ if(shipments){
 				addAmt = addAmt+insuranceAmt;
 			}
 			qty = eachItem.quantityAccepted;
-			ordItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			
+			condiList = [];
+			condiList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+			condiList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+			cond = EntityCondition.makeCondition(condiList, EntityOperator.AND);
+			orderItems = delegator.findList("OrderItem", cond, null, null, null, false);
+			ordItem = EntityUtil.filterByCondition(orderItems, cond);
 			orderItem = EntityUtil.getFirst(ordItem);
+			
 			
 			prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, OrderItem[0].productId));
 			
@@ -498,10 +505,10 @@ if(shipments){
 			
 			
 		}
-		Debug.log("adjustmentJSON============="+adjustmentJSON);
+		//Debug.log("adjustmentJSON============="+adjustmentJSON);
 		//context.adjustmentJSON = adjustmentJSON;
 	//}
 }
 context.invoiceItemsJSON = invoiceItemsJSON;
 
-Debug.log("invoiceItemsJSON============="+invoiceItemsJSON);
+//Debug.log("invoiceItemsJSON============="+invoiceItemsJSON);

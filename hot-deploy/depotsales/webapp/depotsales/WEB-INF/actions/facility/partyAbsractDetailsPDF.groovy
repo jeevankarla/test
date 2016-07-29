@@ -109,24 +109,57 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
   weaversList =EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
   
   
-  conditionList = [];
+  /*conditionList = [];
   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, weaversList));
   conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-  PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+  PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);*/
   
   finalList = [];
-  quotaList = ["availableQuota","usedQuota","eligibleQuota"];
-  
  
+  /*headList = [];
   
+  tempMap = [:];
+  tempMap.put("partyId", " ");
+  tempMap.put("partyName", " ");
+  tempMap.put("city", " ");
+  tempMap.put("state"," ");
+  tempMap.put("dist"," ");
+  
+  tempMap.put("AvailableCOTTON_UPTO40","");
+  tempMap.put("QualizedCOTTON_UPTO40","Cotton Yarn 40s And Above");
+  tempMap.put("AvailableCOTTON_UPTO40","");
+  
+  
+  tempMap.put("AvailableCOTTON_40ABOVE","");
+  tempMap.put("QualizedCOTTON_40ABOVE","Cotton Yarn Upto 40s");
+  tempMap.put("BalanceCOTTON_40ABOVE","");
+  
+  tempMap.put("AvailableSILK_YARN","");
+  tempMap.put("QualizedSILK_YARN","Silk Yarn");
+  tempMap.put("BalanceSILK_YARN","");
+  
+  
+  
+  tempMap.put("AvailableWOOLYARN_10STO39NM","");
+  tempMap.put("QualizedWOOLYARN_10STO39NM","Wool Yarn 10NM To 39.99NM");
+  tempMap.put("BalanceWOOLYARN_10STO39NM","");
+  
+  tempMap.put("AvailableWOOLYARN_40SNMABOVE","");
+  tempMap.put("QualizedWOOLYARN_40SNMABOVE","Wool Yarn 40NM And Above");
+  tempMap.put("BalanceWOOLYARN_40SNMABOVE","");
+  
+  
+  tempMap.put("AvailableWOOLYARN_BELOW10NM","");
+  tempMap.put("QualizedWOOLYARN_BELOW10NM","Wool Yarn Below 10NM");
+  tempMap.put("BalanceWOOLYARN_BELOW10NM","");
+  
+  finalList.add(tempMap);
+  
+  context.headList = headList;*/
   for (eachWeaver in weaversList) {
  
 	  int i = 0;
-	 quotaList.each{ eachType->
-  
-  
-	
 	   
 	   tempMap = [:];
 	   
@@ -134,11 +167,17 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 	   
 	   //Debug.log("partyName==================="+partyName);
 	   
-	   conditionList.clear();
+	  /* conditionList.clear();
 	   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachWeaver));
        conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 	   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	   PartyIdentification = EntityUtil.filterByCondition(PartyIdentificationList, cond);
+*/	   
+	   conditionList = [];
+	   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachWeaver));
+	   conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+	   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	   PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
      
 	   passNo = "";
 	   if(PartyIdentificationList){
@@ -247,47 +286,40 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 	   eligibleWOOLYARN_40SNMABOVE = eligibleQuota.get("WOOLYARN_40SNMABOVE");
 	   eligibleWOOLYARN_BELOW10NM = eligibleQuota.get("WOOLYARN_BELOW10NM");
 	   
-	   if(i == 0){
-	   tempMap.put("COTTON_UPTO40","Available Quota ="+Math.round(availableQuotaUP));
-	   tempMap.put("COTTON_40ABOVE","Available Quota ="+Math.round(availableQuotaAbove40));
-	   tempMap.put("SILK_YARN","Available Quota ="+Math.round(availableSILK_YARN));
-	   tempMap.put("WOOLYARN_10STO39NM","Available Quota ="+Math.round(availableWOOLYARN_10STO39NM));
-	   tempMap.put("WOOLYARN_40SNMABOVE","Available Quota ="+Math.round(availableWOOLYARN_40SNMABOVE));
-	   tempMap.put("WOOLYARN_BELOW10NM","Available Quota ="+Math.round(availableWOOLYARN_BELOW10NM));
 	   
-	   }
-	   if(i == 1){
-		   
-		   tempMap.put("partyId", "");
-		   tempMap.put("partyName", "");
-		   tempMap.put("passbookno", "");
-		   tempMap.put("state", "");
-		   tempMap.put("district", "");
-		   
-	   tempMap.put("COTTON_UPTO40","Qualized Quota ="+Math.round(usedQuotaUP));
-	   tempMap.put("COTTON_40ABOVE","Qualized Quota ="+Math.round(usedQuotaAbove40));
-	   tempMap.put("SILK_YARN","Qualized Quota ="+Math.round(usedSILK_YARN));
-	   tempMap.put("WOOLYARN_10STO39NM","Qualized Quota ="+Math.round(usedWOOLYARN_10STO39NM));
-	   tempMap.put("WOOLYARN_40SNMABOVE","Qualized Quota ="+Math.round(usedWOOLYARN_40SNMABOVE));
-	   tempMap.put("WOOLYARN_BELOW10NM","Qualized Quota ="+Math.round(usedWOOLYARN_BELOW10NM));
-
+	   tempMap.put("AvailableCOTTON_UPTO40",Math.round(availableQuotaUP));
+	   tempMap.put("QualizedCOTTON_UPTO40",Math.round(usedQuotaUP));
+	   tempMap.put("BalanceCOTTON_UPTO40",Math.round(eligibleQuotaUP));
 	   
-	   }
-	   if(i == 2){
-
-		   tempMap.put("partyId", "");
-		   tempMap.put("partyName", "");
-		   tempMap.put("passbookno", "");
-		   tempMap.put("state", "");
-		   tempMap.put("district", "");
-		   
-	   tempMap.put("COTTON_UPTO40","Balance Quota ="+Math.round(eligibleQuotaUP));
-	   tempMap.put("COTTON_40ABOVE","Balance Quota ="+Math.round(eligibleQuotaAbove40));
-	   tempMap.put("SILK_YARN","Balance Quota ="+Math.round(eligibleSILK_YARN));
-	   tempMap.put("WOOLYARN_10STO39NM","Balance Quota ="+Math.round(eligibleWOOLYARN_10STO39NM));
-	   tempMap.put("WOOLYARN_40SNMABOVE","Balance Quota ="+Math.round(eligibleWOOLYARN_40SNMABOVE));
-	   tempMap.put("WOOLYARN_BELOW10NM","Balance Quota ="+Math.round(eligibleWOOLYARN_BELOW10NM));
-	   }
+	   
+	   tempMap.put("AvailableCOTTON_40ABOVE",Math.round(availableQuotaAbove40));
+	   tempMap.put("QualizedCOTTON_40ABOVE",Math.round(usedQuotaAbove40));
+	   tempMap.put("BalanceCOTTON_40ABOVE",Math.round(eligibleQuotaAbove40));
+	   
+	   tempMap.put("AvailableSILK_YARN",Math.round(availableSILK_YARN));
+	   tempMap.put("QualizedSILK_YARN",Math.round(usedSILK_YARN));
+	   tempMap.put("BalanceSILK_YARN",Math.round(eligibleSILK_YARN));
+	   
+	   
+	   tempMap.put("AvailableWOOLYARN_10STO39NM",Math.round(availableWOOLYARN_10STO39NM));
+	   tempMap.put("QualizedWOOLYARN_10STO39NM",Math.round(usedWOOLYARN_10STO39NM));
+	   tempMap.put("BalanceWOOLYARN_10STO39NM",Math.round(eligibleWOOLYARN_10STO39NM));
+	   
+	   
+	   tempMap.put("AvailableWOOLYARN_40SNMABOVE",Math.round(availableWOOLYARN_40SNMABOVE));
+	   tempMap.put("QualizedWOOLYARN_40SNMABOVE",Math.round(usedWOOLYARN_40SNMABOVE));
+	   tempMap.put("BalanceWOOLYARN_40SNMABOVE",Math.round(eligibleWOOLYARN_40SNMABOVE));
+	   
+	   
+	   
+	   tempMap.put("AvailableWOOLYARN_BELOW10NM",Math.round(availableWOOLYARN_BELOW10NM));
+	   tempMap.put("QualizedWOOLYARN_BELOW10NM",Math.round(usedWOOLYARN_BELOW10NM));
+	   tempMap.put("BalanceWOOLYARN_BELOW10NM",Math.round(eligibleWOOLYARN_BELOW10NM));
+	   
+	   
+	  
+	   
+	   
 	  
 	   
 /*	   conditionList.clear();
@@ -335,8 +367,6 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
 	   
 	   
 	   finalList.add(tempMap);
-	   i++;
-}
    
   }
 //Debug.log("finalList==============="+finalList);
