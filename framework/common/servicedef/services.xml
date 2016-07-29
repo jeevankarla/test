@@ -394,7 +394,7 @@ under the License.
         <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
         <attribute name="newUserLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="false"/>
     </service>
-    <service name="updatePassword" engine="java" default-entity-name="UserLogin"
+    <service name="updatePassword" engine="java" export="true" default-entity-name="UserLogin"
         location="org.ofbiz.common.login.LoginServices" invoke="updatePassword" auth="true">
         <description>Update a UserLogin Password</description>
         <attribute name="userLoginId" type="String" mode="IN" optional="true"/>
