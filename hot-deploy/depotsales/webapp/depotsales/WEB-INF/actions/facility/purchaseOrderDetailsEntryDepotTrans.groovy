@@ -79,7 +79,10 @@ if(orderId){
 	prodQtyMap = [:];
 	
 	JSONArray orderItemsJSON = new JSONArray();
+	double poQuantity = 0;
 	orderItems.each{ eachItem ->
+		
+		poQuantity = poQuantity+Double.valueOf(eachItem.quantity);
 		
 		JSONObject newObj = new JSONObject();
 		uomId = productUomMap.get(eachItem.productId);
@@ -144,6 +147,8 @@ if(orderId){
 	context.dataJSON = orderItemsJSON;
 	context.supplierId = supplierId;
 	context.supplierName = supplierName;
+	context.poQuantity = poQuantity;
+	
 }else{
 
 prodList = [];
