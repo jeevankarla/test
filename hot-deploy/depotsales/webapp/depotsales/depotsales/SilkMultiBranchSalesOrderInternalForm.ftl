@@ -104,7 +104,7 @@
 	var data2 = [];
 	var grid2;
 	var withAdjColumns;
-	
+	var savedOrderId;
 	var partyUsedQuotaJSON = ${StringUtil.wrapString(partyUsedQuotaJSON)!'{}'};
 	var productQuotaJSON = ${StringUtil.wrapString(productQuotaJSON)!'{}'};
 	var productCategoryJSON = ${StringUtil.wrapString(productCategoryJSON)!'{}'};
@@ -143,7 +143,72 @@
 		else
 			return {valid:true, msg:null};
 	}
-	
+	var savedresult=false;
+	function processTempIndentEntryInternal(formName, action) {
+	 $('div#saveIndentEntry_spinner').show();
+	    var saveButtonJson=[];
+	    var rowCount=data.length;
+	    for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{
+		     saveButtonJson.push({"custId" : data[rowCount]["customerId"],
+				                  "productId" : data[rowCount]["cProductId"],
+				                  "remarks" : data[rowCount]["remarks"],
+				                  "unitPrice" : data[rowCount]["unitPrice"],
+				                  "quantity" : data[rowCount]["quantity"],
+				                  "amount" : data[rowCount]["amount"]
+				                }); 
+		}
+	 	var dataString = {"ItemJson": saveButtonJson,
+	 					  "rowCount":rowCount,
+						  "schemeCategory":$("#schemeCategory").val(),
+						  "partyId": $("#partyId").val(),
+						  "orderId" : savedOrderId,
+						  "suplierPartyId" : $("#suplierPartyId").val(),
+						  "societyPartyId" : $("#societyPartyId").val(),
+			 			  "partyGeoId" : $("#partyGeoId").val(), 	
+						  "billingType" : $("#billingType").val(),
+						  "orderTaxType": $("#orderTaxType").val(),
+						  "poNumber" : $("#PONumber").val(),
+						  "acctgFlag" : $("#disableAcctgFlag").val(),
+						  "promoAdj" : $("#promotionAdj").val(),
+						  "productStoreId" : $("#productStoreId").val(),
+						  "cfcId" : $("#cfcs").val(),
+						  "orderMessage" : $("#orderMessage").val(),
+			 			  "schemeCategory" : $("#schemeCategory").val(),
+						  "contactMechId" : $("#contactMechId").val(),
+			 			  "transporterId" : $("#transporterId").val(),
+			              "tallyReferenceNo" : $("#tallyReferenceNo").val(),
+			 			  "ediTallyRefNo" : $("#ediTallyRefNo").val(),
+						  "orderMessage" : $("#orderMessage").val(),		 		
+						};
+	 
+			 $.ajax({
+					     type: "POST",
+					     url: "saveBranchSaleOrder",
+					     data: dataString ,
+					     dataType: 'json',
+					     async: false,
+					     success: function(result) {
+					               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+					            	   alert(result["_ERROR_MESSAGE_"]);
+					               }else{  
+					                	savedOrderId=result["orderId"];
+					                	$('div#saveIndentEntry_spinner').hide();
+					                	
+					                	if(savedOrderId){
+					                	savedresult=true;
+					                	jQuery('div#saveIndentEntry_spinner').after("<div id='FNLabel' class='center' font-weight='bold'><font color='green' font-weight='bold'><p style='font-size:15px'>Saved Successfully..!</p></font></div>");
+								       	setTimeout(function () {
+								        $('#FNLabel').remove();
+								       	}, 3000);
+								       }	
+					               }
+					             } ,
+					             error: function(result) {
+				            	 	alert(result["_ERROR_MESSAGE_"]);
+				            	 }
+			}); 	
+	}	
 	function processIndentEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
@@ -292,7 +357,11 @@
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
 			
-			
+			if(savedOrderId &&  savedOrderId!=undefined){
+			   var savedorder = savedOrderId; 
+			   var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(savedorder);		
+				jQuery(formId).append(jQuery(extOrder));
+			}
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		

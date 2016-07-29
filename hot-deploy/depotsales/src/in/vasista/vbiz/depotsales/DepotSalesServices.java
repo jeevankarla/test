@@ -68,6 +68,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.json.JSONException;
 
 
 import java.util.Map.Entry;
@@ -2687,9 +2688,13 @@ public class DepotSalesServices{
 			orderCreateResult = checkout.editOrder(userLogin);
 			GenericValue orderHeaderDetail = null;
 			try{
-				orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-					BigDecimal grandTotal = BigDecimal.ZERO;
-				     grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
+				    orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				    BigDecimal grandTotal = BigDecimal.ZERO;
+				    grandTotal = orderHeaderDetail.getBigDecimal("grandTotal");
+					String statusId = orderHeaderDetail.getString("statusId");
+					if(statusId.equals("ORDER_PENDING")){
+					    orderHeaderDetail.set("statusId", "ORDER_CREATED");
+					}
 				    orderHeaderDetail.set("grandTotal", grandTotal.add(orderGrandTotal));
 				    orderHeaderDetail.store();
 			}catch (Exception e) {
@@ -11741,7 +11746,480 @@ public class DepotSalesServices{
          result.put("invoiceId", invoiceId);
          return result;
   	}
-	
+    public static String saveBranchSaleOrderEvent(HttpServletRequest request, HttpServletResponse response) {
+ 		Delegator delegator = (Delegator) request.getAttribute("delegator");
+ 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+ 		DispatchContext dctx =  dispatcher.getDispatchContext();
+ 		Locale locale = UtilHttp.getLocale(request);
+ 		String partyId = (String) request.getParameter("partyId");
+		String supplierPartyId ="";
+		supplierPartyId=(String) request.getParameter("suplierPartyId");
+		String billToCustomer = (String)request.getParameter("billToCustomer");//using For Amul Sales
+		Map resultMap = FastMap.newInstance();
+		List invoices = FastList.newInstance(); 
+		String effectiveDateStr = (String) request.getParameter("effectiveDate");
+		String productStoreId = (String) request.getParameter("productStoreId");
+		String referenceNo = (String) request.getParameter("referenceNo");
+		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
+		String ediTallyRefNo = (String) request.getParameter("ediTallyRefNo");
+		String contactMechId = (String) request.getParameter("contactMechId");
+		String belowContactMechId = (String) request.getParameter("belowContactMechId");
+		String transporterId = (String) request.getParameter("transporterId");
+		String manualQuotaStr = (String) request.getParameter("manualQuota");
+		String cfcId = (String) request.getParameter("cfcId");
+		if(UtilValidate.isNotEmpty(cfcId)){
+			productStoreId = cfcId;
+		}
+		String orderTaxType = (String) request.getParameter("orderTaxType");
+		String schemeCategory = (String) request.getParameter("schemeCategory");
+		String billingType = (String) request.getParameter("billingType");
+		String schemePartyId=partyId;
+		String orderId = (String) request.getParameter("orderId");
+		String partyGeoId = (String) request.getParameter("partyGeoId");
+		String PONumber = (String) request.getParameter("PONumber");
+		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
+		String orderMessage=(String) request.getParameter("orderMessage");
+		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
+		String disableAcctgFlag = (String) request.getParameter("disableAcctgFlag");
+		String subscriptionTypeId = "AM";
+		String partyIdFrom = "";
+		String shipmentId = "";
+		Map processOrderContext = FastMap.newInstance();
+		String salesChannel = (String)request.getParameter("salesChannel");
+		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
+			productSubscriptionTypeId = "CASH";      	
+		}
+		String productId = null;
+		String customerId = null;
+		String remarks = null;
+		String productFeatureId = null;
+		String batchNo = null;
+		String daysToStore = null;
+		String quantityStr = null;
+		String baleQuantityStr = null;
+		String yarnUOMStr = null;
+		String bundleWeightStr = null;
+		String basicPriceStr = null;
+		String bundleUnitPriceStr=null;
+		String taxListStr = null;
+		String serviceChgStr = null;
+		String serviceChgAmtStr = null;
+		String quotaAvblStr = null;
+		Timestamp effectiveDate=null;
+		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal baleQuantity = BigDecimal.ZERO;
+		BigDecimal bundleWeight = BigDecimal.ZERO;
+		String yarnUOM="";
+		BigDecimal basicPrice = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+		BigDecimal quotaAvbl = BigDecimal.ZERO;
+		BigDecimal manualQuota = BigDecimal.ZERO;
+		String applicableTaxType = null;
+		String checkE2Form = null;
+		String checkCForm = null;
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			}
+		}
+		else{
+			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		if (UtilValidate.isNotEmpty(manualQuotaStr) && !(manualQuotaStr.equals("NaN"))) {
+			manualQuota =new BigDecimal(manualQuotaStr);
+		}
+		if (partyId == "") {
+			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
+			return "error";
+		}
+		try{
+			GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+			if(UtilValidate.isEmpty(party)){
+				request.setAttribute("_ERROR_MESSAGE_","Not a valid Party");
+				return "error";
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Error fetching partyId " + partyId, module);
+			request.setAttribute("_ERROR_MESSAGE_","Invalid party Id");
+			return "error";
+		}
+		if(UtilValidate.isNotEmpty(request.getAttribute("estimatedDeliveryDate"))) {
+			effectiveDate = (Timestamp) request.getAttribute("estimatedDeliveryDate");
+		}
+ 		int rowCount=Integer.parseInt(request.getParameter("rowCount"));
+ 		Map ItemData = (Map) request.getParameterMap();
+ 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		if (rowCount < 0) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+        Map<String, Object> retMap = new HashMap<String, Object>();
+		org.json.JSONObject json = new org.json.JSONObject( paramMap ); 
+		 if(json != JSONObject.NULL) {
+		       retMap = toMap(json);
+		    }
+	    List productIds = FastList.newInstance();
+		List indentProductList = FastList.newInstance();
+		List indentItemProductList = FastList.newInstance();
+		Map consolMap=FastMap.newInstance();
+        String onBeHalfOf="N";
+		 for (int i = 0; i < rowCount; i++) {
+			 List taxRateList = FastList.newInstance();
+			 Map<String  ,Object> productQtyMap = FastMap.newInstance();	  	
+			 Map<String, Object> map = new HashMap<String, Object>();
+			 String count=""+i;
+			 if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][productId]"))) {
+					productId = (String) retMap.get("ItemJson["+count+"][productId]");
+					productIds.add(productId);
+			 }else {
+					request.setAttribute("_ERROR_MESSAGE_",
+							"Missing product id");
+					return "error";
+			  }
+			  if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][custId]"))) {
+				 customerId = (String) retMap.get("ItemJson["+count+"][custId]");
+			  }
+			  if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][baleQuantity]"))) {
+					baleQuantityStr = (String) retMap.get("ItemJson["+count+"][baleQuantity]");
+			  } 
+			  if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][remarks]"))) {
+				remarks = (String) retMap.get("ItemJson["+count+"][remarks]");
+			  }
+			  
+			  if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][quantity]"))) {
+				  quantityStr = (String) retMap.get("ItemJson["+count+"][quantity]");
+			   } else {
+					request.setAttribute("_ERROR_MESSAGE_",
+							"Missing product quantity");
+					return "error";
+			   }
+				if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][bundleWeight]"))) {
+					 bundleWeightStr = (String) retMap.get("ItemJson["+count+"][bundleWeight]");
+				}
+				 if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][cottonUom]"))) {
+					yarnUOMStr = (String) retMap.get("ItemJson["+count+"][cottonUom]");
+				}
+				/*if (paramMap.containsKey("batchNo" + thisSuffix)) {
+					batchNo = (String) paramMap.get("batchNo" + thisSuffix);
+				}
+				if (paramMap.containsKey("daysToStore" + thisSuffix)) {
+					daysToStore = (String) paramMap.get("daysToStore"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("serviceCharge" + thisSuffix)) {
+					serviceChgStr = (String) paramMap.get("serviceCharge"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("serviceChargeAmt" + thisSuffix)) {
+					serviceChgAmtStr = (String) paramMap.get("serviceChargeAmt"
+							+ thisSuffix);
+				}
+				
+				if (paramMap.containsKey("applicableTaxType" + thisSuffix)) {
+					applicableTaxType = (String) paramMap.get("applicableTaxType"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("checkE2Form" + thisSuffix)) {
+					checkE2Form = (String) paramMap.get("checkE2Form"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("checkCForm" + thisSuffix)) {
+					checkCForm = (String) paramMap.get("checkCForm"
+							+ thisSuffix);
+				}*/
+				 if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][unitPrice]"))) {
+					 basicPriceStr = (String) retMap.get("ItemJson["+count+"][unitPrice]");
+				 }
+				 if (UtilValidate.isNotEmpty(retMap.get("ItemJson["+count+"][bundleUnitPrice]"))) {
+						bundleUnitPriceStr = (String) retMap.get("ItemJson["+count+"][bundleUnitPrice]");
+				 }
+				/*
+				 if (paramMap.containsKey("usedQuota" + thisSuffix)) {
+						quotaAvblStr = (String) paramMap.get("usedQuota"+ thisSuffix);
+				 }*/
+				 try {
+						quantity = new BigDecimal(quantityStr);
+						if(UtilValidate.isNotEmpty(baleQuantityStr) && !(baleQuantityStr.equals("NaN"))){
+						baleQuantity = new BigDecimal(baleQuantityStr);
+						}
+						if (UtilValidate.isNotEmpty(bundleWeightStr)) {
+						bundleWeight = new BigDecimal(bundleWeightStr);
+						}
+						if (UtilValidate.isNotEmpty(yarnUOMStr)) {
+							yarnUOM = yarnUOMStr;
+						}
+						if (UtilValidate.isNotEmpty(basicPriceStr)) {
+							basicPrice = new BigDecimal(basicPriceStr);
+						}
+						if (UtilValidate.isNotEmpty(serviceChgStr)) {
+							serviceCharge = new BigDecimal(serviceChgStr);
+						}
+						if (UtilValidate.isNotEmpty(serviceChgAmtStr)) {
+							serviceChargeAmt = new BigDecimal(serviceChgAmtStr);
+						}
+						
+						if(UtilValidate.isNotEmpty(quotaAvblStr) && !(quotaAvblStr.equals("NaN"))){
+							quotaAvbl = new BigDecimal(quotaAvblStr);
+						}
+				 } catch (Exception e) {
+						Debug.logError(e, "Problems parsing quantity string: "
+								+ quantityStr, module);
+						request.setAttribute("_ERROR_MESSAGE_",
+								"Problems parsing quantity string: " + quantityStr);
+						return "error";
+				}
+				 if (UtilValidate.isNotEmpty(customerId)) {
+						onBeHalfOf="Y";
+						if (UtilValidate.isNotEmpty(consolMap.get(productId))){
+							
+							BigDecimal tempbaleqty=BigDecimal.ZERO;
+							BigDecimal tempquantity=BigDecimal.ZERO;
+							BigDecimal tempbundleWeight=BigDecimal.ZERO;
+							Map tempconsolMap=(Map)consolMap.get(productId);
+							tempbaleqty=baleQuantity.add((BigDecimal)tempconsolMap.get("baleQuantity"));
+							tempbundleWeight=bundleWeight.add((BigDecimal)tempconsolMap.get("bundleWeight"));
+							tempquantity=quantity.add((BigDecimal)tempconsolMap.get("quantity"));
+							tempconsolMap.put("quantity",tempquantity);
+							tempconsolMap.put("baleQuantity",tempbaleqty);
+							tempconsolMap.put("bundleWeight",tempbundleWeight);
+						}else{
+							Map tempconsolMap= FastMap.newInstance();
+							tempconsolMap.put("productId", productId);
+							tempconsolMap.put("quantity", quantity);
+							tempconsolMap.put("remarks", remarks);
+							tempconsolMap.put("baleQuantity", baleQuantity);
+							tempconsolMap.put("bundleWeight", bundleWeight);
+							tempconsolMap.put("bundleUnitPrice", bundleUnitPriceStr);				
+							tempconsolMap.put("yarnUOM", yarnUOM);
+							tempconsolMap.put("baleQuantity", baleQuantity);
+							tempconsolMap.put("bundleWeight", bundleWeight);
+							tempconsolMap.put("bundleUnitPrice", bundleUnitPriceStr);				
+							tempconsolMap.put("yarnUOM", yarnUOM);
+							tempconsolMap.put("batchNo", batchNo);
+							tempconsolMap.put("daysToStore", daysToStore);
+							tempconsolMap.put("basicPrice", basicPrice);
+							tempconsolMap.put("taxRateList", taxRateList);
+							tempconsolMap.put("serviceCharge", serviceCharge);
+							tempconsolMap.put("serviceChargeAmt", serviceChargeAmt);
+							tempconsolMap.put("applicableTaxType", applicableTaxType);
+							tempconsolMap.put("checkE2Form", checkE2Form);
+							tempconsolMap.put("checkCForm", checkCForm);
+							tempconsolMap.put("quotaAvbl", quotaAvbl);
+							consolMap.put(productId,tempconsolMap);						
+						}
+					}
+				    productQtyMap.put("productId", productId);
+					productQtyMap.put("quantity", quantity);
+					productQtyMap.put("customerId", customerId);
+					productQtyMap.put("remarks", remarks);
+					productQtyMap.put("baleQuantity", baleQuantity);
+					productQtyMap.put("bundleWeight", bundleWeight);
+					productQtyMap.put("bundleUnitPrice", bundleUnitPriceStr);				
+					productQtyMap.put("yarnUOM", yarnUOM);
+					productQtyMap.put("batchNo", batchNo);
+					productQtyMap.put("daysToStore", daysToStore);
+					productQtyMap.put("basicPrice", basicPrice);
+					productQtyMap.put("taxRateList", taxRateList);
+					productQtyMap.put("serviceCharge", serviceCharge);
+					productQtyMap.put("serviceChargeAmt", serviceChargeAmt);
+					
+					productQtyMap.put("applicableTaxType", applicableTaxType);
+					productQtyMap.put("checkE2Form", checkE2Form);
+					productQtyMap.put("checkCForm", checkCForm);
+					productQtyMap.put("quotaAvbl", quotaAvbl);
+					indentProductList.add(productQtyMap);
+					indentItemProductList.add(productQtyMap);
+		}
+		if( UtilValidate.isEmpty(indentProductList)){
+				Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
+				return "error";
+		}
+		List orderAdjChargesList = FastList.newInstance();
+		if("Y".equals(onBeHalfOf)){
+			indentProductList.clear();
+			Iterator eachProductIter = consolMap.entrySet().iterator();
+	       	 
+	       	 while (eachProductIter.hasNext()) {
+	       		Map.Entry entry = (Entry)eachProductIter.next();
+				//String productId = (String)entry.getKey();
+				Map eachproductMap=(Map)entry.getValue();
+				indentProductList.add(eachproductMap);
+			}			
+		}
+		processOrderContext.put("userLogin", userLogin);
+		processOrderContext.put("onBeHalfOf", onBeHalfOf);
+		processOrderContext.put("schemeCategory", schemeCategory);
+		processOrderContext.put("productQtyList", indentProductList);
+		processOrderContext.put("indentItemProductList", indentItemProductList);
+		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("schemePartyId", schemePartyId);
+		processOrderContext.put("supplierPartyId", supplierPartyId);
+		processOrderContext.put("billToCustomer", billToCustomer);
+		processOrderContext.put("contactMechId", contactMechId);
+		processOrderContext.put("belowContactMechId", belowContactMechId);
+		processOrderContext.put("transporterId", transporterId);
+		processOrderContext.put("productIds", productIds);
+		processOrderContext.put("supplyDate", effectiveDate);
+		processOrderContext.put("salesChannel", salesChannel);
+		processOrderContext.put("orderTaxType", orderTaxType);
+		processOrderContext.put("orderId", orderId);
+		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
+		processOrderContext.put("productStoreId", productStoreId);
+		processOrderContext.put("referenceNo", referenceNo);
+		processOrderContext.put("tallyRefNo", tallyReferenceNo);
+		processOrderContext.put("ediTallyRefNo", ediTallyRefNo);
+		processOrderContext.put("PONumber", PONumber);
+		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
+		processOrderContext.put("orderMessage", orderMessage);
+		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
+		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+		processOrderContext.put("manualQuota", manualQuota);
+		try{
+			result = processBranchSalesOrder(dctx, processOrderContext);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+				return "error";
+			}
+			orderId = (String)result.get("orderId");
+			GenericValue orderHeaderDetail = null;
+			try{
+				orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			    orderHeaderDetail.set("statusId", "ORDER_PENDING");
+			    orderHeaderDetail.store();
+			}catch (Exception e) {
+				  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+				  return "error";
+	  	 	}
+			if(UtilValidate.isEmpty(orderId)){
+				Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+				return "error";
+			}
+			if(UtilValidate.isNotEmpty(billingType) && billingType.equals("onBehalfOf")){
+				 Map<String, String> fields = UtilMisc.<String, String>toMap("orderId", orderId, "partyId", schemePartyId, "roleTypeId", "ON_BEHALF_OF");
+				 try {
+						List conditions = FastList.newInstance();
+						conditions.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+				    	List <GenericValue> orderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+				    	if(UtilValidate.isEmpty(orderRoles)){
+				    		GenericValue value = delegator.makeValue("OrderRole", fields);
+				    		delegator.create(value);
+				    	}
+				 } catch (GenericEntityException e) {
+					 request.setAttribute("_ERROR_MESSAGE_"," Could not add role to order for OnBeHalf ");
+						Debug.logError(e, "Could not add role to order for OnBeHalf  party " + schemePartyId, module);
+						return "error";
+				 }
+			}
+			if(UtilValidate.isNotEmpty(supplierPartyId)){
+				try{
+					GenericValue supplierOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", supplierPartyId, "roleTypeId", "SUPPLIER"));
+					delegator.createOrStore(supplierOrderRole);
+				}catch (Exception e) {
+					  Debug.logError(e, "Error While Creating OrderRole(SUPPLIER)  for  Sale Indent ", module);
+					  request.setAttribute("_ERROR_MESSAGE_", "Error While Creating OrderRole(SUPPLIER)  for Sale Indent  : "+orderId);
+					  return "error";
+		  	 	}
+			}
+			if(UtilValidate.isNotEmpty(orderTaxType)){
+				try{
+				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+				orderAttribute.set("orderId", orderId);
+				orderAttribute.set("attrName", "INDET_TAXTYPE");
+				orderAttribute.set("attrValue", orderTaxType);
+				delegator.createOrStore(orderAttribute);
+				}catch (GenericEntityException e) {
+					 request.setAttribute("_ERROR_MESSAGE_"," Could not add Attribute tax type ");
+					 Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
+					 return "error";
+				 }
+			}
+			if(UtilValidate.isNotEmpty(schemeCategory)){
+				try{
+					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+					orderAttribute.set("orderId", orderId);
+					orderAttribute.set("attrName", "SCHEME_CAT");
+					orderAttribute.set("attrValue", schemeCategory);
+					delegator.createOrStore(orderAttribute);
+					}catch (GenericEntityException e) {
+						 request.setAttribute("_ERROR_MESSAGE_"," Could not add Attribute SchemeCategory ");
+						 Debug.logError(e, "Could not add role to order for SchemeCategory " + orderId, module);
+						 return "error";
+					}
+			}
+			Map resultCtx = FastMap.newInstance();
+				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+				if(ServiceUtil.isError(resultCtx)){
+						Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+						return "error";
+				}
+		}catch(Exception e){
+			Debug.logError(e, module);
+			return "error";
+		}
+		request.setAttribute("orderId",orderId);
+		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
+		request.setAttribute("orderId",orderId); 
+		return "success";
+    }
+    
+    public static Map<String, Object> toMap(JSONObject object){
+        Map<String, Object> map = new HashMap<String, Object>();
+        try{
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }
+        }catch(JSONException e){
+  			Debug.log("Problem in fetching orderItems");
+
+        }
+        return map;
+    }
+
+    public static List<Object> toList(JSONArray array){
+        List<Object> list = new ArrayList<Object>();
+        try{
+	        for(int i = 0; i < array.length(); i++) {
+	            Object value = array.get(i);
+	            if(value instanceof JSONArray) {
+	                value = toList((JSONArray) value);
+	            }	
+	            else if(value instanceof JSONObject) {
+	                value = toMap((JSONObject) value);
+	            }
+	            list.add(value);
+	        }
+	    }catch(JSONException e){
+				Debug.log("Problem in fetching orderItems");
+	    }
+	    return list;
+	}
+
 	
 	
 

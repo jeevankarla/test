@@ -125,6 +125,7 @@
 			var societyAutoJson = ${StringUtil.wrapString(societyJSON)!'[]'};
 		
 		$(document).ready(function(){
+		 $('div#saveIndentEntry_spinner').hide();
 		
 		
 		  //==========for backSpace===============
@@ -1407,6 +1408,19 @@
 				<label style="float:left" id="totalQtyKgs" class="labelItemHeader"></label>
 			</div>
 		    <div class="screenlet-body">
+		    <#if booth?exists || party?exists || partyId?exists >
+		    	<div id="saveIndentEntry_spinner" > 
+      				<p align="center" style="font-size: large;">Saving...
+      				  <img src="<@ofbizContentUrl>/images/hourglass2.gif</@ofbizContentUrl>">
+     				</p>
+				</div>
+				<#assign formAction='tempProcessBranchSalesOrder'>			
+				<#--> <#if !orderId?exists>	
+			   		<div align="right">
+					   	<input type="button" style="padding:.3em" id="tempSave" value="${uiLabelMap.CommonSave}" onclick="javascript:processTempIndentEntryInternal('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
+					</div>  
+				</#if>-->
+			</#if>
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  
 					<#assign formAction='processBranchSalesOrder'>			
