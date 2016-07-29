@@ -1284,10 +1284,10 @@ public class DepotSalesApiServices{
 			Map loomDetailMap = FastMap.newInstance();
 			loomDetailMap.put("loomTypeId",loomTypeId);
 			loomDetailMap.put("description",description);
-			loomDetailMap.put("loomQty",loomQty.setScale(decimals, rounding).stripTrailingZeros().toPlainString());
-			loomDetailMap.put("loomQuota",loomQuota.setScale(decimals, rounding).stripTrailingZeros().toPlainString());
-			loomDetailMap.put("avlQuota",avlQuota.setScale(decimals, rounding).stripTrailingZeros().toPlainString());
-			loomDetailMap.put("usedQuota",usedQuota.setScale(decimals, rounding).stripTrailingZeros().toPlainString());
+			loomDetailMap.put("loomQty",loomQty.setScale(decimals, rounding).intValueExact());
+			loomDetailMap.put("loomQuota",loomQuota.setScale(decimals, rounding).intValueExact());
+			loomDetailMap.put("avlQuota",avlQuota.setScale(decimals, rounding).intValueExact());
+			loomDetailMap.put("usedQuota",usedQuota.setScale(decimals, rounding).intValueExact());
 			loomDetails.put(eachLoomType.getString("loomTypeId"),loomDetailMap);
 		}
 		
@@ -1322,7 +1322,7 @@ public class DepotSalesApiServices{
 		resultMap.put("isDepot",isDepot);
 		resultMap.put("DOA",DOA);
 		resultMap.put("loomDetails",loomDetails);
-		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).stripTrailingZeros().toPlainString());
+		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).intValueExact());
 		resultMap.put("customerBranchMap",customerBranchMap);
 		result.put("weaverDetails",resultMap);
 		
