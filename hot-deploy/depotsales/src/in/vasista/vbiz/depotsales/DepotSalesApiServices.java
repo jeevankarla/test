@@ -435,12 +435,12 @@ public class DepotSalesApiServices{
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("cstAmount"))){
 		    				cstAmount = eachItem.getBigDecimal("cstAmount");
 		    			}
-		    			itemDetailMap.put("quantity",quantity);
-		    			itemDetailMap.put("unitPrice",unitPrice);
-		    			itemDetailMap.put("vatPercent",vatPercent);
-		    			itemDetailMap.put("vatAmount",vatAmount);
-		    			itemDetailMap.put("cstPercent",cstPercent);
-		    			itemDetailMap.put("cstAmount",cstAmount);
+		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
+		    			itemDetailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
+		    			itemDetailMap.put("vatPercent",vatPercent.setScale(decimals, rounding));
+		    			itemDetailMap.put("vatAmount",vatAmount.setScale(decimals, rounding));
+		    			itemDetailMap.put("cstPercent",cstPercent.setScale(decimals, rounding));
+		    			itemDetailMap.put("cstAmount",cstAmount.setScale(decimals, rounding));
 		    			orderItems.add(itemDetailMap);
 		    		}
 	    		}
