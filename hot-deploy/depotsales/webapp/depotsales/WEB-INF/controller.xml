@@ -616,6 +616,12 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="CashierPaymentCheckListDepot"/>        
     </request-map>
+    
+     <request-map uri="partyAbsractDetails.csv">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="partyAbsractDetailsCSV"/>        
+    </request-map>
+    
     <request-map uri="searchProduct">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="searchProduct"/>
@@ -2095,6 +2101,7 @@
     <view-map name="PartyFinancialHistoryWithDrCrDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PartyFinancialHistoryWithDrCrDepotPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="stockPositionReportDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockPositionReportDepotPDF" content-type="application/pdf"/>
     <view-map name="CashierPaymentCheckListDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#CashierPaymentCheckListDepot" content-type="application/pdf" encoding="none"/>
+     <view-map name="partyAbsractDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#partyAbsractDetailsCSV" content-type="text/csv"/>
     <view-map name="searchProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#searchProduct"/>
     <view-map name="EditProductPricesDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProductPricesDepot"/>
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>

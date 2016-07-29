@@ -139,6 +139,29 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="partyAbsractDetailsCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/partyAbsractDetailsPDF.groovy"/>  		</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="partyAbstractDetailCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+    
 	<screen name="LetterOfIndentReport">
 		<section>
 			<actions>

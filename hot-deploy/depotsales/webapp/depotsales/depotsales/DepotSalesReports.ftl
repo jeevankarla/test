@@ -33,6 +33,7 @@ $(document).ready(function(){
 	    makeDatePicker("stockFromDate","stockThruDate");
 	    makeDatePicker("ivdFromDate","ivdThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
+	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");
 	    makeDatePicker("CASHFromDateId","");
@@ -165,6 +166,34 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>
              <td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+           </form>
+        </tr>
+        
+         <tr class="alternate-row">
+      	   <form id="partyAbsractDetails" name="partyAbsractDetails" method="post" action="<@ofbizUrl>partyAbsractDetails.csv</@ofbizUrl>" target="_blank">        
+             <td width="10%">Party Abstract Details</td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="abstrctFromDate" readonly  name="abstrctFromDate"/></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="abstrctThruDate" readonly  name="abstrctThruDate"/></td>
+             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="partyAbsractDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
+           <#-->  <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></td>
+  		   <td width="10%">Party Type :<select name="partyClassificationGroupId" id="partyClassificationGroupId">
+			    <option value=''></option>
+                <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
+                <option value='OTHERS'>Others</option>
+  			 </select></td>	 -->			
+             <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+             <td width="5%"><input type="submit" value="CSV" class="buttontext"/></td>
            </form>
         </tr>
 		<tr class="alternate-row">

@@ -82,7 +82,7 @@ under the License.
 		</fo:table-body>
 	</fo:table>
 	</fo:block>
-		<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}  </fo:block>
+		<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedShipDate, "dd-MMM-yyyy")}  </fo:block>
         <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          <fo:block>     
     <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed" font-size="10pt"> 
