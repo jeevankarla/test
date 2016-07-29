@@ -1971,7 +1971,11 @@
         </response>
         <response name="error" type="view" value="DepotSalesInvoice"/>
     </request-map>
-    
+    <request-map uri="saveBranchSaleOrder">
+        <security auth="true" https="true"/>
+        <event type="java" global-transaction="true" invoke="saveBranchSaleOrderEvent" path="in.vasista.vbiz.depotsales.DepotSalesServices"/>
+        <response value="json" type="request" name="success"/>
+    </request-map>
     
      <!-- View Mappings -->
     
