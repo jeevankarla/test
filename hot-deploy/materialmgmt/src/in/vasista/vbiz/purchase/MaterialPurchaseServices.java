@@ -2831,12 +2831,7 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(amendedPriceStr)){
 					amendedPrice = new BigDecimal(amendedPriceStr);
 				}
-				
-				
-				
-				
 				List<GenericValue> OrderItem =null;
-				
 				try {
 				List conList1 = FastList.newInstance();
 				conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
@@ -2849,10 +2844,24 @@ public class MaterialPurchaseServices {
 				  		return "error";
 						
 				}
-				
-				
-				
+				List<GenericValue> orderAssoc =null;
+				String indentId=null;
+				try {
+					List conList2 = FastList.newInstance();
+					conList2.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS ,orderId));
+		     		EntityCondition cond2=EntityCondition.makeCondition(conList2,EntityOperator.AND);
+					 orderAssoc = delegator.findList("OrderAssoc", cond2, null, null, null, false);
+					 indentId=(EntityUtil.getFirst(orderAssoc)).getString("orderId");
+					 
+					}catch (GenericEntityException e) {
+							Debug.logError("Failed to retrive Indent"+orderId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive indent");	
+					  		return "error";
+							
+					}
 				GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
+				GenericValue indentItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",indentId,"orderItemSeqId",orderItemSeqId), false);
+
 				//GenericValue orderItemChange = delegator.makeValue("OrderItemChange");
 				Map<String, Object> orderItemChange = FastMap.newInstance();
 				orderItemChange.put("userLogin", userLogin);
@@ -2866,31 +2875,38 @@ public class MaterialPurchaseServices {
 				if(amendedQuantity.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("quantity", amendedQuantity);
 					orderItem.set("quantity", amendedQuantity);
+					indentItem.set("quantity", amendedQuantity);
+
 				}
 				if(amendedPrice.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("unitPrice", amendedPrice);
 					orderItem.set("unitPrice", amendedPrice);
 					orderItem.set("unitListPrice", amendedPrice);
+					indentItem.set("unitPrice", amendedPrice);
+					indentItem.set("unitListPrice", amendedPrice);
 				}
-				
 				orderItemChange.put("effectiveDatetime",effectiveDate);
 				orderItemChange.put("changeDatetime", UtilDateTime.nowTimestamp());
 				orderItemChange.put("changeUserLogin",userLogin.getString("userLoginId"));
 				orderItemChange.put("reasonEnumId", reasonEnumId);
 				orderItemChange.put("changeComments", changeComments);
-			    
 				Map resultMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
-		        
 		        if (ServiceUtil.isError(resultMap)) {
 		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Problem creating order Item  change for orderId :"+orderId);	
 					TransactionUtil.rollback();
 			  		return "error";
 		        }
+		        orderItemChange.put("orderId", indentId);
+				Map resultIndentMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
+				if (ServiceUtil.isError(resultIndentMap)) {
+		        	Debug.logError("Problem creating order Item  change for indentId :"+indentId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem creating order Item  change for indentId :"+indentId);	
+					TransactionUtil.rollback();
+			  		return "error";
+		        }
 				orderItem.store();
-				
-				
-				
+				indentItem.store();
 				String Scheam = "";
 				String onBeHalfOf = "";
 			List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
@@ -3341,25 +3357,7 @@ public class MaterialPurchaseServices {
 					
 			  	}
 		  	}
-		  	 List condList= FastList.newInstance();;
-	           condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, primaryOrderId));
-			   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
-			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
-			  if(UtilValidate.isNotEmpty(orderAssocList)){
-				  String PoOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
-			    
-			    Map processContext = FastMap.newInstance();
-	    		processContext.put("userLogin",userLogin);
-	    		processContext.put("SalesOrder",primaryOrderId);
-	    		processContext.put("PurchaseOrder",PoOrderId);
-	            result =updateIndentSummaryPO(dctx, processContext);
-				if(ServiceUtil.isError(result)){
-					Debug.logError("Unable to update order: " + ServiceUtil.getErrorMessage(result), module);
-					request.setAttribute("_ERROR_MESSAGE_", "Error in Unable to update related Purchase order  :");
-					return "error";
-				}
-  
-			  }
+		  	
 	  	}catch(Exception e){
 	  		Debug.logError(e, "Error in amending order, module");
 			request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
