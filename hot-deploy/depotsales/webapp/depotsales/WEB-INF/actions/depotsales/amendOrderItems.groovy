@@ -31,6 +31,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 partyOrders = delegator.findList("OrderRole", expr, null, null, null, false);
+orderItemDetails = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId), null, null, null, false);
 
 orderType="direct";
 onbehalfof = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
@@ -47,14 +48,9 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	GenericValue eachItem = null;
 	//productIds = EntityUtil.getFieldListFromEntityList(list, "productId", true);
 	
-	Debug.log("list==============================="+list);
 	//products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	int i=0;
 	while ((eachItem=list.next()) != null) {
-
-		Debug.log("eachItem==============================="+eachItem);
-		
-	
 	prodDetail =  context.product = delegator.findOne("Product",[productId:eachItem.productId],true);
 	if(i==0){
 		catType="";
@@ -79,96 +75,43 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	}
 	
 	JSONObject newObj = new JSONObject();
-	
-	cond=[];
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BALE_QTY"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpBale = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	baleQtyAttr = EntityUtil.filterByCondition(orderItemAttr, condExpBale);
-	Debug.log("productDetails====================1111111111=dfsdf==========");
-	
-	cond.clear();
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "YARN_UOM"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpYarn = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	yarnUOMAttr = EntityUtil.filterByCondition(orderItemAttr,condExpYarn);
-	Debug.log("productDetails====================2222222=dfsdf==========");
-	
-	cond.clear();
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WIEVER_CUSTOMER"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpWiever = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	WieverAttr = EntityUtil.filterByCondition(orderItemAttr,condExpWiever);
-	Debug.log("productDetails====================33333=dfsdf==========");
-	
-	
-	cond.clear();
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BUNDLE_WGHT"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpBundle = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	bundleAttr = EntityUtil.filterByCondition(orderItemAttr,condExpBundle);
-	Debug.log("productDetails====================666666=dfsdf==========");
-	
-	
-	cond.clear();
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "BANDLE_UNITPRICE"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpBundlePrice = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	bundlePriceAttr = EntityUtil.filterByCondition(orderItemAttr,condExpBundlePrice);
-	Debug.log("bundlePriceAttr====================666666=dfsdf==========");
-	
-	
-	cond.clear();
-	cond.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
-	cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-	condExpRmrk = EntityCondition.makeCondition(cond, EntityOperator.AND);
-	RmrkAttr = EntityUtil.filterByCondition(orderItemAttr,condExpRmrk);
-	Debug.log("productDetails====================9999999=dfsdf==========");
-	
-	yarnUOM="";
-	bundleWeight=0;
-	BundleUnitPrice=0;
-	if(baleQtyAttr){
-		baleQty=(baleQtyAttr.get(0)).get("attrValue");
+	remarks="";
+	uom="";
+	baleQty=0;
+	bundleWght=0;
+	bundleUnitPrice=0;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+	orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+	if(UtilValidate.isNotEmpty(orderItemDtl)){
+		remarks = (orderItemDtl.get(0)).get("remarks");
+		uom = (orderItemDtl.get(0)).get("Uom");
+		baleQty = (orderItemDtl.get(0)).get("baleQuantity");
+		bundleWght=(orderItemDtl.get(0)).get("bundleWeight");
+		bundleUnitPrice=(orderItemDtl.get(0)).get("bundleUnitPrice");
+		if(uom==null){
+			uom="KGs";
+		}
+		
 	}
-	if(yarnUOMAttr){
-		yarnUOM=(yarnUOMAttr.get(0)).get("attrValue");
-	}
-	remrk="";
-	if(RmrkAttr){
-		remrk=(RmrkAttr.get(0)).get("attrValue");
-	}
-	if(bundlePriceAttr){
-		BundleUnitPrice=(bundlePriceAttr.get(0)).get("attrValue");
-	}
-	wieverName="";
-	wieverId="";
-	psbNo="";
-	Debug.log("productDetails====================89898989898=dfsdf==========");
-	
-	if(WieverAttr){
-		wieverId=(WieverAttr.get(0)).get("attrValue");
-		partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+		/*partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 		if(partyIdentification){
 			psbNo = partyIdentification.get("idValue");
 		}
-		wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);
-	}
-	if(bundleAttr){
-		bundleWeight=(bundleAttr.get(0)).get("attrValue");
-	}
-	newObj.put("customerName",wieverName+"["+psbNo+"]");
-	newObj.put("customerId",wieverId);
+		wieverName= org.ofbiz.party.party.PartyHelper.getPartyName(delegator, wieverId, false);*/
+	
+	
+//	newObj.put("customerName",wieverName+"["+psbNo+"]");
+//	newObj.put("customerId",wieverId);
 	newObj.put("orderItemSeqId",eachItem.orderItemSeqId);	
-	newObj.put("remarks",remrk);
-	newObj.put("psbNumber",psbNo);
+	newObj.put("remarks",remarks);
+//	newObj.put("psbNumber",psbNo);
 	newObj.put("cProductId",eachItem.productId);
 	newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
 	newObj.put("baleQuantity",baleQty);
-	newObj.put("KgunitPrice",BundleUnitPrice);
-	
-	newObj.put("cottonUom",yarnUOM);
-	newObj.put("bundleWeight",bundleWeight);
+	newObj.put("bundleunitPrice",bundleUnitPrice);
+	newObj.put("cottonUom",uom);
+	newObj.put("bundleWeight",bundleWght);
 	newObj.put("quantity",eachItem.quantity);
 	newObj.put("unitPrice",eachItem.unitPrice);
 	amount=eachItem.unitPrice*eachItem.quantity;
