@@ -346,38 +346,49 @@
       return {valid: true, msg: null};
     }
 	var mainGrid;		
-	function setupGrid1() {
-		
+		function setupGrid1() {
+
 		var columns = [
 			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"cell-title", url: "LookupIndividualPartyName", regexMatcher:"contains" ,editor: AutoCompleteEditorAjax, sortable:false ,toolTip:""},
 			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
+			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
+			{id:"bundleWeight", name:"Bundle Wt(Kgs)", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
+			{id:"bundleunitPrice", name:"${uiLabelMap.UnitPrice}", field:"bundleunitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"VAT/CST", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
-			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false}
-			{id:"orderItemSeqId", name:"orderItemSeqId", field:"orderItemSeqId", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:FloatCellEditor},
-		<#--	{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
+			{id:"orderItemSeqId", name:"orderItemSeqId", field:"orderItemSeqId", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:FloatCellEditor},
 			{id:"quotaAvbl", name:"Quota Available", field:"quota", width:80, minWidth:80, sortable:false, cssClass:"readOnlyColumnClass", focusable :false},
-			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}-->
+			{id:"warning", name:"Warning", field:"warning", width:130, minWidth:130, sortable:false, cssClass:"readOnlyColumnAndWarningClass", focusable :false}
 			
 			
 		];
-		var hiddencolumns = [
-			{id:"customerName", name:"Customer", field:"customerName", width:250, minWidth:250, cssClass:"readOnlyColumnClass",toolTip:""},
-			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250,  cssClass:"readOnlyColumnClass", sortable:false ,toolTip:""},
-			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
-			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
+		hiddencolumns = [
+			{id:"cProductName", name:"Product", field:"cProductName", width:250, minWidth:250,cssClass:"readOnlyColumnClass" , availableTags: availableTags, regexMatcher:"contains" , sortable:false ,toolTip:""},
+			{id:"remarks", name:"Specifications", field:"remarks", width:120, minWidth:120, sortable:false, cssClass:"readOnlyColumnClass" , focusable :true},
+			{id:"cottonUom", name:"Uom", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",cssClass:"readOnlyColumnClass" ,sortable:false},
+			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, cssClass:"readOnlyColumnClass"},
 			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:60, minWidth:60, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:70, minWidth:70, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
-			
+				
 		];
+
+
+		var data_view = new Slick.Data.DataView();
+		grid = new Slick.Grid("#myGrid1", data, hiddencolumns,options);
+		var columnPicker= new Slick.Controls.ColumnPicker(columns, grid,options);
+		
+		
 		
 		var options = {
 			editable: true,		
@@ -390,7 +401,7 @@
 		};
 		
 
-		grid = new Slick.Grid("#myGrid1", data, hiddencolumns, options);
+		grid = new Slick.Grid("#myGrid1", data,hiddencolumns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());        
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 		
@@ -483,99 +494,76 @@
 	      	
 	      	
 	    });
-        grid.onCellChange.subscribe(function(e,args) {
-        	
-			if (args.cell == 1 || args.cell == 3) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				grid.updateRow(args.row);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				updateTotalIndentAmount();
-			}
-			
-			if (args.cell == 4) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['unitPrice'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}
-				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["amount"] = roundedAmount;
-				
-				grid.updateRow(args.row);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				updateTotalIndentAmount();
-			}
-			if (args.cell == 5) {
-				var prod = data[args.row]["cProductId"];
-				var qty = parseFloat(data[args.row]["quantity"]);
-				var udp = data[args.row]['amount'];
-				var price = 0;
-				if(udp){
-					var totalPrice = udp;
-					price = totalPrice;
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qty)){
-					qty = 0;
-				}				
-				var roundedAmount;
-					roundedAmount = price/qty;
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["unitPrice"] = roundedAmount;
-				
-				grid.updateRow(args.row);
-				
-				var row = args.row;
-				getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, roundedAmount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				
-				updateTotalIndentAmount();
-			}
-			
-			
-		}); 
+
 		
+	  grid.onCellChange.subscribe(function(e,args) {
+		  
+	     	setUndefinedValues(data[args.row]);
+		 	grid.updateRow(args.row);
+			var prod = data[args.row]["cProductId"];
+			var quantity = parseFloat(data[args.row]["quantity"]);
+			var bundleunitPrice = data[args.row]['bundleunitPrice'];
+			var uom = data[args.row]["cottonUom"];
+			var balQuty = parseFloat(data[args.row]["baleQuantity"]);
+			var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
+			var price = parseFloat(data[args.row]["unitPrice"]);
+			var amt = parseFloat(data[args.row]["amount"]);
+			var roundedAmount=0;
+			if( uom == "KGs" ){
+			 	roundedAmount =calculateBundlePrice(balQuty,uom,bundleunitPrice);
+			}else{
+			 	roundedAmount =calculateBundlePrice(balQuty,uom,price);
+			}
+
+			if (args.cell == 3) {
+
+		  		if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+		  		}
+		  		if(isNaN(bundleunitPrice)){
+					bundleunitPrice = 0;
+		  		}	
+		  
+		  		quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+		  		data[args.row]["quantity"]=quantity;
+		  		data[args.row]["bundleunitPrice"] = bundleunitPrice;
+		  		data[args.row]["amount"] = roundedAmount;
+		  		data[args.row]["totPayable"] = roundedAmount;
+		  
+			}
+			else if(args.cell == 4){
+			  baleQty=calculateKgs(quantity,uom,bundleWeight);
+			  data[args.row]["baleQuantity"]=baleQty;
+			   if( uom != "KGs" ){
+			  data[args.row]["amount"] = Math.round(quantity*bundleunitPrice);
+			  upb=reverseCalculationKGToBundle(bundleWeight,bundleunitPrice);
+			  }else{
+			   data[args.row]["amount"] = Math.round(quantity*price);
+			   upb=reverseCalculationKGToBundle(bundleWeight,price);
+			  }
+			  data[args.row]["bundleunitPrice"] = upb;
+			  data[args.row]["totPayable"] = Math.round(quantity*bundleunitPrice);
+			}
+			else if(args.cell == 5){
+			    var upb=0;
+				var bundle=0;
+					if(uom == "Bale"){
+					bundle=balQuty*40;
+					}
+					if(uom == "Half-Bale"){
+					bundle=balQuty*20;
+					}
+			if(uom == "Bundle" || uom == "KGs" ){
+					bundle=balQuty;
+					}
+					upb=amt/bundle;
+					kgprice=amt/quantity;
+				data[args.row]["bundleunitPrice"] =upb;
+				data[args.row]["unitPrice"] = kgprice;
+			}
+	 grid.updateRow(args.row);
+	 });
+
 		grid.onActiveCellChanged.subscribe(function(e,args) {
 			if (args.cell == 1 ) {
    				var currentrow=args.row;
@@ -774,186 +762,118 @@
 		
 	}
 	
-	function updateCurrentQuota(row){
-		var prod = data[row]["cProductId"];
-		var schemeCategory = $("#schemeCategory").val();
-		productCategory = productCategoryJSON[prod];
-		data[row]["productCategory"] = productCategory;
-		
-		quota = parseFloat(productQuotaJSON[prod]);
-		if(isNaN(quota)){
-			quota = 0;
+	
+	
+	
+	
+	
+	
+	 function calculateBundlePrice(balQuty,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			result = Math.round(balQuty*org2*40);
+		}
+		else if(uom == "Half-Bale"){
+		    result = Math.round(balQuty*org2*20);
+		}
+		else if(uom == "Bundle"||uom == "KGs"){				
+		    result = Math.round(balQuty*org2);
 		}
 		
-		var usedQuota = 0
-		for(var i=0;i<data.length;i++){
-			var existingCategory = data[i]["productCategory"];
-			if(productCategory == existingCategory){
-				var takenQty = parseFloat(data[i]["quantity"]);
-				if(isNaN(takenQty)){
-					takenQty = 0;
-				}
-				usedQuota += takenQty;
-				
-				var lineQuota = quota - usedQuota;
-				
-				if(lineQuota < 0){
-					data[i]["quota"] = 0;
-					if(schemeCategory == "MGPS_10Pecent"){
-						data[i]["warning"] = 'Quota Exceeded';
-					}
-				}
-				else{
-					data[i]["quota"] = lineQuota;
-					data[i]["warning"] = '';
-				}
-				
-				grid.updateRow(i);
+		return result;
+	 }
+	 function reverseCalculationBundleToKG(bundleWeight,bundlePrice){
+	  var result=0;
+		result=bundlePrice/bundleWeight;
+		return result;
+	 }
+	 function reverseCalculationKGToBundle(bundleWeight,kgPrice){
+	  var result=0;
+		result=kgPrice*bundleWeight;
+		return result;
+	 }
+	 
+	function calculateBundleWeight(balQuty,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			result = balQuty*org2*40;
+		}
+		else if(uom == "Half-Bale"){
+		    result = balQuty*org2*20;
+		}
+		else if(uom == "Bundle"){				
+		    result = balQuty*org2;
+		}
+		else if(uom == "KGs"){				
+		    result = balQuty;
+		}
+		return result;
+	 }
+	function calculateKgs(quantity,uom,org2){
+	  var result=0;
+	    if(uom == "Bale"){
+			 result=quantity/(org2*40);
 			}
-		}
-	}
-	
-	function addServiceCharge(row){
-		var serviceChargePercent = $("#serviceChargePercent").val();
-		var serviceChargeAmt = 0;
-		
-		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
-	 		serviceChargeAmt = (serviceChargePercent/100) * data[row]["amount"];
-	 	}
-		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
-		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-		
-		data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
-	}
-	
-	function updateServiceChargeAmounts(){
-		var serviceChargePercent = $("#serviceChargePercent").val();
-		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
-			for (i = 0; i < data.length; i++) {
-				var basicAmt = data[i]["amount"];
-				var serviceChargeAmt = (serviceChargePercent/100) * basicAmt;
-				data[i]["SERVICE_CHARGE"] = serviceChargePercent;
-				data[i]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
-				data[i]["totPayable"] = basicAmt + data[i]["taxAmt"] + serviceChargeAmt;
-				grid.updateRow(i);
+		else if(uom == "Half-Bale"){
+				result=quantity/(org2*20);
 			}
+		else if(uom == "Bundle"){
+				result = quantity/org2;
+			}
+		else if(uom == "KGs"){				
+			result = quantity;
+		    }
+		return result;
+	 }
+	 function setUndefinedValues(row){
+	 if ((row["bundleWeight"]) == undefined   ) {
+			row["bundleWeight"] = 4.54;
 		}
-		updateTotalIndentAmount();
+        if ((row["cottonUom"]) == undefined   ) {
+			row["cottonUom"] = "KGs";
+		}
+		if(isNaN(row['unitPrice'])){
+			row['unitPrice'] = 0;
+		 }
+		if(isNaN(row['bundleunitPrice'])){
+			row['bundleunitPrice'] = 0;
+		 }
+		if(isNaN(row["quantity"])){
+			row["quantity"] = 0;
+		 }
+		 if(isNaN(row["amount"])){
+			row["amount"] = 0;
+		 }
+		  if(isNaN(row["totPayable"])){
+			row["totPayable"] = 0;
+		 }
+		 if(isNaN(row["taxAmt"])){
+			row["taxAmt"] = 0;
+		 }
+		 if(isNaN(row["SERVICE_CHARGE_AMT"])){
+			row["SERVICE_CHARGE_AMT"] = 0;
+		 }
+	 }
+	function setCustomerId(item){
+      	var custId= item['customerName'];
+      	var splited = (((custId.split("["))[1]).split("]"))[0];
+      	var productLabel = item['cProductName']; 
+      	item['productNameStr'] = productLabel;
+      	var custmerID=indcustomerLabelPsbNumMap[custId];
+      	item['customerId'] = splited;
+      	item['psbNumber'] = partyPsbNumber[custmerID];
+      	item['cProductId'] = productLabelIdMap[productLabel];  
+      	grid.invalidateRow(data.length);
+      	data.push(item);
+      	grid.updateRowCount();
+      	grid.render();
 	}
-	
-	function getProductTaxDetails(taxAuthorityRateTypeId, taxAuthGeoId, productId, row, totalAmt, schemeCategory, taxType){
-         if( taxAuthGeoId != undefined && taxAuthGeoId != ""){	
-	         $.ajax({
-	        	type: "POST",
-	         	url: "calculateTaxesByGeoId",
-	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
-	       	 	dataType: 'json',
-	       	 	async: true,
-	    	 	success: function(result) {
-	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-	   	  				alert(result["_ERROR_MESSAGE_"]);
-	      			}else{
-	   	  				//var taxPercentage =result["taxPercentage"];
-	   	  				//alert("taxPercentage = "+taxPercentage);
-	   	  				var taxAuthProdCatList =result["taxAuthProdCatList"];
-	   	  				//data[row]["taxPercent"] = (taxAuthProdCatList[0]).taxPercentage;
-	   	  				
-	   	  				var vatSurcharges =result["vatSurcharges"];
-	   	  				var cstSurcharges =result["cstSurcharges"];
-	   	  				var vatPercent =result["vatPercent"];
-	   	  				var cstPercent =result["cstPercent"];
-	   	  				
-	   	  				data[row]["DEFAULT_VAT"] = vatPercent;
-	   	  				data[row]["DEFAULT_CST"] = cstPercent;
-	   	  				data[row]["DEFAULT_VAT_AMT"] = (vatPercent) * totalAmt/100;
-	   	  				data[row]["DEFAULT_CST_AMT"] = (cstPercent) * totalAmt/100;
-	   	  				
-	   	  				data[row]["VAT_SURCHARGE"] = 0;
-						data[row]["VAT_SURCHARGE_AMT"] = 0;
-	   	  				
-	   	  				var totalTaxAmt = 0;
-	   	  				var vatSurchargeList = [];
-	   	  				var taxList = [];
-	   	  				vatSurchargeList.push("VAT_SURCHARGE");
-	   	  				taxList.push("VAT_SURCHARGE");
-	   	  				
-	   	  				for(var i=0 ; i<vatSurcharges.length ; i++){
-	   	  					var taxItem = vatSurcharges[i];
-							var surchargeAmt = 0;
-							surchargeAmt = (taxItem.taxPercentage) * ( (vatPercent) * totalAmt/100)/100;
-							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
-							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = surchargeAmt;
-							
-							//vatSurchargeList.push(taxItem.taxAuthorityRateTypeId);
-							
-							totalTaxAmt += surchargeAmt;
-							
-							//taxList.push(taxItem.taxAuthorityRateTypeId);
-	   	  				}
-	   	  				
-	   	  				var totalAmount = 0;
-						for (i = 0; i < data.length; i++) {
-							totalAmount += data[i]["amount"];
-						}
-						var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-	   	  				
-	   	  				
-	   	  				//var taxList = [];
-	   	  				taxList.push("VAT_SALE");
-	   	  				taxList.push("CST_SALE");
-	   	  				
-	   	  				if(taxType == "Intra-State"){
-	   	  					data[row]["VAT_SALE"] = vatPercent;
-	   	  					data[row]["VAT_SALE_AMT"] = (vatPercent) * totalAmt/100;
-	   	  					totalTaxAmt += (vatPercent) * totalAmt/100;
-	   	  					
-	   	  					data[row]["CST_SALE"] = 0;
-	   	  					data[row]["CST_SALE_AMT"] = 0;
-	   	  					
-	   	  				}
-	   	  				if(taxType == "Inter-State"){
-	   	  					data[row]["CST_SALE"] = cstPercent;
-	   	  					data[row]["CST_SALE_AMT"] = (cstPercent) * totalAmt/100;
-	   	  					totalTaxAmt += (cstPercent) * totalAmt/100;
-	   	  					
-	   	  					data[row]["VAT_SALE"] = 0;
-	   	  					data[row]["VAT_SALE_AMT"] = 0;
-	   	  				}
-	   	  				
-	   	  				<#--
-	   	  				for(var i=0 ; i<taxAuthProdCatList.length ; i++){
-							var taxItem = taxAuthProdCatList[i];
-							
-							totalTaxAmt += (taxItem.taxPercentage) * totalAmt/100;
-							
-							
-							//item['cProductId'] = productLabelIdMap[value];
-							data[row][taxItem.taxAuthorityRateTypeId] = taxItem.taxPercentage;
-							data[row][taxItem.taxAuthorityRateTypeId  + "_AMT"] = (taxItem.taxPercentage) * totalAmt/100;
-							
-							taxList.push(taxItem.taxAuthorityRateTypeId);
-						}
-						-->
-	   	  				
-	   	  				data[row]["taxList"] = taxList;
-	   	  				data[row]["vatSurchargeList"] = vatSurchargeList;
-	   	  				data[row]["taxAmt"] = totalTaxAmt;
-	   	  				
-	   	  				data[row]["totPayable"] = totalAmt + totalTaxAmt;
-	   	  				addServiceCharge(row);
-	   	  				grid.updateRow(row);
-	   	  				
-	   	  				updateTotalIndentAmount();
-	   	  				//data[row]["remarks"].setActiveCell();
-	   	  				return false; 
-	  				}
-	           
-	      		} ,
-	     	 	error: function() {
-	      	 		alert(result["_ERROR_MESSAGE_"]);
-	     	 	}
-	    	});
-	    }	
-	}
-	
+
+ 	function setCustomerIdOnCustomerChange(item,orgs){
+		if(orgs.cell==1 && item!= undefined){
+ 			var custId= item['customerName'];
+      		var splited = (((custId.split("["))[1]).split("]"))[0];
+      		data[orgs.row]['customerId'] = splited;
+ 		}
+    }
 </script>			
