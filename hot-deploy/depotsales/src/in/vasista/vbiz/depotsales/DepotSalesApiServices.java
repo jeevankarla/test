@@ -220,6 +220,13 @@ public class DepotSalesApiServices{
 			Debug.logError(e, module);
 		}
         
+        List<GenericValue> statusItemList = null;
+	  	try{
+	  		statusItemList = delegator.findList("StatusItem",EntityCondition.makeCondition("statusTypeId",EntityOperator.IN, UtilMisc.toList("ORDER_STATUS", "ORDER_ITEM_STATUS")), null, null, null, false);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive StatusItem ", module);
+			return ServiceUtil.returnError("Failed to retrive StatusItem " + e);
+		}
         List orderList = FastList.newInstance();  
         GenericValue eachHeader; 
         while( orderHeaderList != null && (eachHeader = orderHeaderList.next()) != null) {
@@ -320,7 +327,8 @@ public class DepotSalesApiServices{
 	    	tempData.put("orderNo", eachOrderNo);
 	    	tempData.put("orderId", eachOrderId);
 	    	tempData.put("orderDate", String.valueOf(eachHeader.get("estimatedDeliveryDate")).substring(0,10));
-	    	tempData.put("statusId", eachHeader.get("statusId"));
+	    	GenericValue filteredOrderStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+	    	tempData.put("statusId", filteredOrderStatus.getString("description"));
     	
 	    	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 	    		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
@@ -407,7 +415,8 @@ public class DepotSalesApiServices{
 		    			itemDetailMap.put("itemDescription",eachItem.getString("itemDescription"));
 		    			itemDetailMap.put("orderItemSeqId",eachItem.getString("orderItemSeqId"));
 		    			itemDetailMap.put("orderItemTypeId",eachItem.getString("orderItemTypeId"));
-		    			itemDetailMap.put("statusId",eachItem.getString("statusId"));
+		    			GenericValue filteredItemStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+		    			itemDetailMap.put("statusId", filteredItemStatus.getString("description"));
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("quantity"))){
 		    				quantity = eachItem.getBigDecimal("quantity");
 		    			}
