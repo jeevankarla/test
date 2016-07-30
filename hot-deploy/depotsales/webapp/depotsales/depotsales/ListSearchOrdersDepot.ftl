@@ -294,20 +294,28 @@ function drawRow(rowData) {
     statusMap["APPROVE_LEVEL3"] = "ORDER_APPROVED";
    
      
-     
-     if(rowData.POorder != "NA"){
-     
-         if(rowData.poSquenceNo != "NA")
-         row.append($("<td>" +  rowData.poSquenceNo  +"</td>"));  
-         else
-         row.append($("<td>" +  rowData.POorder  +"</td>"));
-     
-     }else{
-     
-       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
-       row.append($("<td>" +  DraftPoButton  +"</td>"));  
-     
+     if(rowData.statusId != "ORDER_PENDING"){
+	     if(rowData.POorder != "NA"){
+	     
+	         if(rowData.poSquenceNo != "NA")
+	         row.append($("<td>" +  rowData.poSquenceNo  +"</td>"));  
+	         else
+	         row.append($("<td>" +  rowData.POorder  +"</td>"));
+	     
+	     }else{
+	     
+	       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
+	       row.append($("<td>" +  DraftPoButton  +"</td>"));  
+	     
+	      }
+      }else{
+      
+         row.append($("<td></td>"));
+      
       }
+      
+      
+      
        //For Indent View
     
     var orderParam = '\'' + rowData.orderId + '\'';
@@ -315,7 +323,7 @@ function drawRow(rowData) {
     var partyId = '\'' + rowData.partyId + '\'';
     
      
-     if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED"){
+     if(rowData.statusId != "APPROVE_LEVEL3" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED" && rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_PENDING"){
     var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
     
     var buutonName;
@@ -338,7 +346,9 @@ function drawRow(rowData) {
    // var approveButton ='<input type=button name="approveOrder" id=approveOrder value='+buutonName+'Head onclick="'+orderCustomMethod+'">';
     row.append($("<td>" +  approveButton  +"</td>"));
    }
-   
+   else if(rowData.statusId == "ORDER_PENDING"){
+       row.append($("<td>Order Pending</td>"));
+  }
    else if(rowData.statusId == "ORDER_CANCELLED"){
        row.append($("<td>Order Cancelled</td>"));
   }
@@ -441,7 +451,7 @@ function drawRow(rowData) {
     <#if security.hasPermission("INDENT_CANCEL", session)>
     	hasPermission = true;
     </#if>
-    if(rowData.statusId != "ORDER_APPROVED" || hasPermission){
+    if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING") || hasPermission){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
