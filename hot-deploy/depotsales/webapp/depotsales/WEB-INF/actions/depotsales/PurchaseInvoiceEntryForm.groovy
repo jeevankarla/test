@@ -49,7 +49,7 @@ import java.math.RoundingMode;
 		def sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		 effectiveDateBegin= UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
 		 effectiveDateEnd = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
-		 Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
+		// Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
 		if(!invoice && orderId){
 			
 			orderedInvoice = Boolean.FALSE;
