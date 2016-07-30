@@ -94,6 +94,26 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		}
 		
 	}
+	quantity = 0;
+	quantity = eachItem.quantity;
+	exprCondList=[];
+	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, parameters.orderId));
+	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	orderAssc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(exprCondList, EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(orderAssc)){
+		poOrderId = EntityUtil.getFirst(orderAssc).orderId;
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_ACCEPTED"]));
+		shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(shipmentReceipts)){
+			shipmentQty = 0;
+			shipmentReceipts.each{ eachShipment->
+				shipmentQty += eachShipment.quantityAccepted;
+			}
+			quantity = quantity-shipmentQty;
+		}
+	}
 		/*partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", wieverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 		if(partyIdentification){
 			psbNo = partyIdentification.get("idValue");
@@ -112,9 +132,9 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	newObj.put("bundleunitPrice",bundleUnitPrice);
 	newObj.put("cottonUom",uom);
 	newObj.put("bundleWeight",bundleWght);
-	newObj.put("quantity",eachItem.quantity);
+	newObj.put("quantity",quantity);
 	newObj.put("unitPrice",eachItem.unitPrice);
-	amount=eachItem.unitPrice*eachItem.quantity;
+	amount=eachItem.unitPrice*quantity;
 	newObj.put("amount", amount);
 	orderItemsJSON.add(newObj);
 	if(OrderItemUIJSON.get(eachItem.productId)){
