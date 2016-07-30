@@ -1415,11 +1415,11 @@
      				</p>
 				</div>
 				<#assign formAction='tempProcessBranchSalesOrder'>			
-				<#--> <#if !orderId?exists>	
+				 <#if !orderId?exists>	
 			   		<div align="right">
 					   	<input type="button" style="padding:.3em" id="tempSave" value="${uiLabelMap.CommonSave}" onclick="javascript:processTempIndentEntryInternal('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 					</div>  
-				</#if>-->
+				</#if>
 			</#if>
 				<div id="myGrid1" style="width:100%;height:210px;"></div>
 					  

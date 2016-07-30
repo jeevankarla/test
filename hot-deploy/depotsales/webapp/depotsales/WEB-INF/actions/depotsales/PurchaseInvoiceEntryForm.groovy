@@ -46,7 +46,10 @@ import java.math.RoundingMode;
 		invoice = delegator.findList("Invoice", condition1, null, null, null, false);
 		
 		orderId = shipment.primaryOrderId;
-		
+		def sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		 effectiveDateBegin= UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
+		 effectiveDateEnd = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
+		// Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
 		if(!invoice && orderId){
 			
 			orderedInvoice = Boolean.FALSE;
@@ -237,9 +240,21 @@ import java.math.RoundingMode;
 					vatPercent = eachItem.vatPercent;
 				}
 				tempMap.put("unitPrice", eachItem.unitPrice);
-				
-				Debug.log("unitPrice=============="+eachItem.unitPrice);
-				
+				if(UtilValidate.isNotEmpty(orderId)){
+					List conditionlist=[];
+					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+					conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, shipment.createdDate));
+					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+					def orderBy = UtilMisc.toList("-changeDatetime");
+					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
+					Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
+						tempMap.put("UPrice",OrderItemChangeDetails.unitPrice);
+					}
+				}
 				tempMap.put("bedPercent", bedPercent);
 				tempMap.put("cstPercent", cstPercent);
 				tempMap.put("vatPercent", vatPercent);
@@ -346,6 +361,26 @@ import java.math.RoundingMode;
 				Debug.log("unitPrice==============="+unitPrice);
 				
 				newObj.put("UPrice", unitPrice);
+				if(UtilValidate.isNotEmpty(orderId)){
+					List conditionlist=[];
+					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+					
+					conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, shipment.createdDate));
+					
+					//conditionList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, "111111111111111"));
+					//conditionList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.GREATER_THAN_EQUAL_TO ,effectiveDateEnd));
+					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+					def orderBy = UtilMisc.toList("-changeDatetime");
+					Debug.log("conditionMain=======4334654==111========"+conditionMain1);
+					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
+					Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
+						newObj.put("UPrice",OrderItemChangeDetails.unitPrice);
+					}
+				}
 				newObj.put("amount", amount);
 				newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
