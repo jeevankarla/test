@@ -2860,7 +2860,10 @@ public class MaterialPurchaseServices {
 							
 					}
 				GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+
 				GenericValue indentItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",indentId,"orderItemSeqId",orderItemSeqId), false);
+				GenericValue indentHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",indentId), false);
 
 				//GenericValue orderItemChange = delegator.makeValue("OrderItemChange");
 				Map<String, Object> orderItemChange = FastMap.newInstance();
@@ -2872,6 +2875,45 @@ public class MaterialPurchaseServices {
 				orderItemChange.put("changeTypeEnumId", "ODR_ITM_AMEND");
 				orderItemChange.put("orderId", orderId);
 				orderItemChange.put("orderItemSeqId", orderItemSeqId);
+				orderItemChange.put("effectiveDatetime",effectiveDate);
+				orderItemChange.put("changeDatetime", UtilDateTime.nowTimestamp());
+				orderItemChange.put("changeUserLogin",userLogin.getString("userLoginId"));
+				orderItemChange.put("reasonEnumId", reasonEnumId);
+				orderItemChange.put("changeComments", changeComments);
+				if(UtilValidate.isNotEmpty(orderId)){
+					List conditionlist = FastList.newInstance();
+					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+					EntityCondition conditionMain=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+					List<GenericValue> OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain , null ,null, null, false );
+					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					 //OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+					if(UtilValidate.isEmpty(OrderItemChangeDetails)){
+						orderItemChange.put("effectiveDatetime",orderHeader.getTimestamp("entryDate"));
+						orderItemChange.put("changeDatetime", orderHeader.getTimestamp("entryDate"));
+						Map resultorderPrvMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
+				        if (ServiceUtil.isError(resultorderPrvMap)) {
+				        	Debug.logError("Problem creating order Item  old change for orderId :"+orderId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Problem creating order Item old change for orderId :"+orderId);	
+							TransactionUtil.rollback();
+					  		return "error";
+				        }
+						orderItemChange.put("orderId", indentId);
+				        orderItemChange.put("effectiveDatetime",indentHeader.getTimestamp("entryDate"));
+						orderItemChange.put("changeDatetime", indentHeader.getTimestamp("entryDate"));
+				        orderItemChange.put("quantity", indentItem.getBigDecimal("quantity"));
+						orderItemChange.put("unitPrice", indentItem.getBigDecimal("unitPrice")); 
+						Map resultIndentPrvMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
+				        if (ServiceUtil.isError(resultIndentPrvMap)) {
+				        	Debug.logError("Problem creating order Item  old change for indentId :"+indentId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Problem creating indet Item old change for indentId :"+indentId);	
+							TransactionUtil.rollback();
+					  		return "error";
+				        }
+					}
+				}
+				
 				if(amendedQuantity.compareTo(BigDecimal.ZERO) !=0){
 					orderItemChange.put("quantity", amendedQuantity);
 					orderItem.set("quantity", amendedQuantity);
@@ -2885,11 +2927,7 @@ public class MaterialPurchaseServices {
 					indentItem.set("unitPrice", amendedPrice);
 					indentItem.set("unitListPrice", amendedPrice);
 				}
-				orderItemChange.put("effectiveDatetime",effectiveDate);
-				orderItemChange.put("changeDatetime", UtilDateTime.nowTimestamp());
-				orderItemChange.put("changeUserLogin",userLogin.getString("userLoginId"));
-				orderItemChange.put("reasonEnumId", reasonEnumId);
-				orderItemChange.put("changeComments", changeComments);
+				orderItemChange.put("orderId", orderId);
 				Map resultMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
 		        if (ServiceUtil.isError(resultMap)) {
 		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
@@ -2978,41 +3016,27 @@ public class MaterialPurchaseServices {
 			
 			updateQuta = amendedQuantity.subtract(actualQty);
 			if(Scheam.equals("MGPS_10Pecent")){
-				
-				
 				String schemeId="TEN_PERCENT_MGPS";
 				String productCategoryId=(String)productCategoriesList.get(0);
-				
 				Timestamp supplyDate = UtilDateTime.nowTimestamp();
-				
-				
-				
                 Map<String,Object>  productCategoryQuotasMap = FastMap.newInstance();
                 Map<String, Object> resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", "C02108","effectiveDate",supplyDate,"productCategoryId",productCategoryId));
 				productCategoryQuotasMap = (Map) resultCtx.get("schemesMap");
-				
 				partyBalanceQuota = (BigDecimal) productCategoryQuotasMap.get(productCategoryId);
                 int updateQuotaSign = updateQuta.signum();
                 if(updateQuta.compareTo(BigDecimal.ZERO)>0 && partyBalanceQuota.compareTo(BigDecimal.ZERO)>0){
                 Map partyBalanceHistoryContext = FastMap.newInstance();
 				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId","C02108","productCategoryId","COTTON_UPTO40","dateTimeStamp", supplyDate,"quantity",updateQuta,"userLogin", userLogin);
-				
-                
                 try {
 					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 					//quota=(BigDecimal)resultMapquota.get("quota");
-					
 					//Debug.log("quota=====Used====3333==============="+quota);
-
-					
 				} catch (Exception e) {
 					Debug.logError("Failed to retrive PartyQuotaBalanceHistory"+orderId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive PartyQuotaBalanceHistory");	
 			  		return "error";
 				}
-				
                 }else if(updateQuotaSign == -1){
-                
                 	condsList.clear();
     				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
     				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
@@ -3020,13 +3044,8 @@ public class MaterialPurchaseServices {
     					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
     					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
     				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
-    				    
-    				    
-    				    
     				    if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
-    						 	
     						for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
-
     							condsList.clear();
     							condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
     							if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
@@ -3044,7 +3063,6 @@ public class MaterialPurchaseServices {
     										  	partyId=(String)OrderItemDetailValue.get("partyId");
     										  	partyBalanceHistoryContext = UtilMisc.toMap("partyId","C02108","orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",Scheam,"quota",updateQuta, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
     										  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-    		
     										}
     									}
     								}
@@ -3065,202 +3083,11 @@ public class MaterialPurchaseServices {
     				}
     				
     			}
-                	
-                	
-                	
                 Map<String, Object> resultCtx1 = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", "C02108","effectiveDate",supplyDate,"productCategoryId",productCategoryId));
 				Map productCategoryQuotasMap1 = (Map) resultCtx1.get("schemesMap");
 				
 				BigDecimal partyBalanceQuota1 = (BigDecimal) productCategoryQuotasMap1.get(productCategoryId);
-				/*List condsList = FastList.newInstance();
-			  	condsList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeId));
-			  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-			  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
-			  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-				try {
-					List<GenericValue> SchemeProductCategory = delegator.findList("SchemeProductCategory", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
-				
-					
-					
-					GenericValue SchemeProductCategoryList = EntityUtil.getFirst(SchemeProductCategory);
-
-					
-					
-				    Debug.log("SchemeProductCategoryList================"+SchemeProductCategoryList);
-				
-				
-				} catch (GenericEntityException e) {
-					Debug.logError("Failed to retrive ProductCategory"+orderId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive ProductCategory");	
-			  		return "error";
-					
-				}*/
-				
-				
-				/* int periodTime = 0;
-				if(productCategoryId == "COTTON_40ABOVE")
-					periodTime = 3;
-				else if(productCategoryId == "COTTON_UPTO40")
-					periodTime = 2;
-				else
-					periodTime = 0;	*/
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				/*try {
-					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-					quota=(BigDecimal)resultMapquota.get("quota");
-					
-					Debug.log("quota=========3333==============="+quota);
-
-					
-				} catch (Exception e) {
-					Debug.logError("Failed to retrive PartyQuotaBalanceHistory"+orderId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive PartyQuotaBalanceHistory");	
-			  		return "error";
-				}
-*/				
-				
-				
-				
-				
-				
 			}
-
-					
-				/*//Debug.log("quotaQuantity====================="+quotaQuantity);
-				
-				//orderItemDetail.put("",);
-				orderItemDetail.put("orderId",orderId);
-				orderItemDetail.put("orderItemSeqId",orderItemSeqId);
-				orderItemDetail.put("userLogin",userLogin);
-				orderItemDetail.put("partyId",customerId);
-				orderItemDetail.put("unitPrice",prdPrice);
-				orderItemDetail.put("discountAmount",discountAmount);
-				orderItemDetail.put("Uom",Uom);
-				orderItemDetail.put("productId",prodId);
-				orderItemDetail.put("baleQuantity",blQuantity);
-				orderItemDetail.put("bundleWeight",budlWeight);
-				orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
-				orderItemDetail.put("remarks",specification);
-				orderItemDetail.put("quotaQuantity",quotaQuantity);
-				orderItemDetail.put("quantity",Kgquantity);
-				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
-				
-				try{
-					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
-				    
-				    if (ServiceUtil.isError(resultMap)) {
-				    	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
-				    	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
-				    }
-				}catch(Exception e){
-						Debug.logError(e, "Error in Order Item Detail, module");
-						return ServiceUtil.returnError( "Error in Order Item Detail");
-					}*/
-				
-
-
-
-				
-				
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-				/*List condExpr = FastList.newInstance();
-	        	condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	        	condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
-	        	EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
-	        	List<GenericValue> OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
-				*/
-
-				
-			/*	for(GenericValue orderItemDetail : OrderItemDetail){
-					
-					    orderItemDetail.set("orderId",orderId);
-						orderItemDetail.set("orderItemSeqId",orderItemSeqId);
-						orderItemDetail.set("userLogin",userLogin);
-						//orderItemDetail.set("partyId",customerId);
-						orderItemDetail.set("unitPrice",amendedPrice);
-						orderItemDetail.set("discountAmount",discountAmount);
-						orderItemDetail.set("Uom",Uom);
-						orderItemDetail.set("productId",prodId);
-						orderItemDetail.set("baleQuantity",blQuantity);
-						orderItemDetail.set("bundleWeight",budlWeight);
-						orderItemDetail.set("bundleUnitPrice",budlUnitPrice);
-						orderItemDetail.set("remarks",specification);
-						orderItemDetail.set("quotaQuantity",quotaQuantity);
-						orderItemDetail.set("quantity",amendedQuantity);
-						orderItemDetail.set("changeUserLogin",userLogin.getString("userLoginId"));
-						orderItemDetail.store();
-					
-				}*/
-
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				//updating OrderItemAttribute 
 				String baleQuantityStr = null;
 				String yarnUOMStr = null;
