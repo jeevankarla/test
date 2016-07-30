@@ -420,10 +420,7 @@ if(shipments){
 			
 			unitPrice = (orderItem.unitPrice);
 			
-			vatAmt = ((unitPrice*vatPercent)/100)*qty;
-			cstAmt = ((unitPrice*cstPercent)/100)*qty;
 			
-			amount = unitPrice*qty  ;
 			
 			JSONObject newObj = new JSONObject();
 			newObj.put("cProductId",OrderItem[0].productId);
@@ -438,6 +435,25 @@ if(shipments){
 			newObj.put("cProductName",productName);
 			newObj.put("quantity",qty);
 			newObj.put("UPrice", unitPrice);
+			if(UtilValidate.isNotEmpty(orderId)){
+					List conditionlist=[];
+					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+					conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, shipment.createdDate));
+					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+					def orderBy = UtilMisc.toList("changeDatetime");
+					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
+					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
+					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
+						newObj.put("UPrice",OrderItemChangeDetails.unitPrice);
+						unitPrice=OrderItemChangeDetails.unitPrice;
+					}
+				}
+			amount = unitPrice*qty  ;
+			vatAmt = ((unitPrice*vatPercent)/100)*qty;
+			cstAmt = ((unitPrice*cstPercent)/100)*qty;
 			newObj.put("amount", amount);
 			newObj.put("VatPercent", vatPercent);
 			newObj.put("VAT", vatAmt);

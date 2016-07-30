@@ -133,11 +133,11 @@ import java.math.RoundingMode;
 			//adjIds = EntityUtil.getFieldListFromEntityList(invoiceItemAdjs, "invoiceItemTypeId", true);
 			
 			invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
-			Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+			//Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 			additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 			dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
-			Debug.log("additionalChgs =========="+additionalChgs);
-			Debug.log("dicounts =========="+dicounts);
+			//Debug.log("additionalChgs =========="+additionalChgs);
+			//Debug.log("dicounts =========="+dicounts);
 			
 			// Other Charges
 			
@@ -247,10 +247,10 @@ import java.math.RoundingMode;
 					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
 					conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, shipment.createdDate));
 					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-					def orderBy = UtilMisc.toList("-changeDatetime");
+					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
-					Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
-					OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						tempMap.put("UPrice",OrderItemChangeDetails.unitPrice);
 					}
@@ -348,17 +348,15 @@ import java.math.RoundingMode;
 				
 				unitPrice = (orderItem.unitPrice);
 				
-				vatAmt = ((unitPrice*vatPercent)/100)*qty;
-				cstAmt = ((unitPrice*cstPercent)/100)*qty;
 				
-				amount = unitPrice*qty  ;
+				
 				
 				JSONObject newObj = new JSONObject();
 				newObj.put("cProductId",eachItem.productId);
 				newObj.put("cProductName",prodValue.description);
 				newObj.put("quantity",qty);
 				
-				Debug.log("unitPrice==============="+unitPrice);
+				//Debug.log("unitPrice==============="+unitPrice);
 				
 				newObj.put("UPrice", unitPrice);
 				if(UtilValidate.isNotEmpty(orderId)){
@@ -366,21 +364,20 @@ import java.math.RoundingMode;
 					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 					conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
-					
 					conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, shipment.createdDate));
-					
-					//conditionList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, "111111111111111"));
-					//conditionList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.GREATER_THAN_EQUAL_TO ,effectiveDateEnd));
 					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-					def orderBy = UtilMisc.toList("-changeDatetime");
-					Debug.log("conditionMain=======4334654==111========"+conditionMain1);
+					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
 					Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
-					OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						newObj.put("UPrice",OrderItemChangeDetails.unitPrice);
+						unitPrice=OrderItemChangeDetails.unitPrice;
 					}
 				}
+				amount = unitPrice*qty  ;
+				vatAmt = ((unitPrice*vatPercent)/100)*qty;
+				cstAmt = ((unitPrice*cstPercent)/100)*qty;
 				newObj.put("amount", amount);
 				newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
