@@ -162,6 +162,7 @@
 	 					  "rowCount":rowCount,
 						  "schemeCategory":$("#schemeCategory").val(),
 						  "partyId": $("#partyId").val(),
+						  "effectiveDate":$("#effectiveDate").val(),
 						  "orderId" : savedOrderId,
 						  "suplierPartyId" : $("#suplierPartyId").val(),
 						  "societyPartyId" : $("#societyPartyId").val(),

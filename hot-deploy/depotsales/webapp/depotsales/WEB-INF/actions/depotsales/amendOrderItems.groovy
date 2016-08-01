@@ -132,7 +132,8 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	newObj.put("bundleunitPrice",bundleUnitPrice);
 	newObj.put("cottonUom",uom);
 	newObj.put("bundleWeight",bundleWght);
-	newObj.put("quantity",quantity);
+	newObj.put("quantity",eachItem.quantity);
+	newObj.put("balQuantity",quantity);
 	newObj.put("unitPrice",eachItem.unitPrice);
 	amount=eachItem.unitPrice*quantity;
 	newObj.put("amount", amount);
