@@ -92,7 +92,7 @@
 	      		
 	      		source: function( request, response ) {
         			$.ajax({
-          					url: "LookupIndividualPartyName",
+          					url: "LookupBranchCustomers",
           					dataType: "html",
           					data: {
             					ajaxLookup: "Y",
@@ -180,7 +180,7 @@
 	 	 	   
 	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, productStoreId, uom, bundleWeight,bundleUnitPrice) {
 		var message = "";
-		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='createSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
+		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='cregggggggggateSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Product:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='productId' name='productId' value='"+productId+"'/></td><input class='h4' type='hidden' readonly id='productStoreId' name='productStoreId' value='"+productStoreId+"'/></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Order Date:</td><td align='left' width='50%'><input type='text' id='saleOrderDate' name='saleOrderDate' onmouseover='datepick1()'/></td><input type='hidden'  id='effectiveDate' name='effectiveDate'/><input type='hidden'  id='quantityOnHandTotal' name='quantityOnHandTotal' value='"+quantityOnHandTotal+"'/></tr>";
