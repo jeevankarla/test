@@ -92,7 +92,7 @@
 	      		
 	      		source: function( request, response ) {
         			$.ajax({
-          					url: "LookupIndividualPartyName",
+          					url: "LookupBranchCustomers",
           					dataType: "html",
           					data: {
             					ajaxLookup: "Y",
