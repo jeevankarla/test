@@ -445,13 +445,14 @@ if(shipments){
 					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
 					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					if(OrderItemChangeDetails)
 					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						newObj.put("UPrice",OrderItemChangeDetails.unitPrice);
 						unitPrice=OrderItemChangeDetails.unitPrice;
 					}
 				}
-			amount = unitPrice*qty  ;
+			amount = unitPrice*qty;
 			vatAmt = ((unitPrice*vatPercent)/100)*qty;
 			cstAmt = ((unitPrice*cstPercent)/100)*qty;
 			newObj.put("amount", amount);
