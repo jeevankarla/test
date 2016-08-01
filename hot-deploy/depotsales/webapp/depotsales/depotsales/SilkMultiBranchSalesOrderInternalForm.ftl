@@ -711,7 +711,7 @@
 		       		var custId = data[args.row]['customerId']; 
 				   	var qut=0;
 				   	if(data[args.row]['customerId'] != "undefined"){
-				   		var dataString = {"partyId": data[args.row]['customerId'],
+				   		var dataString = {"partyId": data[args.row]['customerId'],"productId":data[args.row]['cProductId'],
 								   		"schemeCategory":$("#schemeCategory").val()
 								 		};
 					     $.ajax({
