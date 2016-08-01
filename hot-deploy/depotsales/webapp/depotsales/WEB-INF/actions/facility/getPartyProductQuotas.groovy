@@ -65,6 +65,9 @@ schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "prod
 condsList = [];
 	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+	if(parameters.productId){
+	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
+	}
 	if(effectiveDate){
 	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
