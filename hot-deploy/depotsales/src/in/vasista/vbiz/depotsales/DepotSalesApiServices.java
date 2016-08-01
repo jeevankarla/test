@@ -1299,17 +1299,18 @@ public class DepotSalesApiServices{
 			return ServiceUtil.returnError("Problem while getting Customer Branch details with partyId:"+partyId);
 		}
 		List<GenericValue> productStoreList = (List)customerBranch.get("productStoreList");
-
-		Map customerBranchMap = FastMap.newInstance();
-		for(GenericValue eachProdStore:productStoreList){
-			Map tempMap = FastMap.newInstance();
-			tempMap.put("productStoreId",eachProdStore.getString("productStoreId"));
-			tempMap.put("storeName",eachProdStore.getString("storeName"));
-			tempMap.put("companyName",eachProdStore.getString("companyName"));
-			tempMap.put("title",eachProdStore.getString("title"));
-			tempMap.put("payToPartyId",eachProdStore.getString("payToPartyId"));
-			
-			customerBranchMap.put(eachProdStore.getString("productStoreId"),tempMap);
+		List customerBranchList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(productStoreList)){
+			for(GenericValue eachProdStore:productStoreList){
+				/*Map tempMap = FastMap.newInstance();
+				tempMap.put("productStoreId",eachProdStore.getString("productStoreId"));
+				tempMap.put("storeName",eachProdStore.getString("storeName"));
+				tempMap.put("companyName",eachProdStore.getString("companyName"));
+				tempMap.put("title",eachProdStore.getString("title"));
+				tempMap.put("payToPartyId",eachProdStore.getString("payToPartyId"));
+				customerBranchMap.put(eachProdStore.getString("productStoreId"),tempMap);*/
+				customerBranchList.add(eachProdStore.getString("productStoreId"));
+			}
 		}
 		
 		Map resultMap = FastMap.newInstance();
@@ -1323,7 +1324,7 @@ public class DepotSalesApiServices{
 		resultMap.put("DOA",DOA);
 		resultMap.put("loomDetails",loomDetails);
 		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).intValueExact());
-		resultMap.put("customerBranchMap",customerBranchMap);
+		resultMap.put("customerBranchList",customerBranchList);
 		result.put("weaverDetails",resultMap);
 		
 		return result;
