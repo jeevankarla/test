@@ -403,6 +403,7 @@ public class DepotSalesApiServices{
 	    	try{
 	    		List<GenericValue> orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(conditonList, EntityOperator.AND), null, null, null ,false);
 	    		if(UtilValidate.isNotEmpty(orderItemList)){
+	    			List<GenericValue> orderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId" , EntityOperator.EQUALS, eachOrderId), null, null, null ,false);
 	    			for(GenericValue eachItem:orderItemList){
 		    			Map itemDetailMap = FastMap.newInstance();
 		    			BigDecimal quantity = BigDecimal.ZERO;
@@ -411,11 +412,14 @@ public class DepotSalesApiServices{
 		    			BigDecimal vatAmount = BigDecimal.ZERO;	
 		    			BigDecimal cstPercent = BigDecimal.ZERO;
 		    			BigDecimal cstAmount = BigDecimal.ZERO;
+		    			BigDecimal discountAmount = BigDecimal.ZERO;
+		    			BigDecimal shippedQty = BigDecimal.ZERO;
 		    			itemDetailMap.put("productId",eachItem.getString("productId"));
 		    			itemDetailMap.put("itemDescription",eachItem.getString("itemDescription"));
 		    			itemDetailMap.put("orderItemSeqId",eachItem.getString("orderItemSeqId"));
 		    			itemDetailMap.put("orderItemTypeId",eachItem.getString("orderItemTypeId"));
 		    			GenericValue filteredItemStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+		    			List<GenericValue> filteredItemDetail = EntityUtil.filterByCondition(orderItemDetailList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.get("orderItemSeqId")));
 		    			itemDetailMap.put("statusId", filteredItemStatus.getString("description"));
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("quantity"))){
 		    				quantity = eachItem.getBigDecimal("quantity");
@@ -435,12 +439,37 @@ public class DepotSalesApiServices{
 		    			if(UtilValidate.isNotEmpty(eachItem.getBigDecimal("cstAmount"))){
 		    				cstAmount = eachItem.getBigDecimal("cstAmount");
 		    			}
+		    			if(UtilValidate.isNotEmpty(filteredItemDetail)){
+		    				for(GenericValue eachItemDetaildis:filteredItemDetail){
+		    					discountAmount = discountAmount.add(eachItemDetaildis.getBigDecimal("discountAmount"));
+		    				}
+		    			}
 		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
 		    			itemDetailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
 		    			itemDetailMap.put("vatPercent",vatPercent.setScale(decimals, rounding));
 		    			itemDetailMap.put("vatAmount",vatAmount.setScale(decimals, rounding));
 		    			itemDetailMap.put("cstPercent",cstPercent.setScale(decimals, rounding));
 		    			itemDetailMap.put("cstAmount",cstAmount.setScale(decimals, rounding));
+		    			itemDetailMap.put("discountAmount",discountAmount.setScale(decimals, rounding));
+		    			List<EntityCondition> orderCondList = FastList.newInstance();
+		    			orderCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, eachOrderId));
+		    			orderCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		    			List<GenericValue> orderAssc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(orderCondList, EntityOperator.AND), null, null, null, false);
+		    			if(UtilValidate.isNotEmpty(orderAssc)){
+		    				GenericValue orderAssocValue = EntityUtil.getFirst(orderAssc);
+		    				String poOrderId = orderAssocValue.getString("orderId");
+		    				List<EntityCondition> shipmentCondList = FastList.newInstance();
+		    				shipmentCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
+		    				shipmentCondList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.getString("productId")));
+		    				shipmentCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("SR_RECEIVED","SR_ACCEPTED")));
+			    			List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(shipmentCondList, EntityOperator.AND), null, null, null, false);
+			    			if(UtilValidate.isNotEmpty(shipmentReceipts)){
+			    				for(GenericValue eachShipmentReceipt:shipmentReceipts){
+			    					shippedQty = shippedQty.add(eachShipmentReceipt.getBigDecimal("quantityAccepted"));
+			    				}
+			    			}
+		    			}
+		    			itemDetailMap.put("shippedQty",shippedQty.setScale(decimals, rounding));
 		    			orderItems.add(itemDetailMap);
 		    		}
 	    		}
@@ -1267,12 +1296,6 @@ public class DepotSalesApiServices{
 		
 		Map loomDetails = FastMap.newInstance();
 		for(GenericValue eachLoomType:loomTypes){
-			
-			
-			
-			Debug.log("eachLoomType==================="+eachLoomType);
-			
-			
 			String loomTypeId = eachLoomType.getString("loomTypeId");
 			String description = eachLoomType.getString("description");
 			BigDecimal loomQty = BigDecimal.ZERO;
@@ -1290,10 +1313,10 @@ public class DepotSalesApiServices{
 			Map loomDetailMap = FastMap.newInstance();
 			loomDetailMap.put("loomTypeId",loomTypeId);
 			loomDetailMap.put("description",description);
-			loomDetailMap.put("loomQty",loomQty.setScale(decimals, rounding).intValueExact());
-			loomDetailMap.put("loomQuota",loomQuota.setScale(decimals, rounding).intValueExact());
-			loomDetailMap.put("avlQuota",avlQuota.setScale(decimals, rounding).intValueExact());
-			loomDetailMap.put("usedQuota",usedQuota.setScale(decimals, rounding).intValueExact());
+			loomDetailMap.put("loomQty",loomQty.setScale(decimals, rounding).intValue());
+			loomDetailMap.put("loomQuota",loomQuota.setScale(decimals, rounding).intValue());
+			loomDetailMap.put("avlQuota",avlQuota.setScale(decimals, rounding).intValue());
+			loomDetailMap.put("usedQuota",usedQuota.setScale(decimals, rounding).intValue());
 			loomDetails.put(eachLoomType.getString("loomTypeId"),loomDetailMap);
 		}
 		
@@ -1329,14 +1352,9 @@ public class DepotSalesApiServices{
 		resultMap.put("isDepot",isDepot);
 		resultMap.put("DOA",DOA);
 		resultMap.put("loomDetails",loomDetails);
-		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).intValueExact());
+		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).intValue());
 		resultMap.put("customerBranchList",customerBranchList);
 		result.put("weaverDetails",resultMap);
-		
-		
-		
-		Debug.log("result=========getWeaverDetails========="+result);
-		
 		return result;
     }
     
