@@ -1202,7 +1202,7 @@ public class DepotSalesApiServices{
 			GenericValue partyIdentification = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 			if(UtilValidate.isEmpty(partyIdentification)){
 				Debug.logError("Not a valid party", module);
-				return ServiceUtil.returnError("Not a valid party");
+				//return ServiceUtil.returnError("Not a valid party");
 			}
 			passBookNo = partyIdentification.getString("idValue");
 			issueDate = partyIdentification.getString("issueDate");
