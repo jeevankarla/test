@@ -165,6 +165,7 @@
 	 	var dataString = {"ItemJson": saveButtonJson,
 	 					  "rowCount":rowCount,
 						  "schemeCategory":$("#schemeCategory").val(),
+						  "effectiveDate":$("#effectiveDate").val(),
 						  "partyId": $("#partyId").val(),
 						  "orderId" : savedOrderId,
 						  "suplierPartyId" : $("#suplierPartyId").val(),
