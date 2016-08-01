@@ -1267,6 +1267,12 @@ public class DepotSalesApiServices{
 		
 		Map loomDetails = FastMap.newInstance();
 		for(GenericValue eachLoomType:loomTypes){
+			
+			
+			
+			Debug.log("eachLoomType==================="+eachLoomType);
+			
+			
 			String loomTypeId = eachLoomType.getString("loomTypeId");
 			String description = eachLoomType.getString("description");
 			BigDecimal loomQty = BigDecimal.ZERO;
@@ -1326,6 +1332,10 @@ public class DepotSalesApiServices{
 		resultMap.put("totalLooms",totalLooms.setScale(decimals, rounding).intValueExact());
 		resultMap.put("customerBranchList",customerBranchList);
 		result.put("weaverDetails",resultMap);
+		
+		
+		
+		Debug.log("result=========getWeaverDetails========="+result);
 		
 		return result;
     }
