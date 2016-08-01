@@ -49,7 +49,7 @@ import java.math.RoundingMode;
 		def sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		 effectiveDateBegin= UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
 		 effectiveDateEnd = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
-		// Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
+		// //Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
 		if(!invoice && orderId){
 			
 			orderedInvoice = Boolean.FALSE;
@@ -85,7 +85,6 @@ import java.math.RoundingMode;
 			EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 			OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 			
-			//Debug.log("orderId=================="+orderId);
 			
 			actualOrderId = "";
 			/*tallyRefNo = "";
@@ -133,11 +132,11 @@ import java.math.RoundingMode;
 			//adjIds = EntityUtil.getFieldListFromEntityList(invoiceItemAdjs, "invoiceItemTypeId", true);
 			
 			invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
-			//Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+			////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 			additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 			dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
-			//Debug.log("additionalChgs =========="+additionalChgs);
-			//Debug.log("dicounts =========="+dicounts);
+			////Debug.log("additionalChgs =========="+additionalChgs);
+			////Debug.log("dicounts =========="+dicounts);
 			
 			// Other Charges
 			
@@ -219,6 +218,7 @@ import java.math.RoundingMode;
 				otherCharges.add(tempMap);
 			}
 			
+			//Debug.log("orderItems=================="+orderItems);
 			
 			
 			productQty = [];
@@ -250,7 +250,12 @@ import java.math.RoundingMode;
 					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
 					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					
+					if(OrderItemChangeDetails)
 					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
+					
+					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						tempMap.put("UPrice",OrderItemChangeDetails.unitPrice);
 					}
@@ -268,6 +273,9 @@ import java.math.RoundingMode;
 			}
 			Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
 			
+			//Debug.log("resultCtx=================="+resultCtx);
+			
+			
 			JSONObject productIdLabelJSON = new JSONObject();
 			JSONObject productLabelIdJSON=new JSONObject();
 			
@@ -276,7 +284,6 @@ import java.math.RoundingMode;
 			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR")));
 			cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 			taxDetails = delegator.findList("OrderAdjustment", cond, null, null, null, false);
-			
 			
 			
 			shipmentReceipts.each{ eachItem ->
@@ -356,7 +363,7 @@ import java.math.RoundingMode;
 				newObj.put("cProductName",prodValue.description);
 				newObj.put("quantity",qty);
 				
-				//Debug.log("unitPrice==============="+unitPrice);
+				////Debug.log("unitPrice==============="+unitPrice);
 				
 				newObj.put("UPrice", unitPrice);
 				if(UtilValidate.isNotEmpty(orderId)){
@@ -368,7 +375,9 @@ import java.math.RoundingMode;
 					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
-					Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					
+					if(OrderItemChangeDetails)
 					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						newObj.put("UPrice",OrderItemChangeDetails.unitPrice);
@@ -394,6 +403,8 @@ import java.math.RoundingMode;
 			}
 			context.productIdLabelJSON = productIdLabelJSON;
 			context.productLabelIdJSON = productLabelIdJSON;
+			
+			//Debug.log("productIdLabelJSON=================="+productIdLabelJSON);
 			
 			shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 			JSONArray adjustmentJSON = new JSONArray();
