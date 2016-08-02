@@ -394,7 +394,7 @@ public class DepotSalesApiServices{
 	    	BigDecimal grandTOT = eachHeader.getBigDecimal("grandTotal");
 	    	BigDecimal balance = grandTOT.subtract(paidAmt);
 	    	tempData.put("balance", balance);
-	    		    	
+	    	BigDecimal totDiscountAmt = BigDecimal.ZERO;	    	
 	    	conditonList.clear();
 	    	conditonList.add(EntityCondition.makeCondition("orderId" , EntityOperator.EQUALS, eachOrderId));
 	    	conditonList.add(EntityCondition.makeCondition("orderItemTypeId" , EntityOperator.EQUALS, "PRODUCT_ORDER_ITEM"));
@@ -442,6 +442,7 @@ public class DepotSalesApiServices{
 		    			if(UtilValidate.isNotEmpty(filteredItemDetail)){
 		    				for(GenericValue eachItemDetaildis:filteredItemDetail){
 		    					discountAmount = discountAmount.add(eachItemDetaildis.getBigDecimal("discountAmount"));
+		    					totDiscountAmt = totDiscountAmt.add(eachItemDetaildis.getBigDecimal("discountAmount"));
 		    				}
 		    			}
 		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
@@ -476,6 +477,7 @@ public class DepotSalesApiServices{
 	    	} catch (GenericEntityException e) {
     			Debug.logError(e, module);
     		}
+	    	tempData.put("totDiscountAmt", totDiscountAmt.setScale(decimals, rounding));
 	    	tempData.put("orderItemsList", orderItems);	    	
 	    	
 	    	orderList.add(tempData);

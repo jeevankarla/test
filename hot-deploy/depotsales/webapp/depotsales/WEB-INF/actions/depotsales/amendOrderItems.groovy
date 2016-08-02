@@ -104,6 +104,7 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		poOrderId = EntityUtil.getFirst(orderAssc).orderId;
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_ACCEPTED"]));
 		shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 		if(UtilValidate.isNotEmpty(shipmentReceipts)){
