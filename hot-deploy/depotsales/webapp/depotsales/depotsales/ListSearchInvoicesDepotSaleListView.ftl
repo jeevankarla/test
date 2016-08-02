@@ -434,8 +434,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <#--> <td>AR Payment</td>--> 
-         <#--> <td>Payment Advice</td>
-          <td>Invoice voucher</td> -->
+         <#--> <td>Payment Advice</td>-->
+          <td>Invoice voucher</td> 
           <td>Cancel</td>
          <#--> <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>-->
         </tr>
@@ -494,7 +494,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if> -->
               
-             <#-->   <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+            <#-->        <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.invoiceTypeId == "SALES_INVOICE")||(invoice.invoiceTypeId?exists) >
               		   <#if invoice.purposeTypeId?has_content>
               		  	 <#assign purposeTypeId=invoice.purposeTypeId>
@@ -507,7 +507,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if>-->
               
-            <#--  <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td> -->
+              <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceDEPOTVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td> 
               <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
               
             <#--<#if invoice.parentTypeId?has_content>

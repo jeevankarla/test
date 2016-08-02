@@ -2906,6 +2906,11 @@ under the License.
         <response name="success" type="view" value="newInvoiceVoucher"/>
     </request-map>
     
+    <request-map uri="newInvoiceDEPOTVoucher">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newInvoiceDEPOTVoucher"/>
+    </request-map>
+    
      <request-map uri="paymentVoucher">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="paymentVoucher"/>
@@ -4481,6 +4486,8 @@ under the License.
     <view-map name="DebitNote" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#DebitNote" content-type="application/pdf"/>
     <view-map name="invoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#invoiceVoucher" content-type="application/pdf"/>
     <view-map name="newInvoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucher" content-type="application/pdf"/>
+    <view-map name="newInvoiceDEPOTVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceDEPOTVoucher" content-type="application/pdf"/>
+   
    
    
     <view-map name="paymentVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#paymentVoucher" content-type="application/pdf"/>
