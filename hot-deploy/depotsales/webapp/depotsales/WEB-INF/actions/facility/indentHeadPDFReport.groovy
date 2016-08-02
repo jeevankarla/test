@@ -97,6 +97,8 @@ if(UtilValidate.isNotEmpty(daystart)){
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
 
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -518,7 +520,7 @@ if(contactMechesDetails){
 		   
 		   
 		   
-		 //  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
+		  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
 		   
 		   //Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
 		   
@@ -530,7 +532,8 @@ if(contactMechesDetails){
 		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
 		  
-		
+		   //Debug.log("OrderItemBilling======================"+OrderItemBilling);
+		   
 		 		 
 		 itemOrderId  = OrderItemBilling[0].orderId;
 		 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
@@ -541,6 +544,7 @@ if(contactMechesDetails){
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 	
+		 //Debug.log("OrderItemDetail======================"+OrderItemDetail);
 		 
 	
 		 quantity = eachItem.quantity;
@@ -564,6 +568,8 @@ if(contactMechesDetails){
 			 quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItemDetail.quotaQuantity);
 			 
 		}
+		 
+		 //Debug.log("unit======================"+unit);
 		 
 		 tempMap.put("unit", unit);
 		 
@@ -611,7 +617,13 @@ if(contactMechesDetails){
 				 }
 			}
 			
-			    
+
+			//Debug.log("schemeQQQty======================"+schemeQQQty);
+			
+			//Debug.log("schemeAMMMt======================"+schemeAMMMt);
+			
+			
+						    
 			double tenPerQty = 0;
 			tenPerQty = schemeQQQty;
 			tempMap.put("schemeQty", schemeQQQty);
@@ -935,7 +947,7 @@ if(contactMechesDetails){
 }
 }
 
-//Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
+////Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
 
 context.salesAndPurchaseList = salesAndPurchaseList;
 
