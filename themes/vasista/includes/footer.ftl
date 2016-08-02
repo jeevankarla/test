@@ -62,10 +62,10 @@ under the License.
 </#if>
 -->
 <div id="footer">
-  <a href="http://www.vasista.in" id="footerLink"></a>
+  <!--<a href="http://www.vasista.in" id="footerLink"></a>-->
   <!--<p>${nowTimestamp?datetime?string("dd/MM/yyyy HH:mm")} -->
   <!--<a href="<@ofbizUrl>ListTimezones</@ofbizUrl>">${timeZone.getDisplayName(timeZone.useDaylightTime(), Static["java.util.TimeZone"].LONG, locale)}</a>-->
-  </p>
+  <!--</p>-->
 
 
 
