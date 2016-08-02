@@ -11922,10 +11922,31 @@ public class DepotSalesServices{
   		GenericValue userLogin = (GenericValue) context.get("userLogin");
   		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
   		String orderId = (String) context.get("orderId");
+  		String invoiceDateStr = (String) context.get("invoiceDate");
   		Locale locale = (Locale) context.get("locale");
   		
+  		Timestamp invoiceDate = null;
 		Timestamp effectiveDate=UtilDateTime.nowTimestamp();
 			Map<String, Object> createInvoice = FastMap.newInstance();
+			
+			Debug.log("invoiceDateStr========================="+invoiceDateStr);
+			
+			if (UtilValidate.isNotEmpty(invoiceDateStr)) { //2011-12-25 18:09:45
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");             
+				try {
+					invoiceDate = new java.sql.Timestamp(sdf.parse(invoiceDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + invoiceDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + invoiceDateStr, module);
+				}
+			}
+			else{
+				invoiceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			}
+			
+
+			Debug.log("invoiceDate1========================="+invoiceDate);
 
   		/*try{
   		createInvoice = dispatcher.runSync("createInvoiceForOrder", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));
@@ -11976,7 +11997,7 @@ public class DepotSalesServices{
 			
 			 try {
 			
-  		Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", orderItems, "eventDate", UtilDateTime.nowTimestamp(), "userLogin", userLogin);
+  		Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", orderItems, "eventDate", invoiceDate, "userLogin", userLogin);
         //serviceContext.put("shipmentId",shipmentId);
   		//serviceContext.put("purposeTypeId","DEPOT_YARN_SALE");
        
@@ -11996,10 +12017,13 @@ public class DepotSalesServices{
   		
     	  String invoiceId = (String)createInvoice.get("invoiceId");
     	  
+    	  Debug.log("invoiceId============final============"+invoiceId);
     	  
     	  try{
    	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
    	    	invoice.set("purposeTypeId", "DEPOT_YARN_SALE");
+   	    	//invoice.set("invoiceDate", invoiceDate1);
+   	    	
   			invoice.store();
    		} catch (Exception e) {
    			String errMsg = UtilProperties.getMessage(resource, "AccountingProblemGettingItemsFromShipments", locale);
@@ -12009,8 +12033,9 @@ public class DepotSalesServices{
     	  
     	  
     	  
+    	  
     	  result = ServiceUtil.returnSuccess("Sales Invoice Has been successfully created"+invoiceId);
-         result.put("invoiceId", invoiceId);
+          result.put("invoiceId", invoiceId);
          return result;
   	}
     public static String saveBranchSaleOrderEvent(HttpServletRequest request, HttpServletResponse response) {

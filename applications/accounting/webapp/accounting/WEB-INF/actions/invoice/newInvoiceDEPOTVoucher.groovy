@@ -265,7 +265,7 @@ context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
 
 context.totTaxAmount = totTaxAmount;
-
+context.mgpsAmt = mgpsAmt;
 
 
 
@@ -646,7 +646,7 @@ context.externalOrderId = externalOrderId;
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 		 
 		 
-		  conditionList.clear();
+		  /*conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
 		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -658,7 +658,7 @@ context.externalOrderId = externalOrderId;
 		 for (eachAdj in OrderAdjustment) {
 			 
 			 mgpsAmt = mgpsAmt+eachAdj.amount;
-		 }
+		 }*/
 		 
 	
 		 
@@ -1009,7 +1009,7 @@ context.finalAddresList = finalAddresList;
 		
 	}
 	context.finaOnbehalflDetails = finaOnbehalflDetails;
-	context.mgpsAmt = mgpsAmt;
+	
 	
 	
 //}

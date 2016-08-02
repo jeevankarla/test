@@ -140,6 +140,7 @@
     <service name="raiseSalesInvoiceForDepotSales" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="raiseSalesInvoiceForDepotSales">
         <description>raise Sales Invoice For DepotSales</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceDate" type="String" mode="IN" optional="false"/>
          <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
     </service>
     
