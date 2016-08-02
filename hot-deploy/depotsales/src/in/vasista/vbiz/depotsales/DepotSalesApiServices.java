@@ -442,7 +442,7 @@ public class DepotSalesApiServices{
 		    			if(UtilValidate.isNotEmpty(filteredItemDetail)){
 		    				for(GenericValue eachItemDetaildis:filteredItemDetail){
 		    					discountAmount = discountAmount.add(eachItemDetaildis.getBigDecimal("discountAmount"));
-		    					totDiscountAmt = totDiscountAmt.add(discountAmount);
+		    					totDiscountAmt = totDiscountAmt.add(eachItemDetaildis.getBigDecimal("discountAmount"));
 		    				}
 		    			}
 		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
