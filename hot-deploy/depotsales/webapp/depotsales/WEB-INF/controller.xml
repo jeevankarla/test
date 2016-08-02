@@ -72,10 +72,10 @@
         <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
        <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
-    <request-map uri="processOrdersBranchSales">
+    <request-map uri="FindIndents">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="processOrdersBranchSales"/>   
-       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+        <response name="success" type="view" value="FindIndents"/>   
+       <response name="failed" type="view" value="FindIndents"/>  
     </request-map>   
     <request-map uri="processIndentPortalBranchSales">
         <security https="true" auth="true"/>
@@ -145,8 +145,8 @@
     <request-map uri="approveOrderreload">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
-        <response name="success" type="view" value="processOrdersBranchSales"/>
-        <response name="error" type="view" value="processOrdersBranchSales"/>
+        <response name="success" type="view" value="FindIndents"/>
+        <response name="error" type="view" value="FindIndents"/>
     </request-map>
     
     
@@ -257,27 +257,27 @@
         <response name="success"  type="request-redirect-noparam" value="FindPO">
         <redirect-parameter name="orderId"/>
         </response>   
-       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+       <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
     
      <request-map uri="CreditapproveDepotSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="CreditapproveDepotSalesOrder"/>
-        <response name="success" type="view" value="processOrdersBranchSales"/>   
-       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+        <response name="success" type="view" value="FindIndents"/>   
+       <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
     <request-map uri="approvalLevelOfDraftPo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="changeOrderStatus"/>
-        <response name="success" type="view" value="processOrdersBranchSales"/>   
-       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+        <response name="success" type="view" value="FindIndents"/>   
+       <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelIndentOrder"/>
-        <response name="success" type="view" value="processOrdersBranchSales"/>   
-       <response name="failed" type="view" value="processOrdersBranchSales"/>  
+        <response name="success" type="view" value="FindIndents"/>   
+       <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
     
    <!--  <request-map uri="storePartyPostalAddress">
@@ -682,8 +682,8 @@
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
-         <response name="success"  type="request-redirect-noparam" value="processOrdersBranchSales"></response>
-        <response name="error" type="view" value="processOrdersBranchSales"/>
+         <response name="success"  type="request-redirect-noparam" value="FindIndents"></response>
+        <response name="error" type="view" value="FindIndents"/>
     </request-map>
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
         <security https="true" auth="true"/>
@@ -1073,7 +1073,7 @@
           <security https="true" auth="true"/>
         <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
            <event type="service" path="" invoke="createOrderPayment"/>
-          <response name="success" type="view" value="processOrdersBranchSales"/>   
+          <response name="success" type="view" value="FindIndents"/>   
          <response name="failed" type="view" value="orderPayment"/>  
       </request-map>
       
@@ -2055,7 +2055,7 @@
 <!--     indentor portal screens end -->
     
     
-    <view-map name="processOrdersBranchSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
+    <view-map name="FindIndents" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
     <view-map name="ProcessIndentBranchOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessIndentBranchOrders"/>
    
     <view-map name="BranchIncomingAdvancesReceived" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchIncomingAdvancesReceived"/>
