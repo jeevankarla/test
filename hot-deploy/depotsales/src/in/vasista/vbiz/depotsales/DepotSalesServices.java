@@ -698,6 +698,7 @@ public class DepotSalesServices{
 					
 					for(Map prodBatch : productQtyList){
 						String prod = (String)prodBatch.get("productId");
+						
 						String batchNum = null;
 						if(UtilValidate.isNotEmpty(prodBatch.get("batchNo"))){
 							batchNum = (String)prodBatch.get("batchNo");
@@ -714,6 +715,8 @@ public class DepotSalesServices{
 							delegator.createOrStore(orderItemBatch);
 							
 						}
+						
+						
 						
 					}
 					
@@ -824,6 +827,7 @@ public class DepotSalesServices{
 		BigDecimal quantity = BigDecimal.ZERO;
 		String batchNo = "";
 		String daysToStore = "";
+		int orderItemSeqId = 0;
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			
 			BigDecimal basicPrice = BigDecimal.ZERO;
@@ -832,6 +836,12 @@ public class DepotSalesServices{
 			BigDecimal cstPrice = BigDecimal.ZERO;
 			BigDecimal tcsPrice = BigDecimal.ZERO;
 			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+			String Uom = "";
+			BigDecimal baleQuantity = BigDecimal.ZERO;
+			BigDecimal bundleWeight = BigDecimal.ZERO;
+			BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+			
+			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
@@ -864,7 +874,20 @@ public class DepotSalesServices{
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("uom"))){
+				Uom = (String)prodQtyMap.get("uom");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
+				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
+				bundleUnitPrice = (BigDecimal)prodQtyMap.get("bundleUnitPrice");
+			}
 			
+		
 			//add percentages
 			BigDecimal bedPercent=BigDecimal.ZERO;
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -951,6 +974,7 @@ public class DepotSalesServices{
 					}
 
 					BigDecimal quota = BigDecimal.ZERO;
+					BigDecimal quotaQTY = BigDecimal.ZERO;
 					// Get first productCategoriesList. We got productCategoryId here
 					
 					if(schemeCategory.equals("MGPS_10Pecent")){
@@ -979,7 +1003,7 @@ public class DepotSalesServices{
 			
 			//Quota end
 					
-					
+					BigDecimal discountAmount = BigDecimal.ZERO;
 				ShoppingCartItem item = null;
 				try{
 					
@@ -999,7 +1023,7 @@ public class DepotSalesServices{
 					//item.setAttribute(productId,quantity);
 	        		item.setTaxDetails(taxList);
 				
-				
+	        		
 				if(quota.compareTo(BigDecimal.ZERO)>0){
 					
 					// Have to get these details from schemes. Temporarily hard coding it.
@@ -1007,14 +1031,17 @@ public class DepotSalesServices{
 					BigDecimal percentModifier = schemePercent.movePointLeft(2);
 					item.setOrderItemAttribute("quotaQty",quota.toString());
 					
-					BigDecimal discountAmount = BigDecimal.ZERO;
+					quotaQTY = new BigDecimal(quota.toString());
+					
 					if(quantity.compareTo(quota)>0){
 						discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
 						item.setOrderItemAttribute("quotaQty",quota.toString());
+						quotaQTY = new BigDecimal(quota.toString());
 					}
 					else{
 						discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
 						item.setOrderItemAttribute("quotaQty",quantity.toString());
+						quotaQTY = new BigDecimal(quantity.toString());
 					}
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
 			                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
@@ -1085,6 +1112,11 @@ public class DepotSalesServices{
 					}
 					
 				}
+				
+				
+				
+				
+				
 			}
 		cart.setDefaultCheckoutOptions(dispatcher);
 		//ProductPromoWorker.doPromotions(cart, dispatcher);
@@ -1108,6 +1140,215 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
 			orderId = (String) orderCreateResult.get("orderId");
 		}
+		
+		
+		int orderItemSeq =1;
+		
+		for (Map<String, Object> prodQtyMap : productQtyList) {
+			
+			BigDecimal basicPrice = BigDecimal.ZERO;
+			BigDecimal bedPrice = BigDecimal.ZERO;
+			BigDecimal vatPrice = BigDecimal.ZERO;
+			BigDecimal cstPrice = BigDecimal.ZERO;
+			BigDecimal tcsPrice = BigDecimal.ZERO;
+			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+			String Uom = "";
+			BigDecimal baleQuantity = BigDecimal.ZERO;
+			BigDecimal bundleWeight = BigDecimal.ZERO;
+			BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+			
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+				productId = (String)prodQtyMap.get("productId");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+				quantity = (BigDecimal)prodQtyMap.get("quantity");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
+				batchNo = (String)prodQtyMap.get("batchNo");
+				batchNumExists = true;
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("daysToStore"))){
+				daysToStore = (String)prodQtyMap.get("daysToStore");
+				daysToStoreExists = true;
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
+				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPrice"))){
+				bedPrice = (BigDecimal)prodQtyMap.get("bedPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPrice"))){
+				vatPrice = (BigDecimal)prodQtyMap.get("vatPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPrice"))){
+				cstPrice = (BigDecimal)prodQtyMap.get("cstPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPrice"))){
+				tcsPrice = (BigDecimal)prodQtyMap.get("tcsPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
+				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("uom"))){
+				Uom = (String)prodQtyMap.get("uom");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
+				baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+				bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
+				bundleUnitPrice = (BigDecimal)prodQtyMap.get("bundleUnitPrice");
+			}
+			
+			//add percentages
+			BigDecimal bedPercent=BigDecimal.ZERO;
+			BigDecimal vatPercent=BigDecimal.ZERO;
+			BigDecimal cstPercent=BigDecimal.ZERO;
+			BigDecimal tcsPercent=BigDecimal.ZERO;
+			BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+				bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+				vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+				cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPercent"))){
+				tcsPercent = (BigDecimal)prodQtyMap.get("tcsPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPercent"))){
+				serviceTaxPercent = (BigDecimal)prodQtyMap.get("serviceTaxPercent");
+			}
+			
+
+
+
+// Get Scheme Categories
+			  	List schemeCategoryIds = FastList.newInstance();
+			  	try{
+			  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+			  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+			   	}catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive ProductCategory ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+				}
+
+		// Scheme Calculation
+					List productCategoriesList = FastList.newInstance();
+					condsList.clear();
+				  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
+				  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+				  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
+					try {
+						List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+						productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+					}
+
+					BigDecimal quota = BigDecimal.ZERO;
+					BigDecimal quotaQTY = BigDecimal.ZERO;
+					BigDecimal discountAmount = BigDecimal.ZERO;
+					// Get first productCategoriesList. We got productCategoryId here
+					
+					if(schemeCategory.equals("MGPS_10Pecent")){
+						
+						String schemeId="TEN_PERCENT_MGPS";
+						String productCategoryId=(String)productCategoriesList.get(0);
+						
+						Map partyBalanceHistoryContext = FastMap.newInstance();
+						partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",quantity,"userLogin", userLogin);
+						
+//									if(UtilValidate.isNotEmpty(customerId)){
+//										partyBalanceHistoryContext.put("partyId",customerId);
+//									}
+								
+						try {
+							Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+							quota=(BigDecimal)resultMapquota.get("quota");
+							
+						} catch (Exception e) {
+							Debug.logError(e, "Failed to retrive PartyQuotaBalanceHistory ", module);
+							return ServiceUtil.returnError("Failed to retrive PartyQuotaBalanceHistory " + e);
+						}
+					}
+			
+  	
+  				if(quota.compareTo(BigDecimal.ZERO)>0){
+  					// Have to get these details from schemes. Temporarily hard coding it.
+  					BigDecimal schemePercent = new BigDecimal("10");
+  					BigDecimal percentModifier = schemePercent.movePointLeft(2);
+  					//item.setOrderItemAttribute("quotaQty",quota.toString());
+  					quotaQTY = new BigDecimal(quota.toString());
+  					if(quantity.compareTo(quota)>0){
+  						discountAmount = ((quota.multiply(basicPrice)).multiply(percentModifier)).negate();
+  						//item.setOrderItemAttribute("quotaQty",quota.toString());
+  						quotaQTY = new BigDecimal(quota.toString());
+  					}
+  					else{
+  						discountAmount = ((quantity.multiply(basicPrice)).multiply(percentModifier)).negate();
+  						//item.setOrderItemAttribute("quotaQty",quantity.toString());
+  						quotaQTY = new BigDecimal(quantity.toString());
+  					}
+  					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+  			                UtilMisc.toMap("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", discountAmount,
+  			                        "description", "10 Percent Subsidy on eligible product categories"));
+  				//	item.addAdjustment(orderAdjustment);
+  					
+  				//	totalPrice.add(discountAmount);
+             }
+
+
+//================populate orderItem Attribute============
+
+			
+			
+			Map orderItemDetail = FastMap.newInstance();
+			
+			orderItemDetail.put("orderId",orderId);
+			String orderItemSe = String.format("%05d", orderItemSeq);
+			orderItemDetail.put("orderItemSeqId",orderItemSe);
+			orderItemDetail.put("userLogin",userLogin);
+			orderItemDetail.put("partyId",partyId);
+			orderItemDetail.put("unitPrice",basicPrice);
+			orderItemDetail.put("discountAmount",discountAmount);
+			orderItemDetail.put("Uom",Uom);
+			orderItemDetail.put("productId",productId);
+			orderItemDetail.put("baleQuantity",baleQuantity);
+			orderItemDetail.put("bundleWeight",bundleWeight);
+			orderItemDetail.put("bundleUnitPrice",bundleUnitPrice);
+			//orderItemDetail.put("remarks",specification);
+			orderItemDetail.put("quotaQuantity",quotaQTY);
+			orderItemDetail.put("quantity",quantity);
+			orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
+
+			try{
+				Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
+		        
+		        if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+		        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
+		        }
+			}catch(Exception e){
+		  		Debug.logError(e, "Error in Order Item Detail, module");
+		  		return ServiceUtil.returnError( "Error in Order Item Detail");
+		  	}
+		
+			orderItemSeq++;
+			
+		}
+		
 		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			promoAdjCtx.put("orderId", orderId);
@@ -3835,9 +4076,30 @@ public class DepotSalesServices{
 		String salesChannel = (String) request.getParameter("salesChannel");
 		String orderId = (String) request.getParameter("orderId");
 		String inventoryItemId = (String) request.getParameter("inventoryItemId");
+		String quota = (String) request.getParameter("quota");
+		String baleQuantityStr = (String) request.getParameter("baleQuantity");
+		String uom = (String) request.getParameter("uom");
+		String bundleWeightStr = (String) request.getParameter("bundleWeight");
+		String bundleUnitPriceStr = (String) request.getParameter("bundleUnitPrice");
+		
 		
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal unitCost = BigDecimal.ZERO;
+		
+		
+		BigDecimal baleQuantity = BigDecimal.ZERO;
+		BigDecimal bundleWeight = BigDecimal.ZERO;
+		BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+		
+		if(UtilValidate.isNotEmpty(baleQuantityStr))
+			baleQuantity=new BigDecimal(baleQuantityStr);
+		
+		if(UtilValidate.isNotEmpty(bundleWeightStr))
+			bundleWeight=new BigDecimal(bundleWeightStr);
+		
+		if(UtilValidate.isNotEmpty(bundleUnitPriceStr))
+			bundleUnitPrice=new BigDecimal(bundleUnitPriceStr);
+		
 		Timestamp effectiveDate=null;
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -3891,6 +4153,11 @@ public class DepotSalesServices{
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
 		productQtyMap.put("basicPrice", unitCost);
+		productQtyMap.put("baleQuantity", baleQuantity);
+		productQtyMap.put("uom", uom);
+		productQtyMap.put("bundleWeight", bundleWeight);
+		productQtyMap.put("bundleUnitPrice", bundleUnitPrice);
+		
 		/*productQtyMap.put("batchNo", batchNo);
 		productQtyMap.put("daysToStore", daysToStore);
 		productQtyMap.put("bedPrice", bedPrice);

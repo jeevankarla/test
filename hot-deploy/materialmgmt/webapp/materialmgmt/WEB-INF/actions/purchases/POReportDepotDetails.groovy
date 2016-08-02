@@ -108,6 +108,18 @@ if(UtilValidate.isNotEmpty(orderHeader)){
    allDetailsMap.put("orderDate",orderDate);
  }
 
+
+
+destAddr="";
+//destination Address
+DstAddr = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"DST_ADDR"],false);
+if(DstAddr){
+	destAddr=DstAddr.get("attrValue");
+	allDetailsMap.put("DstAddr",destAddr);
+}
+
+
+
 // partyId,partyName
 if(UtilValidate.isNotEmpty(orderId)){
 	List conlist=[];
@@ -361,6 +373,21 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 			}
 		}}
 		
+		
+		
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderitems.orderId));
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
+		
+		OrderItemDetail=EntityUtil.getFirst(OrderItemDetail);
+		
+		remarks = "";
+		if(OrderItemDetail)
+		remarks = OrderItemDetail.remarks;
+		
+		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
