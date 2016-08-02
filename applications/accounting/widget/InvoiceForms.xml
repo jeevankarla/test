@@ -932,7 +932,7 @@ under the License.
         <field name="partyIdTo"><ignored/></field>
     </form>
     
-    <form name="InvoiceSearchResultsCsv" type="list" title="List Invoices" list-name="invoices" paginate="false">
+    <form name="InvoiceSearchResultsCsv" type="list" title="List Invoices" list-name="salesInvoiceCSVList" paginate="false">
         <row-actions>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
                 <field-map field-name="partyId" from-field="partyIdFrom"/>
@@ -961,6 +961,7 @@ under the License.
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="paidAmount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="outstandingAmount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="tallyRefNo"><display/></field>
     </form>  
     <!-- For Cashier Portal needs to added later -->
     <!-- <form name="FindRecivableVouchers" type="single" target="FindReceivableInvoices" title="Find and list invoices"
