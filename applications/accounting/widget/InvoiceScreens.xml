@@ -1146,6 +1146,7 @@
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                 </service>
                 <set field="invoices" from-field="result.listIt"/>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SalesInvoiceCSV.groovy" />
             </actions>
 			<widgets>
 				<container>

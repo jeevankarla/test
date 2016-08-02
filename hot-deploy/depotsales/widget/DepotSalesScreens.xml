@@ -2731,6 +2731,8 @@
 															from-field="parameters.dueDate_fld1_value" />
 														<parameter param-name="dueDate_fld1_op"
 															from-field="parameters.dueDate_fld1_op" />
+														<parameter param-name="purposeTypeId"
+															value="YARN_SALE" />
 													</link>
 												</widgets>
 											</section>
