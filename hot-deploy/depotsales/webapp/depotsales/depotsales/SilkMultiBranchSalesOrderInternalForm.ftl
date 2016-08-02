@@ -698,9 +698,9 @@
 	      		 	grid.updateRow(args.row);
 				   	
   		 		}
-  		 		if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
-  		 		  getCustomerDetails(args);
-  		 		}
+  		 		//if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
+  		 		//  getCustomerDetails(args);
+  		 		//}
   		 		
    			}
    			

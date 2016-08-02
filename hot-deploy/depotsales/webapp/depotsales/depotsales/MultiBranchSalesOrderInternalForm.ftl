@@ -746,11 +746,11 @@
   		 		}
 
    			}
-   			if (args.cell == 1 ) {
-   			   if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
-  		 		  getCustomerDetails(args);
-  		 		}
-   			}
+   			//if (args.cell == 1 ) {
+   			 //  if(data[currentrow] != undefined && data[currentrow]["customerId"] != undefined){
+  		 	//	  getCustomerDetails(args);
+  		 	//	}
+   			//}
    			
    			if (args.cell == 2 ) {
    				var currentrow=args.row;
