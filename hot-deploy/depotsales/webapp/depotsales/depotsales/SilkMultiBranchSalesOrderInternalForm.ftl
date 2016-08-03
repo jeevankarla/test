@@ -21,7 +21,7 @@
 		font-weight: bold;
 		color: red;
 		background: white;
-		animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
+		//animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
 	}
 	
 	@keyframes blinker {  
@@ -858,9 +858,9 @@
 	
 	$(document).ready(function(){
 	
-		(function blink() { 
-		    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
-		})();
+		//(function blink() { 
+		 //   $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
+		//})();
 		$('#boothId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
