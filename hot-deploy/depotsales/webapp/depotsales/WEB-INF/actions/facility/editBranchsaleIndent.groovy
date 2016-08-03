@@ -445,7 +445,7 @@
 			totalTaxAmt = 0;
 			cond=[];
 			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE"]));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE"]));
 			
 			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
 	
@@ -476,10 +476,15 @@
 			vatSurchargeList.add("VAT_SURCHARGE");
 			newObj.put("vatSurchargeList", vatSurchargeList);
 			
+			JSONArray cstSurchargeList = new JSONArray();
+			cstSurchargeList.add("CST_SURCHARGE");
+			newObj.put("cstSurchargeList", cstSurchargeList);
+			
 			JSONArray taxList = new JSONArray();
 			taxList.add("VAT_SALE");
 			taxList.add("CST_SALE");
 			taxList.add("VAT_SURCHARGE");
+			taxList.add("CST_SURCHARGE");
 			newObj.put("taxList", taxList);
 			
 			applicableTaxTypeAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "applicableTaxType"));
