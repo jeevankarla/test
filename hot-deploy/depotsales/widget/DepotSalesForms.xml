@@ -2641,8 +2641,7 @@
 			<field name="itemDescription" title="itemDescription"><display/></field>
 			<field name="ledgerName" title="ledgerName"><display/></field>
 			<field name="purchaseQuantity" title="purchaseQuantity"><display/></field>
-			<field name="salesQuantity" title="ledgerName"><display/></field>
-			<field name="ledgerName" title="ledgerName"><display/></field>
+			<field name="salesQuantity" title="salesQuantity"><display/></field>
 			<field name="rate" title="rate"><display/></field>
 
     </form>
