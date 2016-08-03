@@ -1471,7 +1471,11 @@
          <response name="success" type="view" value="minutesPDFreport"/>
 	     <response name="error" type="view" value="minutesPDFreport"/>
     </request-map>
-    
+    <request-map uri="IndentCsvReport.csv">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="IndentCsvReport"/>
+	     <response name="error" type="view" value="IndentCsvReport"/>
+    </request-map>
      <request-map uri="minutesHindiPdfReport.pdf">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="minutesHindiPdfReport"/>
@@ -2013,6 +2017,7 @@
     <view-map name="processIndentPortalBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentPortalBranchSales"/>
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
     <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
+    <view-map name="IndentCsvReport" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#IndentCsvReport" content-type="text/csv"/>
     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>

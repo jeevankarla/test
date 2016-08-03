@@ -447,6 +447,14 @@ function drawRow(rowData) {
     }
     
     
+    
+     var IndentReport = '<a class="buttontext" href="<@ofbizUrl>IndentCsvReport.csv?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">CSV</a>';
+    
+    row.append($("<td>" +  IndentReport  +"</td>"));  
+    
+    
+    
+    
     var hasPermission = false;
     <#if security.hasPermission("INDENT_CANCEL", session)>
     	hasPermission = true;
@@ -598,7 +606,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>P&S Approvals</td>
           <td>PO Report</td>
           <td>Approve</td>
-         <#--> <td>Indent Report</td> -->
+          <td>Indent Detail</td> 
            <td>Cancel</td>
         </tr>
       </thead>

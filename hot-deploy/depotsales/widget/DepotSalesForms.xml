@@ -2236,7 +2236,7 @@
 	   
 	   
     </form>
-
+	
      <form name="partyAbstractDetailHeading" type="list" list-name="headList" view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
@@ -2646,6 +2646,32 @@
 
     </form>
     
-    
+    <form name="IndentCsvReportList" type="list" list-name="orderInformationDetails" view-size="99999">
+    	 <field name="partyName" title="Customer Name"><display/></field>
+         <field name="productId" title="ProductId"><display/></field>
+         <field name="prductName" title="ProductName"><display/></field>
+         <field name="remarks" title="Remarks"><display/></field>
+         <field name="quantity" title="Quantity"><display/></field>
+         <field name="unitPrice" title="UnitPrice"><display/></field>
+     	 <field name="itemAmt" title="Amount"><display/></field>
+         <field name="quotaAvbl" title="Quota Qty"><display/></field>
+         <field name="adjustmentAmount" title="Discount"><display/></field>
+         <field name="otherCharges" title="OtherCharges"><display/></field>
+         <field name="payableAmt" title="PayableAmt"><display/></field>
+    </form>
+        
+        <form name="IndentCsvReportList1" type="list" list-name="orderInformationDetails" view-size="99999">
+         <field name="productId" title="ProductId"><display/></field>
+         <field name="prductName" title="ProductName"><display/></field>
+         <field name="remarks" title="Remarks"><display/></field>
+         <field name="quantity" title="Quantity"><display/></field>
+         <field name="unitPrice" title="UnitPrice"><display/></field>
+     	 <field name="itemAmt" title="Amount"><display/></field>
+         <field name="quotaAvbl" title="Quota Qty"><display/></field>
+         <field name="adjustmentAmount" title="Discount"><display/></field>
+         <field name="otherCharges" title="OtherCharges"><display/></field>
+         <field name="payableAmt" title="PayableAmt"><display/></field>
+    </form>
+        
         
 </forms>
