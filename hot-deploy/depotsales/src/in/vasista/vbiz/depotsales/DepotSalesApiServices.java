@@ -404,6 +404,7 @@ public class DepotSalesApiServices{
 	    		List<GenericValue> orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(conditonList, EntityOperator.AND), null, null, null ,false);
 	    		if(UtilValidate.isNotEmpty(orderItemList)){
 	    			List<GenericValue> orderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId" , EntityOperator.EQUALS, eachOrderId), null, null, null ,false);
+	    			List<GenericValue> orderAdjList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId" , EntityOperator.EQUALS, eachOrderId), null, null, null ,false);
 	    			for(GenericValue eachItem:orderItemList){
 		    			Map itemDetailMap = FastMap.newInstance();
 		    			BigDecimal quantity = BigDecimal.ZERO;
@@ -414,6 +415,13 @@ public class DepotSalesApiServices{
 		    			BigDecimal cstAmount = BigDecimal.ZERO;
 		    			BigDecimal discountAmount = BigDecimal.ZERO;
 		    			BigDecimal shippedQty = BigDecimal.ZERO;
+		    			BigDecimal totalAmount = BigDecimal.ZERO;
+		    			BigDecimal otherCharges = BigDecimal.ZERO;
+		    			BigDecimal baleQty = BigDecimal.ZERO;
+		    			BigDecimal bundleWeight = BigDecimal.ZERO;
+		    			BigDecimal netAmount = BigDecimal.ZERO;
+		    			String specification = "";
+		    			String uom = "";
 		    			itemDetailMap.put("productId",eachItem.getString("productId"));
 		    			itemDetailMap.put("itemDescription",eachItem.getString("itemDescription"));
 		    			itemDetailMap.put("orderItemSeqId",eachItem.getString("orderItemSeqId"));
@@ -443,15 +451,42 @@ public class DepotSalesApiServices{
 		    				for(GenericValue eachItemDetaildis:filteredItemDetail){
 		    					discountAmount = discountAmount.add(eachItemDetaildis.getBigDecimal("discountAmount"));
 		    					totDiscountAmt = totDiscountAmt.add(eachItemDetaildis.getBigDecimal("discountAmount"));
+		    					baleQty = baleQty.add(eachItemDetaildis.getBigDecimal("baleQuantity"));
+		    					bundleWeight = bundleWeight.add(eachItemDetaildis.getBigDecimal("bundleWeight"));
+		    					if(UtilValidate.isNotEmpty(eachItemDetaildis.getString("Uom"))){
+		    						uom = eachItemDetaildis.getString("Uom");
+		    					}
+		    					if(UtilValidate.isNotEmpty(eachItemDetaildis.getString("remarks"))){
+		    						specification = eachItemDetaildis.getString("remarks");
+		    					}
 		    				}
 		    			}
+		    			List<EntityCondition> orderAdjCond = FastList.newInstance();
+		    			orderAdjCond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.getString("orderItemSeqId")));
+		    			orderAdjCond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
+		    			List<GenericValue> filteredOrderAdj = EntityUtil.filterByCondition(orderAdjList, EntityCondition.makeCondition(orderAdjCond, EntityOperator.AND));
+		    			if(UtilValidate.isNotEmpty(filteredOrderAdj)){
+		    				for(GenericValue eachOrderAdj:filteredOrderAdj){
+		    					otherCharges = otherCharges.add(eachOrderAdj.getBigDecimal("amount"));
+		    				}
+		    			}
+		    			totalAmount = quantity.multiply(unitPrice);
+		    			itemDetailMap.put("specification",specification);
+		    			itemDetailMap.put("uom",uom);
 		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
 		    			itemDetailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
+		    			itemDetailMap.put("totalAmount",totalAmount.setScale(decimals, rounding));
+		    			itemDetailMap.put("baleQty",baleQty.setScale(decimals, rounding));
+		    			itemDetailMap.put("bundleWeight",bundleWeight.setScale(decimals, rounding));
 		    			itemDetailMap.put("vatPercent",vatPercent.setScale(decimals, rounding));
 		    			itemDetailMap.put("vatAmount",vatAmount.setScale(decimals, rounding));
 		    			itemDetailMap.put("cstPercent",cstPercent.setScale(decimals, rounding));
 		    			itemDetailMap.put("cstAmount",cstAmount.setScale(decimals, rounding));
 		    			itemDetailMap.put("discountAmount",discountAmount.setScale(decimals, rounding));
+		    			itemDetailMap.put("otherCharges",otherCharges.setScale(decimals, rounding));
+		    			netAmount = totalAmount.add(discountAmount);
+		    			netAmount = netAmount.add(otherCharges);
+		    			itemDetailMap.put("netAmount",netAmount.setScale(decimals, rounding));
 		    			List<EntityCondition> orderCondList = FastList.newInstance();
 		    			orderCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, eachOrderId));
 		    			orderCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
