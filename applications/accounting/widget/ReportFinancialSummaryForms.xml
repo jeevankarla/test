@@ -1065,13 +1065,14 @@ under the License.
     </form>	
     <form name="TreasurerPaymentsCSV" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt">
         <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="PaymentAndType"/>
                 <field-map field-name="orderBy" value="effectiveDate DESC"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
+            </service> -->
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/searchPayments.groovy"/>
         </actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
@@ -1086,8 +1087,8 @@ under the License.
         <field name="cancelComments" title="Reason For Voided"><display/></field>
        <field name="partyIdFrom"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdFrom, false);}[${partyIdFrom}]"/> </field>
     	<field name="partyIdTo"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);}[${partyIdTo}]"/></field>       
-        <field name="paymentDate"><display/></field>
-        <field name="transactionDate" title="Tally Reference Date"><display/></field>
+        <field name="paymentDate"><display  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="transactionDate" title="Tally Reference Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>

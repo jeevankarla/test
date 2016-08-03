@@ -141,7 +141,7 @@
 		paymentMethodType = '${payment.paymentMethodTypeId?if_exists}';
 		paymentMethod = '${payment.paymentMethodId?if_exists}';
 	    jQuery("#statusId").val(jQuery("input[name=statusId]").val());
-	    jQuery("#transactionDate").val('${payment.paymentDate?if_exists}');
+	    jQuery("#transactionDate").val('${payment.transactionDate?if_exists}');
 	};
 	
 	
