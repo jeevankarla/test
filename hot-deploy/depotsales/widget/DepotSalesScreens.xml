@@ -4473,8 +4473,44 @@
 			</widgets>
 		</section>
 	</screen>
-    
-    
+	
+	 <screen name="IndentCsvReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/getIndentCsvReport.groovy"/>  		</actions>
+			<widgets>
+				<section>
+				<condition>
+					<if-compare operator="equals" field="orderType"
+					value="onbehalfof" />
+				</condition>
+					<widgets>
+						<include-form name="IndentCsvReportList"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+					</section>
+					<section>
+					<condition>
+					<if-compare operator="equals" field="orderType"
+						value="direct" />
+					</condition>
+					<widgets>
+					<include-form name="IndentCsvReportList1"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
     <screen name="minutesHindiPdfReport">
 		<section>
 			<actions>
