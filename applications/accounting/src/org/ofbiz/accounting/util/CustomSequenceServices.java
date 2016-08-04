@@ -198,6 +198,7 @@ public class CustomSequenceServices {
 			        	
 			        	GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
 			        	String indentNo = orderHeader.getString("externalId");
+			        	String purposeTypeId = orderHeader.getString("purposeTypeId");
 			        	 if (orderHeader == null) {
 				                Debug.logError("Invalid order id  " + orderId, module);
 				                return ServiceUtil.returnError("Invalid order id  " + orderId);            	
@@ -252,11 +253,11 @@ public class CustomSequenceServices {
 			   				GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",finYearId), false);
 			   				Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 			   				Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+			   				String prefix = "IN";
 			       			if(UtilValidate.isEmpty(orderHeaderSequenceTypeId)){
 			       				orderHeaderSequenceTypeId="PO_SEQUENCE";
 			       			}
 			   				GenericValue orderHeaderSequence = delegator.makeValue("OrderHeaderSequence");
-			   				orderHeaderSequence.put("orderHeaderSequenceTypeId",orderHeaderSequenceTypeId );
 			   				orderHeaderSequence.put("orderId", orderId);
 			   				orderHeaderSequence.put("finYearId", finYearId);
 			   				List<GenericValue> orderRoles = FastList.newInstance();
@@ -279,12 +280,17 @@ public class CustomSequenceServices {
                                 	indentTypeId = "O";
                                 }
 			   				}
-			   			    String prefix = "IN";
+			   			    
 				            if((tenantConfigEnableSeq.getString("propertyTypeEnumId").equals("PURCHASE_OR_STORES") && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y"))){
 				            	prefix = "PO";
 				            	List<GenericValue> billToParyDetails = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 				            	partyId = EntityUtil.getFirst(billToParyDetails).getString("partyId");
 				            }
+				            if((UtilValidate.isNotEmpty(purposeTypeId)) && (purposeTypeId.equals("DEPOT_PURCHASE"))){
+				            	prefix = "WPO";
+			       				orderHeaderSequenceTypeId="DEPOT_PO_SEQUENCE";
+			       			}
+				            orderHeaderSequence.put("orderHeaderSequenceTypeId",orderHeaderSequenceTypeId );
 				            List<GenericValue> orderHeaderSeqDetails = delegator.findList("OrderHeaderSequence", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 				            GenericValue orderHeaderSequences = EntityUtil.getFirst(orderHeaderSeqDetails); 
 				            if(UtilValidate.isEmpty(orderHeaderSequences)){
