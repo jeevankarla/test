@@ -57,10 +57,10 @@ $(document).ready(function(){
 	          
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
 	          <#if invoDate?exists && invoDate?has_content>  
-		  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>  
+		  	  	<#--<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>-->  
 	          	<td valign='middle'>
-	            	<div class='tabletext h3'>${invoDate}         
-	            	</div>
+	            	<#--<div class='tabletext h3'>${invoDate}</div>-->
+	            	<input type="text" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>
 	          	</td>       
 	       	  <#else> 
 	          	  	<td valign='middle'>          
