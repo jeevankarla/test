@@ -59,7 +59,25 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	shipmentCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	shipmentList = delegator.findList("Shipment", shipmentCondition, null, ['shipmentId'], null, false);
 
-  shipmentIdsList= EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+  shipmentIds= EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+  
+  shipmentIdsList = [];
+  for (eachShipmentId in shipmentIds) {
+	  conditionList.clear();
+	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachShipmentId));
+	  conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	  
+	  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	  shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, null, false);
+	  
+	  if(shipmentListForPOInvoiceId)
+	  shipmentIdsList.add(eachShipmentId);
+	  
+  }
+  
+  
+  
 
   // fields to search by
   productId = parameters.productId ? parameters.productId.trim() : null;
@@ -161,6 +179,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
+			
 			
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
