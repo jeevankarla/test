@@ -40,20 +40,46 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 	invoiceDetailMap.put("partyIdFrom","");
 	invoiceDetailMap.put("partyIdTo","");
 	invoiceDetailMap.put("tallyRefNo","");
-	invoiceDetailMap.put("referenceNumber","");
+	/*invoiceDetailMap.put("referenceNumber","");*/
 	invoiceDetailMap.put("quantity","");
 	String invoiceId= "";
 	String tallyRefNo = "";
+	String orderId = "";
 	invoiceId = eachInvoice.invoiceId;
-	List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false );
-	if(UtilValidate.isNotEmpty(orderItemBilling)){
-		GenericValue orderItem = EntityUtil.getFirst(orderItemBilling);
-		String orderId = orderItem.orderId;
-		GenericValue orderHeader = delegator.findOne("OrderHeader", ["orderId" : orderId], false);
-		if(UtilValidate.isNotEmpty(orderHeader)){
-			tallyRefNo = orderHeader.tallyRefNo;
+	
+	
+	//tally ref num in sales invoice
+	tallyRefNo = eachInvoice.referenceNumber;
+	//checking for tally ref no in purchase invoice
+	if(UtilValidate.isEmpty(tallyRefNo)){
+		List orderAssoc = delegator.findByAnd("OrderAssoc", UtilMisc.toMap("toOrderId", orderId,"orderAssocTypeId","BackToBackOrder"));
+		if(UtilValidate.isNotEmpty(orderAssoc)){
+			String poOrderId = EntityUtil.getFirst(orderAssc).orderId;
+			List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId) , null, null, null, false );
+			if(UtilValidate.isNotEmpty(orderItemBilling)){
+				GenericValue orderItem = EntityUtil.getFirst(orderItemBilling);
+				String purInvId = orderItem.invoiceId;
+				GenericValue invoice =  delegator.findOne("Invoice", [invoiceId : purInvId], false);
+				if(UtilValidate.isNotEmpty(invoice)){
+					tallyRefNo = invoice.referenceNumber;
+				}
+			}
 		}
 	}
+	//checking for tally ref no in order
+	if(UtilValidate.isEmpty(tallyRefNo)){
+		List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false );
+		if(UtilValidate.isNotEmpty(orderItemBilling)){
+			GenericValue orderItem = EntityUtil.getFirst(orderItemBilling);
+			orderId = orderItem.orderId;
+			GenericValue orderHeader = delegator.findOne("OrderHeader", ["orderId" : orderId], false);
+			if(UtilValidate.isNotEmpty(orderHeader)){
+				tallyRefNo = orderHeader.tallyRefNo;
+			}
+		}
+	}
+	
+	
 	
 	invoiceDetailMap.put("invoiceId",invoiceId);
 	invoiceDetailMap.put("invoiceTypeId",eachInvoice.invoiceTypeId);
@@ -63,7 +89,7 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 	invoiceDetailMap.put("partyIdFrom",eachInvoice.partyIdFrom);
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	invoiceDetailMap.put("tallyRefNo",tallyRefNo);
-	invoiceDetailMap.put("referenceNumber",eachInvoice.referenceNumber);
+	//invoiceDetailMap.put("referenceNumber",eachInvoice.referenceNumber);
 	quantity = 0;
 	List invoiceItems = delegator.findByAnd("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId","INV_FPROD_ITEM"));
 	qtyList = [];
