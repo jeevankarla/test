@@ -40,7 +40,8 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 	invoiceDetailMap.put("partyIdFrom","");
 	invoiceDetailMap.put("partyIdTo","");
 	invoiceDetailMap.put("tallyRefNo","");
-	
+	invoiceDetailMap.put("referenceNumber","");
+	invoiceDetailMap.put("quantity","");
 	String invoiceId= "";
 	String tallyRefNo = "";
 	invoiceId = eachInvoice.invoiceId;
@@ -62,6 +63,17 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 	invoiceDetailMap.put("partyIdFrom",eachInvoice.partyIdFrom);
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	invoiceDetailMap.put("tallyRefNo",tallyRefNo);
+	invoiceDetailMap.put("referenceNumber",eachInvoice.referenceNumber);
+	quantity = 0;
+	List invoiceItems = delegator.findByAnd("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId","INV_FPROD_ITEM"));
+	qtyList = [];
+	if(UtilValidate.isNotEmpty(invoiceItems)){
+		qtyList = EntityUtil.getFieldListFromEntityList(invoiceItems, "quantity", false);
+		for(int j=0 ;j<qtyList.size();j++){
+			quantity = quantity + qtyList.get(j);
+		}
+	}
+	invoiceDetailMap.put("quantity",quantity);
 	salesInvoiceCSVList.add(invoiceDetailMap);
 	
 	
