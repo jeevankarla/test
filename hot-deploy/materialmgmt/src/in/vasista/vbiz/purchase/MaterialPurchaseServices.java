@@ -2537,7 +2537,7 @@ public class MaterialPurchaseServices {
 			cart.setBillFromVendorPartyId(partyId);
 		    cart.setShipFromVendorPartyId(partyId);
 		    cart.setSupplierAgentPartyId(partyId);
-			
+		    cart.setPurposeTypeId("DEPOT_PURCHASE");
 			cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
 			cart.setOrderName(orderName);
 			//cart.setOrderDate(effectiveDate);
@@ -2933,14 +2933,14 @@ public class MaterialPurchaseServices {
 			}
 			
 			//update PurposeType
-			try{
+			/*try{
 			GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			orderHeaderPurpose.set("purposeTypeId", "DEPOT_PURCHASE");
 			orderHeaderPurpose.store();
 			}catch (Exception e) {
 				  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 				  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
-	  	 	}
+	  	 	}*/
 	    
 		}catch(Exception e){
 			try {
