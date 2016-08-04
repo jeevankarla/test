@@ -962,7 +962,7 @@ under the License.
         <field name="paidAmount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="outstandingAmount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="tallyRefNo"><display/></field>
-        <field name="referenceNumber"><display/></field>
+        <!-- <field name="referenceNumber" title="Reference Num"><display/></field> -->
         <field name="quantity"><display/></field>
     </form>  
     <!-- For Cashier Portal needs to added later -->
