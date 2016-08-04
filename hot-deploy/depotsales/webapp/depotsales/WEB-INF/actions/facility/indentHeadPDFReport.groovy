@@ -512,12 +512,11 @@ if(contactMechesDetails){
 		   
 		   tempMap.put("invoiceId", eachItem.invoiceId);
 		
-		   tempMap.put("invoiceDate", eachInvoice.invoiceDate);
+		   tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
 		   
 		 //  invoAmt = invoAmt+(eachItem.amount*eachItem.quantity);
 		   
 		   tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
-		   
 		   
 		   
 		  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
