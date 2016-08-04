@@ -4955,7 +4955,7 @@ public class DepotPurchaseServices{
   	               result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
   	              String invoiceId1 = (String) result.get("invoiceId");
   	              
-  	              Debug.log("invoiceId1==============="+invoiceId1);
+  	             // Debug.log("invoiceId1==============="+invoiceId1);
   	              
   	          } catch (GenericServiceException e) {
   	              
@@ -5000,7 +5000,7 @@ public class DepotPurchaseServices{
   				return "error";
   			}*/
   			
-  			Debug.log("result================="+result);
+  		//	Debug.log("result================="+result);
   			
   			String invoiceId =  (String)result.get("invoiceId");
   			
@@ -5128,6 +5128,8 @@ public class DepotPurchaseServices{
   					return "error";
   			}
 
+  			if(UtilValidate.isNotEmpty(invoiceItemListAdj)){
+  			
   			BigDecimal addToInventory = BigDecimal.ZERO;
   			for (int i = 0; i < invoiceItemListAdj.size(); i++) {
   				
@@ -5181,24 +5183,59 @@ public class DepotPurchaseServices{
 	  					return "error";
 	  			}
 				
-				
 	  			GenericValue OrderItemBillingAndInvoiceAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItemList);
 				
 	  			String orderIdBill = "";
 	  			String orderItemSeqIdBill = "";
 	  			if(UtilValidate.isNotEmpty(OrderItemBillingAndInvoiceAndInvoice)){
 	  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderId");
-	  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderItemSeqId");
+	  				orderItemSeqIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderItemSeqId");
 	  			}
-				
 	  			
+	  			conditionList.clear();
+	  			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderIdBill));
+	  			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqIdBill));
+	  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+	  			List<GenericValue> ShipmentAndReceiptList =null;
 	  			
+	  			try{
+	  				ShipmentAndReceiptList = delegator.findList("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	  		      
+	  			} catch (Exception e) {
+	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+	  					return "error";
+	  			}
+                GenericValue ShipmentAndReceipt = EntityUtil.getFirst(ShipmentAndReceiptList);
+      			//Debug.log("addToInventory====================="+addToInventory);
+
+	  			String inventoryItemId = "";
+	  			if(UtilValidate.isNotEmpty(ShipmentAndReceipt)){
+	  				inventoryItemId = (String)ShipmentAndReceipt.get("inventoryItemId");
+	  			}
 	  			
-           
+	  			// Map<String, Object> inventoryItemMap = UtilMisc.toMap("inventoryItemId", inventoryItemId,"unitCost",addToInventory, "userLogin", userLogin);
+	  	          try {
+	  	              // result = dispatcher.runSync("updateInventoryItem", inventoryItemMap);
+	  	      			//Debug.log("result====================="+result);
+		  	      		//Debug.log("inventoryItemId====================="+inventoryItemId);
+
+	  	      		 GenericValue InventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+	  	   		
+	  	      		//Debug.log("InventoryItem====================="+InventoryItem);
+	  	      		InventoryItem.set("unitCost",addToInventory);
+	  	      	    InventoryItem.store();
+	  	               
+	  	          } catch (Exception e) {
+	  	        	  
+	  	        	 Debug.logError(e, "Error while populating updateInventoryItem ", module);
+	  				  request.setAttribute("_ERROR_MESSAGE_", "Error while populating updateInventoryItem :" + invoiceId+"....! ");
+	  					return "error";
+	  	          }
   			 }
   			
+  		  }  
   			
-  			Debug.log("addToInventory====================="+addToInventory);
   			
   			
   			
