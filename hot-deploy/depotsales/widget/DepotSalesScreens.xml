@@ -4352,7 +4352,7 @@
 				<set field="defaultEffectiveDate"
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;yyyy-MM-dd&quot;);}" />
 				<script
-					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseInvoiceEntryForm.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/PurchaseDepotInvoiceEntryForm.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotTransCommonDecorator"
