@@ -1214,6 +1214,14 @@
        <response name="success" type="request-redirect" value="FindSupplierDispatchs"/>
        <response name="error" type="request-redirect" value="FindSupplierDispatchs"/>
      </request-map>
+     
+      <request-map uri="processDepotTransReceiptItemsDEPOT">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processDepotReceiptItems" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="FindDepotTransGRNShipments"/>
+       <response name="error" type="request-redirect" value="FindDepotTransGRNShipments"/>
+     </request-map>
+     
      <request-map uri="FindDepotTransGRNShipments">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="DepotTransGRNShipments"/>

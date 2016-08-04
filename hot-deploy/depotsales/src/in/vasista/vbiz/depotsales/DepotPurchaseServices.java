@@ -5113,11 +5113,36 @@ public class DepotPurchaseServices{
   			}
 
   		    //================= get purchase Invoice Details===============================
-  		   /* 
+  		   
   			List conditionList = FastList.newInstance();
   			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
+  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
+  			List<GenericValue> invoiceItemListAdj =null;
+  			
+  			try{
+  				invoiceItemListAdj = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		      
+  			} catch (Exception e) {
+  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+  					return "error";
+  			}
+
+  			BigDecimal addToInventory = BigDecimal.ZERO;
+  			for (int i = 0; i < invoiceItemListAdj.size(); i++) {
+  				
+				GenericValue eachInvoiceList = (GenericValue)invoiceItemListAdj.get(i);
+				addToInventory = addToInventory.add(eachInvoiceList.getBigDecimal("amount"));
+           
+  			}
+  			
+  			
+  			
+  			conditionList.clear();
+  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
   			List<GenericValue> invoiceItemList =null;
+  			
   			try{
   		      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
   		      
@@ -5126,9 +5151,54 @@ public class DepotPurchaseServices{
   				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
   					return "error";
   			}
-  		    
-*/
   			
+             for (int i = 0; i < invoiceItemList.size(); i++) {
+  				
+				GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
+				
+				String invoiceIdItem = eachInvoiceList.getString("invoiceId");
+				
+				String invoiceItemSeqIdItem = eachInvoiceList.getString("invoiceItemSeqId");
+				
+				
+				
+				//=====================get relevent Order and Seq==========================
+				
+				
+				
+				conditionList.clear();
+	  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdItem));
+	  			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdItem));
+	  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	  			List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItemList =null;
+	  			
+	  			try{
+	  				OrderItemBillingAndInvoiceAndInvoiceItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	  		      
+	  			} catch (Exception e) {
+	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+	  					return "error";
+	  			}
+				
+				
+	  			GenericValue OrderItemBillingAndInvoiceAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItemList);
+				
+	  			String orderIdBill = "";
+	  			String orderItemSeqIdBill = "";
+	  			if(UtilValidate.isNotEmpty(OrderItemBillingAndInvoiceAndInvoice)){
+	  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderId");
+	  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderItemSeqId");
+	  			}
+				
+	  			
+	  			
+	  			
+           
+  			 }
+  			
+  			
+  			Debug.log("addToInventory====================="+addToInventory);
   			
   			
   			

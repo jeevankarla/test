@@ -36,7 +36,7 @@ context.orderNo = orderNo;
 dctx = dispatcher.getDispatchContext();
 
 supplierId = "";
-
+purposeTypeId = "";
 // usage of po balance if needed
 poBalanceProductMap=[:];
 /*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
@@ -45,6 +45,11 @@ if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
 }*/
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+	
+	purposeTypeId = orderHeader.purposeTypeId;
+	
+	context.purposeTypeId = purposeTypeId;
+	
 	if(!orderHeader){
 
 		context.errorMessage = "No Order Found with Order Id: "+orderId+" !";

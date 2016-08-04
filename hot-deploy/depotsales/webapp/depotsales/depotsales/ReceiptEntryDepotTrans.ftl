@@ -447,7 +447,13 @@ $( "#lrDate" ).datepicker({
 				</div>
 				<div id="myGrid1" style="width:100%;height:200px;"></div>
 			  
-				<#assign formAction ='processDepotTransReceiptItems'>			
+			    <#assign formAction = "">
+			    <#if purposeTypeId?has_content &&  purposeTypeId == "DEPOT_PURCHASE">
+				<#assign formAction ='processDepotTransReceiptItemsDEPOT'>			
+				<#else>
+				<#assign formAction ='processDepotTransReceiptItems'>	
+				</#if>
+				
 				<#if orderId?exists>
 			    	<div align="center">
 			    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
