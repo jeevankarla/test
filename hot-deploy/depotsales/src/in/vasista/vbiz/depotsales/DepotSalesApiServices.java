@@ -90,7 +90,31 @@ public class DepotSalesApiServices{
         // set zero to the proper scale
         //if (decimals != -1) ZERO = ZERO.setScale(decimals);
     }
-
+    
+    /*
+     * Security check to make userLogin partyId must equal facility owner party Id if the user
+     * is a retailer (has MOB_RTLR_DB_VIEW). If user is a sales rep (MOB_SREP_DB_VIEW permission), 
+     * then we just return true.
+     */
+    static boolean hasFacilityAccess(DispatchContext dctx, Map<String, ? extends Object> context) {  
+        Security security = dctx.getSecurity();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	GenericValue party = (GenericValue) context.get("party");
+        if (security.hasEntityPermission("MOB_SREP_DB", "_VIEW", userLogin)) {
+            return true;
+        } 		
+        if (security.hasEntityPermission("MOB_RTLR_DB", "_VIEW", userLogin)) {
+        	if (userLogin != null && userLogin.get("partyId") != null) {
+        		String userLoginParty = (String)userLogin.get("partyId");
+        		String ownerParty = (String)party.get("partyId");
+        		if (userLoginParty.equals(ownerParty)) {
+        			return true;
+        		}
+        	}
+        }
+    	return true;
+    }
+    
     public static Map<String, Object> getWeaverIndents(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();    	
@@ -104,6 +128,19 @@ public class DepotSalesApiServices{
         Timestamp orderDate = (Timestamp)context.get("estimatedDeliveryDate");
         Timestamp orderThruDate = (Timestamp)context.get("estimatedDeliveryThruDate");
         //List branchList = (List)context.get("branchList");
+        
+        GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyId);	   
+  		}
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Indents: " + partyId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
         
         String statusId = (String)context.get("statusId");
         String purposeTypeId = (String)context.get("purposeTypeId");
@@ -544,8 +581,24 @@ public class DepotSalesApiServices{
   		String partyIdFrom = (String) context.get("partyId");
   		String paramPaymentId = (String) context.get("paymentId");
 		List paymentSearchResultsList = FastList.newInstance();
-
-				
+		
+		if (UtilValidate.isEmpty(partyIdFrom)) {
+			Debug.logError("Empty party Id", module);
+			return ServiceUtil.returnError("Empty Empty party Id");	   
+		}
+		GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyIdFrom),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyIdFrom + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyIdFrom);	   
+  		}
+        if (!hasFacilityAccess(ctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Payments: " + partyIdFrom, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
+		
 		List condList= FastList.newInstance();
 		condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
 		if(UtilValidate.isNotEmpty(paramPaymentId))
@@ -1243,6 +1296,24 @@ public class DepotSalesApiServices{
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		String partyId = (String) context.get("partyId");
+		
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Empty party Id", module);
+			return ServiceUtil.returnError("Empty Empty party Id");	   
+		}
+		GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyId);	   
+  		}
+        if (!hasFacilityAccess(ctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Weaver Details: " + partyId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
+		
 		Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
 		String partyName = "";
 		String partyType = "";
