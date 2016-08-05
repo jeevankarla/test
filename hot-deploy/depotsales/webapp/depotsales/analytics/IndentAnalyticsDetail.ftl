@@ -68,8 +68,8 @@ $(document).ready(function () {
             // create Tree Grid
             $("#treeGrid").jqxTreeGrid(
             {
-                width: '99%',
-                height: '800px',
+                width: '98%',
+                height: '1200px',
                 source: dataAdapter,
                 sortable: true,
                 ready: function()
@@ -92,7 +92,7 @@ $(document).ready(function () {
                 },           
                 columns: [
                   { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'center', cellsRenderer: cellsRenderer },
+                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
                   { text: 'Total Revenue (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'In Process', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
@@ -104,6 +104,6 @@ $(document).ready(function () {
         });
     </script>
 	
-       <div id="treeGrid" style='height: 800px'>
+       <div id="treeGrid" style='height: 1200px'>
 		</div>   		
  
