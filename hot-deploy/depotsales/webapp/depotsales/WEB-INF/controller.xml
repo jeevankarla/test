@@ -751,6 +751,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoice"/>
     </request-map>
+    <request-map uri="DepotPurchaseInvoiceView">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotPurchaseInvoiceView"/>
+    </request-map>
     <request-map uri="DepotSalesInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesInvoice"/>
@@ -776,6 +780,10 @@
      <request-map uri="APInvoiceOverview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="APInvoiceOverview"/>
+    </request-map>
+    <request-map uri="DepotTransAPInvoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotTransAPInvoiceOverview"/>
     </request-map>
     <request-map uri="paymentOverview">
         <security https="true" auth="true"/>
@@ -1984,6 +1992,14 @@
         </response>
         <response name="error" type="view" value="DepotPurchaseInvoice"/>
     </request-map>
+    <request-map uri="cancelDepotPurchaseInvoice">
+        <security https="true" auth="true"/>
+        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotPurchaseInvoiceView">
+            <redirect-parameter name="invoiceTypeId" value="PURCHASE_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotPurchaseInvoiceView"/>
+    </request-map>
     <request-map uri="cancelSalesInvoice">
         <security https="true" auth="true"/>
         <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
@@ -2240,4 +2256,6 @@
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>
+    <view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
+    <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
 </site-conf>
