@@ -49,6 +49,9 @@ if ("Y".equals(parameters.noConditionFind)) {
     if (partyIdFrom) {
         exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
     }
+	if (parameters.partyIdTo) {
+		exprListForParameters.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyIdTo));
+	}
 	if (issuingAuthority) {
 		exprListForParameters.add(EntityCondition.makeCondition("issuingAuthority", EntityOperator.LIKE, "%"+issuingAuthority+"%"));
 	}
