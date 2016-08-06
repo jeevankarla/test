@@ -22,7 +22,7 @@
        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
-	        	<drop-down allow-empty="true">
+	        	<drop-down allow-empty="true" no-current-selected-key="ORDER_APPROVED">
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
