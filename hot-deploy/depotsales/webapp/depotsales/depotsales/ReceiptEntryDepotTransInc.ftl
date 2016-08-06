@@ -428,6 +428,20 @@
     	});
     	    	
     	var grandTOT = 0;
+    	 for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{
+				var balanceQty = data[rowCount]["balanceQty"];
+				if(isNaN(balanceQty)){
+					balanceQty = 0;
+				}
+				if(balanceQty <= 0){
+				var obj=[];
+		    	obj[rowCount]={quantity:"readOnlyColumnClass"};		    	
+				grid.setCellCssStyles("readOnlyColumnClass",obj);
+				grid.updateRow(rowCount);				
+				}
+ 		}
+    	
         grid.onCellChange.subscribe(function(e,args) {
         
         for (var rowCount=0; rowCount < data.length; ++rowCount)
@@ -469,9 +483,9 @@
 				//}
 					data[args.row]["balanceQty"]=balanceQty;
 				if(balanceQty <= 0){
-					alert("product order completed");
+					alert("product order will complete");
 					data[args.row]["balanceQty"]=0;
-					data[args.row]["quantity"]=0;
+					//data[args.row]["quantity"]=0;
 				}
 				grid.updateRow(args.row);
 			}
