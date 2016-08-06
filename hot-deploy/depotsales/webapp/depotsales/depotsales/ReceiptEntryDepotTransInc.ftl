@@ -462,12 +462,12 @@
 				if(isNaN(quantity)){
 					quantity = 0;
 				}
-				var balqty=ordQuantity-oldRecvdQty;
-				balqty=balqty-quantity;
+				var balanceQty=ordQuantity-oldRecvdQty;
+				balanceQty=balanceQty-quantity;
 				//if(balqty<0){
 				//balqty=0;
 				//}
-					data[args.row]["balanceQty"]=balqty;
+					data[args.row]["balanceQty"]=balanceQty;
 				if(balanceQty <= 0){
 					alert("product order completed");
 					data[args.row]["balanceQty"]=0;
