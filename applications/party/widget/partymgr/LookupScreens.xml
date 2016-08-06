@@ -31,7 +31,7 @@ under the License.
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-                
+                 <set field="parameters.roleTypeId" value="EMPANELLED_SUPPLIER" />
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->
                 <set field="entityName" value="PartyNameView"/>
