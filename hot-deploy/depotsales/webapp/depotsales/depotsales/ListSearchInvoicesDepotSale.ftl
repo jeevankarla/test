@@ -390,7 +390,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
           <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
-          <td>Due Date</td>
+          <td>Shipment Id</td>
           <td>${uiLabelMap.CommonStatus}</td>
          <#--- <td>${uiLabelMap.CommonDescription}</td>
           <td>Reason For Cancellation</td>-->
@@ -415,14 +415,16 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)?if_exists>
           	<#assign invoiceSequence = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceSequence(delegator, invoice.invoiceId)?if_exists/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>APInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoiceSequence}</a></td>
+              <td><a class="buttontext" target='_blank' href="<@ofbizUrl>APInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoiceSequence}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
                 
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
-              <td>${(invoice.dueDate)?if_exists}</td>
+              <#--><td>${(invoice.dueDate)?if_exists}</td> -->
+              
+               <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialShipmentOverview?shipmentId=${invoice.shipmentId}</@ofbizUrl>">${invoice.shipmentId}</a></td>
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
