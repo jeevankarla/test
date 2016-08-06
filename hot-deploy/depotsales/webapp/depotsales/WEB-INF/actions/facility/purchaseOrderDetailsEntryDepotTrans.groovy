@@ -135,7 +135,8 @@ if(orderId){
 		newObj.put("quantity",eachItem.quantity-receivedQty);
 		newObj.put("balance",0);
 		//newObj.put("balance",eachItem.quantity-receivedQty);
-		newObj.put("balanceQty",eachItem.quantity-receivedQty);
+		 qty=eachItem.quantity;
+		newObj.put("balanceQty",qty.subtract(receivedQty));
 		
 		if(receivedQty>eachItem.quantity){
 		    newObj.put("quantity",0);
