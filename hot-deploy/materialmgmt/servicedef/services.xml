@@ -283,4 +283,12 @@
         <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
+     <service name="updateWeaverDetails" engine="java" auth="true" invoke="updateWeaverDetails" 
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>update weaver  Details</description>
+         <attribute name="weaverId" mode="IN" type="String" optional="false"/>
+         <attribute name="Depot" mode="IN" type="String" optional="true"/>
+       	 <attribute name="daoDate" mode="IN" type="String" optional="true"/>
+       	 <attribute name="partyId" mode="OUT" type="String" optional="true"/>
+     </service>
 </services>
