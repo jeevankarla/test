@@ -145,6 +145,7 @@
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
+				var orderId = $("#orderId").val();			
 		
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
@@ -166,7 +167,8 @@
 			
 			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
 			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
-	 		if (!isNaN(prodId)) {	 		
+	 		if (!isNaN(prodId)) {
+				var inputOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId_o_" + rowCount).val(orderId);
 				var inputcustomerId = jQuery("<input>").attr("type", "hidden").attr("name", "customerId_o_" + rowCount).val(customerId); 			
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
@@ -179,6 +181,7 @@
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
 				
+				jQuery(formId).append(jQuery(inputOrder));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				jQuery(formId).append(jQuery(inputProd));				
