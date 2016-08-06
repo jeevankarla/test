@@ -324,7 +324,7 @@
 					<#--{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator}, -->
 					{id:"quantity", name:"Dispatch Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-					{id:"balance", name:"BalanceQty(Kgs)", field:"balance", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
+					{id:"balanceQty", name:"BalanceQty(Kgs)", field:"balanceQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"unitPrice", name:"unitPrice(Kgs)", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor,formatter: rateFormatter, sortable:false,},
 					{id:"ItemValue", name:"Item Amount(Rs)", field:"ItemValue", width:100, minWidth:100, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor,formatter: rateFormatter, sortable:false}
 				];
@@ -451,24 +451,26 @@
 				}
 				grid.updateRow(args.row);
 			}
-			if (args.cell == 2) {
-				var balanceQty = data[args.row]["balanceQty"];
+			if (args.cell == 3) {
+				var ordQuantity = data[args.row]["orderedQty"];
+				var oldRecvdQty = data[args.row]["oldRecvdQty"];
 				var quantity=data[args.row]["quantity"];
-				if(isNaN(balanceQty)){
-					balanceQty = 0;
+				if(isNaN(oldRecvdQty)){
+					oldRecvdQty = 0;
 				}
 				
 				if(isNaN(quantity)){
 					quantity = 0;
 				}
-				var balqty=balanceQty-quantity;
+				var balqty=ordQuantity-oldRecvdQty;
+				balqty=balqty-quantity;
 				//if(balqty<0){
 				//balqty=0;
 				//}
-					data[args.row]["balance"]=balqty;
+					data[args.row]["balanceQty"]=balqty;
 				if(balanceQty <= 0){
 					alert("product order completed");
-					data[args.row]["balance"]=0;
+					data[args.row]["balanceQty"]=0;
 					data[args.row]["quantity"]=0;
 				}
 				grid.updateRow(args.row);
