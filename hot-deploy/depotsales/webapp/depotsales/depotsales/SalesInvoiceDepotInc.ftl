@@ -869,8 +869,6 @@
         			updateInvoiceTotalAmount();
         		}
         		if (args.cell == 2) {
-        		
-        		    alert("vamsi");
         			updateInvoiceTotalAmount();
         		}
 		}); 
@@ -1010,7 +1008,7 @@
         			updateInvoiceTotalAmount();
         		}
         		
-        		if (args.cell == 3) {
+        		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
         		}
         		
