@@ -274,18 +274,18 @@ under the License.
 	                	 </fo:table-cell>
 	                	</fo:table-row> 
 					    <fo:table-row>
-                        <fo:table-cell>
-                    	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold"></fo:block>
-	                	</fo:table-cell>
-	                	 <fo:table-cell>
-                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
-	                	 </fo:table-cell>
-	                	  <fo:table-cell>
-                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
-	                	 </fo:table-cell>
 	                    <fo:table-cell font-weight="bold">
 	                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Grand Totals:</fo:block>  
 	                    </fo:table-cell>
+	                     <fo:table-cell>
+                    	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold"></fo:block>
+	                	</fo:table-cell>
+	                     <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
+	                     <fo:table-cell>
+                    	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false"></fo:block>
+	                	 </fo:table-cell>
 	                    <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="right" white-space-collapse="false">${debitTotals?string("#0.00")}</fo:block>
 	                	 </fo:table-cell>
