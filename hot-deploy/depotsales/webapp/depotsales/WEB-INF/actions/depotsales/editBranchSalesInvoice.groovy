@@ -137,10 +137,17 @@ prod=delegator.findOne("Product",[productId:eachItem.productId],false);
 if(UtilValidate.isNotEmpty(prod)){
 	productName = prod.get("productName");
 }
+
+amount = (Double.valueOf((eachItem.quantity))*(Double.valueOf(eachItem.amount)));
+
+tenPercent = (amount * -10)/100;
+
+
 newObj.put("cProductName",productName);
 newObj.put("quantity",eachItem.quantity);
 newObj.put("UPrice", eachItem.amount);
 newObj.put("amount", eachItem.amount);
+newObj.put("tenPercent", tenPercent);
 newObj.put("VatPercent", 0.00);
 newObj.put("VAT", 0.00);
 newObj.put("CSTPercent", 0.00);

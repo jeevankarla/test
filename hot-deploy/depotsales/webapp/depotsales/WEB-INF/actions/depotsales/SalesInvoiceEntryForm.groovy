@@ -424,10 +424,6 @@ if(shipments){
 			tenPercentItems = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
 			
 			
-			
-			
-			
-			
 			vatAmt = BigDecimal.ZERO;
 			cstAmt = BigDecimal.ZERO;
 			

@@ -448,7 +448,10 @@
 			<#--{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},-->
 			
 			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
-			{id:"SurChgPercent", name:"SUR(%)", field:"SurChgPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"}
+			{id:"SurChgPercent", name:"SUR(%)", field:"SurChgPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
+			
+			{id:"tenPercent", name:"10% Subsidy Value", field:"tenPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"}
+			
 			
 			<#--{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
 			
@@ -739,7 +742,7 @@
 		   			totalAmount -= data3[i]["adjAmount"];
 		   		}
 		   		else{
-		   			totalAmount += data3[i]["adjAmount"];
+		   			totalAmount -= data3[i]["adjAmount"];
 		   		}
 				
 		   }
@@ -864,6 +867,10 @@
         
         grid2.onCellChange.subscribe(function(e,args) {
         		if (args.cell == 1) {
+        			updateInvoiceTotalAmount();
+        		}
+        		
+        		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
         		}
 		}); 
@@ -1000,6 +1007,9 @@
         
         grid3.onCellChange.subscribe(function(e,args) {
         		if (args.cell == 1) {
+        			updateInvoiceTotalAmount();
+        		}
+        		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
         		}
         		
