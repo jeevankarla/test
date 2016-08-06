@@ -6348,6 +6348,92 @@ catch(Exception e){
 		result=ServiceUtil.returnSuccess("Depot reambursement Receipts added successfully !!");
 	return result;
 }
+
 	
-	
+	public static Map<String, Object> updateWeaverDetails(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String Depot = (String)context.get("Depot");
+		String daoDateStr = (String)context.get("daoDate");
+		String weaverId = (String)context.get("weaverId");
+		if (UtilValidate.isEmpty(weaverId)){
+			Debug.logError("Weaver Id is Empty !" , module);
+			return ServiceUtil.returnError(" Weaver Id is Empty !");
+		}
+		SimpleDateFormat SimpleDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try{
+		List conditionList = FastList.newInstance(); 
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, weaverId));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List<GenericValue> facilities = delegator.findList("Facility", condition, null, null, null, false);
+		    if(Depot.equals("Y")){
+			    try{
+					if(UtilValidate.isNotEmpty(facilities)){
+							GenericValue facilitieEntity = EntityUtil.getFirst(facilities);
+							if(UtilValidate.isNotEmpty(context.get("daoDate"))){
+								 Timestamp openedDate = null;
+									 if(UtilValidate.isNotEmpty(daoDateStr)){
+								  		try {
+								  			openedDate = new java.sql.Timestamp(SimpleDF.parse(daoDateStr).getTime());
+									  	} catch (ParseException e) {
+									  		Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+									  	} catch (NullPointerException e) {
+								  			Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+									  	}
+								  	}
+							facilitieEntity.set("openedDate", openedDate);
+							facilitieEntity.store();
+						}
+					}else{
+						Map inMap = FastMap.newInstance();
+						inMap.put("userLogin",userLogin);
+			        	inMap.put("ownerPartyId",weaverId);
+			        	inMap.put("facilityTypeId","DEPOT_SOCIETY");
+						String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,weaverId, false);
+						if(UtilValidate.isNotEmpty(customerName)){
+							inMap.put("facilityName",customerName);
+							inMap.put("description",customerName);
+						}else{
+							inMap.put("facilityName","");
+							inMap.put("description","");
+						}
+			        	
+			        	//Timestamp openedDate = UtilDateTime.nowTimestamp();
+						if(UtilValidate.isNotEmpty(context.get("daoDate"))){
+						 Timestamp openedDate = null;
+							 if(UtilValidate.isNotEmpty(daoDateStr)){
+						  		try {
+						  			openedDate = new java.sql.Timestamp(SimpleDF.parse(daoDateStr).getTime());
+							  	} catch (ParseException e) {
+							  		Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+							  	} catch (NullPointerException e) {
+						  			Debug.logError(e, "Cannot parse date string: " + daoDateStr, module);
+							  	}
+						  	}
+						 inMap.put("openedDate",openedDate);	
+						}
+						Map resultFacilityMap =  dispatcher.runSync("createFacility", inMap);
+							 if (ServiceUtil.isError(resultFacilityMap)) {
+								 Debug.logError(ServiceUtil.getErrorMessage(resultFacilityMap), module);
+					            return resultFacilityMap;
+					        }
+					}
+			    }catch(GenericServiceException e){
+				  		Debug.logError(e, e.toString(), module);
+				  		return ServiceUtil.returnError(e.toString());
+			 	}
+		    }else{
+		    	delegator.removeAll(facilities);
+		    }
+		}catch (GenericEntityException e) {
+			  Debug.logError(e, "Could not commit transaction for entity Facility", module);
+		  }
+		result=ServiceUtil.returnSuccess("updated successfully !!");
+		result.put("partyId",weaverId);
+		return result;
+	}
+
 }

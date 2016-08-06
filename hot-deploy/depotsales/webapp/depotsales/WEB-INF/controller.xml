@@ -1050,7 +1050,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindSupplier"/>
     </request-map>
-   
+    <request-map uri="updateWeaverDetails">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWeaverDetails"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
     <request-map uri="EditProcProducer">
             <security https="true" auth="true"/>
             <response name="success" type="view" value="EditProcProducer"/>
