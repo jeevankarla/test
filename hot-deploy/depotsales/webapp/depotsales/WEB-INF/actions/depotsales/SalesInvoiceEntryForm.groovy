@@ -326,7 +326,7 @@ if(shipments){
 		
 		condExpr = [];
 		condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-		condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR")));
+		condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR","TEN_PERCENT_SUBSIDY")));
 		cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 		taxDetails = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 		
@@ -380,6 +380,9 @@ if(shipments){
 			}
 			qty = eachItem.quantityAccepted;
 			
+			
+			
+			
 			condiList = [];
 			condiList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 			condiList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -413,6 +416,16 @@ if(shipments){
 			if(UtilValidate.isNotEmpty(cstItems)){
 				cstPercent = (EntityUtil.getFirst(cstItems)).get("sourcePercentage");
 			}
+			
+			double tenPercent = 0;
+			condExpr.clear();
+			condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+			tenPercentItems = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+			
+			
+			
+			
 			
 			
 			vatAmt = BigDecimal.ZERO;
@@ -453,12 +466,19 @@ if(shipments){
 					}
 				}
 			amount = unitPrice*qty;
+			
+			if(UtilValidate.isNotEmpty(tenPercentItems)){
+				//tenPercent = (EntityUtil.getFirst(tenPercentItems)).get("amount");
+				tenPercent = (amount * -10)/100;
+			}
+			
 			vatAmt = ((unitPrice*vatPercent)/100)*qty;
 			cstAmt = ((unitPrice*cstPercent)/100)*qty;
 			newObj.put("amount", amount);
 			newObj.put("VatPercent", vatPercent);
 			newObj.put("VAT", vatAmt);
 			newObj.put("CSTPercent", cstPercent);
+			newObj.put("tenPercent", tenPercent);
 			newObj.put("CST", cstAmt);
 			invoiceItemsJSON.add(newObj);
 			
