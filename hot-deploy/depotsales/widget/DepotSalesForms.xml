@@ -457,8 +457,13 @@
                 </hyperlink>
             </field>
             <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))">
-                <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]"></display>
+                <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]" target-window="_blank">
+          			<parameter param-name="invoiceId" value="${invoiceId}"/>
+          		</hyperlink>
             </field>
+            
+                      
+            
          <!--    <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
                 <hyperlink target="processSalesInvoice" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
@@ -497,8 +502,11 @@
             
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
-            </field>
+                  <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]" target-window="_blank">
+          			<parameter param-name="invoiceId" value="${invoiceId}"/>
+          		</hyperlink>  
             
+            </field>
             
             
             <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
