@@ -43,13 +43,26 @@ List formatList = [];
 	}
 context.formatList = formatList;
 
-
+branchId = "";
+if(parameters.branchId)
 branchId = parameters.branchId;
-passbookNumber = parameters.passbookNumber;
-partyId = parameters.partyId;
-groupName = parameters.groupName;
 
-partyRoleAndIde = new DynamicViewEntity();
+passbookNumber = "";
+if(parameters.passbookNumber)
+passbookNumber = parameters.passbookNumber;
+
+
+partyId = "";
+if(parameters.partyId)
+partyId = parameters.partyId;
+
+
+context.branchId = branchId;
+context.passbookNumber = passbookNumber;
+context.partyId = partyId;
+
+
+/*partyRoleAndIde = new DynamicViewEntity();
 partyRoleAndIde.addMemberEntity("PRPD", "PartyRoleDetailAndPartyDetail");
 partyRoleAndIde.addMemberEntity("PID", "PartyIdentification");
 partyRoleAndIde.addMemberEntity("PRS", "PartyRelationship");
@@ -111,7 +124,7 @@ for(customer in groupNameList){
 
 context.listIt = finalList;
 
-
+*/
 
 
 /*String partyId = parameters.partyId;

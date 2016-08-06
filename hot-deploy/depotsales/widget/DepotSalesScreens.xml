@@ -3856,10 +3856,12 @@
                       		<include-form name="FindDepotSalesProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" />
                       	</screenlet>
-                      	<screenlet title="List Weaver">
-                      		<include-form name="ListDepotSalesProducer"
-  								location="component://depotsales/widget/DepotSalesForms.xml" />
-                      	</screenlet>
+                      <platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/weaverMasterDetail.ftl" />
+										</html>
+									</platform-specific>
                       </decorator-section>
                   </decorator-screen>
               </widgets>
