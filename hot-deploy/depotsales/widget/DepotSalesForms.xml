@@ -314,7 +314,7 @@
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field> 
 <!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
         	<drop-down allow-empty="true" > 
@@ -798,7 +798,7 @@
 <!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
          <field name="purposeTypeId"><hidden value="BRANCH_PURCHASE"/></field> 
          <field name="findPoFlag"><hidden value="Y"/></field>  
-    	<field name="supplierId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+    	<field name="supplierId" title="Supplier"><lookup target-form-name="SupplierLookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -919,7 +919,7 @@
 			<option key="BANK" description="Bank Voucher" ></option>
 			</drop-down>
 		</field> -->
-		<field name="partyIdFrom" title="Supplier"  use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+		<field name="partyIdFrom" title="Supplier"  use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="SupplierLookupPartyName" target-parameter="roleTypeId"/></field>
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
