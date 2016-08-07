@@ -319,12 +319,12 @@
 			<#else>
 				var columns = [
 					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
-					{id:"remarks", name:"Specification", field:"remarks", width:80, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
-					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+					{id:"remarks", name:"Specification", field:"remarks", width:120, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
+					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:120, minWidth:120, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 					<#--{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator}, -->
-					{id:"quantity", name:"Dispatch Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-					{id:"balanceQty", name:"BalanceQty(Kgs)", field:"balanceQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
+					{id:"quantity", name:"Yet To Dispatch Qty", field:"quantity", width:120, minWidth:120, editor:FloatCellEditor, cssClass:"cell-title",sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:120, minWidth:120, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+					{id:"balanceQty", name:"BalanceQty(Kgs)", field:"balanceQty", width:120, minWidth:120, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"unitPrice", name:"unitPrice(Kgs)", field:"unitPrice", width:90, minWidth:90, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor,formatter: rateFormatter, sortable:false,},
 					{id:"ItemValue", name:"Item Amount(Rs)", field:"ItemValue", width:100, minWidth:100, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor,formatter: rateFormatter, sortable:false}
 				];
@@ -482,11 +482,10 @@
 				//balqty=0;
 				//}
 					data[args.row]["balanceQty"]=balanceQty;
-				if(balanceQty <= 0){
-					alert("product order will complete");
-					data[args.row]["balanceQty"]=0;
+				//if(balanceQty <= 0){
+				//	data[args.row]["balanceQty"]=0;
 					//data[args.row]["quantity"]=0;
-				}
+				//}
 				grid.updateRow(args.row);
 			}
 			

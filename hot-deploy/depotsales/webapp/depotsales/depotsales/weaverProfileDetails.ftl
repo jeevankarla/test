@@ -69,7 +69,8 @@ function setDAO(){
 				</td>
 		</tr>
 		<tr>
-		<td><input type="submit" name="update"/></td>
+		<td></td>
+		<td><input type="submit" name="update" value="update"/></td>
 		</tr>
       </thead>
       <tbody>
