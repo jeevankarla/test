@@ -569,7 +569,6 @@ context.shipingAdd=shipingAdd;
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
 
-Debug.log("orderDetailsList================"+orderDetailsList);
 
 context.orderTermList=orderTermList;
 context.addressFlag="Y";
