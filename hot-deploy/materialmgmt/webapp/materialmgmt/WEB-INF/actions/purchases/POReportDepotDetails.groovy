@@ -47,6 +47,8 @@ allDetailsMap["grandTotal"]=BigDecimal.ZERO;
 roundedGrandTotal=BigDecimal.ZERO;
 orderHeader=null;
 orderDesctioption="";
+
+productStoreId = "";
 if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
 	orderDesctioption=orderHeader.orderName;
@@ -117,7 +119,9 @@ if(DstAddr){
 	destAddr=DstAddr.get("attrValue");
 	allDetailsMap.put("DstAddr",destAddr);
 }
-
+if(UtilValidate.isEmpty(DstAddr)){
+	allDetailsMap.put("DstAddr",productStoreId);
+}
 
 
 // partyId,partyName
@@ -390,6 +394,11 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
+		
+		orderDetailsMap["numQuantity"]=OrderItemDetail.baleQuantity;
+		orderDetailsMap["bundleWeight"]=OrderItemDetail.bundleWeight;
+		orderDetailsMap["Uom"]=OrderItemDetail.Uom;
+		
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
 		amount=((orderitems.quantity)*(orderitems.unitPrice));
 		orderDetailsMap["amount"]=amount;
@@ -559,6 +568,9 @@ if(UtilValidate.isNotEmpty(supplierDtls)){
 context.shipingAdd=shipingAdd;
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
+
+Debug.log("orderDetailsList================"+orderDetailsList);
+
 context.orderTermList=orderTermList;
 context.addressFlag="Y";
 bedAmount=0;
