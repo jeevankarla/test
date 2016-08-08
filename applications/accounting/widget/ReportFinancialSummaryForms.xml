@@ -1090,7 +1090,7 @@ under the License.
         <field name="paymentDate"><display  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="transactionDate" title="Tally Reference Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="currencyUomId"><hidden/></field>
-        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount"><display/></field>
     </form>
     <form name="GroupPaymentCSV" type="list" list-name="listIt">
         <actions>

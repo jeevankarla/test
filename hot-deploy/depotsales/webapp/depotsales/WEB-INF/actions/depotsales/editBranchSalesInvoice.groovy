@@ -146,7 +146,7 @@ tenPercent = (amount * -10)/100;
 newObj.put("cProductName",productName);
 newObj.put("quantity",eachItem.quantity);
 newObj.put("UPrice", eachItem.amount);
-newObj.put("amount", eachItem.amount);
+newObj.put("amount", (eachItem.amount)*(eachItem.quantity));
 newObj.put("tenPercent", tenPercent);
 newObj.put("VatPercent", 0.00);
 newObj.put("VAT", 0.00);

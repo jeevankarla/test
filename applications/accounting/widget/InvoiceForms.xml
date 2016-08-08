@@ -958,9 +958,9 @@ under the License.
         <field name="description" encode-output="false"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="paidAmount"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="outstandingAmount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount"><display/></field>
+        <field name="paidAmount"><display/></field>
+        <field name="outstandingAmount"><display/></field>
         <field name="tallyRefNo"><display/></field>
         <!-- <field name="referenceNumber" title="Reference Num"><display/></field> -->
         <field name="quantity"><display/></field>
