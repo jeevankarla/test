@@ -499,7 +499,7 @@
                     <parameter param-name="orderId" value="${orderId}"/>
                 </hyperlink>
             </field>
-            <field name="saleInvoiceAmout" title ="Sale Inv. Amt" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))"> 
+            <field name="saleInvoiceAmout" title ="Sale Inv. Amt" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))"> 
                <display description="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,salesInvoiceId);}"></display>         
             </field>
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
