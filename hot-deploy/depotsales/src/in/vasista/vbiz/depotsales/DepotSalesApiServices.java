@@ -112,7 +112,7 @@ public class DepotSalesApiServices{
         		}
         	}
         }
-    	return true;
+    	return false;
     }
     
     public static Map<String, Object> getWeaverIndents(DispatchContext dctx, Map<String, ? extends Object> context) {
