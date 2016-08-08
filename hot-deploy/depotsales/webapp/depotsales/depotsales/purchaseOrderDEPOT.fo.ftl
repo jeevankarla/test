@@ -139,18 +139,62 @@ under the License.
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("enquiryId")?has_content> DAIRY ENQUIRY NO :${allDetailsMap.get("enquiryId")?if_exists}</#if>                                             <#if allDetailsMap.get("enquiryDate")?has_content>DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("enquiryDate")?if_exists, "dd-MMM-yy")}  </#if>  </fo:block>
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteId")?has_content>QUOTATION NO     :${allDetailsMap.get("quoteId")?if_exists}</#if>                                            <#if allDetailsMap.get("qutationDate")?has_content> DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("qutationDate")?if_exists, "dd-MMM-yy")} </#if>   <#if allDetailsMap.get("qutationDateAttr")?has_content> DATE:${allDetailsMap.get("qutationDateAttr")?if_exists}</#if> </fo:block>
          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteRef")?has_content>QUOTE REF NO     :${allDetailsMap.get("quoteRef")?if_exists}</#if>       </fo:block>
-         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
+         <#--<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>
       	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO        ITEM             REMARKS       QUANTITY       BASIC RATE            AMOUNT</fo:block>
-      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;                                            (Kgs)           (Rs)                (Rs)     </fo:block>
+      	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;                                            (Kgs)           (Rs)                (Rs)     </fo:block>-->
       	<#-- <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;--------------------------------------------------------------------------------------------</fo:block>-->
-    	 <fo:block>
-            <fo:table text-align="center" >
-            <fo:table-column column-width="50pt"/>
+      	
+      	<fo:block font-weight="bold">
+            <fo:table text-align="center" border-style="solid">
+            <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="140pt"/>
        	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="110pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="110pt"/>
+       	    <fo:table-column column-width="65pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="100pt"/>
+               <fo:table-body text-align="center">
+               <fo:table-row>
+               		<fo:table-cell ><fo:block text-align="center"  font-size="10pt" >SNO</fo:block></fo:table-cell>
+               		<fo:table-cell ><fo:block text-align="center" font-size="10pt">ITEM</fo:block></fo:table-cell>
+               		<fo:table-cell ><fo:block text-align="center" font-size="10pt">REMARKS</fo:block></fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">QUANTITY</fo:block>
+               			<fo:block text-align="center" font-size="10pt">(Kgs)</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">BASIC RATE</fo:block>
+               			<fo:block text-align="center" font-size="10pt">(Rs)</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="right" font-size="10pt">QUANTITY</fo:block>
+               			<fo:block text-align="right" font-size="10pt">(Nos)</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="right" font-size="10pt">BUNDLE</fo:block>
+               			<fo:block text-align="right" font-size="10pt">WEIGHT</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="right" font-size="10pt">AMOUNT</fo:block>
+               			<fo:block text-align="right" font-size="10pt">(Rs)</fo:block>
+               		</fo:table-cell>
+               	</fo:table-row>
+               </fo:table-body>
+            </fo:table>
+         </fo:block>
+               
+      	
+    	 <fo:block>
+            <fo:table text-align="center" >
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="140pt"/>
+       	    <fo:table-column column-width="100pt"/>
+       	    <fo:table-column column-width="65pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="100pt"/>
                <fo:table-body text-align="center">
                   <#assign sNo=1>
 	              <#list orderDetailsList as orderListItem>
@@ -168,6 +212,12 @@ under the License.
   			           <fo:table-cell  >
   			           		<fo:block text-align="center"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block>
 							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("bundleUnitListPrice")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("bundleUnitListPrice")?if_exists?string("##0.00")}(Bundle)<#else></#if></fo:block>
+  			           </fo:table-cell>
+  			           <fo:table-cell>
+  			           		<fo:block text-align="right"  font-size="10pt">${orderListItem.get("numQuantity")?if_exists}(${orderListItem.get("Uom")?if_exists})</fo:block>
+  			           </fo:table-cell>
+  			           <fo:table-cell>
+  			           		<fo:block text-align="right"  font-size="10pt">${orderListItem.get("bundleWeight")?if_exists}</fo:block>
   			           </fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				     </fo:table-row>
@@ -430,7 +480,7 @@ under the License.
 	 </fo:block>	
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
 
-        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >NOTE: Supplier must refer the above Purchase Order No.<#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if> in their </fo:block>
+        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >NOTE: Supplier must refer the above Purchase Order No.<#if allDetailsMap.get("orderNo")?has_content>${allDetailsMap.get("orderNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if> in their </fo:block>
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >invoice.Payment to mills will be released only after receipt of payment from user agency  </fo:block>     
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;Sub Standard Goods will be returned at your cost and risk  </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;</fo:block>

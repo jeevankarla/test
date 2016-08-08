@@ -61,7 +61,7 @@ OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem"
 
 indentDate = "";
 itemOrderId  = OrderItemBilling[0].orderId;
-
+destinationDepot = "";
 OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
 
 Debug.log("OrderHeaderAct================="+OrderHeaderAct);
@@ -69,7 +69,7 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
  if(OrderHeaderAct){
 	indentDate = OrderHeaderAct.get("orderDate");
 	externalOrderId = OrderHeaderAct.get("externalId");
-	
+	destinationDepot = OrderHeaderAct.get("productStoreId");
 	}
  
  Debug.log("indentDate================="+indentDate);
@@ -429,6 +429,10 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 			
 		}
 	}
+}
+
+if(UtilValidate.isEmpty(destination)){
+	destination = destinationDepot;
 }
 
 indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , itemOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
