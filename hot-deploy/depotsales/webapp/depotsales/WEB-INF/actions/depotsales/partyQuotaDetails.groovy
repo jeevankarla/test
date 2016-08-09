@@ -90,9 +90,7 @@ if(parameters.partyId){
 	finalJson.put("SchemeList", schemeArray);
 	quota=0;
 	
-	if(UtilValidate.isNotEmpty(parameters.productId)){
-		Debug.log("parameters.productId====================="+parameters.productId);
-		
+	if(UtilValidate.isNotEmpty(parameters.productId)){		
 		conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS,"SCHEME_MGPS"));
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,parameters.productId));
