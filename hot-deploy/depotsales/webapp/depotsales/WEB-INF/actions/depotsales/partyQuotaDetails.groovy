@@ -91,31 +91,31 @@ if(parameters.partyId){
 	quota=0;
 	
 	if(UtilValidate.isNotEmpty(parameters.productId)){
+		Debug.log("parameters.productId====================="+parameters.productId);
 		
 		conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS,"SCHEME_MGPS"));
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,parameters.productId));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		ProductCategoryAndMemberObject = EntityUtil.getFirst(delegator.findList("ProductCategoryAndMember",condition,null,null,null,false));
-		productCategoryId=ProductCategoryAndMemberObject.get("productCategoryId");
-		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate,"productCategoryId",productCategoryId));
-		productCategoryQuotasMap = resultCtx.get("schemesMap");
+		if(UtilValidate.isNotEmpty(ProductCategoryAndMemberObject)){
+			productCategoryId=ProductCategoryAndMemberObject.get("productCategoryId");
+			resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId,"effectiveDate",effectiveDate,"productCategoryId",productCategoryId));
+			productCategoryQuotasMap = resultCtx.get("schemesMap");
+			if(productCategoryQuotasMap.containsKey(productCategoryId)){
+				if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(productCategoryId))){
+					quota = productCategoryQuotasMap.get(productCategoryId);
+				}
+				else{
+					
+				}
 		
-		if(productCategoryQuotasMap.containsKey(productCategoryId)){
-			if(UtilValidate.isNotEmpty(productCategoryQuotasMap.get(productCategoryId))){
-				quota = productCategoryQuotasMap.get(productCategoryId);
 			}
-			else{
-				
-			}
-	
-		}
-
+		}  
 	}
 	
 	finalJson.put("quota", quota);
 	context.quotaJson=finalJson;
-
 	request.setAttribute("quotaJson", finalJson);
 	
 }
