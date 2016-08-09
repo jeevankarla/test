@@ -733,6 +733,10 @@
 			
 			invoiceGrandTOT+= data[i]["CST"];
 		   }
+		   if(!isNaN(data[i]["tenPercent"])){
+			totalAmount += data[i]["tenPercent"];
+			
+		   }
 		   
 		}
 		
@@ -1059,15 +1063,6 @@
         		}
         		
         		
-        		
-        		
-        		// update Discount Values
-		
-		
-        
-        
-       
-        		
 		}); 
 		
 		grid3.onActiveCellChanged.subscribe(function(e,args) {
@@ -1127,13 +1122,11 @@
 		 	setupGrid1();
 		 	setupGrid2();
 		 	setupGrid3();
-		 	updateInvoiceTotalAmount();
-		 	
 		 	<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
-		 	
 		 	calculateMagpsDiscount();
-		 	
-		  </#if>	
+		  </#if>
+		 	updateInvoiceTotalAmount();
+		 		
 		 }else{ 
 	        gridHideCall();
 	     }
