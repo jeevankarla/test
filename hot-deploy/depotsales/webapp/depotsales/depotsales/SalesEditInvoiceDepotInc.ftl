@@ -717,6 +717,10 @@
 		   if(!isNaN(data[i]["CST"])){
 			totalAmount += data[i]["CST"];
 		   }
+		   if(!isNaN(data[i]["tenPercent"])){
+			totalAmount += data[i]["tenPercent"];
+			
+		   }
 		   
 		}
 		
@@ -872,6 +876,9 @@
         		
         		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
+        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+        			calculateMagpsDiscount();
+        		</#if>
         		}
 		}); 
 		
@@ -1011,6 +1018,9 @@
         		}
         		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
+        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+        			calculateMagpsDiscount();
+        			</#if>
         		}
         		
         		
@@ -1074,7 +1084,12 @@
 		 	setupGrid1();
 		 	setupGrid2();
 		 	setupGrid3();
+		 	<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+		 	calculateMagpsDiscount();
+		  </#if>
 		 	updateInvoiceTotalAmount();
+		 	
+		 	
 		 }else{ 
 	        gridHideCall();
 	     }
@@ -1104,7 +1119,177 @@
     	  		
 	});
 	
+
+	function calculateMagpsDiscount(){
 	
+	
+	 var mgpsTenDiscPer = 0;
+		var teDisCount = 0;
+		var tenAdjAmt = 0;
+	    var mgpsTenAdjustAmt = 0;
+		for (i = 0; i < data2.length; i++) {
+		      if(!isNaN(data2[i]["adjAmount"])){
+		   		var termType = data2[i]["invoiceItemTypeId"];
+		   		    if(termType != "TEN_PER_CHARGES"){
+		   		     teDisCount = teDisCount+data2[i]["adjAmount"];
+		   		   }
+		   }
+		}
+	
+	   
+		for (i = 0; i < data3.length; i++) {
+		      if(!isNaN(data3[i]["adjAmount"])){
+		   		var termType = data3[i]["invoiceItemTypeId"];
+		   		    if(termType != "TEN_PER_DISCOUNT"){
+		   		     teDisCount = teDisCount-data3[i]["adjAmount"];
+		   		   }
+		   }
+		}
+		
+		
+        		
+          mgpsTenDiscPer = 	(Math.abs(teDisCount)*10)/100;
+        		
+        		
+        		if(teDisCount > 0){
+        		var termType = "";
+        		for (i = 0; i < data3.length; i++) {
+		      		if(!isNaN(data3[i]["adjAmount"])){
+		   	        termType = data3[i]["invoiceItemTypeId"];
+		            }
+		         }
+        		
+        		  if(termType == "TEN_PER_DISCOUNT"){
+		   		     for (i = 0; i < data3.length; i++) {
+		              if(!isNaN(data3[i]["adjAmount"])){
+				   		var termType = data3[i]["invoiceItemTypeId"];
+				   		 if(termType == "TEN_PER_DISCOUNT"){
+				   		   data3[i]["adjAmount"] = mgpsTenDiscPer;
+				   		   grid3.updateRow(i);
+		   		         }
+		              }
+		             }
+		             
+		             
+		              for (i = 0; i < data2.length; i++) {
+				              if(!isNaN(data2[i]["adjAmount"])){
+						   		var termType = data2[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_CHARGES"){
+									 data2[i]["adjAmount"] = 0;
+						   		   grid2.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }
+		   		     
+		   		   }else{
+		        		     var dataJson1 = {"invoiceItemTypeId":"TEN_PER_DISCOUNT","adjAmount":mgpsTenDiscPer};
+		      		 		   data3.push(dataJson1);
+				              grid3.invalidate();
+				              grid3.updateRowCount();
+		      		          grid3.render();
+		      		          
+		      		       for (i = 0; i < data2.length; i++) {
+				              if(!isNaN(data2[i]["adjAmount"])){
+						   		var termType = data2[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_DISCOUNT"){
+									 data2[i]["adjAmount"] = 0;
+						   		   grid2.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }
+		      		          
+		      		          
+        		      }
+        		    }else if(teDisCount < 0){
+		        		var termType = "";
+		        		for (i = 0; i < data2.length; i++) {
+				      		if(!isNaN(data2[i]["adjAmount"])){
+				   	        termType = data2[i]["invoiceItemTypeId"];
+				            }
+				         }
+		        		
+		        		  if(termType == "TEN_PER_CHARGES"){
+				   		     for (i = 0; i < data2.length; i++) {
+				              if(!isNaN(data2[i]["adjAmount"])){
+						   		var termType = data2[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_CHARGES"){
+						   		   data2[i]["adjAmount"] = mgpsTenDiscPer;
+						   		   grid2.updateRow(i);
+				   		         }
+				              }
+				             }
+				             
+				             
+				             
+				              for (i = 0; i < data3.length; i++) {
+				              if(!isNaN(data3[i]["adjAmount"])){
+						   		var termType = data3[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_DISCOUNT"){
+									 data3[i]["adjAmount"] = 0;
+						   		   grid3.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }
+				             
+				             
+				             
+				   		     
+				   		   }else{
+				        		      var dataJson = {"invoiceItemTypeId":"TEN_PER_CHARGES","adjAmount":mgpsTenDiscPer};
+      		 		                   data2.push(dataJson);		
+						              grid2.invalidate();
+						              grid2.updateRowCount();
+				      		          grid2.render();
+				      		          
+				      		          
+				      		          
+				      	 for (i = 0; i < data3.length; i++) {
+				              if(!isNaN(data3[i]["adjAmount"])){
+						   		var termType = data3[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_DISCOUNT"){
+									 data3[i]["adjAmount"] = 0;
+						   		   grid3.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }
+				             
+				      		          
+				      		          
+		        		      }
+        		    }else if(teDisCount == 0){
+        		    
+        		           for (i = 0; i < data2.length; i++) {
+				              if(!isNaN(data2[i]["adjAmount"])){
+						   		var termType = data2[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_CHARGES"){
+									 data2[i]["adjAmount"] = 0;
+						   		   grid2.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }
+				              
+				           
+				            for (i = 0; i < data3.length; i++) {
+				              if(!isNaN(data3[i]["adjAmount"])){
+						   		var termType = data3[i]["invoiceItemTypeId"];
+						   		 if(termType == "TEN_PER_DISCOUNT"){
+									 data3[i]["adjAmount"] = 0;
+						   		   grid3.updateRow(i);
+						   		   
+				   		         }
+				              }
+				              }   
+				              
+        		    
+        		       }
+     	           }
+	
+
 // to show special related fields in form			
 	
 	$(document).ready(function(){
