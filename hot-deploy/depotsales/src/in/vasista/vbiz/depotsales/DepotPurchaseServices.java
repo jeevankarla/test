@@ -1762,8 +1762,9 @@ public class DepotPurchaseServices{
     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
     	    	if(UtilValidate.isNotEmpty(tallyrefNo))
     	    	invoice.set("referenceNumber", tallyrefNo);
-    	    	invoice.set("invoiceDate", invoiceDate);
-    	    	
+    	    	if(UtilValidate.isNotEmpty(invoiceDate)){
+    	    		invoice.set("invoiceDate", invoiceDate);
+    	    	}
     	    	
    			invoice.store();
     		} catch (Exception e) {
