@@ -30,7 +30,7 @@ import org.ofbiz.entity.model.ModelKeyMap;
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
 
-Map formatMap = [:];
+/*Map formatMap = [:];
 List formatList = [];
 
 	for (eachList in resultCtx.get("productStoreList")) {
@@ -41,7 +41,32 @@ List formatList = [];
 		formatList.addAll(formatMap);
 		
 	}
-context.formatList = formatList;
+context.formatList = formatList;*/
+
+
+Map formatMap = [:];
+List formatList = [];
+	
+	List<GenericValue> partyClassificationList = null;
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+	if(partyClassificationList){
+		for (eachList in partyClassificationList) {
+			//Debug.log("eachList========================"+eachList.get("partyId"));
+			formatMap = [:];
+			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+			formatMap.put("productStoreName",partyName);
+			formatMap.put("payToPartyId",eachList.get("partyId"));
+			formatList.addAll(formatMap);
+		}
+	}
+
+	context.formatList = formatList;
+
+
+	partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
+	
+	context.partyClassificationList = partyClassificationList;
+
 
 branchId = "";
 if(parameters.branchId)
@@ -57,9 +82,22 @@ if(parameters.partyId)
 partyId = parameters.partyId;
 
 
+partyClassification = "";
+if(parameters.partyClassificationId)
+partyClassification = parameters.partyClassificationId;
+
+
+isDepot = "";
+if(parameters.isDepot)
+isDepot = parameters.isDepot;
+
 context.branchId = branchId;
 context.passbookNumber = passbookNumber;
 context.partyId = partyId;
+context.partyClassification = partyClassification;
+context.isDepot = isDepot;
+
+
 
 
 /*partyRoleAndIde = new DynamicViewEntity();

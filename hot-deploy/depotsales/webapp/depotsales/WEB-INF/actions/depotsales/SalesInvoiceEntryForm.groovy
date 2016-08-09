@@ -86,6 +86,13 @@ if(shipments){
 	 
      JSONArray invoiceDiscountJSON = new JSONArray();
 	 JSONArray invoiceAdditionalJSON = new JSONArray();
+	 
+	 
+	  disCountFlag = "";
+	 
+	   double totAdjustment = 0;
+	    
+	   if(invoiceItemList){
 		invoiceItemList.each{eachItem ->
 			
 			
@@ -94,6 +101,8 @@ if(shipments){
 			newObj.put("applicableTo",eachItem.description);
 			
 			////Debug.log("eachItem.amount============="+eachItem.amount);
+			
+			totAdjustment = totAdjustment+(eachItem.amount*eachItem.quantity);
 			
 			newObj.put("adjAmount",Math.abs((eachItem.amount*eachItem.quantity)));
 			newObj.put("discQty",eachItem.quantity);
@@ -104,7 +113,50 @@ if(shipments){
 			invoiceDiscountJSON.add(newObj);
 			
 		}
-			
+	   }else{
+	   
+	   disCountFlag = "N";
+	   
+	   
+	   
+	   }	
+		
+	   
+	   context.disCountFlag = disCountFlag;
+	   
+		//Debug.log("totAdjustment============"+totAdjustment);
+		
+		
+		/*if(totAdjustment>0){
+		JSONObject TenewObj = new JSONObject();
+		
+		TenewObj.put("invoiceItemTypeId", "TEN_PER_CHARGES");
+		TenewObj.put("applicableTo", "");
+		TenewObj.put("adjAmount", (totAdjustment*10)/100);
+		TenewObj.put("discQty", 0);
+		
+		invoiceAdditionalJSON.add(TenewObj);
+		
+		}else{
+		
+		
+		JSONObject TenewObjD = new JSONObject();
+		
+		TenewObjD.put("invoiceItemTypeId", "TEN_PER_DISCOUNT");
+		TenewObjD.put("applicableTo", "");
+		TenewObjD.put("adjAmount", Math.abs((totAdjustment*10)/100));
+		TenewObjD.put("discQty", 0);
+		
+		
+		invoiceDiscountJSON.add(TenewObjD);
+		
+		
+		}*/
+		
+		
+		
+		
+		
 		context.invoiceDiscountJSON = invoiceDiscountJSON;
 		context.invoiceAdditionalJSON = invoiceAdditionalJSON;
 	// //Debug.log("invoiceDiscountJSON======================="+invoiceDiscountJSON);
@@ -150,26 +202,37 @@ if(shipments){
 		productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 		
 	
-		exprCondList=[];
+		/*exprCondList=[];
 		exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 		
-		////Debug.log("orderId=================="+orderId);
-		
-		/*tallyRefNo = "";
+		scheme = "";
 		if(OrderAss){
 			
-			actualOrderId=OrderAss.toOrderId;
+			salesOreder=OrderAss.orderId;
 			
-		}
+			Debug.log("salesOreder=================="+salesOreder);
+			
 		
-		actualOrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", actualOrderId), false);
+		}*/
 		
-		tallyRefNo = actualOrderHeader.tallyRefNo;
 		
-		context.tallyRefNo = tallyRefNo;*/
+		orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		
+		if(UtilValidate.isNotEmpty(orderAttr)){
+			orderAttr.each{ eachAttr ->
+				if(eachAttr.attrName == "SCHEME_CAT"){
+					scheme =  eachAttr.attrValue;
+				}
+				
+			}
+		   }
+		
+		//Debug.log("scheme============="+scheme);
+		
+		context.scheme = scheme;
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
