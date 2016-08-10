@@ -103,7 +103,7 @@ condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUAL
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom"] as Set;
+fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenceNumber"] as Set;
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
@@ -163,7 +163,12 @@ if(invoice){
 
 for (eachInvoice in invoice) {
 	
-	 
+	
+	tallyRefNo = "";
+	if(eachInvoice.referenceNumber)
+	tallyRefNo = eachInvoice.referenceNumber;
+	
+	
 	invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 	
 	PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
@@ -508,9 +513,19 @@ if(contactMechesDetails){
 	double grandTotal = 0;
 	for (eachItem in invoiceItemList) {
 		
+		
+		   double invoiceNetAmt = 0;
+		
 		   tempMap = [:];
 		   
-		   tempMap.put("invoiceId", eachItem.invoiceId);
+		   billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , eachItem.invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+		   if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+			   invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+			   invoiceSequence = invoiceSeqDetails.invoiceSequence;
+			   tempMap.put("invoiceId", invoiceSequence);
+		   }else{
+			   tempMap.put("invoiceId", eachItem.invoiceId);
+		   }
 		
 		   tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
 		   
@@ -518,6 +533,7 @@ if(contactMechesDetails){
 		   
 		   tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 		   
+		   invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 		   
 		  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
 		   
@@ -657,6 +673,10 @@ if(contactMechesDetails){
 			}
 			
 			tempMap.put("altaxAmt", taxAmt);
+			
+			
+			invoiceNetAmt = invoiceNetAmt+taxAmt;
+			
 			//=====================================================================
 			
 			/*if(quantity > quotaQuantity)
@@ -723,6 +743,8 @@ if(contactMechesDetails){
 			tempMap.put("cluster", "");
 			
 			tempMap.put("subsidyAmt", schemeAMMMt);
+			
+			invoiceNetAmt = invoiceNetAmt+schemeAMMMt;
 			
 			tempMap.put("District", shipingAdd.get("city"));
 			
@@ -836,9 +858,17 @@ if(contactMechesDetails){
 			
 			
 			if(POInvoiceItemList){
-			tempMap.put("millInvoiceId", POInvoiceItemList[0].invoiceId);
 			
-			tempMap.put("millInvoiceDate", poinvoiceDate);
+			billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , POInvoiceItemList[0].invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+			if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+				invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+				invoiceSequence = invoiceSeqDetails.invoiceSequence;
+				tempMap.put("millInvoiceId", invoiceSequence);
+			}else{
+				tempMap.put("millInvoiceId", POInvoiceItemList[0].invoiceId);
+			}
+			
+			tempMap.put("millInvoiceDate", UtilDateTime.toDateString(poinvoiceDate,"dd-MM-yyyy"));
 			
 			tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 			
@@ -939,6 +969,43 @@ if(contactMechesDetails){
 			tempMap.put("salesQuantity", eachItem.quantity);
 			
 			tempMap.put("rate", eachItem.amount);
+			
+			
+			//checking for tally ref no in purchase invoice
+			if(UtilValidate.isEmpty(tallyRefNo)){
+				List orderAssoc = delegator.findByAnd("OrderAssoc", UtilMisc.toMap("toOrderId", actualOrderId,"orderAssocTypeId","BackToBackOrder"));
+				if(UtilValidate.isNotEmpty(orderAssoc)){
+					String poOrderId = EntityUtil.getFirst(orderAssoc).orderId;
+					List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId) , null, null, null, false );
+					if(UtilValidate.isNotEmpty(orderItemBilling)){
+						GenericValue orderItem = EntityUtil.getFirst(orderItemBilling);
+						String purInvId = orderItem.invoiceId;
+						GenericValue invoice =  delegator.findOne("Invoice", [invoiceId : purInvId], false);
+						if(UtilValidate.isNotEmpty(invoice)){
+							tallyRefNo = invoice.referenceNumber;
+						}
+					}
+				}
+			}
+			//checking for tally ref no in order
+			if(UtilValidate.isEmpty(tallyRefNo)){
+				List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachItem.invoiceId) , null, null, null, false );
+				if(UtilValidate.isNotEmpty(orderItemBilling)){
+					GenericValue orderItem = EntityUtil.getFirst(orderItemBilling);
+					orderId = orderItem.orderId;
+					GenericValue orderHeader = delegator.findOne("OrderHeader", ["orderId" : orderId], false);
+					if(UtilValidate.isNotEmpty(orderHeader)){
+						tallyRefNo = orderHeader.tallyRefNo;
+					}
+				}
+			}
+			
+			tempMap.put("tallyRefNo", tallyRefNo);
+			
+			tempMap.put("tallyRefDate", UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
+			
+			tempMap.put("invoiceNetAmt", invoiceNetAmt);
+			
 			
 		   salesAndPurchaseList.add(tempMap);
 		
