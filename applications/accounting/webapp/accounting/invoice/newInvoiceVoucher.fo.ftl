@@ -64,7 +64,7 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
-				<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
+				<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>

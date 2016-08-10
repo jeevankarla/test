@@ -457,9 +457,10 @@
                 </hyperlink>
             </field>
             <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))">
-                <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]" target-window="_blank">
+                <!-- <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]" target-window="_blank">
           			<parameter param-name="invoiceId" value="${invoiceId}"/>
-          		</hyperlink>
+          		</hyperlink> -->
+          		 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]"></display>   
             </field>
             <field name="purInvoiceAmout" title ="Pur Inv. Amt" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))"> 
                <display description="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,purchaseInvoiceId);}"></display>         
@@ -504,9 +505,10 @@
             </field>
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
                 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
-                  <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]" target-window="_blank">
+                 <!--  <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]" target-window="_blank">
           			<parameter param-name="invoiceId" value="${invoiceId}"/>
-          		</hyperlink>  
+          		</hyperlink>   -->
+          		 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>   
             
             </field>
             
