@@ -34,7 +34,7 @@ invoiceId= parameters.invoiceId;
 if(invoiceId){
 	
 
-context.invoiceId= invoiceId;		
+context.invoiceId= invoiceId;
 billToPartyId= parameters.partyId;
 
 context.billToPartyId = billToPartyId;
@@ -44,7 +44,15 @@ partyName= parameters.partyName;
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 shipmentId = invoiceList.get("shipmentId");
-
+partyIdFrom = invoiceList.get("partyIdFrom");
+shipmentDate = "";
+if(UtilValidate.isNotEmpty(shipmentId)){
+	shipment = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+	shipmentDate = shipment.estimatedShipDate;
+}
+context.shipmentDate = shipmentDate;
+context.partyIdFrom = partyIdFrom;
+context.shipmentId = shipmentId;
 invoDate = invoiceList.get("invoiceDate");
 
 //Debug.log("invoDate================"+invoDate);
@@ -76,6 +84,10 @@ if(orderId){
 	
 }
 
+Debug.log("partyId======================"+partyId);
+Debug.log("invoDate===================="+invoDate);
+Debug.log("shipmentId================"+shipmentId);
+Debug.log("orderId=================="+orderId);
 
 
 List conditionList = [];
@@ -112,13 +124,13 @@ JSONArray invoiceItemsJSON = new JSONArray();
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 
 
-invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
-invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
+invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
 
 
 
@@ -202,7 +214,7 @@ context.invoiceAdjLabelJSON = invoiceAdjLabelJSON;
 context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
 
 
-
+Debug.log("invoiceAdjItemsJSON===================="+invoiceAdjItemsJSON);
 
 
 
