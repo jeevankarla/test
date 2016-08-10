@@ -168,7 +168,7 @@ PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
  }
 */
 
-inputCtx = [:];
+/*inputCtx = [:];
 inputCtx.put("userLogin",userLogin);
 inputCtx.put("partyId", partyId);
 try{
@@ -182,7 +182,7 @@ try{
  }
 }catch(Exception e){}
 
-
+*/
 
 balanceAmt = 0;
 context.totAmt=totAmt;
