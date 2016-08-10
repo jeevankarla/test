@@ -45,6 +45,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			dateFormat:'yy, MM dd',
 			changeMonth: true,
 			changeYear: true,
+			yearRange: "-20:+0", 
 			onSelect: function(selectedDate) {
 			$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: null}).datepicker('setDate', date);
 			}
