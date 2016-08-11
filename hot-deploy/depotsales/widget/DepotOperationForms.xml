@@ -14,6 +14,7 @@
         <field name="orderId"><text-find/></field>
         <field title="Entry Date" name="entryDate"><date-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="refrenceNo" title="PORef.No"><text-find/></field>
 <!--        <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
@@ -43,6 +44,10 @@
       		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
       		<set field="size" value="${groovy: return(orderItemList.size())}"/>
+      		<entity-condition entity-name="OrderAttribute" list="orderAttributes" >
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      		</entity-condition>
+      		<set field="poRefNum" value="${groovy: return(orderAttributes[0].attrValue)}"/>
       		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
@@ -76,6 +81,7 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field> -->
+        <field name="poRefNum" title="poRef. No"><display/></field>
         <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="PurchaseOrderViewDEPOT.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
