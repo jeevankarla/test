@@ -101,6 +101,10 @@ List conditionList=[];
 		    tempMap.put("salesOrder",shipment.primaryOrderId);
 		}
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
+		
+		orderHeader = delegator.findOne("OrderHeader", [orderId : shipment.primaryOrderId], false);
+		tempMap.put("orderDate",orderHeader.orderDate);
+		
 		poRefNum = "";
 		orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
 		if(UtilValidate.isNotEmpty(orderAttributes)){
@@ -178,6 +182,7 @@ List conditionList=[];
 				tempMap.put("vehicleId",list.vehicleId);
 				tempMap.put("statusId",list.statusId);
 				tempMap.put("primaryOrderId",list.primaryOrderId);
+				tempMap.put("orderDate",list.orderDate);
 				tempMap.put("partyId", partyId);
 				tempMap.put("partyIdTo",list.partyIdTo);
 				
