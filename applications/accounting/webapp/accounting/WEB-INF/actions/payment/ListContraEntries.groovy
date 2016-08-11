@@ -113,8 +113,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, transDateStart));
 		conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, transDateEnd));
 	}
-	if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
-		conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeId));
+	if(UtilValidate.isNotEmpty(finAccountTransTypeId) ){
+		if(!("ALL".equals(finAccountTransTypeId))){
+		    conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeId));
+		}
 	}else{
 		conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
 	}
