@@ -2629,7 +2629,7 @@
 			<field name="altaxAmt" title="at/OtherTax"><display/></field>
 			<field name="schemeQty" title="schemeQty"><display/></field>
 			<field name="subsidyAmt" title="subsidyAmt"><display/></field>
-			<field name="invoiceNetAmt" title="subsidyAmt"><display/></field>
+			<field name="invoiceNetAmt" title="Net Amount"><display/></field>
 			<field name="userAgency" title="userAgency"><display/></field>
 			<field name="cluster" title="cluster"><display/></field>
 			<field name="District" title="District"><display/></field>

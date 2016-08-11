@@ -286,5 +286,5 @@ function drawRow(rowData) {
     </table>
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
-         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Weavers..</span></div>
         <a href="#" class="scrollup">Top</a>

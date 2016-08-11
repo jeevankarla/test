@@ -245,11 +245,11 @@ function drawRow(rowData) {
     
     if(rowData.orderTotal != rowData.balance)
     {
-     row.append($("<td align=right>Payment Realized</td>"));
+     row.append($("<td align=left>Payment Realized</td>"));
     }else if(rowData.balance == 0){
-     row.append($("<td align=right>Payment Received</td>"));
+     row.append($("<td align=left>Payment Received</td>"));
     }else{
-     row.append($("<td align=right>Payment Not Received</td>"));
+     row.append($("<td align=left>Payment Not Received</td>"));
     }
     row.append($("<td align=right>" + rowData.paidAmt + "</td>"));
     

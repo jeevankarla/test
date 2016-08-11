@@ -5131,11 +5131,13 @@ public class DepotPurchaseServices{
 
   			if(UtilValidate.isNotEmpty(invoiceItemListAdj)){
   			
-  			BigDecimal addToInventory = BigDecimal.ZERO;
+  			
+  			
+  			BigDecimal invoiceAdjTotal = BigDecimal.ZERO;
   			for (int i = 0; i < invoiceItemListAdj.size(); i++) {
   				
 				GenericValue eachInvoiceList = (GenericValue)invoiceItemListAdj.get(i);
-				addToInventory = addToInventory.add(eachInvoiceList.getBigDecimal("amount"));
+				invoiceAdjTotal = invoiceAdjTotal.add(eachInvoiceList.getBigDecimal("amount"));
            
   			}
   			
@@ -5143,7 +5145,7 @@ public class DepotPurchaseServices{
   			
   			conditionList.clear();
   			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
   			List<GenericValue> invoiceItemList =null;
   			
   			try{
@@ -5163,7 +5165,31 @@ public class DepotPurchaseServices{
 				
 				String invoiceItemSeqIdItem = eachInvoiceList.getString("invoiceItemSeqId");
 				
+				BigDecimal quantity = eachInvoiceList.getBigDecimal("quantity");
 				
+				BigDecimal amount = eachInvoiceList.getBigDecimal("amount");
+				
+				BigDecimal itemTotal = quantity.multiply(amount);
+				
+				//Debug.log("itemTotal=============="+itemTotal);
+				
+				//Debug.log("invoiceAdjTotal=============="+invoiceAdjTotal);
+				
+				BigDecimal AdjWithInvoAmt = itemTotal.add(invoiceAdjTotal);
+				
+				//Debug.log("AdjWithInvoAmt=============="+AdjWithInvoAmt);
+
+				
+				double addTOInventoryUnitPrice = 0;
+				if(quantity.doubleValue() > 0)
+				 addTOInventoryUnitPrice = AdjWithInvoAmt.doubleValue()/quantity.doubleValue();
+				
+				BigDecimal addToInventory = new BigDecimal(addTOInventoryUnitPrice);
+				
+				//Debug.log("addTOInventoryUnitPrice=============="+addTOInventoryUnitPrice);
+
+				//Debug.log("addToInventory=============="+addToInventory);
+
 				
 				//=====================get relevent Order and Seq==========================
 				
@@ -5179,7 +5205,7 @@ public class DepotPurchaseServices{
 	  				OrderItemBillingAndInvoiceAndInvoiceItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	  		      
 	  			} catch (Exception e) {
-	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+	  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
 	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
 	  					return "error";
 	  			}
@@ -5203,12 +5229,12 @@ public class DepotPurchaseServices{
 	  				ShipmentAndReceiptList = delegator.findList("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	  		      
 	  			} catch (Exception e) {
-	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+	  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
 	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
 	  					return "error";
 	  			}
                 GenericValue ShipmentAndReceipt = EntityUtil.getFirst(ShipmentAndReceiptList);
-      			//Debug.log("addToInventory====================="+addToInventory);
+      			////Debug.log("addToInventory====================="+addToInventory);
 
 	  			String inventoryItemId = "";
 	  			if(UtilValidate.isNotEmpty(ShipmentAndReceipt)){
@@ -5218,18 +5244,18 @@ public class DepotPurchaseServices{
 	  			// Map<String, Object> inventoryItemMap = UtilMisc.toMap("inventoryItemId", inventoryItemId,"unitCost",addToInventory, "userLogin", userLogin);
 	  	          try {
 	  	              // result = dispatcher.runSync("updateInventoryItem", inventoryItemMap);
-	  	      			//Debug.log("result====================="+result);
-		  	      		//Debug.log("inventoryItemId====================="+inventoryItemId);
+	  	      			////Debug.log("result====================="+result);
+		  	      		////Debug.log("inventoryItemId====================="+inventoryItemId);
 
 	  	      		 GenericValue InventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 	  	   		
-	  	      		//Debug.log("InventoryItem====================="+InventoryItem);
+	  	      		////Debug.log("InventoryItem====================="+InventoryItem);
 	  	      		InventoryItem.set("unitCost",addToInventory);
 	  	      	    InventoryItem.store();
 	  	               
 	  	          } catch (Exception e) {
 	  	        	  
-	  	        	 Debug.logError(e, "Error while populating updateInventoryItem ", module);
+	  	        	 //Debug.logError(e, "Error while populating updateInventoryItem ", module);
 	  				  request.setAttribute("_ERROR_MESSAGE_", "Error while populating updateInventoryItem :" + invoiceId+"....! ");
 	  					return "error";
 	  	          }
