@@ -159,6 +159,8 @@ public class InvoiceServices {
         String invoiceId = (String) context.get("invoiceId");
         String shipmentId = (String) context.get("shipmentId");
 
+        String invoicetypeId = "";
+        
         if (UtilValidate.isEmpty(billItems)) {
             Debug.logVerbose("No order items to invoice; not creating invoice; returning success", module);
             return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,"AccountingNoOrderItemsToInvoice",locale));
@@ -253,6 +255,9 @@ public class InvoiceServices {
 
                 // call service, not direct entity op: delegator.create(invoice);
                 invoiceId = (String) createInvoiceResult.get("invoiceId");
+                
+                GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+                invoicetypeId = (String) invoice.getString("invoiceTypeId");
                 
                 Debug.log("invoiceId=======232======"+invoiceId);
             }
@@ -419,7 +424,17 @@ public class InvoiceServices {
                 Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
+                
+              //  Debug.log("invoicetypeId========================="+invoicetypeId);
+                if(!invoicetypeId.equals("PURCHASE_INVOICE")){
                 createInvoiceItemContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, (orderItem.getString("orderItemTypeId")), (product == null ? null : product.getString("productTypeId")), invoiceType, "INV_FPROD_ITEM"));
+               // Debug.log("invoicetypeId=============INNN============"+invoicetypeId);
+                }
+                else{
+                createInvoiceItemContext.put("invoiceItemTypeId", "INV_RAWPROD_ITEM");	
+              //  Debug.log("invoicetypeId============OUTTTTT============="+invoicetypeId);
+                }
+                
                 createInvoiceItemContext.put("description", orderItem.get("itemDescription"));
                 createInvoiceItemContext.put("quantity", billingQuantity);
                 createInvoiceItemContext.put("amount", billingAmount);
