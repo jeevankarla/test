@@ -158,6 +158,42 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		inventoryItemDetails = delegator.findList("InventoryItemDetail",  cond,null, null, null, false );
+	
+		double bookedQuantity = 0;
+		//==============================calculate available Stock===================
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+		conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, iter.inventoryItemId));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+		
+		if(OrderItemAttribute){
+		relaventOrderIds = EntityUtil.getFieldListFromEntityList(OrderItemAttribute, "orderId", true);
+		
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , relaventOrderIds));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		orderIdsWithOutCancelledList = delegator.findList("OrderHeader",  cond,null, null, null, false );
+		
+		activeOrderIds = EntityUtil.getFieldListFromEntityList(orderIdsWithOutCancelledList, "orderId", true);
+		
+		bookedOrdersList = EntityUtil.filterByCondition(orderIdsWithOutCancelledList, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, null));
+		bookedOrderIds = EntityUtil.getFieldListFromEntityList(bookedOrdersList, "orderId", true);
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , bookedOrderIds));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		OrderItemDetailList = delegator.findList("OrderItemDetail",  cond,null, null, null, false );
+		
+		for (eachOrderItem in OrderItemDetailList) {
+			bookedQuantity = bookedQuantity+eachOrderItem.baleQuantity;
+		}
+		
+		}
+		row.putAt("bookedQuantity", bookedQuantity);
+		
 		String uom ="";
 		bundleWeight =0;
 		bundleUnitPrice =0;
@@ -179,6 +215,18 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
