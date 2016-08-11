@@ -434,8 +434,8 @@ under the License.
         <field name="finAccountId" title="From Financial Account" >
             <drop-down>
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
-                   <entity-constraint name="organizationPartyId" value="Company"/> 
-                    <entity-constraint name="ownerPartyId" value="Company"/>
+<!--                    <entity-constraint name="organizationPartyId" value="Company"/>  -->
+<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
                      <entity-constraint name="finAccountTypeId" value="CASH"/>
                     
                     <entity-order-by field-name="finAccountName"/>
@@ -469,8 +469,8 @@ under the License.
          <field name="contraFinAccountId"  title="To Financial Account"  >
             <drop-down>
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
-                   <entity-constraint name="organizationPartyId" value="Company"/> 
-                    <entity-constraint name="ownerPartyId" value="Company"/>
+<!--                    <entity-constraint name="organizationPartyId" value="Company"/>  -->
+<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
