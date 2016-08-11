@@ -421,7 +421,8 @@ under the License.
         <field name="amount" ><text ></text></field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>
         <field name="finAccountTransTypeId">
-        	<drop-down allow-empty="false">
+        	<drop-down no-current-selected-key="ALL">
+        		<option key="ALL" description="ALL"/>
         		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
         		<option key="DEPOSIT" description="DEPOSIT"/>
         	</drop-down>
@@ -644,12 +645,10 @@ under the License.
         </field>        
         <field name="finAccountTransId"><hidden/></field>
         <field name="entryType"   ><hidden value="Contra"/></field>       
-        <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
-            <drop-down no-current-selected-key="WITHDRAWAL">
-                <entity-options description="${description}" entity-name="FinAccountTransType">  
-                	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
-                    <entity-order-by field-name="-description"/>
-                </entity-options>
+        <field name="finAccountTransTypeId" action="javascript:setPaymentType();" event="onChange"> 
+            <drop-down>
+            	<option key="All" description="All">ALL</option>
+               
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->
