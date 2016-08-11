@@ -1186,11 +1186,11 @@
         		
           mgpsTenDiscPer = 	(Math.abs(teDisCount)*10)/100;
         		
-        		
         		if(teDisCount > 0){
         		var termType = "";
         		for (i = 0; i < data3.length; i++) {
 		      		if(!isNaN(data3[i]["adjAmount"])){
+		      		if(data3[i]["invoiceItemTypeId"] == "TEN_PER_DISCOUNT")
 		   	        termType = data3[i]["invoiceItemTypeId"];
 		            }
 		         }
@@ -1242,6 +1242,7 @@
 		        		var termType = "";
 		        		for (i = 0; i < data2.length; i++) {
 				      		if(!isNaN(data2[i]["adjAmount"])){
+				      		if(data2[i]["invoiceItemTypeId"] == "TEN_PER_CHARGES")
 				   	        termType = data2[i]["invoiceItemTypeId"];
 				            }
 				         }
@@ -1297,7 +1298,6 @@
 				      		          
 		        		      }
         		    }else if(teDisCount == 0){
-        		    
         		           for (i = 0; i < data2.length; i++) {
 				              if(!isNaN(data2[i]["adjAmount"])){
 						   		var termType = data2[i]["invoiceItemTypeId"];
