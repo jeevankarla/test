@@ -129,6 +129,10 @@ function drawRow(rowData) {
     var facilityId = '\'' + rowData.facilityId + '\'';
     var facilityTypeId = '\'' + rowData.facilityTypeId + '\'';
     
+    var NstateProvinceGeoIdVal = '\'' + rowData.NstateProvinceGeoIdVal + '\'';
+    
+    var TstateProvinceGeoIdVal = '\'' + rowData.TstateProvinceGeoIdVal + '\'';
+    
     var viewButton = rowData.facilityName+"/"+rowData.Ncity;
     
     var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+")";
@@ -141,7 +145,7 @@ function drawRow(rowData) {
      var NcontactMechId = '\'' + rowData.NcontactMechId + '\'';
       var TcontactMechId = '\'' + rowData.TcontactMechId + '\'';
      
-      var editAddress = "javascript:editFaciAddress("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+NcontactMechId+","+TcontactMechId+","+facilityId+","+facilityTypeId+")";
+      var editAddress = "javascript:editFaciAddress("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+NcontactMechId+","+TcontactMechId+","+facilityId+","+facilityTypeId+","+NstateProvinceGeoIdVal+","+TstateProvinceGeoIdVal+")";
     var editFaciAddress ='<input type=button name="EditFac" id=EditFac value=EditFacilityAddress onclick="'+editAddress+'">';
     row.append($("<td>" +  editFaciAddress  +"</td>"));
   
@@ -166,7 +170,7 @@ function drawRow(rowData) {
 
 
 
-function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName,NcontactMechId,TcontactMechId,facilityId,facilityTypeId){
+function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName,NcontactMechId,TcontactMechId,facilityId,facilityTypeId , NstateProvinceGeoIdVal, TstateProvinceGeoIdVal){
 
 
           $("#facicontactMechType").val(facilityTypeId);
@@ -180,24 +184,16 @@ function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , Nstate
 	     document.getElementById("facicontactMechType").value = facilityTypeId;
 	    
 	    
-	    var countryelement = document.getElementById('editcontactmechform_countryId');
-             countryelement.value = NcountryGeoId;
-	     var stateelement = document.getElementById('editcontactmechform_stateId');
-             
-          /*   if(NstateProvinceGeoId.includes('IN'))
-             stateelement.value = NstateProvinceGeoId;
-             else
-             stateelement.value = 'IN-'+NstateProvinceGeoId;
-             */
-          var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
-             Tcountryelement.value = TcountryGeoId;
-	     var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
-            /* 
-             if(TstateProvinceGeoId.includes('IN'))
-             Tstateelement.value = TstateProvinceGeoId;
-             else
-	          Tstateelement.value = 'IN-'+TstateProvinceGeoId;
-	         */
+		 var countryelement = document.getElementById('editcontactmechform_countryId');
+		     countryelement.value = NcountryGeoId;
+		 var stateelement = document.getElementById('editcontactmechform_stateId');
+		      stateelement.value = NstateProvinceGeoIdVal;
+		 
+		  var Tcountryelement = document.getElementById('TFeditcontactmechform_countryId');
+		     Tcountryelement.value = TcountryGeoId;
+		  var Tstateelement = document.getElementById('TFeditcontactmechform_stateId');
+		      Tstateelement.value = TstateProvinceGeoIdVal;
+	     
 	     
 	     var TFaddress1 = $("#TFaddress1").val(Taddress1);
 	     var TFaddress2 = $("#TFaddress2").val(Taddress2);
@@ -723,9 +719,9 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
 										
-							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
-								         <#list stateAssocs as stateAssoc>
-							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
+							   			<#--> <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>-->
+								         <#list stateListJSON as stateAssoc>
+							   					 <option value='${stateAssoc.value}'>${stateAssoc.label}</option>
 										</#list>
 								          <option></option>
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
@@ -818,9 +814,9 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								      <td>
 								        <select name="stateProvinceGeoId" id="TFeditcontactmechform_stateId">
 										
-							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
-								         <#list stateAssocs as stateAssoc>
-							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
+							   		<#-->	 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)> -->
+								         <#list stateListJSON as stateAssoc>
+							   					 <option value='${stateAssoc.value}'>${stateAssoc.label}</option>
 										</#list>
 								          <option></option>
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
