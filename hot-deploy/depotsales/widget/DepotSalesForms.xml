@@ -389,6 +389,9 @@
           			<parameter param-name="orderId" value="${orderId}"/>
           		</hyperlink>
             </field>
+            <field name="orderDate" title="Order Date">
+            	<display></display>
+            </field>
             <field name="poOrder" title="PO" widget-style="buttontext">
             	<hyperlink target="POoverview" description="${poOrder}" target-window="_blank">
           			<parameter param-name="orderId" value="${primaryOrderId}"/>
