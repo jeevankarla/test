@@ -170,6 +170,7 @@
 				<set field="titleProperty" value="Find Purchase Order" />
 				<set field="tabButtonItem" value="FindDepotTransPO" />
 				<set field="tabButtonItem2" value="FindDepotTransPO" />
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/poRefNoSearch.groovy"/>
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
