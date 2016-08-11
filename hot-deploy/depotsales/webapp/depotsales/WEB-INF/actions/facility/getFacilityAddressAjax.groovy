@@ -95,6 +95,9 @@ for (eachFacility in FacilityList) {
 			else
 			tempMap.put("NstateProvinceGeoId",PostalAddressList[0].stateProvinceGeoId);
 			
+			
+			tempMap.put("NstateProvinceGeoIdVal", PostalAddressList[0].stateProvinceGeoId);
+			
 			tempMap.put("NcontactMechPurposeTypeId", FacilityContactMechList[0].contactMechPurposeTypeId);
 			tempMap.put("NpostalCode", PostalAddressList[0].postalCode);
 			tempMap.put("Taddress1", PostalAddressList[1].address1);
@@ -112,6 +115,9 @@ for (eachFacility in FacilityList) {
 			tempMap.put("TstateProvinceGeoId",geo1.geoName);
 			else
 			tempMap.put("TstateProvinceGeoId",PostalAddressList[1].stateProvinceGeoId);
+			
+			
+			tempMap.put("TstateProvinceGeoIdVal", PostalAddressList[1].stateProvinceGeoId);
 		
 			tempMap.put("TcontactMechPurposeTypeId", FacilityContactMechList[1].contactMechPurposeTypeId);
 			tempMap.put("TpostalCode", PostalAddressList[1].postalCode);

@@ -275,13 +275,21 @@
 	// preparing state List Json
 	
 	
-	dctx = dispatcher.getDispatchContext();
+	//dctx = dispatcher.getDispatchContext();
 	
-	List<GenericValue> statesList = org.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator, "IND");
+	//List<GenericValue> statesList = org.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator, "IND");
+	
+	conditionDeopoList.clear();
+	conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+	conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+	conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+	statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+	
+	
 	JSONArray stateListJSON = new JSONArray();
 	statesList.each{ eachState ->
 			JSONObject newObj = new JSONObject();
-			newObj.put("value",eachState.geoCode);
+			newObj.put("value",eachState.geoId);
 			newObj.put("label",eachState.geoName);
 			stateListJSON.add(newObj);
 	}
