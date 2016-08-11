@@ -856,7 +856,7 @@
 				roundedAmount=data[args.row]["amount"];
 				grid.updateRow(args.row);
 				//updatePayablePrice(args.row);
-				updateTotalIndentAmount();
+				//updateTotalIndentAmount();
 			}
 	}); 
 		
