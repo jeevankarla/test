@@ -1636,6 +1636,13 @@
     
     <form name="FindDepotTransMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
+        <field name="facilityId" title="Depot">
+			<drop-down allow-empty="true"   >
+				<entity-options description="${facilityName}" entity-name="Facility" >
+					<entity-constraint name="facilityTypeId" operator="in" value="WAREHOUSE,CFC,DEPOT"/>
+				</entity-options>
+			</drop-down>
+		</field>
         <field name="shipmentTypeId"><hidden value="DEPOT_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
