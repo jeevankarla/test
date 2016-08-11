@@ -50,6 +50,22 @@ List conditionList=[];
 		orderId = poReferNumDetails.orderId;
 		shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId));
 	}
+	
+	if(UtilValidate.isNotEmpty(parameters.facilityId)){
+		orderIdList = [];
+		orderIdList = EntityUtil.getFieldListFromEntityList(shipmentList,"primaryOrderId", true);
+		if(orderIdList){
+			orderCondList = [];
+			orderCondList.add(EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIdList));
+			orderCondList.add(EntityCondition.makeCondition("originFacilityId",EntityOperator.EQUALS,parameters.facilityId));
+			orderCond=EntityCondition.makeCondition(orderCondList,EntityOperator.AND);
+			orderHeaderList = delegator.findList("OrderHeader", orderCond, UtilMisc.toSet("orderId"), null, null, false );
+				filteredOrderIdList = EntityUtil.getFieldListFromEntityList(orderHeaderList,"orderId", true);
+				shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, filteredOrderIdList));
+		}
+		
+	}
+	
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
