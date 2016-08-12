@@ -44,8 +44,7 @@ List formatList = [];
 	}
 context.formatList = formatList;
 
-branchId = parameters.partyIdFrom;
-
+branchId = parameters.branchId;
 salesChannel = parameters.salesChannelEnumId;
 
 
@@ -93,7 +92,7 @@ else{
 	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "DEPOT_SALES"));
 
 
-condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
+//condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
@@ -161,9 +160,35 @@ orderHeader.each{ eachHeader ->
 		billFromVendorPartyId = billFromOrderParty.get(0).get("partyId");
 	}
 	
+	//===================get ShipmentId=======================
+	
+	
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId));
+	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+	
+	inventoryItemId = "";
+	if(OrderItemAttribute){
+		inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
+	}
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+	
+	shipmentId = "";
+	if(ShipmentReceipt){
+		shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+	}
+	
+	//=========================================================
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
 	tempData.put("partyId", partyId);
+	tempData.put("shipmentId", shipmentId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
 	salesOrder ="";
