@@ -128,23 +128,11 @@ shipmentMap.put("partyId",partyId);
 	shipmentMap.put("partyName",partyName);
   }
 }
-
 if(UtilValidate.isEmpty(orderId)){
 fromPartyIdData = delegator.findOne("Shipment",["shipmentId":shipmentId],false);
 if(UtilValidate.isNotEmpty(fromPartyIdData)){
 partyId=fromPartyIdData.get("partyIdFrom");
-estimatedShipCost=0;
-Debug.log("fromPartyIdData============="+fromPartyIdData);
-
-if(fromPartyIdData.get("estimatedShipCost")){
-	estimatedShipCost=fromPartyIdData.get("estimatedShipCost");
-}
-Debug.log("estimatedShipCost============="+estimatedShipCost);
-dfsd
 shipmentMap.put("partyId",partyId);
-
-shipmentMap.put("estimatedShipCost",estimatedShipCost);
-
 partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 shipmentMap.put("partyName",partyName);
 }
