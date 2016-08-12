@@ -1760,7 +1760,13 @@
     </form>
     <form name="ListPhysicalInventoryDepotForSale" type="list" list-name="physicalInventory" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
-       
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+		   </entity-one>
+		<set field="productName" from-field="product.description"/> 
+		<set field="balancedQty" value="${quantityOnHandTotal-(bookedQuantity)}"/>
+		</row-actions>
         <field name="shipmentId" title="Shipment Id"><display/></field>
         <field name="shipmentTypeId" title="shipment Type"><display-entity entity-name="ShipmentType" key-field-name="shipmentTypeId" description="${description}"></display-entity></field>
         <field name="facilityName" title="Depot"><display></display></field>
@@ -1778,7 +1784,7 @@
         <field name="bookedQuantity" title="Booked Quantity"><display/></field>
         <field name="unitCost"><display/></field>
         <field name="Sale" title="Sale Indent" widget-style="buttontext">
-             <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}');"></hyperlink>
+              <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${productName}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}','${balancedQty}');"></hyperlink>
         </field>
         <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>

@@ -178,7 +178,7 @@
 		return result;
 	 }
 	 	 	   
-	function showInventorySaleQTip(productId, quantityOnHandTotal, unitCost, inventoryItemId, productStoreId, uom, bundleWeight,bundleUnitPrice) {
+	function showInventorySaleQTip(productId, productName,quantityOnHandTotal, unitCost, inventoryItemId, productStoreId, uom, bundleWeight,bundleUnitPrice,balancedQty) {
 		var message = "";
 		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='createSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
 		
@@ -202,7 +202,7 @@
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Total Indent Amount:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='indentAmount' name='indentAmount' value=''/></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		title = "<center>Create Sale Indent<center><br />";
+		title = "<center>Create Sale Indent<center><br />ProductName :"+productName+"<br />Balance Quantity : "+ balancedQty;
 		message += "</table></form>";
 		Alert(message, title);
 	};
