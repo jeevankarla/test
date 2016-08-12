@@ -941,7 +941,10 @@ context.finalAddresList = finalAddresList;
 				quantity = eachOrderItemList.get("quantity");
 				tempMap.put("quantity", quantity);
 				unitPrice = eachOrderItemList.get("unitPrice");
-				tempMap.put("quotaQty", Math.round(((Double.valueOf(quotaQty)*unitPrice)*10)/100));
+				
+				quotaQty = eachOrderItemList.get("quotaQuantity");
+				
+				tempMap.put("quotaQty", Math.round(((quotaQty*unitPrice)*10)/100));
 				amount = quantity*unitPrice;
 				tempMap.put("amount", amount);
 			}

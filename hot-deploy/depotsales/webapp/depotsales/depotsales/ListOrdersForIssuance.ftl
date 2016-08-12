@@ -341,7 +341,7 @@ under the License.
       <#list orderList as eachOrder>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               	<td>${eachOrder.partyName?if_exists}[${eachOrder.partyId?if_exists}]</td>
-              	<td>${eachOrder.orderId?if_exists}</td>
+              	<td>${eachOrder.orderNo?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
             <#-->    <td>${eachOrder.orderTotal?if_exists}</td>  -->
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderInformation('${eachOrder.orderId?if_exists}');"/></td>
@@ -366,7 +366,7 @@ under the License.
               	<td>Payment Not Received</td>
               	</#if>
               	
-              	<#if (paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED">
+              	<#if ((paymentSatusMap.get(eachOrder.orderId).get("statusId"))=="PMNT_RECEIVED") &&  eachOrder.shipmentId == "">
               		<td><input type="button" name="issuance" id="issuance" value="Issue Indent Items" onclick="javascript:issueIndentItems('${eachOrder.actualOrderId}','${eachOrder.partyId}');"/></td>
               	<#else>
               	<td></td>

@@ -98,6 +98,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	inventoryItemIdsList= EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "inventoryItemId", true);
 //inventoryItemFind
 	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
 	conditionList.add(EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"));
     conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIdsList));
 
@@ -215,20 +216,6 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
 			row.putAt("fromPartyId", shipment.partyIdFrom);
