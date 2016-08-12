@@ -117,7 +117,7 @@
 		message += "</table></form>";
 		Alert(message, title);
 	};
-	function QCApprovalQTip(shipmentId,partyIdTo,partyName) {
+	function QCApprovalQTip(shipmentId,partyIdTo,partyName,depoPartyId,depoPartyName) {
 		var message = "";
 		message += "<form action='DepotshipmentSendForQC' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
 		
@@ -125,7 +125,7 @@
 		
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>To Branch:</td><td align='left' width='50%'>"+partyName+"   ["+partyIdTo+"]</td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='partyId' name='partyId' value='"+partyIdTo+"'/></td></tr>";
-		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Depo:</td><td align='left' width='50%'>"+depoPartyName+"   ["+depoPartyId+"]</td></tr>";
 		
 		//message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Department :</td><td align='left' width='50%'><select name='partyId' id='partyId'  class='h4'>"+
 					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
