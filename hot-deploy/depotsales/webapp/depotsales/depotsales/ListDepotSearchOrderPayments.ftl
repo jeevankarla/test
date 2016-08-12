@@ -206,6 +206,8 @@ under the License.
      <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
+          
+          <td>shipmentId</td>
           <td>Party Code</td>
           <td>Party Name</td>
           <td>Indent Id</td>
@@ -222,6 +224,9 @@ under the License.
           <#--> <td>Advance Payments</td> -->
              <td>Received Amount</td>
              <td>Sales Invoice</td>
+             
+             
+             
             <#-- <td>Indent Status</td>-->
         <#--  <td>Edit</td>
           <td>Generate PO</td> -->
@@ -237,6 +242,7 @@ under the License.
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
       			<input type="hidden" name="paymentPreferenceId" value="${eachOrder.partyId}">
       			<input type="hidden" name="partyId" value="${eachOrder.partyId}">
+      			<td>${eachOrder.shipmentId?if_exists}</td>
             	<td>${eachOrder.partyId?if_exists}</td>
               	<td>${eachOrder.partyName?if_exists}</td>
               	<#if eachOrder.salesOrder?has_content>
@@ -270,7 +276,7 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>-->
-					<#if (eachOrder.orderTotal) != (eachOrder.paidAmt)>
+					<#if (eachOrder.orderTotal) != (eachOrder.paidAmt) && (eachOrder.salesButton) != "Y" >
               	 <td><input type="button" name="Payment" id="Payment" value="Indent Payment" onclick="javascript:showPaymentEntryForDepotPayment('${eachOrder.orderId}','${eachOrder.partyId}','${eachOrder.partyName}','${eachOrder.orderTotal}','${eachOrder.balance}');"/></td>
                    <#else>
                      <td></td>

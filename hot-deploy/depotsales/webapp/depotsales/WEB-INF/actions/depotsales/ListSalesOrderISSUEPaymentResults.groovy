@@ -92,7 +92,7 @@ if(salesChannel == "WEB_SALES_CHANNEL"){
 }*/
 condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "DEPOT_SALES"));
 
-condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
+//condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
@@ -155,21 +155,28 @@ orderHeader.each{ eachHeader ->
 		billFromVendorPartyId = billFromOrderParty.get(0).get("partyId");
 	}
 	
+	
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
 	tempData.put("partyId", partyId);
+	
+	if(eachHeader.shipmentId)
+	tempData.put("shipmentId", eachHeader.shipmentId);
+	else
+	tempData.put("shipmentId", "");
+	
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
 	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 		salesOrder = orderSeqDetails.orderNo;
-		tempData.put("orderId",salesOrder);
+		tempData.put("orderNo",salesOrder);
 	}else{
-		tempData.put("orderId", eachHeader.orderId);
+		tempData.put("orderNo", eachHeader.orderId);
 	}
 	
-	tempData.put("actualOrderId", eachHeader.orderId);
+	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	tempData.put("statusId", eachHeader.statusId);
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){

@@ -766,7 +766,7 @@ if(contactMechesDetails){
 			else
 			tempMap.put("orderNo", actualOrderId);
 			
-			tempMap.put("indentDate", orderDate);
+			tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd-MM-yyyy"));
 			
 			tempMap.put("custIndDate", "");
 		    
@@ -886,13 +886,13 @@ if(contactMechesDetails){
 				tempMap.put("poOrderId", poOrderId);
 			}
 
-			orderDate = "";
+			PorderDate = "";
 			if(poOrderId){
 			OrderHeader = delegator.findOne("OrderHeader",[orderId : poOrderId] , false);
-			orderDate = OrderHeader.orderDate;
+			PorderDate = OrderHeader.orderDate;
 	        }
 			
-	        tempMap.put("poorderDate", orderDate);
+	        tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd-MM-yyyy"));
 			
 			
 			if(shipmentId){
@@ -908,7 +908,7 @@ if(contactMechesDetails){
 			deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 			
 			if(deliveryChallanDate)
-			tempMap.put("lrDate", deliveryChallanDate);
+			tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd-MM-yyyy") );
 			else
 			tempMap.put("lrDate", "");
 			
@@ -933,8 +933,20 @@ if(contactMechesDetails){
 			tempMap.put("transporter", carrierName);
 			else
 			tempMap.put("transporter", "");
+			
+			supplierInvoiceId = ""
+			supplierInvoiceId = shipmentList.get("supplierInvoiceId");
+			
+			if(supplierInvoiceId)
+			tempMap.put("supplierInvoiceId", supplierInvoiceId);
+			else
+			tempMap.put("supplierInvoiceId", supplierInvoiceId);
+			
+			
 			}
 
+			
+			
 			DstAddr = delegator.findOne("OrderAttribute",["orderId":poOrderId,"attrName":"DST_ADDR"],false);
 			if(DstAddr){
 				destAddr=DstAddr.get("attrValue");

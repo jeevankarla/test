@@ -2662,6 +2662,7 @@
 			<field name="rate" title="rate"><display/></field>
 			<field name="tallyRefNo" title="Tally Bill No"><display/></field>
 			<field name="tallyRefDate" title="Tally Reference Date"><display/></field>
+			<field name="supplierInvoiceId" title="supplier Invoice"><display/></field>
 			<field name="millInvoiceId" title="Purchase Invoice No"><display/></field>
 			<field name="millInvoiceDate" title="Purchase Invoice Date"><display/></field>
 			<field name="poInvoiceAmt" title="Purchase Invoice Amount"><display/></field>
