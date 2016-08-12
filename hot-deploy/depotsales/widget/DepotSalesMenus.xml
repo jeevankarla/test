@@ -1201,6 +1201,7 @@
             </condition> 
 			<link target="DepotSalesInvoiceView">
 				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+				<parameter param-name="purposeTypeId" value="DEPOT_YARN_SALE" />
 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>

@@ -2901,9 +2901,9 @@
 				</service>
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="salesInvoiceView" />
-				<set field="tabButtonItem5" value="" />
-				<set field="tabButtonItem2" value="" />
-				<set field="invoiceTypeId" value="SALES_INVOICE" />
+				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
+				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
 				<script
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
 			</actions>
