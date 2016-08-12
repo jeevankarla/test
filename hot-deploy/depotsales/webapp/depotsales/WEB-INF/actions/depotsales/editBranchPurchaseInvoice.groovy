@@ -132,11 +132,8 @@ invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, fal
 invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
 
-
-
-
-
-
+invoiceVatItemsList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "VAT_PUR"));
+invoiceCstItemsList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "CST_PUR"));
 
 for (eachItem in invoiceItemList) {
 	
@@ -154,16 +151,35 @@ amount = (Double.valueOf((eachItem.quantity))*(Double.valueOf(eachItem.amount)))
 
 tenPercent = (amount * -10)/100;
 
+vatPercent = 0.00;
+VAT = 0.00;
+
+CSTPercent = 0.00;
+CST = 0.00;
+
+vatDetails = EntityUtil.filterByCondition(invoiceVatItemsList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+if(UtilValidate.isNotEmpty(vatDetails)){
+	vatDetailItem = EntityUtil.getFirst(vatDetails);
+	VAT = vatDetailItem.amount;
+	vatPercent = (VAT*100.00)/(amount);
+	
+}
+cstDetails = EntityUtil.filterByCondition(invoiceCstItemsList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+if(UtilValidate.isNotEmpty(cstDetails)){
+	cstDetailItem = EntityUtil.getFirst(cstDetails);
+	CST = cstDetailItem.amount;
+	CSTPercent = (CST*100.00)/(amount);
+}
 
 newObj.put("cProductName",productName);
 newObj.put("quantity",eachItem.quantity);
 newObj.put("UPrice", eachItem.amount);
-newObj.put("amount", (eachItem.amount)*(eachItem.quantity));
+newObj.put("amount", amount);
 newObj.put("tenPercent", tenPercent);
-newObj.put("VatPercent", 0.00);
-newObj.put("VAT", 0.00);
-newObj.put("CSTPercent", 0.00);
-newObj.put("CST", 0.00);
+newObj.put("VatPercent", vatPercent);
+newObj.put("VAT", VAT);
+newObj.put("CSTPercent", CSTPercent);
+newObj.put("CST", CST);
 invoiceItemsJSON.add(newObj);
 
 
