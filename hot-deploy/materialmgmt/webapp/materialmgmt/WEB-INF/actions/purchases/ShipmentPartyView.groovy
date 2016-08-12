@@ -74,20 +74,16 @@ List conditionList=[];
 		tempMap.put("estimatedShipDate",shipment.estimatedShipDate);
 		tempMap.put("vehicleId",shipment.vehicleId);
 		tempMap.put("partyIdTo",shipment.partyIdTo);
-		
-		conditionList = [];
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,shipment.partyIdTo));
-		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		facilityList=delegator.findList("Facility",condition,null,null,null,false);
-		
+		orderHeader = delegator.findOne("OrderHeader", [orderId : shipment.primaryOrderId], false);
+		tempMap.put("orderDate",orderHeader.orderDate);
 		depoPartyId = "";
-		if(UtilValidate.isNotEmpty(facilityList)){
-			depoPartyId = facilityList[0].get("facilityId");
-			depoPartyName=PartyHelper.getPartyName(delegator, depoPartyId, false);
-			tempMap.put("depoPartyName",depoPartyName);
-		}else{
-		tempMap.put("depoPartyName","");
+		if(UtilValidate.isNotEmpty(orderHeader.originFacilityId)){
+			depoPartyId = orderHeader.originFacilityId;
 		}
+		tempMap.put("depoPartyId",depoPartyId);
+		facility = delegator.findOne("Facility", [facilityId : depoPartyId], false);
+		depoPartyName=facility.description;
+		tempMap.put("depoPartyName",depoPartyName);
 		if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
 		 partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
 		    tempMap.put("partyName",partyName);
@@ -117,10 +113,6 @@ List conditionList=[];
 		    tempMap.put("salesOrder",shipment.primaryOrderId);
 		}
 		tempMap.put("primaryOrderId",shipment.primaryOrderId);
-		
-		orderHeader = delegator.findOne("OrderHeader", [orderId : shipment.primaryOrderId], false);
-		tempMap.put("orderDate",orderHeader.orderDate);
-		
 		poRefNum = "";
 		orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
 		if(UtilValidate.isNotEmpty(orderAttributes)){
