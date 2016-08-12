@@ -84,6 +84,12 @@ shipmentMap.put("dcNo",dcNo);
 shipmentMap.put("carrierName",carrierName);
 shipmentMap.put("dcDate",dcDate);
 shipmentMap.put("description",description);
+estimatedShipCost=0;
+if(invoiceDetails.get("estimatedShipCost")){
+	estimatedShipCost=invoiceDetails.get("estimatedShipCost");
+}
+shipmentMap.put("estimatedShipCost",estimatedShipCost);
+
 ////get PartyId from Role for Dept
 //List conditionlist=[];
 //conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
