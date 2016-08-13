@@ -43,10 +43,12 @@ under the License.
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
 <input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
+<input type="hidden" name="scheme" id="scheme" value="${scheme}">
+
 
 
 <script type="text/javascript">
-
+ 
 
 
 var orderId = $("#paramOrderId").val();
@@ -57,10 +59,11 @@ var paramStatusId = $("#paramStatusId").val();
 var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 var tallyRefNO = $("#tallyRefNO").val();
+var scheme = $("#scheme").val();
 
 var reload = "";
 
-
+ 
 
 var displayedIndent = 0;
 var uniqueOrderIdsList = [];
@@ -161,7 +164,7 @@ $(function(){
            }
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
