@@ -60,7 +60,7 @@ under the License.
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
-				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)}</fo:block>
+				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)}</fo:block>
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
@@ -70,7 +70,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
 				<#--><fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block> -->
-				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>

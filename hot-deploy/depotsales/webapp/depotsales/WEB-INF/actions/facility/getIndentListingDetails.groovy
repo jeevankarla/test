@@ -82,6 +82,8 @@ facilityStatusId = parameters.statusId;
 facilityPartyId = parameters.partyId;
  screenFlag = parameters.screenFlag;
  tallyRefNO = parameters.tallyRefNO;
+ scheme = parameters.scheme;
+ 
  
  
  Debug.log("facilityDeliveryDate================"+facilityDeliveryDate);
@@ -120,6 +122,16 @@ JSONArray orderList=new JSONArray();
 inputFields = [:];
 inputFields.put("noConditionFind", "Y");
 inputFields.put("hideSearch","Y");
+
+schemeOrderIds = [];
+if(scheme && searchOrderId.size() == 0){
+	schemeOrderIdsList = delegator.find("OrderAttribute", EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, scheme), null, UtilMisc.toSet("orderId"), null, null);
+	schemeOrderIds=EntityUtil.getFieldListFromEntityListIterator(schemeOrderIdsList, "orderId", true);
+ }
+
+if(UtilValidate.isNotEmpty(schemeOrderIds) && searchOrderId.size() == 0){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,schemeOrderIds));
+}
 
 if(UtilValidate.isNotEmpty(searchOrderId)){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
@@ -165,6 +177,12 @@ double totalIndents = 0
 
 //Debug.log("facilityPartyId=================="+facilityPartyId);
 
+
+  
+ 
+
+
+
 if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()==1) && (UtilValidate.isEmpty(facilityOrderId))){
 
 	
@@ -204,8 +222,14 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 		}
 	
 	}
+	schemeOrderIds = [];
+	if(scheme && searchOrderId.size() == 0){
+		schemeOrderIdsList = delegator.find("OrderAttribute", EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, scheme), null, UtilMisc.toSet("orderId"), null, null);
+		schemeOrderIds=EntityUtil.getFieldListFromEntityListIterator(schemeOrderIdsList, "orderId", true);
+		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,schemeOrderIds));
+	 }
 	
-	
+		
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	//orderHeaderbefo = delegator.findList("OrderHeader", cond, null, payOrderBy, null ,false);
@@ -245,46 +269,7 @@ if(uniqueOrderIdsList)
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
 
 
-//orderIds1=EntityUtil.getFieldListFromEntityList(orderHeader1, "orderId", true);
 
-//condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,orderIds1));
-/*
-List condList11 = [];
-condList11.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, orderIds1));
-condList11.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-condList11Tion = EntityCondition.makeCondition(condList11, EntityOperator.AND);
-*/
-
-//orderHeader2 = delegator.findList("OrderHeader", EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), null, payOrderBy, null ,false);
-
-
-//orderHeader2 = EntityUtil.filterByCondition(orderHeader2, EntityCondition.makeCondition("orderId" ,EntityOperator.IN,orderIds1));
-
-
-/*orderIds2 = [];
-
-for (eachOrder in orderHeader2) {
-	orderIds2.add(eachOrder.orderId);
-	
-	
-}*/
-
-/*orderIds2=EntityUtil.getFieldListFromEntityList(orderHeader2, "orderId", true);
-
-List FinalcondList = [];
-
-FinalcondList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, orderIds2));
-//if(uniqueOrderIdsList)
-//FinalcondList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
-
-finalcond = EntityCondition.makeCondition(FinalcondList, EntityOperator.AND);
-
-
-//orderHeader = delegator.findList("OrderHeader", finalcond, null, payOrderBy, null ,false);
-
-//orderHeader = EntityUtil.filterByCondition(orderHeader2, EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, uniqueOrderIdsList));
-
-*/
 orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
 
@@ -353,9 +338,6 @@ orderHeader.each{ eachHeader ->
 
 	orderId = eachHeader.orderId;
 	
-	
-	
-	
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
@@ -385,7 +367,15 @@ orderHeader.each{ eachHeader ->
 		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 		orderNo = orderSeqDetails.orderNo;
 	}
+
+	/*exprCondrri=[];
+	exprCondrri.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
+	exprCondrri.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "MGPS_10Pecent"));
+	EntityCondition disConditAtrri = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+	schemeOrderIdsList = delegator.findList("OrderAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, scheme), UtilMisc.toSet("orderId"), null, null, false);
+	*/
 	
+		
 	
 	exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));

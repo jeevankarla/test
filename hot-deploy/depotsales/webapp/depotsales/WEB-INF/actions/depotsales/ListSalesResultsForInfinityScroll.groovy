@@ -530,7 +530,7 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 
 salesChannel = parameters.salesChannelEnumId;
 
-
+scheme = "";
 tallyRefNO = "";
 paramOrderId = "";
 paramFacilityId = "";
@@ -570,6 +570,10 @@ if(parameters.indentDateSort)
 if(parameters.indentDateSort)
   tallyRefNO = parameters.tallyRefNO;
 
+if(parameters.scheme)
+scheme = parameters.scheme;
+  
+  
    
 context.paramOrderId = paramOrderId;
 context.paramFacilityId = paramFacilityId;
@@ -579,6 +583,8 @@ context.paramStatusId = paramStatusId;
 context.paramBranch = paramBranch;
 context.tallyRefNO = tallyRefNO;
 context.indentDateSort = indentDateSort;
+context.scheme = scheme;
+
 BankList = delegator.findList("Bank", null, null, null, null, false);
 JSONArray BankListJSON = new JSONArray();
 if(BankList){

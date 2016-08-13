@@ -121,6 +121,13 @@
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="scheme" title="scheme" position="3">
+	        	<drop-down allow-empty="true">
+	        		<option key="MGPS_10Pecent" description="MGPS+10 % Scheme"/>
+	        		<option key="MGPS" description="MGPS Scheme"/>
+	        		<option key="General" description="General Scheme"/>
+	        	</drop-down>
+        </field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
@@ -130,6 +137,9 @@
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        
+         
+        
         <field name="indentDateSort">
 	        	<drop-down allow-empty="false">
 	        		<option key="-orderDate" description="Descending"/>
@@ -2651,6 +2661,7 @@
 			<field name="supplierName" title="supplierName"><display/></field>
 			<field name="millState" title="millState"><display/></field>
 			<field name="source" title="source"><display/></field>
+			<field name="TallyPoNumber" title="Tally Po Number"><display/></field>
 			<field name="poOrderId" title="poOrderId"><display/></field>
 			<field name="poorderDate" title="poorderDate"><display/></field>
 			<field name="destAddr" title="destAddr"><display/></field>
@@ -2663,6 +2674,7 @@
 			<field name="tallyRefNo" title="Tally Bill No"><display/></field>
 			<field name="tallyRefDate" title="Tally Reference Date"><display/></field>
 			<field name="supplierInvoiceId" title="supplier Invoice"><display/></field>
+			<field name="supplierInvoiceDate" title="supplier Invoice Date"><display/></field>
 			<field name="millInvoiceId" title="Purchase Invoice No"><display/></field>
 			<field name="millInvoiceDate" title="Purchase Invoice Date"><display/></field>
 			<field name="poInvoiceAmt" title="Purchase Invoice Amount"><display/></field>
