@@ -43,6 +43,8 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 
+context.partyId = partyId;
+
 tallySalesNo = invoiceList.get("referenceNumber");
 
 context.partyId = partyId;
@@ -79,6 +81,35 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 
  context.indentDate = indentDate;
  
+ poOrderId = "";
+ List orderAssoc = delegator.findByAnd("OrderAssoc", UtilMisc.toMap("toOrderId", itemOrderId,"orderAssocTypeId","BackToBackOrder"));
+ if(UtilValidate.isNotEmpty(orderAssoc)){
+	poOrderId = EntityUtil.getFirst(orderAssoc).orderId;
+ }
+ 
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
+ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["BILL_FROM_VENDOR","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
+ expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
+ 
+ //Debug.log("OrderRoleList================="+OrderRoleList);
+	 supplierId = "";aasdfsd
+	 
+	 if(UtilValidate.isNotEmpty(OrderRoleList)){
+		 OrderRoleList.each{ eachAttr ->
+			 if(eachAttr.roleTypeId == "BILL_FROM_VENDOR"){
+				 supplierId =  eachAttr.partyId;
+			 }
+		 }
+		}
+	 
+	 //Debug.log("supplierId==============="+supplierId);
+	 
+	 context.supplierId = supplierId;
+ 
+	 
+	
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
@@ -484,26 +515,7 @@ PODetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondit
 poDate = PODetails[0].get("orderDate");
 
 
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
-expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
 
-
-	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId), null, null, null, false);
-	
-	if(UtilValidate.isNotEmpty(orderAttr)){
-		orderAttr.each{ eachAttr ->
-			if(eachAttr.attrName == "SCHEME_CAT"){
-				scheme =  eachAttr.attrValue;
-			}
-			
-		}
-	   }
-	
-	
-	
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
