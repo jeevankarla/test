@@ -101,7 +101,7 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
 }
 
-
+  
 transThruDate = null;
 if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
 	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

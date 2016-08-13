@@ -78,7 +78,7 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
-
+  
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
 

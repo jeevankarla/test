@@ -138,7 +138,7 @@
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         
-         
+            
         
         <field name="indentDateSort">
 	        	<drop-down allow-empty="false">

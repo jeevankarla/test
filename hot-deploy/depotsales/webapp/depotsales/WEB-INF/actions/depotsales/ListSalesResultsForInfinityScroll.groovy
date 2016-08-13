@@ -547,7 +547,7 @@ if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
 }
 if(parameters.orderId)
 	 paramOrderId = parameters.orderId;
-   
+    
 if(parameters.partyId)
    paramFacilityId = parameters.partyId;
 
