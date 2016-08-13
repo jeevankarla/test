@@ -127,7 +127,7 @@
 	        		<option key="MGPS" description="MGPS Scheme"/>
 	        		<option key="General" description="General Scheme"/>
 	        	</drop-down>
-        </field>
+        </field> 
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="orderNo" title="sequenceId" position="2"><text-find/></field>

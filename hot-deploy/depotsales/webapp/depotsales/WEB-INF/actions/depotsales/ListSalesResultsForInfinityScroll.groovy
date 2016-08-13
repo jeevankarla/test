@@ -530,7 +530,7 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 
 salesChannel = parameters.salesChannelEnumId;
 
-scheme = "";
+scheme = ""; 
 tallyRefNO = "";
 paramOrderId = "";
 paramFacilityId = "";

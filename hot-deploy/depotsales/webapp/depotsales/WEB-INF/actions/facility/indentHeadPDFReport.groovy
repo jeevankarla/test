@@ -52,9 +52,9 @@ branchList.add(branchId);
 
 
 
-Debug.log("branchList=================="+branchList);
+//Debug.log("branchList=================="+branchList);
 
-
+  
 
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
   
