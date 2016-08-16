@@ -280,6 +280,13 @@
        <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
     
+    <request-map uri="approvalLevelOfDepotPo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="FindDepotTransPO"/>   
+       <response name="failed" type="view" value="FindDepotTransPO"/>  
+    </request-map>
+    
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelIndentOrder"/>
