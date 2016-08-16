@@ -169,7 +169,7 @@
 	JSONArray supplierJSON = new JSONArray();
 	JSONObject supplierIdJson = new JSONObject();
 	
-	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
+	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "EMPANELLED_SUPPLIER")],EntityOperator.AND);
 	supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
 	
 	partyIdsFromSuppList = EntityUtil.getFieldListFromEntityList(supplierList, "partyId", true);
