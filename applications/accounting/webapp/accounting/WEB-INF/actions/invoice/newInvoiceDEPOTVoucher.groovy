@@ -81,25 +81,61 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 
  context.indentDate = indentDate;
  
- poOrderId = "";
+ /*poOrderId = "";
  List orderAssoc = delegator.findByAnd("OrderAssoc", UtilMisc.toMap("toOrderId", itemOrderId,"orderAssocTypeId","BackToBackOrder"));
  if(UtilValidate.isNotEmpty(orderAssoc)){
 	poOrderId = EntityUtil.getFirst(orderAssoc).orderId;
+ }*/
+ //=========================get supplier Id=========================================
+ 
+ 
+ 
+ conditionList = [];
+ conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , itemOrderId));
+ conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+ 
+ inventoryItemId = "";
+ if(OrderItemAttribute){
+	 inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
+ }
+ 
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+ 
+ shipmentIdForSale = "";
+ if(ShipmentReceipt){
+	 shipmentIdForSale = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+ }
+ 
+ shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
+ 
+ poOrderId = "";
+ if(shipmentList){
+	 poOrderId = shipmentList.primaryOrderId;
+	 
  }
  
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
- conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["BILL_FROM_VENDOR","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
+ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER_AGENT"]));
  expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
  OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
  
- //Debug.log("OrderRoleList================="+OrderRoleList);
-	 supplierId = "";aasdfsd
+// Debug.log("OrderRoleList================="+OrderRoleList);
+ 
+	 supplierId = "";
 	 
 	 if(UtilValidate.isNotEmpty(OrderRoleList)){
 		 OrderRoleList.each{ eachAttr ->
-			 if(eachAttr.roleTypeId == "BILL_FROM_VENDOR"){
+			 if(eachAttr.roleTypeId == "SUPPLIER_AGENT"){
 				 supplierId =  eachAttr.partyId;
+				 
+				 Debug.log("supplierId==============="+supplierId);
+				 
 			 }
 		 }
 		}
@@ -108,9 +144,8 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 	 
 	 context.supplierId = supplierId;
  
-	 
 	
-
+//=======================================================================================================
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
