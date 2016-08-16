@@ -77,12 +77,15 @@ List conditionList=[];
 		orderHeader = delegator.findOne("OrderHeader", [orderId : shipment.primaryOrderId], false);
 		tempMap.put("orderDate",orderHeader.orderDate);
 		depoPartyId = "";
+		depoPartyName = "";
 		if(UtilValidate.isNotEmpty(orderHeader.originFacilityId)){
 			depoPartyId = orderHeader.originFacilityId;
 		}
 		tempMap.put("depoPartyId",depoPartyId);
 		facility = delegator.findOne("Facility", [facilityId : depoPartyId], false);
-		depoPartyName=facility.description;
+		if(UtilValidate.isNotEmpty(facility)){
+			depoPartyName=facility.description;
+		}
 		tempMap.put("depoPartyName",depoPartyName);
 		if(UtilValidate.isNotEmpty(shipment.partyIdTo)){
 		 partyName=PartyHelper.getPartyName(delegator, shipment.partyIdTo, false);
