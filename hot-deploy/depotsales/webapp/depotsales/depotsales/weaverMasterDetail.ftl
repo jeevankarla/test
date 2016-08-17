@@ -38,6 +38,11 @@ under the License.
 <input type="hidden" name="branchId" id="branchId" value="${branchId}">
 <input type="hidden" name="partyId" id="partyId" value="${partyId}">
 <input type="hidden" name="passbookNumber" id="passbookNumber" value="${passbookNumber}">
+<input type="hidden" name="partyClassification" id="partyClassification" value="${partyClassification}">
+<input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
+<input type="hidden" name="satate" id="satate" value="${satate}">
+
+
 <input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
 
 <input type="hidden" name="viewClicked" id="viewClicked" >
@@ -50,6 +55,13 @@ under the License.
 var branchId = $("#branchId").val();
 var partyId = $("#partyId").val();
 var passbookNumber = $("#passbookNumber").val();
+var partyClassification = $("#partyClassification").val();
+
+var isDepot = $("#isDepot").val();
+var satate = $("#satate").val();
+
+
+
 
 
 var displayedIndent = 0;
@@ -143,7 +155,7 @@ var passbookNumber = $("#passbookNumber").val();
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
            
-		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"partyClassification":partyClassification,"isDepot":isDepot,"satate":satate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
    //  alert(JSON.stringify(dataJson));
@@ -208,7 +220,11 @@ function drawRow(rowData) {
     row.append($("<td>" + rowData.partyName + "</td>"));
     row.append($("<td>" + rowData.partyClassification + "</td>"));
     row.append($("<td>" + rowData.branchName + "</td>"));
+    row.append($("<td>" + rowData.state + "</td>"));
+    row.append($("<td>" + rowData.isDepot + "</td>"));
     row.append($("<td>" + rowData.passNo + "</td>"));
+    row.append($("<td>" + rowData.loomDetail + "</td>"));
+    
       
 
 }
@@ -276,7 +292,10 @@ function drawRow(rowData) {
           <td>Weaver Name</td>
           <td>Party Classification</td>
           <td>Branch Name</td>
+           <td>State</td>
+          <td>Depot Holder</td>
           <td>PassBook Number</td>
+           <td>No Of Looms</td>
         </tr>
       </thead>
       <tbody>
@@ -286,5 +305,5 @@ function drawRow(rowData) {
     </table>
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
-         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Weavers..</span></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
         <a href="#" class="scrollup">Top</a>
