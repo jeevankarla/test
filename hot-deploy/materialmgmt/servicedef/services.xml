@@ -291,4 +291,12 @@
        	 <attribute name="daoDate" mode="IN" type="String" optional="true"/>
        	 <attribute name="partyId" mode="OUT" type="String" optional="true"/>
      </service>
+     
+      <service name="updateWeaverPartyClassification" engine="java" auth="true" invoke="updateWeaverPartyClassification" 
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>update weaver Classification  Details</description>
+         <attribute name="weaverId" mode="IN" type="String" optional="false"/>
+         <attribute name="calssification" mode="IN" type="String" optional="false"/>
+         <attribute name="partyId" mode="OUT" type="String" optional="true"/>
+     </service>
 </services>

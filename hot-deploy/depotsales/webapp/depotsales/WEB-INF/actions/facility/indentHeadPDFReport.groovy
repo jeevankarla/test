@@ -52,7 +52,7 @@ branchList.add(branchId);
 
 
 
-//Debug.log("branchList=================="+branchList);
+////Debug.log("branchList=================="+branchList);
 
   
 
@@ -64,7 +64,7 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
 		
 		 } catch (ParseException e) {
-			 Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+			 //Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			 }
    
 }
@@ -75,16 +75,16 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   
 	   thruDate = new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime());
    } catch (ParseException e) {
-	   Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+	   //Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
   
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
 
-Debug.log("daystart==================="+daystart);
+//Debug.log("daystart==================="+daystart);
 
-Debug.log("dayend==================="+dayend);
+//Debug.log("dayend==================="+dayend);
 
 
 condList = [];
@@ -107,12 +107,12 @@ fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenc
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
-//Debug.log("invoice========================="+invoice);
+////Debug.log("invoice========================="+invoice);
 
 
 invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
 
-Debug.log("invoiceIds========================="+invoiceIds);
+//Debug.log("invoiceIds========================="+invoiceIds);
 
 condList.clear();
 
@@ -128,14 +128,14 @@ OrderItemBilling = delegator.findList("OrderItemBilling", billingcond, fieldsToB
 
 orderIdsFromBilling = EntityUtil.getFieldListFromEntityList(OrderItemBilling, "orderId", true);
 
-//Debug.log("OrderItemBilling========================="+OrderItemBilling);
+////Debug.log("OrderItemBilling========================="+OrderItemBilling);
 
 
-Debug.log("orderIdsFromBilling========================="+orderIdsFromBilling);
+//Debug.log("orderIdsFromBilling========================="+orderIdsFromBilling);
 
 actualInvoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBilling, "invoiceId", true);
 
-Debug.log("actualInvoiceIds========================="+actualInvoiceIds);
+//Debug.log("actualInvoiceIds========================="+actualInvoiceIds);
 
 
 OrderItemDetail = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdsFromBilling), null, null, null, false);
@@ -148,7 +148,7 @@ invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
 
-//Debug.log("InvoiceItem========================="+InvoiceItem);
+////Debug.log("InvoiceItem========================="+InvoiceItem);
 
 
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.IN , orderIdsFromBilling)  , null, null, null, false );
@@ -180,7 +180,7 @@ for (eachInvoice in invoice) {
 	shipmentList = delegator.findOne("Shipment",[shipmentId : eachInvoice.shipmentId] , false);
 	primaryOrderId = shipmentList.get("primaryOrderId");
 	
-	Debug.log("primaryOrderId============"+primaryOrderId);
+	//Debug.log("primaryOrderId============"+primaryOrderId);
 	exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -221,10 +221,10 @@ for (eachInvoice in invoice) {
 	 if(supplier)
 	 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
 	
-	 Debug.log("partyId==================="+partyId);
+	 //Debug.log("partyId==================="+partyId);
 	 
 	 
-	 Debug.log("supplier==================="+supplier);
+	 //Debug.log("supplier==================="+supplier);
 	
 	//=================Addresss======================
 	
@@ -257,7 +257,7 @@ for (eachInvoice in invoice) {
 			
 			partyPostalAddress=contactMec;
 			
-			//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+			////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
 		//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
 			if(partyPostalAddress){
 				address1="";
@@ -267,7 +267,7 @@ for (eachInvoice in invoice) {
 				postalCode="";
 				if(partyPostalAddress.get("address1")){
 				address1=partyPostalAddress.get("address1");
-				//Debug.log("address1=========================="+address1);
+				////Debug.log("address1=========================="+address1);
 				}
 				if(partyPostalAddress.get("address2")){
 					address2=partyPostalAddress.get("address2");
@@ -310,7 +310,7 @@ if(contactMechesDetails){
 		
 		partyPostalAddress=contactMec;
 		
-		//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+		////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
 	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
 		if(partyPostalAddress){
 			address1="";
@@ -320,7 +320,7 @@ if(contactMechesDetails){
 			postalCode="";
 			if(partyPostalAddress.get("address1")){
 			address1=partyPostalAddress.get("address1");
-			//Debug.log("address1=========================="+address1);
+			////Debug.log("address1=========================="+address1);
 			}
 			if(partyPostalAddress.get("address2")){
 				address2=partyPostalAddress.get("address2");
@@ -349,9 +349,9 @@ if(contactMechesDetails){
 	
 	//partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	
-	Debug.log("partyPostalAddress===================="+partyPostalAddress);
+	//Debug.log("partyPostalAddress===================="+partyPostalAddress);
 	
-	Debug.log("shipingAdd========================="+shipingAdd);
+	//Debug.log("shipingAdd========================="+shipingAdd);
 	//================================================
 	
 	//============IS Depo
@@ -394,7 +394,7 @@ if(contactMechesDetails){
 	
 	
 	
-	//Debug.log("orderHeaderSequencesfilter================"+orderHeaderSequencesfilter);
+	////Debug.log("orderHeaderSequencesfilter================"+orderHeaderSequencesfilter);
 	
 	orderNo ="NA";
 	if(UtilValidate.isNotEmpty(orderHeaderSequencesfilter)){
@@ -467,7 +467,7 @@ if(contactMechesDetails){
 	
 //==============================All Taxes==================================================	
 	
-	double altaxAmt = 0;
+	
 	/*conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -498,17 +498,35 @@ if(contactMechesDetails){
 		
 		if(eachAdjment.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
-		}else{
-		   
-		    altaxAmt = altaxAmt+Double.valueOf( eachAdjment.amount);
 		}
 	}
 	
 	
 //=============================================	
 	
+//=====================for Adjustments=================================================
 	
-	Debug.log("invoiceItemList================="+invoiceItemList.size());
+	
+	
+	double allAdjWitOutTEN = 0;
+	
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT"]));
+	
+	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	
+	InvoiceRemainItemAdjustment = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+
+	if(InvoiceRemainItemAdjustment){
+		for (eachAdjustment in InvoiceRemainItemAdjustment) {
+			allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.amount;
+		}
+	}
+	
+	//=======================================================		
+	
+	//Debug.log("invoiceItemList================="+invoiceItemList.size());
 	
 	double invoAmt = 0;
 	
@@ -537,9 +555,9 @@ if(contactMechesDetails){
 		   
 		   invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 		   
-		  Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
+		  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
 		   
-		   Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
+		   //Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
 		   
 		   
 		   conditionList.clear();
@@ -549,7 +567,7 @@ if(contactMechesDetails){
 		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
 		  
-		   Debug.log("OrderItemBilling======================"+OrderItemBilling);
+		   //Debug.log("OrderItemBilling======================"+OrderItemBilling);
 		   
 		 		 
 		 itemOrderId  = OrderItemBilling[0].orderId;
@@ -561,7 +579,7 @@ if(contactMechesDetails){
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 	
-		 Debug.log("OrderItemDetail======================"+OrderItemDetail);
+		 //Debug.log("OrderItemDetail======================"+OrderItemDetail);
 		 
 	
 		 quantity = eachItem.quantity;
@@ -586,7 +604,7 @@ if(contactMechesDetails){
 			 
 		}
 		 
-		 Debug.log("unit======================"+unit);
+		 //Debug.log("unit======================"+unit);
 		 
 		 tempMap.put("unit", unit);
 		 
@@ -635,9 +653,9 @@ if(contactMechesDetails){
 			}
 			
 
-			Debug.log("schemeQQQty======================"+schemeQQQty);
+			//Debug.log("schemeQQQty======================"+schemeQQQty);
 			
-			Debug.log("schemeAMMMt======================"+schemeAMMMt);
+			//Debug.log("schemeAMMMt======================"+schemeAMMMt);
 			
 			
 						    
@@ -675,6 +693,8 @@ if(contactMechesDetails){
 			}
 			
 			tempMap.put("altaxAmt", taxAmt);
+			
+			tempMap.put("allAdjWitOutTEN", allAdjWitOutTEN);
 			
 			
 			invoiceNetAmt = invoiceNetAmt+taxAmt;
@@ -815,8 +835,8 @@ if(contactMechesDetails){
 			poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
 			}
 			
-			Debug.log("poOrderId============="+poOrderId);
-			Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
+			//Debug.log("poOrderId============="+poOrderId);
+			//Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
 			
 			
 			
@@ -836,8 +856,8 @@ if(contactMechesDetails){
 			}
 			
 			
-			Debug.log("poInvoiceId============="+poInvoiceId);
-			Debug.log("poInvoiceItemSeqId============="+poInvoiceItemSeqId);
+			//Debug.log("poInvoiceId============="+poInvoiceId);
+			//Debug.log("poInvoiceItemSeqId============="+poInvoiceItemSeqId);
 			
 			
 			conditionList.clear();
@@ -858,9 +878,9 @@ if(contactMechesDetails){
 			shipmentId = poInvoiceList.get("shipmentId");
 	        }
 			
-			Debug.log("popartyId============="+popartyId);
-			Debug.log("poinvoiceDate============="+poinvoiceDate);
-			Debug.log("shipmentId============="+shipmentId);
+			//Debug.log("popartyId============="+popartyId);
+			//Debug.log("poinvoiceDate============="+poinvoiceDate);
+			//Debug.log("shipmentId============="+shipmentId);
 			
 			
 			if(POInvoiceItemList){
@@ -1057,7 +1077,7 @@ if(contactMechesDetails){
 }
 }
 
-//Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
+////Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
 
 context.salesAndPurchaseList = salesAndPurchaseList;
 

@@ -4055,6 +4055,7 @@
                     <set field="contentId" from-field="parameters.contentId" global="true"/>
                     <entity-one entity-name="Content" value-field="content"/>
                     <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ServeProfilePic.groovy" />
+                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/partyClassificationList.groovy" />
             	</actions>
                 <widgets> 
            			<decorator-screen name="DepotSalesCommonDecorator"
@@ -4078,7 +4079,7 @@
     	      	         	<screenlet title="Loom Information">
     	      	         				<include-screen name="CattleInfo" location="component://depotsales/widget/DepotSalesScreens.xml"/>
     	      	         				<!-- <include-form name="ProducerProfilePicture" location="component://procurement/widget/ProcurementForms.xml"/> -->
-    	      	         	</screenlet>			
+    	      	         	</screenlet>	
     	         			</container>
     	         			<container style="righthalf">
     	      	             	    <screenlet title="Profile Picture">
@@ -4086,6 +4087,13 @@
     	      	         				<include-form name="ProducerProfilePicture" location="component://depotsales/widget/DepotSalesForms.xml"/>
     	      	         			</screenlet>
     	      	         			<include-screen name="Contact" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	      	         			<screenlet title="Weaver Classification Details">
+    	         					<platform-specific>
+					                       <html>
+					                           <html-template location="component://depotsales/webapp/depotsales/depotsales/updatePartyClassification.ftl"/>
+					                       </html>
+                  					 </platform-specific>
+    	         			</screenlet>		
     	         			</container>
                      </decorator-section>
                   </decorator-screen>

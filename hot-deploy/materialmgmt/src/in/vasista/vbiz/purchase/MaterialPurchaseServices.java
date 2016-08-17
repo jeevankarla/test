@@ -6570,5 +6570,59 @@ catch(Exception e){
 		result.put("partyId",weaverId);
 		return result;
 	}
+	
+	
+	
+	public static Map<String, Object> updateWeaverPartyClassification(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String weaverId = (String)context.get("weaverId");
+		String calssification = (String)context.get("calssification");
+		
+		if (UtilValidate.isEmpty(weaverId)){
+			Debug.logError("Weaver Id is Empty !" , module);
+			return ServiceUtil.returnError(" Weaver Id is Empty !");
+		}
+		SimpleDateFormat SimpleDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List conditionList = FastList.newInstance(); 
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, weaverId));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		
+		List<GenericValue> PartyClassification = null;
+		try{
+		 PartyClassification = delegator.findList("PartyClassification", condition, null, null, null, false);
+
+	      delegator.removeAll(PartyClassification);
+	      
+	      
+	        Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+	        inPartyMapClass.put("partyClassificationGroupId", calssification);
+	        inPartyMapClass.put("partyId", weaverId);
+			try{            	
+				Map resultMap = dispatcher.runSync("createPartyClassification", inPartyMapClass);
+				if (ServiceUtil.isError(resultMap)) {
+						String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+						Debug.logError(errMsg , module);
+						return ServiceUtil.returnError(errMsg);
+	             }
+				//partyId = (String)resultMap.get("partyId");
+				
+	        }catch (GenericServiceException e) {
+	         Debug.logError(e, module);
+	         return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+	      }
+
+		}catch (GenericEntityException e) {
+			  Debug.logError(e, "Could not commit transaction for entity Facility", module);
+		  }
+		
+		result=ServiceUtil.returnSuccess("updated Classification successfully !!");
+		result.put("partyId",weaverId);
+		return result;
+	}
+	
 
 }
