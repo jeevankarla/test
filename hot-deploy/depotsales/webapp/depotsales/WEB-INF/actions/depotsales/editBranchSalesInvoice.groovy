@@ -47,14 +47,14 @@ shipmentId = invoiceList.get("shipmentId");
 
 invoDate = invoiceList.get("invoiceDate");
 
-//Debug.log("invoDate================"+invoDate);
+////Debug.log("invoDate================"+invoDate);
 
 
 SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM, yyyy");
  invoDate = formatter.format(invoDate);
 
 
-//Debug.log("invoDate================"+invoDate);
+////Debug.log("invoDate================"+invoDate);
 
 context.invoDate = invoDate;
 
@@ -103,7 +103,7 @@ if(tallySalesNo)
 tallyRefNo = tallySalesNo;
 
 
-Debug.log("tallyRefNo=============="+tallyRefNo);
+//Debug.log("tallyRefNo=============="+tallyRefNo);
 
 context.tallyRefNo = tallyRefNo;
 
@@ -122,7 +122,20 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 
 
 
+orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
+//Debug.log("orderAttr==================="+orderAttr);
+scheme = "";
+if(UtilValidate.isNotEmpty(orderAttr)){
+	orderAttr.each{ eachAttr ->
+		if(eachAttr.attrName == "SCHEME_CAT"){
+			scheme =  eachAttr.attrValue;
+		}
+		
+	}
+   }
+
+context.scheme = scheme;
 
 
 
@@ -138,10 +151,14 @@ if(UtilValidate.isNotEmpty(prod)){
 	productName = prod.get("productName");
 }
 
+double tenPercent = 0;
+
+//Debug.log("scheme==============="+scheme);
+
+if(scheme == "MGPS_10Pecent"){
 amount = (Double.valueOf((eachItem.quantity))*(Double.valueOf(eachItem.amount)));
-
 tenPercent = (amount * -10)/100;
-
+}
 
 newObj.put("cProductName",productName);
 newObj.put("quantity",eachItem.quantity);
@@ -164,7 +181,7 @@ context.invoiceItemsJSON = invoiceItemsJSON;
 
 
 invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
-Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+//Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
 
@@ -201,7 +218,7 @@ context.invoiceAdjItemsJSON = invoiceAdjItemsJSON;
 context.invoiceAdjLabelJSON = invoiceAdjLabelJSON;
 context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
 
-Debug.log("orderId==================="+orderId);
+//Debug.log("orderId==================="+orderId);
 
 /*exprCondList=[];
 exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -213,20 +230,8 @@ saleOrderId=orderAssc.toOrderId;
 */
 
 
-orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
-Debug.log("orderAttr==================="+orderAttr);
 
-if(UtilValidate.isNotEmpty(orderAttr)){
-	orderAttr.each{ eachAttr ->
-		if(eachAttr.attrName == "SCHEME_CAT"){
-			scheme =  eachAttr.attrValue;
-		}
-		
-	}
-   }
-
-context.scheme = scheme;
 
 disCountFlag = "";
 
@@ -263,8 +268,8 @@ JSONArray invoiceAdditionalJSON = new JSONArray();
  
  context.disCountFlag = disCountFlag;
     
-   Debug.log("invoiceDiscountJSON================="+invoiceDiscountJSON);
-   Debug.log("invoiceAdditionalJSON================="+invoiceAdditionalJSON);
+   //Debug.log("invoiceDiscountJSON================="+invoiceDiscountJSON);
+   //Debug.log("invoiceAdditionalJSON================="+invoiceAdditionalJSON);
    context.invoiceDiscountJSON = invoiceDiscountJSON;
    context.invoiceAdditionalJSON = invoiceAdditionalJSON;
 
