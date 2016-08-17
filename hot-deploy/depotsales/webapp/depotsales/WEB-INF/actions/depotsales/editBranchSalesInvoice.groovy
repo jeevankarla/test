@@ -45,16 +45,17 @@ invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 shipmentId = invoiceList.get("shipmentId");
 
-invoDate = invoiceList.get("invoiceDate");
 
 ////Debug.log("invoDate================"+invoDate);
-
-
+invoDate = "";
+if(invoiceList.get("invoiceDate")){
+invoDate = invoiceList.get("invoiceDate");
 SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM, yyyy");
  invoDate = formatter.format(invoDate);
-
+}
 
 ////Debug.log("invoDate================"+invoDate);
+ 
 
 context.invoDate = invoDate;
 

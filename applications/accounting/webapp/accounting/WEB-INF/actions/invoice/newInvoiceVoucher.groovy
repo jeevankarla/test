@@ -261,11 +261,26 @@ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, null, false);
 
 purInvoiceId = "";
+double purInvoiceTOt = 0;
 
-if(shipmentListForPOInvoiceId)
+if(shipmentListForPOInvoiceId){
  purInvoiceId = shipmentListForPOInvoiceId[0].invoiceId;
 
  
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
+ //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ purChaseInvoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
+ 
+ for (eachItem in purChaseInvoiceItemLists) {
+
+	 purInvoiceTOt = purInvoiceTOt+(Double.valueOf(eachItem.quantity)*Double.valueOf(eachItem.amount));
+}
+}
+
+context.purInvoiceTOt = purInvoiceTOt;
+
 /*conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
