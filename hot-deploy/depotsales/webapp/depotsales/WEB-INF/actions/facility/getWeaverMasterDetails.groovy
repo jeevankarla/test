@@ -87,6 +87,7 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	PartyClassificationPartyIds = [];
 	if(partyClassification){
 		condListb1 = [];
+		if(partyIdsList)
 		condListb1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
 		condListb1.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, partyClassification));
 		condListb = EntityCondition.makeCondition(condListb1, EntityOperator.AND);
@@ -99,13 +100,17 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	isDepotPartyIds = [];
 	if(isDepot){
 		condListb2 = [];
-		if(isDepot == "Y"){
+		if(parameters.isDepot == "Y"){
+			
 			condListb2.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+			if(partyIdsList)
 			condListb2.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,partyIdsList));
 			fcond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
 			FacilityList = delegator.find("Facility", fcond, null, UtilMisc.toSet("ownerPartyId"), null, null);
 			
 			isDepotPartyIds = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
+			
+			
 		}
 	
 	}
@@ -113,6 +118,7 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	PartyContactDetailByPurposeIds = [];
 	if(state){
 		condListb4 = [];
+		if(partyIdsList)
 		condListb4.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
 		condListb4.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 		condListb4.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
@@ -125,7 +131,6 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 		
 	}
 	
-	Debug.log("satastatete================="+state);
 	
 	
 	
@@ -290,14 +295,16 @@ partyList.each{ partyList ->
 		PartyContactDetailByPurpose = EntityUtil.getFirst(delegator.findList("PartyContactDetailByPurpose",condListb,UtilMisc.toSet("partyId","stateProvinceGeoId"),null,null,false));
 		
 		
+		if(PartyContactDetailByPurpose){
 		stateProvinceGeoId = PartyContactDetailByPurpose.get("stateProvinceGeoId");
 		
 		geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
-		
-		if(geo.geoName)
+		if(geo)
 		tempData.put("state",geo.geoName);
-		else
+		}
+		else{
 		tempData.put("state","");
+		}
 	
 	
 	

@@ -411,6 +411,20 @@ if(shipments){
 			
 			//Debug.log("orderItemSeqId===================="+orderItemSeqId);
 			
+			orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			//Debug.log("orderAttr==================="+orderAttr);
+			scheme = "";
+			if(UtilValidate.isNotEmpty(orderAttr)){
+				orderAttr.each{ eachAttr ->
+					if(eachAttr.attrName == "SCHEME_CAT"){
+						scheme =  eachAttr.attrValue;
+					}
+					
+				}
+			   }
+			
+			
 			condExpr.clear();
 			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 			condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
@@ -486,6 +500,7 @@ if(shipments){
 			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 			tenPercentItems = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
 			
+			//Debug.log("tenPercentItems=============="+tenPercentItems);
 			
 			vatAmt = BigDecimal.ZERO;
 			cstAmt = BigDecimal.ZERO;
@@ -526,7 +541,7 @@ if(shipments){
 				}
 			amount = unitPrice*qty;
 			
-			if(UtilValidate.isNotEmpty(tenPercentItems)){
+			if(UtilValidate.isNotEmpty(tenPercentItems) && scheme == "MGPS_10Pecent"){
 				//tenPercent = (EntityUtil.getFirst(tenPercentItems)).get("amount");
 				tenPercent = (amount * -10)/100;
 			}
