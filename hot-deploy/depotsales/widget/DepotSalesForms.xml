@@ -1507,11 +1507,18 @@
 	        	</drop-down>
         </field>
         
-        <field name="satate" title="State">
+        <field name="satate" id-name="satate" title="State" event="onclick"  action="javascript:getCites();">
               <drop-down allow-empty="true">
                   <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
               </drop-down>
         </field>
+        
+        <field name="district" id-name="district" title="District" >
+              <drop-down allow-empty="true">
+              </drop-down>
+        </field>
+        
+         
         
               <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>

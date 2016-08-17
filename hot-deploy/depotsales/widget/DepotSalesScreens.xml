@@ -3959,6 +3959,8 @@
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
+              	  <set field="district" from-field="parameters.district" />
+              	  
               </actions>           
                <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -3984,6 +3986,12 @@
                       		<include-form name="FindDepotSalesProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" />
                       	</screenlet>
+                      	 <platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/forfilterCities.ftl" />
+										</html>
+									</platform-specific>
                       <platform-specific>
 										<html>
 											<html-template
@@ -4093,7 +4101,14 @@
 					                           <html-template location="component://depotsales/webapp/depotsales/depotsales/updatePartyClassification.ftl"/>
 					                       </html>
                   					 </platform-specific>
-    	         			</screenlet>		
+    	         			</screenlet>	
+    	         			<screenlet title="Weaver Relationship Details">
+    	         					<platform-specific>
+					                       <html>
+					                           <html-template location="component://depotsales/webapp/depotsales/depotsales/updatePartyRelationShip.ftl"/>
+					                       </html>
+                  					 </platform-specific>
+    	         			</screenlet>			
     	         			</container>
                      </decorator-section>
                   </decorator-screen>

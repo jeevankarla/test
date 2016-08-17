@@ -41,6 +41,8 @@ under the License.
 <input type="hidden" name="partyClassification" id="partyClassification" value="${partyClassification}">
 <input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
 <input type="hidden" name="satate" id="satate" value="${satate}">
+<input type="hidden" name="district" id="district" value="${district}">
+
 
 
 <input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
@@ -59,6 +61,8 @@ var partyClassification = $("#partyClassification").val();
 
 var isDepot = $("#isDepot").val();
 var satate = $("#satate").val();
+var district = $("#district").val();
+
 
 
 
@@ -155,7 +159,7 @@ var passbookNumber = $("#passbookNumber").val();
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
            
-		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"partyClassification":partyClassification,"isDepot":isDepot,"satate":satate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
    //  alert(JSON.stringify(dataJson));
@@ -221,6 +225,7 @@ function drawRow(rowData) {
     row.append($("<td>" + rowData.partyClassification + "</td>"));
     row.append($("<td>" + rowData.branchName + "</td>"));
     row.append($("<td>" + rowData.state + "</td>"));
+    row.append($("<td>" + rowData.district + "</td>"));
     row.append($("<td>" + rowData.isDepot + "</td>"));
     row.append($("<td>" + rowData.passNo + "</td>"));
     row.append($("<td>" + rowData.loomDetail + "</td>"));
@@ -293,6 +298,7 @@ function drawRow(rowData) {
           <td>Party Classification</td>
           <td>Branch Name</td>
            <td>State</td>
+           <td>District</td>
           <td>Depot Holder</td>
           <td>PassBook Number</td>
            <td>No Of Looms</td>
