@@ -37,6 +37,8 @@ partyId = parameters.partyId;
 partyClassification = parameters.partyClassification;
 isDepot = parameters.isDepot;
 state = parameters.satate;
+district = parameters.district;
+
 
 
 uniqueOrderId = parameters.uniqueOrderId;
@@ -45,10 +47,10 @@ uniqueOrderId = parameters.uniqueOrderId;
 uniqueOrderIdsList = Eval.me(uniqueOrderId)
 
 
-Debug.log("branchId================="+branchId);
-Debug.log("passbookNumber================="+passbookNumber);
-Debug.log("partyId================="+partyId);
-Debug.log("partyClassification================="+partyClassification);
+//Debug.log("branchId================="+branchId);
+//Debug.log("passbookNumber================="+passbookNumber);
+//Debug.log("partyId================="+partyId);
+//Debug.log("partyClassification================="+partyClassification);
 
 double totalIndents = 0;
 JSONArray weaverDetailsList = new JSONArray();
@@ -127,7 +129,24 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 		
 		PartyContactDetailByPurposeIds = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByPurposeList, "partyId", true);
 	
-		//Debug.log("PartyContactDetailByPurposeIds================="+PartyContactDetailByPurposeIds);
+		////Debug.log("PartyContactDetailByPurposeIds================="+PartyContactDetailByPurposeIds);
+		
+	}
+	
+	PartyContactDetailByDistrict = [];
+	
+	if(district){
+		condListb5 = [];
+		if(partyIdsList)
+		condListb5.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
+		condListb5.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		condListb5.add(EntityCondition.makeCondition("districtGeoId", EntityOperator.EQUALS, district));
+		condListb = EntityCondition.makeCondition(condListb5, EntityOperator.AND);
+		PartyContactDetailByDistrict = delegator.find("PartyContactDetailByPurpose", condListb, null, UtilMisc.toSet("partyId"), null, null);
+		
+		PartyContactDetailByDistrict = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByDistrict, "partyId", true);
+	
+		//Debug.log("PartyContactDetailByDistrict================="+PartyContactDetailByDistrict);
 		
 	}
 	
@@ -139,7 +158,6 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 		if(PartyClassificationPartyIds && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyClassificationPartyIds));
 		}
-		
 		if(UtilValidate.isNotEmpty(branchList)&& UtilValidate.isEmpty(PartyClassificationPartyIds) && UtilValidate.isEmpty(isDepotPartyIds) && UtilValidate.isEmpty(PartyContactDetailByPurposeIds)){
 		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.IN, branchList));
 		}
@@ -147,9 +165,13 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 		if(UtilValidate.isNotEmpty(isDepotPartyIds) && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, isDepotPartyIds));
 		}
-		if(UtilValidate.isNotEmpty(PartyContactDetailByPurposeIds) && !partyId){
+		if(UtilValidate.isNotEmpty(PartyContactDetailByPurposeIds) && UtilValidate.isEmpty(PartyContactDetailByDistrict) && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyContactDetailByPurposeIds));
+		}else if(UtilValidate.isNotEmpty(PartyContactDetailByDistrict) && !partyId){
+			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyContactDetailByDistrict));
 		}
+		
+		
 	}else{
 	
 	if(UtilValidate.isNotEmpty(partyId)){
@@ -286,28 +308,116 @@ partyList.each{ partyList ->
 	
 	//============================state====================
 	
-		conditionList.clear();
+	/*	conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 		conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 		if(state)
 		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
 		condListb = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		PartyContactDetailByPurpose = EntityUtil.getFirst(delegator.findList("PartyContactDetailByPurpose",condListb,UtilMisc.toSet("partyId","stateProvinceGeoId"),null,null,false));
+		PartyContactDetailByPurpose = EntityUtil.getFirst(delegator.findList("PartyContactDetailByPurpose",condListb,UtilMisc.toSet("partyId","stateProvinceGeoId","districtGeoId"),null,null,false));
 		
 		
 		if(PartyContactDetailByPurpose){
 		stateProvinceGeoId = PartyContactDetailByPurpose.get("stateProvinceGeoId");
 		
+		districtGeoId = PartyContactDetailByPurpose.get("districtGeoId");
+		
 		geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
 		if(geo)
 		tempData.put("state",geo.geoName);
+		
+		geoDist=delegator.findOne("Geo",[geoId : districtGeoId], false);
+		
+		if(geoDist)
+		tempData.put("district",geoDist.geoName);
 		}
 		else{
 		tempData.put("state","");
+		tempData.put("district","");
+		}*/
+	
+	
+	   //===============================state District================================
+	
+	
+	contactMechesDetails = [];
+	conditionListAddress = [];
+	conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+	 List<String> orderBy = UtilMisc.toList("-contactMechId");
+	contactMech = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy, null, false);
+	
+	
+	if(contactMech){
+	contactMechesDetails = contactMech;
+	}
+	else{
+		conditionListAddress.clear();
+		conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+	}
+	
+	shipingAdd = [:];
+	
+	if(contactMechesDetails){
+		contactMec=contactMechesDetails.getFirst();
+		if(contactMec){
+			//partyPostalAddress=contactMec.get("postalAddress");
+			
+			partyPostalAddress=contactMec;
+			
+			//////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+		//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+			if(partyPostalAddress){
+				address1="";
+				address2="";
+				state="";
+				city="";
+				postalCode="";
+				districtGeoId = "";
+				if(partyPostalAddress.get("address1")){
+				address1=partyPostalAddress.get("address1");
+				//////Debug.log("address1=========================="+address1);
+				}
+				if(partyPostalAddress.get("address2")){
+					address2=partyPostalAddress.get("address2");
+					}
+				if(partyPostalAddress.get("city")){
+					city=partyPostalAddress.get("city");
+					}
+				if(partyPostalAddress.get("stateGeoName")){
+					state=partyPostalAddress.get("stateGeoName");
+					}
+				if(partyPostalAddress.get("postalCode")){
+					postalCode=partyPostalAddress.get("postalCode");
+					}
+				if(partyPostalAddress.get("districtGeoId")){
+					districtGeoId=partyPostalAddress.get("districtGeoId");
+					}
+				
+				
+				//shipingAdd.put("name",shippPartyName);
+				shipingAdd.put("address1",address1);
+				shipingAdd.put("address2",address2);
+				shipingAdd.put("city",city);
+				shipingAdd.put("state",state);
+				shipingAdd.put("postalCode",postalCode);
+				geo=delegator.findOne("Geo",[geoId : districtGeoId], false);
+				if(geo)
+				shipingAdd.put("district",geo.geoName);
+				else
+				shipingAdd.put("district","");
+				
+			}
 		}
+	}
+	//========================================
+	tempData.put("state",shipingAdd.get("state"));
 	
-	
-	
+	tempData.put("district",shipingAdd.get("district"));
 	
 	weaverDetailsList.add(tempData);
 	}

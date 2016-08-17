@@ -152,8 +152,15 @@
     <request-map uri="approveOrderreload">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
-        <response name="success" type="view" value="FindIndents"/>
-        <response name="error" type="view" value="FindIndents"/>
+        <response name="success" type="view" value="FindProcProducer"/>
+        <response name="error" type="view" value="FindProcProducer"/>
+    </request-map>
+    
+     <request-map uri="fetchCitesForState">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="fetchCitesForState.groovy"/> 
+         <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     
     
@@ -1091,6 +1098,13 @@
      <request-map uri="updateWeaverPartyClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWeaverPartyClassification"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
+     <request-map uri="updateWeaverPartyRelationShip">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWeaverPartyRelationShip"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>

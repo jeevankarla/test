@@ -96,6 +96,10 @@ satate = "";
 if(parameters.satate)
 satate = parameters.satate;
 
+district = "";
+if(parameters.district)
+district = parameters.district;
+
 /*partyClassification = "";
 if(parameters.partyClassificationId)
 partyClassification = parameters.partyClassificationId;
@@ -114,6 +118,8 @@ context.partyId = partyId;
 context.partyClassification = partyClassification;
 context.isDepot = isDepot;
 context.satate = satate;
+context.district = district;
+
 
 
 conditionDeopoList = [];
