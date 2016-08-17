@@ -23,7 +23,8 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.model.DynamicViewEntity
 import org.ofbiz.entity.model.ModelKeyMap;
 
-
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
 
 
 
@@ -91,12 +92,45 @@ isDepot = "";
 if(parameters.isDepot)
 isDepot = parameters.isDepot;
 
+satate = "";
+if(parameters.satate)
+satate = parameters.satate;
+
+/*partyClassification = "";
+if(parameters.partyClassificationId)
+partyClassification = parameters.partyClassificationId;
+
+
+
+isDepot = "";
+if(parameters.isDepot)
+isDepot = parameters.isDepot;
+
+*/
+
 context.branchId = branchId;
 context.passbookNumber = passbookNumber;
 context.partyId = partyId;
 context.partyClassification = partyClassification;
 context.isDepot = isDepot;
+context.satate = satate;
 
+
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+
+
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoId);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateListJSON = stateListJSON;
 
 
 

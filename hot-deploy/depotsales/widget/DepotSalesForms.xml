@@ -121,7 +121,7 @@
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
-        <field name="scheme" title="scheme" position="3">
+        <field name="scheme" title="Scheme" position="3">
 	        	<drop-down allow-empty="true">
 	        		<option key="MGPS_10Pecent" description="MGPS+10 % Scheme"/>
 	        		<option key="MGPS" description="MGPS Scheme"/>
@@ -1493,6 +1493,26 @@
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
         </field>
+        
+           <field name="partyClassificationId" title="Party Classification">
+              <drop-down allow-empty="true">
+                  <list-options key-name="partyClassificationGroupId" list-name="partyClassificationList" description="${description}"/>
+              </drop-down>
+        </field>
+        
+         <field name="isDepot" title="Depot Holder">
+	        	<drop-down allow-empty="true">
+	        		<option key="Y" description="YES"/>
+	        		<option key="N" description="NO"/>
+	        	</drop-down>
+        </field>
+        
+        <field name="satate" title="State">
+              <drop-down allow-empty="true">
+                  <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
+              </drop-down>
+        </field>
+        
               <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               
