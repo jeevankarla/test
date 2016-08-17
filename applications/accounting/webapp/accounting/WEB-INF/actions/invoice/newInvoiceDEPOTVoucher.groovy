@@ -66,7 +66,7 @@ itemOrderId  = OrderItemBilling[0].orderId;
 destinationDepot = "";
 OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
 
-Debug.log("OrderHeaderAct================="+OrderHeaderAct);
+//Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 
  if(OrderHeaderAct){
 	indentDate = OrderHeaderAct.get("orderDate");
@@ -74,9 +74,9 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 	destinationDepot = OrderHeaderAct.get("productStoreId");
 	}
  
- Debug.log("indentDate================="+indentDate);
+ //Debug.log("indentDate================="+indentDate);
  
- Debug.log("externalOrderId================="+externalOrderId);
+ //Debug.log("externalOrderId================="+externalOrderId);
  
 
  context.indentDate = indentDate;
@@ -125,7 +125,7 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
  expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
  OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
  
-// Debug.log("OrderRoleList================="+OrderRoleList);
+// //Debug.log("OrderRoleList================="+OrderRoleList);
  
 	 supplierId = "";
 	 
@@ -133,14 +133,12 @@ Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 		 OrderRoleList.each{ eachAttr ->
 			 if(eachAttr.roleTypeId == "SUPPLIER_AGENT"){
 				 supplierId =  eachAttr.partyId;
-				 
-				 Debug.log("supplierId==============="+supplierId);
-				 
+				// //Debug.log("supplierId==============="+supplierId);
 			 }
 		 }
 		}
 	 
-	 //Debug.log("supplierId==============="+supplierId);
+	 ////Debug.log("supplierId==============="+supplierId);
 	 
 	 context.supplierId = supplierId;
  
@@ -194,7 +192,7 @@ estimatedShipDate = shipmentList.get("estimatedShipDate");
 
 
 
-Debug.log("shipmentList================"+shipmentList);
+//Debug.log("shipmentList================"+shipmentList);
 
 
 
@@ -275,7 +273,7 @@ for (eachList in invoiceItemList) {
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
 	
-	// Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
+	// //Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
 	
 	
 	 itemAdjustList = [];
@@ -355,11 +353,24 @@ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, null, false);
 
 purInvoiceId = "";
-
-if(shipmentListForPOInvoiceId)
+double piTotal = 0;
+if(shipmentListForPOInvoiceId){
  purInvoiceId = shipmentListForPOInvoiceId[0].invoiceId;
 
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
+ //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
+
+ for (eachItem in invoiceItemLists) {
+	 piTotal = piTotal+Double.valueOf(eachItem.amount*eachItem.quantity);
+}
  
+}
+ 
+context.piTotal = piTotal;
+
 /*conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -445,7 +456,7 @@ BOEmail="";
 try{
 	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
 	if(ServiceUtil.isError(resultCtx)){
-		Debug.logError("Problem in BO Header ", module);
+		//Debug.logError("Problem in BO Header ", module);
 		return ServiceUtil.returnError("Problem in fetching financial year ");
 	}
 	if(resultCtx.get("boHeaderMap")){
@@ -458,7 +469,7 @@ try{
 		}
 	}
 }catch(GenericServiceException e){
-	Debug.logError(e, module);
+	//Debug.logError(e, module);
 	return ServiceUtil.returnError(e.getMessage());
 }
 context.BOAddress=BOAddress;
@@ -703,7 +714,7 @@ context.externalOrderId = externalOrderId;
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderAdjustment = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 		 
-		 Debug.log("OrderAdjustment==============="+OrderAdjustment);
+		 //Debug.log("OrderAdjustment==============="+OrderAdjustment);
 		 
 		 
 		 for (eachAdj in OrderAdjustment) {
@@ -1004,7 +1015,7 @@ context.finalAddresList = finalAddresList;
 			amount = 0;
 			tempMap = [:];
 			
-			//Debug.log("OrderItemAttribute============"+OrderItemAttribute);
+			////Debug.log("OrderItemAttribute============"+OrderItemAttribute);
 			
 	/*		if(UtilValidate.isNotEmpty(OrderItemAttribute)){
 				OrderItemAttribute.each{ eachAttr ->
