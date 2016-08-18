@@ -25,7 +25,24 @@ import org.ofbiz.entity.model.ModelKeyMap;
 
 
 
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
+Map formatMap = [:];
+List formatList = [];
+List productStoreList = resultCtx.get("productStoreList");
+context.productStoreList = productStoreList;
+
+for (eachList in productStoreList) {
+	formatMap = [:];
+	if(eachList.get("storeName"))
+	formatMap.put("productStoreName",eachList.get("storeName"));
+	else
+	formatMap.put("productStoreName","");
+	
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+}
+context.formatList = formatList;
 
 partyClassiTYpeList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
 

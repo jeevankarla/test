@@ -1488,19 +1488,19 @@
              <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
               <!-- <field name="groupName" title="Weaver Name"><text  size="15"></text></field>  -->
              
-           <field name="branchId" title="${uiLabelMap.Branch}">
+           <field name="branchId" id-name="branchId" title="${uiLabelMap.Branch}">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
               </drop-down>
         </field>
         
-           <field name="partyClassificationId" title="Party Classification">
+           <field name="partyClassificationId" title="Party Classification" event="onclick"  action="javascript:selectBranch();">
               <drop-down allow-empty="true">
                   <list-options key-name="partyClassificationGroupId" list-name="partyClassificationList" description="${description}"/>
               </drop-down>
         </field>
         
-         <field name="isDepot" title="Depot Holder">
+         <field name="isDepot" title="Depot Holder" event="onclick"  action="javascript:selectBranch();">
 	        	<drop-down allow-empty="true">
 	        		<option key="Y" description="YES"/>
 	        		<option key="N" description="NO"/>
@@ -1518,12 +1518,13 @@
               </drop-down>
         </field>
         
-         
-        
               <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
-              <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
+              <field name="passGreater" title="Passbook Number Greater Than" position="1"><check></check></field>
               
-               
+              
+              
+              
+              <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
               
               <field name="submit" title="Find"><submit/></field>
               

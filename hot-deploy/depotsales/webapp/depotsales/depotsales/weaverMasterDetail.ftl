@@ -41,7 +41,7 @@ under the License.
 <input type="hidden" name="partyClassification" id="partyClassification" value="${partyClassification}">
 <input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
 <input type="hidden" name="satate" id="satate" value="${satate}">
-<input type="hidden" name="district" id="district" value="${district}">
+<input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
 
 
 
@@ -62,6 +62,8 @@ var partyClassification = $("#partyClassification").val();
 var isDepot = $("#isDepot").val();
 var satate = $("#satate").val();
 var district = $("#district").val();
+var passGreater = $("#passGreater").val();
+
 
 
 
@@ -159,7 +161,7 @@ var passbookNumber = $("#passbookNumber").val();
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
            
-		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
    //  alert(JSON.stringify(dataJson));
@@ -311,5 +313,5 @@ function drawRow(rowData) {
     </table>
   </form>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
-         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">NO More Orders..</span></div>
+         <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Weavers..</span></div>
         <a href="#" class="scrollup">Top</a>

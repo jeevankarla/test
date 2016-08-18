@@ -6624,5 +6624,46 @@ catch(Exception e){
 		return result;
 	}
 	
+	
+	
+	public static Map<String, Object> updateWeaverPartyRelationShip(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Locale locale = (Locale) context.get("locale");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String weaverId = (String)context.get("weaverId");
+		String calssification = (String)context.get("relation");
+		
+		if (UtilValidate.isEmpty(weaverId)){
+			Debug.logError("Weaver Id is Empty !" , module);
+			return ServiceUtil.returnError(" Weaver Id is Empty !");
+		}
+		SimpleDateFormat SimpleDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 
+		 Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+	        inPartyMapClass.put("fromDate", nowTimeStamp);
+	        inPartyMapClass.put("partyIdTo", weaverId);
+			try{            	
+				Map resultMap = dispatcher.runSync("updatePartyRelationship", inPartyMapClass);
+				if (ServiceUtil.isError(resultMap)) {
+						String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+						Debug.logError(errMsg , module);
+						return ServiceUtil.returnError(errMsg);
+	             }
+				//partyId = (String)resultMap.get("partyId");
+				
+	        }catch (GenericServiceException e) {
+	         Debug.logError(e, module);
+	         return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+	      }
+		
+		
+		result=ServiceUtil.returnSuccess("updated Classification successfully !!");
+		result.put("partyId",weaverId);
+		return result;
+	}
+	
 }
