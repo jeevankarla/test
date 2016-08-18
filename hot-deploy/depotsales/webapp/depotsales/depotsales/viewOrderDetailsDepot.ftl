@@ -837,6 +837,8 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 	    
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Invoice Date:</td><td align='left' width='50%'><input type='text' name='invoiceDate' id='invoiceDate' onmouseover='datepick()'></td></tr>";
 		
+		message += "<tr class='h3'><td align='left' class='h3' width='50%'>Tally Ref No:</td><td align='left' width='50%'><input type='text' name='tallyRefNo' id='tallyRefNo'></td></tr>";
+		
 					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
 					"</select></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";

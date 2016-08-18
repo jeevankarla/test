@@ -11923,6 +11923,7 @@ public class DepotSalesServices{
   		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
   		String orderId = (String) context.get("orderId");
   		String invoiceDateStr = (String) context.get("invoiceDate");
+  		String tallyRefNo = (String) context.get("tallyRefNo");
   		Locale locale = (Locale) context.get("locale");
   		
   		Timestamp invoiceDate = null;
@@ -12022,6 +12023,10 @@ public class DepotSalesServices{
     	  try{
    	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
    	    	invoice.set("purposeTypeId", "DEPOT_YARN_SALE");
+   	    	if(UtilValidate.isNotEmpty(tallyRefNo)){
+   	    		Debug.log("tallyRefNo========================"+tallyRefNo);
+   	    		invoice.set("referenceNumber", tallyRefNo);
+   	    	}
    	    	//invoice.set("invoiceDate", invoiceDate1);
    	    	
   			invoice.store();
