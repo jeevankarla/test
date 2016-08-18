@@ -152,8 +152,8 @@
     <request-map uri="approveOrderreload">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
-        <response name="success" type="view" value="FindProcProducer"/>
-        <response name="error" type="view" value="FindProcProducer"/>
+        <response name="success" type="view" value="FindIndents"/>
+        <response name="error" type="view" value="FindIndents"/>
     </request-map>
     
      <request-map uri="fetchCitesForState">

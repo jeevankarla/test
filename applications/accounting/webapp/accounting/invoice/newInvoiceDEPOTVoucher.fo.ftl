@@ -69,13 +69,13 @@ under the License.
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
-				<#--><fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block> -->
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Supplier Inv No     :${supplierInvo?if_exists}</fo:block> 
 	 		 	<#--><fo:block text-align="right"  font-weight="bold"  font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block> -->
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >DATE :<#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
+				<fo:block text-align="right"     font-size="10pt" >DATE :<#if supplierInvoDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>
 				</fo:table-cell>
 			</fo:table-row>

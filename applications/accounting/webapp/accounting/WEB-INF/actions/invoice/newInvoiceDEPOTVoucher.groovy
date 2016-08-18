@@ -66,7 +66,7 @@ itemOrderId  = OrderItemBilling[0].orderId;
 destinationDepot = "";
 OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
 
-//Debug.log("OrderHeaderAct================="+OrderHeaderAct);
+//////Debug.log("OrderHeaderAct================="+OrderHeaderAct);
 
  if(OrderHeaderAct){
 	indentDate = OrderHeaderAct.get("orderDate");
@@ -74,9 +74,9 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
 	destinationDepot = OrderHeaderAct.get("productStoreId");
 	}
  
- //Debug.log("indentDate================="+indentDate);
+ //////Debug.log("indentDate================="+indentDate);
  
- //Debug.log("externalOrderId================="+externalOrderId);
+ //////Debug.log("externalOrderId================="+externalOrderId);
  
 
  context.indentDate = indentDate;
@@ -113,6 +113,26 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
  
  shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
  
+ 
+ supplierInvoiceId ="";
+ if(shipmentList.get("supplierInvoiceId"))
+ supplierInvoiceId = shipmentList.get("supplierInvoiceId");
+ 
+ supplierInvoiceDate = "";
+ if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate")))
+	 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
+ 
+ 
+	 ////Debug.log("supplierInvoiceId==============="+supplierInvoiceId);
+	 
+	 ////Debug.log("supplierInvoiceDate==============="+supplierInvoiceDate);
+	 
+	 
+context.supplierInvo = supplierInvoiceId;	
+
+context.supplierInvoDate = supplierInvoiceDate;
+	 
+ 
  poOrderId = "";
  if(shipmentList){
 	 poOrderId = shipmentList.primaryOrderId;
@@ -125,7 +145,7 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
  expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
  OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
  
-// //Debug.log("OrderRoleList================="+OrderRoleList);
+// //////Debug.log("OrderRoleList================="+OrderRoleList);
  
 	 supplierId = "";
 	 
@@ -133,12 +153,12 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
 		 OrderRoleList.each{ eachAttr ->
 			 if(eachAttr.roleTypeId == "SUPPLIER_AGENT"){
 				 supplierId =  eachAttr.partyId;
-				// //Debug.log("supplierId==============="+supplierId);
+				// //////Debug.log("supplierId==============="+supplierId);
 			 }
 		 }
 		}
 	 
-	 ////Debug.log("supplierId==============="+supplierId);
+	 ////////Debug.log("supplierId==============="+supplierId);
 	 
 	 context.supplierId = supplierId;
  
@@ -192,7 +212,7 @@ estimatedShipDate = shipmentList.get("estimatedShipDate");
 
 
 
-//Debug.log("shipmentList================"+shipmentList);
+//////Debug.log("shipmentList================"+shipmentList);
 
 
 
@@ -273,7 +293,7 @@ for (eachList in invoiceItemList) {
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
 	
-	// //Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
+	// //////Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
 	
 	
 	 itemAdjustList = [];
@@ -456,7 +476,7 @@ BOEmail="";
 try{
 	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
 	if(ServiceUtil.isError(resultCtx)){
-		//Debug.logError("Problem in BO Header ", module);
+		//////Debug.logError("Problem in BO Header ", module);
 		return ServiceUtil.returnError("Problem in fetching financial year ");
 	}
 	if(resultCtx.get("boHeaderMap")){
@@ -469,7 +489,7 @@ try{
 		}
 	}
 }catch(GenericServiceException e){
-	//Debug.logError(e, module);
+	//////Debug.logError(e, module);
 	return ServiceUtil.returnError(e.getMessage());
 }
 context.BOAddress=BOAddress;
@@ -714,7 +734,7 @@ context.externalOrderId = externalOrderId;
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderAdjustment = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 		 
-		 //Debug.log("OrderAdjustment==============="+OrderAdjustment);
+		 //////Debug.log("OrderAdjustment==============="+OrderAdjustment);
 		 
 		 
 		 for (eachAdj in OrderAdjustment) {
@@ -1015,7 +1035,7 @@ context.finalAddresList = finalAddresList;
 			amount = 0;
 			tempMap = [:];
 			
-			////Debug.log("OrderItemAttribute============"+OrderItemAttribute);
+			////////Debug.log("OrderItemAttribute============"+OrderItemAttribute);
 			
 	/*		if(UtilValidate.isNotEmpty(OrderItemAttribute)){
 				OrderItemAttribute.each{ eachAttr ->
