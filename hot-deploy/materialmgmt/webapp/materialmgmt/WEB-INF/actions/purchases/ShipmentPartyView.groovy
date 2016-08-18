@@ -69,17 +69,22 @@ List conditionList=[];
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
+		depoPartyId = "";
+		depoPartyName = "";
 		if(shipment){
 		tempMap.put("shipmentId",shipment.shipmentId);
 		tempMap.put("estimatedShipDate",shipment.estimatedShipDate);
-		tempMap.put("vehicleId",shipment.vehicleId);
+		//tempMap.put("vehicleId",shipment.vehicleId);
 		tempMap.put("partyIdTo",shipment.partyIdTo);
-		orderHeader = delegator.findOne("OrderHeader", [orderId : shipment.primaryOrderId], false);
-		tempMap.put("orderDate",orderHeader.orderDate);
-		depoPartyId = "";
-		depoPartyName = "";
-		if(UtilValidate.isNotEmpty(orderHeader.originFacilityId)){
-			depoPartyId = orderHeader.originFacilityId;
+		String primaryOrderId=null;
+		if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+			primaryOrderId=shipment.primaryOrderId;
+		}
+		tempMap.put("statusId",shipment.statusId);
+		orderHeader = delegator.findOne("OrderHeader", [orderId : primaryOrderId], false);
+		if(UtilValidate.isNotEmpty(orderHeader)){
+		depoPartyId = orderHeader.originFacilityId;
+		   tempMap.put("orderDate",orderHeader.orderDate);
 		}
 		tempMap.put("depoPartyId",depoPartyId);
 		facility = delegator.findOne("Facility", [facilityId : depoPartyId], false);
@@ -94,9 +99,8 @@ List conditionList=[];
 		else{
 			tempMap.put("partyName","");
 		}
-		tempMap.put("statusId",shipment.statusId);
 		exprCondList=[];
-		exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId));
+		exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
@@ -107,17 +111,17 @@ List conditionList=[];
 		}else{
 			tempMap.put("salesOrder","");
 		}
-		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , shipment.primaryOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , primaryOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 		if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 			orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 			salesOrder = orderSeqDetails.orderNo;
 			tempMap.put("salesOrder",salesOrder);
 		}else{
-		    tempMap.put("salesOrder",shipment.primaryOrderId);
+		    tempMap.put("salesOrder",primaryOrderId);
 		}
-		tempMap.put("primaryOrderId",shipment.primaryOrderId);
+		tempMap.put("primaryOrderId",primaryOrderId);
 		poRefNum = "";
-		orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
+		orderAttributes = delegator.findOne("OrderAttribute", [orderId : primaryOrderId,attrName:"REF_NUMBER"], false);
 		if(UtilValidate.isNotEmpty(orderAttributes)){
 			poRefNum=orderAttributes.attrValue;
 		}
@@ -125,9 +129,9 @@ List conditionList=[];
 		if(shipment.partyIdFrom){
 			tempMap.putAt("partyId", shipment.partyIdFrom);
 			
-			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+			if(UtilValidate.isNotEmpty(primaryOrderId)){
 				ecl = EntityCondition.makeCondition([
-					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId),
 					EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER")],
 				EntityOperator.AND);
 				billToOrderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
@@ -138,9 +142,9 @@ List conditionList=[];
 			}
 			
 		}else{
-			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+			if(UtilValidate.isNotEmpty(primaryOrderId)){
 				ecl = EntityCondition.makeCondition([
-									   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+									   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId),
 									   EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_FROM_VENDOR")],
 								   EntityOperator.AND);
 				orderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
@@ -148,7 +152,7 @@ List conditionList=[];
 				tempMap.put("partyId",orderRole.partyId);
 				
 				ecl = EntityCondition.makeCondition([
-					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+					EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId),
 					EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER")],
 				EntityOperator.AND);
 				billToOrderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
@@ -162,9 +166,9 @@ List conditionList=[];
 		if(shipment.partyIdTo){
 			tempMap.putAt("weaver", shipment.partyIdTo);
 		}else{
-			if(UtilValidate.isNotEmpty(shipment.primaryOrderId)){
+			if(UtilValidate.isNotEmpty(primaryOrderId)){
 				ecl = EntityCondition.makeCondition([
-									   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId),
+									   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId),
 									   EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER")],
 								   EntityOperator.AND);
 				orderRoles=delegator.findList("OrderRole",ecl,null,null,null,false);
