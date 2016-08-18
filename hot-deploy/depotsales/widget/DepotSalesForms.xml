@@ -1373,6 +1373,46 @@
       	</form>
       	
       	
+      	
+      	 <form name="weaverRelationShip" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updatePartyIdentification"
+          	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="PartyRelationshipList">
+          	  <actions>
+      			<entity-condition entity-name="PartyRelationship" list="PartyRelationshipList">
+      			   <condition-list combine="and">
+      			       <condition-expr field-name="partyIdTo" from-field="parameters.partyId" operator="equals"/>
+      			   </condition-list>
+          		</entity-condition>
+      		</actions>
+      		<!-- <field name="partyIdentificationTypeId" >
+      		<drop-down allow-empty="true">             
+      				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+      				          <entity-order-by field-name="partyIdentificationTypeId"/>
+      				</entity-options>
+      			</drop-down>  
+      		</field> -->
+      		
+      		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+            </field>
+            
+       		 <field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
+       		
+       		<field name="partyId"><hidden /></field>
+      		 <field name="fromDate" title="Issue Date"><date-time type="date"></date-time></field>
+      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> 
+      	<!--	<field name="submitButton" title="Update" separate-column="true">
+                  <submit button-type="button"/></field>
+              <field name="deleteLink" title="Delete" widget-style="buttontext">
+                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
+                      <parameter param-name="partyId"/>
+                      <parameter param-name="partyIdentificationTypeId"/>
+                 </hyperlink>
+              </field> -->
+      	</form>
+      	
+      	
       	  <form name="createProducerIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
           	  default-table-style="basic-table hover-bar" separate-columns="true" >
           	  <actions>
@@ -1391,6 +1431,24 @@
       		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
       		<field name="submitButton" title="Create" separate-column="true">
                   <submit button-type="button"/></field>
+      	</form>
+      	
+      	
+      	  <form name="createweaverRelationShip" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
+          	  default-table-style="basic-table hover-bar" separate-columns="true" >
+          	  <actions>
+      		</actions>
+      		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+            </field>
+      		<field name="partyId"><hidden /></field>
+      		<!-- <field name="idValue" title="Number"><text size="22"></text></field> -->
+      		 <field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
+      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> 
+      		<!--<field name="submitButton" title="Create" separate-column="true">
+                  <submit button-type="button"/></field>-->
       	</form>
       	
       	
@@ -1507,7 +1565,7 @@
 	        	</drop-down>
         </field>
         
-        <field name="satate" id-name="satate" title="State" event="onclick"  action="javascript:getCites();">
+        <field name="satate" id-name="satate" title="State" event="onchange"  action="javascript:getCites();">
               <drop-down allow-empty="true">
                   <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
               </drop-down>
@@ -2732,6 +2790,7 @@
     
     <form name="IndentCsvReportList" type="list" list-name="orderInformationDetails" view-size="99999">
     	 <field name="partyName" title="Customer Name"><display/></field>
+    	 <field name="passbookNo" title="PassBook Number"><display/></field>
          <field name="productId" title="ProductId"><display/></field>
          <field name="prductName" title="ProductName"><display/></field>
          <field name="remarks" title="Remarks"><display/></field>
@@ -2745,6 +2804,8 @@
     </form>
         
         <form name="IndentCsvReportList1" type="list" list-name="orderInformationDetails" view-size="99999">
+         
+         <field name="passbookNo" title="PassBook Number"><display/></field>
          <field name="productId" title="ProductId"><display/></field>
          <field name="prductName" title="ProductName"><display/></field>
          <field name="remarks" title="Remarks"><display/></field>

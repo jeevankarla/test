@@ -99,10 +99,24 @@ for (eachItem in orderItems) {
 	String productId =(String)product.get("productId");
 	String partyName = PartyHelper.getPartyName(delegator, eachItem.partyId, false);
 	
+	
+	
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachItem.partyId));
+	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+	
+	passNo = "";
+	if(PartyIdentificationList){
+		passNo = PartyIdentificationList[0].get("idValue");
+	}
+	
 	orderDetail.put("productId",productId);
 	orderDetail.put("orderType",orderType);
 	orderDetail.put("partyName",partyName);
 	orderDetail.put("prductName",desc);
+	orderDetail.put("passbookNo",passNo);
 	orderDetail.put("quantity", eachItem.quantity);
 	orderDetail.put("unitPrice", eachItem.unitPrice.setScale(2,0));
 	orderDetail.put("itemAmt", ((eachItem.quantity.setScale(2,0))*(eachItem.unitPrice.setScale(2,0))));
