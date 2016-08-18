@@ -348,6 +348,7 @@ partyList.each{ partyList ->
 	conditionListAddress = [];
 	conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+	conditionListAddress.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
 	 List<String> orderBy = UtilMisc.toList("-contactMechId");
 	contactMech = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy, null, false);
@@ -360,8 +361,10 @@ partyList.each{ partyList ->
 		conditionListAddress.clear();
 		conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionListAddress.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
-		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+		List<String> orderBy2 = UtilMisc.toList("-contactMechId");
+		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy2, null, false);
 	}
 	
 	shipingAdd = [:];
@@ -382,6 +385,7 @@ partyList.each{ partyList ->
 				city="";
 				postalCode="";
 				districtGeoId = "";
+				stateProvinceGeoId = "";
 				if(partyPostalAddress.get("address1")){
 				address1=partyPostalAddress.get("address1");
 				//////Debug.log("address1=========================="+address1);
@@ -401,7 +405,11 @@ partyList.each{ partyList ->
 				if(partyPostalAddress.get("districtGeoId")){
 					districtGeoId=partyPostalAddress.get("districtGeoId");
 					}
+				if(partyPostalAddress.get("stateProvinceGeoId")){
+					stateProvinceGeoId=partyPostalAddress.get("stateProvinceGeoId");
+					}
 				
+				Debug.log("stateProvinceGeoId========="+stateProvinceGeoId)
 				
 				//shipingAdd.put("name",shippPartyName);
 				shipingAdd.put("address1",address1);
@@ -414,6 +422,16 @@ partyList.each{ partyList ->
 				shipingAdd.put("district",geo.geoName);
 				else
 				shipingAdd.put("district","");
+				
+				if(!state){
+					geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
+					if(geo)
+					shipingAdd.put("state",geo.geoName);
+					else
+					shipingAdd.put("state","");
+					
+				}
+				
 				
 			}
 		}

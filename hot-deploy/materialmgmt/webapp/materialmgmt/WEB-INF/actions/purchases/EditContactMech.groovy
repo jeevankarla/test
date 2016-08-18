@@ -103,7 +103,7 @@ if(contactMechesDetails){
 		
 		partyPostalAddress=contactMec;
 		
-		//////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+		////////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
 	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
 		if(partyPostalAddress){
 			address1="";
@@ -113,9 +113,10 @@ if(contactMechesDetails){
 			postalCode="";
 			districtGeoId = "";
 			stateGeoId = "";
+			stateProvinceGeoId = "";
 			if(partyPostalAddress.get("address1")){
 			address1=partyPostalAddress.get("address1");
-			//////Debug.log("address1=========================="+address1);
+			////////Debug.log("address1=========================="+address1);
 			}
 			if(partyPostalAddress.get("address2")){
 				address2=partyPostalAddress.get("address2");
@@ -135,7 +136,9 @@ if(contactMechesDetails){
 			if(partyPostalAddress.get("stateGeoId")){
 				stateGeoId=partyPostalAddress.get("stateGeoId");
 				}
-			
+			if(partyPostalAddress.get("stateProvinceGeoId")){
+				stateProvinceGeoId=partyPostalAddress.get("stateProvinceGeoId");
+				}
 			
 			
 			
@@ -144,13 +147,32 @@ if(contactMechesDetails){
 			shipingAdd.put("address2",address2);
 			shipingAdd.put("city",city);
 			shipingAdd.put("state",state);
+			shipingAdd.put("districtGeoId",districtGeoId);
 			shipingAdd.put("postalCode",postalCode);
 			shipingAdd.put("stateGeoId",stateGeoId);
+			
+			//Debug.log("districtGeoId============"+districtGeoId);
+			
+			//Debug.log("stateGeoId============"+stateGeoId);
+			
+			//Debug.log("stateProvinceGeoId============"+stateProvinceGeoId);
+			
+			
 			geo=delegator.findOne("Geo",[geoId : districtGeoId], false);
 			if(geo)
 			shipingAdd.put("district",geo.geoName);
 			else
 			shipingAdd.put("district","");
+			
+			
+			if(!state){
+				geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
+				if(geo)
+				shipingAdd.put("state",geo.geoName);
+				else
+				shipingAdd.put("state","");
+				
+			}
 			
 		}
 	}
@@ -159,10 +181,18 @@ if(contactMechesDetails){
 
 stateGeoId = shipingAdd.get("stateGeoId");
 
+districtGeoId = shipingAdd.get("districtGeoId");
+
+
 state = shipingAdd.get("state");
 
-context.stateGeoId = stateGeoId;
+district = shipingAdd.get("district");
 
+context.district = district;
+
+context.districtGeoId = districtGeoId;
+
+context.stateGeoId = stateGeoId;
 context.state = state;
 
 
