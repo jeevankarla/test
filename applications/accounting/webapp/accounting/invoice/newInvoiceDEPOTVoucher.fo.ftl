@@ -76,7 +76,7 @@ under the License.
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if supplierInvoDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>
+				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : <#if tallyRefNo?has_content>${tallyRefNo?if_exists}<#else><#if tallySalesNo?has_content>${tallySalesNo?if_exists}</#if></#if></fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 		</fo:table-body>

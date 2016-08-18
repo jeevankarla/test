@@ -352,7 +352,7 @@ context.totTaxAmount = totTaxAmount;
 context.mgpsAmt = mgpsAmt;
 
 
-
+context.tallySalesNo = tallySalesNo;
 allDetailsMap = [:];
 orderAttrForPo = [];
 OrderHeaderList = [];
