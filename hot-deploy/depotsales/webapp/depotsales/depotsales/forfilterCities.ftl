@@ -61,4 +61,16 @@ fetchCitesForState(state);
 
 
 }
+
+
+
+function selectBranch(){
+var branchId = $("#branchId option:selected").val();
+
+ if(branchId.length == 0)
+ alert("Please Select Branch..!!");
+
+
+}
+
 </script>

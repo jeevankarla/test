@@ -38,6 +38,8 @@ partyClassification = parameters.partyClassification;
 isDepot = parameters.isDepot;
 state = parameters.satate;
 district = parameters.district;
+passGreater = parameters.passGreater;
+
 
 
 
@@ -187,8 +189,10 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
 	
-	if(UtilValidate.isNotEmpty(passbookNumber)){
-		condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.EQUALS, passbookNumber));
+	if(UtilValidate.isNotEmpty(passbookNumber) && UtilValidate.isNotEmpty(passGreater)){
+		condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.GREATER_THAN, passbookNumber));
+	}else if(UtilValidate.isNotEmpty(passbookNumber)){
+	   condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.EQUALS, passbookNumber));
 	}
 	
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);

@@ -100,6 +100,11 @@ district = "";
 if(parameters.district)
 district = parameters.district;
 
+
+passGreater = "";
+if(parameters.passGreater)
+passGreater = parameters.passGreater;
+
 /*partyClassification = "";
 if(parameters.partyClassificationId)
 partyClassification = parameters.partyClassificationId;
@@ -119,6 +124,8 @@ context.partyClassification = partyClassification;
 context.isDepot = isDepot;
 context.satate = satate;
 context.district = district;
+context.passGreater = passGreater;
+
 
 
 
