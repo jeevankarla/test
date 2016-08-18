@@ -70,7 +70,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
 				<#--><fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block> -->
-	 		 	<fo:block text-align="right"  font-weight="bold"  font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block>
+	 		 	<#--><fo:block text-align="right"  font-weight="bold"  font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block> -->
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
@@ -310,7 +310,7 @@ under the License.
 	<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${tempTotAmount?if_exists}</fo:block>
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
-	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier :                                                                         OTHER CHARGES :</fo:block>
+	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}                                                                        OTHER CHARGES :</fo:block>
 	
 	 <fo:block>
 	      
