@@ -157,9 +157,9 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	
 	List condList = [];
 	if(!partyId){
-		if(PartyClassificationPartyIds && !partyId){
+		if(partyClassification && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyClassificationPartyIds));
-		}
+		}else{
 		if(UtilValidate.isNotEmpty(branchList)&& UtilValidate.isEmpty(PartyClassificationPartyIds) && UtilValidate.isEmpty(isDepotPartyIds) && UtilValidate.isEmpty(PartyContactDetailByPurposeIds)){
 		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.IN, branchList));
 		}
@@ -172,7 +172,7 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 		}else if(UtilValidate.isNotEmpty(PartyContactDetailByDistrict) && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyContactDetailByDistrict));
 		}
-		
+		}	
 		
 	}else{
 	

@@ -4087,7 +4087,11 @@
     	      	         	<screenlet title="Loom Information">
     	      	         				<include-screen name="CattleInfo" location="component://depotsales/widget/DepotSalesScreens.xml"/>
     	      	         				<!-- <include-form name="ProducerProfilePicture" location="component://procurement/widget/ProcurementForms.xml"/> -->
-    	      	         	</screenlet>	
+    	      	         	</screenlet>
+    	      	         	
+    	      	         	<screenlet title="Weaver          Relationship Details">
+    	         					<include-screen name="updateWeaverRelationShip" location="component://depotsales/widget/DepotSalesScreens.xml"/>
+    	         			</screenlet>	
     	         			</container>
     	         			<container style="righthalf">
     	      	             	    <screenlet title="Profile Picture">
@@ -4102,7 +4106,7 @@
 					                       </html>
                   					 </platform-specific>
     	         			</screenlet>	
-    	         			<screenlet title="Weaver Relationship Details">
+    	         			<screenlet title="Weaver          Relationship Details">
     	         					<platform-specific>
 					                       <html>
 					                           <html-template location="component://depotsales/webapp/depotsales/depotsales/updatePartyRelationShip.ftl"/>
@@ -4163,6 +4167,25 @@
                 <widgets> 
                 	<include-form name="ProducerIdentification" location="component://depotsales/widget/DepotSalesForms.xml"/>
                 	<include-form name="createProducerIdentification" location="component://depotsales/widget/DepotSalesForms.xml"/>
+               </widgets>
+            </section>
+        </screen> 
+        
+         <screen name="updateWeaverRelationShip">
+            <section>
+            	<actions>
+            		<entity-condition entity-name="PartyIdentification" list="existedPartyIdentifications">
+    				   <condition-list combine="and">
+    				       <condition-expr field-name="partyId" from-field="parameters.partyId" operator="equals"/>
+    				   </condition-list>
+    				   <select-field field-name="partyIdentificationTypeId"/>
+    	    		</entity-condition>
+    	    		<set field="existedPartyIdentifications" from-field="existedPartyIdentifications" global="true"/>
+    	    	<!-- 	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/partyIdentificationTypes.groovy"/>   -->
+            	</actions>
+                <widgets> 
+                	<include-form name="weaverRelationShip" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                	<include-form name="createweaverRelationShip" location="component://depotsales/widget/DepotSalesForms.xml"/>
                </widgets>
             </section>
         </screen> 

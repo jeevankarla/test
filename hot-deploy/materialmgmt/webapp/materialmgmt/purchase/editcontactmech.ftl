@@ -147,16 +147,8 @@ under the License.
         <input type="text" size="50" maxlength="100" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')?if_exists)}" />
       </td>
     </tr>
-    <tr>
-      <td class="label">${uiLabelMap.PartyState}</td>
-      <td>
-        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
-          <option>${(mechMap.postalAddress.stateProvinceGeoId)?if_exists}</option>
-          <option></option>
-          ${screens.render("component://common/widget/CommonScreens.xml#states")}
-        </select>
-      </td>
-    </tr>
+
+    
     <tr>
       <td class="label">${uiLabelMap.PartyZipCode} *</td>
       <td>
@@ -183,11 +175,11 @@ under the License.
       </td>
     </tr>
     <#assign isUsps = Static["org.ofbiz.party.contact.ContactMechWorker"].isUspsAddress(mechMap.postalAddress)>
-    <tr>
+   <#--> <tr>
       <td class="label">${uiLabelMap.PartyIsUsps}</td>
       <td><#if isUsps>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if>
       </td>
-    </tr>
+    </tr>-->
 
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId?if_exists>
     <tr>
@@ -218,7 +210,7 @@ under the License.
       </td>
     </tr>
   </#if>
-  <tr>
+ <#--> <tr>
     <td class="label">${uiLabelMap.PartyContactAllowSolicitation}?</td>
     <td>
       <select name="allowSolicitation">
@@ -229,7 +221,7 @@ under the License.
         <option value="N">${uiLabelMap.CommonN}</option>
       </select>
     </td>
-  </tr>
+  </tr> -->
   </form>
   </table>
   </div>
@@ -240,3 +232,16 @@ under the License.
 <#else>
   <a href="<@ofbizUrl>viewprofile?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonGoBack}</a>
 </#if>
+
+
+<script>
+
+function getRelatedCities(){
+
+
+   alert("vamsi");
+
+
+}
+
+</script>

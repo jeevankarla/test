@@ -28,6 +28,9 @@ import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+
 partyId = parameters.partyId;
 context.partyId = partyId;
 Map mechMap = new HashMap();
@@ -48,3 +51,144 @@ if (cmNewPurposeTypeId) {
     context.cmNewPurposeTypeId = cmNewPurposeTypeId;
 }
 context.donePage = parameters.DONE_PAGE ?:"viewprofile?party_id=" + partyId + "&partyId=" + partyId;;
+
+
+
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+
+
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoId);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateListJSON = stateListJSON;
+
+
+//===============================state District================================
+
+
+contactMechesDetails = [];
+conditionListAddress = [];
+conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+ List<String> orderBy = UtilMisc.toList("-contactMechId");
+contactMech = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy, null, false);
+
+
+if(contactMech){
+contactMechesDetails = contactMech;
+}
+else{
+	conditionListAddress.clear();
+	conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+	contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+}
+
+shipingAdd = [:];
+
+if(contactMechesDetails){
+	contactMec=contactMechesDetails.getFirst();
+	if(contactMec){
+		//partyPostalAddress=contactMec.get("postalAddress");
+		
+		partyPostalAddress=contactMec;
+		
+		//////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
+		if(partyPostalAddress){
+			address1="";
+			address2="";
+			state="";
+			city="";
+			postalCode="";
+			districtGeoId = "";
+			stateGeoId = "";
+			if(partyPostalAddress.get("address1")){
+			address1=partyPostalAddress.get("address1");
+			//////Debug.log("address1=========================="+address1);
+			}
+			if(partyPostalAddress.get("address2")){
+				address2=partyPostalAddress.get("address2");
+				}
+			if(partyPostalAddress.get("city")){
+				city=partyPostalAddress.get("city");
+				}
+			if(partyPostalAddress.get("stateGeoName")){
+				state=partyPostalAddress.get("stateGeoName");
+				}
+			if(partyPostalAddress.get("postalCode")){
+				postalCode=partyPostalAddress.get("postalCode");
+				}
+			if(partyPostalAddress.get("districtGeoId")){
+				districtGeoId=partyPostalAddress.get("districtGeoId");
+				}
+			if(partyPostalAddress.get("stateGeoId")){
+				stateGeoId=partyPostalAddress.get("stateGeoId");
+				}
+			
+			
+			
+			
+			//shipingAdd.put("name",shippPartyName);
+			shipingAdd.put("address1",address1);
+			shipingAdd.put("address2",address2);
+			shipingAdd.put("city",city);
+			shipingAdd.put("state",state);
+			shipingAdd.put("postalCode",postalCode);
+			shipingAdd.put("stateGeoId",stateGeoId);
+			geo=delegator.findOne("Geo",[geoId : districtGeoId], false);
+			if(geo)
+			shipingAdd.put("district",geo.geoName);
+			else
+			shipingAdd.put("district","");
+			
+		}
+	}
+}
+//========================================
+
+stateGeoId = shipingAdd.get("stateGeoId");
+
+state = shipingAdd.get("state");
+
+context.stateGeoId = stateGeoId;
+
+context.state = state;
+
+
+conditionDeopoList.clear();
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.EQUALS,stateGeoId));
+conditionDeopoList.add(EntityCondition.makeCondition("geoAssocTypeId", EntityOperator.EQUALS,"DISTRICT"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+districtListAss = delegator.findList("GeoAssoc",conditionDepo,UtilMisc.toSet("geoIdTo"),null,null,false);
+
+List districts = EntityUtil.getFieldListFromEntityList(districtListAss, "geoIdTo", true);
+
+
+conditionDeopoList.clear();
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.IN,districts));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"DISTRICT"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+districtList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+
+
+JSONArray districtJSON = new JSONArray();
+districtList.each{ eachDistrict ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachDistrict.geoId);
+		newObj.put("label",eachDistrict.geoName);
+		districtJSON.add(newObj);
+}
+context.districtJSON = districtJSON;
+
+
