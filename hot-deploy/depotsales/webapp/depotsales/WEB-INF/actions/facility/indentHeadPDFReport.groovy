@@ -30,10 +30,19 @@ daystart = null;
 Timestamp fromDate;
 Timestamp thruDate;
 
+DateList=[];
+DateMap = [:];
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
+DateMap.put("partyfromDate", partyfromDate);
+DateMap.put("partythruDate", partythruDate);
 
+DateList.add(DateMap);
+context.DateList=DateList;
 branchId = parameters.branchId;
+branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+branchName = branch.get("groupName");
+DateMap.put("branchName", branchName);
 
 branchList = [];
 

@@ -25,15 +25,21 @@ import java.util.Map.Entry;
 
 
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
-
-
+ DateList=[];
+ DateMap = [:];
 partyfromDate=parameters.abstrctFromDate;
 partythruDate=parameters.abstrctThruDate;
+DateMap.put("partyfromDate", partyfromDate);
+DateMap.put("partythruDate", partythruDate);
+DateList.add(DateMap);
+context.DateList=DateList;
 
 partyId=parameters.partyId;
 
 branchId=parameters.branchId;
-
+branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+branchName = branch.get("groupName");
+DateMap.put("branchName", branchName);
 Timestamp fromDate;
 Timestamp thruDate;
 
