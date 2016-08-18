@@ -302,6 +302,13 @@ function datepick()	{
   });
   
 
+ function makeZero(){
+
+
+ $("#postalCode").val("0");
+ 
+
+}
 
 
 </script>
@@ -425,7 +432,7 @@ function datepick()	{
 									<tr>
 									    <td class="label"><b> Postal Code :</b></td>
 									    <td>
-									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0" autocomplete="off" />
+									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" value="0"  onblur=makeZero(); />
 									    </td>
 									    </tr>
 									    <tr>

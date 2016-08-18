@@ -150,9 +150,9 @@ under the License.
 
     
     <tr>
-      <td class="label">${uiLabelMap.PartyZipCode} *</td>
+      <td class="label">${uiLabelMap.PartyZipCode} </td>
       <td>
-        <input type="text" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')?if_exists)}" />
+        <input type="text" size="30" maxlength="60" name="postalCode" id="postalCode" value="0" onblur="javascript: makeZero();" />
       </td>
     </tr>
     <tr>
@@ -174,6 +174,34 @@ under the License.
         </select>
       </td>
     </tr>
+    
+    
+    <tr>
+      <td class="label">State</td>
+      <td>
+        <select name="stateProvinceGeoId" id="stateProvinceGeoId">
+            
+            <option  value="${stateGeoId}">${state}</option>
+            <#list stateListJSON as state>
+            <option  value="${state.value}">${state.label}</option>
+            </#list>
+        </select>
+      </td>
+    </tr>
+    
+     <tr>
+      <td class="label">District</td>
+      <td>
+        <select name="districtGeoId" id="districtGeoId">
+             <option  value="${districtGeoId}">${district}</option>
+            <#list districtJSON as dist>
+            <option  value="${dist.value}">${dist.label}</option>
+            </#list>
+        </select>
+      </td>
+    </tr>
+    
+    
     <#assign isUsps = Static["org.ofbiz.party.contact.ContactMechWorker"].isUspsAddress(mechMap.postalAddress)>
    <#--> <tr>
       <td class="label">${uiLabelMap.PartyIsUsps}</td>
@@ -236,11 +264,11 @@ under the License.
 
 <script>
 
-function getRelatedCities(){
+function makeZero(){
 
 
-   alert("vamsi");
-
+ $("#postalCode").val("0");
+ 
 
 }
 

@@ -232,9 +232,11 @@ for (eachInvoice in invoice) {
 	conditionListAddress = [];
 	conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 	conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
+	conditionListAddress.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 	conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
 	 List<String> orderBy = UtilMisc.toList("-contactMechId");
 	contactMech = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy, null, false);
+	
 	
 	
 	if(contactMech){
@@ -244,8 +246,10 @@ for (eachInvoice in invoice) {
 		conditionListAddress.clear();
 		conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 		conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionListAddress.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 		conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
-		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+		List<String> orderBy2 = UtilMisc.toList("-contactMechId");
+		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy2, null, false);
 	}
 	
 	shipingAdd = [:];
