@@ -548,12 +548,6 @@ context.externalOrderId = externalOrderId;
 		schemeDeductionAmt = schemeDeductionAmt+Math.abs(eachInvoiceList.amount);
 		}
 		
-		
-		
-		
-		
-		
-		
 	}*/
 	
 	
@@ -567,19 +561,22 @@ context.externalOrderId = externalOrderId;
 		List productIds = EntityUtil.getFieldListFromEntityList(invoiceItemList, "productId", true);
 		
 		
-		for(eachProd in productIds)
-		{
+	/*	for(eachProd in productIds)
+		{*/
 
-			eachInvoiceItemList = EntityUtil.filterByCondition(invoiceItemList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
+			//eachInvoiceItemList = EntityUtil.filterByCondition(invoiceItemList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
 			
-			tempMap = [:];
+			
 			double schemeAmt = 0;
 			double quantity = 0;
 			double amount = 0;
 			
-			OrderItemDetail = [];
-		for (eachInvoiceList in eachInvoiceItemList) {
+			
+		for (eachInvoiceList in invoiceItemList) {
 	   
+			OrderItemDetail = [];
+			
+			tempMap = [:];
 		 tempMap.put("productId", eachInvoiceList.productId);
 		 tempMap.put("prodDescription", eachInvoiceList.description);
 		 tempMap.put("rateKg", eachInvoiceList.unitPrice);
@@ -783,7 +780,7 @@ context.externalOrderId = externalOrderId;
 		  
 		finalDetails.add(tempMap);
 		 }
-		}		
+		//}		
 	 }
 	
 	context.grandTotal = Math.round(grandTotal);
@@ -805,11 +802,12 @@ tanId="";
 partyPostalAddress = dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 
 
-if(partyPostalAddress.address1){
+if(partyPostalAddress){
 	
+
    if(partyPostalAddress.address1){
 	   address1=partyPostalAddress.address1;
-   }
+  
    tempMap=[:];
    tempMap.put("key1","Road / Street / Lane");
    tempMap.put("key2",address1);
@@ -838,13 +836,13 @@ if(partyPostalAddress.address1){
    tempMap.put("key2",postalCode);
    finalAddresList.add(tempMap);
    
-}else{
+    }else{
 		contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
 		partyPostalAddress = contactMench.postalAddress;
 		
-		if(partyPostalAddress[0].address1){
+		if(partyPostalAddress){
 			address1=partyPostalAddress[0].address1;
-		}
+		
 		tempMap=[:];
 		tempMap.put("key1","Road / Street / Lane");
 		tempMap.put("key2",address1);
@@ -871,6 +869,43 @@ if(partyPostalAddress.address1){
 		tempMap.put("key1","PIN Code");
 		tempMap.put("key2",postalCode);
 		finalAddresList.add(tempMap);
+		}
+    }	
+   
+}else{
+		contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
+		partyPostalAddress = contactMench.postalAddress;
+		
+		if(partyPostalAddress){
+			address1=partyPostalAddress[0].address1;
+		
+		tempMap=[:];
+		tempMap.put("key1","Road / Street / Lane");
+		tempMap.put("key2",address1);
+		finalAddresList.add(tempMap);
+		if(partyPostalAddress[0].address2){
+			address2=partyPostalAddress[0].address2;
+		}
+		tempMap=[:];
+		tempMap.put("key1","Area / Locality");
+		tempMap.put("key2",address2);
+		finalAddresList.add(tempMap);
+		if(partyPostalAddress[0].city){
+			city=partyPostalAddress[0].city;
+		}
+		tempMap=[:];
+		tempMap.put("key1","Town / District / City");
+		tempMap.put("key2",city);
+		finalAddresList.add(tempMap);
+		
+		if(partyPostalAddress[0].postalCode){
+			postalCode=partyPostalAddress[0].postalCode;
+		}
+		tempMap=[:];
+		tempMap.put("key1","PIN Code");
+		tempMap.put("key2",postalCode);
+		finalAddresList.add(tempMap);
+		}
 }
 
 context.finalAddresList = finalAddresList;

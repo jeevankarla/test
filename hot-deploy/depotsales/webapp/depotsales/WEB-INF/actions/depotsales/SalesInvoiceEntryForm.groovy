@@ -505,7 +505,7 @@ if(shipments){
 			vatAmt = BigDecimal.ZERO;
 			cstAmt = BigDecimal.ZERO;
 			
-			unitPrice = (orderItem.unitPrice);
+			unitPrice = (OrderItem[0].unitPrice);
 			
 			
 			
