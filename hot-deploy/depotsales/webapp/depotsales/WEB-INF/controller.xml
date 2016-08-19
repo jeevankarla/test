@@ -1055,6 +1055,20 @@
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
     
+    <request-map uri="updateWeaverRelationship">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyRelationship"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
+     <request-map uri="deleteWeaverRelation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWeaverRelationship"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    
    <request-map uri="editcontactmech">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcontactmech" save-current-view="true"/>
@@ -1438,7 +1452,7 @@
     
     <request-map uri="createweaverRelationShip">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createweaverRelationShip"/>
+        <event type="service" path="" invoke="createPartyRelationship"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>

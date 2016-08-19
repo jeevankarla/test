@@ -52,7 +52,7 @@ context.partyClassiTYpeList = partyClassiTYpeList;
 
 weaverClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), UtilMisc.toSet("partyClassificationGroupId"), null, null,false);
 
-partyClassification = "";
+partyClassificationGroupId = "";
 if(weaverClassification){
 	partyClassificationGroupId = weaverClassification[0].get("partyClassificationGroupId");
 }

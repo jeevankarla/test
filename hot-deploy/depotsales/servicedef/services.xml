@@ -486,5 +486,16 @@
         <attribute name="purchaseOrderId" mode="IN" type="String" optional="true"/>
     </service>
     
+    <service name="deleteWeaverRelationship" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="deleteWeaverRelationship">
+        <description>Weaver relation delete</description>
+                <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+                <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="false"/>
+                <attribute name="roleTypeIdTo" type="String" mode="IN" optional="false"/>
+                <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+                <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+                <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
+                <attribute name="partyId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
 </services>
 
