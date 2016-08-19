@@ -266,7 +266,8 @@ under the License.
 
 function makeZero(){
 
-
+var postalCode =  $("#postalCode").val();
+ if(postalCode.length == 0)
  $("#postalCode").val("0");
  
 
