@@ -12518,6 +12518,44 @@ public class DepotSalesServices{
 	}
 
 	
-	
+    public static Map<String, Object> deleteWeaverRelationship(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String partyIdTo = (String) context.get("partyIdTo");
+  		String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
+  		String roleTypeIdTo = (String) context.get("roleTypeIdTo");
+  		String partyIdFrom = (String) context.get("partyIdFrom");
+  		Timestamp fromDate = (Timestamp) context.get("fromDate");
+  		String partyRelationshipTypeId = (String) context.get("partyRelationshipTypeId");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+
+  		
+  		 try{
+  			 
+  			List conditions = FastList.newInstance();
+			conditions.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo));
+			conditions.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+			conditions.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, roleTypeIdFrom));
+			conditions.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, roleTypeIdTo));
+			conditions.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, partyRelationshipTypeId));
+			conditions.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, fromDate));
+  			   
+  			 
+				List<GenericValue> PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(PartyRelationship)){
+					delegator.removeAll(PartyRelationship);
+				}
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+			}
+  		
+    	  result = ServiceUtil.returnSuccess("Party Relationship Has been successfully Deleted"+partyIdTo);
+          result.put("partyId", partyIdTo);
+         return result;
+  	}
 
 }

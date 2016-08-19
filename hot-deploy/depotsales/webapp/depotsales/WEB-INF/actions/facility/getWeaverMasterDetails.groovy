@@ -153,39 +153,10 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	
 	
 	List condList = [];
-/*	if(!partyId){
-		if(partyClassification && !partyId){
-			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyClassificationPartyIds));
-		}else{
-		if(UtilValidate.isNotEmpty(branchList)&& UtilValidate.isEmpty(PartyClassificationPartyIds) && UtilValidate.isEmpty(isDepotPartyIds) && UtilValidate.isEmpty(PartyContactDetailByPurposeIds)){
-		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.IN, branchList));
-		}
-		
-		if(UtilValidate.isNotEmpty(isDepotPartyIds) && !partyId){
-			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, isDepotPartyIds));
-		}
-		if(UtilValidate.isNotEmpty(PartyContactDetailByPurposeIds) && UtilValidate.isEmpty(PartyContactDetailByDistrict) && !partyId){
-			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyContactDetailByPurposeIds));
-		}else if(UtilValidate.isNotEmpty(PartyContactDetailByDistrict) && !partyId){
-			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyContactDetailByDistrict));
-		}
-		}	
-		
-	}else{
-	
-	if(UtilValidate.isNotEmpty(partyId)){
+	if((branchpartyIdsList || branchId || partyClassification || isDepot || state || district) && !partyId)
+	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
+	else if(UtilValidate.isNotEmpty(partyId))
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
-	}
-	
-	}
-	*/
-	
-	
-	if(branchpartyIdsList && !partyId){
-		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
-	}else if(UtilValidate.isNotEmpty(partyId)){
-		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
-	}
 	
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));

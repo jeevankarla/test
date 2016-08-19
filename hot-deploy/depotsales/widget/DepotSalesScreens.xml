@@ -4106,13 +4106,6 @@
 					                       </html>
                   					 </platform-specific>
     	         			</screenlet>	
-    	         			<screenlet title="Weaver          Relationship Details">
-    	         					<platform-specific>
-					                       <html>
-					                           <html-template location="component://depotsales/webapp/depotsales/depotsales/updatePartyRelationShip.ftl"/>
-					                       </html>
-                  					 </platform-specific>
-    	         			</screenlet>			
     	         			</container>
                      </decorator-section>
                   </decorator-screen>

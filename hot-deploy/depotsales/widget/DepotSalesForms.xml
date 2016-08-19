@@ -1379,7 +1379,7 @@
       	
       	
       	
-      	 <form name="weaverRelationShip" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updatePartyIdentification"
+      	 <form name="weaverRelationShip" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updateWeaverRelationship"
           	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="PartyRelationshipList">
           	  <actions>
       			<entity-condition entity-name="PartyRelationship" list="PartyRelationshipList">
@@ -1402,19 +1402,27 @@
             </drop-down>
             </field>
             
-       		 <field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
+       		<!--  <field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>  -->
        		
        		<field name="partyId"><hidden /></field>
-      		 <field name="fromDate" title="Issue Date"><date-time type="date"></date-time></field>
-      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> 
-      	<!--	<field name="submitButton" title="Update" separate-column="true">
+      		<field name="roleTypeIdFrom"><hidden value="ORGANIZATION_UNIT" /></field>
+      		<field name="roleTypeIdTo"><hidden value="EMPANELLED_CUSTOMER" /></field>
+      		<field name="partyRelationshipTypeId"><hidden value="BRANCH_CUSTOMER" /></field>
+      		<field name="partyIdTo"><hidden value="${partyId}" /></field>
+      		 <field name="fromDate" title="From Date"><date-time type="date"></date-time></field>
+      		<field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field> 
+      		<field name="submitButton" title="Update" separate-column="true">
                   <submit button-type="button"/></field>
               <field name="deleteLink" title="Delete" widget-style="buttontext">
-                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
-                      <parameter param-name="partyId"/>
-                      <parameter param-name="partyIdentificationTypeId"/>
+                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWeaverRelation">
+                      <parameter param-name="partyIdTo" />
+                      <parameter param-name="roleTypeIdFrom" />
+                      <parameter param-name="roleTypeIdTo" />
+                      <parameter param-name="partyRelationshipTypeId" />
+                      <parameter param-name="fromDate"/>
+                      <parameter param-name="partyIdFrom"/>
                  </hyperlink>
-              </field> -->
+              </field> 
       	</form>
       	
       	
@@ -1439,7 +1447,7 @@
       	</form>
       	
       	
-      	  <form name="createweaverRelationShip" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
+      	  <form name="createweaverRelationShip" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createweaverRelationShip"
           	  default-table-style="basic-table hover-bar" separate-columns="true" >
           	  <actions>
       		</actions>
@@ -1449,11 +1457,16 @@
             </drop-down>
             </field>
       		<field name="partyId"><hidden /></field>
+      		<field name="partyIdTo"><hidden value="${partyId}" /></field>
+      		<field name="roleTypeIdFrom"><hidden value="ORGANIZATION_UNIT" /></field>
+      		<field name="roleTypeIdTo"><hidden value="EMPANELLED_CUSTOMER" /></field>
+      		<field name="partyRelationshipTypeId"><hidden value="BRANCH_CUSTOMER" /></field>
+      		<field name="partyIdTo"><hidden value="${partyId}" /></field>
       		<!-- <field name="idValue" title="Number"><text size="22"></text></field> -->
-      		 <field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
-      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> 
-      		<!--<field name="submitButton" title="Create" separate-column="true">
-                  <submit button-type="button"/></field>-->
+      		 <field name="fromDate" title="From Date"><date-time type="date" ></date-time></field>
+      		<field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field> 
+      		<field name="submitButton" title="Create" separate-column="true">
+                  <submit button-type="button"/></field>
       	</form>
       	
       	
