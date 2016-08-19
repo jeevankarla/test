@@ -66,10 +66,6 @@ var passGreater = $("#passGreater").val();
 
 
 
-
-
-
-
 var displayedIndent = 0;
 var uniqueOrderIdsList = [];
 var orderData;

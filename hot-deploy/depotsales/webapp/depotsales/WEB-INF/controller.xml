@@ -1434,6 +1434,14 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
+    
+    
+    <request-map uri="createweaverRelationShip">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createweaverRelationShip"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
 	
 	 <request-map uri="updateProducerFinAccount">
         <security https="true" auth="true"/>

@@ -74,7 +74,9 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 if(UtilValidate.isEmpty(branchList) && UtilValidate.isNotEmpty(branchId))
 branchList.add(branchId);
 
-partyList = []as HashSet;
+
+
+partyList = [];
 
 
 condListba = [];
@@ -83,80 +85,75 @@ condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQ
 condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
 
-PartyRelationship = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
+partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
 
 
-partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, "partyIdTo", true);
+branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
+
 
 	PartyClassificationPartyIds = [];
-	if(partyClassification){
+	if(partyClassification && !partyId){
 		condListb1 = [];
-		if(partyIdsList)
-		condListb1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
+		if(branchpartyIdsList)
+		condListb1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
 		condListb1.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, partyClassification));
 		condListb = EntityCondition.makeCondition(condListb1, EntityOperator.AND);
 		PartyClassificationList = delegator.find("PartyClassification", condListb, null, UtilMisc.toSet("partyId"), null, null);
 		
-		PartyClassificationPartyIds = EntityUtil.getFieldListFromEntityListIterator(PartyClassificationList, "partyId", true);
-	
+		
+		branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyClassificationList, "partyId", true);
 	}
 	
 	isDepotPartyIds = [];
-	if(isDepot){
+	if(isDepot && !partyId){
 		condListb2 = [];
 		if(parameters.isDepot == "Y"){
 			
 			condListb2.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
-			if(partyIdsList)
-			condListb2.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,partyIdsList));
+			if(branchpartyIdsList)
+			condListb2.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,branchpartyIdsList));
 			fcond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
 			FacilityList = delegator.find("Facility", fcond, null, UtilMisc.toSet("ownerPartyId"), null, null);
 			
-			isDepotPartyIds = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
-			
-			
+			branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
 		}
 	
 	}
 	
 	PartyContactDetailByPurposeIds = [];
-	if(state){
+	if(state && !partyId){
 		condListb4 = [];
-		if(partyIdsList)
-		condListb4.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
+		if(branchpartyIdsList)
+		condListb4.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
 		condListb4.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 		condListb4.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
 		condListb = EntityCondition.makeCondition(condListb4, EntityOperator.AND);
 		PartyContactDetailByPurposeList = delegator.find("PartyContactDetailByPurpose", condListb, null, UtilMisc.toSet("partyId"), null, null);
 		
-		PartyContactDetailByPurposeIds = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByPurposeList, "partyId", true);
+		branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByPurposeList, "partyId", true);
 	
-		////Debug.log("PartyContactDetailByPurposeIds================="+PartyContactDetailByPurposeIds);
-		
 	}
 	
 	PartyContactDetailByDistrict = [];
 	
 	if(district){
 		condListb5 = [];
-		if(partyIdsList)
-		condListb5.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdsList));
+		if(branchpartyIdsList)
+		condListb5.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
 		condListb5.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 		condListb5.add(EntityCondition.makeCondition("districtGeoId", EntityOperator.EQUALS, district));
 		condListb = EntityCondition.makeCondition(condListb5, EntityOperator.AND);
+		
 		PartyContactDetailByDistrict = delegator.find("PartyContactDetailByPurpose", condListb, null, UtilMisc.toSet("partyId"), null, null);
 		
-		PartyContactDetailByDistrict = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByDistrict, "partyId", true);
+		branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByDistrict, "partyId", true);
 	
-		//Debug.log("PartyContactDetailByDistrict================="+PartyContactDetailByDistrict);
 		
 	}
 	
 	
-	
-	
 	List condList = [];
-	if(!partyId){
+/*	if(!partyId){
 		if(partyClassification && !partyId){
 			condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, PartyClassificationPartyIds));
 		}else{
@@ -181,10 +178,14 @@ partyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, 
 	}
 	
 	}
+	*/
 	
 	
-	
-	
+	if(branchpartyIdsList && !partyId){
+		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
+	}else if(UtilValidate.isNotEmpty(partyId)){
+		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
+	}
 	
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
@@ -409,7 +410,7 @@ partyList.each{ partyList ->
 					stateProvinceGeoId=partyPostalAddress.get("stateProvinceGeoId");
 					}
 				
-				Debug.log("stateProvinceGeoId========="+stateProvinceGeoId)
+				//Debug.log("stateProvinceGeoId========="+stateProvinceGeoId)
 				
 				//shipingAdd.put("name",shippPartyName);
 				shipingAdd.put("address1",address1);
