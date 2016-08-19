@@ -2010,6 +2010,8 @@
 			<widgets>
 				<section>
 					<widgets>
+					<include-form name="RegularIceCreamSaleBookHeading" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					<include-form name="RegularIceCreamSaleBookDetails" location="component://byproducts/widget/ByProductsReportForms.xml" />
 								<include-form name="RegularIceCreamSaleBookCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
 					</widgets>
 				</section>

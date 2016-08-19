@@ -22,8 +22,16 @@
 	import org.ofbiz.service.ServiceUtil;
 	import org.ofbiz.entity.model.DynamicViewEntity
 	import org.ofbiz.entity.model.ModelKeyMap;
-	
+	BranchList=[];
+	branchMap = [:];
+		
 	branchId = parameters.branchId;
+	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+	branchName = branch.get("groupName");
+	branchMap.put("branchName", branchName);
+	BranchList.add(branchMap);
+	context.BranchList=BranchList;
+	
 	passbookNumber = parameters.passbookNumber;
 	partyId = parameters.partyId;
 	groupName = parameters.groupName;
