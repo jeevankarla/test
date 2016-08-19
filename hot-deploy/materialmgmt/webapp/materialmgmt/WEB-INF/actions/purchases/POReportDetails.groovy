@@ -348,6 +348,12 @@ if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
     allDetailsMap.put("sequenceId",sequenceId);
     allDetailsMap.put("indentSquienceNo",indentSquienceNo);
 }
+transporterName="";
+transporterDetails = delegator.findOne("OrderAttribute",["orderId":toOrderId,"attrName":"TRANSPORTER_PREF"],false);
+if(UtilValidate.isNotEmpty(transporterDetails)){
+    transporterName = transporterDetails.get("attrValue");
+}
+allDetailsMap.putAt("transporterName", transporterName);
 context.toOrderId = toOrderId;
 orderHeader = delegator.findOne("OrderHeader",["orderId":toOrderId],false);
 
