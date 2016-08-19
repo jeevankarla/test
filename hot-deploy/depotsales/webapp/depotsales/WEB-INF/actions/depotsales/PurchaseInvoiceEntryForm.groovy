@@ -181,9 +181,12 @@ import java.math.RoundingMode;
 			context.discountLabelJSON = discountLabelJSON;
 			context.discountLabelIdJSON = discountLabelIdJSON;
 			
-			
-			
-			
+			orderNo="";
+			draftOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+			if(UtilValidate.isNotEmpty(draftOrderIdDetails)){
+				orderNo = EntityUtil.getFirst(draftOrderIdDetails).orderNo;
+			}
+			context.orderNo=orderNo;
 			context.orderId = orderId;
 			context.partyId = partyId;
 			context.billToPartyId = billToPartyId;

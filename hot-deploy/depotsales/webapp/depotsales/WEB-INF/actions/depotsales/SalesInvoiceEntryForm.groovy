@@ -310,7 +310,12 @@ if(shipments){
 		
 		
 		
-		
+		orderNo="";
+		salesOrderSeqDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+		if(UtilValidate.isNotEmpty(salesOrderSeqDetails)){
+			orderNo = EntityUtil.getFirst(salesOrderSeqDetails).orderNo;
+		}
+		context.orderNo=orderNo;
 		context.orderId = orderId;
 		context.partyId = partyId;
 		context.billToPartyId = billToPartyId;
