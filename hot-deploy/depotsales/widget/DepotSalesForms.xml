@@ -645,11 +645,16 @@
         <field name="statusId" title="Status"><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display/></field>
         <field name="supplierId" title="Supplier">
-        	<display default-value="${supplierId}"/>
+        	<display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);}  [${supplierId}]"/>
         </field>
         <field name="supplierInvoiceId" title="Supplier Invoice No"><display/></field>
         <field name="supplierInvoiceDate" title="Supplier Invoice Date"><display /></field>
+        <field name="carrierName" title="Vehicle No"><display/></field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="estimatedReadyDate" title="LR Date"><display/></field>
+        <field name="lrNumber" title="LR No"><display/></field>
+        <field name="estimatedShipCost" title="Freight Charges"><display/></field>
+        <field name="description" title="Remarks"><display/></field>
         <field name="createdDate" title="Created Date"><display/></field>
         <field name="createdByUserLogin" title="Created User Login"><display/></field>
     </form>
