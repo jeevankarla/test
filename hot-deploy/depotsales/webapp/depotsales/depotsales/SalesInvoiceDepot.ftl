@@ -137,9 +137,15 @@ $(document).ready(function(){
 	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Sales Order No:</div></td>
 				<#if orderId?exists && orderId?has_content>  
 		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>${orderId?if_exists}</div> 
-	          		</td>       
+	          		<#if orderNo?exists && orderNo?has_content>   
+		          		<td valign='middle'>
+		            		<div class='tabletext h3'>${orderNo?if_exists}</div> 
+		          		</td>   
+		          	<#else>	
+			           <td valign='middle'>
+		                   <div class='tabletext h3'>${orderId?if_exists}</div> 
+		          	   </td> 
+	          		</#if>        
 	          	</#if>
 	        </tr>
 	                  
