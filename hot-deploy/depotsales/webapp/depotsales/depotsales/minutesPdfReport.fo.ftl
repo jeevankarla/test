@@ -326,7 +326,8 @@ under the License.
 				<fo:block>c) Difference of the Sale</fo:block>
 				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: Nil</fo:block>
 				<fo:block>d) 0 days interest on the credit:</fo:block>
-				<fo:block>e) Percentage of Trading Contribution: 0%</fo:block>
+				<#assign orderAdj = delegator.findByAnd("OrderAdjustment", {"orderId" : indentId, "orderAdjustmentTypeId" : "SERVICE_CHARGE" })?if_exists />
+				<fo:block>e) Percentage of Trading Contribution: ${orderAdj[0].sourcePercentage}%</fo:block>
 			    <fo:block>	
 			        <fo:table border-style="solid">
              		    <fo:table-column column-width="100%"/>
