@@ -139,6 +139,22 @@ if(UtilValidate.isNotEmpty(orderAttr)){
 context.scheme = scheme;
 
 
+condExpr = [];
+condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+orderAdjustForTen = delegator.findList("OrderAdjustment", cond, UtilMisc.toSet("orderId","amount"), null, null, false);
+
+
+
+ tenperValue = 0;
+if(orderAdjustForTen){
+	amount=(EntityUtil.getFirst(orderAdjustForTen)).getString("amount");
+	tenperValue = Double.valueOf(amount);
+}
+
+context.tenperValue = tenperValue;
+
 
 for (eachItem in invoiceItemList) {
 	
@@ -156,7 +172,7 @@ double tenPercent = 0;
 
 //Debug.log("scheme==============="+scheme);
 
-if(scheme == "MGPS_10Pecent"){
+if(scheme == "MGPS_10Pecent" && tenperValue != 0){
 amount = (Double.valueOf((eachItem.quantity))*(Double.valueOf(eachItem.amount)));
 tenPercent = (amount * -10)/100;
 }

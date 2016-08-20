@@ -876,7 +876,7 @@
         		
         		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
-        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" && tenperValue !=0 >
         			calculateMagpsDiscount();
         		</#if>
         		}
@@ -1018,7 +1018,7 @@
         		}
         		if (args.cell == 2) {
         			updateInvoiceTotalAmount();
-        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+        			<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" && tenperValue !=0 >
         			calculateMagpsDiscount();
         			</#if>
         		}
@@ -1084,7 +1084,7 @@
 		 	setupGrid1();
 		 	setupGrid2();
 		 	setupGrid3();
-		 	<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" >
+		 	<#if scheme == "MGPS_10Pecent" && disCountFlag != "N" && tenperValue !=0 >
 		 	calculateMagpsDiscount();
 		  </#if>
 		 	updateInvoiceTotalAmount();

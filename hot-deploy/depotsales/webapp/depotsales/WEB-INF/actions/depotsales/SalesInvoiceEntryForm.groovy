@@ -230,9 +230,27 @@ if(shipments){
 			}
 		   }
 		
-		//Debug.log("scheme============="+scheme);
+		Debug.log("scheme============="+scheme);
 		
 		context.scheme = scheme;
+		
+		
+		
+		condExpr = [];
+		condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+		orderAdjustForTen = delegator.findList("OrderAdjustment", cond, UtilMisc.toSet("orderId","amount"), null, null, false);
+		
+		
+		
+		 tenperValue = 0;
+		if(orderAdjustForTen){
+			amount=(EntityUtil.getFirst(orderAdjustForTen)).getString("amount");
+			tenperValue = Double.valueOf(amount);
+		}
+		
+		context.tenperValue = tenperValue;
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -540,6 +558,9 @@ if(shipments){
 					}
 				}
 			amount = unitPrice*qty;
+			
+			
+			
 			
 			if(UtilValidate.isNotEmpty(tenPercentItems) && scheme == "MGPS_10Pecent"){
 				//tenPercent = (EntityUtil.getFirst(tenPercentItems)).get("amount");

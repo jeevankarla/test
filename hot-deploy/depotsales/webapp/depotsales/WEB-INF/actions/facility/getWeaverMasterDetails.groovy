@@ -158,6 +158,13 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	else if(UtilValidate.isNotEmpty(partyId))
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
 	
+		
+	
+	if(branchList.size() == 1){
+		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS, branchId));
+	}		
+		
+		
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
 	
@@ -206,7 +213,7 @@ partyList.each{ partyList ->
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
 	fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	
-	FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
+	FacilityList = delegator.findList("Facility", fcond, UtilMisc.toSet("facilityId"), null, null, false);
 	
 	
 	isDepots = "";
@@ -232,7 +239,38 @@ partyList.each{ partyList ->
 	
 	tempData.put("totalIndents", totalIndents);
 	
-	branchName = PartyHelper.getPartyName(delegator, partyList.partyIdFrom, false);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()),
+		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+	
+	fcondP = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	
+	PartyRelationship = delegator.findList("PartyRelationship", fcondP, null, null, null, false);
+
+	
+	branchName = "";
+	
+	if(PartyRelationship.size() !=1){
+		
+		int i=0;
+		for (eachEbranchList in PartyRelationship) {
+			
+			if(i!=0 && i != PartyRelationship.size())
+			branchName = branchName +","+ PartyHelper.getPartyName(delegator, eachEbranchList.partyIdFrom, false);
+			else
+			branchName = branchName + PartyHelper.getPartyName(delegator, eachEbranchList.partyIdFrom, false);
+			
+			i++;
+		}
+	}else{
+	  branchName = branchName + PartyHelper.getPartyName(delegator, partyList.partyIdFrom, false);
+	}	
+	
 	
 	tempData.put("branchName", branchName);
 	
@@ -243,7 +281,6 @@ partyList.each{ partyList ->
 	partyClassification = "";
 	if(partyClassificationList){
 		partyClassificationGroupId = partyClassificationList[0].get("partyClassificationGroupId");
-		
 		PartyClassificationGroup = delegator.findOne("PartyClassificationGroup",[partyClassificationGroupId : partyClassificationGroupId] , false);
 		
 		if(PartyClassificationGroup)
@@ -272,7 +309,7 @@ partyList.each{ partyList ->
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,null,null,null,false));
+		LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,UtilMisc.toSet("description"),null,null,false));
 		
 		if(LoomTypeDetails)
 		loomDetail = loomDetail+(LoomTypeDetails.description+" : "+Math.round(eachPartyLoom.quantity)+"   ");
@@ -420,7 +457,6 @@ partyList.each{ partyList ->
 	
 }
 	
-
 
 request.setAttribute("weaverDetailsList", weaverDetailsList);
 return "success";
