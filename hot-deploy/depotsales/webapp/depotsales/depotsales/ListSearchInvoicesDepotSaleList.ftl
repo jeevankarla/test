@@ -461,13 +461,20 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
               </td>
-               <#assign shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
-                <#assign orderRole = delegator.findByAnd("OrderRole", {"orderId" : shipment.primaryOrderId?if_exists, "roleTypeId" : "BILL_FROM_VENDOR" })>
-                <#assign customerName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, orderRole[0].partyId, false)/>
- 		       <td>
-                <a href="/partymgr/control/viewprofile?partyId=${(orderRole[0].partyId)?if_exists}">${customerName}[${(orderRole[0].partyId)?if_exists}]</a>
-              </td>
-			 
+              <#if (invoice.shipmentId?has_content) && invoice.shipmentId != "OBC">
+              <#assign shipmentId = invoice.shipmentId>
+               <#assign shipment = delegator.findOne("Shipment", {"shipmentId" : shipmentId}, false)?if_exists />
+               <#if shipment?has_content && shipment.primaryOrderId>
+                  <#assign orderRole = delegator.findByAnd("OrderRole", {"orderId" : shipment.primaryOrderId, "roleTypeId" : "BILL_FROM_VENDOR" })>
+                  <#assign customerName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, orderRole[0].partyId?has_content, false)/>
+	 		       <td>
+	                <a href="/partymgr/control/viewprofile?partyId=${(orderRole[0].partyId)?if_exists}">${customerName}[${(orderRole[0].partyId)?has_content}]</a>
+	              </td>
+	             <#else>
+	              <td>
+	              </td>
+               </#if>
+			 </#if>
  			
             <#-->  <td>${(invoice.description)?if_exists}</td>
  			  <td>${(invoice.cancelComments)?if_exists}</td>-->
