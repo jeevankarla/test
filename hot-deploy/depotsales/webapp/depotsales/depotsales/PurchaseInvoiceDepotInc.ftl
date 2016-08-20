@@ -11,8 +11,8 @@
 	    	font-size: 13px;
 		}
 		.form-style-8{
-		    max-width: 650px;
-		    max-height: 185px;
+		    max-width: 1400px;
+		    max-height: 200px;
 		    max-right: 10px;
 		    margin-top: 10px;
 			margin-bottom: -15px;
@@ -21,7 +21,18 @@
 		    border-radius: 20px;
 		    border: 1px solid #305A72;
 		}
-		
+		.form-style-7{
+		   	max-width: 1200px;
+		    max-height: 185px;
+		    max-right: 10px;
+		    margin-top: 10px;
+			margin-bottom: -15px;
+		    padding: 15px;
+		    background-color: Thistle;
+		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+		    border-radius: 20px;
+		    border: 1px solid #305A72;
+		}
 	</style>
 
 </style>			

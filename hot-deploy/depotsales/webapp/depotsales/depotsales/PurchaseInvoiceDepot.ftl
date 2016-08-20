@@ -36,19 +36,21 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "PurchaseInvoiceDepotInc.ftl"/>
-
-<div class="full">
-	
-		<div class="screenlet-title-bar">
-	         <div class="grid-header" style="width:100%">
-				<label>Purchase Invoice Entry </label>
-			</div>
-	     </div>
-	      
-	    <div class="screenlet-body">
-	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
-	      <table width="60%"  border="0" cellspacing="0" cellpadding="0">  
-	        <tr>
+<div class="full" style="width:100%">
+			<div class="screenlet-title-bar">
+         		<div class="grid-header" style="width:100%">
+					<label><font color="green">Purchase Invoice Entry</font></label>
+				</div>
+		     </div>
+      
+    		<div class="screenlet-body">
+     
+	           <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
+			    	<table width="100%">
+			    	<tr>
+				        <td width="40%">
+			    	<table  border="0" cellspacing="0" cellpadding="0">
+				        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
 	          <#if effectiveDate?exists && effectiveDate?has_content>  
@@ -145,11 +147,97 @@ $(document).ready(function(){
 	          		</#if>   
 	          	</#if>
 	        </tr>
-	                  
-	      </table>
-	      <div id="sOFieldsDiv" >
-	      </div> 
-	</form>
+				        
+	    			</table>
+	    			</td>
+	    			<td border="1">
+	    			<#if ShipmentReceipt?has_content>
+	    				<table  class="form-style-7">
+				      	  <tr>
+				      	  
+				      		  <td align="center" colspan="5">
+				       			<font ><b><u> Shipment History</u></b></font>
+				       		 </td>
+	    				 </tr>
+	    				 <tr>
+	    				 	<td width="10%">
+								<b>ShipmentId</b>	    						 
+			    			</td>
+	    					<td width="70%" align="center">
+								<b>Product</b>	    						 
+			    			</td>
+			    			<td width="10%">
+								<b>Accepted Quantity</b>    						 
+			    			</td>
+			    			<td width="10%">
+			    				<b>Status</b>
+			    			</td>
+			    			<td width="20%" align="center">
+			    				<b>Invoice No</b>
+			    			</td>
+			    			<td width="30%" align="center">
+			    				<b>LR No</b>
+			    			</td>
+			    			<td width="10%">
+								<b>Entry by </b>  						 
+			    			</td>
+	    				 </tr>
+	    				 <#assign totalQty=0>
+	    				 <#list ShipmentReceipt as eachShipment>
+	    				 	  <#assign ShipmentDetail = delegator.findOne("Shipment", {"shipmentId" : eachShipment.get("shipmentId")}, true)?if_exists/>
+	    				 
+	    				 <tr>
+	    				 	<td width="10%">
+	    						 ${eachShipment.get("shipmentId")}
+	    						 
+			    			</td>
+	    					<td width="70%">
+	    						<#assign product = delegator.findOne("Product", {"productId" : eachShipment.get("productId")}, true)?if_exists/>
+	    					
+	    						 ${product.get("brandName")?if_exists}
+	    						 
+			    			</td>
+			    			<td width="10%">
+	    						 ${eachShipment.get("quantityAccepted")?if_exists}
+	    						<#assign totalQty=totalQty+eachShipment.get("quantityAccepted")>
+			    			</td>
+			    			<td width="10%">
+	    						<#if "SR_RECEIVED"==eachShipment.get("statusId")>Received<#else>${eachShipment.get("statusId")}</#if>
+	    						 
+			    			</td>
+			    			<td width="20%">
+	    						 ${ShipmentDetail.get("supplierInvoiceId")?if_exists}
+	    						 
+			    			</td>
+			    			<td width="30%">
+	    						 ${ShipmentDetail.get("lrNumber")?if_exists}
+	    						 
+			    			</td>
+			    			
+			    			<td width="10%">
+	    						 ${eachShipment.get("receivedByUserLoginId")}
+	    						 
+			    			</td>
+			    			
+	    				 </tr>
+	    				 </#list>
+	    				  <tr>
+	    				 	<td width="10%" colspan="4" align="center">
+	    				 		<b>Total Quantity Shipped Till Now : ${totalQty?if_exists}</b>
+	    				 	</td>
+	    				  </tr>
+	    				</table>
+	    			</#if>
+	    			</td>
+	    			</tr>
+	    			</table>
+	    			 <div id="sOFieldsDiv" >
+	               </div> 
+				</form>
+    		</div>
+		</div>
+
+	    
 	<br/>
     <form method="post" id="indententry" action="<@ofbizUrl>purchaseEntryInit</@ofbizUrl>">  
 	<#-- passing BillToPartyId: -->
