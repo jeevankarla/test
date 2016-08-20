@@ -5262,13 +5262,8 @@ public class InvoiceServices {
 	       		}
        		}
        		Timestamp invDate=null;
-   			//Debug.log("invoiceId=======4444444========="+invoiceId);
-
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
        			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
-       			
-       		//	Debug.log("invoiceItems=======4444444========="+invoiceItems);
-
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
        			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate"))){
        			    invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
@@ -5289,34 +5284,21 @@ public class InvoiceServices {
        			String indentTypeId = "D";
        			String boSequnce = "";
        			String roSequnce ="";
-       			
-       			//Debug.log("shipmentId====4444444============"+shipmentId);
-       			//if(UtilValidate.isNotEmpty(shipmentId)){
+       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
-	           			//Debug.log("orderId====4444444============"+orderId);
-	           			//Debug.log("invoiceTypeId====4444444============"+((EntityUtil.getFirst(invoiceItems)).getString("purposeTypeId")) );
-	           			if(UtilValidate.isNotEmpty(shipmentId)){
-	           				try{
-	           			      orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-	           			       orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
-	           				}catch(Exception e){
-	           		        	Debug.logError(e, e.toString(), module);
-	           		        }
-	        			}
+	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
 	                	prefix="PI";
 	       			}
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
-	           			//Debug.log("partyId====4444444============"+partyId);
-	           			if(UtilValidate.isNotEmpty(shipmentId)){
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
 	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
 	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
-	           			}
 	                	prefix="SI";
 	       			}
 	       		    List condList = FastList.newInstance();
@@ -5333,7 +5315,7 @@ public class InvoiceServices {
 	       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
 	    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
 	                roSequnce = partyROs.getString("externalId");
-       			//}
+       			}
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");
@@ -5398,7 +5380,6 @@ public class InvoiceServices {
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
     				billOfSale.put("billOfSaleTypeId", "SALE_INV_SQUENCE");
     				billOfSale.put("invoiceId", invoiceId);
-    				Debug.log("partyId========================"+partyId);
     				billOfSale.put("partyId", partyId);
     				billOfSale.put("finYearId", finYearId);
     				billOfSale.put("invoiceDueDate", invDate);
