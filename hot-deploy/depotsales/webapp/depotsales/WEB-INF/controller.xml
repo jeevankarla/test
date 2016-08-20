@@ -2092,7 +2092,17 @@
         <event type="java" global-transaction="true" invoke="saveBranchSaleOrderEvent" path="in.vasista.vbiz.depotsales.DepotSalesServices"/>
         <response value="json" type="request" name="success"/>
     </request-map>
-    
+    <request-map uri="editGRN">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="editGRN"/>
+       <response name="error" type="view" value="editGRN"/>
+     </request-map>
+     <request-map uri="processEditGrnShipment">
+       <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processEditGrnShipment" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="FindSupplierShipments"/>
+       <response name="error" type="request-redirect" value="FindSupplierShipments"/>
+     </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -2338,4 +2348,5 @@
     <view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
     <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
+    <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
 </site-conf>

@@ -12557,5 +12557,89 @@ public class DepotSalesServices{
           result.put("partyId", partyIdTo);
          return result;
   	}
+    
+    public static String processEditGrnShipment(HttpServletRequest request, HttpServletResponse response) {
+    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		
+  		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy"); 
+  		
+  		String supplierInvoiceDateStr = (String) request.getParameter("suppInvoiceDate");
+  		String supplierInvoiceId = (String) request.getParameter("suppInvoiceId");
+  		String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
+  		String deliveryChallanNumber = (String) request.getParameter("deliveryChallanNo");
+  		String lrNumber = (String) request.getParameter("lrNumber");
+  		String estimatedReadyDateStr = (String) request.getParameter("lrDate");
+  		String carrierName = (String) request.getParameter("carrierName");
+  		String vehicleId = (String) request.getParameter("vehicleId");
+  		BigDecimal estimatedShipCost = BigDecimal.ZERO;
+  		if(UtilValidate.isNotEmpty(request.getParameter("freightCharges"))){
+  			estimatedShipCost = new BigDecimal(request.getParameter("freightCharges"));
+  		}
+  		String remarks = (String) request.getParameter("remarks");
+  		
+  		
+  		Timestamp supplierInvoiceDate = null;
+  		Timestamp deliveryChallanDate = null;
+  		Timestamp estimatedReadyDate = null;
+  		
+  		if (UtilValidate.isNotEmpty(supplierInvoiceDateStr)) { 
+			try {
+				supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse invoice date string: " + supplierInvoiceDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse invoice date string: " + supplierInvoiceDateStr, module);
+			}
+  		}
+  		if (UtilValidate.isNotEmpty(deliveryChallanDateStr)) { 
+			try {
+				deliveryChallanDate = new java.sql.Timestamp(sdf.parse(deliveryChallanDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse delivery date string: " + deliveryChallanDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse delivery date string: " + deliveryChallanDateStr, module);
+			}
+  		}
+  		if (UtilValidate.isNotEmpty(estimatedReadyDateStr)) { 
+			try {
+				estimatedReadyDate = new java.sql.Timestamp(sdf.parse(estimatedReadyDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse estimated ready date string: " + estimatedReadyDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse estimated ready date string: " + estimatedReadyDateStr, module);
+			}
+  		}
+  		String shipmentId = (String) request.getParameter("shipmentId");
+  		try{
+			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+			if(UtilValidate.isEmpty(shipment)){
+				request.setAttribute("_ERROR_MESSAGE_", "Invalid Shipment Id");
+				return "error";
+			}
+			shipment.set("supplierInvoiceDate", supplierInvoiceDate);
+			shipment.set("supplierInvoiceId", supplierInvoiceId);
+			shipment.set("deliveryChallanDate", deliveryChallanDate);
+			shipment.set("deliveryChallanNumber", deliveryChallanNumber);
+			shipment.set("lrNumber", lrNumber);
+			shipment.set("estimatedReadyDate", estimatedReadyDate);
+			shipment.set("carrierName", carrierName);
+			shipment.set("vehicleId", vehicleId);
+			shipment.set("estimatedShipCost", estimatedShipCost);
+			shipment.set("description", remarks);
+			shipment.store();
+		}catch (GenericEntityException e) {
+			Debug.logError("Error While Updating Shipment Details ", module);
+			request.setAttribute("_ERROR_MESSAGE_", "Error While Updating Shipment Details ");
+			return "error";
+		}
+  		request.setAttribute("_EVENT_MESSAGE_", "Shipment Details Has been successfully Updated : "+shipmentId);
+  		request.setAttribute("shipmentId",shipmentId);
+		return "success";
+          
+  	}
 
 }
