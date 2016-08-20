@@ -462,6 +462,59 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="editGRN">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Supplier PO Dispatch" />
+				<set field="tabButtonItem" value="FindSupplierDispatchs" />
+				<set field="tabButtonItem2" value="SupplierDispatchEntry" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="parameters.roleTypeId" value="SUPPLIER" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="orderNo" from-field="parameters.orderNo"/>
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="defaulteffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/TransportersList.groovy" />
+				<entity-one entity-name="Shipment" value-field="shipmentDetail">
+                    <field-map field-name="shipmentId" from-field="parameters.shipmentId"/>
+                </entity-one>	
+			</actions>
+			<widgets>
+				<decorator-screen name="SupplierMyPortalCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="SupplierReceiptTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<platform-specific>
+											<html>
+												<html-template
+													location="component://depotsales/webapp/depotsales/depotsales/editGRNShipment.ftl" />
+											</html>
+										</platform-specific>
+									</widgets>
+									<fail-widgets>
+										<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+										</label>
+									</fail-widgets>
+								</section>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="ProcessInventorySalesOrder">
     		<section>
     			<actions>

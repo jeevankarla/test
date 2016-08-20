@@ -403,6 +403,13 @@
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
         </field>
+        <field name="editGRN" widget-style="buttontext" title="Edit GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+            <hyperlink target="editGRN" description="Edit GRN">
+                <parameter param-name="shipmentId"/>
+                <parameter param-name="orderId" value="${primaryOrderId}"/>
+                <parameter param-name="orderNo" from-field="salesOrder"/>
+            </hyperlink>
+        </field>
         <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
             <hyperlink target="CancelGrnShipment" description="Cancel GRN">
                 <parameter param-name="shipmentId"/>
