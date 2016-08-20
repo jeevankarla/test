@@ -640,7 +640,7 @@ context.externalOrderId = externalOrderId;
 	   }*/
 		 
 		 
-		 quantity = quantity+eachInvoiceList.quantity;
+		 quantity = eachInvoiceList.quantity;
 		 amount = eachInvoiceList.amount;
 		
 		 double baleQty = 0; 
