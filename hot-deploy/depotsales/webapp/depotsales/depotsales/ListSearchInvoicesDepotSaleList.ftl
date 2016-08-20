@@ -428,9 +428,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.CommonStatus}</td>
           <#--- <td>${uiLabelMap.CommonDescription}</td>
           <td>Reason For Cancellation</td>-->
+          <td>Supplier</td>
+          <td>Branch</td>
           <td>Customer</td>
-          <td>${uiLabelMap.AccountingVendorParty}</td>
-          <td>${uiLabelMap.AccountingToParty}</td>
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
