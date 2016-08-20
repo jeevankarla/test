@@ -399,6 +399,17 @@ function populateData(){
 			
 		} 
 		  
+		  function populateManualAddress(){
+		    var districtGeoId = $("#districtGeoId").val();
+		    var shipingAddCity = $("#shipingAddCity").val();
+		    if(districtGeoId.length != 0){
+			     $("#city").val(districtGeoId);
+		     }
+		     else{
+		     $("#districtGeoId").val(shipingAddCity);
+		    }
+		  }
+
 		  
 		  function populateDestination(){
 		  
@@ -905,14 +916,15 @@ function populateData(){
       						<tr>
                     			<td class="label"><FONT COLOR="#045FB4"><b>Destination  : </b></FONT></td>
                             	 <#if shipingAdd?has_content && shipingAdd.get("city")?has_content>
-                            	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("city")?if_exists}" onblur = "populateDestination()">
+                            	         <td ><input type="text" name="districtGeoId" id="districtGeoId" value="${shipingAdd.get("city")?if_exists}" onblur = "populateManualAddress()">
                             		<#else>
-                            		     <td><input type="text" name="districtGeoId" id="districtGeoId" onblur = "populateDestination()">
+                            		     <td><input type="text" name="districtGeoId" id="districtGeoId" onblur = "populateManualAddress()">
                             	 </#if>
                             	 </td>
                             	 
                             	  <input type="hidden" name="shipingAddCity" id="shipingAddCity" value="${shipingAdd.get("city")?if_exists}">
-                            	  
+                            	   <input type="hidden" name="shipingAdd1" id="shipingAdd1" value="${shipingAdd.get("address1")?if_exists}">
+                            	   <input type="hidden" name="shipingAdd2" id="shipingAdd2" value="${shipingAdd.get("address2")?if_exists}">
       						</tr>
       						
 			           </table>
