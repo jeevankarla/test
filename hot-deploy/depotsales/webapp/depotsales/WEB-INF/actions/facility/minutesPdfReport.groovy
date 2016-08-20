@@ -28,6 +28,7 @@ rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 dctx = dispatcher.getDispatchContext();
 
 context.partyName = parameters.partyName;
+context.indentId=parameters.orderId;
 partyId = parameters.partyId;
 consList=[];
 consList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
