@@ -395,8 +395,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
          <#--- <td>${uiLabelMap.CommonDescription}</td>
           <td>Reason For Cancellation</td>-->
           <td>Customer</td>
-          <td>${uiLabelMap.AccountingVendorParty}</td>
-          <td>${uiLabelMap.AccountingToParty}</td>
+          <td>Supplier</td>
+          <td>Branch</td>
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
@@ -433,12 +433,20 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               </td>
  		      
 			  </td>
-               <#assign shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
+			   <#if (invoice.shipmentId?has_content) && invoice.shipmentId != "OBC">
+                <#assign shipmentId = invoice.shipmentId>
+                <#if shipment?has_content && shipment.primaryOrderId>
+                <#assign shipment = delegator.findOne("Shipment", {"shipmentId" : shipmentId}, false)?if_exists />
                 <#assign orderRole = delegator.findByAnd("OrderRole", {"orderId" : shipment.primaryOrderId?if_exists, "roleTypeId" : "SHIP_TO_CUSTOMER" })>
-                <#assign customerName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, orderRole[0].partyId, false)/>
- 		       <td>
-                <a href="/partymgr/control/viewprofile?partyId=${(orderRole[0].partyId)?if_exists}">${customerName}[${(orderRole[0].partyId)?if_exists}]</a>
-              </td>
+ 		        <#assign customerName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, orderRole[0].partyId?has_content, false)/>
+	 		       <td>
+	                <a href="/partymgr/control/viewprofile?partyId=${(orderRole[0].partyId)?if_exists}">${customerName}[${(orderRole[0].partyId)?has_content}]</a>
+	              </td>
+	             <#else>
+	              <td>
+	              </td>
+               </#if>
+			 </#if>
  			
              <#--- <td>${(invoice.description)?if_exists}</td>
  			  <td>${(invoice.cancelComments)?if_exists}</td>-->
