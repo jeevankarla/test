@@ -5284,23 +5284,35 @@ public class InvoiceServices {
        			String indentTypeId = "D";
        			String boSequnce = "";
        			String roSequnce ="";
-       			if(UtilValidate.isNotEmpty(shipmentId)){
+       			//if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
+	        			
+	        			try{
 	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
 	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	        			}catch(Exception e){
+	        				Debug.logError("Problem in OrderAssoc", module);
+	        			}
+	           			
 	                	prefix="PI";
 	       			}
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
+	        			
+	        			try{
 	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
 	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	        			}catch(Exception e){
+	        				Debug.logError("Problem in OrderAssoc", module);
+	        			}
 	                	prefix="SI";
 	       			}
+	       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       		    List condList = FastList.newInstance();
 	                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
