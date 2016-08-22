@@ -950,6 +950,13 @@
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
+        <field name="schemeCategory" title="Scheme Category" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
+        	<drop-down allow-empty="true">
+        		<option key="MGPS_10Pecent" description="MGPS+10% Scheme"/>
+        		<option key="MGPS" description="MGPS Scheme"/>
+        		<option key="General" description="General Scheme"/>
+        	</drop-down>
+        </field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
         <field name="invoiceSequence"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
