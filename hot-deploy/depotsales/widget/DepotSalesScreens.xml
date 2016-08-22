@@ -2772,6 +2772,7 @@
 					<field-map field-name="entityName" value="Invoice" />
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service>
+				<set field="parameters.invoiceId" value="" />				
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="salesInvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
