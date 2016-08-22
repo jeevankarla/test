@@ -6005,5 +6005,33 @@ public class InvoiceServices {
             return invSeqObject.getString("invoiceSequence");
         }
     }
+	public static BigDecimal getInvoiceBasicValue(Delegator delegator, String invoiceId) {
+		BigDecimal invoiceItemBasicVal = BigDecimal.ZERO;
+        try {
+        	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+        	String invoicetypeId = (String) invoice.getString("invoiceTypeId");
+    		List conditionList = FastList.newInstance();
+    		List<GenericValue> invoiceItemList = FastList.newInstance();
+        	if(invoicetypeId.equals("PURCHASE_INVOICE")){
+        		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+        		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+            	invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productId","quantity","amount"), null, null, true);
+        	}
+        	if(invoicetypeId.equals("SALES_INVOICE")){
+        		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+        		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+            	invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("productId","quantity","amount"), null, null, true);
+        	}
+        	for (GenericValue invoiceItem : invoiceItemList) {
+	            BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
+	            BigDecimal unitpPce = invoiceItem.getBigDecimal("amount");
+	            BigDecimal amount = quantity.multiply(unitpPce);
+	            invoiceItemBasicVal = invoiceItemBasicVal.add(amount);
+        	}
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error,while getting Basic Amount of Invoice", module);
+        }
+        return invoiceItemBasicVal; 
+    }
 	
 }
