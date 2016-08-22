@@ -387,7 +387,7 @@ context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
 }
 
-grandTotal = OrderHeaderList.get("grandTotal")
+grandTotal = OrderHeaderList.get("grandTotal");
 
 context.grandTotal = grandTotal;
 
@@ -783,7 +783,7 @@ context.externalOrderId = externalOrderId;
 		//}		
 	 }
 	
-	context.grandTotal = Math.round(grandTotal);
+	context.grandTotal = grandTotal;
 	context.finalDetails = finalDetails;
 
 		
