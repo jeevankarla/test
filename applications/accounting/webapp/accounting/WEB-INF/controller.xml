@@ -2285,6 +2285,19 @@ under the License.
         </response>
         <response name="error" type="request-redirect" value="FindDepositPaidAccount"/>
     </request-map>
+    <request-map uri="createAdvanceDepositPaidFinAccountAndDeposit">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createDepositFinAccountAndDeposit"/>
+        <!-- <response name="success" type="request" value="FindDepositAccount"/>
+        <response name="error" type="view" value="FindDepositAccount"/> -->
+        <response name="success" type="request-redirect" value="FindEmployeeAdv">
+        <redirect-parameter name="finAccountTypeId"/>
+        <redirect-parameter name="finAccountName"/>
+        <redirect-parameter name="ownerPartyId"/>
+        <redirect-parameter name="noConditionFind"/>
+        </response>
+        <response name="error" type="request-redirect" value="FindEmployeeAdv"/>
+    </request-map>
 <!--     <request-map uri="refundDepositContraFinAccTrans">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="refundDepositContraFinAccTrans"/>

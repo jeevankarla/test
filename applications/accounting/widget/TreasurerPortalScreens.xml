@@ -904,8 +904,8 @@
                                 <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
                                 </platform-specific>
-                                <screenlet title="Create Deposit Paid Account">
-                                    <include-form name="EditDepositPaidAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                <screenlet title="Create Advance Deposit Paid Account">
+                                    <include-form name="EditAdvanceDeposit" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
