@@ -523,7 +523,10 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if> -->
               
-              <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialSalesEditInvoiceInit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+              <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialSalesEditInvoiceInit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+                <#else>
+ 		   	       <td></td>
+              </#if>
               
                 <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.invoiceTypeId == "SALES_INVOICE")||(invoice.invoiceTypeId?exists) >
