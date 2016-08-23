@@ -2147,6 +2147,15 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
+		 <menu-item name="FindEmployeeAdv" title="Employee Advance">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindEmployeeAdv">
+			</link>
+		 </menu-item>
 		   <!-- <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
 				<or>
