@@ -2108,6 +2108,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositPaidAccount"/>
     </request-map>
+    
+    <request-map uri="FindEmployeeAdv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindEmployeeAdv"/>
+    </request-map>
      <request-map uri="FindFinAccountTransAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
@@ -2204,6 +2209,10 @@ under the License.
      <request-map uri="EditDepositPaidFinAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditDepositPaidFinAccount"/>
+    </request-map>
+     <request-map uri="EditEmployeeAdvFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditEmployeeAdvFinAccount"/>
     </request-map>
     <request-map uri="WithdrawFromDepositAcct">
         <security https="true" auth="true"/>
@@ -4180,6 +4189,8 @@ under the License.
     <view-map name="EditDepositFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditDepositFinAccount"/>
     <view-map name="EditDepositReceivedFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditDepositReceivedFinAccount"/>
     <view-map name="EditDepositPaidFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditDepositPaidFinAccount"/>
+    <view-map name="EditEmployeeAdvFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditEmployeeAdvFinAccount"/>
+
     <view-map name="WithdrawFromDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#WithdrawFromDepositAcct"/>
     <view-map name="DepositToDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositToDepositAcct"/>
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
@@ -4189,6 +4200,7 @@ under the License.
 <!--     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/> -->
         <view-map name="FindDepositReceivedAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositReceivedAccount"/>
         <view-map name="FindDepositPaidAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositPaidAccount"/>
+        <view-map name="FindEmployeeAdv" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmployeeAdv"/>
         <view-map name="DepositTransfer" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositTransfer"/>
     
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
