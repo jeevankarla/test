@@ -3890,8 +3890,31 @@ under the License.
         <response name="error" type="view" value="PartySubLedgerByPurposeTypeCSV"/>
     </request-map>
     
+    <request-map uri="apGroupPayment">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="apGroupPayment"/>
+        <response name="error" type="view" value="apGroupPayment"/>
+    </request-map>
     
+    <request-map uri="makeGroupInvoicePayments">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeGroupInvoicePayments" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="apGroupPayment"/>
+        <response name="error" type="request-redirect-noparam" value="apGroupPayment"/>
+    </request-map>
     
+    <request-map uri="findAPGroupPayment">
+           <security https="true" auth="true"/>
+            <response name="success" type="view" value="FindAPGroupPayment"/>
+            <response name="error" type="view" value="FindAPGroupPayment"/>
+    </request-map>
+    
+    <request-map uri="LookupPartyNameJSON">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/reports/" invoke="LookupPartyNameJSON.groovy"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+    </request-map>
     
     <request-map uri="AccountReports">
         <security https="true" auth="true"/>
@@ -4637,6 +4660,7 @@ under the License.
    <view-map name="ArPaymentRegister" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#ArPaymentRegister" content-type="application/pdf" encoding="none"/>
    <view-map name="ApPaymentRegister" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#ApPaymentRegister" content-type="application/pdf" encoding="none"/>
    
-   
+   <view-map name="apGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#APGroupPaymentProcessing"/>
+   <view-map name="FindAPGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPGroupPayment"/>
    <!-- end of view mappings -->
 </site-conf>

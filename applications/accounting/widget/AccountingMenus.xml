@@ -2311,7 +2311,15 @@
             </condition>
             <link target="GroupPaymentNew">
             </link>
-        </menu-item> 
+        </menu-item>
+        <menu-item name="apGroupPayment" title="Group Payment">
+		     <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="apGroupPayment"></link>
+		</menu-item> 
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>
