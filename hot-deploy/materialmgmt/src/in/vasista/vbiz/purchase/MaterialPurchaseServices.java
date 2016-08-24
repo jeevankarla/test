@@ -4104,7 +4104,17 @@ public class MaterialPurchaseServices {
 								}
 								eachAdj.set("amount",discountAmount);
 								eachAdj.store();
-							}	
+							}else{
+								BigDecimal sourcePercentage=eachAdj.getBigDecimal("sourcePercentage");
+								if(sourcePercentage.compareTo(BigDecimal.ZERO)>0){
+								BigDecimal baseAmt=(Kgquantity.multiply(amendedPrice));
+								BigDecimal taxAmt=baseAmt.multiply(sourcePercentage.divide( new BigDecimal("100")));
+								//Debug.log("taxAmt======================="+taxAmt);
+								eachAdj.set("amount",taxAmt);
+								eachAdj.store();
+								}
+								
+							}
 						}
 					}
 					
