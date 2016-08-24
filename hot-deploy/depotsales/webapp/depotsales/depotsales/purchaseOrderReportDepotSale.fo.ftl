@@ -84,7 +84,7 @@ under the License.
    				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
-                       		<fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always"><#if allDetailsMap.get("transporterName")?has_content>TransporterName.: ${allDetailsMap.get("transporterName")?if_exists}</#if></fo:block></fo:table-cell>       			
+                       		<fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always"></fo:block></fo:table-cell>       			
                        </fo:table-row>
                        <fo:table-row>
 				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  ><#if allDetailsMap.get("refNo")?has_content> Reference NO   &#160;: ${allDetailsMap.get("refNo")?if_exists}</#if></fo:block></fo:table-cell>
@@ -389,7 +389,7 @@ under the License.
 			<fo:table-body>
                <fo:table-row>
 				  <fo:table-cell><fo:block text-align="left" font-size="11pt">3</fo:block></fo:table-cell>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT : Depatch Goods Through Bank Approved Transport</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT / TRANSPORTER NAME : Depatch Goods Through <#if allDetailsMap.get("transporterName")?has_content>${allDetailsMap.get("transporterName")?if_exists}<#else>Bank Approved Transport</#if></fo:block></fo:table-cell>
                </fo:table-row>
 	        </fo:table-body>
 	   </fo:table>
