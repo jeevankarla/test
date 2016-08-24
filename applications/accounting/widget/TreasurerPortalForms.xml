@@ -1097,9 +1097,10 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done after creating the Deposit Account --></field>
         
 		<field name="acctParentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
-        	<drop-down>
+        	<!--<drop-down>
         		<list-options key-name="finAccountTypeId" list-name="depositAccountTypes" description="${description}"/>
-        	</drop-down>
+        	</drop-down> -->
+        	<hidden value="DEPOSIT_PAID"/>
         </field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
       	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
