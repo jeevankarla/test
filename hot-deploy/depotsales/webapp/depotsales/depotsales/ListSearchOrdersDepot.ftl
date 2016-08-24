@@ -277,18 +277,20 @@ function drawRow(rowData) {
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
     row.append($("<td>" + indentDate + "</td>"));
     
-   if( rowData.POorder == "NA"){
+   if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
    row.append($("<td>" +  editOrder  +"</td>"));  
    }else{
    
     row.append($("<td></td>"));
    }
-
-    var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
-    
-    row.append($("<td>" +  minutesReport  +"</td>"));  
-
+   if(rowData.statusId != "ORDER_CANCELLED"){
+      var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
+      row.append($("<td>" +  minutesReport  +"</td>"));  
+   }else{
+   
+    row.append($("<td></td>"));
+   }
       var statusMap = {};
     
     statusMap["DRAFTPO_PROPOSAL"] = "APPROVE_LEVEL1";
@@ -297,7 +299,7 @@ function drawRow(rowData) {
     statusMap["APPROVE_LEVEL3"] = "ORDER_APPROVED";
    
      
-     if(rowData.statusId != "ORDER_PENDING"){
+     if((rowData.statusId != "ORDER_PENDING") && (rowData.statusId != "ORDER_CANCELLED")){
 	     if(rowData.POorder != "NA"){
 	     
 	         if(rowData.poSquenceNo != "NA")
@@ -362,7 +364,7 @@ function drawRow(rowData) {
     
     }
     
-    if(rowData.POorder != "NA"){
+    if((rowData.POorder != "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var poOrder= '\'' + rowData.POorder + '\'';;
    	var showqtipmthod = "javascript:showAgencyAddress("+ poOrder + ")";
     var PoReport ='<input type=button name="POReport" id=POReport value="PO Report" onclick="'+showqtipmthod+'">';
@@ -450,11 +452,12 @@ function drawRow(rowData) {
     }
     
     
-    
+    if(rowData.statusId != "ORDER_CANCELLED"){
      var IndentReport = '<a class="buttontext" href="<@ofbizUrl>IndentCsvReport.csv?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">CSV</a>';
-    
     row.append($("<td>" +  IndentReport  +"</td>"));  
-    
+    }else{
+       row.append($("<td></td>")); 
+    }
     
     
     
@@ -462,7 +465,7 @@ function drawRow(rowData) {
     <#if security.hasPermission("INDENT_CANCEL", session)>
     	hasPermission = true;
     </#if>
-    if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING") || hasPermission){
+    if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING") && (rowData.statusId != "ORDER_CANCELLED") || hasPermission){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
