@@ -4032,97 +4032,79 @@ public class MaterialPurchaseServices {
 				
 				BigDecimal partyBalanceQuota1 = (BigDecimal) productCategoryQuotasMap1.get(productCategoryId);
 			}
-				//updating OrderItemAttribute 
-				String baleQuantityStr = null;
-				String yarnUOMStr = null;
-				String remarks = "";
-				String bundleWeightStr = null;
-
-				if (paramMap.containsKey("baleQuantity" + thisSuffix)) {
-					baleQuantityStr = (String) paramMap
-							.get("baleQuantity" + thisSuffix);
-					 orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "BALE_QTY"), false);
-				     orderItemAttr.set("attrValue", baleQuantityStr);
-					 orderItemAttr.store();
-
-				}
-				if (paramMap.containsKey("remarks" + thisSuffix)) {
-					 if(UtilValidate.isNotEmpty(paramMap.get("remarks" + thisSuffix)) && (paramMap.get("remarks" + thisSuffix) != null)){
-						 remarks = (String) paramMap.get("remarks" + thisSuffix);
-					 }
-					 orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "REMARKS"), false);
-					 if(UtilValidate.isNotEmpty(orderItemAttr)){
-						 orderItemAttr.set("attrValue", remarks);
-						 orderItemAttr.store();
-					 }
-					
-				}
-				if (paramMap.containsKey("bundleWeight" + thisSuffix)) {
-					bundleWeightStr = (String) paramMap
-							.get("bundleWeight" + thisSuffix);
-					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "BUNDLE_WGHT"), false);
-					 if(UtilValidate.isNotEmpty(orderItemAttr)){
-						orderItemAttr.set("attrValue", bundleWeightStr);
-						orderItemAttr.store();
-					 }
-
-				}
-				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
-					yarnUOMStr = (String) paramMap
-							.get("yarnUOM" + thisSuffix);
-					orderItemAttr = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId,"attrName", "YARN_UOM"), false);
-					 if(UtilValidate.isNotEmpty(orderItemAttr)){
-						orderItemAttr.set("attrValue", yarnUOMStr);
-						orderItemAttr.store();
-					 }
-
-				}
 				//Debug.log("baleQuantityStr=="+baleQuantityStr+"remarks=="+remarks+"bundleWeightStr==="+bundleWeightStr+"yarnUOMStr==="+yarnUOMStr);
 		        request.setAttribute("orderId",orderId);
 		        
 		        if(UtilValidate.isNotEmpty(primaryOrderId)){
 			  		
-			  		resultMap = MaterialHelperServices.getOrderItemAndTermsMapForCalculation(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", primaryOrderId));
-					if (ServiceUtil.isError(resultMap)) {
-		  		  		String errMsg =  ServiceUtil.getErrorMessage(resultMap);
-		  		  		Debug.logError(errMsg , module);
-		  		  		request.setAttribute("_ERROR_MESSAGE_", errMsg);	
-		  		  		TransactionUtil.rollback();
-		  		  		return "error";
-		  		  	}
-					List<Map> otherCharges = (List)resultMap.get("otherCharges");
-					List<Map> productQty = (List)resultMap.get("productQty");
-					resultMap = MaterialHelperServices.getMaterialItemValuationDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "productQty", productQty, "otherCharges", otherCharges, "incTax", ""));
-					if(ServiceUtil.isError(resultMap)){
-		  		  		String errMsg =  ServiceUtil.getErrorMessage(resultMap);
-		  		  		Debug.logError(errMsg , module);
-		  		  		request.setAttribute("_ERROR_MESSAGE_", errMsg);	
-		  		  		TransactionUtil.rollback();
-		  		  		return "error";
-					}
-					List<Map> itemDetails = (List)resultMap.get("itemDetail");
+		        	List exprCdList=FastList.newInstance();
+			  		exprCdList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 					
-					List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+					if(UtilValidate.isNotEmpty(orderItemSeqId)){
+						exprCdList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+					}
+					
+					List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition(exprCdList,EntityOperator.AND), null, null, null, false);
 					
 					Map productSeqMap = FastMap.newInstance();
-					for(GenericValue eachItem : orderItems){
-						productSeqMap.put(eachItem.getString("productId"), eachItem.getString("orderItemSeqId"));
-					}
+					for(GenericValue item : orderItems){
+						productSeqMap.put(item.getString("productId"), item.getString("orderItemSeqId"));
 					List condExpr = FastList.newInstance();
 		        	condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
 		        	condExpr.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDate));
 		        	EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 		        	List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", cond, null, null, null, false);
-					
-					for(Map item : itemDetails){
-						String prodId = (String)item.get("productId");
-						BigDecimal unitListPrice = (BigDecimal) item.get("unitListPrice");
-						String seqId = (String)productSeqMap.get(prodId);
-						List<GenericValue> changeItem = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seqId));
-						if(UtilValidate.isNotEmpty(changeItem)){
-							GenericValue changeItemStore = EntityUtil.getFirst(changeItem);
-							changeItemStore.set("unitListPrice", unitListPrice);
-							changeItemStore.store();
+						String prodId = (String)item.getString("productId");
+						String SeqId = (String)item.getString("orderItemSeqId");
+						BigDecimal Kgquantity=item.getBigDecimal("quantity");
+						BigDecimal unitListPrice = (BigDecimal) item.getBigDecimal("unitListPrice");
+						List conList = FastList.newInstance();
+						conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
+						
+						if(UtilValidate.isNotEmpty(prodId)){
+							conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+						}
+					  	BigDecimal quotaQty =BigDecimal.ZERO;
+						try {
+							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
+
+							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+									if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+										quotaQty =quotaQty.add(OrderItemDetailValue.getBigDecimal("quotaQuantity"));
+									}
+								}
+							}
+					  	} catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive QuotaQty ", module);
+							request.setAttribute("_ERROR_MESSAGE_", "Error in retriving QuotaQty");
+							return "error";
+						}
+						//Adjustment calculation
+						List condList = FastList.newInstance();
+						condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId ));
+						List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+						for(GenericValue eachAdj : orderAdjustments){
+							//Debug.log("eachAdj=========================="+eachAdj);
+							String adjustmentTypeId = eachAdj.getString("orderAdjustmentTypeId");
+							if(adjustmentTypeId.equals("TEN_PERCENT_SUBSIDY")){
+								BigDecimal discountAmount = BigDecimal.ZERO;
+								if(quotaQty.compareTo(BigDecimal.ZERO)>0){
+									// Have to get these details from schemes. Temporarily hard coding it.
+									BigDecimal schemePercent = new BigDecimal("10");
+									BigDecimal percentModifier = schemePercent.movePointLeft(2);
+									if(Kgquantity.compareTo(quotaQty)>0){
+										discountAmount = ((quotaQty.multiply(amendedPrice)).multiply(percentModifier)).negate();
+									}
+									else{
+										discountAmount = ((Kgquantity.multiply(amendedPrice)).multiply(percentModifier)).negate();
+									}
+									//Debug.log("discountAmount===================="+discountAmount);
+								}
+								eachAdj.set("amount",discountAmount);
+								eachAdj.store();
+							}	
 						}
 					}
 					
