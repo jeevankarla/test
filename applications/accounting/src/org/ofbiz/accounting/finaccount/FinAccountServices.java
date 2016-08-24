@@ -268,6 +268,7 @@ public class FinAccountServices {
         String inFavor = (String) context.get("inFavor");
         amount = amount.abs();
         String parentTypeId = (String) context.get("acctParentTypeId");
+        String finAccountTypeId=(String) context.get("finAccountTypeId");
         String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
@@ -279,16 +280,36 @@ public class FinAccountServices {
         String finAccountTransTypeId = "DEPOSIT";
         try {
             // get the product store id and use it to generate a unique fin account code
-        	 Map<String, Object> createResult = dispatcher.runSync("createFinAccount", context);
-        	 
-             if (ServiceUtil.isError(createResult)) {
-                 return createResult;
-             }
+        	// check party FinAccount 
+			Map<String, Object> createResult=FastMap.newInstance();
+        	if("EMP_ADV".equals(finAccountTypeId)){
+	        	List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,depositPartyId));
+				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,finAccountTypeId));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+		    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+				GenericValue finAccountList = EntityUtil.getFirst(delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false));
+				if(UtilValidate.isNotEmpty(finAccountList)){
+		            finAccountId = finAccountList.getString("finAccountId");
+				}else{
+		        	 createResult = dispatcher.runSync("createFinAccount", context);
+		             if (ServiceUtil.isError(createResult)) {
+		                 return createResult;
+		             }
+			            finAccountId = (String)createResult.get("finAccountId");
+				}
+			
+        	}else{
+        		 createResult = dispatcher.runSync("createFinAccount", context);
+	             if (ServiceUtil.isError(createResult)) {
+	                 return createResult;
+	             }
+		            finAccountId = (String)createResult.get("finAccountId");
+        	}
              if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
             	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
-             finAccountId = (String)createResult.get("finAccountId");
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
