@@ -4914,4 +4914,157 @@
         </section>
     </screen>
   
+  	<screen name="APGroupPaymentProcessing">
+        <section>
+            <actions>
+             <!-- <set field="isTreasurerPortalAP" value="Y"/>
+             <set field="isTreasurerPortalAR" value="N" /> -->
+             <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/> 
+                <set field="titleProperty" value="Find Group Invoices"/>
+                  <set field="tabButtonItem" value="apGroupPayment" />	
+			      <set field="tabButtonItem2" value="ApUnAppliedInvoiceSearch"/>  
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
+                </service>
+                <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>  
+                 <set field="parentTypeId" from-field="parameters.parentTypeId" />      
+                 <set field="partyIdFrom" from-field="parameters.partyIdFrom" />     
+                 <set field="parameters.partyIdFrom" value="${groovy:org.ofbiz.base.util.StringUtil.split(parameters.partyIdFrom, &quot;,&quot;);}" type="List"/>
+                  <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="InvoiceAndType"/>
+                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
+                </service>
+                <!-- get Company BankAccounts -->
+    			<entity-condition entity-name="FinAccount" list="companyFinAccountsList" >
+	    			<condition-list>
+	    				<condition-expr field-name="ownerPartyId" value="Company"/>
+	    				<condition-expr field-name="statusId" value="FNACT_ACTIVE"/>
+	    				<condition-expr field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
+	    			</condition-list>
+    			</entity-condition>
+    			<entity-condition list="paymentMethods" entity-name="PaymentMethodAndType">
+					<condition-list combine="and">
+						<condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/>
+						<condition-expr field-name="paymentMethodTypeId" operator="not-equals" value="CASH_PAYOUT"/>
+					</condition-list>
+				</entity-condition>
+				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+				<entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+						<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>
+                <set field="invoices" from-field="result.listIt"/>   
+            </actions>
+            <widgets>
+             <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="ApGroupPaymentSubTab" location="component://accounting/widget/ap/ApMenus.xml"/> 
+                        <section>
+                        <!-- <condition>
+                          <if-compare operator="equals" value="true" field="hasArInvoiceEditPermission"/>
+                    	</condition> -->
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                      <decorator-section name="search-options">
+                                        <platform-specific>
+                                            	<html><html-template location="component://accounting/webapp/accounting/invoice/FindSearchGroupInvoices.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="Invoices List"> 
+            								<section>   
+            									<condition>
+            										<not><if-empty field="invoices" /></not>
+            									</condition>
+            									<widgets>              							                                   
+		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
+														target="InvoiceSearchResultsCsv.csv">
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
+														<parameter param-name="description_op" from-field="parameters.description_op"/>
+														<parameter param-name="description" from-field="parameters.description"/>
+														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
+														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>
+														<parameter param-name="partyIdFrom" from-field="partyIdFrom"/>
+														<parameter param-name="partyId" from-field="parameters.partyId"/>
+														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
+														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
+														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
+														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
+														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
+														<parameter param-name="partyIdFrom_op" from-field="parameters.partyIdFrom_op"/>
+													</link>	  
+												</widgets>
+											</section>               
+                                        	<platform-specific>
+                                            	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchGroupInvoices.ftl"/></html>
+                                        	</platform-specific>
+                                        </screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindAPGroupPayment">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Find AP Group Payment"/>              
+			   <set field="tabButtonItem" value="apGroupPayment" />
+			   <set field="tabButtonItem2" value="FindAPGroupPayment" />	
+               <!-- <set field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+               <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+	           <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+	           <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+	           <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/> -->
+               <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/FindGroupPayments.groovy"/>
+                
+               <set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+               <entity-condition list="finAccountList" entity-name="FinAccount">
+                	<condition-list combine="and">
+                		<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+						<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+                	</condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+            	 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+            	 	<decorator-section name="body">
+            	 		<include-menu name="ApGroupPaymentSubTab" location="component://accounting/widget/ap/ApMenus.xml"/>
+						<section>
+							<widgets>
+								<container style="full">
+								<screenlet title="Find Group Payments">
+									<platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/FindAPGroupPayments.ftl"/></html></platform-specific>		
+								</screenlet>
+								</container>		
+								<decorator-section name="search-results">
+										<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/viewPaymentGroupDetails.ftl"/></html></platform-specific>
+                                        <include-form name="ListAPGroupPayments"  location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </decorator-section>											
+							</widgets>
+						</section>						
+					</decorator-section>	
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

@@ -68,4 +68,14 @@ under the License.
             <link target="findApBranchPayments"/>
         </menu-item>
     </menu>
+    
+    <menu name="ApGroupPaymentSubTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2" >
+        <menu-item name="ApUnAppliedInvoiceSearch" title="Find Invoices">
+            <link target="apGroupPayment"></link>
+        </menu-item>
+        <menu-item name="FindAPGroupPayment" title="Find Group Payment">
+                <link target="findAPGroupPayment"/>
+        </menu-item>
+    </menu>
 </menus>
