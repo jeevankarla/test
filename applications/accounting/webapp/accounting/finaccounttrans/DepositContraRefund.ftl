@@ -94,9 +94,11 @@
 						"<option value=''>-- Select -- </option>"+
 						"<#if companyBanksList?has_content><#list companyBanksList as eachFinAccount><option value='${eachFinAccount.finAccountId?if_exists}' >${eachFinAccount.finAccountName?if_exists}</option></#list></#if>"+            
 						"</select>";
-						
 		if(acctype == "ReceivedAccount"){
 		message += "<form action='refundDepositReceivedContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
+		}
+		else if(acctype == "EmpAdv"){
+		message += "<form action='refundAdvanceDepositContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
 		}else{
 		message += "<form action='refundDepositPaidContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
 		}

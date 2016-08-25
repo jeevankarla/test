@@ -223,6 +223,9 @@ public class FinAccountServices {
         	if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_PAID")){
     			context.put("finAccountTransTypeId", "WITHDRAWAL");
         	}
+        	if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("EMPLOYEE_ADV")){
+    			context.put("finAccountTransTypeId", "WITHDRAWAL");
+        	}
         	
         	BigDecimal acctAmt = BigDecimal.ZERO;
         	if(UtilValidate.isNotEmpty(finAccount.get("actualBalance"))){
