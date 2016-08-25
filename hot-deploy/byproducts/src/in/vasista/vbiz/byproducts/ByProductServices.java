@@ -7547,10 +7547,6 @@ public class ByProductServices {
 			  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
 			  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
 			  		  serviceCtx.put("userLogin", userLogin);
-			  		  
-			  		  
-			  		  Debug.log("serviceCtx==================="+serviceCtx);
-			  		  
 			  		  Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", serviceCtx);
 			  		  if(ServiceUtil.isError(resultCtx)){
 			    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
