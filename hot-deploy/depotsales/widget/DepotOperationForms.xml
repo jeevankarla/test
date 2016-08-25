@@ -109,6 +109,11 @@
                 <parameter param-name="statusId" value="APPROVE_LEVEL1" />
             </hyperlink>
         </field>
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="Minutes" widget-style="buttontext">
+            <hyperlink target="PurchaseOrderMinutesReport.pdf" description="Minutes" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
         <field name="approveOrder" title="P And S Approvals" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL1&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
             <hyperlink target="approvalLevelOfDepotPo" description="Account Head">
                 <parameter param-name="orderId"/>

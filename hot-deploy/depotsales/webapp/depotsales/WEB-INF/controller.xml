@@ -729,7 +729,10 @@
     	<response name="success" type="view" value="PurchaseOrderViewDepot"/>
     </request-map>
     
-    
+     <request-map uri="PurchaseOrderMinutesReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderMinutesReport"/>
+    </request-map>
      <request-map uri="arcOrder.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ArcOrderPDF"/>
@@ -2255,6 +2258,8 @@
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
    
    <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
+   <view-map name="PurchaseOrderMinutesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderMinutesReport" content-type="application/pdf"/>
+  
    
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
