@@ -112,6 +112,7 @@ public class DepotHelperServices{
         if(UtilValidate.isNotEmpty(productStoreId)){
         	List condList =FastList.newInstance();
    	    	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, productStoreId));
+   	    	condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
    	    	
    	    	/*condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
    	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
