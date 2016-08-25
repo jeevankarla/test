@@ -302,6 +302,32 @@ under the License.
             </hyperlink>
         </field>
     </form>
+     <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
+        <field name="fromDate" title="Acc Date"><display/></field>
+<!--         <field name="finAccountType"><display></display></field> -->
+        <field name="actualBalance" title="Acc Balance"><display/></field>
+        <field name="refund" widget-style="buttontext" event="onclick" action="" >
+            <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','EmpAdv');" description="Refund">
+            </hyperlink>
+        </field>
+        <field name="printReceipt" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="transactionView" widget-style="buttontext" >
+            <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
+             	<parameter param-name="finAccountId"/>
+             	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+    </form>
     <form name="ListDepositTransactions" type="list" separate-columns="true"  list-name="finAccountTransList" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>

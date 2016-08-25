@@ -366,7 +366,7 @@
 									</link>
 								</container> 
 								<screenlet title="List Deposit Account">				
-									 <include-form name="ListDepositPaidAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+									 <include-form name="ListAdvDepositPaidAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
 	                   	</section>
