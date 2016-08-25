@@ -252,12 +252,12 @@ context.scheme = scheme;
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItem = delegator.findList("OrderItem", condExpr, null, null, null, false);
 
-			for (eachItem in OrderItem) {
-				
-				
+			 for(int a=0; a < OrderItem.size();a++){
+				 	 orderItem = OrderItem.get(a);
+					 eachItem=[];
+					 eachItem=orderItem;
 				tempMap = [:];
 				tempMap.put("productId", eachItem.productId);
-				
 				productName = ""
 				prod=delegator.findOne("Product",[productId:eachItem.productId],false);
 				
@@ -268,14 +268,12 @@ context.scheme = scheme;
 					
 				tempMap.put("quantity", eachItem.quantity);
 								
-				
 				double tenPerQty = 0;
 				
 				double quantity = 0;
 				double quotaQuantity = 0;
 				double baleQuantity = 0;
 				double bundleUnitPrice = 0;
-				
 				
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
@@ -289,7 +287,6 @@ context.scheme = scheme;
 				double sourcePercentage = 0;
 				
 				 if(scheme == "General"){
-					 
 					 conditionList.clear();
 					 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 					 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -297,8 +294,10 @@ context.scheme = scheme;
 					 OrderAdjustment = delegator.findList("OrderAdjustment", condExpr, null, null, null, false);
 					
 					 if(OrderAdjustment){
-					 
-					 for (eachAdjust in OrderAdjustment) {
+					 for(int i=0; i< OrderAdjustment.size();i++){
+							 orderAdjustment = OrderAdjustment.get(i);
+							eachAdjust=[];
+							eachAdjust=orderAdjustment;
 						
 						 if(eachAdjust.orderAdjustmentTypeId == "SERVICE_CHARGE"){
 							 if(eachAdjust.amount){
@@ -312,8 +311,10 @@ context.scheme = scheme;
 				 }
 					 
 			 }
-				 
-				for (eachOrderItem in OrderItemDetail) {
+				for(int j=0; j< OrderItemDetail.size();j++){
+						orderItemDetail = OrderItemDetail.get(j);
+					   eachOrderItem=[];
+					   eachOrderItem=orderItemDetail;
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
 					baleQuantity = baleQuantity+Double.valueOf(eachOrderItem.baleQuantity);
 					bundleUnitPrice = bundleUnitPrice+Double.valueOf(eachOrderItem.bundleUnitPrice);
@@ -322,7 +323,6 @@ context.scheme = scheme;
 				if(eachItem.quantity)
 				  quantity = Double.valueOf(eachItem.quantity);
 				
-				  
 				  if(OrderItemDetail[0]){
 					  
 					 if(OrderItemDetail[0].remarks)
@@ -333,7 +333,6 @@ context.scheme = scheme;
 				  }else{
 				  tempMap.put("remarks", "");
 				  }
-				  
 			  if(scheme != "General"){
 					  if(quantity > quotaQuantity)
 					  {
@@ -360,7 +359,6 @@ context.scheme = scheme;
 				  else
 				  tempMap.put("mgpsQty", quantity-tenPerQty);
 				  
-				  
 				  if(scheme == "General"){
 				  double perAmt = (eachItem.unitPrice*sourcePercentage)/100;
 				  tempMap.put("unitPrice",(eachItem.unitPrice+perAmt));
@@ -369,7 +367,6 @@ context.scheme = scheme;
 				  }
 				  
 				  tempMap.put("PurunitPrice", eachItem.unitPrice);
-				  
 				  if(UtilValidate.isNotEmpty(OrderItemDetail[0])){
 					  
 					  if(OrderItemDetail[0].Uom)
@@ -380,7 +377,6 @@ context.scheme = scheme;
 				  }else{
 				  tempMap.put("Uom", "/KGs");
 				  }
-				   
 			   //purChasesVal;
 				  
 				  tempMap.put("totalPurCost", (eachItem.quantity*eachItem.unitPrice));
@@ -389,7 +385,6 @@ context.scheme = scheme;
 				  
 				  OrderItems.add(tempMap);
 			}
-			
 			//Debug.log("OrderItems================="+OrderItems);
 
 			typeBasedMap = [:];
