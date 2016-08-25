@@ -261,7 +261,7 @@ if(shipments){
 		partyId = "";
 		
 		billToPartyId="";
-
+        branchPartyId = "";
 		if(orderRole){
 			billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 			if(billToPartyIdList){
@@ -271,8 +271,12 @@ if(shipments){
 			if(supplierPartyIdList){
 				partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");
 			}
+			branchPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			if(branchPartyIdList){
+				branchPartyId = (EntityUtil.getFirst(branchPartyIdList)).getString("partyId");
+			}
 		}
-		
+		context.branchPartyId=branchPartyId;
 		invoiceTypeId = "";
 		orderTypeId = orderHeader.orderTypeId;
 		if(orderTypeId == "SALES_ORDER"){
