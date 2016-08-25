@@ -101,6 +101,17 @@ $(document).ready(function(){
 	          		</td>       
 	          	</#if>
 	        </tr>
+	        <tr>
+	        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Customer:</div></td>
+	        <#if weaverPartyId?exists && weaverPartyId?has_content>  
+	      		<td valign='middle'>
+	        		<div class='tabletext h3'>
+	        			<#assign cutomerName = delegator.findOne("PartyNameView", {"partyId" : weaverPartyId}, true) />
+	           			${weaverPartyId?if_exists} [ ${cutomerName.groupName?if_exists} ${cutomerName.firstName?if_exists} ${cutomerName.lastName?if_exists}]             
+	        		</div>
+	      		</td>       
+	         </#if>
+	        </tr>
 	        <tr><td><br/></td></tr>
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />

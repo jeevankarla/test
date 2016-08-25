@@ -102,6 +102,17 @@ $(document).ready(function(){
 	          		</td>       
 	          	</#if>
 	        </tr>
+	         <tr>
+	        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Branch:</div></td>
+	        <#if branchPartyId?exists && branchPartyId?has_content>  
+	      		<td valign='middle'>
+	        		<div class='tabletext h3'>
+	        			<#assign branchName = delegator.findOne("PartyNameView", {"partyId" : branchPartyId}, true) />
+	           			${branchPartyId?if_exists} [ ${branchName.groupName?if_exists} ${branchName.firstName?if_exists} ${branchName.lastName?if_exists}]             
+	        		</div>
+	      		</td>       
+	         </#if>
+	        </tr>
 	        <tr><td><br/></td></tr>
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />

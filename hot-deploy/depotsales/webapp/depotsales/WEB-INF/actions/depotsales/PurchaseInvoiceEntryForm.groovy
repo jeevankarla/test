@@ -102,14 +102,14 @@ import java.math.RoundingMode;
 			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR",,"BILL_TO_CUSTOMER") ));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR","SHIP_TO_CUSTOMER","BILL_TO_CUSTOMER") ));
 			condition3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			orderRole = delegator.findList("OrderRole", condition3, null, null, null, false);
 			
 			partyId = "";
 			
 			billToPartyId="";
-	
+	        weaverPartyId ="";
 			if(orderRole){
 				billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 				if(billToPartyIdList){
@@ -119,8 +119,12 @@ import java.math.RoundingMode;
 				if(supplierPartyIdList){
 					partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");
 				}
+				weaverPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+				if(weaverPartyIdList){
+					weaverPartyId = (EntityUtil.getFirst(weaverPartyIdList)).getString("partyId");
+				}
 			}
-			
+			context.weaverPartyId= weaverPartyId;
 			invoiceTypeId = "";
 			orderTypeId = orderHeader.orderTypeId;
 			if(orderTypeId == "PURCHASE_ORDER"){
