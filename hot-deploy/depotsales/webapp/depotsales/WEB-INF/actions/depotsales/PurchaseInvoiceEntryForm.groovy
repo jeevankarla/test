@@ -180,8 +180,8 @@ import java.math.RoundingMode;
 			context.discountItemsJSON = discountItemsJSON;
 			context.discountLabelJSON = discountLabelJSON;
 			context.discountLabelIdJSON = discountLabelIdJSON;
-			ShipmentReceipt = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-	        context.ShipmentReceipt=ShipmentReceipt;
+			ShipmentDetail = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+	        context.ShipmentDetail=ShipmentDetail;
 			orderNo="";
 			draftOrderIdDetails = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 			if(UtilValidate.isNotEmpty(draftOrderIdDetails)){

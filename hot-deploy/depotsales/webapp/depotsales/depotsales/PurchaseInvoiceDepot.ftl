@@ -151,7 +151,7 @@ $(document).ready(function(){
 	    			</table>
 	    			</td>
 	    			<td border="1">
-	    			<#if ShipmentReceipt?has_content>
+	    			<#if ShipmentDetail?has_content>
 	    				<table  class="form-style-7">
 				      	  <tr>
 				      	  
@@ -160,72 +160,63 @@ $(document).ready(function(){
 				       		 </td>
 	    				 </tr>
 	    				 <tr>
-	    				 	<td width="10%">
+	    				 	<td width="10%" align="center">
 								<b>ShipmentId</b>	    						 
 			    			</td>
-	    					<td width="70%" align="center">
-								<b>Product</b>	    						 
-			    			</td>
-			    			<td width="10%">
-								<b>Accepted Quantity</b>    						 
-			    			</td>
-			    			<td width="10%">
-			    				<b>Status</b>
+	    					<td width="40%" align="center">
+								<b>Supplier Invoice No.</b>	    						 
 			    			</td>
 			    			<td width="20%" align="center">
-			    				<b>Invoice No</b>
+								<b>Supplier Invoice Date</b>    						 
 			    			</td>
-			    			<td width="30%" align="center">
+			    			<td width="40%" align="center">
+			    				<b>Delivery Challan No.</b>
+			    			</td>
+			    			<td width="20%" align="center">
+			    				<b>Delivery Challan Date</b>
+			    			</td>
+			    			<td width="40%" align="center">
 			    				<b>LR No</b>
 			    			</td>
-			    			<td width="10%">
-								<b>Entry by </b>  						 
+			    			<td width="20%" align="center">
+			    				<b>LR Date</b>
+			    			</td>
+			    			<td width="40%" align="center">
+								<b>Carrier/Courier Name</b>  						 
+			    			</td>
+			    			<td width="20%" align="center">
+								<b>Freight Charges</b>  						 
 			    			</td>
 	    				 </tr>
-	    				 <#assign totalQty=0>
-	    				 <#list ShipmentReceipt as eachShipment>
-	    				 	  <#assign ShipmentDetail = delegator.findOne("Shipment", {"shipmentId" : eachShipment.get("shipmentId")}, true)?if_exists/>
-	    				 
 	    				 <tr>
 	    				 	<td width="10%">
-	    						 ${eachShipment.get("shipmentId")}
-	    						 
+	    						 ${ShipmentDetail.get("shipmentId")}
 			    			</td>
-	    					<td width="70%">
-	    						<#assign product = delegator.findOne("Product", {"productId" : eachShipment.get("productId")}, true)?if_exists/>
-	    					
-	    						 ${product.get("brandName")?if_exists}
-	    						 
+	    					<td width="40%" align="left">
+	    						  ${ShipmentDetail.get("supplierInvoiceId")?if_exists}
 			    			</td>
-			    			<td width="10%">
-	    						 ${eachShipment.get("quantityAccepted")?if_exists}
-	    						<#assign totalQty=totalQty+eachShipment.get("quantityAccepted")>
+			    			<td width="20%" align="center">
+	    						  ${ShipmentDetail.get("supplierInvoiceDate")?if_exists}
 			    			</td>
-			    			<td width="10%">
-	    						<#if "SR_RECEIVED"==eachShipment.get("statusId")>Received<#else>${eachShipment.get("statusId")}</#if>
-	    						 
+			    			<td  width="40%" align="left">
+	    						${ShipmentDetail.get("deliveryChallanNumber")?if_exists}
 			    			</td>
-			    			<td width="20%">
-	    						 ${ShipmentDetail.get("supplierInvoiceId")?if_exists}
-	    						 
+			    			<td width="20%" align="center">
+	    						 ${ShipmentDetail.get("deliveryChallanDate")?if_exists}
 			    			</td>
-			    			<td width="30%">
+			    			<td  width="40%" align="left">
 	    						 ${ShipmentDetail.get("lrNumber")?if_exists}
-	    						 
 			    			</td>
-			    			
-			    			<td width="10%">
-	    						 ${eachShipment.get("receivedByUserLoginId")}
-	    						 
+			    			<td width="20%" align="center">
+	    						 ${ShipmentDetail.get("estimatedReadyDate")?if_exists}
 			    			</td>
-			    			
+			    			<td  width="40%" align="center">
+	    						 ${ShipmentDetail.get("carrierName")?if_exists}
+			    			</td>
+			    			<td width="20%" align="right">
+	    						 ${ShipmentDetail.get("estimatedShipCost")?if_exists}
+			    			</td>		    			
 	    				 </tr>
-	    				 </#list>
-	    				  <tr>
-	    				 	<td width="10%" colspan="4" align="center">
-	    				 		<b>Total Quantity Shipped Till Now : ${totalQty?if_exists}</b>
-	    				 	</td>
-	    				  </tr>
 	    				</table>
 	    			</#if>
 	    			</td>
