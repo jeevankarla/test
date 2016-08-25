@@ -93,7 +93,11 @@
 			formatList=(List)partyIdToList;
 		}
 	}
-		Debug.log("formatList======================="+formatList);
+	if(UtilValidate.isEmpty(formatList)){
+		formatList.add(parameters.branchId);
+	}
+	
+	Debug.log("formatList======================="+formatList);
 	condList = [];
 	condList.add(EntityCondition.makeCondition("roleTypeIdTo" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
