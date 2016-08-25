@@ -197,13 +197,14 @@
                 </entity-condition>
                 <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
-            			<condition-list combine="or">
+            			<!-- <condition-list combine="or">
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
-            			</condition-list>
+            			</condition-list> -->
+            			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH,TAX_CREDIT"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
             		</condition-list>
             	</entity-condition>
             	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
@@ -260,15 +261,16 @@
                 		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
                 	</condition-list>
                 </entity-condition>
-                <entity-condition list="companyBanksList" entity-name="FinAccount">
+                 <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
-            			<condition-list combine="or">
+            			<!-- <condition-list combine="or">
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
-            			</condition-list>
+            			</condition-list> -->
+            			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH,TAX_CREDIT"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
             		</condition-list>
             	</entity-condition>
             	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
@@ -327,13 +329,14 @@
                 </entity-condition>
                 <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
-            			<condition-list combine="or">
+            			<!-- <condition-list combine="or">
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
             				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
-            			</condition-list>
+            			</condition-list> -->
+            			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH,TAX_CREDIT"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
             		</condition-list>
             	</entity-condition>
             	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
