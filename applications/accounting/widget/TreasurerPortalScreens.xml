@@ -4951,7 +4951,7 @@
     			</entity-condition>
     			<entity-condition list="paymentMethods" entity-name="PaymentMethodAndType">
 					<condition-list combine="and">
-						<condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/>
+						<!-- <condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/> -->
 						<condition-expr field-name="paymentMethodTypeId" operator="not-equals" value="CASH_PAYOUT"/>
 					</condition-list>
 				</entity-condition>
