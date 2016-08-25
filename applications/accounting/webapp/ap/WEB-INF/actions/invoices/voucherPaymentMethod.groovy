@@ -27,6 +27,27 @@ import org.ofbiz.entity.util.EntityUtil;
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
 
+
+roleTypeId = parameters.roleTypeId;
+
+List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCOUNTING_ROLE"),null,null,null,false);
+roleTypeAttrList=[];
+if(roleTypeAttr){
+	roleTypeAttr.each{roleType->
+		tempMap=[:];
+		if(roleType.roleTypeId != "EMPLOYEE" && roleType.roleTypeId != "MILK_SUPPLIER"){
+			GenericValue roleTypeDes=delegator.findOne("RoleType",[roleTypeId:roleType.roleTypeId],false);
+			if(UtilValidate.isNotEmpty(roleTypeDes)){
+				tempMap["roleTypeId"]=roleType.roleTypeId;
+				tempMap["description"]=roleTypeDes.description;
+				roleTypeAttrList.add(tempMap);
+			}
+		}
+	}
+}
+context.roleTypeAttrList=roleTypeAttrList;
+context.roleTypeId = roleTypeId;
+
 Map formatMap = [:];
 List formatList = [];
 List branchIds = [];
