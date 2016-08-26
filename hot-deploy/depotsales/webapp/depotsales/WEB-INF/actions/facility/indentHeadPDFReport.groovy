@@ -852,10 +852,15 @@ if(contactMechesDetails){
 			//Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
 			
 			
-			
+            conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachInvoice.shipmentId));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			poInvoices = delegator.findList("Invoice", cond, null, null, null, false);			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, poOrderItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoices[0].invoiceId));
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			POrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
