@@ -254,7 +254,7 @@ if(shipments){
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR",,"BILL_TO_CUSTOMER") ));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER","BILL_FROM_VENDOR",,"BILL_TO_CUSTOMER") ));
 		condition3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		orderRole = delegator.findList("OrderRole", condition3, null, null, null, false);
 		
@@ -267,7 +267,7 @@ if(shipments){
 			if(billToPartyIdList){
 				billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
 			}
-			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
 			if(supplierPartyIdList){
 				partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");
 			}
