@@ -389,7 +389,7 @@ under the License.
 			<fo:table-body>
                <fo:table-row>
 				  <fo:table-cell><fo:block text-align="left" font-size="11pt">3</fo:block></fo:table-cell>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT / TRANSPORTER NAME : Depatch Goods Through <#if allDetailsMap.get("transporterName")?has_content>${allDetailsMap.get("transporterName")?if_exists}<#else>Bank Approved Transport</#if></fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt">MODE OF TRANSPORT / TRANSPORTER NAME : Depatch Goods Through <#if allDetailsMap.get("transporterName")?has_content><fo:inline  font-weight="bold">${allDetailsMap.get("transporterName")?if_exists}</fo:inline><#else>Bank Approved Transport</#if></fo:block></fo:table-cell>
                </fo:table-row>
 	        </fo:table-body>
 	   </fo:table>
