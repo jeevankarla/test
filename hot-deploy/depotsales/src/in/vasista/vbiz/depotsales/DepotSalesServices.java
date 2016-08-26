@@ -12641,5 +12641,24 @@ public class DepotSalesServices{
 		return "success";
           
   	}
+    
+    public static Map<String, Object> getRegionalOffices(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List<GenericValue> PartyClassification = null;
+		try{
+			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"), UtilMisc.toSet("partyId"), null, null, false);
+			if(UtilValidate.isNotEmpty(PartyClassification)){
+				List partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
+				List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				result.put("partyList",partyGroup);
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive RegionalOffices ", module);
+		}
+		return result;
+    }
 
 }
