@@ -39,7 +39,7 @@ under the License.
          
          				<fo:block text-align="left"    font-size="10pt" >T.I.N No     : ${allDetailsMap.get("tinNumber")?if_exists}</fo:block>
          				<fo:block text-align="left"  white-space-collapse="false"  font-size="10pt" >C.S.T No : ${allDetailsMap.get("cstNumber")?if_exists}                                                     C.I.N No : ${allDetailsMap.get("cinNumber")?if_exists} </fo:block>
-           <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">SALE INVOICE</fo:block>
+           <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">SALE INVOICE <#if parameters.docType?has_content><#if parameters.docType=="Original">(Original Copy)<#else> (Duplicate Copy)</#if><#else> (Original Copy)</#if> </fo:block>
            <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if><#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block> 
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
    		   <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
