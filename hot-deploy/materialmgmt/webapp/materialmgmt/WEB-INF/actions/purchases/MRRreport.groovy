@@ -34,11 +34,44 @@ shipmentId = parameters.shipmentId;
 receiptId = parameters.receiptId;
 orderId = parameters.orderId;
 dateReceived = parameters.datetimeReceived;
+productStoreId ="";
+branchContext=[:];
 OrderHeaderDetails = delegator.findOne("OrderHeader",["orderId":orderId],false);
 if((OrderHeaderDetails) && (OrderHeaderDetails.orderDate)){
 	orderDate =  OrderHeaderDetails.orderDate;
+	productStoreId = OrderHeaderDetails.get("productStoreId");
 	context.orderDate=orderDate;
 }
+branchId="";
+if (productStoreId) {
+	productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
+	branchId=productStore.payToPartyId;
+}
+BOAddress="";
+BOEmail="";
+branchContext.put("branchId",branchId);
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+	
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 orderAttributeList = delegator.findList("OrderAttribute",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 fileNumberDetails = EntityUtil.filterByCondition(orderAttributeList, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "FILE_NUMBER"));
 fileNumberDet=EntityUtil.getFirst(fileNumberDetails);
