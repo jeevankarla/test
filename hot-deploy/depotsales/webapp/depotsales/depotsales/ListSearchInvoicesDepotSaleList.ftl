@@ -373,7 +373,23 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		var title = "Reason for cancel";
     	Alert(message, title);
 	}
+	function submitForm(){
+		cancelForm(); 		 
+		jQuery('#newInvoiceVoucher').submit();
+	}
 	
+	function showDocTypeQtip(invoiceId){
+	  var action;
+     var message = "";
+
+                message += "<html><head></head><body><form id='newInvoiceVoucher' target='_blank'  name='newInvoiceVoucher' method='post' action='newInvoiceVoucher' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+      			message += "<tr class='h2'><td align='left' class='h5' width='60%'><font size=45%></font><input type='radio' id='docType' name='docType' value='Original'>Original </td><td align='left'  width='90%'><input type='radio' id='docType' name='docType' value='Duplicate'>Duplicate</td></tr>";
+     		    message += "<tr class='h3'><td align='center'><span align='right'><input type='hidden' name='invoiceId' value="+invoiceId+" ><input type='button' value='Submit' class='newtab' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
+			    message +=	"</table></form></body></html>";
+			    
+	var title = "Document Type";
+    Alert(message, title);
+};
 	
 	
 </script>
@@ -540,21 +556,16 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#else>
                 	<td align="center"></td>
               </#if>
-              
-             <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td> </#if>
+            
+             <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" onclick="javascript:showDocTypeQtip('${invoice.invoiceId}')" >Print</a></td> </#if>
               <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
-              
+             
             <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>
                <td align="center"></td>
                </#if> -->
             <#-->  <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>-->
-           
-              	
-           
-             
-           
            
             </tr>
             <#-- toggle the row color -->
