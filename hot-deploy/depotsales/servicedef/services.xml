@@ -497,5 +497,9 @@
                 <attribute name="partyId" type="String" mode="OUT" optional="false"/>
     </service>
     
+    <service name="getRegionalOffices" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getRegionalOffices" auth="true">
+    	<description>get Regional Offices</description>
+        <attribute name="partyList" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>
 
