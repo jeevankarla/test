@@ -335,7 +335,7 @@ under the License.
 			            <fo:table-body> 
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Sales Terms</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Terms</fo:block>
 					            </fo:table-cell>
 					            <#--><fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold"                                                                                  >Purchase Terms</fo:block>
