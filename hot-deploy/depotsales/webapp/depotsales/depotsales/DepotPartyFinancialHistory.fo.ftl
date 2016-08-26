@@ -115,9 +115,10 @@ under the License.
                          <#assign partyCreditTotal=0>
                          <#assign closingBalance=0>
                          <#if  (openingBalanceMap.get(eachParty)?has_content) || (partyDayWiseDetailMap.get(eachParty)?has_content)>
+                         <#assign partIdentification = delegator.findOne("PartyIdentification", {"partyId" : eachParty,"partyIdentificationTypeId","REGISTRATION_NUMBER"}, true) />
                      <fo:table-row>
                         <fo:table-cell>
-                    	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">${partyName}</fo:block>
+                    	   <fo:block font-size="11pt" text-align="left" keep-together="always" font-weight="bold">${partyName} <#if partIdentification?has_content && partIdentification.idValue?has_content>[${partIdentification.idValue}]</#if></fo:block>
 	                	</fo:table-cell>
 	                	 <fo:table-cell>
                     	    <fo:block font-size="11pt" text-align="left" white-space-collapse="false">&#xA;</fo:block>
