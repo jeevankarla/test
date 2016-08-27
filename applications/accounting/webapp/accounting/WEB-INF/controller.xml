@@ -2813,6 +2813,12 @@ under the License.
     	<response name="success" type="request-redirect-noparam" value="findGroupPayment"/>
     	<response name="error" type="request-redirect-noparam" value="findGroupPayment"/>    	
     </request-map>
+    <request-map uri="cancelAPGroupPayment">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="cancelPaymentGrouping" />    	
+    	<response name="success" type="request-redirect-noparam" value="findAPGroupPayment"/>
+    	<response name="error" type="request-redirect-noparam" value="findAPGroupPayment"/>    	
+    </request-map>
      <request-map uri="printPayGroupVoucherAbstract.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupVoucherAbstract"/>
@@ -4094,7 +4100,16 @@ under the License.
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="PortalPaymentOverview"/>
     </request-map>
-    
+    <request-map uri="getPaymentGroupDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/" invoke="getPaymentGroupDetails.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="partyPayGroupVoucher.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyPrintPayGroupVoucher"/>
+    </request-map>
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
@@ -4668,5 +4683,7 @@ under the License.
    
    <view-map name="apGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#APGroupPaymentProcessing"/>
    <view-map name="FindAPGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPGroupPayment"/>
+   <view-map name="PartyPrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyPrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
+   
    <!-- end of view mappings -->
 </site-conf>

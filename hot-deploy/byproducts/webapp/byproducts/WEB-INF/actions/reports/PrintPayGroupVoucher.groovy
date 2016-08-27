@@ -53,6 +53,7 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
 
 printPaymentsList = [];
+partyPaymentMap = [:];
 paymentGroupId = parameters.paymentGroupId;
 context.put("paymentGroupId",paymentGroupId);
 if(UtilValidate.isNotEmpty(paymentGroupId)){
@@ -63,7 +64,10 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 			if(UtilValidate.isNotEmpty(paymentId)){
 				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
 				tempprintPaymentsList.each{paymentRecipt->
+					invDts = delegator.findList("PaymentAndApplication",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
+					invoiceId = invDts[0].invoiceId;
 					tempprintPaymentMap=[:];
+					tempprintPaymentMap.put("invoiceId",invoiceId);
 					tempprintPaymentMap.putAll(paymentRecipt);
 					totalAmount=paymentRecipt.amount;
 					amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
@@ -72,20 +76,32 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 					finalPaymentMap.putAll(tempprintPaymentMap);
 					printPaymentsList.add(finalPaymentMap);
 					context.put("printPaymentsList",printPaymentsList);
+					partyIdTo = paymentRecipt.partyIdTo;
+					if(UtilValidate.isEmpty(partyPaymentMap[partyIdTo])){
+						tempList=[];
+						tempList.add(tempprintPaymentMap);
+						partyIdTo = paymentRecipt.partyIdTo;
+						partyPaymentMap[partyIdTo]=tempList;
+					}else{
+						tempList=[];
+						tempList=partyPaymentMap[partyIdTo];
+						tempList.add(tempprintPaymentMap);
+						partyPaymentMap[partyIdTo]=tempList;
+					}
 				}
 			}
 		}
 	}
 }
+context.partyMap = partyPaymentMap;
 paymentGroup = delegator.findOne("PaymentGroup", UtilMisc.toMap("paymentGroupId", paymentGroupId), false);
 abstractDetails = [:];
 tempAmount = 0;
 if(paymentGroup.amount){
 	tempAmount = paymentGroup.amount;
 }
-amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%indRupees-and-paiseRupees", locale);
+amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%rupees-and-paise", locale).toUpperCase();
 abstractDetails.put("amount", tempAmount);
 abstractDetails.put("amountInWords", amountInWords);
 context.abstractDetails = abstractDetails;
-
 
