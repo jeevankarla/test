@@ -3,6 +3,32 @@
 <#else>
 	<#include "CreateBranchTransPoInc.ftl"/>
 </#if>
+
+
+
+<style type="text/css">
+.myTable { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable th { 
+  background-color: goldenrod;
+  color: white; 
+  }
+.myTable td, 
+.myTable th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+  
+  
+</style>
+
+
+
 <#--
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
@@ -79,6 +105,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
 			}
 		});
+		
 	}
 	function manualAddressEntry(){
 	//$("#ManualAddress").hide();
@@ -264,6 +291,8 @@ function populateData(){
 			
 			makeDatePicker("fromDate","fromDateId");
 	        makeDatePicker("thruDate","fromDateId");
+	        makeDatePicker("estiDate","fromDateId");
+	        
 		
 			//$(this.target).find('input').autocomplete();
 			
@@ -489,6 +518,7 @@ function populateData(){
 <form id="CreateMPO"  action="<@ofbizUrl>createPOByOrder</@ofbizUrl>" name="CreateMPO" method="post">
 
 <div id="wizard-2">
+
     <h3>PO Header</h3>
     <section>
       <fieldset>
@@ -807,6 +837,7 @@ function populateData(){
                  <h3>Delivery Address Details</h3>
 		         <section>
 			          <fieldset>
+						 <div class="lefthalf">
 			          <#--
 			          	  <table cellpadding="15" cellspacing="15" class='h3'>
 								<tr>
@@ -1034,15 +1065,103 @@ function populateData(){
 								 </#if> 
 							</table>-->
           				     </td>
+          				     
 						        </tr>
+						        
+						         
 					  </table>
+					  
+					  </div>
+					  
+					<#-->  <div class="righthalf">
+		                 <table cellpadding="5" cellspacing="5" class='h3'>
+		                  <tr>
+		                  
+		                  <td>
+		                  
+		                      <tr>
+		                         <td>
+		                          <label id="hida"  value="2">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    </label>
+		                         </td>
+		                         
+		                         <td>
+	                              <table>
+						          <tr>
+						       <input type="button" id="addRow" value="Add Destination">
+						          <input type="button"  class="plusbtn" value="Add Multiple Destinations" />
+                                 <span>&#160;&#160;&#160; </span>
+                                  <input type="button" value="Remove Destination" class="minusbtn" />  
+						            <table class="myTable" id ="rowTable"><tbody>
+						            <tr>
+										<th>Destination</th>
+										<th>Quantity</th>
+										<th>Estimated ShipDate</th>
+									</tr>
+						            </tbody></table>	     
+						          <tr>
+						         </table>
+		                         </td>
+		                         </tr>
+		                  </td>
+		                  
+		                       
+					  </div>-->
+					  
 					  </fieldset>
                   </section>
             </form>
                 
  <script type="application/javascript">
  
+ 
+ 
+ function deleteRow(){
+ 
+    $('.myTable tr').click(function () {
+           var rowIndex = $('.myTable tr').index(this); 
+             if(rowIndex != -1)
+              document.getElementById("myTable").deleteRow(rowIndex);  
+          });
+ 
+    // $(".myTable tr:eq(0)").remove();
+ }
+ 
+var destinationParent = {}; 
+
+
+
+function storeData(){
+    
+   $("tr.item").each(function() {
+	  $this = $(this)
+	  
+	  var rowIndex = $('#rowTable tr').index(this);
+	  var city = $this.find("input.cityadd").val();
+	  var quantity = $this.find("input.quantity").val();
+	  var estiDate = $this.find("input.estiDate").val();
+	  
+	  var destinationMap = {}; 
+	  
+	         destinationMap['city'] = city;
+		     destinationMap['quantity'] = quantity;
+		     destinationMap['estiDate'] = estiDate;
+	         destinationParent[rowIndex] = destinationMap;
+  
+   });
+    
+}
+
  $(document).ready(function(){
+      var storeData = "javascript:storeData()";
+     $('.plusbtn').click(function() {
+           $(".myTable").append('<tr class="item"><td><input type="text" id="cityadd" onblur="'+storeData+'" class="cityadd" /></td><td><input type="text" id="quantity" class="quantity" onblur="'+storeData+'"  /></td><td><input type="date" id="estiDate" class="estiDate" onblur="'+storeData+'" /></td></tr>');
+     });
+   $(".estiDate" ).datepicker();
+   $('.minusbtn').click(function() {
+   
+        if($(".myTable tr").length != 1)
+            $(".myTable tr:last-child").remove();
+    }); 
     
     getPayTermDes();
     getDelTermDes();
