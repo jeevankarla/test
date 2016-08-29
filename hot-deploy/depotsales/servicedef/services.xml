@@ -496,6 +496,13 @@
                 <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
                 <attribute name="partyId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="runQuotaTallyReconsilation" engine="java" 
+            location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="tallyQuotaReconsilation" auth="true">
+        <description>Tally Quota </description>
+        <auto-attributes entity-name="OrderItemDetail" include="pk" mode="IN" optional="false"/>
+         <attribute name="quotaQty" type="String" mode="IN" optional="false"/>
+        <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
+    </service>
     
     <service name="getRegionalOffices" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getRegionalOffices" auth="true">
     	<description>get Regional Offices</description>

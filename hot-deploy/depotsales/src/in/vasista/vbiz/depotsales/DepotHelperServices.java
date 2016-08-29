@@ -1902,7 +1902,85 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    return resultMap;
   	}
 
+  	 public static Map<String, Object> tallyQuotaReconsilation(DispatchContext dctx, Map<String, ? extends Object> context) {
+     	
+ 		Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();   
+         Map<String, Object> result = new HashMap<String, Object>();
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+         String orderItemDetailId = (String) context.get("orderItemDetailId");
+         String qtQty = (String) context.get("quotaQty");
+		 GenericValue orderItemDetail = null;
+		 String orderId=null;
+		 String SeqId=null;
+		 BigDecimal unitPrice=BigDecimal.ZERO;
+         try{
+			  orderItemDetail = delegator.findOne("OrderItemDetail", UtilMisc.toMap("orderItemDetailId", orderItemDetailId), false);
+			  if(UtilValidate.isNotEmpty(orderItemDetail)){
+			    BigDecimal quotaQuantity = BigDecimal.ZERO;
+			    orderId=orderItemDetail.getString("orderId");
+			    String prodId=orderItemDetail.getString("productId");
+			    SeqId=orderItemDetail.getString("orderItemSeqId");
+			    unitPrice=orderItemDetail.getBigDecimal("unitPrice");
+			   // quotaQuantity = orderHeaderDetail.getBigDecimal("quotaQuantity");
+			    quotaQuantity = new BigDecimal(qtQty);
+			    orderItemDetail.set("discountAmount", quotaQuantity.multiply(unitPrice).negate());
+			    orderItemDetail.set("quotaQuantity", quotaQuantity);
+			    orderItemDetail.store();
+			    List conList = FastList.newInstance();
+				conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				
+				if(UtilValidate.isNotEmpty(prodId)){
+					conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+				}
+			  	BigDecimal quotaQty =BigDecimal.ZERO;
+				try {
+					List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 
+					if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+						for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+							if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+								quotaQty =quotaQty.add(OrderItemDetailValue.getBigDecimal("quotaQuantity"));
+							}
+						}
+					}
+			  	} catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive QuotaQty ", module);
+		            return ServiceUtil.returnError(e.getMessage());
+				}
+				// Adjustment Calculation
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				//condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
+				condList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY" ));
+				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+				for(GenericValue eachAdj : orderAdjustments){
+					String adjustmentTypeId = eachAdj.getString("orderAdjustmentTypeId");
+						BigDecimal discountAmount = BigDecimal.ZERO;
+						if(quotaQty.compareTo(BigDecimal.ZERO)>0){
+							// Have to get these details from schemes. Temporarily hard coding it.
+							BigDecimal schemePercent = new BigDecimal("10");
+							BigDecimal percentModifier = schemePercent.movePointLeft(2);
+							//if(Kgquantity.compareTo(quotaQty)>0){
+								discountAmount = ((quotaQty.multiply(unitPrice)).multiply(percentModifier)).negate();
+							//}
+							//else{
+							//	discountAmount = ((Kgquantity.multiply(unitPrice)).multiply(percentModifier)).negate();
+							//}
+							//Debug.log("discountAmount===================="+discountAmount);
+						}
+						eachAdj.set("amount",discountAmount);
+						eachAdj.store();
+				}
+         }
+		}catch (Exception e) {
+			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+			  return ServiceUtil.returnError("Error While Updating grandTotal for Order : "+orderId);
+	 	}
+       result = ServiceUtil.returnSuccess("Updated successfully ....!!");
+       return result;
+     }
     
     
 }
