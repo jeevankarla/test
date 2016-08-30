@@ -7,11 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+
+import org.json.JSONArray;
+
+import net.sf.json.JSONObject;
+
+
 
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -29,6 +36,7 @@ import org.ofbiz.entity.GenericDelegator;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.json.JSONArray;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -55,6 +63,12 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
+
+
+import org.ofbiz.base.conversion.JSONConverters.JSONToList; 
+
+import net.sf.json.JSONSerializer; 
+
 
 
 
@@ -3986,6 +4000,72 @@ public class DepotPurchaseServices{
 						request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
 			        }
 				}
+			
+				String multiaddress = (String) request.getParameter("multiaddress");
+
+				
+				if(UtilValidate.isNotEmpty(multiaddress)){
+				
+				JSONArray multiAddressArray=null;
+				     try{		
+				         multiAddressArray =new JSONArray(multiaddress);
+					  
+
+				         int shipGroupSeqId = 1;
+					  for (int i = 0; i < multiAddressArray.length(); i++) {
+						  
+					    	String multiAddressArrayStr = String.valueOf( multiAddressArray.get(i));
+				
+				               JSONObject multiAddressMap = new JSONObject();
+				               multiAddressMap = (JSONObject) JSONSerializer.toJSON(multiAddressArrayStr);
+				
+				               String Mcity = (String) multiAddressMap.get("city");
+				               String quantityStr = (String) multiAddressMap.get("quantity");
+				               String estiDateStr = (String) multiAddressMap.get("estiDate");
+				               
+				               
+				               Timestamp estimatedShipDate = null;
+				               if (UtilValidate.isNotEmpty(estiDateStr)) { //2011-12-25 18:09:45
+				       			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");             
+				       			try {
+				       				estimatedShipDate = new java.sql.Timestamp(sdf1.parse(estiDateStr).getTime());
+				       			} catch (ParseException e) {
+				       				Debug.logError(e, "Cannot parse date string: " + estiDateStr, module);
+				       			} catch (NullPointerException e) {
+				       				Debug.logError(e, "Cannot parse date string: " + estiDateStr, module);
+				       			}
+				       		}
+				       		else{
+				       			estimatedShipDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				       		}
+				              
+				               if(UtilValidate.isNotEmpty(Mcity)){
+									try{
+								        GenericValue OrderItemShipGroup = delegator.makeValue("OrderItemShipGroup");
+								        OrderItemShipGroup.set("orderId", orderId);
+								        String shipGroupSeq = String.format("%05d", shipGroupSeqId);
+								        OrderItemShipGroup.set("shipGroupSeqId", shipGroupSeq);
+								        OrderItemShipGroup.set("city", Mcity);
+								        if(UtilValidate.isNotEmpty(quantityStr))
+								        OrderItemShipGroup.set("quantity", new BigDecimal(quantityStr));
+								        OrderItemShipGroup.set("estimatedShipDate", estimatedShipDate);
+						           	    delegator.createOrStore(OrderItemShipGroup);
+						           	    
+						           	     shipGroupSeqId++;
+									}catch (Exception ex) {
+										request.setAttribute("_ERROR_MESSAGE_", "Error while storing OrderItemShipGroup Details for Order: "+orderId);	  	 
+							        }
+								}
+					    }
+					
+					 }catch(Exception e){
+						 Debug.logError("JSON Array Parsing Error : "+e, module);
+					 } 
+				     
+				}
+		    
+				
+				
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
 		request.setAttribute("orderId", orderId); 
 		return "success";
