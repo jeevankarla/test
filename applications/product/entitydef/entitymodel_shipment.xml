@@ -650,6 +650,7 @@ under the License.
       <field name="vehicleId" type="id"></field><!--KMF route vehicle assocaiation  -->
       <field name="carrierName" type="name"></field>
       <field name="lrNumber" type="id"></field>
+      <field name="destination" type="id"></field>
       <field name="routeId" type="id"></field>
       <field name="additionalShippingCharge" type="currency-amount"></field>
       <field type="fixed-point" name="claimAmount"/>

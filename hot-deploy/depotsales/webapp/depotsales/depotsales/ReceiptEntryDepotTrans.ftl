@@ -236,6 +236,30 @@ $( "#lrDate" ).datepicker({
 				          </#if>
 		          			
 				        </tr>
+				        
+				         <tr><td><br/></td></tr>
+				         <#if OrderItemShipGroupList?has_content>
+					  	<tr>
+							<td>&nbsp;</td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Destination: </div></td>
+					        <td>&nbsp;</td>
+					        <#if destination?exists && destination?has_content>  
+						  		<input type="hidden" name="destination" id="destination" value="${destination}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${destination}         
+					            	</div>
+					          	</td>       
+					       	<#else> 
+					        	<td valign='middle'>
+		          				<select name="destination" id="destination" class='h3' style="width:162px">
+		          					<#list OrderItemShipGroupList as eachList>
+		          					<option value="${eachList.city}">${eachList.city}</option>
+		          					</#list>
+		          				</select>
+		          			</td>
+				       	  </#if>
+					  	</tr>
+				        </#if>
 				        <tr><td><br/></td></tr>
 					  	<tr>
 							<td>&nbsp;</td>
