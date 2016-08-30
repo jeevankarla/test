@@ -993,6 +993,8 @@ under the License.
       <field name="vendorPartyId" type="id"><description>For use with multi-vendor stores, order will be split so that each ship group is associated with only one vendor (only if applicable)</description></field>
       <field name="carrierPartyId" type="id" enable-audit-log="true"></field>
       <field name="carrierRoleTypeId" type="id"></field>
+      <field name="city" type="id"></field>
+      <field name="quantity" type="fixed-point"></field>
       <field name="facilityId" type="id"></field>
       <field name="contactMechId" type="id"></field>
       <field name="telecomContactMechId" type="id"></field>

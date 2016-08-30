@@ -930,6 +930,7 @@ function populateData(){
                     	 		<td class="label"><FONT COLOR="#108FR8">${orderInfo.get("shipToPartyName")?if_exists}</FONT></td>
 								<td>
 						      		<input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
+						      		<input type="hidden" name="multiaddress" id="multiaddress" size="18" />
   								</td>
 							</tr>
 							<tr>
@@ -1087,7 +1088,6 @@ function populateData(){
 		                         <td>
 	                              <table>
 						          <tr>
-						       <input type="button" id="addRow" value="Add Destination">
 						          <input type="button"  class="plusbtn" value="Add Multiple Destinations" />
                                  <span>&#160;&#160;&#160; </span>
                                   <input type="button" value="Remove Destination" class="minusbtn" />  
@@ -1123,7 +1123,6 @@ function populateData(){
               document.getElementById("myTable").deleteRow(rowIndex);  
           });
  
-    // $(".myTable tr:eq(0)").remove();
  }
  
 var destinationParent = {}; 
@@ -1141,13 +1140,34 @@ function storeData(){
 	  var estiDate = $this.find("input.estiDate").val();
 	  
 	  var destinationMap = {}; 
-	  
+	   
+	   
+	     // alert(city);
+	   
 	         destinationMap['city'] = city;
 		     destinationMap['quantity'] = quantity;
 		     destinationMap['estiDate'] = estiDate;
+		     
+		      ///alert(JSON.stringify(destinationMap));
+		     
 	         destinationParent[rowIndex] = destinationMap;
   
    });
+   
+   
+     
+      var count = Object.keys(destinationParent).length;
+      
+      var destinationArray = [];
+     
+		for (i = 1; i <= count; i++) { 
+		    var eachMap = destinationParent[i];
+		    destinationArray.push(eachMap);
+		}   
+		   
+		 //  alert(JSON.stringify(destinationArray));
+		   
+   $("#multiaddress").val(JSON.stringify(destinationArray));
     
 }
 
