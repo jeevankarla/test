@@ -4042,7 +4042,7 @@ public class DepotPurchaseServices{
 				               if(UtilValidate.isNotEmpty(Mcity)){
 									try{
 								        GenericValue OrderItemShipGroup = delegator.makeValue("OrderItemShipGroup");
-								        OrderItemShipGroup.set("orderId", orderId);
+								        OrderItemShipGroup.set("orderId", result.get("orderId"));
 								        String shipGroupSeq = String.format("%05d", shipGroupSeqId);
 								        OrderItemShipGroup.set("shipGroupSeqId", shipGroupSeq);
 								        OrderItemShipGroup.set("city", Mcity);
