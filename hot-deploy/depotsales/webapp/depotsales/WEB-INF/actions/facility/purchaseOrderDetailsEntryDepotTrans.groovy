@@ -269,6 +269,19 @@ if(supplierId){
 	context.supplierName = supplierName;
 }
 
+
+
+
+exprList= [];
+exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		
+OrderItemShipGroupList = delegator.findList("OrderItemShipGroup", discontinuationDateCondition,UtilMisc.toSet("city"), null, null, false);
+
+context.OrderItemShipGroupList = OrderItemShipGroupList;
+
+
+
 return "success";
 
 

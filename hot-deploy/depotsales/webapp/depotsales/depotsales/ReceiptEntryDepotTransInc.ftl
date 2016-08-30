@@ -198,6 +198,9 @@
         var freightChar = jQuery("<input>").attr("type", "hidden").attr("name", "freightCharges").val(freightCharges);
         var carrier = $("#carrierName").val();
         var carrierName = jQuery("<input>").attr("type", "hidden").attr("name", "carrierName").val(carrier);
+        
+        var destina = $("#destination").val();
+        var destination = jQuery("<input>").attr("type", "hidden").attr("name", "destination").val(destina);
 			
 		jQuery(formId).append(jQuery(effDate));
 		jQuery(formId).append(jQuery(suppInvoice));
@@ -215,6 +218,7 @@
 		jQuery(formId).append(jQuery(lrDate));
 		jQuery(formId).append(jQuery(freightChar));
 		jQuery(formId).append(jQuery(carrierName));
+		jQuery(formId).append(jQuery(destination));
 		
 		
 		jQuery(formId).attr("action", action);

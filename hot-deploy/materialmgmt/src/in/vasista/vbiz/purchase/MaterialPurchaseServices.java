@@ -91,6 +91,10 @@ public class MaterialPurchaseServices {
 	    String orderId = (String) request.getParameter("orderId");
 	    String vehicleId = (String) request.getParameter("vehicleId");
 	    String lrNumber = (String) request.getParameter("lrNumber");
+	    String destination = (String) request.getParameter("destination");
+	    
+	    
+	    
 	    String carrierName = (String) request.getParameter("carrierName");
 	    if(UtilValidate.isEmpty(carrierName)){
 	    	carrierName = "_NA_";
@@ -303,6 +307,7 @@ public class MaterialPurchaseServices {
 	        newEntity.set("statusId", "DISPATCHED");
 	        newEntity.put("vehicleId",vehicleId);
 	        newEntity.put("lrNumber",lrNumber);
+	        newEntity.put("destination",destination);
 	        newEntity.put("carrierName",carrierName);
 	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);

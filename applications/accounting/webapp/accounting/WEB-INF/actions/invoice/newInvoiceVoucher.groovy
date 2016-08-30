@@ -89,6 +89,8 @@ supplierInvoiceDate = "";
 carrierName = "";
 estimatedShipCost = "";
 estimatedShipDate = "";
+destination = "";
+
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
@@ -98,9 +100,6 @@ estimatedShipDate = shipmentList.get("estimatedShipDate");
 
 
 deliveryChallanDate = "";
-
-Debug.log("shipmentList================"+shipmentList);
-
 
 
 if(shipmentList.get("deliveryChallanDate"))
@@ -118,6 +117,9 @@ carrierName = "";
 
 if(shipmentList.get("carrierName"))
 carrierName = shipmentList.get("carrierName");
+
+if(shipmentList.get("destination"))
+destination = shipmentList.get("destination");
 
 
 estimatedShipCost = shipmentList.get("estimatedShipCost");
@@ -392,7 +394,6 @@ grandTotal = OrderHeaderList.get("grandTotal");
 context.grandTotal = grandTotal;
 
 actualOrderId = "";
-destination = "";
 
    
 
@@ -403,6 +404,8 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 			actualOrderId =  eachAttr.attrValue;
 		}
 		if(eachAttr.attrName == "DST_ADDR"){
+			
+			if(!destination)
 			destination =  eachAttr.attrValue;
 			
 			/*if(districtGeoId){
@@ -416,6 +419,14 @@ if(UtilValidate.isNotEmpty(orderAttrForPo)){
 		}
 	}
 }
+
+
+
+
+
+
+
+
 
 indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , actualOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 if(UtilValidate.isNotEmpty(indentOrderSequences)){

@@ -14,7 +14,7 @@
   border-collapse: collapse; 
   }
 .myTable th { 
-  background-color: goldenrod;
+  background-color: blue;
   color: white; 
   }
 .myTable td, 
