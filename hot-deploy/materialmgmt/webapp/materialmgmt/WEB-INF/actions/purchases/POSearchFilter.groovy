@@ -24,6 +24,15 @@ List branchIds = [];
 		branchIds.add(eachList.get("payToPartyId"));
 		
 	}
+	roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+	roPartyList = roList.get("partyList");
+	
+	for(eachRO in roPartyList){
+		formatMap = [:];
+		formatMap.put("storeName",eachRO.get("groupName"));
+		formatMap.put("payToPartyId",eachRO.get("partyId"));
+		formatList.addAll(formatMap);
+	}
 context.branchList = formatList;
  userPartyId = userLogin.partyId;
  partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "SUPPLIER"), false);
