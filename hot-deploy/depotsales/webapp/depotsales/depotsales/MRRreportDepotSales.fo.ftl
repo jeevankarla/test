@@ -184,6 +184,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        		   </fo:table-cell> 
                                <fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("description")?if_exists}   </fo:block>
+                       			</fo:table-cell>
+                       			<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;DESTINATION  </fo:block>  
+                       		   </fo:table-cell> 
+                               <fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;:${shipmentMap.get("destination")?if_exists}  </fo:block>
                        			</fo:table-cell>	        
                 	   		</fo:table-row>
                     </fo:table-body>

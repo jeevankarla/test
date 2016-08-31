@@ -1029,8 +1029,11 @@ for (eachType in orderAdjustmentTypeIds) {
 	 
 }
 
-
 context.typeBasedMap = typeBasedMap;
 
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+OrderItemShipGroup = delegator.findList("OrderItemShipGroup", condExpr, null, null, null, false);
 
-
+context.OrderItemShipGroup = OrderItemShipGroup;

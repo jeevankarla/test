@@ -1,4 +1,5 @@
 
+
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -361,18 +362,29 @@ under the License.
 					       <fo:table width="80%" align="right" table-layout="fixed"  font-size="11pt" >
       					   <fo:table-column column-width="100%"/>	             
 				           	  <fo:table-body>
-							  <fo:table-row>
-							  <#if allDetailsMap.get("DstAddr")?has_content>
-								  <fo:table-cell>
-	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
-	                               </fo:table-cell>
-								  <#else>
-								  <fo:table-cell>
-								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
-								  </fo:table-cell>
+				           	  
+				           	  <#if OrderItemShipGroup?has_content>
+					           	   <fo:table-row>
+										  <fo:table-cell>
+										  <#list OrderItemShipGroup as eachList>
+			                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${eachList.get("city")?if_exists}(Quantity : ${eachList.get("quantity")?if_exists} )</fo:block>
+			                              </#list>
+			                               </fo:table-cell>
+								</fo:table-row>
+				           	  <#else>
+								  <fo:table-row>
+								  <#if allDetailsMap.get("DstAddr")?has_content>
+									  <fo:table-cell>
+		                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
+		                               </fo:table-cell>
+									  <#else>
+									  <fo:table-cell>
+									    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
+									  </fo:table-cell>
 							 </#if>
-							 
-							</fo:table-row>
+							 </fo:table-row>
+						</#if>	 
+							
 						</fo:table-body>
 					   </fo:table>
 					  </fo:block>
