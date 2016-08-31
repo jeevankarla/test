@@ -85,6 +85,8 @@ if(orderId){
 	
 	JSONArray orderItemsJSON = new JSONArray();
 	double poQuantity = 0;
+	double dispatchPrice = 0;
+	
 	orderItems.each{ eachItem ->
 		
 		poQuantity = poQuantity+Double.valueOf(eachItem.quantity);
@@ -131,6 +133,9 @@ if(orderId){
 		newObj.put("unitPrice",eachItem.unitPrice);
 		disptchQty=eachItem.quantity-receivedQty
 		newObj.put("ItemValue",eachItem.unitPrice*disptchQty);
+		
+		dispatchPrice = dispatchPrice+(eachItem.unitPrice*disptchQty);
+		
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("quantity",eachItem.quantity-receivedQty);
 		newObj.put("balance",0);
@@ -154,6 +159,8 @@ if(orderId){
 	context.supplierId = supplierId;
 	context.supplierName = supplierName;
 	context.poQuantity = poQuantity;
+	context.dispatchPrice = dispatchPrice;
+	
 	
 }else{
 
