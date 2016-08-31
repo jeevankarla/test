@@ -49,11 +49,32 @@ for (eachList in productStoreList) {
 }
 context.formatList = formatList;
 
-branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
+/*branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
 if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 	branchList.clear();
 	branchList.add(parameters.partyIdFrom)
 }
+*/
+
+branchId = parameters.partyIdFrom;
+
+branchList = [];
+
+if(branchId){
+condListb = [];
+
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchList)
+branchList.add(branchId);
+}
+
 
 //branchId = parameters.partyIdFrom;
 
@@ -84,9 +105,6 @@ facilityPartyId = parameters.partyId;
  tallyRefNO = parameters.tallyRefNO;
  scheme = parameters.scheme;
  
-  
- 
- Debug.log("facilityDeliveryDate================"+facilityDeliveryDate);
 
 facilityDateStart = null;
 facilityDateEnd = null;
@@ -177,13 +195,10 @@ double totalIndents = 0
 
 //Debug.log("facilityPartyId=================="+facilityPartyId);
 
-
-  
- 
+Debug.log("branchList======43434============"+branchList.size());
 
 
-
-if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()==1) && (UtilValidate.isEmpty(facilityOrderId))){
+if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()>=1) && (UtilValidate.isEmpty(facilityOrderId))){
 
 	
 	custCondList = [];
@@ -192,7 +207,7 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 	
 	orderHeaderbefo = [];
 	branchbasedIds = [];
-	if(branchList.size()==1){
+	if(branchList.size()>=1){
 	    custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
 		custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 		branchbillFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
@@ -213,7 +228,7 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 		
 		weaverBasedOrderIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
 		
-		if(branchList.size()==1){
+		if(branchList.size()>=1){
 		WeaverbillFromVendorOrderRoles = EntityUtil.filterByCondition(branchbillFromVendorOrderRoles, EntityCondition.makeCondition("orderId", EntityOperator.IN, weaverBasedOrderIds));
 		branchWeaverIds = EntityUtil.getFieldListFromEntityList(WeaverbillFromVendorOrderRoles, "orderId", true);
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,branchWeaverIds));
