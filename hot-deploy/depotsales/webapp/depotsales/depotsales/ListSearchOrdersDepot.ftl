@@ -477,6 +477,15 @@ function drawRow(rowData) {
         row.append($("<td></td>"));
     
     }
+    
+    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId == "ORDER_APPROVED"){
+      var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';
+      row.append($("<td>" +  amendButton  +"</td>"));  
+   }else{
+   
+    row.append($("<td></td>"));
+   }
+    
 
 }
 
@@ -614,6 +623,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>Approve</td>
           <td>Indent Detail</td> 
            <td>Cancel</td>
+           <td>Amend Indent</td>
         </tr>
       </thead>
       <tbody>
