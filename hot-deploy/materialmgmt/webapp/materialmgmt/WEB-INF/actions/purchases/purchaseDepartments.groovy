@@ -68,6 +68,15 @@ List formatList = [];
 		branchMap.put("payToPartyId",eachList.get("payToPartyId"));
 		branchList.addAll(branchMap);
 	}
+	roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+	roPartyList = roList.get("partyList");
+	
+	for(eachRO in roPartyList){
+		branchMap = [:];
+		branchMap.put("productStoreName",eachRO.get("groupName"));
+		branchMap.put("payToPartyId",eachRO.get("partyId"));
+		branchList.addAll(branchMap);
+	}
 	context.branchList = branchList;
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;

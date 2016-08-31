@@ -60,8 +60,17 @@ List branchIds = [];
 		branchIds.add(eachList.get("payToPartyId"));
 		
 	}
-context.branchList = formatList;
 
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+
+for(eachRO in roPartyList){
+	formatMap = [:];
+	formatMap.put("storeName",eachRO.get("groupName"));
+	formatMap.put("payToPartyId",eachRO.get("partyId"));
+	formatList.addAll(formatMap);
+}
+context.branchList = formatList;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 if(UtilValidate.isEmpty(parameters.noConditionFind)){
