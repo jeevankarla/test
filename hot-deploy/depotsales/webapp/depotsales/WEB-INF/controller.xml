@@ -886,6 +886,10 @@
 	        <response name="success" type="view" value="FindDepotSupplierPurchseShipment"/>   
 	       	<response name="failed" type="view" value="FindDepotSupplierPurchseShipment"/>  
 	    </request-map>
+	    <request-map uri="subsidyDetails.csv">
+           <security https="true" auth="true"/>                        
+           <response name="success" type="view" value="subsidyDetailsCSV"/>        
+        </request-map>
     <!-- BRANCH SALES -->
     
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
@@ -2354,4 +2358,5 @@
     <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
+    <view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
 </site-conf>
