@@ -2772,7 +2772,8 @@
 					<field-map field-name="entityName" value="Invoice" />
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service>
-				<set field="parameters.invoiceId" value="" />				
+				<set field="parameters.invoiceId" value="" />
+				<set field="parameters.partyIdFrom" value="${parameters.tempPartyIdFrom}" />				
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="salesInvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
@@ -3027,6 +3028,7 @@
 					<field-map field-name="entityName" value="Invoice" />
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service>
+				<set field="parameters.partyId" value="${parameters.tempPartyId}" />
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="purchaseinvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
