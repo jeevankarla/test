@@ -14,7 +14,7 @@
   border-collapse: collapse; 
   }
 .myTable th { 
-  background-color: blue;
+  background-color: green;
   color: white; 
   }
 .myTable td, 
@@ -27,6 +27,8 @@
   
 </style>
 
+
+<input type="hidden" name="totQuantity" id="totQuantity" value="${totQuantity}">
 
 
 <#--
@@ -1074,7 +1076,7 @@ function populateData(){
 					  
 					  </div>
 					  
-					<#-->  <div class="righthalf">
+					  <div class="righthalf">
 		                 <table cellpadding="5" cellspacing="5" class='h3'>
 		                  <tr>
 		                  
@@ -1088,6 +1090,8 @@ function populateData(){
 		                         <td>
 	                              <table>
 						          <tr>
+						          <font colour = "blue">Total PO Quantity : ${totQuantity}</font>
+						          <span>&#160;&#160;&#160; </span>
 						          <input type="button"  class="plusbtn" value="Add Multiple Destinations" />
                                  <span>&#160;&#160;&#160; </span>
                                   <input type="button" value="Remove Destination" class="minusbtn" />  
@@ -1105,7 +1109,7 @@ function populateData(){
 		                  </td>
 		                  
 		                       
-					  </div>-->
+					  </div>
 					  
 					  </fieldset>
                   </section>
@@ -1171,10 +1175,36 @@ function storeData(){
     
 }
 
+
+function calculateSum(){
+
+ var totQuantity = $("#totQuantity").val();
+
+ var givenQty = 0;
+
+ $("tr.item").each(function() {
+     $this = $(this)
+    var quantity = $this.find("input.quantity").val();
+    givenQty = givenQty+parseInt(quantity);
+  
+  });
+  
+  if(totQuantity < parseInt(givenQty)){
+  
+    $this.find("input.quantity").val(0);   
+    $this.find("input.cityadd").val("");
+  
+  }
+
+}
+
  $(document).ready(function(){
       var storeData = "javascript:storeData()";
+      
+       var calculateSum = "javascript:calculateSum()";
+      
      $('.plusbtn').click(function() {
-           $(".myTable").append('<tr class="item"><td><input type="text" id="cityadd" onblur="'+storeData+'" class="cityadd" /></td><td><input type="text" id="quantity" class="quantity" onblur="'+storeData+'"  /></td><td><input type="date" id="estiDate" class="estiDate" onblur="'+storeData+'" /></td></tr>');
+           $(".myTable").append('<tr class="item"><td><input type="text" id="cityadd" onblur="'+storeData+'" class="cityadd" /></td><td><input type="text" id="quantity" name="quantity" class="quantity" onkeyup="'+calculateSum+'"    onblur="'+storeData+'"  /></td><td><input type="date" id="estiDate" class="estiDate" onblur="'+storeData+'" /></td></tr>');
      });
    $(".estiDate" ).datepicker();
    $('.minusbtn').click(function() {
@@ -1182,6 +1212,8 @@ function storeData(){
         if($(".myTable tr").length != 1)
             $(".myTable tr:last-child").remove();
     }); 
+    
+     
     
     getPayTermDes();
     getDelTermDes();

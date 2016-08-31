@@ -444,6 +444,10 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		
 	
 	//Debug.log("orderitemdetails================="+orderItemDetails)
+		
+	
+		double totQuantity = 0;	
+		
 	orderItems.each{ eachItem ->
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
@@ -502,6 +506,9 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.description);
 		newObj.put("quantity",eachItem.quantity);
+		
+		totQuantity = totQuantity+eachItem.quantity;
+		
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
 		if(eachItem.bedPercent){
@@ -516,6 +523,8 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		orderItemsJSON.add(newObj);
 	}
 	context.put("orderItemsJSON", orderItemsJSON);
+	
+	context.totQuantity = totQuantity;
 	
 	JSONArray orderAdjustmentJSON = new JSONArray();
 	
