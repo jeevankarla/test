@@ -3133,5 +3133,12 @@
 		</field>
 		<field name="billingAccountId"><hidden/></field>
 	</form>    
-        
+    <form name="subsidyDetailsList" type="list" list-name="finalList" view-size="99999">
+        <field name="MothDayBegin" title="Period From"><display/></field>
+        <field name="MothDayEnd" title="Period To"><display/></field>
+        <field name="monthQty" title="Qunatity"><display/></field>
+        <field name="monthSubsidy" title="10% Subsidy"><display/></field>
+        <field name="monthServiceCharg" title="0.05% Service Charges"><display/></field>
+        <field name="monthTotal" title="Total"><display/></field>
+    </form>    
 </forms>
