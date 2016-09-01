@@ -43,12 +43,16 @@ if(UtilValidate.isNotEmpty(OrderAss)){
 	salesOrder = OrderAss.get("toOrderId");
 	indentTransporter = delegator.findOne("OrderAttribute", [orderId : salesOrder, attrName : "TRANSPORTER_PREF"], false);
 	 if(UtilValidate.isNotEmpty(indentTransporter)){
+		 boolean atleastOneAlpha = (indentTransporter.attrValue).matches(".*[a-zA-Z]+.*");
+		 if(atleastOneAlpha)
 		 carrierName = indentTransporter.attrValue;
 	 }
 }
 
- 
-if(!carrierName){
+
+context.carrierName = carrierName;
+
+//if(carrierName){
 
 branchId = "";
 
@@ -102,7 +106,6 @@ request.setAttribute("transporterJSON", transporterJSON);
 
 return "sucess";
 
-}else{
+/*}else{
 
- context.carrierName = carrierName;
-}
+}*/

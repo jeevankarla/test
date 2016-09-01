@@ -298,17 +298,9 @@ $( "#lrDate" ).datepicker({
 							<td>&nbsp;</td>
 					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Carrier/Courier Name: </div></td>
 					        <td>&nbsp;</td>
-					        <#if carrierName?exists && carrierName?has_content>  
-						  		<input type="hidden" name="carrierName" id="carrierName" value="${carrierName}"/>  
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${carrierName}         
-					            	</div>
-					          	</td>       
-					       	<#else> 
-					        	<td valign='middle'>          
-					            	<input class='h3' type="text" name="carrierName" id="carrierName"/>           		
-					            </td>
-				       	  </#if>
+				        	<td valign='middle'>          
+				            	<input class='h3' type="text" name="carrierName" id="carrierName"  value="${carrierName}" />           		
+				            </td>
 					  	</tr>
 					  	<tr>
 							<td>&nbsp;</td>
