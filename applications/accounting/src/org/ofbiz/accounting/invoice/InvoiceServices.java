@@ -158,6 +158,8 @@ public class InvoiceServices {
         List<GenericValue> billItems = UtilGenerics.checkList(context.get("billItems"));
         String invoiceId = (String) context.get("invoiceId");
         String shipmentId = (String) context.get("shipmentId");
+        Map itemAdjMap = (Map) context.get("itemAdjMap");
+        List ignoreAdjustmentsList = (List) context.get("ignoreAdjustmentsList");
 
         String invoicetypeId = "";
         
@@ -363,9 +365,12 @@ public class InvoiceServices {
             // sequence for items - all OrderItems or InventoryReservations + all Adjustments
             int invoiceItemSeqNum = 1;
             String invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, INVOICE_ITEM_SEQUENCE_ID_DIGITS);
-
+            
             // create the item records
             for (GenericValue currentValue : billItems) {
+            	String orderItemSeqId = (String) currentValue.get("orderItemSeqId");
+            	List inputAdjustmentsList = (List) itemAdjMap.get(orderItemSeqId);
+            	
                 GenericValue itemIssuance = null;
                 GenericValue orderItem = null;
                 GenericValue shipmentReceipt = null;
@@ -514,6 +519,12 @@ public class InvoiceServices {
 
                 // create the item adjustment as line items
                 List<GenericValue> itemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orh.getAdjustments());
+                if(UtilValidate.isNotEmpty(inputAdjustmentsList)){
+                	itemAdjustments = inputAdjustmentsList;
+                }
+                
+                //inputAdjustmentsList
+                
                 for (GenericValue adj : itemAdjustments) {
 
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
@@ -671,19 +682,22 @@ public class InvoiceServices {
                         }
                        
                         // Create the OrderAdjustmentBilling record
-                        Map<String, Object> createOrderAdjustmentBillingContext = FastMap.newInstance();
-                        createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
-                        createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
-                        createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
-                        createOrderAdjustmentBillingContext.put("amount", amount);
-                        createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
-                        createOrderAdjustmentBillingContext.put("userLogin", userLogin);
+                        
+                        if(UtilValidate.isNotEmpty(adj.getString("orderAdjustmentId"))){
+                        	Map<String, Object> createOrderAdjustmentBillingContext = FastMap.newInstance();
+                            createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
+                            createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
+                            createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
+                            createOrderAdjustmentBillingContext.put("amount", amount);
+                            createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
+                            createOrderAdjustmentBillingContext.put("userLogin", userLogin);
 
-                        Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
-                        if (ServiceUtil.isError(createOrderAdjustmentBillingResult)) {
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingOrderAdjustmentBillingFromOrder",locale), null, null, createOrderAdjustmentBillingContext);
+                            Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
+                            if (ServiceUtil.isError(createOrderAdjustmentBillingResult)) {
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingOrderAdjustmentBillingFromOrder",locale), null, null, createOrderAdjustmentBillingContext);
+                            }
                         }
-
+                        
                         // this adjustment amount
                         BigDecimal thisAdjAmount = amount;
 
@@ -713,7 +727,11 @@ public class InvoiceServices {
             List<GenericValue> headerAdjustments = orh.getOrderHeaderAdjustments();
            
             for (GenericValue adj : headerAdjustments) {
-
+            	
+            	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+            		continue;
+            	}
+            	
                 // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 BigDecimal adjAlreadyInvoicedAmount = null;
                 try {

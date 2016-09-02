@@ -36,17 +36,19 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "PurchaseInvoiceDepotInc.ftl"/>
+<#include "EditPurchaseInvoicePrice.ftl"/>
+
 <div class="full" style="width:100%">
-			<div class="screenlet-title-bar">
-         		<div class="grid-header" style="width:100%">
-					<label><font color="green">Purchase Invoice Entry</font></label>
-				</div>
-		     </div>
-      
-    		<div class="screenlet-body">
-     
-	           <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
-			    	<table width="100%">
+	
+		<div class="screenlet-title-bar">
+	         <div class="grid-header" style="width:100%">
+				<label><font color="green">Purchase Invoice Entry</font></label>
+			</div>
+	     </div>
+	      
+	    <div class="screenlet-body">
+	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
+	      <table width="100%">
 			    	<tr>
 				        <td width="40%">
 			    	<table  border="0" cellspacing="0" cellpadding="0">
@@ -158,8 +160,52 @@ $(document).ready(function(){
 	          		</#if>   
 	          	</#if>
 	        </tr>
-				        
-	    			</table>
+	        
+	        <tr>
+		       	  		<td align='left' class="label" nowrap="nowrap">Purchase Tax Type:</td>
+		       	  		<td valign='middle'>
+	          				<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
+	          					<#if purchaseTaxType?exists && purchaseTaxType?has_content>
+	          						<#if purchaseTaxType == "Intra-State">
+	          							<option value="Intra-State" selected>With In State</option>
+	          						<#else>
+	          							<option value="Inter-State" selected>Inter State</option>
+	          						</#if> 
+	          					</#if> 
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
+	          				</select>
+	          				<#if supplierGeoId?exists && supplierGeoId?has_content>
+					    		<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${supplierGeoId}" readonly/>
+					    	</#if>
+					      	<#if branchGeoId?exists && branchGeoId?has_content>
+					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${branchGeoId}" readonly/>
+					    	</#if>
+	          			</td>
+		          		<td>&nbsp;</td>
+		          		<td align='left' class="label" nowrap="nowrap">Transaction Type:</td>
+		       			<td valign='middle'>
+	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if purchaseTitleTransferEnumId?exists && purchaseTitleTransferEnumId?has_content>
+	          						<#if purchaseTitleTransferEnumId == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          						</#if>
+	          						<#if purchaseTitleTransferEnumId == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          						</#if>
+	          						<#if purchaseTitleTransferEnumId == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          						</#if> 
+	          					</#if> 
+	          				
+	          				
+	          					<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="NO_E2_FORM"></option>
+	          				</select>
+	          			</td>
+		       		</tr>  
+		       		</table>
 	    			</td>
 	    			<td border="1">
 	    			<#if ShipmentDetail?has_content>
@@ -231,15 +277,13 @@ $(document).ready(function(){
 	    				</table>
 	    			</#if>
 	    			</td>
-	    			</tr>
-	    			</table>
-	    			 <div id="sOFieldsDiv" >
-	               </div> 
-				</form>
-    		</div>
+	    			</tr>        
+	      </table>
+	      <div id="sOFieldsDiv" >
+	      </div> 
+	</form>
+	</div>
 		</div>
-
-	    
 	<br/>
     <form method="post" id="indententry" action="<@ofbizUrl>purchaseEntryInit</@ofbizUrl>">  
 	<#-- passing BillToPartyId: -->
@@ -267,23 +311,23 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<div class="lefthalf" >
-				<div class="screenlet-title-bar">
-					<div class="grid-header" style="width:100%">
-						<label>Discounts</label><span id="totalAmount"></span>
-					</div>
-					<div id="myGrid3" style="width:100%;height:150px;">
-						<div class="grid-header" style="width:100%">
-						</div>
-					</div>
-				</div>
-				</div>
-				<div class="righthalf">
+				<div class="full">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
 					</div>
 					<div id="myGrid2" style="width:100%;height:150px;">
+						<div class="grid-header" style="width:100%">
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="full" >
+				<div class="screenlet-title-bar">
+					<div class="grid-header" style="width:100%">
+						<label>Discounts</label><span id="totalAmount"></span>
+					</div>
+					<div id="myGrid3" style="width:100%;height:150px;">
 						<div class="grid-header" style="width:100%">
 						</div>
 					</div>

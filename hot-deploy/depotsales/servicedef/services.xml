@@ -120,7 +120,15 @@
         <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="numberOfCattle" type="String" mode="IN" optional="false"/>
     </service>
-    
+    <service name="UpdatePartyLoom" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="updatePartyLooms" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+        <attribute name="oldFromDate" type="String" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="createIssuanceForDepotOrder" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createIssuanceForDepotOrder">
         <description>Issue Products to Order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -142,7 +150,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceDate" type="String" mode="IN" optional="false"/>
         <attribute name="tallyRefNo" type="String" mode="IN" optional="true"/>
-         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
     </service>
     
      <service name="preferenceCancel" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="preferenceCancel">
@@ -290,6 +298,15 @@
         <attribute name="vatSurcharges" type="List" mode="OUT" optional="true"/>
         <attribute name="cstSurcharges" type="List" mode="OUT" optional="true"/>
     </service>
+    <service name="calculateTaxesByGeoIdTest" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="calculateTaxesByGeoIdTest">
+        <description>Get Child Categories and Category Members</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthorityRateTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="defaultTaxMap" type="Map" mode="OUT" optional="true"/>
+        <attribute name="taxValueMap" type="Map" mode="OUT" optional="true"/>
+        <attribute name="orderAdjustmentsList" type="List" mode="OUT" optional="true"/>
+    </service>
     <service name="createBranchSaleInvoice" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createBranchSaleInvoice">
         <description>Issue Products to Order</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
@@ -309,6 +326,8 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
         <attribute name="billItems" type="List" mode="IN" optional="false"/>
+        <attribute name="ignoreAdjustmentsList" type="List" mode="IN" optional="true"/>
+        <attribute name="itemAdjMap" type="Map" mode="IN" optional="true"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
@@ -485,7 +504,6 @@
                 location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="updateOrderStatusToComplete" auth="false">
         <attribute name="purchaseOrderId" mode="IN" type="String" optional="true"/>
     </service>
-    
     <service name="deleteWeaverRelationship" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="deleteWeaverRelationship">
         <description>Weaver relation delete</description>
                 <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
@@ -503,7 +521,6 @@
          <attribute name="quotaQty" type="String" mode="IN" optional="false"/>
         <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
     </service>
-    
     <service name="getRegionalOffices" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getRegionalOffices" auth="true">
     	<description>get Regional Offices</description>
         <attribute name="partyList" mode="OUT" type="List" optional="true"/>

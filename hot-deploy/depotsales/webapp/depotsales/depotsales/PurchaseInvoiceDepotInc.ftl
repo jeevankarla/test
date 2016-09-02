@@ -12,7 +12,7 @@
 		}
 		.form-style-8{
 		    max-width: 1400px;
-		    max-height: 200px;
+		    max-height: 260px;
 		    max-right: 10px;
 		    margin-top: 10px;
 			margin-bottom: -15px;
@@ -69,6 +69,7 @@
 	var dropDownOption = "ALL";
 	var prodDropDownOption = "ALL";
 	
+	var purTaxListReady = ${StringUtil.wrapString(purTaxListReady)!'[]'};
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
@@ -95,7 +96,12 @@
 		else
 			return {valid:true, msg:null};
 	}
-
+	
+	function editClickHandlerEvent(row){
+		getProductPurchaseTaxDetails($("#supplierGeoId").val(), row, $("#purchaseTaxType").val());
+		showItemAdjustmentsAndTaxes(data[row], row);
+	}
+	
 	function processIndentEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
@@ -105,7 +111,7 @@
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
-		
+			
 			//dropDownOption = "ALL";
 			var product = data[rowCount]["cProductName"];
     			dropDownOption += ","+product;
@@ -132,6 +138,20 @@
 			var bedSecCessPer = data[rowCount]["bedSecCessPercent"];
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
+			<#--
+			var vatPur = data[rowCount]["VAT_SALE_PUR"];
+			var cstPur = data[rowCount]["CST_SALE_PUR"];
+			var vatPurAmt = data[rowCount]["VAT_SALE_PUR_AMT"];
+			var cstPurAmt = data[rowCount]["CST_SALE_PUR_AMT"];
+			
+			var vatSur = data[rowCount]["VAT_SURCHARGE_PUR"];
+			var cstSur = data[rowCount]["CST_SURCHARGE_PUR"];
+			var vatPurAmt = data[rowCount]["VAT_SURCHARGE_PUR_AMT"];
+			var cstPurAmt = data[rowCount]["CST_SURCHARGE_PUR_AMT"];
+			-->
+			
+			
+			var taxAmt = data[rowCount]["taxAmt"];
 		
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
@@ -154,6 +174,44 @@
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "oritemseq_o_" + rowCount).val(orderItemSeqId);
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				
+				<#--
+				if(data[rowCount]["VAT_SALE_PUR"]){
+					var inputVat = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_SALE_PUR_o_" + rowCount).val(data[rowCount]["VAT_SALE_PUR"]);
+					jQuery(formId).append(jQuery(inputVat));
+				}
+				if(data[rowCount]["CST_SALE_PUR"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "CST_SALE_PUR_o_" + rowCount).val(data[rowCount]["CST_SALE_PUR"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				if(data[rowCount]["VAT_SALE_PUR_AMT"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_SALE_PUR_AMT_o_" + rowCount).val(data[rowCount]["VAT_SALE_PUR_AMT"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				if(data[rowCount]["CST_SALE_PUR_AMT"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "CST_SALE_PUR_AMT_o_" + rowCount).val(data[rowCount]["CST_SALE_PUR_AMT"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				
+				if(data[rowCount]["VAT_SURCHARGE_PUR"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_SURCHARGE_PUR_o_" + rowCount).val(data[rowCount]["VAT_SURCHARGE_PUR"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				if(data[rowCount]["CST_SURCHARGE_PUR"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "CST_SURCHARGE_PUR_o_" + rowCount).val(data[rowCount]["CST_SURCHARGE_PUR"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				if(data[rowCount]["VAT_SURCHARGE_PUR_AMT"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_SURCHARGE_PUR_AMT_o_" + rowCount).val(data[rowCount]["VAT_SURCHARGE_PUR_AMT"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				if(data[rowCount]["CST_SURCHARGE_PUR_AMT"]){
+					var inputTax = jQuery("<input>").attr("type", "hidden").attr("name", "CST_SURCHARGE_PUR_AMT_o_" + rowCount).val(data[rowCount]["CST_SURCHARGE_PUR_AMT"]);
+					jQuery(formId).append(jQuery(inputTax));
+				}
+				-->
+				
+				
+				
 				//percentages
 				
 				var inputVATPer = jQuery("<input>").attr("type", "hidden").attr("name", "VatPercent_o_" + rowCount).val(VATPer);
@@ -171,6 +229,29 @@
 				var inputbedSecCessPer = jQuery("<input>").attr("type", "hidden").attr("name", "bedSecCessPercent_o_" + rowCount).val(bedSecCessPer);
 				jQuery(formId).append(jQuery(inputbedSecCessPer));
 				
+				var inputTaxAmt = jQuery("<input>").attr("type", "hidden").attr("name", "taxAmt_o_" + rowCount).val(taxAmt);
+				jQuery(formId).append(jQuery(inputTaxAmt));
+				
+				// Purchase taxes
+				
+				var purTaxList = [];
+				purTaxList = data[rowCount]["purTaxList"]
+				
+				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
+				jQuery(formId).append(jQuery(purTaxListItem));	
+				if(purTaxList != undefined){
+					for(var i=0;i<purTaxList.length;i++){
+						var taxType = purTaxList[i];
+						var taxPercentage = data[rowCount][taxType + "_PUR"];
+						var taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						
+						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
+						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
+						jQuery(formId).append(jQuery(purInputTaxTypePerc));
+						jQuery(formId).append(jQuery(purInputTaxTypeValue));
+					}
+				}
+                
 				
    			}
 		}
@@ -185,14 +266,22 @@
 				applicableTo = productLabelIdMap["["+applicableToLabel+"]"];
 			}
 			
+			var assessableValue = "";
+			if(data2[rowCount]["assessableValue"]){
+				assessableValue = data2[rowCount]["assessableValue"];
+			}
+			
 			var adjAmt = parseFloat(data2[rowCount]["adjAmount"]);
 	 		if (!isNaN(adjAmt)) {	 		
 				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemTypeId_o_" + rowCount).val(invItemTypeId);
 				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTo_o_" + rowCount).val(applicableTo);
 				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjAmt_o_" + rowCount).val(adjAmt);
+				var inputAssessableVal = jQuery("<input>").attr("type", "hidden").attr("name", "assessableValue_o_" + rowCount).val(assessableValue);
+				
 				jQuery(formId).append(jQuery(inputInv));
 				jQuery(formId).append(jQuery(inputApplicable));				
 				jQuery(formId).append(jQuery(inputAmt));
+				jQuery(formId).append(jQuery(inputAssessableVal));
 			}
 		}
 		
@@ -209,15 +298,23 @@
 			if (isNaN(discQty) ) {
 				discQty = 0;
 			}
+			var assessableValue = "";
+			if(data3[rowCount]["assessableValue"]){
+				assessableValue = data2[rowCount]["assessableValue"];
+			}
+			
 	 		if (!isNaN(adjAmt)) {	 		
 				var inputInv = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemTypeDiscId_o_" + rowCount).val(invItemTypeId);
 				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableToDisc_o_" + rowCount).val(applicableTo);
 				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "adjDiscAmt_o_" + rowCount).val(adjAmt);
 				var inputDiscQty= jQuery("<input>").attr("type", "hidden").attr("name", "discQty_o_" + rowCount).val(discQty);
+				var inputAssessableVal = jQuery("<input>").attr("type", "hidden").attr("name", "assessableValueDisc_o_" + rowCount).val(assessableValue);
+				
 				jQuery(formId).append(jQuery(inputInv));	
 				jQuery(formId).append(jQuery(inputApplicable));			
 				jQuery(formId).append(jQuery(inputAmt));
 				jQuery(formId).append(jQuery(inputDiscQty));
+				jQuery(formId).append(jQuery(inputAssessableVal));
 			}
 		}
 		
@@ -436,14 +533,19 @@
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter, focusable :false},
 			{id:"UPrice", name:"Unit Price", field:"UPrice", width:130, minWidth:130, cssClass:"readOnlyColumnClass", sortable:false, align:"right", toolTip:"UD Price", focusable :false},
 			{id:"amount", name:"Total Basic Amount", field:"amount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter},
-			{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
-			<#--{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},-->
+			<#--{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
+			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},
 			
 			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
 			{id:"SurChgPercent", name:"SUR(%)", field:"SurChgPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"}
 			
-			<#--{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
-			
+			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
+			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
 		];
 		  
 		  var columns=withOutBedcolumns;
@@ -750,7 +852,7 @@
 			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
 			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:355, minWidth:355, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-		
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options2 = {
@@ -891,7 +993,8 @@
 			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
 			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:315, minWidth:315, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"}
+			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options3 = {
@@ -1105,4 +1208,127 @@
      function gridShowCall() {
            $('#FieldsDIV').show();
     }
+    
+    function getProductPurchaseTaxDetails(taxAuthGeoId, row, taxType){
+    
+    	var productId = data[row]["cProductId"];
+    	var totalAmt = data[row]["amount"];
+    	
+        if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	
+	         $.ajax({
+	        	type: "POST",
+	         	url: "calculateTaxesByGeoIdTest",
+	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
+	       	 	dataType: 'json',
+	       	 	async: true,
+	    	 	success: function(result) {
+	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	   	  				alert(result["_ERROR_MESSAGE_"]);
+	      			}else{
+	   	  				
+	   	  				var defaultTaxMapPur =result["defaultTaxMap"];
+	   	  				var taxValueMapPur =result["taxValueMap"];
+	   	  				
+	   	  				var purOrderAdjustmentsList = result["orderAdjustmentsList"];
+	   	  				data[row]["purOrderAdjustmentsList"] = purOrderAdjustmentsList;
+	   	  				
+	   	  				var purOrderAdjustmentTypeList = [];
+	   	  				for(var i=0;i<purOrderAdjustmentsList.length;i++){
+	   	  					var purOrderAdjustmentType = purOrderAdjustmentsList[i];
+	   	  					purOrderAdjustmentTypeList.push(purOrderAdjustmentType["orderAdjustmentTypeId"]);
+	   	  				}
+	   	  				data[row]["purOrderAdjustmentTypeList"] = purOrderAdjustmentTypeList;
+	   	  				
+	   	  				data[row]["defaultTaxMapPur"] = defaultTaxMapPur;
+	   	  				data[row]["taxValueMapPur"] = taxValueMapPur;
+	   	  				
+	   	  				<#--
+	   	  				var purTaxList = [];
+	   	  				
+	   	  				var purchaseTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
+						var validPurchaseTaxList = transactionTypeTaxMap[purchaseTitleTransferEnumId];
+						
+						for(var i=0;i<validPurchaseTaxList.length;i++){
+							var purchaseTax = validPurchaseTaxList[i];
+							purTaxList.push(purchaseTax);
+							if(defaultTaxMapPur[purchaseTax] != 'undefined' || defaultTaxMapPur[purchaseTax] != null){
+								var surchargeList = defaultTaxMapPur[purchaseTax]["surchargeList"];
+								
+								for(var j=0;j<surchargeList.length;j++){
+									var surchargeDetails = surchargeList[j];
+									purTaxList.push(surchargeDetails.taxAuthorityRateTypeId);
+								}
+							}
+						}
+						-->
+						
+	   	  				var count = 0;
+						$.each(taxValueMapPur, function(key, value) {
+						    data[row]["DEFAULT_PUR_"+key] = value;
+						    data[row]["DEFAULT_PUR_"+key+"_AMT"] = (value) * totalAmt/100;
+						    
+						    data[row][key+"_PUR"] = value;
+						    data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
+						    
+						    count++;
+						});
+	   	  				
+	   	  				var purTaxList = [];
+						purTaxList.push("VAT_SALE");
+						purTaxList.push("CST_SALE");
+						purTaxList.push("VAT_SURCHARGE");
+						purTaxList.push("CST_SURCHARGE");
+	   	  				
+	   	  				data[row]["purTaxList"] = purTaxList;
+	   	  				
+	   	  				grid.updateRow(row);
+	   	  				
+	   	  				//updateTotalIndentAmount();
+	   	  				//data[row]["remarks"].setActiveCell();
+	   	  				return false; 
+	  				}
+	           
+	      		} ,
+	     	 	error: function() {
+	      	 		alert(result["_ERROR_MESSAGE_"]);
+	     	 	}
+	    	});
+	    }	
+	    else{
+	    	
+			var purTaxList = [];
+			purTaxList.push("VAT_SALE");
+			purTaxList.push("CST_SALE");
+			purTaxList.push("VAT_SURCHARGE");
+			purTaxList.push("CST_SURCHARGE");
+	   	  				
+	   	  	
+	   	  	data[row]["purTaxList"] = purTaxList;
+	   	  	
+	   	  	//updatePayableAmount(row);			
+			//addServiceCharge(row);
+	   	  	grid.updateRow(row);
+	   	  	
+	   	  	updateTotalIndentAmount();
+	   	  	
+	   	  	
+	    }
+	}    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+    
 </script>			
