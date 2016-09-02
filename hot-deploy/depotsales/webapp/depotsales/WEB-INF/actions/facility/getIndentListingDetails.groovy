@@ -195,8 +195,6 @@ double totalIndents = 0
 
 //Debug.log("facilityPartyId=================="+facilityPartyId);
 
-Debug.log("branchList======43434============"+branchList.size());
-
 
 if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()>=1) && (UtilValidate.isEmpty(facilityOrderId))){
 
