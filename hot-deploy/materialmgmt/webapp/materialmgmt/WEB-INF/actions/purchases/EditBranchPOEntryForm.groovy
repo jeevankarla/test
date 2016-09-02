@@ -1,12 +1,13 @@
 
 import org.ofbiz.base.util.*;
-
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+
 import java.util.*;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.UtilMisc;
@@ -14,7 +15,9 @@ import org.ofbiz.base.util.UtilMisc;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastMap;
+
 import org.ofbiz.base.util.UtilNumber;
+
 import java.sql.Timestamp;
 
 import org.ofbiz.base.util.UtilDateTime;
@@ -31,8 +34,10 @@ import org.ofbiz.product.product.ProductWorker;
 
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
+
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
+
 import java.util.Map.Entry;
 
 purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
@@ -58,6 +63,7 @@ if(onbehalfof){
 context.orderType=orderType;
 orderEditParamMap = [:];
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+
 if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	orderInfoDetail = [:];
@@ -107,11 +113,11 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderInfoDetail.putAt("quotationNo", quotationNo);
 	orderInfoDetail.putAt("validFromDate", fromDate);
 	orderInfoDetail.putAt("validThruDate", thruDate);
-	
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER", "BILL_FROM_VENDOR","SHIP_TO_CUSTOMER")));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
+	
 	//orderRole = EntityUtil.getFirst(orderRoles);
 	if(orderRoles){
 		roleCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPPLIER")],EntityOperator.AND);
@@ -253,8 +259,56 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		orderInfoDetail.putAt("billToPartyId", orderParty.partyId);
 		
 	}*/
+	
+	Debug.log("OIF ================" +orderInfoDetail);
+	
+	branchId = orderInfoDetail.get("billToPartyId");
+	supplierId = orderInfoDetail.get("supplierId");
+	
+	Debug.log("branchId =================" +branchId);
+	Debug.log("supplierId ================" +supplierId);
+	
+	
+	String supplierGeoId = null;
+	List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplierId, false, "TAX_CONTACT_MECH");
+	if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+		supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+	}
+	
+	String branchGeoId = null;
+	List branchContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, branchId, false, "TAX_CONTACT_MECH");
+	if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
+		branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+	}
+	
+	Debug.log("supplierGeoId =================" +supplierGeoId);
+	Debug.log("branchGeoId ================" +branchGeoId);
+	
+	orderInfoDetail.putAt("supplierGeoId", supplierGeoId);
+	orderInfoDetail.putAt("branchGeoId", branchGeoId);
+	
+	String purchaseTitleTransferEnumId = "CST_CFORM";
+	orderInfoDetail.putAt("purchaseTaxType", "Inter-State");
+	if(supplierGeoId == branchGeoId){
+		orderInfoDetail.putAt("purchaseTaxType", "Intra-State");
+		purchaseTitleTransferEnumId = "NO_E2_FORM";
+	}
+	else{
+		orderInfoDetail.putAt("purchaseTaxType", "Inter-State");
+		purchaseTitleTransferEnumId = "CST_CFORM";
+	}
+	orderInfoDetail.putAt("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
+	context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
+	
+	
+	
+	
+	
+	
+	Debug.log("orderId =================="+orderId);
 	orderEditParamMap.putAt("orderHeader", orderInfoDetail);
 	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	Debug.log("orderAdjustments =================="+orderAdjustments);
 	
 	orderAdjDetail = [:];
 	orderAdjustments.each{ eachAdj ->
@@ -353,8 +407,27 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		context.termExists = "Y";
 	}
 	
-
+	titleTransferEnumIdsList = [];
+	taxAuthorityTypeTitleTransferList = delegator.findList("TaxAuthorityTypeTitleTransfer", null, null, null, null, false);
+	titleTransferEnumIdsList = EntityUtil.getFieldListFromEntityList(taxAuthorityTypeTitleTransferList, "titleTransferEnumId", true);
+	
+	JSONObject transactionTypeTaxMap = new JSONObject();
+	for(int i=0; i<titleTransferEnumIdsList.size(); i++){
+		titleTransferEnumId = titleTransferEnumIdsList.get(i);
 		
+		filteredTitleTransfer = EntityUtil.filterByCondition(taxAuthorityTypeTitleTransferList, EntityCondition.makeCondition("titleTransferEnumId", EntityOperator.EQUALS, titleTransferEnumId));
+		taxIdsList = EntityUtil.getFieldListFromEntityList(filteredTitleTransfer, "taxAuthorityRateTypeId", true);
+		
+		JSONArray applicableTaxList = new JSONArray();
+		for(int j=0; j<taxIdsList.size(); j++){
+			applicableTaxList.add(taxIdsList.get(j));
+		}
+		transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
+	}
+	Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+	context.transactionTypeTaxMap = transactionTypeTaxMap;
+	
+	
 		/*Map<String, Object> orderDtlMap = FastMap.newInstance();
 		orderDtlMap.put("orderId", orderId);
 		orderDtlMap.put("userLogin", userLogin);	
@@ -444,15 +517,23 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		
 	
 	//Debug.log("orderitemdetails================="+orderItemDetails)
-		
-	
-		double totQuantity = 0;	
-		
 	orderItems.each{ eachItem ->
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
 			amount = 0;
 		}
+		
+		taxResultCtx = 0;
+		taxValueMap = [:];
+		if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+			Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
+			prodCatTaxCtx.put("productId", eachItem.productId);
+			prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
+			
+			taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
+			taxValueMap = taxResultCtx.get("taxValueMap");
+		}
+		
 		
 		bedTaxPercent = 0;
 		if(eachItem.bedPercent){
@@ -506,10 +587,22 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.description);
 		newObj.put("quantity",eachItem.quantity);
-		
-		totQuantity = totQuantity+eachItem.quantity;
-		
 		newObj.put("unitPrice",eachItem.unitPrice);
+		
+		totalTaxAmt = 0;
+		if(purchaseTitleTransferEnumId){
+			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
+			
+			for(int i=0; i<purTaxList.size(); i++){
+				taxItem = purTaxList.get(i);
+				newObj.put(taxItem, taxValueMap.get(taxItem));
+				//newObj.put("vatPercent", vatPercent);
+				totalTaxAmt = totalTaxAmt + taxValueMap.get(taxItem);
+			}
+			
+			
+		}
+		newObj.put("taxAmt", totalTaxAmt);
 		newObj.put("amount", amount);
 		if(eachItem.bedPercent){
 			newObj.put("bedPercent", bedTaxPercent);
@@ -521,12 +614,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
+		
+		
 	}
 	context.put("orderItemsJSON", orderItemsJSON);
 	
-	context.totQuantity = totQuantity;
 	
-	JSONArray orderAdjustmentJSON = new JSONArray();
+	/*JSONArray orderAdjustmentJSON = new JSONArray();
 	
 	otherTerms.each{ eachOtherTerm ->
 		
@@ -551,7 +645,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("description", eachOtherTerm.description);
 		orderAdjustmentJSON.add(newObj);
 	}
-	context.put("orderAdjustmentJSON", orderAdjustmentJSON);
+	context.put("orderAdjustmentJSON", orderAdjustmentJSON);*/
 	
 	orderTerms.put("paymentTerms", paymentTerms);
 	orderTerms.put("deliveryTerms", deliveryTerms);
@@ -587,3 +681,54 @@ statesList.each{ eachState ->
 		stateListJSON.add(newObj);
 }
 context.stateListJSON = stateListJSON;
+
+
+adjCondList = [];
+adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
+orderAdjustmentTypeList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
+
+additionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orderAdjustmentTypeList, "orderAdjustmentTypeId", true)));
+Debug.log("additionalChgs =================="+additionalChgs);
+
+if(additionalChgs){
+	context.termExists = "Y";
+}
+
+
+JSONArray adjustmentJSON = new JSONArray();
+additionalChgs.each{ eachOdrAdj ->
+	tempMap = [:];
+	adjTypeId = eachOdrAdj.orderAdjustmentTypeId;
+	applicableTo = eachOdrAdj.orderItemSeqId;
+	
+				
+	if(UtilValidate.isEmpty(applicableTo) || applicableTo == "_NA_"){
+		applicableTo = "ALL";
+	}
+	else{
+		originalOrderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", applicableTo));
+		applicableTo = originalOrderItem.get("itemDescription");
+	}
+	
+	totalAdjAmt = eachOdrAdj.amount;
+	percentage = eachOdrAdj.sourcePercentage;
+	
+	
+	JSONObject newObj = new JSONObject();
+	newObj.put("adjustmentTypeId", adjTypeId);
+	newObj.put("applicableTo", applicableTo);
+	newObj.put("adjValue", totalAdjAmt);
+	newObj.put("uomId", "INR");
+	if(eachOdrAdj.isAssessableValue && eachOdrAdj.isAssessableValue == "Y"){
+		newObj.put("assessableValue", "checked");
+	}
+	adjustmentJSON.add(newObj);
+}
+Debug.log("adjustmentJSON =================="+adjustmentJSON);
+context.orderAdjustmentJSON = adjustmentJSON;
+
+InvoiceItem = delegator.findList("InvoiceItem", null, null, null, null, false);
+
+Debug.log("InvoiceItem =================="+EntityUtil.getFieldListFromEntityList(InvoiceItem, "invoiceItemTypeId", true));
+
+

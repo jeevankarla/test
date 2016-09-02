@@ -137,9 +137,6 @@
         <!-- <field name="sequenceId"><text-find/></field> -->
       <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
-        
-            
-        
         <field name="indentDateSort">
 	        	<drop-down allow-empty="false">
 	        		<option key="-orderDate" description="Descending"/>
@@ -459,21 +456,21 @@
             </field> -->
             <!-- <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
                  <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
-            </field> -->
+            </field> --> 
             <field name="editGRN" widget-style="buttontext" title="Edit GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
             <hyperlink target="editGRN" description="Edit GRN">
                 <parameter param-name="shipmentId"/>
                 <parameter param-name="orderId" value="${primaryOrderId}"/>
                 <parameter param-name="orderNo" from-field="salesOrder"/>
             </hyperlink>
-           </field> 
+           	</field> 
             <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
             <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
              	<parameter param-name="shipmentId" value="${shipmentId}"/>
              	<parameter param-name="orderId" value="${primaryOrderId}"/>
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
-          </field>
+          	</field>
             <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(&quot;${purchaseInvoiceSize}&quot; == &quot;0&quot;) &amp;&amp;(statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)) ">
                 <hyperlink target="MaterialInvoiceInit" description="Pur Invoice">
                     <parameter param-name="shipmentId"/>
@@ -524,7 +521,7 @@
                     <parameter param-name="orderId" value="${orderId}"/>
                 </hyperlink>
             </field>
-            <field name="saleInvoiceAmout" title ="Sale Inv. Amt" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))"> 
+             <field name="saleInvoiceAmout" title ="Sale Inv. Amt" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))"> 
                <display description="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,salesInvoiceId);}"></display>         
             </field>
              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
@@ -1398,9 +1395,7 @@
               </field>
       	</form>
       	
-      	
-      	
-      	 <form name="weaverRelationShip" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updateWeaverRelationship"
+      	<form name="weaverRelationShip" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updateWeaverRelationship"
           	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="PartyRelationshipList">
           	  <actions>
       			<entity-condition entity-name="PartyRelationship" list="PartyRelationshipList">
@@ -1445,9 +1440,7 @@
                  </hyperlink>
               </field> 
       	</form>
-      	
-      	
-      	  <form name="createProducerIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
+      	<form name="createProducerIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createProducerPartyIdentification"
           	  default-table-style="basic-table hover-bar" separate-columns="true" >
           	  <actions>
       		</actions>
@@ -1465,10 +1458,10 @@
       		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
       		<field name="submitButton" title="Create" separate-column="true">
                   <submit button-type="button"/></field>
-      	</form>
+      </form>
       	
       	
-      	  <form name="createweaverRelationShip" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createweaverRelationShip"
+      <form name="createweaverRelationShip" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createweaverRelationShip"
           	  default-table-style="basic-table hover-bar" separate-columns="true" >
           	  <actions>
       		</actions>
@@ -1488,10 +1481,8 @@
       		<field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field> 
       		<field name="submitButton" title="Create" separate-column="true">
                   <submit button-type="button"/></field>
-      	</form>
-      	
-      	
-      <form name="CattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
+      	</form>	
+      	<form name="LoomInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" default-table-style="basic-table " 
        		 list-name="LoomDetails" >
        		 <row-actions>
 					<entity-condition entity-name="SchemeProductCategory" list="SchemeCatQty">
@@ -1502,7 +1493,18 @@
          	<field name="loomTypeId" title="Weaver Type"><display></display></field>
          	<field name="loomTypeId" title="Loom Type"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}"/></field>
          	<field name="quantity" title="Number Of Looms"><display></display></field>
+         	<field name="fromDate" title="${uiLabelMap.fromDate}"><display/></field>
+         	<field name="thruDate" title="${uiLabelMap.thruDate}"><display/></field>
          	<field name="quotaPerLoom" title="Total Eligibility"><display description="${(SchemeCatQty[0].maxQty)*(quantity)}"></display></field>
+         	<field name="EditLoom" title="Edit Loom" widget-style="buttontext">
+             	<hyperlink  target-type="plain" description="Edit"  target="javascript:LoomEditForm('${partyId}','${loomTypeId}','${quantity}','${fromDate}','${thruDate}');"></hyperlink>
+        	</field>
+            <field name="deleteLink" title="Delete" widget-style="buttontext">
+                <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="partyIdentificationTypeId"/>
+                </hyperlink>
+            </field>
         </form>
         
         <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
@@ -1625,7 +1627,7 @@
               
               <field name="submit" title="Find"><submit/></field>
               
-          </form>
+       </form>
        <form name="ListDepotSalesProducer" type="list" list-name="listIt" odd-row-style="alternate-row" 
 				default-entity-name="PartyRoleDetailAndPartyDetail" default-table-style="basic-table hover-bar" >
 				
@@ -1846,7 +1848,7 @@
         </field>
          <field name="poRefNum" title="poRef. No"><display/></field>
 <!--         <field name="vehicleId" title="Vehicle No"><display/></field> -->
-<!--         <field name="depoPartyName" title="Vehicle No"><hidden/></field> -->
+<!--        <field name="depoPartyName" title="Vehicle No"><hidden/></field> -->
         <field name="partyIdTo" title="Vehicle No"><hidden/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
         	<display-entity entity-name="StatusItem" description="${description}"/>
@@ -1867,7 +1869,7 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
-         <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+        <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
              <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalQTip('${shipmentId}','${partyIdTo}','${partyName}','${depoPartyId}','${depoPartyName}');"></hyperlink>
         </field>
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
@@ -1915,7 +1917,7 @@
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}"></display-entity>
         </field>
-        <field name="quantityOnHandTotal" title="Stock Available"><display/></field>        
+        <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="bookedQuantity" title="Booked Quantity"><display/></field>
         <field name="unitCost"><display/></field>
         <field name="Sale" title="Sale Indent" widget-style="buttontext">
@@ -2259,7 +2261,7 @@
         <field name="STYLE" title="Style"><display/></field>
        
     </form>
-     <form name="ProductMastersHeading" type="list"  view-size="99999">
+    <form name="ProductMastersHeading" type="list"  view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
         <field name="partyName" title="_"><display/></field>
@@ -2401,8 +2403,6 @@
         <field name="QualizedWOOLYARN_BELOW10NM" title="_"><display/></field>
         <field name="BalanceWOOLYARN_BELOW10NM" title="_"><display/></field>
     </form>
-    
-    
     <form name="CustomerMastersHeading" type="list"  view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
@@ -2435,7 +2435,6 @@
         <field name="QualizedWOOLYARN_BELOW10NM" title="_"><display/></field>
         <field name="BalanceWOOLYARN_BELOW10NM" title="_"><display/></field>
     </form>
-    
   <form name="SupplierMastersCSV" type="list" list-name="supplierMastersList" view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="Party Code"><display/></field>
@@ -2457,7 +2456,7 @@
         <field name="branchCode" title="Branch Code"><display/></field>
         
     </form>
-     <form name="SupplierMastersHeading" type="list"  view-size="99999">
+    <form name="SupplierMastersHeading" type="list"  view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
         <field name="partyName" title="_"><display/></field>
@@ -2524,7 +2523,7 @@
 	   
 	   
     </form>
-    
+
      <form name="partyAbstractDetailHeading" type="list" list-name="headList" view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
@@ -2553,12 +2552,13 @@
         <field name="QualizedWOOLYARN_40SNMABOVE" title="Wool Yarn 40NM And Above"><display/></field>
         <field name="BalanceWOOLYARN_40SNMABOVE" title="_"><display/></field>
         
+        
         <field name="AvailableWOOLYARN_BELOW10NM" title="_"><display/></field>
         <field name="QualizedWOOLYARN_BELOW10NM" title="Wool Yarn Below 10NM"><display/></field>
         <field name="BalanceWOOLYARN_BELOW10NM" title="_"><display/></field>
-    </form>
-    
-    <form name="partyAbstractReportName" type="list"  view-size="99999">
+	</form>
+	
+	<form name="partyAbstractReportName" type="list"  view-size="99999">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
         <field name="partyName" title="_"><display/></field>
@@ -2590,7 +2590,7 @@
         <field name="QualizedWOOLYARN_BELOW10NM" title="_"><display/></field>
         <field name="BalanceWOOLYARN_BELOW10NM" title="_"><display/></field>
     </form>
-<form name="partyAbstractReportDetails" type="list"  view-size="99999" list-name="DateList">
+	<form name="partyAbstractReportDetails" type="list"  view-size="99999" list-name="DateList">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
         <field name="partyName" title="_"><display/></field>
@@ -3008,7 +3008,6 @@
 			<field name="freight" title="Freight Amount"><display/></field>
 
     </form>
-    
     <form name="invoiceVoucherReportDetails" type="list"  view-size="99999" list-name="DateList">
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="_"><display/></field>
@@ -3132,7 +3131,7 @@
 			<hidden />
 		</field>
 		<field name="billingAccountId"><hidden/></field>
-	</form>    
+	</form>
     <form name="subsidyDetailsList" type="list" list-name="finalList" view-size="99999">
         <field name="MothDayBegin" title="Period From"><display/></field>
         <field name="MothDayEnd" title="Period To"><display/></field>
@@ -3140,5 +3139,6 @@
         <field name="monthSubsidy" title="10% Subsidy"><display/></field>
         <field name="monthServiceCharg" title="0.05% Service Charges"><display/></field>
         <field name="monthTotal" title="Total"><display/></field>
-    </form>    
+    </form>
+        
 </forms>

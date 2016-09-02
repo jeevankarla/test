@@ -121,13 +121,12 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-     <request-map uri="getWeaverMasterDetails">
+    <request-map uri="getWeaverMasterDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getWeaverMasterDetails.groovy"/> 
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
      <request-map uri="otherAddressStore">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="otherAddressStore.groovy"/> 
@@ -156,15 +155,13 @@
         <response name="error" type="view" value="FindIndents"/>
     </request-map>
     
-     <request-map uri="fetchCitesForState">
+    <request-map uri="fetchCitesForState">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="fetchCitesForState.groovy"/> 
          <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
-    
-       <request-map uri="approveOrdersAjax">
+    <request-map uri="approveOrdersAjax">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
         <response name="success" type="request" value="json"/>
@@ -293,7 +290,6 @@
         <response name="success" type="view" value="FindDepotTransPO"/>   
        <response name="failed" type="view" value="FindDepotTransPO"/>  
     </request-map>
-    
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelIndentOrder"/>
@@ -485,7 +481,6 @@
        <response name="success" type="view" value="purchaseInvoiceEdit"/>
        <response name="error" type="view" value="purchaseInvoiceEdit"/>
      </request-map>
-     
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
@@ -514,14 +509,12 @@
        <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
        <response name="error" type="view" value="DepotSalesInvoice"/>
      </request-map>
-     
      <request-map uri="processEditPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditPurchaseInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
      </request-map>
-     
      <request-map uri="processSalesInvoice">
        <security https="true" auth="true"/>
        <event type="service" invoke="createBranchSaleInvoice"/>
@@ -729,11 +722,11 @@
     	<response name="success" type="view" value="PurchaseOrderViewDepot"/>
     </request-map>
     
-     <request-map uri="PurchaseOrderMinutesReport.pdf">
+    <request-map uri="PurchaseOrderMinutesReport.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderMinutesReport"/>
     </request-map>
-     <request-map uri="arcOrder.pdf">
+    <request-map uri="arcOrder.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ArcOrderPDF"/>
     </request-map>
@@ -1041,14 +1034,12 @@
         <response name="success" type="view"  value="TransPorterviewprofile"/>
         <response name="error" type="view" value="TransPorterviewprofile"/>
     </request-map>
-    
-     <request-map uri="editPartyLooms">
+    <request-map uri="editPartyLooms">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="editPartyLooms"/>
         <response name="success" type="view"  value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
     <request-map uri="TransporterCreateVendorIdentification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyIdentification"/>
@@ -1061,21 +1052,19 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
     <request-map uri="updateWeaverRelationship">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyRelationship"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
-     <request-map uri="deleteWeaverRelation">
+    <request-map uri="deleteWeaverRelation">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteWeaverRelationship"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
+     
    <request-map uri="editcontactmech">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcontactmech" save-current-view="true"/>
@@ -1115,20 +1104,19 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
-     <request-map uri="updateWeaverPartyClassification">
+    <request-map uri="updateWeaverPartyClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWeaverPartyClassification"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
-     <request-map uri="updateWeaverPartyRelationShip">
+    <request-map uri="updateWeaverPartyRelationShip">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWeaverPartyRelationShip"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
+    
     <request-map uri="EditProcProducer">
             <security https="true" auth="true"/>
             <response name="success" type="view" value="EditProcProducer"/>
@@ -1185,7 +1173,6 @@
           <response name="success" type="view" value="FindSalesIndentPayment"/>   
          <response name="failed" type="view" value="FindSalesIndentPayment"/>  
       </request-map>
-      
       <request-map uri="createDepotInvoiceApplyPayment">
           <security https="true" auth="true"/>
         <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
@@ -1300,14 +1287,12 @@
        <response name="success" type="request-redirect" value="FindSupplierDispatchs"/>
        <response name="error" type="request-redirect" value="FindSupplierDispatchs"/>
      </request-map>
-     
-      <request-map uri="processDepotTransReceiptItemsDEPOT">
+     <request-map uri="processDepotTransReceiptItemsDEPOT">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processDepotReceiptItems" global-transaction="true"/>
        <response name="success" type="request-redirect" value="FindDepotTransGRNShipments"/>
        <response name="error" type="request-redirect" value="FindDepotTransGRNShipments"/>
      </request-map>
-     
      <request-map uri="FindDepotTransGRNShipments">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="DepotTransGRNShipments"/>
@@ -1455,16 +1440,13 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-    
-    
-    <request-map uri="createweaverRelationShip">
+	<request-map uri="createweaverRelationShip">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyRelationship"/>
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
-	
-	 <request-map uri="updateProducerFinAccount">
+	<request-map uri="updateProducerFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProducerFinAccount"/>
         <response name="success" type="view" value="EditProcProducer"/>
@@ -1578,7 +1560,7 @@
          <response name="success" type="view" value="IndentCsvReport"/>
 	     <response name="error" type="view" value="IndentCsvReport"/>
     </request-map>
-     <request-map uri="minutesHindiPdfReport.pdf">
+    <request-map uri="minutesHindiPdfReport.pdf">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="minutesHindiPdfReport"/>
 	     <response name="error" type="view" value="minutesHindiPdfReport"/>
@@ -2065,6 +2047,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="calculateTaxesByGeoIdTest">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="calculateTaxesByGeoIdTest"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="purchaseInvoiceDetails.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseInvoiceDetailsPDFReport"/>
@@ -2103,13 +2091,26 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="editGRN"/>
        <response name="error" type="view" value="editGRN"/>
-     </request-map>
-     <request-map uri="processEditGrnShipment">
+    </request-map>
+    <request-map uri="processEditGrnShipment">
        <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processEditGrnShipment" global-transaction="true"/>
        <response name="success" type="request-redirect" value="FindSupplierShipments"/>
        <response name="error" type="request-redirect" value="FindSupplierShipments"/>
+    </request-map>
+    <request-map uri="editPartyLooms">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="editPartyLooms"/>
+        <response name="success" type="view"  value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
+    <request-map uri="UpdatePartyLoom">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="UpdatePartyLoom"></event>
+       <response name="success" type="view"  value="EditProcProducer"/>
+       <response name="error" type="view" value="EditProcProducer"/>
      </request-map>
+     
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -2228,7 +2229,7 @@
     <view-map name="MaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesInvoiceInit"/>
     
     <view-map name="MaterialSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesEditInvoiceInit"/>
-   	<view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
+    <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
    
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
@@ -2261,10 +2262,9 @@
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
    
-   <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
-   <view-map name="PurchaseOrderMinutesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderMinutesReport" content-type="application/pdf"/>
-  
-   
+    <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
+    <view-map name="PurchaseOrderMinutesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderMinutesReport" content-type="application/pdf"/>
+    
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
@@ -2354,9 +2354,9 @@
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>
-    <view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
+	<view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
     <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
-    <view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
+	<view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
 </site-conf>

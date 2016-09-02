@@ -4,8 +4,6 @@
 	<#include "CreateBranchTransPoInc.ftl"/>
 </#if>
 
-
-
 <style type="text/css">
 .myTable { 
   width: 100%;
@@ -39,7 +37,30 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
+
+<style type="text/css">
+
+		input[type=button] {
+			color: white;
+		    padding: .5x 7px;
+		    background:#008CBA;
+		    border: .8px solid green;
+		    border:0 none;
+		    cursor:pointer;
+		    -webkit-border-radius: 5px;
+		    border-radius: 5px; 
+		}
+		input[type=button]:hover {
+		    background-color: #3e8e41;
+		}
+
+
+</style>
+
+
 <script type="application/javascript">
+
+
 var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
 		var StateJsonMap = ${StringUtil.wrapString(stateListJSON)!'{}'};
 		var CountryOptionList;
@@ -107,7 +128,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
 			}
 		});
-		
 	}
 	function manualAddressEntry(){
 	//$("#ManualAddress").hide();
@@ -293,9 +313,8 @@ function populateData(){
 			
 			makeDatePicker("fromDate","fromDateId");
 	        makeDatePicker("thruDate","fromDateId");
-	        makeDatePicker("estiDate","fromDateId");
-	        
-		
+			makeDatePicker("estiDate","fromDateId");
+			
 			//$(this.target).find('input').autocomplete();
 			
 			$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
@@ -430,7 +449,7 @@ function populateData(){
 			
 		} 
 		  
-		  function populateManualAddress(){
+		   function populateManualAddress(){
 		    var districtGeoId = $("#districtGeoId").val();
 		    var shipingAddCity = $("#shipingAddCity").val();
 		    if(districtGeoId.length != 0){
@@ -440,7 +459,7 @@ function populateData(){
 		     $("#districtGeoId").val(shipingAddCity);
 		    }
 		  }
-
+		  
 		  
 		  function populateDestination(){
 		  
@@ -520,7 +539,6 @@ function populateData(){
 <form id="CreateMPO"  action="<@ofbizUrl>createPOByOrder</@ofbizUrl>" name="CreateMPO" method="post">
 
 <div id="wizard-2">
-
     <h3>PO Header</h3>
     <section>
       <fieldset>
@@ -568,7 +586,13 @@ function populateData(){
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
 					    		<span class="tooltip" id="supplierName"></span>
 					    	</#if>
-					      	
+					    	
+					    	<#if orderId?exists && orderInfo.get("supplierGeoId")?exists>
+					    		<input type="text" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${orderInfo.get("supplierGeoId")}" readonly/>
+					    	</#if>
+					      	<#if orderId?exists && orderInfo.get("branchGeoId")?exists>
+					    		<input type="text" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${orderInfo.get("branchGeoId")}" readonly/>
+					    	</#if>
 					    </td>
 					</tr>
 					<tr>
@@ -670,6 +694,44 @@ function populateData(){
 						   	</#if> 
         				 </td>
 					</tr>
+					<tr>
+		       	  		<td align='left' class="label" nowrap="nowrap">Purchase Tax Type:</td>
+		       	  		<td valign='middle'>
+	          				<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
+	          					<#if orderId?exists && orderInfo.get("purchaseTaxType")?exists>
+	          						<#if orderInfo.get("purchaseTaxType") == "Intra-State">
+	          							<option value="Intra-State" selected>With In State</option>
+	          						<#else>
+	          							<option value="Inter-State" selected>Inter State</option>
+	          						</#if> 
+	          					</#if> 
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
+	          				</select>
+	          			</td>
+		          		<td>&nbsp;</td>
+		          		<td align='left' class="label" nowrap="nowrap">Transaction Type:</td>
+		       			<td valign='middle'>
+	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if orderId?exists && orderInfo.get("purchaseTitleTransferEnumId")?exists>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          						</#if> 
+	          					</#if> 
+	          				
+	          				
+	          					<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="NO_E2_FORM"></option>
+	          				</select>
+	          			</td>
+		       		</tr>
 					<!--<tr>
 					    <td class="label"><b>Ref Date:* </b></td>
 					    <td>
@@ -724,38 +786,45 @@ function populateData(){
 							<label>Purchase Order</label>
 						</div>
 			 			<div class="screenlet-body" id="FieldsDIV" >
+			 				<#--
 			 				<table width="100%" border="0" cellspacing="10" cellpadding="10">
 				 		        <tr>
-				 		        	<#--<#if includeTax?exists && includeTax=="Y">
+				 		        	<#if includeTax?exists && includeTax=="Y">
 						        	<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" checked /></font></h3></td>
 									<#else>
 									<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" onClick="javascript: updateGridAmount();" /></font></h3></td>
-									</#if>-->
+									</#if>
 						        	<td align="center"><h2><font color="black">Total PO Value :</font> <font color="green"><span id="totalPOAmount">Rs. 0</span></font></h2></td>
 						        	<td align='right'><input class="styled-button" type="button" id="calculateBtn"  name="calculateBtn" value="Calculate" onClick="javascript: calculatePOValue();"/></td>
 				 		         </tr>
 				        	</table>
+				        	-->
 				        	
 				        	<div class="screenlet-title-bar">
 				        		<div class="grid-header" style="width:80%">
-									<label>Material Details</label>
+									<label style="float:left">Material Details</label>
+									<label style="float:left" id="itemsSelected" class="labelItemHeader"><font color="green">Total PO Value :</font></label>
+									<font color="green"><span id="totalPOAmount">Rs. 0</span></font>
+									<input type="button" style="float:right" class="buttonText" id="calculateBtn" value="Calculate" onclick="javascript:calculatePOValue();" />
 								</div>
 							
 								<div id="myGrid1" style="width:100%;height:150px;">
 									<div class="grid-header" style="width:80%">
 									</div>
 			             		</div>
+			             		<#--
 			             		<br/>
 								<center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center>	
-								<br/>		             		
+								<br/>
+								-->		             		
 							</div>
 							
 							<div class="screenlet-title-bar" id="titleScreen">
-								<div class="grid-header" style="width:67%">
+								<div class="grid-header" style="width:75%">
 									<label>Other Charges</label>
 								</div>
-								<div id="myGrid2" style="width:67%;height:150px;">
-									<div class="grid-header" style="width:67%">
+								<div id="myGrid2" style="width:75%;height:150px;">
+									<div class="grid-header" style="width:75%">
 								</div>
 							</div>
 						</div>
@@ -839,7 +908,7 @@ function populateData(){
                  <h3>Delivery Address Details</h3>
 		         <section>
 			          <fieldset>
-						 <div class="lefthalf">
+			          	<div class="lefthalf">
 			          <#--
 			          	  <table cellpadding="15" cellspacing="15" class='h3'>
 								<tr>
@@ -932,7 +1001,7 @@ function populateData(){
                     	 		<td class="label"><FONT COLOR="#108FR8">${orderInfo.get("shipToPartyName")?if_exists}</FONT></td>
 								<td>
 						      		<input type="hidden" name="shipToPartyId" id="shipToPartyId" size="18" value="${orderInfo.get("shipToPartyId")?if_exists}"/>
-						      		<input type="hidden" name="multiaddress" id="multiaddress" size="18" />
+  									<input type="hidden" name="multiaddress" id="multiaddress" size="18" />
   								</td>
 							</tr>
 							<tr>
@@ -956,9 +1025,9 @@ function populateData(){
                             	 </#if>
                             	 </td>
                             	 
-                            	  <input type="hidden" name="shipingAddCity" id="shipingAddCity" value="${shipingAdd.get("city")?if_exists}">
-                            	   <input type="hidden" name="shipingAdd1" id="shipingAdd1" value="${shipingAdd.get("address1")?if_exists}">
-                            	   <input type="hidden" name="shipingAdd2" id="shipingAdd2" value="${shipingAdd.get("address2")?if_exists}">
+                            	 <input type="hidden" name="shipingAddCity" id="shipingAddCity" value="${shipingAdd.get("city")?if_exists}">
+                            	 <input type="hidden" name="shipingAdd1" id="shipingAdd1" value="${shipingAdd.get("address1")?if_exists}">
+                            	 <input type="hidden" name="shipingAdd2" id="shipingAdd2" value="${shipingAdd.get("address2")?if_exists}">
       						</tr>
       						
 			           </table>
@@ -1068,10 +1137,7 @@ function populateData(){
 								 </#if> 
 							</table>-->
           				     </td>
-          				     
 						        </tr>
-						        
-						         
 					  </table>
 					  
 					  </div>
@@ -1110,14 +1176,11 @@ function populateData(){
 		                  
 		                       
 					  </div>
-					  
 					  </fieldset>
                   </section>
             </form>
                 
  <script type="application/javascript">
- 
- 
  
  function deleteRow(){
  
@@ -1130,10 +1193,9 @@ function populateData(){
  }
  
 var destinationParent = {}; 
-
-
-
-function storeData(){
+ 
+ 
+ function storeData(){
     
    $("tr.item").each(function() {
 	  $this = $(this)
@@ -1199,7 +1261,8 @@ function calculateSum(){
 }
 
  $(document).ready(function(){
-      var storeData = "javascript:storeData()";
+ 	
+ 	var storeData = "javascript:storeData()";
       
        var calculateSum = "javascript:calculateSum()";
       
@@ -1212,8 +1275,6 @@ function calculateSum(){
         if($(".myTable tr").length != 1)
             $(".myTable tr:last-child").remove();
     }); 
-    
-     
     
     getPayTermDes();
     getDelTermDes();

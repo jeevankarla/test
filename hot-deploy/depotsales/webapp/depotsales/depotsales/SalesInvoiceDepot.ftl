@@ -36,6 +36,7 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "SalesInvoiceDepotInc.ftl"/>
+<#include "EditSaleInvoicePrice.ftl"/>
 
 <div class="full">
 	
@@ -159,7 +160,50 @@ $(document).ready(function(){
 	          		</#if>        
 	          	</#if>
 	        </tr>
-	                  
+	        <tr>
+		       	  		<td align='left' class="label" nowrap="nowrap">Sale Tax Type:</td>
+		       	  		<td valign='middle'>
+	          				<select name="saleTaxType" id="saleTaxType" class='h4' style="width:120px">
+	          					<#if saleTaxType?exists && saleTaxType?has_content>
+	          						<#if saleTaxType == "Intra-State">
+	          							<option value="Intra-State" selected>With In State</option>
+	          						<#else>
+	          							<option value="Inter-State" selected>Inter State</option>
+	          						</#if> 
+	          					</#if> 
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
+	          				</select>
+	          				<#if customerGeoId?exists && customerGeoId?has_content>
+					    		<input type="hidden" name="customerGeoId" id="customerGeoId" size="18" maxlength="60" value="${customerGeoId}" readonly/>
+					    	</#if>
+					      	<#if branchGeoId?exists && branchGeoId?has_content>
+					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${branchGeoId}" readonly/>
+					    	</#if>
+	          			</td>
+		          		<td>&nbsp;</td>
+		          		<td align='left' class="label" nowrap="nowrap">Transaction Type:</td>
+		       			<td valign='middle'>
+	          				<select name="saleTitleTransferEnumId" id="saleTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if saleTitleTransferEnumId?exists && saleTitleTransferEnumId?has_content>
+	          						<#if saleTitleTransferEnumId == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          						</#if>
+	          						<#if saleTitleTransferEnumId == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          						</#if>
+	          						<#if saleTitleTransferEnumId == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          						</#if> 
+	          					</#if> 
+	          				
+	          				
+	          					<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="NO_E2_FORM"></option>
+	          				</select>
+	          			</td>
+		       		</tr>           
 	      </table>
 	      <div id="sOFieldsDiv" >
 	      </div> 
@@ -191,18 +235,7 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<div class="lefthalf" >
-				<div class="screenlet-title-bar">
-					<div class="grid-header" style="width:100%">
-						<label>Discounts</label><span id="totalAmount"></span>
-					</div>
-					<div id="myGrid3" style="width:100%;height:150px;">
-						<div class="grid-header" style="width:100%">
-						</div>
-					</div>
-				</div>
-				</div>
-				<div class="righthalf">
+				<div class="full">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
@@ -213,6 +246,18 @@ $(document).ready(function(){
 					</div>
 				</div>
 				</div>
+				<div class="full" >
+				<div class="screenlet-title-bar">
+					<div class="grid-header" style="width:100%">
+						<label>Discounts</label><span id="totalAmount"></span>
+					</div>
+					<div id="myGrid3" style="width:100%;height:150px;">
+						<div class="grid-header" style="width:100%">
+						</div>
+					</div>
+				</div>
+				</div>
+				
 				<#assign formAction ='processNewSalesInvoice'>	
 				<#if partyId?exists>
 			    	<div align="center">

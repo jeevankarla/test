@@ -1,25 +1,34 @@
 	
 	import org.ofbiz.base.util.*;
-	import org.ofbiz.entity.Delegator;
-	import org.ofbiz.entity.util.EntityUtil;
-	import org.ofbiz.entity.condition.EntityCondition;
-	import org.ofbiz.entity.condition.EntityOperator;
-	import net.sf.json.JSONObject;
-	import net.sf.json.JSONArray;
-	import javolution.util.FastMap;
-	import java.sql.Timestamp;
-	import org.ofbiz.base.util.UtilDateTime;
-	import java.text.SimpleDateFormat;
-	import java.text.ParseException;
-	import org.ofbiz.service.ServiceUtil;
-	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-	import in.vasista.vbiz.byproducts.ByProductServices;
-	import org.ofbiz.product.product.ProductWorker;
-	import in.vasista.vbiz.facility.util.FacilityUtil;
-	import in.vasista.vbiz.byproducts.icp.ICPServices;
-	import in.vasista.vbiz.purchase.MaterialHelperServices;
-	import org.ofbiz.party.party.PartyHelper;
-	import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import javolution.util.FastMap;
+
+import java.sql.Timestamp;
+
+import org.ofbiz.base.util.UtilDateTime;
+
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+import org.ofbiz.service.ServiceUtil;
+
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import in.vasista.vbiz.byproducts.ByProductServices;
+
+import org.ofbiz.product.product.ProductWorker;
+
+import in.vasista.vbiz.facility.util.FacilityUtil;
+import in.vasista.vbiz.byproducts.icp.ICPServices;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
+
+import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.party.contact.ContactMechWorker;
 	
 	
 	if(parameters.boothId){
@@ -445,6 +454,27 @@
 		}
 	  
 	}
+	
+	titleTransferEnumIdsList = [];
+	taxAuthorityTypeTitleTransferList = delegator.findList("TaxAuthorityTypeTitleTransfer", null, null, null, null, false);
+	titleTransferEnumIdsList = EntityUtil.getFieldListFromEntityList(taxAuthorityTypeTitleTransferList, "titleTransferEnumId", true);
+	
+	JSONObject transactionTypeTaxMap = new JSONObject();
+	for(int i=0; i<titleTransferEnumIdsList.size(); i++){
+		titleTransferEnumId = titleTransferEnumIdsList.get(i);
+		
+		filteredTitleTransfer = EntityUtil.filterByCondition(taxAuthorityTypeTitleTransferList, EntityCondition.makeCondition("titleTransferEnumId", EntityOperator.EQUALS, titleTransferEnumId));
+		taxIdsList = EntityUtil.getFieldListFromEntityList(filteredTitleTransfer, "taxAuthorityRateTypeId", true);
+		
+		JSONArray applicableTaxList = new JSONArray();
+		for(int j=0; j<taxIdsList.size(); j++){
+			applicableTaxList.add(taxIdsList.get(j));
+		}
+		transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
+	}
+	Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+	
+	context.transactionTypeTaxMap = transactionTypeTaxMap;
 	context.productQuotaJSON = productQuotaJSON;
 	context.productCategoryJSON = productCategoryJSON;
 	
