@@ -1085,6 +1085,7 @@
 					default-value="20" />
 				<set field="targetRequest" value="FindGRNShipmentsDepot" />
 				<!-- <set field="noConditionFind" value="Y" /> -->
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ROSearchFilter.groovy" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -1093,6 +1094,7 @@
 					<field-map field-name="viewIndex" from-field="viewIndex" />
 					<field-map field-name="viewSize" from-field="viewSize" />
 				</service>
+				<set field="parameters.partyId" value="${tempPartyId}" />
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PartyShipmentView.groovy" />
 				<script
@@ -2622,6 +2624,7 @@
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="10" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ROSearchFilter.groovy" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -2630,6 +2633,7 @@
 					<field-map field-name="viewIndex"  from-field="viewIndex"/>
 					<field-map field-name="viewSize" from-field="viewSize"/>
 				</service>
+				<set field="parameters.partyId" value="${tempPartyId}" />
 				<set field="targetRequest" value="FindPO" />
 				
 
