@@ -33,6 +33,7 @@ $(document).ready(function(){
 	    makeDatePicker("stockFromDate","stockThruDate");
 	    makeDatePicker("ivdFromDate","ivdThruDate");
 	    makeDatePicker3("subsidyFromDate","subsidyThruDate");
+	    makeDatePicker3("claimFromDate","claimThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
@@ -237,6 +238,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="30%" nowrap>10% Subsidy Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="subsidyFromDate" readonly  name="subsidyFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="subsidyThruDate" readonly  name="subsidyThruDate"/></td>
+  			<td width="15%"></td>
+  			<td width="15%"></td>
+			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+    	<form id="claimReportDetails" name="claimReportDetails" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetails.csv</@ofbizUrl>">	
+  			<td width="30%" nowrap>Claim Report</td>
+  			<td width="15%">From<input  type="text" size="18pt" id="claimFromDate" readonly  name="claimFromDate"/></td>
+  			<td width="15%">Thru<input  type="text" size="18pt" id="claimThruDate" readonly  name="claimThruDate"/></td>
   			<td width="15%"></td>
   			<td width="15%"></td>
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>

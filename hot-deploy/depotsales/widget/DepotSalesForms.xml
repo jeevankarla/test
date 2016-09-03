@@ -3104,6 +3104,19 @@
          <field name="otherCharges" title="OtherCharges"><display/></field>
          <field name="payableAmt" title="PayableAmt"><display/></field>
     </form>
+    <form name="claimDetailsList" type="list" list-name="finalList" view-size="99999">
+        <field name="sNo" title="SI. No."><display/></field>
+        <field name="city" title="Name Of State"><display/></field>
+        <field name="userAgency" title="Name Of User Agency"><display/></field>
+        <field name="invoiceDate" title="Date Of Supply"><display/></field>
+        <field name="productName" title="Varity Of yarn"><display/></field>
+        <field name="categoryname" title="Count Of yarn"><display/></field>
+        <field name="quantity" title="Yarn Supplied during the quarter(in Kgs)"><display/></field>
+        <field name="value" title="Value Of Yarn Before yarn subsidy(in Rs)"><display/></field>
+        <field name="subsidyAmt" title="Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)"><display/></field>
+        <field name="serviceCharg" title="Service Charges @0.5% Of yarn value Before Subsidy(in Rs)"><display/></field>
+        <field name="claimTotal" title="Total Claim For Yarn Subsidy And Claim Charges(in Rs)"><display/></field>
+    </form>
       <form name="FindApInvoicesForDepot" type="single" target="DepotPurchaseInvoiceView" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
 		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
