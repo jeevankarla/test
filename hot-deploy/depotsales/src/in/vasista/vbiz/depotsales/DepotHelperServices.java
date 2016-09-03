@@ -1923,6 +1923,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			    String prodId=orderItemDetail.getString("productId");
 			    SeqId=orderItemDetail.getString("orderItemSeqId");
 			    unitPrice=orderItemDetail.getBigDecimal("unitPrice");
+			    BigDecimal extQuotaQuantity=orderItemDetail.getBigDecimal("quotaQuantity");
 			   // quotaQuantity = orderHeaderDetail.getBigDecimal("quotaQuantity");
 			    quotaQuantity = new BigDecimal(qtQty);
 			    orderItemDetail.set("discountAmount", quotaQuantity.multiply(unitPrice).negate());
@@ -1955,24 +1956,83 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 				//condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
 				condList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY" ));
 				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-				for(GenericValue eachAdj : orderAdjustments){
-					String adjustmentTypeId = eachAdj.getString("orderAdjustmentTypeId");
-						BigDecimal discountAmount = BigDecimal.ZERO;
-						if(quotaQty.compareTo(BigDecimal.ZERO)>0){
-							// Have to get these details from schemes. Temporarily hard coding it.
-							BigDecimal schemePercent = new BigDecimal("10");
-							BigDecimal percentModifier = schemePercent.movePointLeft(2);
-							//if(Kgquantity.compareTo(quotaQty)>0){
-								discountAmount = ((quotaQty.multiply(unitPrice)).multiply(percentModifier)).negate();
-							//}
-							//else{
-							//	discountAmount = ((Kgquantity.multiply(unitPrice)).multiply(percentModifier)).negate();
-							//}
-							//Debug.log("discountAmount===================="+discountAmount);
-						}
-						eachAdj.set("amount",discountAmount);
-						eachAdj.store();
-				}
+				if(UtilValidate.isNotEmpty(orderAdjustments)){
+					for(GenericValue eachAdj : orderAdjustments){
+						String adjustmentTypeId =eachAdj.getString("orderAdjustmentTypeId");
+						String orderAdjustmentId=eachAdj.getString("orderAdjustmentId");
+							BigDecimal discountAmount = BigDecimal.ZERO;
+							if(quotaQty.compareTo(BigDecimal.ZERO)>0){
+								// Have to get these details from schemes. Temporarily hard coding it.
+								BigDecimal schemePercent = new BigDecimal("10");
+								BigDecimal percentModifier = schemePercent.movePointLeft(2);
+								//if(Kgquantity.compareTo(quotaQty)>0){
+									discountAmount = ((quotaQty.multiply(unitPrice)).multiply(percentModifier)).negate();
+								//}
+								//else{
+								//	discountAmount = ((Kgquantity.multiply(unitPrice)).multiply(percentModifier)).negate();
+								//}
+								//Debug.log("discountAmount===================="+discountAmount);
+							}
+							eachAdj.set("amount",discountAmount);
+							eachAdj.store();
+							condList.clear();
+							condList.add(EntityCondition.makeCondition("orderAdjustmentId", EntityOperator.EQUALS, orderAdjustmentId));
+							List<GenericValue> orderAdjustmentBillings = delegator.findList("OrderAdjustmentBilling", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+							for(GenericValue eachAdjBill : orderAdjustmentBillings){
+								String invoiceId=eachAdjBill.getString("invoiceId");
+								condList.clear();
+								condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+								condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+	
+								List<GenericValue> invoiceItemDetails = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+								BigDecimal shippedQuantity=BigDecimal.ZERO;
+								BigDecimal utPrice=BigDecimal.ZERO;
+								for(GenericValue eachinvoiceItem : invoiceItemDetails){
+									
+									if(!("TEN_PERCENT_SUBSIDY".equals(eachinvoiceItem.getString("invoiceItemTypeId")))){
+										 shippedQuantity=eachinvoiceItem.getBigDecimal("quantity");
+										 utPrice=eachinvoiceItem.getBigDecimal("amount");
+										 //Debug.log("utPrice==="+eachinvoiceItem.getString("invoiceItemTypeId")+"========================"+utPrice);
+									}
+									
+									if("TEN_PERCENT_SUBSIDY".equals(eachinvoiceItem.getString("invoiceItemTypeId"))){
+										if(shippedQuantity.compareTo(quotaQuantity)<0){
+											quotaQuantity=quotaQuantity.subtract(shippedQuantity);
+										}else{
+												BigDecimal schemePercent = new BigDecimal("10");
+												BigDecimal percentModifier = schemePercent.movePointLeft(2);
+												BigDecimal discAmount = ((quotaQuantity.multiply(utPrice)).multiply(percentModifier)).negate();
+												eachinvoiceItem.set("amount",discAmount);
+												eachinvoiceItem.store();
+												eachAdjBill.set("quantity",quotaQuantity);
+												eachAdjBill.set("amount",discAmount);
+												eachAdjBill.store();
+										}
+									}
+								}
+							}
+							
+					}
+			  }else{
+				  String orderAdjustmentId ="";
+				  Map<String, Object> createOrderAdjustmentContext = FastMap.newInstance();
+	  				createOrderAdjustmentContext.put("orderId", orderId);
+	  				createOrderAdjustmentContext.put("orderItemSeqId", SeqId);
+	  		        createOrderAdjustmentContext.put("orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY");
+	  		        createOrderAdjustmentContext.put("description", "10 Percent Subsidy on eligible product categories");
+	  		        //createOrderAdjustmentContext.put("sourcePercentage", new BigDecimal("5.25"));
+	  		        BigDecimal schemePercent = new BigDecimal("10");
+					BigDecimal percentModifier = schemePercent.movePointLeft(2);
+	  		        createOrderAdjustmentContext.put("amount",((quotaQty.multiply(unitPrice)).multiply(percentModifier)).negate());
+	  		        createOrderAdjustmentContext.put("userLogin", userLogin);
+	  		        try {
+	  		            Map<String, Object> createOrderAdjustmentResult = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentContext);
+	  		            orderAdjustmentId = (String) createOrderAdjustmentResult.get("orderAdjustmentId");
+	  		        } catch (GenericServiceException e) {
+	  		            Debug.logError(e, "Problems Creating Order Adjustment", module);
+	  		            return ServiceUtil.returnError("Problems Creating Order Adjustment");
+	  		        }
+			  }
          }
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
