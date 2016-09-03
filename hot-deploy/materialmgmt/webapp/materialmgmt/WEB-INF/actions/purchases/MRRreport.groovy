@@ -238,6 +238,9 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	colist.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
 	cod=EntityCondition.makeCondition(colist,EntityOperator.AND);
 	shipmtItemList = delegator.findList("ShipmentItem", cod , null, null, null, false );
+	
+	
+	
 	shipmtItemList=EntityUtil.getFirst(shipmtItemList);
 	grnDetailsMap["receivedQty"]=shipmtItemList.quantity;
 	grnDetailsMap["productId"]=grnData.productId;
@@ -269,14 +272,34 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	//DC QTY
 	grnDetailsMap["deliveryChallanQty"]=grnData.deliveryChallanQty;
 	
+	
+	
 	// unitPrice 
-	if(UtilValidate.isNotEmpty(inventoryItemId)){
+	/*if(UtilValidate.isNotEmpty(inventoryItemId)){
 		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 		unitPrice = inventoryItem.unitCost;
 		if(UtilValidate.isNotEmpty(unitPrice)){
 		grnDetailsMap["unitPrice"]= unitPrice;
 		}
+	}*/
+	
+	
+	
+    colist.clear();
+	colist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
+	colist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,grnData.orderItemSeqId));
+	cod=EntityCondition.makeCondition(colist,EntityOperator.AND);
+	orderItemList = delegator.findList("OrderItem", cod , null, null, null, false );
+	
+	
+	if(orderItemList){
+	unitPrice = orderItemList[0].unitPrice
+	
+	grnDetailsMap["unitPrice"]= unitPrice;
+	
 	}
+	
+	
 	if(UtilValidate.isNotEmpty(orderId)){
 		List conditionlist=[];
 		conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
