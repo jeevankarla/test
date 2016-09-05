@@ -2057,6 +2057,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseInvoiceDetailsPDFReport"/>
     </request-map>
+    
+     <request-map uri="reimburcentTransporterReport.csv">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="reimburcentTransporterReportCSV"/>
+	     <response name="error" type="view" value="reimburcentTransporterReportCSV"/>
+    </request-map> 
         
     <request-map uri="cancelPurchaseInvoice">
         <security https="true" auth="true"/>
@@ -2122,7 +2128,7 @@
 	<view-map name="CustomerMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerMastersCSV" content-type="text/csv"/>
 	
 	<view-map name="indentHeadReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentHeadReportCSV" content-type="text/csv"/>
-	
+	 <view-map name="reimburcentTransporterReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportCSV" content-type="text/csv"/>
 	
 	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>

@@ -8112,4 +8112,30 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	 <screen name="reimburcentTransporterReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/reimburcentTransporterReportCSV.groovy"/>  		</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="reimburcentTransporterReportCSV"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	   
+	
 </screens>

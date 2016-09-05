@@ -3156,5 +3156,6 @@
         <field name="monthServiceCharg" title="0.05% Service Charges"><display/></field>
         <field name="monthTotal" title="Total"><display/></field>
     </form>
-        
+         <form name="reimburcentTransporterReportCSV" type="list" list-name="finalList" view-size="99999">
+     </form>    
 </forms>
