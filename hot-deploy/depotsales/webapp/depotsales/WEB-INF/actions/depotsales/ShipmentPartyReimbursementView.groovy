@@ -51,15 +51,63 @@ if(depotReimbYear) {
 	}
 //get SchemeTimePeriod list end
 
+shipmentFromDate = parameters.shipmentFromDate;
+shipmentThruDate = parameters.shipmentThruDate;
+partyId = parameters.partyId;
+
+Debug.log("partyId================="+partyId);
+
+shipmentFromDateTimestamp = null;
+shipmentThruDateTimestamp = null;
+if(UtilValidate.isNotEmpty(shipmentFromDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		shipmentFromDateTimestamp = new java.sql.Timestamp(sdf.parse(shipmentFromDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + shipmentFromDate, "");
+	}
+	shipmentFromDateTimestamp = UtilDateTime.getDayStart(shipmentFromDateTimestamp);
+}
+
+  
+if(UtilValidate.isNotEmpty(shipmentThruDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		shipmentThruDateTimestamp = new java.sql.Timestamp(sdf.parse(shipmentThruDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + shipmentThruDate, "");
+	}
+	shipmentThruDateTimestamp = UtilDateTime.getDayEnd(shipmentThruDateTimestamp);
+}
+
+
+
 List finalList=[];
 List conditionList=[];
     reimbursementEligibilityPercentage=2;
-	shipmentList=result.listIt;
+	//shipmentList=result.listIt;
+	
+	conditionList = [];
+	//conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	if(partyId)
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN, ["BRANCH_SHIPMENT","DEPOT_SHIPMENT"]));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.NOT_EQUAL, null));
+	if(UtilValidate.isNotEmpty(shipmentFromDateTimestamp)){
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, shipmentFromDateTimestamp));
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, shipmentThruDateTimestamp));
+	}
+	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	shipmentList = delegator.find("Shipment", condition, null, null, null, null);
+	
+	Debug.log("shipmentList============="+shipmentList.size());
+	
 	partyName = "";
 	JSONObject shipmentReimbursementJson = new JSONObject();
 	shipmentList.each{shipment->
 		tempMap=[:];
-		if(shipment){Debug.log("&&&&&&&&&&&&&&&&&&---#######-"+shipment);
+		if(shipment){/*Debug.log("&&&&&&&&&&&&&&&&&&---#######-"+shipment);*/
 		tempMap.put("shipmentId",shipment.shipmentId);
 		tempMap.put("vehicleId",shipment.vehicleId);
 		tempMap.put("partyIdTo",shipment.partyIdTo);
