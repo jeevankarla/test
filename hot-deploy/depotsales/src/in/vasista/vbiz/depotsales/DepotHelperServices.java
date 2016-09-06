@@ -2032,6 +2032,94 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	  		            Debug.logError(e, "Problems Creating Order Adjustment", module);
 	  		            return ServiceUtil.returnError("Problems Creating Order Adjustment");
 	  		        }
+	  		        String POOrderId="";
+	  		      condList.clear();
+	  		      condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+	  			   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	  			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+	  			  if(UtilValidate.isNotEmpty(orderAssocList)){
+	  			    POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+	  			  }
+	  		       if(UtilValidate.isNotEmpty(POOrderId)){
+	  		    	 condList.clear();
+		  		      condList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, POOrderId));
+		  			   EntityCondition condExpress1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		  		        List<String> orderBy = UtilMisc.toList("-createdDate");
+
+		  			   List<GenericValue> shipmentsList = delegator.findList("Shipment", condExpress1, null, null, null, false);
+			  			 if(UtilValidate.isNotEmpty(shipmentsList)){
+			  				 for(GenericValue eachShipment : shipmentsList){
+				  				 String shipmentId=eachShipment.getString("shipmentId");
+				  				 condList.clear();
+					  		      condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+					  		      condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+					  			   EntityCondition condExpress2 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					  			   GenericValue invoices= EntityUtil.getFirst(delegator.findList("Invoice", condExpress2, null, null, null, false));
+					  				 if(UtilValidate.isNotEmpty(invoices)){
+						  				 String invoiceId=invoices.getString("invoiceId");
+						  				condList.clear();
+										condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+										condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+			
+										List<GenericValue> invoiceItemDetails = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+										BigDecimal shippedQuantity=BigDecimal.ZERO;
+										BigDecimal utPrice=BigDecimal.ZERO;
+										for(GenericValue eachinvoiceItem : invoiceItemDetails){
+											String invoiceItemSeqId=eachinvoiceItem.getString("invoiceItemSeqId");
+
+											if(!("TEN_PERCENT_SUBSIDY".equals(eachinvoiceItem.getString("invoiceItemTypeId")))){
+												 shippedQuantity=eachinvoiceItem.getBigDecimal("quantity");
+												 utPrice=eachinvoiceItem.getBigDecimal("amount");
+												 //Debug.log("utPrice==="+eachinvoiceItem.getString("invoiceItemTypeId")+"========================"+utPrice);
+											}
+								        	Map<String, Object> createInvItem = FastMap.newInstance();
+					                        Map<String, Object> createOrderAdjustmentBillingContext = FastMap.newInstance();
+								        	BigDecimal discAmount=BigDecimal.ZERO;
+								        	createInvItem.put("userLogin", userLogin);
+								        	createInvItem.put("invoiceId", invoiceId);
+								        	createInvItem.put("invoiceItemTypeId", "TEN_PERCENT_SUBSIDY");
+								        	createInvItem.put("description", "10 Percent Subsidy on eligible product categories");
+								        	createInvItem.put("parentInvoiceId",invoiceId);
+								        	createInvItem.put("parentInvoiceItemSeqId",invoiceItemSeqId);
+								        	createInvItem.put("quantity",new BigDecimal("1"));
+								        	createInvItem.put("productId",prodId);
+								        	if(shippedQuantity.compareTo(quotaQuantity)<0){
+												quotaQuantity=quotaQuantity.subtract(shippedQuantity);
+						                        createOrderAdjustmentBillingContext.put("quantity", shippedQuantity);
+
+											    discAmount = ((shippedQuantity.multiply(utPrice)).multiply(percentModifier)).negate();
+									        	createInvItem.put("amount",discAmount);
+											}else{
+						                        createOrderAdjustmentBillingContext.put("quantity", quotaQuantity);
+													discAmount = ((quotaQuantity.multiply(utPrice)).multiply(percentModifier)).negate();
+										        	createInvItem.put("amount",discAmount);
+											}
+									        try{
+										          Map<String, Object> createInvItemResult = dispatcher.runSync("createInvoiceItem", createInvItem);
+									         }catch (GenericServiceException e) {
+								  		            Debug.logError(e, "Problems Creating invoiceItem", module);
+								  		            return ServiceUtil.returnError("Problems Creating invoiceItem");
+								  		     }
+									        
+									     // Create the OrderAdjustmentBilling record
+					                        createOrderAdjustmentBillingContext.put("orderAdjustmentId", orderAdjustmentId);
+					                        createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
+					                        createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
+					                        createOrderAdjustmentBillingContext.put("amount", discAmount);
+					                        createOrderAdjustmentBillingContext.put("userLogin", userLogin);
+					                        Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
+					                       
+					                        
+					                        if (ServiceUtil.isError(createOrderAdjustmentBillingResult)) {
+					                        	String errMsg =  ServiceUtil.getErrorMessage(createOrderAdjustmentBillingResult);
+					        	  		  		Debug.logError(errMsg , module);
+					        	  		  		return ServiceUtil.returnError(errMsg);
+					        	  		  	}  
+										}
+					  			 }
+			  				 }
+			  			 }
+	  		       }
 			  }
          }
 		}catch (Exception e) {
