@@ -74,6 +74,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperat
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, false );
 if(UtilValidate.isNotEmpty(InvoiceItem)){
+	sNo=1;
 	for(i=0; i<InvoiceItem.size(); i++){
 		
 		 quantity =0;
@@ -82,8 +83,6 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 		 productName = "";
 		 subsidyAmt = 0;
 		 categoryname= "";
-		 sNo = i+1;
-		 temMap.put("sNo", sNo);
 		 eachInvoiceItem = InvoiceItem[i];
 		 invoiceItemTypeId=eachInvoiceItem.get("invoiceItemTypeId");
 		 invoiceId = eachInvoiceItem.get("invoiceId");
@@ -103,10 +102,10 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			 partyPostalAddress = delegator.findList("PartyContactDetailByPurpose", condition, null, null, null, false);
 			 partyPostalAddress= EntityUtil.getFirst(partyPostalAddress);
-			 if(UtilValidate.isNotEmpty(partyPostalAddress) && (partyPostalAddress.districtGeoId)){
-				 districtGeoId=partyPostalAddress.districtGeoId;
+			 if(UtilValidate.isNotEmpty(partyPostalAddress) && (partyPostalAddress.stateProvinceGeoId)){
+				 stateProvinceGeoId=partyPostalAddress.stateProvinceGeoId;
 			 }
-			 geo=delegator.findOne("Geo",[geoId : districtGeoId], false);
+			 geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
 			 if(UtilValidate.isNotEmpty(geo)){
 				 districtName= geo.geoName;
 			 }
@@ -123,8 +122,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			 productCategoryAndMember = delegator.findList("ProductCategoryAndMember",condition, null, null, null, false );
 			 productCategoryAndMember= EntityUtil.getFirst(productCategoryAndMember);
-			 if(UtilValidate.isNotEmpty(productCategoryAndMember) && (productCategoryAndMember.description)){
-				 categoryname= productCategoryAndMember.description;
+			 if(UtilValidate.isNotEmpty(productCategoryAndMember) && (productCategoryAndMember.primaryParentCategoryId)){
+				 productCategory = delegator.findOne("ProductCategory",["productCategoryId":productCategoryAndMember.primaryParentCategoryId],false);
+				 if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description)){
+				     categoryname= productCategory.description;
+				 }		 
 			 }
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
@@ -148,8 +150,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 claimTotal = subsidyAmt +serviceCharg;
 			 temMap.put("claimTotal", claimTotal);
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
+				temMap.put("sNo", sNo);
+				sNo = sNo+1;
 			    finalList.add(temMap);
-			 }  
+			 } 
+			 
 		 }
 		
 	}
