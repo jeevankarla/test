@@ -246,7 +246,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       </tr>
       <tr class="alternate-row">
     	<form id="claimReportDetails" name="claimReportDetails" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetails.csv</@ofbizUrl>">	
-  			<td width="30%" nowrap>Claim Report</td>
+  			<td width="30%" nowrap>State Of claim For Reimbursement Of 10% Subsidy Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="claimFromDate" readonly  name="claimFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="claimThruDate" readonly  name="claimThruDate"/></td>
   			 <td width="15%"><span class='h3'>Branch
