@@ -78,6 +78,12 @@ List formatList = [];
 		branchList.addAll(branchMap);
 	}
 	context.branchList = branchList;
+	conditionDeopoList = [];
+	conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+	conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+	conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+	statesList = delegator.findList("Geo",conditionDepo,UtilMisc.toSet("geoId","geoName"),null,null,false);
+	context.statesList= statesList;
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);

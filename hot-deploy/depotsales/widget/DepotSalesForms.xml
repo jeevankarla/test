@@ -3109,11 +3109,11 @@
     </form>
     <form name="claimDetailsList" type="list" list-name="finalList" view-size="99999">
         <field name="sNo" title="SI. No."><display/></field>
-        <field name="city" title="Name Of State"><display/></field>
+        <field name="districtName" title="Name Of State"><display/></field>
         <field name="userAgency" title="Name Of User Agency"><display/></field>
         <field name="invoiceDate" title="Date Of Supply"><display/></field>
-        <field name="productName" title="Varity Of yarn"><display/></field>
-        <field name="categoryname" title="Count Of yarn"><display/></field>
+        <field name="productName" title="Count Of yarn"><display/></field>
+        <field name="categoryname" title="Varity Of yarn"><display/></field>
         <field name="quantity" title="Yarn Supplied during the quarter(in Kgs)"><display/></field>
         <field name="value" title="Value Of Yarn Before yarn subsidy(in Rs)"><display/></field>
         <field name="subsidyAmt" title="Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)"><display/></field>
