@@ -248,8 +248,22 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="30%" nowrap>Claim Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="claimFromDate" readonly  name="claimFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="claimThruDate" readonly  name="claimThruDate"/></td>
-  			<td width="15%"></td>
-  			<td width="15%"></td>
+  			 <td width="15%"><span class='h3'>Branch
+				<select name="branchId" id="branchId">
+					<option value=""></option>
+					<#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></td>
+  			 <td width="15%"><span class='h3'>State
+				<select name="geoId" id="geoId">
+					<option value=""></option>
+					<#list  statesList as eachState>
+						<option value='${eachState.geoId?if_exists}'>${eachState.geoName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></td>
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 		</form>	
       </tr>

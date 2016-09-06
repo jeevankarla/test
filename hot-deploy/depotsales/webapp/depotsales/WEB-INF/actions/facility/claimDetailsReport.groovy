@@ -42,11 +42,29 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
+branchId = parameters.branchId;
+geoId = parameters.geoId;
+partyIdToList = [];
+resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
+if(resultCtx && resultCtx.get("partyList")){
+	partyList=resultCtx.get("partyList");
+	partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
+}	
+partyIdToList.add(branchId);
+stateFilterParties = delegator.findList("PartyContactDetailByPurpose",EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS , geoId)  , UtilMisc.toSet("partyId"), null, null, false );
+partyIds = EntityUtil.getFieldListFromEntityList(stateFilterParties, "partyId", true);
 finalList = [];
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
 conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
+if(UtilValidate.isNotEmpty(branchId)){
+	conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdToList));
+}
+if(UtilValidate.isNotEmpty(geoId)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
+}
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 invoices = delegator.find("Invoice",condition,null,UtilMisc.toSet("invoiceId"),null,null);
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoices, "invoiceId", true);
@@ -77,14 +95,22 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 partyId = invoice.partyId;
 			 userAgency = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 			 temMap.put("userAgency", userAgency);
-			 city = "";
-			 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
-			 if(UtilValidate.isNotEmpty(partyPostalAddress)){
-				 if(UtilValidate.isNotEmpty(partyPostalAddress.city)){
-					 city=partyPostalAddress.city;
-				 }
+			 districtName = "";
+			 districtGeoId ="";
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			 conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
+			 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 partyPostalAddress = delegator.findList("PartyContactDetailByPurpose", condition, null, null, null, false);
+			 partyPostalAddress= EntityUtil.getFirst(partyPostalAddress);
+			 if(UtilValidate.isNotEmpty(partyPostalAddress) && (partyPostalAddress.districtGeoId)){
+				 districtGeoId=partyPostalAddress.districtGeoId;
 			 }
-			 temMap.put("city", city);
+			 geo=delegator.findOne("Geo",[geoId : districtGeoId], false);
+			 if(UtilValidate.isNotEmpty(geo)){
+				 districtName= geo.geoName;
+			 }
+			 temMap.put("districtName", districtName);
 			 productId = eachInvoiceItem.get("productId");
 			 productDetails = delegator.findOne("Product",["productId":productId],false);
 			 if(UtilValidate.isNotEmpty(productDetails)){
@@ -121,7 +147,9 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("serviceCharg", serviceCharg);
 			 claimTotal = subsidyAmt +serviceCharg;
 			 temMap.put("claimTotal", claimTotal);
-			 finalList.add(temMap);
+			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
+			    finalList.add(temMap);
+			 }  
 		 }
 		
 	}
