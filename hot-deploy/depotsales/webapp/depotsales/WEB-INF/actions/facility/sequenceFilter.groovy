@@ -60,6 +60,16 @@ if(parameters.invoiceTypeId == "SALES_INVOICE"){
 			
 		}
 	}
+	else{
+		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+		List branchIds = [];
+		for (eachList in resultCtx.get("productStoreList")) {
+			branchIds.add(eachList.get("payToPartyId"));
+		}
+		parameters.partyIdFrom = branchIds;
+		parameters.partyIdFrom_op = "in";
+		parameters.tempPartyIdFrom = "";
+	}
 }
 
 
@@ -84,6 +94,16 @@ if(parameters.invoiceTypeId == "PURCHASE_INVOICE"){
 			}
 			
 		}
+	}
+	else{
+		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+		List branchIds = [];
+		for (eachList in resultCtx.get("productStoreList")) {
+			branchIds.add(eachList.get("payToPartyId"));
+		}
+		parameters.partyId = branchIds;
+		parameters.partyId_op = "in";
+		parameters.tempPartyId = "";
 	}
 }
 
