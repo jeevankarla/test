@@ -246,7 +246,7 @@ for (eachInvoiceList in invoice) {
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
-	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
+	condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
