@@ -3169,5 +3169,25 @@
          <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
-     </form>    
+     </form> 
+     
+     
+     <form name="depotReimburcentReportCSV" type="list" list-name="finalList" view-size="99999">
+         <field name="billno" title="Sale Invo.No"><display/></field>
+         <field name="invoiceDate" title="Invoice Date"><display/></field>
+         <field name="invoiceQTY" title="Quantity"><display/></field>
+         <field name="invoiceAmount" title="Amount"><display/></field>
+         <field name="supplierName" title="Name Of Supplier"><display/></field>
+         <field name="destAddr" title="Destination"><display/></field>
+         <field name="transporter" title="Transporter"><display/></field>
+         <field name="claim" title="Claim Amount"><display/></field>
+         <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
+         <field name="lrNumber" title="Lr Number"><display/></field>
+         <field name="lrDate" title="LR Date"><display/></field>
+     </form> 
+     
+     
+     
+     
+        
 </forms>
