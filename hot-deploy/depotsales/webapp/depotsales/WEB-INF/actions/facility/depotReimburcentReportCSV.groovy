@@ -172,6 +172,16 @@ if(state && !partyId){
 	}
 }
 
+isDepotPartyIds = [];
+condListb2 = [];
+condListb2.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+if(branchBasedWeaversList)
+condListb2.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,branchBasedWeaversList));
+fcond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+FacilityList = delegator.find("Facility", fcond, null, UtilMisc.toSet("ownerPartyId"), null, null);
+
+branchBasedWeaversList = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
+
 
 condList = [];
 //condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "11821"));
