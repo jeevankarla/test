@@ -23,20 +23,26 @@ if(UtilValidate.isNotEmpty(parameters.partyId_op)){
 	List tempPartyIdList = StringUtil.split(partyId,",");
 	List<String> newPartyList = FastList.newInstance();
 	for(int i=0;i<tempPartyIdList.size();i++)
-		newPartyList.add(tempPartyIdList.get(i).trim());
+	{
+		tPartyId = tempPartyIdList.get(i).replaceAll("\\[", "").replaceAll("\\]","");
+		newPartyList.add(tPartyId.trim());
+	}
 	parameters.partyId = newPartyList;
-	
 	condList = [];
 	partyIdList = newPartyList;
-	condList.add(EntityCondition.makeCondition("partyIdTo" ,EntityOperator.EQUALS,partyIdList[0]));
+	condList.add(EntityCondition.makeCondition("partyIdTo" ,EntityOperator.IN,partyIdList));
 	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" ,EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
 	condList.add(EntityCondition.makeCondition("roleTypeIdTo" ,EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
 	PartyRelationshipList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
 	if(UtilValidate.isNotEmpty(PartyRelationshipList)){
-		PartyRelationship = EntityUtil.getFirst(PartyRelationshipList);
-		context.partyId = PartyRelationship.get("partyIdFrom");
+		List partyIdFromList = EntityUtil.getFieldListFromEntityList(PartyRelationshipList, "partyIdFrom", true);
+		if(partyIdFromList.size() == 1){
+			context.partyId = EntityUtil.getFirst(PartyRelationshipList).get("partyIdFrom");
+		}
+		else{
+			context.partyId = "";
+		}
 	}
-	
 }
 else if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIdFrom = parameters.partyId;
@@ -58,4 +64,16 @@ else if(UtilValidate.isNotEmpty(parameters.partyId)){
 		}
 	}
 }
-
+else{
+	if(parameters.hideSearch=="Y"){
+		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+		List branchIds = [];
+		for (eachList in resultCtx.get("productStoreList")) {
+			branchIds.add(eachList.get("payToPartyId"));
+		}
+		parameters.partyId = branchIds;
+		parameters.partyId_op = "in";
+		context.partyId = "";
+	}
+	
+}

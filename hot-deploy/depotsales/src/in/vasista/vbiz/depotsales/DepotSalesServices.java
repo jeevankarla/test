@@ -13302,9 +13302,43 @@ Debug.log("taxRateList =============="+taxRateList);
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
+		String partyId = (String) context.get("partyId");
+        if(UtilValidate.isEmpty(partyId)){
+        	partyId = (String) userLogin.get("partyId");
+        }
+        List conditions = FastList.newInstance();
+        List<GenericValue> PartyRelationship = null;
+        try{
+			conditions.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			conditions.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "BRANCH_EMPLOYEE"));
+			PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+        }catch(GenericEntityException e){
+        	Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+        }
+        
+        conditions.clear();
+        if(UtilValidate.isNotEmpty(PartyRelationship)){
+        	List branchIdList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdFrom", true);
+        	try{
+        		conditions.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, branchIdList));
+        		conditions.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        		conditions.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+    			PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+    			conditions.clear();
+    			if(UtilValidate.isNotEmpty(PartyRelationship)){
+    				List roIdsList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdFrom", true);
+    				conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList));
+    			}
+        	}catch(GenericEntityException e){
+        		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+        	}
+        	
+        }
+        conditions.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+        
 		List<GenericValue> PartyClassification = null;
 		try{
-			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"), UtilMisc.toSet("partyId"), null, null, false);
+			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false);
 			if(UtilValidate.isNotEmpty(PartyClassification)){
 				List partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
 				List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
