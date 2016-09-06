@@ -38,6 +38,9 @@ import org.ofbiz.entity.util.EntityTypeUtil;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.party.party.PartyHelper;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+
 
 Map formatMap = [:];
 List formatList = [];
@@ -147,4 +150,23 @@ if(roleTypeAttr){
 context.roleTypeAttrList=roleTypeAttrList;
 //Debug.log("finalDepartmentList================="+finalDepartmentList);
 	
+
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+
+
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoId);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateListJSON = stateListJSON;
+
+
+//Debug.log("stateListJSON============"+stateListJSON);
 
