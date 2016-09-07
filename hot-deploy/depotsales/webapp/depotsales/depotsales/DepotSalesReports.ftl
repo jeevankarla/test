@@ -235,6 +235,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 		</form>	
       </tr>
+      <tr class="alternate-row">
+			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentCSV.csv</@ofbizUrl>" target="_blank">	
+				<td width="30%">Indent Listing Report</td>
+				<td width="15%"></td>
+			    <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentListing" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+			    <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
+					  	 <td width="15%"></td>
+				<td width="10%">
+				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+          </tr>
        <tr class="alternate-row">
     	<form id="subsidyDetails" name="subsidyDetails" method="post"  target="_blank" action="<@ofbizUrl>subsidyDetails.csv</@ofbizUrl>">	
   			<td width="30%" nowrap>10% Subsidy Report</td>

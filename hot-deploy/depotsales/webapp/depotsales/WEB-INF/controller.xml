@@ -54,6 +54,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuotaAnalyticsInternal"/>
     </request-map>
+    <request-map uri="IndentCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentCSV"/>
+      </request-map>
     
     <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
@@ -2274,7 +2278,7 @@
     <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>
     <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>
 	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
-  
+    <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
     
     
     

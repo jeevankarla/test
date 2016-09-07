@@ -12,6 +12,8 @@
         <!-- <attribute name="branchList" type="java.util.List" mode="IN" optional="true"/> -->
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="branchId" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
         <attribute name="tallyRefNO" type="String" mode="IN" optional="true"/>
         <attribute name="orderNo" type="String" mode="IN" optional="true"/>
         <attribute name="estimatedDeliveryDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
