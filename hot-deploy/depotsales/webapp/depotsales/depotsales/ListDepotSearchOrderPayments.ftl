@@ -224,7 +224,7 @@ under the License.
           <#--> <td>Advance Payments</td> -->
              <td>Received Amount</td>
              <td>Sales Invoice</td>
-             
+             <td>Cancel Indent</td>
              
              
             <#-- <td>Indent Status</td>-->
@@ -297,7 +297,7 @@ under the License.
                 <#else>
                 <td>${(eachOrder.salesNo)?if_exists}</td>
                 </#if>
-           
+       			<td><#if (eachOrder.salesButton) == "Y"><input type="button" name="viewOrder" id="viewOrder" value="cancel" onclick="javascript:cancelDepotSaleOrderCaution('${eachOrder.orderId}','${eachOrder.partyId}')"></#if></td>
            
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
               	<td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPayment('${orderPreferenceMap.get(eachOrder.orderId)}');"/></td>

@@ -296,6 +296,12 @@
         <response name="success" type="view" value="FindIndents"/>   
        <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
+    <request-map uri="cancelDepotSaleOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelIndentOrder"/>
+        <response name="success" type="view" value="FindSalesIndentPayment"/>   
+       <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+    </request-map>
     
    <!--  <request-map uri="storePartyPostalAddress">
         <security https="true" auth="true"/>
