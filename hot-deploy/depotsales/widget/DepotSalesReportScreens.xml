@@ -45,7 +45,25 @@
 			</widgets>
 		</section>
 	</screen>
-    
+    <screen name="IndentCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="processOrdersBranchSales" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/IndentListingCsv.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="IndentCSVHeading" location="component://depotsales/widget/DepotSalesForms.xml" />
+					<include-form name="IndentCSVDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						<include-form name="IndentCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
     <screen name="DepotSalesBookAbstractReportPDF">
 		<section>
 			<actions>
