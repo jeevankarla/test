@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/css/smoothness/jquery-ui-1.8.5.custom.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/examples/examples.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
-<style type="text/css">
 
 	<style type="text/css">
 	 	.labelFontCSS {
@@ -14,8 +13,8 @@
 		    max-width: 1400px;
 		    max-height: 260px;
 		    max-right: 10px;
-		    margin-top: 10px;
-			margin-bottom: -15px;
+		    margin-top: -2px;
+			margin-bottom: 0px;
 		    padding: 15px;
 		    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
 		    border-radius: 20px;
@@ -25,7 +24,7 @@
 		   	max-width: 1200px;
 		    max-height: 185px;
 		    max-right: 10px;
-		    margin-top: 10px;
+		    margin-top: -2px;
 			margin-bottom: -15px;
 		    padding: 15px;
 		    background-color: Thistle;
@@ -33,9 +32,9 @@
 		    border-radius: 20px;
 		    border: 1px solid #305A72;
 		}
+		
 	</style>
 
-</style>			
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -152,6 +151,10 @@
 			
 			
 			var taxAmt = data[rowCount]["taxAmt"];
+			
+			
+			
+			
 		
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
@@ -235,7 +238,7 @@
 				// Purchase taxes
 				
 				var purTaxList = [];
-				purTaxList = data[rowCount]["purTaxList"]
+				purTaxList = data[rowCount]["purTaxList"];
 				
 				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
 				jQuery(formId).append(jQuery(purTaxListItem));	
@@ -849,10 +852,10 @@
 	function setupGrid2() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:355, minWidth:355, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
+			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:130, minWidth:130, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:320, minWidth:320, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjAmount", name:"Amount", field:"adjAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:80, minWidth:80, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options2 = {
@@ -990,11 +993,11 @@
 	function setupGrid3() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:315, minWidth:315, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
+			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId", width:130, minWidth:130, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:295, minWidth:295, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjAmount", name:"Amount", field:"adjAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"discQty", name:"Qty", field:"discQty", width:40, minWidth:40, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:80, minWidth:80, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options3 = {
@@ -1220,7 +1223,7 @@
 	         	url: "calculateTaxesByGeoIdTest",
 	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
 	       	 	dataType: 'json',
-	       	 	async: true,
+	       	 	async: false,
 	    	 	success: function(result) {
 	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
 	   	  				alert(result["_ERROR_MESSAGE_"]);
@@ -1267,9 +1270,12 @@
 						    data[row]["DEFAULT_PUR_"+key] = value;
 						    data[row]["DEFAULT_PUR_"+key+"_AMT"] = (value) * totalAmt/100;
 						    
-						    data[row][key+"_PUR"] = value;
-						    data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
-						    
+						    if(!data[row][key+"_PUR"]){
+						    	data[row][key+"_PUR"] = value;
+						    }
+						   	if(!data[row][key+"_PUR_AMT"]){
+						    	data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
+						    }
 						    count++;
 						});
 	   	  				
@@ -1309,7 +1315,7 @@
 			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
-	   	  	updateTotalIndentAmount();
+	   	  	//updateTotalIndentAmount();
 	   	  	
 	   	  	
 	    }

@@ -21,7 +21,7 @@
 		font-weight: bold;
 		color: red;
 		background: white;
-		animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
+		//animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
 	}
 	
 	@keyframes blinker {  

@@ -551,7 +551,6 @@
 			if(data3){
 				for(var i=0;i<data3.length;i++){
 					var adjustment = data3[i];
-					alert("adjustment = "+JSON.stringify(adjustment));
 					if(adjustment["assessableValue"] && adjustment["assessableValue"] == true){
 						if(adjustment["adjAmount"]){
 							adjustmentIncBasic = adjustmentIncBasic + (adjustment["adjAmount"]);
@@ -606,7 +605,6 @@
 					for(var i=0;i<purTaxList.length;i++){
 						var purTax = purTaxList[i];
 						var purTaxValue = taxValueMapPur[purTax];
-						alert("purTaxValue = "+purTaxValue);
 						var purTaxAmount = purTaxValue*(totalAmt)*0.01;
 						if(defaultTaxMapPur[purTax] != 'undefined' || defaultTaxMapPur[purTax] != null){
 							var taxDetails = defaultTaxMapPur[purTax]["taxDetails"];
@@ -774,7 +772,7 @@
 		dataRow["taxApplicabilityList"] = taxApplicabilityList;
 		grid.updateRow(rowIndex);
 		grid.render();
-		updateTotalIndentAmount();
+		//updateTotalIndentAmount();
 		cancelForm();
 	}	
 		

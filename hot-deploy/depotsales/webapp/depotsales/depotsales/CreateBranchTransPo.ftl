@@ -588,10 +588,10 @@ function populateData(){
 					    	</#if>
 					    	
 					    	<#if orderId?exists && orderInfo.get("supplierGeoId")?exists>
-					    		<input type="text" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${orderInfo.get("supplierGeoId")}" readonly/>
+					    		<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${orderInfo.get("supplierGeoId")}" readonly/>
 					    	</#if>
 					      	<#if orderId?exists && orderInfo.get("branchGeoId")?exists>
-					    		<input type="text" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${orderInfo.get("branchGeoId")}" readonly/>
+					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${orderInfo.get("branchGeoId")}" readonly/>
 					    	</#if>
 					    </td>
 					</tr>
@@ -1156,7 +1156,7 @@ function populateData(){
 		                         <td>
 	                              <table>
 						          <tr>
-						          <font colour = "blue">Total PO Quantity : ${totQuantity}</font>
+						          <font colour = "blue">Total PO Quantity :<#-- ${totQuantity} --></font>
 						          <span>&#160;&#160;&#160; </span>
 						          <input type="button"  class="plusbtn" value="Add Multiple Destinations" />
                                  <span>&#160;&#160;&#160; </span>

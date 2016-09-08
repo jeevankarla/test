@@ -1054,7 +1054,7 @@
 	         	url: "calculateTaxesByGeoIdTest",
 	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
 	       	 	dataType: 'json',
-	       	 	async: true,
+	       	 	async: false,
 	    	 	success: function(result) {
 	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
 	   	  				alert(result["_ERROR_MESSAGE_"]);

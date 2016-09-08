@@ -4,22 +4,34 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastMap;
+
 import java.sql.Timestamp;
+
 import org.ofbiz.base.util.UtilDateTime;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+
 import org.ofbiz.service.ServiceUtil;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+
 import org.ofbiz.product.product.ProductWorker;
+
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
+
 import java.math.RoundingMode;
-	
+
+import org.ofbiz.party.contact.ContactMechWorker;
+
+
 	purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
 	purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
@@ -78,7 +90,7 @@ import java.math.RoundingMode;
 			orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			
-		
+			
 			exprCondList=[];
 			exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 			exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -109,7 +121,7 @@ import java.math.RoundingMode;
 			partyId = "";
 			
 			billToPartyId="";
-	        weaverPartyId ="";
+			weaverPartyId ="";
 			if(orderRole){
 				billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 				if(billToPartyIdList){
@@ -131,10 +143,84 @@ import java.math.RoundingMode;
 				invoiceTypeId = "PURCHASE_INVOICE";
 			}
 			
+			titleTransferEnumIdsList = [];
+			taxAuthorityTypeTitleTransferList = delegator.findList("TaxAuthorityTypeTitleTransfer", null, null, null, null, false);
+			titleTransferEnumIdsList = EntityUtil.getFieldListFromEntityList(taxAuthorityTypeTitleTransferList, "titleTransferEnumId", true);
+			
+			// Transaction Type Tax Details
+			JSONObject transactionTypeTaxMap = new JSONObject();
+			for(int i=0; i<titleTransferEnumIdsList.size(); i++){
+				titleTransferEnumId = titleTransferEnumIdsList.get(i);
+				
+				filteredTitleTransfer = EntityUtil.filterByCondition(taxAuthorityTypeTitleTransferList, EntityCondition.makeCondition("titleTransferEnumId", EntityOperator.EQUALS, titleTransferEnumId));
+				taxIdsList = EntityUtil.getFieldListFromEntityList(filteredTitleTransfer, "taxAuthorityRateTypeId", true);
+				
+				JSONArray applicableTaxList = new JSONArray();
+				for(int j=0; j<taxIdsList.size(); j++){
+					applicableTaxList.add(taxIdsList.get(j));
+				}
+				transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
+			}
+			Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+			context.transactionTypeTaxMap = transactionTypeTaxMap;
+			
+			Debug.log("supplier =================="+partyId);
+			Debug.log("branch =================="+billToPartyId);
+			
+			String supplierGeoId = null;
+			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false, "TAX_CONTACT_MECH");
+			if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+				supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+			}
+			
+			String branchGeoId = null;
+			List branchContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, billToPartyId, false, "TAX_CONTACT_MECH");
+			if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
+				branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+			}
+			
+			Debug.log("supplierGeoId =================" +supplierGeoId);
+			Debug.log("branchGeoId ================" +branchGeoId);
+			
+			context.supplierGeoId = supplierGeoId;
+			context.branchGeoId = branchGeoId;
+			
+			
+			orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			purchaseTaxType = null;
+			purchaseTitleTransferEnumId = null;
+			orderAttr.each{ eachAttr ->
+				if(eachAttr.attrName == "purchaseTaxType"){
+					purchaseTaxType =  eachAttr.attrValue;
+				}
+				if(eachAttr.attrName == "purchaseTitleTransferEnumId"){
+					purchaseTitleTransferEnumId = eachAttr.attrValue;
+				}
+			}
+			if(UtilValidate.isEmpty(purchaseTitleTransferEnumId)){
+				if(supplierGeoId == branchGeoId){
+					purchaseTaxType = "Intra-State";
+					purchaseTitleTransferEnumId = "NO_E2_FORM";
+				}
+				else{
+					purchaseTaxType = "Inter-State";
+					purchaseTitleTransferEnumId = "CST_CFORM";
+				}
+			}
+			
+			context.purchaseTaxType = purchaseTaxType;
+			context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
+			
+			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
+			context.purTaxListReady = purTaxList;
+			
+			
+			
+			
 			
 			//invoiceItemAdjs = delegator.findList("InvoiceItemTypeMap", EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId), null, null, null, false);
 			//adjIds = EntityUtil.getFieldListFromEntityList(invoiceItemAdjs, "invoiceItemTypeId", true);
-			
 			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]));
@@ -146,7 +232,7 @@ import java.math.RoundingMode;
 			////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 			additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 			dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
-			////Debug.log("additionalChgs =========="+additionalChgs);
+			Debug.log("additionalChgs =========="+additionalChgs);
 			////Debug.log("dicounts =========="+dicounts);
 			
 			// Other Charges
@@ -163,6 +249,7 @@ import java.math.RoundingMode;
 				invoiceAdjLabelIdJSON.put(eachItem.description +" [ " +eachItem.invoiceItemTypeId+"]", eachItem.invoiceItemTypeId);
 				
 			}
+			Debug.log("invoiceAdjItemsJSON =========="+invoiceAdjItemsJSON);
 			context.invoiceAdjItemsJSON = invoiceAdjItemsJSON;
 			context.invoiceAdjLabelJSON = invoiceAdjLabelJSON;
 			context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
@@ -202,7 +289,7 @@ import java.math.RoundingMode;
 			
 			condExpr = [];
 			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, UtilMisc.toList("BED_PUR", "VAT_PUR","CST_PUR", "BEDCESS_PUR", "BEDSECCESS_PUR")));
+			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, UtilMisc.toList("BED_PUR", "VAT_PUR","CST_PUR", "CESS_PUR", "CST_SURCHARGE", "VAT_SURCHARGE")));
 			cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 			orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 			
@@ -238,6 +325,21 @@ import java.math.RoundingMode;
 			
 			productQty = [];
 			orderItems.each{ eachItem ->
+				
+				Debug.log("orderId =========="+eachItem.orderId);
+				taxResultCtx = 0;
+				taxValueMap = [:];
+				defaultTaxMap = [:];
+				if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+					Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
+					prodCatTaxCtx.put("productId", eachItem.productId);
+					prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
+					
+					taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
+					taxValueMap = taxResultCtx.get("taxValueMap");
+					defaultTaxMap = taxResultCtx.get("defaultTaxMap");
+				}
+				
 				tempMap = [:];
 				tempMap.put("productId", eachItem.productId);
 				tempMap.put("quantity", eachItem.quantity);
@@ -296,12 +398,17 @@ import java.math.RoundingMode;
 			
 			condExpr = [];
 			condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR")));
+			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
 			cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 			taxDetails = delegator.findList("OrderAdjustment", cond, null, null, null, false);
+			Debug.log("taxDetails=================="+taxDetails);
+			
 			
 			
 			shipmentReceipts.each{ eachItem ->
+				
+				relOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+				origQty = (relOrderItem.get(0)).get("quantity");
 				
 				String productId = eachItem.productId;
 				adjUnitAmtMap = [:];
@@ -342,7 +449,7 @@ import java.math.RoundingMode;
 				prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 				
 				// Fetch Tax details from order adjustment
-				vatPercent = 0;
+				/*vatPercent = 0;
 				
 				condExpr = [];
 				condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -366,21 +473,16 @@ import java.math.RoundingMode;
 				
 				
 				vatAmt = BigDecimal.ZERO;
-				cstAmt = BigDecimal.ZERO;
+				cstAmt = BigDecimal.ZERO;*/
 				
 				unitPrice = (orderItem.unitPrice);
-				
-				
-				
 				
 				JSONObject newObj = new JSONObject();
 				newObj.put("cProductId",eachItem.productId);
 				newObj.put("cProductName",prodValue.description);
 				newObj.put("quantity",qty);
-				
-				////Debug.log("unitPrice==============="+unitPrice);
-				
 				newObj.put("UPrice", unitPrice);
+				
 				if(UtilValidate.isNotEmpty(orderId)){
 					List conditionlist=[];
 					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -399,14 +501,74 @@ import java.math.RoundingMode;
 						unitPrice=OrderItemChangeDetails.unitPrice;
 					}
 				}
+				totalTaxAmt = 0;
+				if(purchaseTitleTransferEnumId){
+					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
+					for(int i=0; i<purTaxList.size(); i++){
+						taxItem = purTaxList.get(i);
+						Debug.log("taxItem ============="+taxItem);
+						purTaxItem = taxItem.replace("_SALE", "_PUR");
+						
+						Debug.log("taxItemtaxItem ============="+taxItem);
+						taxInfo = defaultTaxMap.get(taxItem);
+						surChargeList = taxInfo.get("surchargeList");
+						
+						condExpr = [];
+						condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+						condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, purTaxItem));
+						taxItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+						Debug.log("taxItemList ============="+taxItemList);
+						taxPercent = 0;
+						taxValue = 0;
+						actualTaxValue = 0;
+						if(UtilValidate.isNotEmpty(taxItemList)){
+							taxPercent = (EntityUtil.getFirst(taxItemList)).get("sourcePercentage");
+							actualTaxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
+							taxValue = (actualTaxValue/origQty)*qty;
+						}
+						Debug.log("taxValue ============="+taxValue);
+						newObj.put(taxItem+"_PUR", taxPercent);
+						newObj.put(taxItem+"_PUR_AMT" , taxValue);
+						
+						totalTaxAmt = totalTaxAmt + taxValue;
+						Debug.log("totalTaxAmt ============="+totalTaxAmt);
+						for(int j=0; j<surChargeList.size(); j++){
+							surchargeItem = (surChargeList.get(j)).get("taxAuthorityRateTypeId");
+							Debug.log("surchargeItem ============="+surchargeItem);
+							condExpr = [];
+							condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+							condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, surchargeItem));
+							surItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+							
+							surTaxPercent = 0;
+							surTaxValue = 0;
+							if(UtilValidate.isNotEmpty(surItemList)){
+								surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
+								surTaxValue = (surTaxPercent/100)*taxValue;
+							}
+							newObj.put(surchargeItem+"_PUR", surTaxPercent);
+							newObj.put(surchargeItem+"_PUR_AMT" , surTaxValue);
+							
+							totalTaxAmt = totalTaxAmt + surTaxValue;
+							
+						}
+						
+					}
+				}
+				
+				newObj.put("taxAmt", totalTaxAmt);
+				
+				
+				Debug.log("newObj ============="+newObj);
+				
 				amount = unitPrice*qty  ;
-				vatAmt = ((unitPrice*vatPercent)/100)*qty;
-				cstAmt = ((unitPrice*cstPercent)/100)*qty;
+				/*vatAmt = ((unitPrice*vatPercent)/100)*qty;
+				cstAmt = ((unitPrice*cstPercent)/100)*qty;*/
 				newObj.put("amount", amount);
-				newObj.put("VatPercent", vatPercent);
+				/*newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
 				newObj.put("CSTPercent", cstPercent);
-				newObj.put("CST", cstAmt);
+				newObj.put("CST", cstAmt);*/
 				invoiceItemsJSON.add(newObj);
 				
 				JSONObject newObjProd = new JSONObject();
@@ -421,10 +583,10 @@ import java.math.RoundingMode;
 			
 			//Debug.log("productIdLabelJSON=================="+productIdLabelJSON);
 			
-			shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+			//shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 			JSONArray adjustmentJSON = new JSONArray();
 	
-			adjustmentTypes = [];
+			/*adjustmentTypes = [];
 			shipmentAttribute.each{ eachAdj ->
 				amt = new BigDecimal(eachAdj.attrValue);
 				JSONObject newObj = new JSONObject();
@@ -440,7 +602,7 @@ import java.math.RoundingMode;
 				tempMap.termDays = null;
 				tempMap.description = "";
 				adjustmentTypes.add(tempMap);
-			}
+			}*/
 			
 			orderAdjustments.each{ eachOdrAdj ->
 				tempMap = [:];
@@ -473,7 +635,11 @@ import java.math.RoundingMode;
 				newObj.put("invoiceItemTypeId", adjTypeId);
 				newObj.put("applicableTo", applicableTo);
 				newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
+				if(eachOdrAdj.isAssessableValue && eachOdrAdj.isAssessableValue == "Y"){
+					newObj.put("assessableValue", true);
+				}
 				if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_DISC_BASIC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
+					Debug.log("adjTypeId ============="+adjTypeId);
 					adjustmentJSON.add(newObj);
 				}
 				
