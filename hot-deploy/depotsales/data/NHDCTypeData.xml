@@ -490,16 +490,16 @@ under the License.
 	
 	
 	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="VAT_SALE" titleTransferEnumId="NO_E2_FORM" fromDate="2015-04-01 00:00:00.0"/>
-	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="VAT_SURCHARGE" titleTransferEnumId="NO_E2_FORM" fromDate="2015-04-01 00:00:00.0"/>
+	<!-- <TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="VAT_SURCHARGE" titleTransferEnumId="NO_E2_FORM" fromDate="2015-04-01 00:00:00.0"/> -->
 	
 	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SALE" titleTransferEnumId="E2_FORM" fromDate="2015-04-01 00:00:00.0"/>
-	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="E2_FORM" fromDate="2015-04-01 00:00:00.0"/>
+	<!-- <TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="E2_FORM" fromDate="2015-04-01 00:00:00.0"/> -->
 	
 	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SALE" titleTransferEnumId="CST_CFORM" fromDate="2015-04-01 00:00:00.0"/>
-	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="CST_CFORM" fromDate="2015-04-01 00:00:00.0"/>
+	<!-- <TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="CST_CFORM" fromDate="2015-04-01 00:00:00.0"/> -->
 	
 	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SALE" titleTransferEnumId="CST_NOCFORM" fromDate="2015-04-01 00:00:00.0"/>
-	<TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="CST_NOCFORM" fromDate="2015-04-01 00:00:00.0"/>
+	<!-- <TaxAuthorityTypeTitleTransfer taxAuthorityRateTypeId="CST_SURCHARGE" titleTransferEnumId="CST_NOCFORM" fromDate="2015-04-01 00:00:00.0"/> -->
 	
 	<TaxAuthorityRateType description="Cst Sale" parentTypeId="DEFAULT_TAXES" taxAuthorityRateTypeId="CST_SALE"/> 
 	<TaxAuthorityRateType description="Vat Sale" parentTypeId="DEFAULT_TAXES" taxAuthorityRateTypeId="VAT_SALE"/> 

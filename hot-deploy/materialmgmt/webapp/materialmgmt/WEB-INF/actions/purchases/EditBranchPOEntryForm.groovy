@@ -592,12 +592,14 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		totalTaxAmt = 0;
 		if(purchaseTitleTransferEnumId){
 			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
-			
 			for(int i=0; i<purTaxList.size(); i++){
 				taxItem = purTaxList.get(i);
 				newObj.put(taxItem, taxValueMap.get(taxItem));
 				//newObj.put("vatPercent", vatPercent);
-				totalTaxAmt = totalTaxAmt + taxValueMap.get(taxItem);
+				if(taxValueMap.get(taxItem)){
+					totalTaxAmt = totalTaxAmt + taxValueMap.get(taxItem);
+				}
+				
 			}
 			
 			

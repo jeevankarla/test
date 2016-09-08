@@ -719,8 +719,6 @@
 		var totalPayableValue = $("#totalPayableValue").val();
 		var baseAmount = $("#baseAmount").val();
 		var saleBaseAmt = $("#saleBaseAmt").val();
-		alert(tenPercentSubsidy);
-		
 				
 		$("#salesTaxUpdationTable tr :input:visible").each(function () {
 		    var id = this.id;

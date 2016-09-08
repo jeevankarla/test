@@ -873,10 +873,10 @@
 	function setupGrid2() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:355, minWidth:355, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
+			{id:"invoiceItemTypeId", name:"Adjustment Type", field:"invoiceItemTypeId", width:130, minWidth:180, cssClass:"cell-title", availableTags: availableAdjTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: invoiceTypeValidator,formatter: invoiceItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:320, minWidth:355, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:70, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options2 = {
@@ -1022,11 +1022,11 @@
 	function setupGrid3() {
     
         withAdjColumns = [
-			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId",cssClass:"readOnlyColumnClass", width:170, minWidth:170, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
-			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:315, minWidth:315, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
-			{id:"adjAmount", name:"Amount", field:"adjAmount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
+			{id:"invoiceItemTypeId", name:"Discount Type", field:"invoiceItemTypeId",cssClass:"readOnlyColumnClass", width:130, minWidth:130, cssClass:"cell-title", availableTags: availableDiscountTags, regexMatcher:"contains",editor: AutoCompleteEditor, validator: discountTypeValidator,formatter: discountItemFormatter,sortable:false ,toolTip:""},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:295, minWidth:295, cssClass:"cell-title",options: prodDropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjAmount", name:"Amount", field:"adjAmount", width:65, minWidth:65, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
 			{id:"discQty", name:"Qty", field:"discQty", width:50, minWidth:50, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Amount"},
-			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
+			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:70, minWidth:70, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
 		var options3 = {
@@ -1436,7 +1436,7 @@
 	         	url: "calculateTaxesByGeoIdTest",
 	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
 	       	 	dataType: 'json',
-	       	 	async: true,
+	       	 	async: false,
 	    	 	success: function(result) {
 	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
 	   	  				alert(result["_ERROR_MESSAGE_"]);
