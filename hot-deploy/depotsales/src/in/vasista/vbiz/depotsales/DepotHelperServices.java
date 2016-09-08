@@ -1953,7 +1953,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 				// Adjustment Calculation
 				List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
+				//condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
 				condList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY" ));
 				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 				if(UtilValidate.isNotEmpty(orderAdjustments)){
@@ -1980,31 +1980,30 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 							List<GenericValue> orderAdjustmentBillings = delegator.findList("OrderAdjustmentBilling", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 							for(GenericValue eachAdjBill : orderAdjustmentBillings){
 								String invoiceId=eachAdjBill.getString("invoiceId");
+								BigDecimal billedQty=eachAdjBill.getBigDecimal("quantity");
 								condList.clear();
 								condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 								condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
-	
 								List<GenericValue> invoiceItemDetails = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 								BigDecimal shippedQuantity=BigDecimal.ZERO;
 								BigDecimal utPrice=BigDecimal.ZERO;
 								for(GenericValue eachinvoiceItem : invoiceItemDetails){
-									
 									if(!("TEN_PERCENT_SUBSIDY".equals(eachinvoiceItem.getString("invoiceItemTypeId")))){
 										 shippedQuantity=eachinvoiceItem.getBigDecimal("quantity");
 										 utPrice=eachinvoiceItem.getBigDecimal("amount");
 										 //Debug.log("utPrice==="+eachinvoiceItem.getString("invoiceItemTypeId")+"========================"+utPrice);
 									}
-									
+
 									if("TEN_PERCENT_SUBSIDY".equals(eachinvoiceItem.getString("invoiceItemTypeId"))){
-										if(shippedQuantity.compareTo(quotaQuantity)<0){
-											quotaQuantity=quotaQuantity.subtract(shippedQuantity);
+										if(shippedQuantity.compareTo(quotaQty) < 0){
+											quotaQty=quotaQty.subtract(shippedQuantity);
 										}else{
 												BigDecimal schemePercent = new BigDecimal("10");
 												BigDecimal percentModifier = schemePercent.movePointLeft(2);
-												BigDecimal discAmount = ((quotaQuantity.multiply(utPrice)).multiply(percentModifier)).negate();
+												BigDecimal discAmount = ((quotaQty.multiply(utPrice)).multiply(percentModifier)).negate();
 												eachinvoiceItem.set("amount",discAmount);
 												eachinvoiceItem.store();
-												eachAdjBill.set("quantity",quotaQuantity);
+												eachAdjBill.set("quantity",quotaQty);
 												eachAdjBill.set("amount",discAmount);
 												eachAdjBill.store();
 										}
