@@ -104,5 +104,11 @@
         <attribute type="Map" mode="OUT" name="weaverDetails" optional="true"/>
     </service>
     
+    <service name="getTransporters" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getTransporters">
+        <description>Get Transporters</description>
+        <attribute type="Map" mode="OUT" name="transportersMap" optional="true"/>
+    </service>
+    
 </services>
 

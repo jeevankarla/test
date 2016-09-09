@@ -1498,4 +1498,44 @@ public class DepotSalesApiServices{
 		return result;
     }
     
+    public static Map<String, Object> getTransporters(DispatchContext ctx,Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		Map transportersMap = FastMap.newInstance();
+		List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS ,"BRANCH_TRANSPORTER"));
+		EntityListIterator PartyRelationship = null;
+		try {
+			PartyRelationship = delegator.find("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to get PartyRelationship ", module);
+		}
+		if(UtilValidate.isNotEmpty(PartyRelationship)){
+			List partyIdList = EntityUtil.getFieldListFromEntityListIterator(PartyRelationship, "partyIdTo", true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyIdList));
+			EntityListIterator partyList = null;
+			try {
+				partyList = delegator.find("Party", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
+				if(UtilValidate.isNotEmpty(partyList)){
+					GenericValue eachParty;
+					while( partyList != null && (eachParty = partyList.next()) != null) {
+						Map transporterDetail = FastMap.newInstance();
+						String partyName = PartyHelper.getPartyName(delegator, eachParty.getString("partyId"), false);
+						transporterDetail.put("partyId",eachParty.getString("partyId"));
+						transporterDetail.put("partyName",partyName);
+						transportersMap.put(eachParty.getString("partyId"),transporterDetail);
+					}
+				}
+			}
+			catch(GenericEntityException e){
+				Debug.logError(e, "Failed to get party list ", module);
+			}
+		}
+		result.put("transportersMap",transportersMap);
+		return result;
+    }
+    
 }
