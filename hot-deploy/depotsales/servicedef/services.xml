@@ -520,6 +520,11 @@
         <auto-attributes entity-name="OrderItemDetail" include="pk" mode="IN" optional="false"/>
          <attribute name="quotaQty" type="String" mode="IN" optional="false"/>
         <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
+    </service> 
+     <service name="runQuotaTallyReconsilationFromEntries" engine="java" default-entity-name=""
+            location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="runQuotaReconsilationFromEntries" auth="true">
+        <description>Tally Quota </description>
+        <!-- <auto-attributes include="nonpk" mode="IN" optional="true"/> -->
     </service>
     <service name="getRegionalOffices" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getRegionalOffices" auth="true">
     	<description>get Regional Offices</description>
