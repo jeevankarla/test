@@ -64,6 +64,8 @@ context.orderType=orderType;
 orderEditParamMap = [:];
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 
+orderAdjustments = [];
+
 if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	orderInfoDetail = [:];
@@ -525,14 +527,15 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		
 		taxResultCtx = 0;
 		taxValueMap = [:];
-		if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+		//if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
 			Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 			prodCatTaxCtx.put("productId", eachItem.productId);
 			prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
-			
+			Debug.log("prodCatTaxCtx ====="+prodCatTaxCtx);
 			taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
+			Debug.log("taxResultCtx ====="+taxResultCtx);
 			taxValueMap = taxResultCtx.get("taxValueMap");
-		}
+		//}
 		
 		
 		bedTaxPercent = 0;
@@ -689,7 +692,10 @@ adjCondList = [];
 adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 orderAdjustmentTypeList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
 
-additionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orderAdjustmentTypeList, "orderAdjustmentTypeId", true)));
+additionalChgs = [];
+if(UtilValidate.isNotEmpty(orderAdjustments)){
+	additionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orderAdjustmentTypeList, "orderAdjustmentTypeId", true)));
+}
 Debug.log("additionalChgs =================="+additionalChgs);
 
 if(additionalChgs){

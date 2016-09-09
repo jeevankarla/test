@@ -330,15 +330,15 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				taxResultCtx = 0;
 				taxValueMap = [:];
 				defaultTaxMap = [:];
-				if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+				//if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
 					Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 					prodCatTaxCtx.put("productId", eachItem.productId);
-					prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
+					prodCatTaxCtx.put("taxAuthGeoId", null);
 					
 					taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
 					taxValueMap = taxResultCtx.get("taxValueMap");
 					defaultTaxMap = taxResultCtx.get("defaultTaxMap");
-				}
+				//}
 				
 				tempMap = [:];
 				tempMap.put("productId", eachItem.productId);
