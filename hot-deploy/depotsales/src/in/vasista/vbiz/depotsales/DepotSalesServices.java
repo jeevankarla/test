@@ -13316,4 +13316,70 @@ Debug.log("taxRateList =============="+taxRateList);
 		return result;
     }
 
+    
+    public static Map<String, Object> populateShipmentReimbursment(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String shipmentId1 = (String) context.get("shipmentId");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+
+  		List<GenericValue> shipmentList = null;
+  		
+  		 try{
+  			 
+  			List conditionList = FastList.newInstance();
+  		    if(UtilValidate.isNotEmpty(shipmentId1))	
+  			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId1));
+  			conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "BRANCH_SHIPMENT"));
+  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+  			conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.NOT_EQUAL, null));
+   
+  			 
+				shipmentList = delegator.findList("Shipment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive Shipment ", module);
+			}
+  		 
+  		try{
+  			
+  			if(UtilValidate.isNotEmpty(shipmentList)){
+  				
+  				
+  				for(GenericValue eachShipment : shipmentList){
+  				
+  				GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
+				
+  				String shipmentId = eachShipment.getString("shipmentId");
+  				BigDecimal estimatedShipCost=eachShipment.getBigDecimal("estimatedShipCost");
+  				
+	  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
+	  				
+		  				ShipmentReimbursement.set("shipmentId", shipmentId);
+		  				ShipmentReimbursement.set("receiptAmount", estimatedShipCost);
+						delegator.createSetNextSeqId(ShipmentReimbursement);
+		  				
+	  				}
+				
+  				}
+  				
+  			}
+  			
+  		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to populate Shipment Reimbursment ", module);
+		}
+  		 
+  		
+    	  result = ServiceUtil.returnSuccess("ShipmentReimbursement Has been successfully Updated");
+         
+         return result;
+  	}
+    
+    
+    
+    
 }
