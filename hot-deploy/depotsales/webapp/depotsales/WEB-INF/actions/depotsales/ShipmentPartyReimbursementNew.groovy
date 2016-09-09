@@ -331,7 +331,7 @@ invoice = delegator.findList("InvoiceAndItem", cond, fieldsToSelect, null, null,
 invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
 
 
-
+JSONObject shipmentReimbursementJson = new JSONObject();
 Debug.log("invoiceIds================="+invoiceIds.size());
 
 finalList = [];
@@ -507,9 +507,46 @@ for (eachInvoice in invoiceIds) {
 		
 		 double reimbursentAMT = 0;
 		 if(ShipmentReimbursement){
+			 
+			 tempList = [];
 			 for (eachReimbursement in ShipmentReimbursement) {
+				 
+				 tempMap1 = [:];
+				 
 				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
+				 
+				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
+				 if(eachReimbursement.claimId)
+				 tempMap1.put("claimId", eachReimbursement.claimId)
+				 else
+				 tempMap1.put("claimId", "")
+				 if(eachReimbursement.receiptNo)
+				 tempMap1.put("receiptNo", eachReimbursement.receiptNo)
+				 else
+				 tempMap1.put("receiptNo", "")
+				 if(eachReimbursement.receiptAmount)
+				 tempMap1.put("receiptAmount", eachReimbursement.receiptAmount)
+				 else
+				 tempMap1.put("receiptAmount", "")
+				 if(eachReimbursement.receiptDate)
+				 tempMap1.put("receiptDate", eachReimbursement.receiptDate)
+				 else
+				 tempMap1.put("receiptDate", "")
+				 
+				 if(eachReimbursement.description)
+				 tempMap1.put("description", eachReimbursement.description)
+				 else
+				 tempMap1.put("description", "")
+				 
+				 
+				 tempList.add(tempMap1);
+				 
 			 }
+			 
+			 
+			 shipmentReimbursementJson.put(shipmentId, tempList);
+			 
+			 
 		 }
 		 
 		 eligibleAMT = eligibleAMT+reimbursentAMT;
@@ -599,3 +636,9 @@ for (eachInvoice in invoiceIds) {
 }
 
 context.finalList = finalList;
+
+Debug.log("shipmentReimbursementJson================="+shipmentReimbursementJson);
+
+
+context.shipmentReimbursementJson = shipmentReimbursementJson;
+
