@@ -22,6 +22,29 @@
         </section>
     </screen>
     
+    <screen name="ReimbursementReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Reimbursement Reports"/>	            
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="ReimbursementReports" /> 
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+            </actions>
+            <widgets>
+            	 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">  
+   					<include-menu name="ReimbursementTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+   							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/ReimbursementReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="DepotSalesBookReportPDF">
 		<section>
 			<actions>

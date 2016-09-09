@@ -425,8 +425,14 @@ for (eachInvoice in invoiceIds) {
 	
 	double eligibleAMT = 0;
 	
+	double maxAmt = 0;
+	
 	eligibleAMT = (invoiceAMT*percentage)/100;
 	
+	maxAmt = (invoiceAMT*percentage)/100;
+	
+	
+	tempMap.put("maxAmt", maxAmt);
 	
 	Debug.log("eligibleAMT==============="+eligibleAMT);
 	

@@ -2700,6 +2700,7 @@
          <field name="transporter" title="Transporter"><display/></field>
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
+         <field name="maxAmt" title="Max Claim Amount"><display/></field>
          <field name="claim" title="Claim Amount"><display/></field>
          <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
           <field name="SendtoQC"   title="Reimbursement" widget-style="buttontext">
@@ -2782,6 +2783,7 @@
          <field name="transporter" title="Transporter"><display/></field>
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
+         <field name="maxAmt" title="Max Claim Amount"><display/></field>
          <field name="claim" title="Claim Amount"><display/></field>
          <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
          <!--  <field name="SendtoQC"   title="Reimbursement" widget-style="buttontext">
