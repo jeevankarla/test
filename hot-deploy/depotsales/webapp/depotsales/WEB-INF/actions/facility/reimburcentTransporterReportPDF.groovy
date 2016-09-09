@@ -21,6 +21,9 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import java.util.Map.Entry;
 
+import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.party.contact.ContactMechWorker;
+
 
 
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
@@ -40,6 +43,8 @@ productCategory=parameters.productCategory;
 
 DateMap.put("partyfromDate", partyfromDate);
 DateMap.put("partythruDate", partythruDate);
+
+
 
 DateList.add(DateMap);
 context.DateList=DateList;
@@ -145,6 +150,12 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
+
+
+
+context.daystart = daystart;
+
+context.dayend = dayend;
   
 reimbursmentPercentage = [:];
 reimbursmentPercentage.put("SILK", 1);
@@ -223,7 +234,12 @@ partyIds=EntityUtil.getFieldListFromEntityList(invoice, "partyId", true);
 
 //Debug.log("partyIds================="+partyIds.size());
 
+partyPassMap= [:];
 finalMap = [:];
+
+partyWiseTotalsMap = [:];
+
+
 dupliInvoices = []as Set;
 for (eachPartyId in partyIds) {
 	
@@ -233,6 +249,12 @@ for (eachPartyId in partyIds) {
 	finalList = [];
 	
 	
+	
+	double TotalQuantiy = 0;
+	
+	double TotalAmount = 0;
+	
+	totalTempMap = [:];
 	
 	for (eachInvoiceList in invoiceList) {
 	//eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice.invoiceId] , false);
@@ -281,6 +303,20 @@ for (eachPartyId in partyIds) {
 		dupliInvoices.add(eachInvoiceList.invoiceId);
 		
 		
+		passNo = "";
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+		conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+		if(PartyIdentificationList){
+		passNo = PartyIdentificationList[0].get("idValue");
+		}
+		
+		if(passNo)
+		partyPassMap.put(partyId, passNo);
+		
+		
 		productId = InvoiceItem[0].productId;
 	double invoiceAMT = 0;
 	double invoiceQTY = 0;
@@ -289,7 +325,13 @@ for (eachPartyId in partyIds) {
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
+		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		TotalAmount = TotalAmount + (eachInvoiceItem.quantity);
+		
 	}
+	
+	
+	
 	
 	tempMap.put("invoiceAmount", invoiceAMT);
 	
@@ -460,19 +502,162 @@ for (eachPartyId in partyIds) {
 		 else
 		 tempMap.put("supplierInvoiceDate", "");
 		 
+		 
+		 
+		 
+		 
+		 //==============Address Details===================
+		 if(partyId){
+		 finalAddresList=[];
+		 address1="";
+		 address2="";
+		 city="";
+		 postalCode="";
+		 panId="";
+		 tanId="";
+		 
+		 partyPostalAddress = dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+		 
+		 if(partyPostalAddress[0]){
+			 
+			if(partyPostalAddress.address1){
+				address1=partyPostalAddress.address1;
+		   
+				
+			tempMapAdd=[:];
+			tempMapAdd.put("key1","Road / Street / Lane");
+			tempMapAdd.put("key2",address1);
+			finalAddresList.add(tempMapAdd);
+			if(partyPostalAddress.address2){
+				address2=partyPostalAddress.address2;
+			}
+			tempMapAdd=[:];
+			tempMapAdd.put("key1","Area / Locality");
+			tempMapAdd.put("key2",address2);
+			finalAddresList.add(tempMapAdd);
+			if(partyPostalAddress.city){
+				
+				city=partyPostalAddress.city;
+			}
+			tempMapAdd=[:];
+			tempMapAdd.put("key1","Town / District / City");
+			tempMapAdd.put("key2",city);
+			finalAddresList.add(tempMapAdd);
+			
+			if(partyPostalAddress.postalCode){
+				postalCode=partyPostalAddress.postalCode;
+			}
+			tempMapAdd=[:];
+			tempMapAdd.put("key1","PIN Code");
+			tempMapAdd.put("key2",postalCode);
+			finalAddresList.add(tempMapAdd);
+			
+			 }else{
+				 contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
+				 partyPostalAddress = contactMench.postalAddress;
+				 
+				 if(partyPostalAddress[0]){
+					 address1=partyPostalAddress[0].address1;
+				 
+				 tempMapAdd1=[:];
+				 tempMapAdd1.put("key1","Road / Street / Lane");
+				 tempMapAdd1.put("key2",address1);
+				 finalAddresList.add(tempMapAdd1);
+				 if(partyPostalAddress[0].address2){
+					 address2=partyPostalAddress[0].address2;
+				 }
+				 tempMapAdd1=[:];
+				 tempMapAdd1.put("key1","Area / Locality");
+				 tempMapAdd1.put("key2",address2);
+				 finalAddresList.add(tempMapAdd1);
+				 if(partyPostalAddress[0].city){
+					 city=partyPostalAddress[0].city;
+				 }
+				 tempMapAdd1=[:];
+				 tempMapAdd1.put("key1","Town / District / City");
+				 tempMapAdd1.put("key2",city);
+				 finalAddresList.add(tempMapAdd1);
+				 
+				 if(partyPostalAddress[0].postalCode){
+					 postalCode=partyPostalAddress[0].postalCode;
+				 }
+				 tempMapAdd1=[:];
+				 tempMapAdd1.put("key1","PIN Code");
+				 tempMapAdd1.put("key2",postalCode);
+				 finalAddresList.add(tempMapAdd1);
+				 }
+			 }
+			
+		 }else{
+				 contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
+				 partyPostalAddress = contactMench.postalAddress;
+				 
+				 
+				 if(partyPostalAddress[0]){
+					 address1=partyPostalAddress[0].address1;
+				 
+				 tempMapAdd2=[:];
+				 tempMapAdd2.put("key1","Road / Street / Lane");
+				 tempMapAdd2.put("key2",address1);
+				 finalAddresList.add(tempMapAdd2);
+				 if(partyPostalAddress[0].address2){
+					 address2=partyPostalAddress[0].address2;
+				 }
+				 tempMapAdd2=[:];
+				 tempMapAdd2.put("key1","Area / Locality");
+				 tempMapAdd2.put("key2",address2);
+				 finalAddresList.add(tempMapAdd2);
+				 if(partyPostalAddress[0].city){
+					 city=partyPostalAddress[0].city;
+				 }
+				 tempMapAdd2=[:];
+				 tempMapAdd2.put("key1","Town / District / City");
+				 tempMapAdd2.put("key2",city);
+				 finalAddresList.add(tempMapAdd2);
+				 
+				 if(partyPostalAddress[0].postalCode){
+					 postalCode=partyPostalAddress[0].postalCode;
+				 }
+				 tempMapAdd2=[:];
+				 tempMapAdd2.put("key1","PIN Code");
+				 tempMapAdd2.put("key2",postalCode);
+				 finalAddresList.add(tempMapAdd2);
+				 }
+		 }
+		 
+		 //context.finalAddresList = finalAddresList;
+		 //============================================================
+		 
+		 if(finalAddresList)
+		 tempMap.put("finalAddresList", finalAddresList);
+		 else
+		 tempMap.put("finalAddresList", "");
+		 
+		 
+	
+		 
+		 
+		 }
 		 }
 	}
    
   finalList.add(tempMap);
     }
 }
-	if(finalList)
-	finalMap.put(eachPartyId, finalList);
 	
+	totalTempMap.put("TotalQuantiy", TotalQuantiy);
+	totalTempMap.put("TotalAmount", TotalAmount);
+	
+	if(finalList){
+	finalMap.put(eachPartyId, finalList);
+	partyWiseTotalsMap.put(eachPartyId, totalTempMap);
+	}
 	
 }
 
 context.finalMap = finalMap;
+
+context.partyWiseTotalsMap = partyWiseTotalsMap;
 
 
 //Debug.log("finalMap==============="+finalMap);
