@@ -2129,5 +2129,43 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
        return result;
      }
     
-    
+  	public static Map<String, Object> runQuotaReconsilationFromEntries(DispatchContext dctx, Map<String, ? extends Object> context) {
+  	
+  		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        EntityListIterator tallyQuotaReconciliationEntriesItr = null;
+       
+        try{
+	        try {
+					tallyQuotaReconciliationEntriesItr = delegator.find("TallyQuotaReconciliation", null,null, null, null, null);
+						if (!UtilValidate.isEmpty(tallyQuotaReconciliationEntriesItr)) {
+							List<GenericValue> tallyQuotaReconciliationEntries = tallyQuotaReconciliationEntriesItr.getCompleteList();
+							for(GenericValue eachEntry : tallyQuotaReconciliationEntries){
+								String orderItemDetailId = eachEntry.getString("orderItemDetailId");
+								BigDecimal quotaQuantity = eachEntry.getBigDecimal("quotaQuantity");
+								result = dispatcher.runSync("runQuotaTallyReconsilation", UtilMisc.toMap("userLogin", userLogin, "orderItemDetailId", orderItemDetailId,"quotaQty",(quotaQuantity).toString()));
+								if (ServiceUtil.isError(result)) {
+					  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+					  		  		Debug.logError(errMsg , module);
+					  		  		return ServiceUtil.returnError(errMsg);
+					  		  	}
+							}
+						}
+			
+					tallyQuotaReconciliationEntriesItr.close();
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+        }catch(GenericServiceException e){
+        	Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+
+        }
+		return result;
+  		
+  	}
 }

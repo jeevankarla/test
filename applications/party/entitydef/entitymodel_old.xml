@@ -175,7 +175,16 @@ under the License.
 			<key-map field-name="partyId" rel-field-name="partyId" />
 		</relation>
 	</entity>
-    
+    <entity entity-name="TallyQuotaReconciliation"
+             package-name="org.ofbiz.party.party"
+             title="Quota Reconciliation Entity">
+	     <field name="orderItemDetailId" type="id-ne"></field>
+	     <field name="quotaQuantity" type="fixed-point"></field>
+	     <prim-key field="orderItemDetailId"/>
+	     <relation rel-entity-name="OrderItemDetail" type="one" fk-name="Quota_Rec">
+	     <key-map field-name="orderItemDetailId"/>
+	     </relation>
+    </entity>
     
     
 </entitymodel>
