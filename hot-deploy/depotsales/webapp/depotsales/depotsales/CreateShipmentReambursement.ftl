@@ -5,7 +5,10 @@
 
 
 <script type="application/javascript">
-var jsonObj = ${StringUtil.wrapString(shipmentReimbursementList)!'{}'};
+var jsonObj = ${StringUtil.wrapString(shipmentReimbursementJson)!'{}'};
+
+//alert(JSON.stringify(jsonObj));
+
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -152,7 +155,13 @@ var jsonObj = ${StringUtil.wrapString(shipmentReimbursementList)!'{}'};
 	
 	function payReimbursement(shipmentId,invoiceAmount,eligibilityAmount){
 	
+	
+	//alert("vamsi"+JSON.stringify(jsonObj));
+	
 	var shipmentarr=jsonObj[shipmentId];
+	
+	//alert(JSON.stringify(shipmentarr));
+	
 	var receiptString="";
 	if(shipmentarr){
 	$.each(shipmentarr, function( index, value ) {
@@ -240,7 +249,7 @@ function addReceipt(){
 function buildReambursementList(claimId,receiptNo,receiptAmount,receiptDate,description){
   var reambursementObj ={};
    var receiptString="";
-   receiptString+= "<tr class='h3'><td>"+receiptNo+"</td>";
+   receiptString+= "<tr class='h3'><td>"+claimId+"</td>";
    receiptString+= "<td>"+receiptAmount+"</td>";
    receiptString+= "<td>"+receiptDate+"</td>";
     receiptString+= "<td>"+description+"</td>";
