@@ -1240,8 +1240,11 @@ var destinationParent = {};
 
 function calculateSum(){
 
- var totQuantity = $("#totQuantity").val();
+ var totQuantity = 0;
 
+if($("#totQuantity").val()){
+	var totQuantity = $("#totQuantity").val();
+}
  var givenQty = 0;
 
  $("tr.item").each(function() {
@@ -1279,12 +1282,18 @@ function calculateSum(){
     getPayTermDes();
     getDelTermDes();
     
+    $("#titleScreen").show(); 
+    prepareApplicableOptions();
+    setupGrid2();
+    
+    <#--
     <#if orderId?exists && termExists?exists && termExists == "Y">
     	prepareApplicableOptions();
     	setupGrid2();
     <#else>
     	$("#titleScreen").hide();
     </#if>
+    -->
     <#if orderId?exists>
     	calculatePOValue();
     </#if>
