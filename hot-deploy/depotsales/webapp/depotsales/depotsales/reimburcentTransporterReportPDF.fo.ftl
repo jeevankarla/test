@@ -22,7 +22,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
                 <fo:region-body margin-top=".1"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -44,9 +44,13 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
 				<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${eachParty?if_exists} </fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            
+                  
+                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
                  
-                <#-->  <fo:block>     
+                 <fo:block text-align="left"    font-size="10pt" >STATEMENT SHOWING THE AGENCYWISE DETAILS OF COTTON/SILK/JUTE YARN SUPPLIED BY NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED UNDER THE SCHEME FOR SUPPLY OF YARN AT :<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block>
+                 
+               <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                <fo:block>     
     <fo:table width="100%"   align="right" table-layout="fixed"  font-size="10pt"> 
 	<fo:table-column column-width="50%"/>
 	<fo:table-column column-width="50%"/>
@@ -56,88 +60,98 @@ under the License.
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
-				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)}</fo:block>
+				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >Name Of The Agency : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, eachParty, true)}</fo:block>
+				
+				<#assign partyWiseDetails = finalMap.get(eachParty)>
+				
+				<#assign partyWiseDetails = partyWiseDetails.entrySet()>
+				
+				<#assign finalAddresList = "">
+				<#list partyWiseDetails as eachList>
+				
+				<#assign finalAddresList = eachList.get("finalAddresList")>
+				</#list>
+				
+				<fo:block text-align="left"    font-size="10pt" >Address:</fo:block>
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
-				<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
+				
+				
 				</fo:table-cell>
-				<fo:table-cell >
+				<#--><fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
-				</fo:table-cell>
+				</fo:table-cell>-->
 				<fo:table-cell >
-				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >DATE :<#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>
+				<fo:block text-align="right"     font-size="10pt" >District :</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 		</fo:table-body>
 	</fo:table>
-	</fo:block>-->
+	</fo:block>
             
-            
-        		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
              	 
         		<fo:block>
              		<fo:table border-style="solid">
-             		    <fo:table-column column-width="4%"/>
-			            <fo:table-column column-width="25%"/>
+             		    <fo:table-column column-width="2%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="17%"/>
+			            <fo:table-column column-width="8%"/>
+			            <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="15%"/>
-			             <fo:table-column column-width="10%"/>
-			              <fo:table-column column-width="10%"/>
-			               <fo:table-column column-width="10%"/>
-			                <fo:table-column column-width="10%"/>
-			                <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="10%"/>
+			             <fo:table-column column-width="8%"/>
+			              <fo:table-column column-width="8%"/>
+			               <fo:table-column column-width="8%"/>
+			                <fo:table-column column-width="8%"/>
 			            
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">SNo</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">S No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Sale Invo No.</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">Sale Invo No.</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Date</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell >
 					           
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Sale Quantity</fo:block>
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(KGS)</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Sale Quantity</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Amount</fo:block>
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(Rs)</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Amount</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">(Rs)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Name of Supplier</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Name of Supplier</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="11pt" white-space-collapse="false">Destination</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">Destination</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Transporter</fo:block>
+					            	<fo:block   text-align="left" font-size="10pt" white-space-collapse="false">Transporter</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Lr No</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Lr No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Date</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Claim Amount</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Claim Amount</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Eligibility Claim Amount</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">Eligible Claim Amount</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							
@@ -146,51 +160,109 @@ under the License.
 			                  <#list eachPartyList as eachPartyDet>
 			                <fo:table-row>
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${sr} </fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${sr} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("billno")} </fo:block>
+					            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("billno")} </fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("invoiceDate")}</fo:block>
+					            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("invoiceDate")}</fo:block>
 					            </fo:table-cell>  
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("invoiceQTY")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("invoiceQTY")}</fo:block>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("invoiceAmount")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("invoiceAmount")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("supplierName")}</fo:block>
+					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("supplierName")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("destAddr")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("destAddr")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("transporter")}</fo:block>
+					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("transporter")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("destAddr")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("lrNumber")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("lrNumber")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("lrDate")}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("lrDate")}</fo:block>
-					            </fo:table-cell>
-					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("claim")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("claim")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachPartyDet.get("eligibleAMT")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${eachPartyDet.get("eligibleAMT")}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							<#assign sr=sr+1>
 							</#list>
+							
+							<#assign partyWiseTotalsMap = partyWiseTotalsMap.get(eachParty)>
+							
+							 <fo:table-row>
+			                    <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>  
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap.get("TotalAmount")} </fo:block>
+						         </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap.get("TotalQuantiy")} </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+							</fo:table-row>
+							
+							
+							
+							
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block text-align="left"    font-size="10pt" >Certified that the above yarn supplies have actually been made by NHDC Limited and the amount of freight has been paid by this <fo:inline font-weight="bold" > ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, eachParty, true)}</fo:inline> corporation/society/agency as indicated above</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<fo:block text-align="right"    font-size="10pt" >SIGNATURE OF EXECUTIVE OFFICER</fo:block>
+				<fo:block text-align="right"    font-size="10pt" >NAME OF USER AGENCY (WITH RUBBER STAMP)</fo:block>
 			</fo:flow>
 		</fo:page-sequence>
 		</#list>
