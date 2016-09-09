@@ -525,5 +525,12 @@
     	<description>get Regional Offices</description>
         <attribute name="partyList" mode="OUT" type="List" optional="true"/>
     </service>
+    
+    <service name="populateShipmentReimbursment" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateShipmentReimbursment">
+        <description>Weaver relation delete</description>
+                <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    
 </services>
 

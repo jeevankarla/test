@@ -82,7 +82,7 @@ if(UtilValidate.isNotEmpty(shipmentThruDate)){
 
 
 
-List finalList=[];
+/*List finalList=[];
 List conditionList=[];
     reimbursementEligibilityPercentage=2;
 	//shipmentList=result.listIt;
@@ -107,7 +107,7 @@ List conditionList=[];
 	JSONObject shipmentReimbursementJson = new JSONObject();
 	shipmentList.each{shipment->
 		tempMap=[:];
-		if(shipment){/*Debug.log("&&&&&&&&&&&&&&&&&&---#######-"+shipment);*/
+		if(shipment){Debug.log("&&&&&&&&&&&&&&&&&&---#######-"+shipment);
 		tempMap.put("shipmentId",shipment.shipmentId);
 		tempMap.put("vehicleId",shipment.vehicleId);
 		tempMap.put("partyIdTo",shipment.partyIdTo);
@@ -300,5 +300,5 @@ List conditionList=[];
 		context.shipmentReimbursementList=shipmentReimbursementJson.toString();
 	}
 
-
+*/
 	
