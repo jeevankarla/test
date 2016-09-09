@@ -377,7 +377,15 @@ for (eachInvoice in invoiceIds) {
 	
 	double eligibleAMT = 0;
 	
+	double maxAmt = 0;
+	
 	eligibleAMT = (invoiceAMT*2)/100;
+	
+	
+	maxAmt = (invoiceAMT*2)/100;
+	
+	tempMap.put("maxAmt", maxAmt);
+	
 	
 	tempMap.put("invoiceQTY", invoiceQTY);
 	
