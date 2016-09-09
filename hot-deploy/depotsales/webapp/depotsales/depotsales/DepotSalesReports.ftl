@@ -288,7 +288,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		</form>	
       </tr>
       
-       <tr class="alternate-row">
+      <#--> <tr class="alternate-row">
       	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Reimbursment Transporter Report</td>
              <td width="10%">&nbsp;From<input  type="text" size="15pt" id="reimburcentTransporterFRO" readonly  name="partyfromDate"/></td>
@@ -354,7 +354,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
            </form>
-        </tr> 
+        </tr> -->
         
         
 	</table>

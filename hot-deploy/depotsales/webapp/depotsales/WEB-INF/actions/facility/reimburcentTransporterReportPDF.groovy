@@ -84,7 +84,7 @@ branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, 
 
 
 
-////Debug.log("branchList=================="+branchList);
+//////Debug.log("branchList=================="+branchList);
 productIds = [];
 
 productCategoryIds = [];
@@ -116,7 +116,7 @@ if(!partyId){
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	
 }
-////Debug.log("productIds================"+productIds.size());
+//////Debug.log("productIds================"+productIds.size());
   
 daystart = null;
 dayend = null;
@@ -128,7 +128,7 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
 		daystart = UtilDateTime.getDayStart(fromDate);
 		 } catch (ParseException e) {
-			 ////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+			 //////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			 }
    
 }
@@ -142,7 +142,7 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   dayend = UtilDateTime.getDayEnd(thruDate);
 	   
    } catch (ParseException e) {
-	   ////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
   
@@ -195,8 +195,11 @@ condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, par
 if(!partyId && branchpartyIdsList)
 condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
 */
-if(!partyId && branchBasedWeaversList)
+if(partyId){
+condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+}else if(!partyId && branchBasedWeaversList){
 condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
+}
 
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
@@ -204,35 +207,39 @@ condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUAL
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-//////Debug.log("cond================="+cond);
+////////Debug.log("cond================="+cond);
 
 
-fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","partyId","referenceNumber"] as Set;
 
 invoice = delegator.findList("InvoiceAndItem", cond, fieldsToSelect, null, null, false);
 
-//////////Debug.log("invoice========================="+invoice);
+////////////Debug.log("invoice========================="+invoice);
 
 
-//invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
+partyIds=EntityUtil.getFieldListFromEntityList(invoice, "partyId", true);
 
 
 
-////Debug.log("invoiceIds================="+invoiceIds.size());
+//Debug.log("partyIds================="+partyIds.size());
 
-finalList = [];
+finalMap = [:];
 dupliInvoices = []as Set;
-
-for (eachInvoiceList in invoice) {
+for (eachPartyId in partyIds) {
 	
-	//eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice] , false);
 	
-	if(!dupliInvoices.contains(eachInvoiceList.invoiceId)){
+	invoiceList = EntityUtil.filterByCondition(invoice, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachPartyId));
 	
+	finalList = [];
+	
+	
+	
+	for (eachInvoiceList in invoiceList) {
+	//eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice.invoiceId] , false);
+	
+    if(!dupliInvoices.contains(eachInvoiceList.invoiceId)){
 		
-		dupliInvoices.add(eachInvoiceList.invoiceId);
-		
-		
+	
 	tempMap=[:];
 	
 	tempMap.put("invoiceId", eachInvoiceList.invoiceId);
@@ -243,7 +250,7 @@ for (eachInvoiceList in invoice) {
 		invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
 		invoiceSequence = invoiceSeqDetails.invoiceSequence;
 		
-		////Debug.log("invoiceSequence======2121==========="+invoiceSequence);
+		//////Debug.log("invoiceSequence======2121==========="+invoiceSequence);
 		
 		tempMap.put("billno", invoiceSequence);
 	}else{
@@ -252,7 +259,7 @@ for (eachInvoiceList in invoice) {
 	
 	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
 		   
-	 //////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
+	 ////////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
 	 
 	 
    
@@ -266,10 +273,14 @@ for (eachInvoiceList in invoice) {
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
 	  
 	
-	Debug.log("InvoiceItem================="+InvoiceItem.size());
+	//Debug.log("InvoiceItem================="+InvoiceItem.size());
 	
 	if(InvoiceItem){
 
+		
+		dupliInvoices.add(eachInvoiceList.invoiceId);
+		
+		
 		productId = InvoiceItem[0].productId;
 	double invoiceAMT = 0;
 	double invoiceQTY = 0;
@@ -282,7 +293,7 @@ for (eachInvoiceList in invoice) {
 	
 	tempMap.put("invoiceAmount", invoiceAMT);
 	
-	Debug.log("productId================="+productId);
+	//Debug.log("productId================="+productId);
 	
 	
 	condListCat.clear();
@@ -292,11 +303,11 @@ for (eachInvoiceList in invoice) {
 	ProductCategoryMember = delegator.findList("ProductCategoryAndMember", condList1,UtilMisc.toSet("productCategoryId"), null, null, false);
 
 	
-	Debug.log("ProductCategoryMember================="+ProductCategoryMember);
+	//Debug.log("ProductCategoryMember================="+ProductCategoryMember);
 	
 	productCategoryId = ProductCategoryMember[0].productCategoryId;
 	
-	Debug.log("productCategoryId================="+productCategoryId);
+	//Debug.log("productCategoryId================="+productCategoryId);
 	
 	
 	ProductCategory = delegator.findOne("ProductCategory",[productCategoryId : productCategoryId] , false);
@@ -309,20 +320,20 @@ for (eachInvoiceList in invoice) {
 	percentage = 2.5;
 	
 	
-	Debug.log("percentage==============="+percentage);
+	//Debug.log("percentage==============="+percentage);
 	
 	
 	double eligibleAMT = 0;
 	
 	eligibleAMT = (invoiceAMT*percentage)/100;
 	
-	Debug.log("eligibleAMT==============="+eligibleAMT);
+	//Debug.log("eligibleAMT==============="+eligibleAMT);
 	
 	
 	tempMap.put("invoiceQTY", invoiceQTY);
 	
 	
-	//////Debug.log("invoiceAMT================="+invoiceAMT);
+	////////Debug.log("invoiceAMT================="+invoiceAMT);
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
@@ -330,11 +341,11 @@ for (eachInvoiceList in invoice) {
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
    
-	//////Debug.log("OrderItemBilling======================"+OrderItemBilling);
+	////////Debug.log("OrderItemBilling======================"+OrderItemBilling);
 		   
 	 itemOrderId  = OrderItemBilling[0].orderId;
 	 
-	 ////Debug.log("itemOrderId================="+itemOrderId);
+	 //////Debug.log("itemOrderId================="+itemOrderId);
 	 
 	 conditionList = [];
 	 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
@@ -364,7 +375,7 @@ for (eachInvoiceList in invoice) {
 	 if(supplier)
 	 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
 	 
-	 ////Debug.log("supplierName================="+supplierName);
+	 //////Debug.log("supplierName================="+supplierName);
 	 
 	 tempMap.put("supplierName", supplierName);
 	 
@@ -403,7 +414,7 @@ for (eachInvoiceList in invoice) {
 		 
 		 
 		 double claimAmt = 0;
-	     estimatedShipCost = shipmentList.get("estimatedShipCost");
+		 estimatedShipCost = shipmentList.get("estimatedShipCost");
 					 
 		 if(estimatedShipCost){
 		 claimAmt = Double.valueOf(estimatedShipCost);
@@ -425,7 +436,7 @@ for (eachInvoiceList in invoice) {
 		 tempMap.put("estimatedShipDate", "");
 		 
 		 carrierName = shipmentList.get("carrierName");
-		 ////Debug.log("carrierName================="+carrierName);
+		 //////Debug.log("carrierName================="+carrierName);
 		 
 		 if(carrierName)
 		 tempMap.put("transporter", carrierName);
@@ -451,8 +462,20 @@ for (eachInvoiceList in invoice) {
 		 
 		 }
 	}
-	 finalList.add(tempMap);
-	}
+   
+  finalList.add(tempMap);
+    }
+}
+	if(finalList)
+	finalMap.put(eachPartyId, finalList);
+	
+	
 }
 
-context.finalList = finalList;
+context.finalMap = finalMap;
+
+
+//Debug.log("finalMap==============="+finalMap);
+
+
+
