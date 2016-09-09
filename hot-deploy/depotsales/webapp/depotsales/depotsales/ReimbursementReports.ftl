@@ -24,6 +24,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});
 	}
 
+
+	function appendParams(formName, action) {
+		var formId = "#" + formName;
+		jQuery(formId).attr("action", action);	
+		jQuery(formId).submit();
+	   }
 $(document).ready(function(){
 
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
@@ -70,7 +76,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        <tr class="alternate-row">
-      	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>" target="_blank">        
+      	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.pdf</@ofbizUrl>" target="_blank">        
              <td width="10%">Reimbursment Transporter Report</td>
              <td width="10%">&nbsp;From<input  type="text" size="15pt" id="reimburcentTransporterFRO" readonly  name="partyfromDate"/></td>
       		 <td width="10%">Thru<input  type="text" size="15pt" id="reimburcentTransporterTHRU" readonly  name="partythruDate"/></td>
@@ -98,7 +104,11 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
-				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	</td> 
+				
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('reimburcentTransporterReport', '<@ofbizUrl>reimburcentTransporterReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('reimburcentTransporterReport', '<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
            </form>
         </tr> 
         
