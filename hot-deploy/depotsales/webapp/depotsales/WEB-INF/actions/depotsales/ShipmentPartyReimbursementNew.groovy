@@ -583,8 +583,8 @@ for (eachInvoice in invoiceIds) {
 		 double claimAmt = 0;
 		 estimatedShipCost = shipmentList.get("estimatedShipCost");
 					 
-		 if(estimatedShipCost){
-		 claimAmt = Double.valueOf(estimatedShipCost)+reimbursentAMT;
+		 if(reimbursentAMT){
+		 claimAmt = reimbursentAMT;
 		 tempMap.put("claim", claimAmt);
 		 } else{
 		 tempMap.put("claim", reimbursentAMT);

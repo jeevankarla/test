@@ -13393,8 +13393,10 @@ Debug.log("taxRateList =============="+taxRateList);
   				
 	  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
 	  				
+	  					Timestamp receiptDate=UtilDateTime.nowTimestamp();
 		  				ShipmentReimbursement.set("shipmentId", shipmentId);
 		  				ShipmentReimbursement.set("receiptAmount", estimatedShipCost);
+		  				ShipmentReimbursement.set("receiptDate", receiptDate);
 						delegator.createSetNextSeqId(ShipmentReimbursement);
 		  				
 	  				}
