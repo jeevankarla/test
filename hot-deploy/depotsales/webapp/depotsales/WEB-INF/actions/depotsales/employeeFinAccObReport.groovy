@@ -28,6 +28,7 @@ import org.ofbiz.accounting.finaccount.FinAccountServices;
 dctx = dispatcher.getDispatchContext();
 effectiveDate=null;
 fromDate=parameters.eObFromDate;
+parameters.fromDate=fromDate;
 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 try {
 	effectiveDate = UtilDateTime.toTimestamp(dateFormat.parse(fromDate));

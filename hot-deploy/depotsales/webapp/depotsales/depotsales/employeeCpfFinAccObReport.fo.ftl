@@ -20,26 +20,27 @@ under the License.
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	<fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" >
-                <fo:region-body margin-top="1.5in"/>
-                <fo:region-before extent="1in"/>
-                <fo:region-after extent="1in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" 
+                 margin-top="0.3in" margin-bottom=".7n" margin-left=".5in" margin-right=".5in">
+        <fo:region-body margin-top="1.1in"/>
+        <fo:region-before extent="1.0in"/>
+        <fo:region-after extent="1.5in"/>  
             </fo:simple-page-master>
      </fo:layout-master-set>
      	<#if partyWiseFinMap?has_content>
 		<fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                        ${reportHeader.description?if_exists}</fo:block>
-				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;                        ROUTEWISE SALE, RECEIPT AND DUES PARTICULARS</fo:block> 		
+        		<#--<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                        ${reportHeader.description?if_exists}</fo:block>-->
+				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160; &#160;&#160;&#160;                               PF CONTRIBUTIONS BALANCE</fo:block> 		
             	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-            	<fo:block keep-together="always" white-space-collapse="false">&#160;      FROM DATE : ${parameters.fromDate}          TO DATE : ${parameters.thruDate}</fo:block>
-            	<fo:block>--------------------------------------------------${partyWiseFinMap.entrySet()}--------------------------------</fo:block>
+            	<fo:block keep-together="always" white-space-collapse="false">&#160;      FROM DATE : ${parameters.fromDate}</fo:block>
+            	<fo:block>&#160;&#160;   ----------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">        				
      				<fo:block font-family="Courier,monospace"> 
      				
-     					<fo:table>
+     					<fo:table align="center">
                     		<fo:table-column column-width="20%"/>
                     		<#list finAccountIds as finAcc>
                    			<fo:table-column column-width="30%"/> 
