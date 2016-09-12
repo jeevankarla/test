@@ -391,6 +391,67 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     Alert(message, title);
 };
 	
+
+
+
+function roundingInvoiceItems(invoiceId){
+	  var action;
+     var message = "";
+
+       invoiceId = invoiceId;
+		var dataJson = {"invoiceId": invoiceId};
+		jQuery.ajax({
+                url: 'getInvoiceItemDetails',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						invoiceItem = result["invoiceItem"];
+					   
+					    //alert(invoiceItem);
+					    
+					    if(invoiceItem.length != 0)
+					    showInvoiceDetails();
+					    
+					   
+               		}
+               	}							
+		});
+
+};
+	
+
+
+
+	function showInvoiceDetails() {
+		
+		var message = "";
+		var title = "";
+		if(invoiceItem != undefined){
+			var invoAmt = 0;
+			
+			var invoiceId = invoiceItem[0].invoiceId;
+			var invoiceSequence = invoiceItem[0].invoiceSequence;
+			
+			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			message += "<thead><td align='center' class='h3'> Invoice Id</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Quantity.</td><td align='center' class='h3'> Unit Price.</td><td align='center' class='h3'>Befor Rounding Amount</td><td align='center' class='h3'>After Rounding Amount</td>";
+			for (i = 0; i < invoiceItem.length; ++i) {
+				message += "<tr><td align='center' class='h4'>" + invoiceItem[i].invoiceId + "</td><td align='center' class='h4'>" + invoiceItem[i].productId + "</td><td align='left' class='h4'>" + invoiceItem[i].description + "</td><td align='center' class='h4'>"+ invoiceItem[i].quantity +"</td><td align='center' class='h4'>"+ invoiceItem[i].unitPrice +"</td><td align='center' class='h4'>"+ invoiceItem[i].beforeRound +"</td><td align='center' class='h4'>"+ invoiceItem[i].invoItemAmt +"</td>";
+				invoAmt = invoAmt+invoiceItem[i].invoItemAmt;
+			}
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
+			title = "<center>Invoice : " + invoiceSequence + "<center><br /><br /> Total Invoice Value = "+ invoAmt +" ";
+			message += "</table>";
+			Alert(message, title);
+		}
+		
+	};
+		
+	
+	
 	
 </script>
 <#if invoices?has_content>
@@ -473,6 +534,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>-->
+              
+              <td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>
+              
               <td>${(invoice.invoiceDate)?if_exists}</td>
                 <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialShipmentOverview?shipmentId=${invoice.shipmentId}</@ofbizUrl>">${invoice.shipmentId}</a></td>
               <td>
