@@ -1557,6 +1557,13 @@ public class DepotSalesApiServices{
 						transporterDetail.put("contactNumber",contactNumber);
 						transportersMap.put(eachParty.getString("partyId"),transporterDetail);
 					}
+					if (partyList != null) {
+			            try {
+			            	partyList.close();
+			            } catch (GenericEntityException e) {
+			                Debug.logWarning(e, module);
+			            }
+			        }
 				}
 			}
 			catch(GenericEntityException e){
