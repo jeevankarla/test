@@ -1526,6 +1526,35 @@ public class DepotSalesApiServices{
 						String partyName = PartyHelper.getPartyName(delegator, eachParty.getString("partyId"), false);
 						transporterDetail.put("partyId",eachParty.getString("partyId"));
 						transporterDetail.put("partyName",partyName);
+						Map addressMap = FastMap.newInstance();
+						Map inputMap = FastMap.newInstance();
+						inputMap.put("partyId", eachParty.get("partyId"));
+						inputMap.put("userLogin", userLogin);
+						try{
+							addressMap  = dispatcher.runSync("getPartyPostalAddress", inputMap);
+						} catch(Exception e){
+							Debug.logError("Not a valid party", module);
+						}
+						transporterDetail.put("addressMap",addressMap);
+						String contactNumber = "";
+						try{
+							Map<String, Object> getTelParams = FastMap.newInstance();
+				        	getTelParams.put("partyId", eachParty.get("partyId"));
+							Map<String, Object> serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+				            if (ServiceUtil.isError(serviceResult)) {
+				            	 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+				            } 
+				            if(UtilValidate.isNotEmpty(serviceResult.get("contactNumber"))){
+				            	contactNumber = (String) serviceResult.get("contactNumber");
+				            	/*if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
+				            		contactNumber = (String) serviceResult.get("countryCode") +" "+ (String) serviceResult.get("contactNumber");
+				            	}*/
+				            }
+						}
+			            catch (Exception e) {
+							Debug.logError(e, "Error fetching contact number from getPartyTelephone service", module);
+						}
+						transporterDetail.put("contactNumber",contactNumber);
 						transportersMap.put(eachParty.getString("partyId"),transporterDetail);
 					}
 				}
