@@ -262,6 +262,7 @@ for (eachPartyId in partyIds) {
     if(!dupliInvoices.contains(eachInvoiceList.invoiceId)){
 		
 	
+		dupliInvoices.add(eachInvoiceList.invoiceId);
 	tempMap=[:];
 	
 	tempMap.put("invoiceId", eachInvoiceList.invoiceId);
@@ -300,7 +301,7 @@ for (eachPartyId in partyIds) {
 	if(InvoiceItem){
 
 		
-		dupliInvoices.add(eachInvoiceList.invoiceId);
+		
 		
 		
 		passNo = "";
