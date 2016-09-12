@@ -41,37 +41,48 @@ under the License.
      				<fo:block font-family="Courier,monospace"> 
      				
      					<fo:table align="center">
+                    		<fo:table-column column-width="10%"/>
                     		<fo:table-column column-width="20%"/>
                     		<#list finAccountIds as finAcc>
-                   			<fo:table-column column-width="30%"/> 
+                   			<fo:table-column column-width="25%"/> 
                    			</#list>               
                    		    <fo:table-body>  
                    		    <fo:table-row>
+                   		   			 <fo:table-cell>
+                    					<fo:block font-weight="bold">SNO</fo:block>
+                    				</fo:table-cell>
                     				<fo:table-cell>
                     					<fo:block font-weight="bold">Employee Name</fo:block>
                     				</fo:table-cell>
                           		<#list finAccountIds as finAcc>
                           			<#assign finAccountDetail = delegator.findOne("FinAccount", {"finAccountId" : finAcc}, true)?if_exists/> 
                           			<fo:table-cell>
-                    					<fo:block>${finAccountDetail.finAccountName?if_exists}</fo:block>
+                    					<fo:block><#if finAccountDetail?has_content>${finAccountDetail.finAccountName?if_exists}<#else> ${finAcc}</#if></fo:block>
                     				</fo:table-cell>
                           		</#list>
                           		</fo:table-row> 
+                          		<#assign sno=1>
                    		    <#assign partyWiseFinList =partyWiseFinMap.entrySet()>
                    		     <#list partyWiseFinList as partyWiseFin>
                     			<fo:table-row>
+                    				<fo:table-cell>
+                    					<fo:block>${sno}</fo:block>
+                    				</fo:table-cell>
                     				<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyWiseFin.getKey(), false)>
                     				<fo:table-cell>
-                    					<fo:block>${partyFullName}</fo:block>
+                    					<fo:block>${partyFullName}[${partyWiseFin.getKey()}]</fo:block>
                     				</fo:table-cell>
-                          		<#list finAccountIds as finAcc>
-                          		<#assign partyFinList =partyWiseFin.getValue()>
-                          		<#assign partyFinOb =partyFinList.get(finAcc)>
+                          		
+                          		<#assign partyFinList =partyWiseFin.getValue().entrySet()>
+                          		<#list partyFinList as finAccbal>
+                          		<#assign finAccId =finAccbal.getKey()?has_content>
+                          		<#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : finAccbal.getKey()}, true)?if_exists/> 
                           			<fo:table-cell>
-                    					<fo:block>${partyFinOb?if_exists}</fo:block>
+                    					<fo:block><#if finAccountDetails.actualBalance?has_content>${(finAccountDetails.actualBalance)*-1?if_exists}<#else>0.00</#if></fo:block>
                     				</fo:table-cell>
                           		</#list>
                           		</fo:table-row>  
+                          		<#assign sno=sno+1>
                     		</#list>                    			
                    			</fo:table-body>
                 		</fo:table>
