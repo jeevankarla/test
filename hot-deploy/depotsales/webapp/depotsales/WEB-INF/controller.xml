@@ -1590,6 +1590,12 @@
          <response name="success" type="view" value="minutesHindiPdfReport"/>
 	     <response name="error" type="view" value="minutesHindiPdfReport"/>
     </request-map>
+    <request-map uri="employeesFinOpeningBal.pdf">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="employeesFinOpeningBalPDF"/>
+	     <response name="error" type="view" value="employeesFinOpeningBalPDF"/>
+    </request-map>
+    
          <request-map uri="getCountryStateList">
           <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
@@ -2180,6 +2186,9 @@
     <view-map name="IndentorPortalScreen" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalScreen"/>
     <view-map name="processIndentPortalBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentPortalBranchSales"/>
     <view-map name="minutesHindiPdfReport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesHindiPdfReport" content-type="application/pdf"/>
+    <view-map name="employeesFinOpeningBalPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#employeesFinOpeningBalPDF" content-type="application/pdf"/>
+ 
+   
     <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
    <view-map name="reimburcentTransporterReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportPDF" content-type="application/pdf"/>
     <view-map name="IndentCsvReport" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#IndentCsvReport" content-type="text/csv"/>
