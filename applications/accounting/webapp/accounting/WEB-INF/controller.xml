@@ -2322,7 +2322,11 @@ under the License.
         <response name="success" type="request-redirect-noparam" value="FindEmployeeAdv"/>
         <response name="error" type="request-redirect-noparam" value="FindEmployeeAdv"/>
     </request-map>
-    
+    <request-map uri="employeesFinOpeningBal.pdf">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="employeesFinOpeningBalPDF"/>
+	     <response name="error" type="view" value="employeesFinOpeningBalPDF"/>
+    </request-map>
     <request-map uri="updateFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFinAccount"/>
@@ -4556,6 +4560,7 @@ under the License.
     <view-map name="invoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#invoiceVoucher" content-type="application/pdf"/>
     <view-map name="newInvoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucher" content-type="application/pdf"/>
     <view-map name="newInvoiceDEPOTVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceDEPOTVoucher" content-type="application/pdf"/>
+    <view-map name="employeesFinOpeningBalPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#employeesFinOpeningBalPDF" content-type="application/pdf"/>
    
    
    

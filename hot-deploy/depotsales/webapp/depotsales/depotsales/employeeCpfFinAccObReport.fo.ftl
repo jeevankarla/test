@@ -27,7 +27,6 @@ under the License.
         <fo:region-after extent="1.5in"/>  
             </fo:simple-page-master>
      </fo:layout-master-set>
-     	<#if partyWiseFinMap?has_content>
 		<fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
@@ -39,45 +38,57 @@ under the License.
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">        				
      				<fo:block font-family="Courier,monospace"> 
-     				
+     				   <#if partyWiseFinMap?has_content>
      					<fo:table align="center">
+                    		<fo:table-column column-width="10%"/>
                     		<fo:table-column column-width="20%"/>
                     		<#list finAccountIds as finAcc>
-                   			<fo:table-column column-width="30%"/> 
+                   			<fo:table-column column-width="25%"/> 
                    			</#list>               
                    		    <fo:table-body>  
                    		    <fo:table-row>
+                   		   			 <fo:table-cell>
+                    					<fo:block font-weight="bold">SNO</fo:block>
+                    				</fo:table-cell>
                     				<fo:table-cell>
                     					<fo:block font-weight="bold">Employee Name</fo:block>
                     				</fo:table-cell>
                           		<#list finAccountIds as finAcc>
                           			<#assign finAccountDetail = delegator.findOne("FinAccount", {"finAccountId" : finAcc}, true)?if_exists/> 
                           			<fo:table-cell>
-                    					<fo:block>${finAccountDetail.finAccountName?if_exists}</fo:block>
+                    					<fo:block><#if finAccountDetail?has_content>${finAccountDetail.finAccountName?if_exists}<#else> ${finAcc}</#if></fo:block>
                     				</fo:table-cell>
                           		</#list>
                           		</fo:table-row> 
+                          		<#assign sno=1>
                    		    <#assign partyWiseFinList =partyWiseFinMap.entrySet()>
                    		     <#list partyWiseFinList as partyWiseFin>
                     			<fo:table-row>
+                    				<fo:table-cell>
+                    					<fo:block>${sno}</fo:block>
+                    				</fo:table-cell>
                     				<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyWiseFin.getKey(), false)>
                     				<fo:table-cell>
-                    					<fo:block>${partyFullName}</fo:block>
+                    					<fo:block>${partyFullName}[${partyWiseFin.getKey()}]</fo:block>
                     				</fo:table-cell>
-                          		<#list finAccountIds as finAcc>
-                          		<#assign partyFinList =partyWiseFin.getValue()>
-                          		<#assign partyFinOb =partyFinList.get(finAcc)>
+                          		
+                          		<#assign partyFinList =partyWiseFin.getValue().entrySet()>
+                          		<#list partyFinList as finAccbal>
+                          		<#assign finAccId =finAccbal.getKey()?has_content>
+                          		<#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : finAccbal.getKey()}, true)?if_exists/> 
                           			<fo:table-cell>
-                    					<fo:block>${partyFinOb?if_exists}</fo:block>
+                    					<fo:block><#if finAccountDetails.actualBalance?has_content>${(finAccountDetails.actualBalance)*-1?if_exists}<#else>0.00</#if></fo:block>
                     				</fo:table-cell>
                           		</#list>
                           		</fo:table-row>  
+                          		<#assign sno=sno+1>
                     		</#list>                    			
                    			</fo:table-body>
                 		</fo:table>
+                		</#if>  
      				</fo:block>
      			</fo:flow>
     	</fo:page-sequence> 
-    	</#if>   	
+    	 	
 </fo:root>
 </#escape>

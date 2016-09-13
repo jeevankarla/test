@@ -288,15 +288,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 		</form>	
       </tr>
-      <tr class="alternate-row">
-    	<form id="employeeOB" name="employeeOB" method="post"  target="_blank" action="<@ofbizUrl>employeesFinOpeningBal.pdf</@ofbizUrl>">	
-  			<td width="30%" nowrap>Employee CPF OB</td>
-  			<td width="15%">From<input  type="text" size="18pt" id="eObFromDate" readonly  name="eObFromDate"/></td>
-  			<td width="15%"></td>
-  			<td width="15%"></td>
-			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-		</form>	
-      </tr>
+     
       <#--> <tr class="alternate-row">
       	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Reimbursment Transporter Report</td>
