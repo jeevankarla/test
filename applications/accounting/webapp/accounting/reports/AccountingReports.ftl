@@ -206,6 +206,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker3("FinacialFromDate","FinacialThruDate");
 	    makeDatePicker3("advFromDate","advThruDate");
 	    makeDatePicker3("subLedgerFromDate","subLedgerThruDate");
+	    makeDatePicker("eObFromDate");
 	    makeDatePicker("prFromDate","prThruDate");
 	    makeDatePicker("aprFromDate","aprThruDate");
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
@@ -645,6 +646,15 @@ function reportTypeChangeFunc() {
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 				</form>
               </tr>
+               <tr class="alternate-row">
+			    	<form id="employeeOB" name="employeeOB" method="post"  target="_blank" action="<@ofbizUrl>employeesFinOpeningBal.pdf</@ofbizUrl>">	
+			  			<td width="30%" nowrap>Employee CPF OB</td>
+			  			<td width="15%">From<input  type="text" size="18pt" id="eObFromDate" readonly  name="eObFromDate"/></td>
+			  			<td width="15%"></td>
+			  			<td width="15%"></td>
+						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+					</form>	
+     		 </tr>
 		</table>     			     
 	</div> 	
 </div>

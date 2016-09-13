@@ -27,7 +27,6 @@ under the License.
         <fo:region-after extent="1.5in"/>  
             </fo:simple-page-master>
      </fo:layout-master-set>
-     	<#if partyWiseFinMap?has_content>
 		<fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
@@ -39,7 +38,7 @@ under the License.
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">        				
      				<fo:block font-family="Courier,monospace"> 
-     				
+     				   <#if partyWiseFinMap?has_content>
      					<fo:table align="center">
                     		<fo:table-column column-width="10%"/>
                     		<fo:table-column column-width="20%"/>
@@ -86,9 +85,10 @@ under the License.
                     		</#list>                    			
                    			</fo:table-body>
                 		</fo:table>
+                		</#if>  
      				</fo:block>
      			</fo:flow>
     	</fo:page-sequence> 
-    	</#if>   	
+    	 	
 </fo:root>
 </#escape>

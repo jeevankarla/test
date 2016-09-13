@@ -29,7 +29,7 @@ dctx = dispatcher.getDispatchContext();
 effectiveDate=null;
 fromDate=parameters.eObFromDate;
 parameters.fromDate=fromDate;
-SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy, MMM dd");
 try {
 	effectiveDate = UtilDateTime.toTimestamp(dateFormat.parse(fromDate));
 } catch (ParseException e) {
@@ -37,7 +37,6 @@ try {
 }
 List finAccountIds=["EMP_CONTRI","EMPR_CONTRI","VPF_CONTRI"];
 context.finAccountIds=finAccountIds;
-Debug.log("effectiveDate=================================="+effectiveDate);
 condListb=[];
 condListb.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"));
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
@@ -48,7 +47,7 @@ partyRoleList.close();
 
 condList=[];
 condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, partyIds));
-//condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountIds));
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountIds));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 EntityListIterator finAccountList = delegator.find("FinAccount",cond,null,null,null,null);
 
