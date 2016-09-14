@@ -2896,6 +2896,7 @@
      <form name="listofroundingTypes" type="list" list-name="InvoiceItemTypeAttribute" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
 			<field name="invoiceItemTypeId" title="Item Type"><display/></field>
+			<field name="description" title="Description"><display/></field>
 			<field name="attrValue" title="Decimals"><display/></field>
 			<field name="roundingType" title="Rounding Type"><display/></field>
 			<field name="places" title="Places"><display/></field>

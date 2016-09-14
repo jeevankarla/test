@@ -1724,6 +1724,7 @@
 		<field name="attrValue" type="value"></field>
 		<field name="roundingType" type="value"></field>
 		<field name="places" type="value"></field>
+		<field name="description" type="description"></field>
 		<prim-key field="invoiceItemTypeId" />
 		<prim-key field="attrName" />
 		<relation type="one" fk-name="INVOICE_ITM_TYP"

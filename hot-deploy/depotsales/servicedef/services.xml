@@ -550,7 +550,10 @@
          <attribute name="places" type="String" mode="IN" optional="false"/>
     </service>
     
-    
+    <service name="populateInvoiceItemsWithRounding" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateInvoiceItemsWithRounding" transaction-timeout="6000000">
+        <description>populate Rounding</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+    </service>
     
     
 </services>

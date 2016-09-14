@@ -71,16 +71,8 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		
 		tempMap = [:];
 		
-		//int decimal  = 0;
-		inputCtx = [:];
-		inputCtx.put("userLogin",userLogin);
-		inputCtx.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
-		try{
-		 resultCtx = dispatcher.runSync("getInvoiceItemTypeDecimals", inputCtx);
-		 if(resultCtx.decimal)
-		 decimal = Integer.valueOf(resultCtx.decimal);
-		 
-		}catch(Exception e){}
+		BigDecimal decimal  = BigDecimal.ZERO;
+		
 		
 		tempMap.put("invoiceSequence", invoiceSequence);
 		tempMap.put("invoiceId", eachItem.invoiceId);
@@ -95,9 +87,30 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		 
 		tempMap.put("beforeRound",invoItemAmt);
 		
+		
+		inputCtx = [:];
+		inputCtx.put("userLogin",userLogin);
+		inputCtx.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
+		inputCtx.put("amount", invoItemAmt);
+		try{
+		 resultCtx = dispatcher.runSync("getInvoiceItemTypeDecimals", inputCtx);
+		 
+		 
+		 Debug.log("resultCtx============"+resultCtx);
+		 
+		 
+		 if(resultCtx.amount)
+		 invoItemAmt = resultCtx.amount;
+		 
+		 Debug.log("decimal============"+decimal);
+		 
+		 
+		}catch(Exception e){}
+		
+		
 		//double roundedInvAmt = Math.round(invoItemAmt);
 		
-		BigDecimal newPrice = new BigDecimal(100);
+	/*	BigDecimal newPrice = new BigDecimal(100);
 		
 		
 		Debug.log("Given=============="+newPrice);
@@ -193,7 +206,7 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 	//	BigDecimal newPrice = new BigDecimal(44.50);
 		
 		
-	/*	
+		
 		double tenthPower = Math.floor(Math.log10(newPrice));
 		double place = Math.pow(10, tenthPower);
 		
@@ -207,14 +220,14 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		finalVal = price.add(x)
 		else
 		finalVal = (price.add(x)).subtract(10);
-		*/
+		
 		
 		
 		///============round UP===========
 		
 		
 		//==============================================
-        /*		
+        		
 		int y =100 - ( price.intValue() % 100);
 		Debug.log("y================="+y);
 		BigDecimal finalVal100 = BigDecimal.ZERO;
@@ -224,10 +237,10 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		finalVal100 = (price.add(y));
 		finalVal100 = finalVal100.subtract(100);
 		}
-		*/
-		//totalAmout = totalAmout+roundedInvAmt;
 		
-		tempMap.put("invoItemAmt",roundedAmount);
+		//totalAmout = totalAmout+roundedInvAmt;
+*/		
+		tempMap.put("invoItemAmt",invoItemAmt);
 		tempMap.put("invoiceGrandTotal",totalAmout);
 		
 		invoiceItemList.add(tempMap);
