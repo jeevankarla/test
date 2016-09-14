@@ -13712,12 +13712,16 @@ Debug.log("taxRateList =============="+taxRateList);
 	        	 
 	        	 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	        	 
+	        		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+	        		 
 		        	for(GenericValue eachInvoiceItem : InvoiceItem){
 		        	
 		        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
 		        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
 		        		BigDecimal itemValue = quantity.multiply(amount);
 		        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+		        		
+		        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
 		        		
 		        		eachInvoiceItem.set("itemValue",roundedAmount);
 		        		
@@ -13727,6 +13731,17 @@ Debug.log("taxRateList =============="+taxRateList);
 		        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
 		        		}
 		        	}
+		        	
+		        	try{
+		        		
+		        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",eacinvoiceId),false);	
+		        		
+		        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+		        	InvoiceHeader.store();
+		        	}catch(GenericEntityException e){
+	        			Debug.logError(e, "Failed to Populate Invoice ", module);
+	        		}
+		        	
 	        	 }
 	        	 
   			}
