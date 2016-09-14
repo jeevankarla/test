@@ -13562,6 +13562,45 @@ Debug.log("taxRateList =============="+taxRateList);
     
     
     
+    public static Map<String, Object> populateRounding(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String itemType = (String) context.get("itemType");
+  		String decimals = (String) context.get("decimals");
+  		String roundType = (String) context.get("roundType");
+  		String places = (String) context.get("places");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+
+  		try{
+  			
+  			if(UtilValidate.isNotEmpty(itemType)){
+  				
+  				GenericValue InvoiceItemTypeAttribute = delegator.makeValue("InvoiceItemTypeAttribute");
+				
+	  					
+		  				InvoiceItemTypeAttribute.set("invoiceItemTypeId", itemType);
+		  				InvoiceItemTypeAttribute.set("attrName", itemType);
+		  				InvoiceItemTypeAttribute.set("attrValue", decimals);
+		  				InvoiceItemTypeAttribute.set("roundingType", roundType);
+		  				InvoiceItemTypeAttribute.set("places", places);
+		  				delegator.createOrStore(InvoiceItemTypeAttribute);
+		  				
+  				}
+  				
+  			
+  		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to populate InvoiceItem Type Attribute ", module);
+		}
+  		 
+  		
+    	  result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
+         
+         return result;
+  	}
     
   
     
