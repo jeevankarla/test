@@ -277,7 +277,7 @@ if(shipmentListForPOInvoiceId){
  
  for (eachItem in purChaseInvoiceItemLists) {
 
-	 purInvoiceTOt = purInvoiceTOt+(Double.valueOf(eachItem.quantity)*Double.valueOf(eachItem.amount));
+	 purInvoiceTOt = purInvoiceTOt+(eachItem.itemValue);
 }
 }
 
