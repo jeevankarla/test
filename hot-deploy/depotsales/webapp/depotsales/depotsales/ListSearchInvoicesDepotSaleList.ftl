@@ -436,7 +436,7 @@ function roundingInvoiceItems(invoiceId){
 			var invoiceId = invoiceItem[0].invoiceId;
 			var invoiceSequence = invoiceItem[0].invoiceSequence;
 			
-			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			message += "<html><head></head><body><form id='newInvoiceVoucher' target='_blank'  name='newInvoiceVoucher' method='post' action='newInvoiceVoucher' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
 			message += "<thead><td align='center' class='h3'> Invoice Id</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Quantity.</td><td align='center' class='h3'> Unit Price.</td><td align='center' class='h3'>Befor Rounding Amount</td><td align='center' class='h3'>After Rounding Amount</td>";
 			for (i = 0; i < invoiceItem.length; ++i) {
 				message += "<tr><td align='center' class='h4'>" + invoiceItem[i].invoiceId + "</td><td align='center' class='h4'>" + invoiceItem[i].productId + "</td><td align='left' class='h4'>" + invoiceItem[i].description + "</td><td align='center' class='h4'>"+ invoiceItem[i].quantity +"</td><td align='center' class='h4'>"+ invoiceItem[i].unitPrice +"</td><td align='center' class='h4'>"+ invoiceItem[i].beforeRound +"</td><td align='center' class='h4'>"+ invoiceItem[i].invoItemAmt +"</td>";
@@ -444,7 +444,7 @@ function roundingInvoiceItems(invoiceId){
 			}
 			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
 			title = "<center>Invoice : " + invoiceSequence + "<center><br /><br /> Total Invoice Value = "+ invoAmt +" ";
-			message += "</table>";
+			message += "</table></form></body></html>";
 			Alert(message, title);
 		}
 		
