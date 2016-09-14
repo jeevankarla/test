@@ -2853,6 +2853,57 @@
 	</form>
 
 
+             <form name="FindRoundingForm" title="" type="single" target="Rounding" header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+         <field name="itemType" title="Item Type*" required-field="true">
+	        	<drop-down allow-empty="true">
+	        		
+	        	</drop-down>
+        </field>
+        
+        <field name="decimals" title="Decimals*" required-field="true">
+	        	<drop-down allow-empty="true">
+	        		<option key="0" description="0"/>
+	        		<option key="1" description="1"/>
+	        		<option key="2" description="2"/>
+	        		<option key="3" description="3"/>
+	        		<option key="4" description="4"/>
+	        	</drop-down>
+        </field> 
+        
+        <field name="roundType" title="Round Type*" required-field="true">
+	        	<drop-down allow-empty="true">
+	        		<option key="ROUND" description="ROUND"/>
+	        		<option key="ROUND_UP" description="ROUND UP"/>
+	        		<option key="ROUND_DOWN" description="ROUND DOWN"/>
+	        	</drop-down>
+        </field>
+        
+        <field name="places" title="Places*" required-field="true">
+	        	<drop-down allow-empty="true">
+	        		<option key="0" description="0"/>
+	        		<option key="1" description="1"/>
+	        		<option key="10" description="10"/>
+	        		<option key="100" description="100"/>
+	        	</drop-down>
+        </field> 
+       
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+     <form name="listofroundingTypes" type="list" list-name="salesAndPurchaseList" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+			<field name="invoiceTypeId" title="Item Type"><display/></field>
+			<field name="decimals" title="Decimals"><display/></field>
+			<field name="roundingType" title="Rounding Type"><display/></field>
+			<field name="places" title="Places"><display/></field>
+
+    </form>
+    
+    
+
     <form name="FindShipmentReimbursementBilling" title="" type="single" target="FindShipmentReimbursementBilling" header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 

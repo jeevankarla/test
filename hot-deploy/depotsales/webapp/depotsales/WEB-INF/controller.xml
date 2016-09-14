@@ -632,6 +632,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ShippingReimbursement"/>
     </request-map>
+    
+    
+     <request-map uri="Rounding">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Rounding"/>
+    </request-map>
+    
      <request-map uri="DepotReimbursement">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotReimbursement"/>
@@ -2404,6 +2411,7 @@
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
     <view-map name="ShippingReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#ShippingReimbursement"/>
+    <view-map name="Rounding" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#Rounding"/>
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>

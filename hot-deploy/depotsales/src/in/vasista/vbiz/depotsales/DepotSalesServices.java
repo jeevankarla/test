@@ -13391,9 +13391,14 @@ Debug.log("taxRateList =============="+taxRateList);
   				String shipmentId = eachShipment.getString("shipmentId");
   				BigDecimal estimatedShipCost=eachShipment.getBigDecimal("estimatedShipCost");
   				
+  				Timestamp receiptDate=eachShipment.getTimestamp("estimatedShipDate");
+  				if(UtilValidate.isEmpty(receiptDate))
+  				 receiptDate=UtilDateTime.nowTimestamp();
+  				
+  				
 	  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
 	  				
-	  					Timestamp receiptDate=UtilDateTime.nowTimestamp();
+	  					
 		  				ShipmentReimbursement.set("shipmentId", shipmentId);
 		  				ShipmentReimbursement.set("receiptAmount", estimatedShipCost);
 		  				ShipmentReimbursement.set("receiptDate", receiptDate);
@@ -13414,6 +13419,157 @@ Debug.log("taxRateList =============="+taxRateList);
          
          return result;
   	}
+    
+    
+    
+    public static Map<String, Object> getInvoiceItemTypeDecimals(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String invoiceItemType = (String) context.get("invoiceItemTypeId");
+  		
+  		BigDecimal newPrice = (BigDecimal) context.get("amount");
+  		
+  		Locale locale = (Locale) context.get("locale");
+
+  		List<GenericValue> invoiceItemTypeAttributeList = null;
+  		String decimalStr = "";
+  		String roundingType = "";
+  		String placesStr = "";
+  		
+  		 try{
+  			 
+  			List conditionList = FastList.newInstance();
+  		    if(UtilValidate.isNotEmpty(invoiceItemType))	
+  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceItemType));
+  			 
+  		    invoiceItemTypeAttributeList = delegator.findList("InvoiceItemTypeAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				
+  		     GenericValue invoiceItemTypeAttribute = EntityUtil.getFirst(invoiceItemTypeAttributeList);
+  		     
+  		   if(UtilValidate.isNotEmpty(invoiceItemTypeAttribute))
+  			 decimalStr = (String) invoiceItemTypeAttribute.get("attrValue");
+  		     roundingType = (String) invoiceItemTypeAttribute.get("roundingType");
+  		     placesStr = (String) invoiceItemTypeAttribute.get("places");
+  		    
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItemTypeAttribute ", module);
+			}
+  		
+  			int decimal = Integer.valueOf(decimalStr);
+  			int places = Integer.valueOf(placesStr);
+  		
+  			
+  			/*int places = 0;
+  			int decimal = 2;*/
+  		
+  			BigDecimal roundedAmount = BigDecimal.ZERO;
+  			
+  	     	if((places == 0  && roundingType == "ROUND_UP" ))
+  		      roundedAmount = (newPrice.setScale(decimal, BigDecimal.ROUND_UP));
+		    if((places == 0  && roundingType == "ROUND_DOWN" ))
+			  roundedAmount = (newPrice.setScale(decimal, BigDecimal.ROUND_DOWN));
+		    if((places == 0  && roundingType == "ROUND" ))
+			  roundedAmount = (newPrice.setScale(decimal, rounding));
+			 if(places == 1 && roundingType == "ROUND" )
+			   roundedAmount = (newPrice.setScale(0, rounding));
+			 if(places == 1 && roundingType == "ROUND_DOWN" )
+				 roundedAmount = (newPrice.setScale(0, BigDecimal.ROUND_DOWN));
+			 if(places == 1 && roundingType == "ROUND_UP" )
+				 roundedAmount = (newPrice.setScale(0, BigDecimal.ROUND_UP));
+			  
+			
+			  
+               if(places == 10 && roundingType == "ROUND"){
+				  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 10 - ( newPrice.intValue() % 10);
+				  if(x<=5)
+				  roundedAmount = newPrice.add(new BigDecimal(x));
+				  else
+				  roundedAmount = (newPrice.add(new BigDecimal(x))).subtract(new BigDecimal(10));
+			  }else if(places == 10 && roundingType == "ROUND_UP"){
+			  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 10 - ( newPrice.intValue() % 10);
+				  
+				  if(newPrice.intValue() != x)
+				  roundedAmount = newPrice.add(new BigDecimal(x));
+				  else
+				  roundedAmount = newPrice;
+				  
+			  
+			  }else if(places == 10 && roundingType == "ROUND_DOWN"){
+			  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 10 - ( newPrice.intValue() % 10);
+				  
+				  if(newPrice.intValue() != x){
+				  roundedAmount = (newPrice.add(new BigDecimal(x)));
+				  roundedAmount = roundedAmount.subtract(new BigDecimal(10));
+				  }
+				  else{
+				  roundedAmount = newPrice;
+				  }
+			  }
+			  
+			  if(places == 100 && roundingType == "ROUND"){
+				  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 100 - ( newPrice.intValue() % 100);
+				  if(x<=50){
+				  roundedAmount = newPrice.add(new BigDecimal(x));
+				  }
+				  else{
+				  roundedAmount = (newPrice.add(new BigDecimal(x)));
+				  
+				  roundedAmount = roundedAmount.subtract(new BigDecimal(100));
+				  }
+			  }
+			  if(places == 100 && roundingType == "ROUND_UP"){
+				  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 100 - ( newPrice.intValue() % 100);
+				  if(newPrice.intValue() != x)
+				  roundedAmount = newPrice.add(new BigDecimal(x));
+				  else
+				  roundedAmount = newPrice;
+			  }
+			  if(places == 100 && roundingType == "ROUND_DOWN"){
+				  
+				  newPrice = (newPrice.setScale(0, rounding));
+				  int x = 100 - ( newPrice.intValue() % 100);
+				  
+				  if(newPrice.intValue() != x){
+				  roundedAmount = (newPrice.add(new BigDecimal(x)));
+				  roundedAmount = roundedAmount.subtract(new BigDecimal(100));
+				  }
+				  else{
+				  roundedAmount = newPrice;
+				  }
+			  }
+			  
+			  			  
+  		
+  		
+  		result.put("amount", roundedAmount);
+        result.put("invoiceItemTypeId", invoiceItemType);
+         
+         return result;
+  	}
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
     
     
     
