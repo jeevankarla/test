@@ -222,7 +222,7 @@ for (eachList in invoiceItemList) {
 		  itemAdjustList.add(tempMap);
 		  }
 		  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
-		  mgpsAmt = mgpsAmt+eachItem.amount;
+		  mgpsAmt = mgpsAmt+eachItem.itemValue;
 		  }
 	}
 	 }
@@ -777,8 +777,13 @@ context.externalOrderId = externalOrderId;
 		   }
 			  
 		  
-		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
-		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
+		 // tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
+			  
+			  tempMap.put("ToTamount", eachInvoiceList.itemValue+serviceAmt);
+		 
+			  
+			  
+			   grandTotal = grandTotal+(eachInvoiceList.itemValue)+serviceAmt;
 		  
 		 /* double mgpsQty = 0;
 		  if(quantity > schemeAmt)
@@ -851,7 +856,7 @@ if(partyPostalAddress){
 		contactMench = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false);
 		partyPostalAddress = contactMench.postalAddress;
 		
-		if(partyPostalAddress){
+		if(partyPostalAddress[0]){
 			address1=partyPostalAddress[0].address1;
 		
 		tempMap=[:];
