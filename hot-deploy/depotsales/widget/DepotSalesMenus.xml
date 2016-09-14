@@ -200,6 +200,11 @@
         		<parameter param-name="statusId" value="GOODS_RECEIVED"/>
         	</link>
 	    </menu-item>
+	    
+	    <menu-item name="Rounding" title="Rounding">
+	      	<link target="Rounding">
+        	</link>
+	    </menu-item>
        <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>
