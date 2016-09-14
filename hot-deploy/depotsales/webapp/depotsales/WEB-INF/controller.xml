@@ -1424,6 +1424,15 @@
         <response name="error" type="view" value="IndentPortalOrderPayment"/>
     </request-map>
     
+      <request-map uri="populateRounding">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="populateRounding"/>
+        <response name="success" type="view" value="Rounding"/>
+        <response name="error" type="view" value="Rounding"/>
+    </request-map>
+    
+    
+    
     
     <request-map uri="CancelDepotTransPOOrder">
         <security https="true" auth="true"/>

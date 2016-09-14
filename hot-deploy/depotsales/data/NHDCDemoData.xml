@@ -685,4 +685,27 @@ under the License.
 	
 	
 	
+	
+<InvoiceItemType invoiceItemTypeId="COMMERCIAL_MOD_ADJ" description="Commercial module Adjustments"/> 
+
+<InvoiceItemType invoiceItemTypeId="PRODUCTS" parentTypeId="COMMERCIAL_MOD_ADJ" description="Main Products"/> 
+<InvoiceItemType invoiceItemTypeId="ADDITIONAL_CHARGES" parentTypeId="COMMERCIAL_MOD_ADJ" description="ADDITIONAL CHARGES"/>
+<InvoiceItemType invoiceItemTypeId="DISCOUNTS" parentTypeId="COMMERCIAL_MOD_ADJ" description="Discount"/>
+<InvoiceItemType invoiceItemTypeId="TAX_PURCHASE" parentTypeId="COMMERCIAL_MOD_ADJ" description="TAX PURCHASE"/>
+<InvoiceItemType invoiceItemTypeId="TAX_SALE" parentTypeId="COMMERCIAL_MOD_ADJ" description="TAX SALE"/>
+
+<InvoiceItemType invoiceItemTypeId="CST_PUR" parentTypeId="TAX_PURCHASE" description="CST ON PURCHASE"/> 
+<InvoiceItemType invoiceItemTypeId="VAT_PUR" parentTypeId="TAX_PURCHASE" description="VAT ON PURCHASE"/> 
+
+<InvoiceItemType invoiceItemTypeId="CST_SALE" parentTypeId="TAX_SALE" description="CST ON SALES"/> 
+<InvoiceItemType invoiceItemTypeId="VAT_SALE" parentTypeId="TAX_SALE" description="VAT ON SALES"/> 
+
+<InvoiceItemType invoiceItemTypeId="INV_RAWPROD_ITEM" parentTypeId="PRODUCTS" description="PURCHASE ITEM"/> 
+<InvoiceItemType invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId="PRODUCTS" description="SALE ITEM"/> 
+
+<InvoiceItemType invoiceItemTypeId="TEN_PERCENT_SUBSIDY" parentTypeId="PRODUCTS" description="10 % Subcidy"/> 
+<InvoiceItemType invoiceItemTypeId="SERVICE_CHARGE" parentTypeId="PRODUCTS" description="Service Charge"/> 
+	
+	
+	
 </entity-engine-xml>

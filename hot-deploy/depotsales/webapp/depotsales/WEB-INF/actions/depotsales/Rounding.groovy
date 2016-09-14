@@ -23,3 +23,40 @@ import java.util.Map.Entry;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
+
+
+/*
+
+itemType = parameters.itemType;
+
+decimals
+
+roundType
+
+places*/
+
+
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"COMMERCIAL_MOD_ADJ"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+invoiceItemTypeList = delegator.findList("InvoiceItemType",conditionDepo,null,null,null,false);
+
+
+invoiceItemTypeIdS=EntityUtil.getFieldListFromEntityList(invoiceItemTypeList, "invoiceItemTypeId", true);
+
+List<String> payOrderBy = UtilMisc.toList("invoiceItemTypeId");
+conditionDeopoList.clear();
+conditionDeopoList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN,invoiceItemTypeIdS));
+conditionDeopoList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,["ROUNDING_OFF","TEN_PER_CHARGES","ROUNDING_CHARGES","TEN_PER_DISCOUNT"]));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+invoiceItemTypeList = delegator.findList("InvoiceItemType",conditionDepo,null,payOrderBy,null,false);
+
+
+context.invoiceItemTypeList = invoiceItemTypeList;
+
+
+InvoiceItemTypeAttribute = delegator.findList("InvoiceItemTypeAttribute",null,null,null,null,false);
+
+
+context.InvoiceItemTypeAttribute = InvoiceItemTypeAttribute;

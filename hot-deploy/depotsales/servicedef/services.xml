@@ -542,6 +542,16 @@
          <attribute name="amount" type="BigDecimal" mode="INOUT" optional="false"/>
     </service>
     
+    <service name="populateRounding" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateRounding" transaction-timeout="6000000">
+        <description>populate Rounding</description>
+         <attribute name="itemType" type="String" mode="IN" optional="false"/>
+         <attribute name="decimals" type="String" mode="IN" optional="false"/>
+         <attribute name="roundType" type="String" mode="IN" optional="false"/>
+         <attribute name="places" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    
+    
     
 </services>
 
