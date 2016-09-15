@@ -512,7 +512,8 @@ if(contactMechesDetails){
 	for (eachAdjment in InvoiceItemAdjustment) {
 		
 		if(eachAdjment.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
-			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
+			//tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
+			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.itemValue);
 		}
 	}
 	
@@ -535,7 +536,7 @@ if(contactMechesDetails){
 
 	if(InvoiceRemainItemAdjustment){
 		for (eachAdjustment in InvoiceRemainItemAdjustment) {
-			allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.amount;
+			allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.itemValue;
 		}
 	}
 	
@@ -566,12 +567,15 @@ if(contactMechesDetails){
 		   
 		 //  invoAmt = invoAmt+(eachItem.amount*eachItem.quantity);
 		   
-		   tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
+		  // tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 		   
-		   invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
+		   tempMap.put("invoiceAmount", eachItem.itemValue);
+		   
+		  // invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
+		   
+		   invoiceNetAmt = invoiceNetAmt+eachItem.itemValue;
 		   
 		  //Debug.log("eachItem.invoiceId================="+eachItem.invoiceId);
-		   
 		   //Debug.log("eachItem.invoiceItemSeqId================="+eachItem.invoiceItemSeqId);
 		   
 		   
@@ -923,9 +927,13 @@ if(contactMechesDetails){
 			tempMap.put("millInvoiceDate","");
 			
 			
-			tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
+			//tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 			
-			tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
+			tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+			
+			//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
+			
+			tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
 			
 			}
 			
