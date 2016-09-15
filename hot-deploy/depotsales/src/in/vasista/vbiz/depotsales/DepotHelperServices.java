@@ -1926,7 +1926,9 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			    BigDecimal extQuotaQuantity=orderItemDetail.getBigDecimal("quotaQuantity");
 			   // quotaQuantity = orderHeaderDetail.getBigDecimal("quotaQuantity");
 			    quotaQuantity = new BigDecimal(qtQty);
-			    orderItemDetail.set("discountAmount", quotaQuantity.multiply(unitPrice).negate());
+			    BigDecimal schemePerc = new BigDecimal("10");
+				BigDecimal percModifier = schemePerc.movePointLeft(2);
+			    orderItemDetail.set("discountAmount", ((quotaQuantity.multiply(unitPrice)).multiply(percModifier)).negate());
 			    orderItemDetail.set("quotaQuantity", quotaQuantity);
 			    orderItemDetail.store();
 			    List conList = FastList.newInstance();
