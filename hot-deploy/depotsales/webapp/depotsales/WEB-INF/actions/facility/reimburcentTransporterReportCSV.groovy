@@ -209,31 +209,26 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 //////Debug.log("cond================="+cond);
 
 
-fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId"] as Set;
 
-invoice = delegator.findList("InvoiceAndItem", cond, fieldsToSelect, null, null, false);
+invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
+//////////////Debug.log("invoice========================="+invoice);
+invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
+condList = [];
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 
-//////////Debug.log("invoice========================="+invoice);
+
+partyIds=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 
 
-//invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
-
-
-
-////Debug.log("invoiceIds================="+invoiceIds.size());
 
 finalList = [];
 dupliInvoices = []as Set;
 
-for (eachInvoiceList in invoice) {
+for (eachInvoiceList in Invoice) {
 	
-	//eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice] , false);
 	
-	if(!dupliInvoices.contains(eachInvoiceList.invoiceId)){
-	
-		
-		dupliInvoices.add(eachInvoiceList.invoiceId);
-		
 		
 	tempMap=[:];
 	
@@ -454,7 +449,6 @@ for (eachInvoiceList in invoice) {
 		 }
 	}
 	 finalList.add(tempMap);
-	}
 }
 
 context.finalList = finalList;

@@ -321,24 +321,21 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 ////Debug.log("cond================="+cond);
 
 
-fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId"] as Set;
 
-invoice = delegator.findList("InvoiceAndItem", cond, fieldsToSelect, null, null, false);
-
+invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
 //////////////Debug.log("invoice========================="+invoice);
-
-
-invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
+invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
+condList = [];
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 
 
 JSONObject shipmentReimbursementJson = new JSONObject();
 //Debug.log("invoiceIds================="+invoiceIds.size());
 
 finalList = [];
-for (eachInvoice in invoiceIds) {
-	
-	eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice] , false);
-	
+for (eachInvoiceList in Invoice) {
 	
 	tempMap=[:];
 	
@@ -385,7 +382,9 @@ for (eachInvoice in invoiceIds) {
 	double invoiceQTY = 0;
 	for (eachInvoiceItem in InvoiceItem) {
 		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		//invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		if(eachInvoiceItem.itemValue)
+		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
