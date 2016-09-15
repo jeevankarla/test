@@ -712,7 +712,7 @@ context.externalOrderId = externalOrderId;
 				 OrderAdjustmentAndBilling = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
 	 
 				 if(OrderAdjustmentAndBilling[0])
-				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
+				 schemeQQQty = Math.round(OrderAdjustmentAndBilling[0].quantity);
 				
 			}
 			
@@ -759,7 +759,7 @@ context.externalOrderId = externalOrderId;
 			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, cond);
 			  
 			  if(invoiceInnerAdjItemList){
-			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount;
+			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].itemValue;
 			  //sourcePercentage = sourcePercentage+invoiceInnerAdjItemList[0].sourcePercentage;
 			  
 			  }
@@ -768,7 +768,7 @@ context.externalOrderId = externalOrderId;
 		  
 		  if(scheme == "General"){
 			  
-			  sourcePercentage = (serviceAmt/(quantity*amount))*100;
+			  sourcePercentage = (serviceAmt/(eachInvoiceList.itemValue))*100;
 			  double perAmt = (eachInvoiceList.amount*sourcePercentage)/100;
 			  
 			  tempMap.put("amount",(eachInvoiceList.amount+perAmt));

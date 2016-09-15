@@ -116,12 +116,12 @@ fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenc
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
-////Debug.log("invoice========================="+invoice);
+//Debug.log("invoice========================="+invoice);
 
 
 invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
 
-////Debug.log("invoiceIds========================="+invoiceIds);
+//Debug.log("invoiceIds========================="+invoiceIds.size());
 
 condList.clear();
 
@@ -137,14 +137,14 @@ OrderItemBilling = delegator.findList("OrderItemBilling", billingcond, fieldsToB
 
 orderIdsFromBilling = EntityUtil.getFieldListFromEntityList(OrderItemBilling, "orderId", true);
 
-//Debug.log("OrderItemBilling========================="+OrderItemBilling);
+//Debug.log("OrderItemBilling========================="+OrderItemBilling.size());
 
 
-//Debug.log("orderIdsFromBilling========================="+orderIdsFromBilling);
+//Debug.log("orderIdsFromBilling========================="+orderIdsFromBilling.size());
 
 actualInvoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBilling, "invoiceId", true);
 
-////Debug.log("actualInvoiceIds========================="+actualInvoiceIds);
+//Debug.log("actualInvoiceIds========================="+actualInvoiceIds.size());
 
 
 OrderItemDetail = delegator.findList("OrderItemDetail", EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdsFromBilling), null, null, null, false);
@@ -159,7 +159,7 @@ invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
 
-////Debug.log("InvoiceItem========================="+InvoiceItem);
+//Debug.log("InvoiceItem========================="+InvoiceItem.size());
 
 
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.IN , orderIdsFromBilling)  , null, null, null, false );
@@ -520,7 +520,7 @@ if(contactMechesDetails){
 		
 		if(eachAdjment.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 			//tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.amount);
-			tenPerAmt = tenPerAmt +Double.valueOf( eachAdjment.itemValue);
+			tenPerAmt = tenPerAmt +Double.valueOf(eachAdjment.itemValue);
 		}
 	}
 	
@@ -680,7 +680,7 @@ if(contactMechesDetails){
 	 
 				 if(OrderAdjustmentAndBilling[0]){
 				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
-				 schemeAMMMt = OrderAdjustmentAndBilling[0].amount;
+				 schemeAMMMt = Math.round(OrderAdjustmentAndBilling[0].amount);
 				
 				 }
 			}
@@ -720,10 +720,14 @@ if(contactMechesDetails){
 				 OrderOtherTaxesAdjustment = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
 	 
 				 if(OrderOtherTaxesAdjustment[0]){
-				 taxAmt = OrderOtherTaxesAdjustment[0].amount;
+				 taxAmt = Math.round(OrderOtherTaxesAdjustment[0].amount);
 				
 				 }
 			}
+			
+			//Debug.log("taxAmt======================"+taxAmt);
+			//Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
+			
 			
 			tempMap.put("altaxAmt", taxAmt);
 			
@@ -756,6 +760,7 @@ if(contactMechesDetails){
 		  else
 		  tempMap.put("mgpsQty", quantity-tenPerQty);
 			
+		  //Debug.log("tenPerQty============4343========"+tenPerQty);
 		  
 		 double serviceAmt = 0;
 		 double sourcePercentage = 0;
@@ -769,17 +774,24 @@ if(contactMechesDetails){
 			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 			  
-			  if(invoiceInnerAdjItemList){
-			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].amount;
+			  //Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList);
+			  
+			  //Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList[0].itemValue);
+			  
+			  
+			  if(invoiceInnerAdjItemList[0]){
+			  serviceAmt = serviceAmt+invoiceInnerAdjItemList[0].itemValue;
 			  //sourcePercentage = sourcePercentage+invoiceInnerAdjItemList[0].sourcePercentage;
 			  
 			  }
 		  }
 		  
 		  
+		  //Debug.log("serviceAmt===================="+serviceAmt);
+		  
 		  if(scheme == "General"){
 			  
-			  sourcePercentage = (serviceAmt/(quantity*amount))*100;
+			  sourcePercentage = (serviceAmt/(eachItem.itemValue))*100;
 			  double perAmt = (eachItem.amount*sourcePercentage)/100;
 			  
 			  tempMap.put("amount",(eachItem.amount+perAmt));
@@ -788,8 +800,8 @@ if(contactMechesDetails){
 		   }
 			  
 		  
-		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
-		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
+		  tempMap.put("ToTamount", eachItem.itemValue+serviceAmt);
+		  grandTotal = grandTotal+eachItem.itemValue+serviceAmt;
 		  
 		   
 		   

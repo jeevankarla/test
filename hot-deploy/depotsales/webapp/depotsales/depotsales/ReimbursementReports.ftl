@@ -28,7 +28,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 	function appendParams(formName, action) {
 		var formId = "#" + formName;
 		jQuery(formId).attr("action", action);	
+		
+		if($("#reimburcentTransporterFRO).val().length() != 0)
 		jQuery(formId).submit();
+		
+		
 	   }
 $(document).ready(function(){
 
@@ -47,7 +51,11 @@ $(document).ready(function(){
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");
 	    makeDatePicker("CASHFromDateId","");
-		$('#ui-datepicker-div').css('clip', 'auto');		
+		$('#ui-datepicker-div').css('clip', 'auto');	
+		
+		
+		
+		
 	});
  
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -78,10 +86,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
        <tr class="alternate-row">
       	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.pdf</@ofbizUrl>" target="_blank">        
              <td width="10%">Reimbursment Transporter Report</td>
-             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="reimburcentTransporterFRO" readonly  name="partyfromDate"/></td>
-      		 <td width="10%">Thru<input  type="text" size="15pt" id="reimburcentTransporterTHRU" readonly  name="partythruDate"/></td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="reimburcentTransporterFRO" readonly  name="partyfromDate"  /></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="reimburcentTransporterTHRU" readonly  name="partythruDate"  /></td>
                       <td width="15%"><span class='h3'>Branch
-				 <select name="branchId" id="branchId">
+				 <select name="branchId" id="branchId" required>
 				 <option value=''></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
@@ -117,10 +125,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
         <tr class="alternate-row">
       	   <form id="depotReimburcentReport" name="depotReimburcentReport" method="post" action="<@ofbizUrl>depotReimburcentReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Depot Reimbursment Report</td>
-             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="depotReimburcentReportFRO" readonly  name="partyfromDate"/></td>
-      		 <td width="10%">Thru<input  type="text" size="15pt" id="depotReimburcentReportTHRU" readonly  name="partythruDate"/></td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="depotReimburcentReportFRO" readonly  name="partyfromDate" required /></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="depotReimburcentReportTHRU" readonly  name="partythruDate" required /></td>
                       <td width="15%"><span class='h3'>Branch
-				 <select name="branchId" id="branchId">
+				 <select name="branchId" id="branchId" required>
 				 <option value=''></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
