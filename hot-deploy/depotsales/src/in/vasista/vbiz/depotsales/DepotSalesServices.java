@@ -13660,7 +13660,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		
   		List conditionList = FastList.newInstance();
-  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT4"));
+  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT1"));
   		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
   		
   		try{
@@ -13775,7 +13775,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		
   		List conditionList = FastList.newInstance();
-  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT4"));
+  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT1"));
   		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
   		
   		try{
