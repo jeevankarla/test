@@ -217,7 +217,7 @@ for (eachList in invoiceItemList) {
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  
-		  totTaxAmount = totTaxAmount+(eachItem.amount*eachItem.quantity);
+		  totTaxAmount = totTaxAmount+(eachItem.itemValue);
 		  
 		  itemAdjustList.add(tempMap);
 		  }
