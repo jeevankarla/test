@@ -153,6 +153,8 @@ condList.clear();
 
 condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, actualInvoiceIds));
 condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
+condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -881,6 +883,8 @@ if(contactMechesDetails){
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, poOrderItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			POInvoiceItemList = delegator.findList("InvoiceItem", cond, null, null, null, false);
 			
