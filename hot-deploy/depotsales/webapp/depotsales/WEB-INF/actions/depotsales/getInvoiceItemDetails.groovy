@@ -61,7 +61,7 @@ if(UtilValidate.isNotEmpty(invoiceId)){
     condList = [];
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	invoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -77,7 +77,11 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		tempMap.put("invoiceSequence", invoiceSequence);
 		tempMap.put("invoiceId", eachItem.invoiceId);
 		tempMap.put("seqId", eachItem.invoiceItemSeqId);
+		if(eachItem.productId)
 		tempMap.put("productId", eachItem.productId);
+		else
+		tempMap.put("productId", "");
+		
 		tempMap.put("description", eachItem.description);
 		tempMap.put("quantity", eachItem.quantity);
 		tempMap.put("unitPrice", eachItem.amount);

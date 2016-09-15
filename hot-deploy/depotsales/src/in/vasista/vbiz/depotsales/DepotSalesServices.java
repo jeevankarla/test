@@ -13702,7 +13702,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	        	conditionList.clear();
 	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eacinvoiceId));
 	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	        	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	        	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	        	 try{
 	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	        	 
@@ -13817,7 +13817,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	        	conditionList.clear();
 	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eacinvoiceId));
 	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	        	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	        	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	        	 try{
 	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	        	 
