@@ -364,7 +364,7 @@ for (eachInvoiceList in Invoice) {
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -375,7 +375,10 @@ for (eachInvoiceList in Invoice) {
 	
 	if(InvoiceItem){
 
+		productId = "";
+		if(InvoiceItem[0].productId)
 		productId = InvoiceItem[0].productId;
+		
 		
 		
 	double invoiceAMT = 0;
