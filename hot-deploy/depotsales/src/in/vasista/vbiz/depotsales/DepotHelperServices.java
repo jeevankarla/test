@@ -1932,26 +1932,53 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			    orderItemDetail.set("quotaQuantity", quotaQuantity);
 			    orderItemDetail.store();
 			    List conList = FastList.newInstance();
-				conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			    /*conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 				
 				if(UtilValidate.isNotEmpty(prodId)){
 					conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
-				}
-			  	BigDecimal quotaQty =BigDecimal.ZERO;
-				try {
-					List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
-
+				}*/
+			 
+				List<GenericValue> OrderItemDetailsList = null;
+				 List condList1 = FastList.newInstance();
+				 condList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				  	BigDecimal grnadTotal =BigDecimal.ZERO;
+				  	BigDecimal BasicPrice =BigDecimal.ZERO;
+				  	BigDecimal discPrice =BigDecimal.ZERO;
+					try {
+						 OrderItemDetailsList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condList1,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId","unitPrice","quantity","discountAmount"), null, null, true);
+						if(UtilValidate.isNotEmpty(OrderItemDetailsList)){
+							for(GenericValue OrderItemDetailValues : OrderItemDetailsList){
+								if(UtilValidate.isNotEmpty(OrderItemDetailValues)){
+									BasicPrice =BasicPrice.add((OrderItemDetailValues.getBigDecimal("unitPrice")).multiply(OrderItemDetailValues.getBigDecimal("quantity")));
+									 discPrice=discPrice.add((OrderItemDetailValues.getBigDecimal("discountAmount")).negate());
+								}
+							}
+						}
+				  	} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive QuotaQty ", module);
+			            return ServiceUtil.returnError(e.getMessage());
+					}
+				grnadTotal=BasicPrice.subtract(discPrice);
+				try{
+				    GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				    orderHeaderDetail.set("grandTotal", grnadTotal);
+				    orderHeaderDetail.store();
+					}catch (Exception e) {
+						  Debug.logError(e, "Error While Updating grandTotal for Order ", module);
+						  return ServiceUtil.returnError("Error While Updating grandTotal for Order : "+orderId);
+					}
+	        	List<GenericValue> OrderItemDetailList = EntityUtil.filterByCondition(OrderItemDetailsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+	         
+	        	BigDecimal quotaQty =BigDecimal.ZERO;
+					//List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 					if(UtilValidate.isNotEmpty(OrderItemDetailList)){
 						for(GenericValue OrderItemDetailValue : OrderItemDetailList){
 							if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+								
 								quotaQty =quotaQty.add(OrderItemDetailValue.getBigDecimal("quotaQuantity"));
 							}
 						}
 					}
-			  	} catch (GenericEntityException e) {
-					Debug.logError(e, "Failed to retrive QuotaQty ", module);
-		            return ServiceUtil.returnError(e.getMessage());
-				}
 				// Adjustment Calculation
 				List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -2124,7 +2151,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			  }
          }
 		}catch (Exception e) {
-			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
+			  Debug.logError(e, "Error While Updating Values for Order ", module);
 			  return ServiceUtil.returnError("Error While Updating grandTotal for Order : "+orderId);
 	 	}
        result = ServiceUtil.returnSuccess("Updated successfully ....!!");
