@@ -500,6 +500,7 @@ function roundingInvoiceItems(invoiceId){
         <tr class="header-row-2">
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
          <#--> <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>-->
+         <td>Rounding</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Shipment Id</td> 
           <td>${uiLabelMap.CommonStatus}</td>
@@ -510,7 +511,7 @@ function roundingInvoiceItems(invoiceId){
           <td>Customer</td>
           <td>PurInv.BasAmt</td>
           <td>SaleInv.BasAmt</td>
-          <td>${uiLabelMap.AccountingAmount}</td>
+          <#--><td>${uiLabelMap.AccountingAmount}</td>-->
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <#--> <td>AR Payment</td>--> 
@@ -582,13 +583,15 @@ function roundingInvoiceItems(invoiceId){
  		      <#if purchaseInvoice?has_content && purchaseInvoice[0].invoiceId?has_content>
  		         <#assign purInvoiceId = purchaseInvoice[0].invoiceId>
  			     <#assign purchaseBasAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, purInvoiceId)?if_exists/>
- 		   	     <td>${purchaseBasAmt}</td>
+ 		   	     <td><@ofbizCurrency amount=purchaseInvoice[0].invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
  		   	     <#else>
  		   	       <td></td>
  			  </#if>
               <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
- 			  <td>${saleBasicAmt}</td>
-              <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
+ 			  <#--><td>${saleBasicAmt}</td> -->
+ 			  
+              <#--><td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
                
