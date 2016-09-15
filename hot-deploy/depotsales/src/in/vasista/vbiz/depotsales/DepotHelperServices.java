@@ -1955,7 +1955,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 				// Adjustment Calculation
 				List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				//condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
+				condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId));
 				condList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY" ));
 				List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 				if(UtilValidate.isNotEmpty(orderAdjustments)){
