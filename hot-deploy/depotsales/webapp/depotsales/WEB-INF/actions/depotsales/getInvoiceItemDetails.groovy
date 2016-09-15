@@ -88,7 +88,7 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		tempMap.put("beforeRound",invoItemAmt);
 		
 		
-		inputCtx = [:];
+		/*inputCtx = [:];
 		inputCtx.put("userLogin",userLogin);
 		inputCtx.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
 		inputCtx.put("amount", invoItemAmt);
@@ -106,9 +106,9 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		 
 		 
 		}catch(Exception e){}
+	*/	
 		
-		
-		//double roundedInvAmt = Math.round(invoItemAmt);
+		double roundedInvAmt = Math.round(invoItemAmt);
 		
 	/*	BigDecimal newPrice = new BigDecimal(100);
 		
@@ -240,7 +240,7 @@ if(UtilValidate.isNotEmpty(invoiceId)){
 		
 		//totalAmout = totalAmout+roundedInvAmt;
 */		
-		tempMap.put("invoItemAmt",invoItemAmt);
+		tempMap.put("invoItemAmt",roundedInvAmt);
 		tempMap.put("invoiceGrandTotal",totalAmout);
 		
 		invoiceItemList.add(tempMap);
