@@ -215,23 +215,22 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 ////Debug.log("cond================="+cond);
 
 
-fieldsToSelect = ["invoiceId","invoiceDate","shipmentId","partyIdFrom","referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId"] as Set;
 
-invoice = delegator.findList("InvoiceAndItem", cond, fieldsToSelect, null, null, false);
-
-////////Debug.log("invoice========================="+invoice);
-
-
-invoiceIds=EntityUtil.getFieldListFromEntityList(invoice, "invoiceId", true);
+invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
+//////////////Debug.log("invoice========================="+invoice);
+invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
+condList = [];
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 
 
 
 //Debug.log("invoiceIds================="+invoiceIds.size());
 
 finalList = [];
-for (eachInvoice in invoiceIds) {
+for (eachInvoiceList in Invoice) {
 	
-	eachInvoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice] , false);
 	
 	
 	tempMap=[:];
@@ -275,16 +274,16 @@ for (eachInvoice in invoiceIds) {
 	double invoiceQTY = 0;
 	for (eachInvoiceItem in InvoiceItem) {
 		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
 	
 	tempMap.put("invoiceAmount", invoiceAMT);
 	
-	double eligibleAMT = 0;
+	double maxAmt = 0;
 	
-	eligibleAMT = (invoiceAMT*2)/100;
+	maxAmt = (invoiceAMT*2)/100;
 	
 	tempMap.put("invoiceQTY", invoiceQTY);
 	
@@ -343,6 +342,59 @@ for (eachInvoice in invoiceIds) {
 		 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 		 
 		 
+		 
+		 
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 ShipmentReimbursement = delegator.findList("ShipmentReimbursement", expr, null, null, null, false);
+		
+		 double reimbursentAMT = 0;
+		 if(ShipmentReimbursement){
+			 
+			 tempList = [];
+			 for (eachReimbursement in ShipmentReimbursement) {
+				 
+				 tempMap1 = [:];
+				 
+				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
+				 
+				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
+				 if(eachReimbursement.claimId)
+				 tempMap1.put("claimId", eachReimbursement.claimId)
+				 else
+				 tempMap1.put("claimId", "")
+				 if(eachReimbursement.receiptNo)
+				 tempMap1.put("receiptNo", eachReimbursement.receiptNo)
+				 else
+				 tempMap1.put("receiptNo", "")
+				 if(eachReimbursement.receiptAmount)
+				 tempMap1.put("receiptAmount", eachReimbursement.receiptAmount)
+				 else
+				 tempMap1.put("receiptAmount", "")
+				 if(eachReimbursement.receiptDate)
+				 tempMap1.put("receiptDate", eachReimbursement.receiptDate)
+				 else
+				 tempMap1.put("receiptDate", "")
+				 
+				 if(eachReimbursement.description)
+				 tempMap1.put("description", eachReimbursement.description)
+				 else
+				 tempMap1.put("description", "")
+				 
+				 
+				 tempList.add(tempMap1);
+				 
+			 }
+			 
+			 
+			// shipmentReimbursementJson.put(shipmentId, tempList);
+			 
+			 
+		 }
+		 
+		 
 		 primaryOrderId = shipmentList.get("primaryOrderId");
 		 
 		 DstAddr = delegator.findOne("OrderAttribute",["orderId":primaryOrderId,"attrName":"DST_ADDR"],false);
@@ -379,10 +431,10 @@ for (eachInvoice in invoiceIds) {
 		 tempMap.put("claim", "");
 		 }
 		 
-		 if(claimAmt > eligibleAMT)
-		 tempMap.put("eligibleAMT", eligibleAMT);
+		 if(maxAmt > reimbursentAMT)
+		 tempMap.put("eligibleAMT", reimbursentAMT);
 		 else
-		 tempMap.put("eligibleAMT", claimAmt);
+		 tempMap.put("eligibleAMT", maxAmt);
 	 
 		 estimatedShipDate = shipmentList.get("estimatedShipDate");
 		 

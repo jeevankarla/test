@@ -364,7 +364,7 @@ for (eachInvoiceList in Invoice) {
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -375,7 +375,10 @@ for (eachInvoiceList in Invoice) {
 	
 	if(InvoiceItem){
 
+		productId = "";
+		if(InvoiceItem[0].productId)
 		productId = InvoiceItem[0].productId;
+		
 		
 		
 	double invoiceAMT = 0;
@@ -426,7 +429,7 @@ for (eachInvoiceList in Invoice) {
 	
 	double maxAmt = 0;
 	
-	eligibleAMT = (invoiceAMT*percentage)/100;
+//	eligibleAMT = (invoiceAMT*percentage)/100;
 	
 	maxAmt = (invoiceAMT*percentage)/100;
 	
@@ -548,7 +551,6 @@ for (eachInvoiceList in Invoice) {
 			 
 		 }
 		 
-		 eligibleAMT = eligibleAMT+reimbursentAMT;
 		 
 		 //===================================================
 		 
@@ -585,14 +587,14 @@ for (eachInvoiceList in Invoice) {
 		 if(reimbursentAMT){
 		 claimAmt = reimbursentAMT;
 		 tempMap.put("claim", claimAmt);
-		 } else{
+		 } /*else{
 		 tempMap.put("claim", reimbursentAMT);
 		 }
-		 
-		 if(claimAmt > eligibleAMT)
-		 tempMap.put("eligibleAMT", eligibleAMT);
+		 */
+		 if(maxAmt > reimbursentAMT)
+		 tempMap.put("eligibleAMT", reimbursentAMT);
 		 else
-		 tempMap.put("eligibleAMT", claimAmt);
+		 tempMap.put("eligibleAMT", maxAmt);
 	 
 		 estimatedShipDate = shipmentList.get("estimatedShipDate");
 		 

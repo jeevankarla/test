@@ -289,7 +289,7 @@ for (eachPartyId in partyIds) {
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -322,10 +322,10 @@ for (eachPartyId in partyIds) {
 	double invoiceQTY = 0;
 	for (eachInvoiceItem in InvoiceItem) {
 		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
-		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.itemValue);
 		TotalAmount = TotalAmount + (eachInvoiceItem.quantity);
 		
 	}
@@ -367,7 +367,7 @@ for (eachPartyId in partyIds) {
 	
 	double eligibleAMT = 0;
 	
-	eligibleAMT = (invoiceAMT*percentage)/100;
+	maxAmt = (invoiceAMT*percentage)/100;
 	
 	//Debug.log("eligibleAMT==============="+eligibleAMT);
 	
@@ -429,6 +429,59 @@ for (eachPartyId in partyIds) {
 		 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 		 
 		 
+		 
+		 
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 ShipmentReimbursement = delegator.findList("ShipmentReimbursement", expr, null, null, null, false);
+		
+		 double reimbursentAMT = 0;
+		 if(ShipmentReimbursement){
+			 
+			 tempList = [];
+			 for (eachReimbursement in ShipmentReimbursement) {
+				 
+				 tempMap1 = [:];
+				 
+				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
+				 
+				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
+				 if(eachReimbursement.claimId)
+				 tempMap1.put("claimId", eachReimbursement.claimId)
+				 else
+				 tempMap1.put("claimId", "")
+				 if(eachReimbursement.receiptNo)
+				 tempMap1.put("receiptNo", eachReimbursement.receiptNo)
+				 else
+				 tempMap1.put("receiptNo", "")
+				 if(eachReimbursement.receiptAmount)
+				 tempMap1.put("receiptAmount", eachReimbursement.receiptAmount)
+				 else
+				 tempMap1.put("receiptAmount", "")
+				 if(eachReimbursement.receiptDate)
+				 tempMap1.put("receiptDate", eachReimbursement.receiptDate)
+				 else
+				 tempMap1.put("receiptDate", "")
+				 
+				 if(eachReimbursement.description)
+				 tempMap1.put("description", eachReimbursement.description)
+				 else
+				 tempMap1.put("description", "")
+				 
+				 
+				 tempList.add(tempMap1);
+				 
+			 }
+			 
+			 
+			 shipmentReimbursementJson.put(shipmentId, tempList);
+			 
+			 
+		 }
+		 
+		 
 		 primaryOrderId = shipmentList.get("primaryOrderId");
 		 
 		 DstAddr = delegator.findOne("OrderAttribute",["orderId":primaryOrderId,"attrName":"DST_ADDR"],false);
@@ -458,17 +511,17 @@ for (eachPartyId in partyIds) {
 		 double claimAmt = 0;
 		 estimatedShipCost = shipmentList.get("estimatedShipCost");
 					 
-		 if(estimatedShipCost){
-		 claimAmt = Double.valueOf(estimatedShipCost);
+		 if(reimbursentAMT){
+		 claimAmt = Double.valueOf(reimbursentAMT);
 		 tempMap.put("claim", claimAmt);
 		 } else{
 		 tempMap.put("claim", "");
 		 }
 		 
-		 if(claimAmt > eligibleAMT)
-		 tempMap.put("eligibleAMT", eligibleAMT);
+		 if(maxAmt > reimbursentAMT)
+		 tempMap.put("eligibleAMT", reimbursentAMT);
 		 else
-		 tempMap.put("eligibleAMT", claimAmt);
+		 tempMap.put("eligibleAMT", maxAmt);
 	 
 		 estimatedShipDate = shipmentList.get("estimatedShipDate");
 		 
