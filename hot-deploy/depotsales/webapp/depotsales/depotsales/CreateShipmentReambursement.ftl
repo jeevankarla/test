@@ -155,16 +155,11 @@ var jsonObj = ${StringUtil.wrapString(shipmentReimbursementJson)!'{}'};
 	
 	function payReimbursement(shipmentId,invoiceAmount,eligibilityAmount){
 	
-	
-	//alert("vamsi"+JSON.stringify(jsonObj));
-	
 	var shipmentarr=jsonObj[shipmentId];
-	
-	//alert(JSON.stringify(shipmentarr));
-	
 	var receiptString="";
 	if(shipmentarr){
 	$.each(shipmentarr, function( index, value ) {
+	
       receiptString+= buildReambursementList(value.claimId,value.receiptNo,value.receiptAmount,value.receiptDate,value.description);
 	});
 	}
@@ -249,7 +244,7 @@ function addReceipt(){
 function buildReambursementList(claimId,receiptNo,receiptAmount,receiptDate,description){
   var reambursementObj ={};
    var receiptString="";
-   receiptString+= "<tr class='h3'><td>"+claimId+"</td>";
+   receiptString+= "<tr class='h3'><td>"+receiptNo+"</td>";
    receiptString+= "<td>"+receiptAmount+"</td>";
    receiptString+= "<td>"+receiptDate+"</td>";
     receiptString+= "<td>"+description+"</td>";
@@ -260,6 +255,8 @@ function buildReambursementList(claimId,receiptNo,receiptAmount,receiptDate,desc
    reambursementObj['receiptDate']=receiptDate;
    reambursementObj['description']=description;
    reambursementList.push(reambursementObj);
+   
+   alert(JSON.stringify(reambursementList));
    $("#payReimbursementList").val(JSON.stringify(reambursementList));
    return receiptString;
 }

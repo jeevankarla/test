@@ -531,7 +531,7 @@ for (eachInvoiceList in Invoice) {
 				 else
 				 tempMap1.put("receiptAmount", "")
 				 if(eachReimbursement.receiptDate)
-				 tempMap1.put("receiptDate", eachReimbursement.receiptDate)
+				 tempMap1.put("receiptDate", UtilDateTime.toDateString(eachReimbursement.receiptDate, "dd/MM/yyyy"))
 				 else
 				 tempMap1.put("receiptDate", "")
 				 
