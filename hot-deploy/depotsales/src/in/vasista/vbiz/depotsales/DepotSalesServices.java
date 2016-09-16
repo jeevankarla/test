@@ -9994,6 +9994,9 @@ Debug.log("taxRateList =============="+taxRateList);
 		        		delegator.removeAll(reambursementIdsList);
 		        	}
 		         }
+		         
+		         Debug.log("reambursementList================="+reambursementList);
+		         
 		        for (int i = 0; i < reambursementList.length(); i++) {
 		        	JSONObject reambursementObject =(JSONObject)reambursementList.get(i);
 		        	String  claimId = (String)reambursementObject.getString("claimId");
@@ -10004,6 +10007,13 @@ Debug.log("taxRateList =============="+taxRateList);
 		        	 Timestamp receiptDate = new Timestamp(date.getTime());
 		        	BigDecimal receiptAmount =new BigDecimal((String)reambursementObject.getString("receiptAmount"));
 		        	totalReceiptAmount=totalReceiptAmount.add(receiptAmount);
+		        	
+			         Debug.log("claimId================="+claimId);
+			         Debug.log("receiptNo================="+receiptNo);
+			         Debug.log("description================="+description);
+			         Debug.log("receiptDate================="+receiptDate);
+			         Debug.log("receiptAmount================="+receiptAmount);
+		        	
 		        	
 		        	if(UtilValidate.isEmpty(claimId)){
 		        		GenericValue newItemAttr = delegator.makeValue("ShipmentReimbursement");        	 
@@ -10018,7 +10028,7 @@ Debug.log("taxRateList =============="+taxRateList);
 		        receiptEligablityAmount=totalReceiptAmount;
 		        conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
-				conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+				conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
 //				conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_PAID"));
 				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				List<GenericValue> invoiceAndItemList=delegator.findList("InvoiceAndItem",condition,null,null,null,false);
@@ -10034,6 +10044,8 @@ Debug.log("taxRateList =============="+taxRateList);
 				}
 				invoiceEligablityAmount=(invoiceAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
 				BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
+				
+				
 				GenericValue shipmentObj=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
 				shipmentObj.set("claimAmount",finalEligablityAmount);
 				shipmentObj.set("claimStatus","APPLYED");
@@ -13360,6 +13372,17 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		Locale locale = (Locale) context.get("locale");
   		
+  		
+  		try{
+	  		List<GenericValue> ShipmentReimbursement = delegator.findList("ShipmentReimbursement", null, null, null, null, false);
+			if(UtilValidate.isNotEmpty(ShipmentReimbursement)){
+				delegator.removeAll(ShipmentReimbursement);
+			}
+  		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to delete ShipmentReimbursement ", module);
+		}
+  		
+  		
 
   		List<GenericValue> shipmentList = null;
   		
@@ -13383,7 +13406,6 @@ Debug.log("taxRateList =============="+taxRateList);
   			
   			if(UtilValidate.isNotEmpty(shipmentList)){
   				
-  				
   				for(GenericValue eachShipment : shipmentList){
   				
   				GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
@@ -13394,26 +13416,18 @@ Debug.log("taxRateList =============="+taxRateList);
   				Timestamp receiptDate=eachShipment.getTimestamp("estimatedShipDate");
   				if(UtilValidate.isEmpty(receiptDate))
   				 receiptDate=UtilDateTime.nowTimestamp();
-  				
-  				
 	  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
-	  				
-	  					
 		  				ShipmentReimbursement.set("shipmentId", shipmentId);
 		  				ShipmentReimbursement.set("receiptAmount", estimatedShipCost);
 		  				ShipmentReimbursement.set("receiptDate", receiptDate);
 						delegator.createSetNextSeqId(ShipmentReimbursement);
 		  				
 	  				}
-				
   				}
-  				
   			}
-  			
   		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to populate Shipment Reimbursment ", module);
 		}
-  		 
   		
     	  result = ServiceUtil.returnSuccess("ShipmentReimbursement Has been successfully Updated");
          
@@ -13783,9 +13797,6 @@ Debug.log("taxRateList =============="+taxRateList);
   		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive PartyRelationship ", module);
 		}
-  		
-  		
-  		
   		
  		 try{
  			conditionList.clear();
