@@ -13672,8 +13672,6 @@ Debug.log("taxRateList =============="+taxRateList);
 		}
   		
   		
-  		
-  		
  		 try{
  			conditionList.clear();
  		    if(UtilValidate.isNotEmpty(branchList))	

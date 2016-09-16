@@ -429,7 +429,7 @@ for (eachInvoiceList in Invoice) {
 	
 	double maxAmt = 0;
 	
-	eligibleAMT = (invoiceAMT*percentage)/100;
+//	eligibleAMT = (invoiceAMT*percentage)/100;
 	
 	maxAmt = (invoiceAMT*percentage)/100;
 	
@@ -551,7 +551,6 @@ for (eachInvoiceList in Invoice) {
 			 
 		 }
 		 
-		 eligibleAMT = eligibleAMT+reimbursentAMT;
 		 
 		 //===================================================
 		 
@@ -588,14 +587,14 @@ for (eachInvoiceList in Invoice) {
 		 if(reimbursentAMT){
 		 claimAmt = reimbursentAMT;
 		 tempMap.put("claim", claimAmt);
-		 } else{
+		 } /*else{
 		 tempMap.put("claim", reimbursentAMT);
 		 }
-		 
-		 if(claimAmt > eligibleAMT)
-		 tempMap.put("eligibleAMT", eligibleAMT);
+		 */
+		 if(maxAmt > reimbursentAMT)
+		 tempMap.put("eligibleAMT", reimbursentAMT);
 		 else
-		 tempMap.put("eligibleAMT", claimAmt);
+		 tempMap.put("eligibleAMT", maxAmt);
 	 
 		 estimatedShipDate = shipmentList.get("estimatedShipDate");
 		 
