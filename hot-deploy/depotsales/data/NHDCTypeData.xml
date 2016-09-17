@@ -507,4 +507,35 @@ under the License.
 	<OrderAssocType orderAssocTypeId="GeneralSaleAssoc" description="General Sale Order Assoc"/> 
 	
 	
+	<GeoType geoTypeId="TERRAIN" description="Terrain"/>
+	
+	<GeoType geoTypeId="PLAINS" parentTypeId="TERRAIN" description="Plains"/>
+	<GeoType geoTypeId="HILLY_OR_REMOTE" parentTypeId="TERRAIN" description="Hilly Or Remote Area"/>
+	<GeoType geoTypeId="NORTH_EAST" parentTypeId="TERRAIN" description="North-East Region"/> 
+	
+	<OrderAdjustmentType orderAdjustmentTypeId="DISCOUNTS" description="Additional Charges"/> 
+
+	<OrderAdjustmentType orderAdjustmentTypeId="PRICE_DISCOUNT" parentTypeId="DISCOUNTS" description="Price Discount"/> 
+	<OrderAdjustmentType orderAdjustmentTypeId="OTHER_DISCOUNT" parentTypeId="DISCOUNTS" description="Other Discounts"/> 
+	<OrderAdjustmentType orderAdjustmentTypeId="QTY_DISCOUNT" parentTypeId="DISCOUNTS" description="Quantity Discounts"/> 
+	
+	<InvoiceItemType invoiceItemTypeId="PRICE_DISCOUNT" parentTypeId="DISCOUNTS" description="Price Discount"/> 
+	<InvoiceItemType invoiceItemTypeId="OTHER_DISCOUNT" parentTypeId="DISCOUNTS" description="Other Discounts"/> 
+	<InvoiceItemType invoiceItemTypeId="QTY_DISCOUNT" parentTypeId="DISCOUNTS" description="Quantity Discounts"/>
+	
+	<InvoiceItemType invoiceItemTypeId="CESS" parentTypeId="ADDITIONAL_CHARGES" description="Cess"/> 
+	<InvoiceItemType invoiceItemTypeId="INSURANCE_CHGS" parentTypeId="ADDITIONAL_CHARGES" description="Insurance Charges"/> 
+	<InvoiceItemType invoiceItemTypeId="PACKING_FORWARDIG" parentTypeId="ADDITIONAL_CHARGES" description="Packing And Forwarding Charges"/>
+	<InvoiceItemType invoiceItemTypeId="OTHER_CHARGES" parentTypeId="ADDITIONAL_CHARGES" description="Other Charges"/> 
+	
+	<InvoiceItemTypeMap invoiceItemMapKey="INSURANCE_CHGS" invoiceItemTypeId="INSURANCE_CHGS" invoiceTypeId="SALES_INVOICE"/> 
+	<InvoiceItemTypeMap invoiceItemMapKey="PACKING_FORWARDIG" invoiceItemTypeId="PACKING_FORWARDIG" invoiceTypeId="SALES_INVOICE"/>
+	<InvoiceItemTypeMap invoiceItemMapKey="OTHER_CHARGES" invoiceItemTypeId="OTHER_CHARGES" invoiceTypeId="SALES_INVOICE"/> 
+	<InvoiceItemTypeMap invoiceItemMapKey="CESS" invoiceItemTypeId="CESS" invoiceTypeId="SALES_INVOICE"/>
+	
+	<InvoiceItemTypeMap invoiceItemMapKey="PRICE_DISCOUNT" invoiceItemTypeId="PRICE_DISCOUNT" invoiceTypeId="SALES_INVOICE"/>
+	<InvoiceItemTypeMap invoiceItemMapKey="OTHER_DISCOUNT" invoiceItemTypeId="OTHER_DISCOUNT" invoiceTypeId="SALES_INVOICE"/> 
+	<InvoiceItemTypeMap invoiceItemMapKey="QTY_DISCOUNT" invoiceItemTypeId="QTY_DISCOUNT" invoiceTypeId="SALES_INVOICE"/>
+
+	
 </entity-engine-xml>
