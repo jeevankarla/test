@@ -645,6 +645,9 @@ public class InvoiceServices {
                         createInvoiceItemAdjContext.put("overrideGlAccountId", adj.get("overrideGlAccountId"));
                         createInvoiceItemAdjContext.put("parentInvoiceId", invoiceId);
                         createInvoiceItemAdjContext.put("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
+                        if(UtilValidate.isNotEmpty(adj.get("isAssessableValue")) && (adj.get("isAssessableValue").equals("Y")) ){
+                        	createInvoiceItemAdjContext.put("isAssessableValue", "Y");
+                        }
                         //createInvoiceItemAdjContext.put("uomId", "");
                         createInvoiceItemAdjContext.put("userLogin", userLogin);
                         createInvoiceItemAdjContext.put("taxAuthPartyId", adj.get("taxAuthPartyId"));
