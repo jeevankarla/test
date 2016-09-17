@@ -229,10 +229,18 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			
 			
 			invoiceItemTypes = delegator.findList("InvoiceItemType", condit, null, null, null, false);
+			invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
+			
 			////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 			additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 			dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
 			Debug.log("additionalChgs =========="+additionalChgs);
+			
+			additionalChgTypeIdsList = EntityUtil.getFieldListFromEntityList(additionalChgs, "invoiceItemTypeId", true);
+			discountTypeIdsList = EntityUtil.getFieldListFromEntityList(dicounts, "invoiceItemTypeId", true);
+			
+			
+			
 			////Debug.log("dicounts =========="+dicounts);
 			
 			// Other Charges
@@ -271,6 +279,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			context.discountItemsJSON = discountItemsJSON;
 			context.discountLabelJSON = discountLabelJSON;
 			context.discountLabelIdJSON = discountLabelIdJSON;
+			
 			ShipmentDetail = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
 	        context.ShipmentDetail=ShipmentDetail;
 			orderNo="";
@@ -296,7 +305,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			prodQty = [];
 			adjustmentTypes = [];
 			
-			otherCharges = [];
+			/*otherCharges = [];
 			orderAdjustments.each{ eachOdrAdj ->
 				tempMap = [:];
 				
@@ -318,7 +327,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				tempMap.put("termDays", null);
 				tempMap.put("description", "");
 				otherCharges.add(tempMap);
-			}
+			}*/
 			
 			//Debug.log("orderItems=================="+orderItems);
 			
@@ -383,12 +392,12 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				productQty.add(tempMap);
 			}
 			
-			Map resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQty, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", ""));
+			/*Map resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQty, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", ""));
 			if(ServiceUtil.isError(resultCtx)){
 					String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
 					return ServiceUtil.returnError(errMsg);
 			}
-			Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
+			Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");*/
 			
 			//Debug.log("resultCtx=================="+resultCtx);
 			
@@ -411,7 +420,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				origQty = (relOrderItem.get(0)).get("quantity");
 				
 				String productId = eachItem.productId;
-				adjUnitAmtMap = [:];
+				/*adjUnitAmtMap = [:];
 				if(adjPerUnit && adjPerUnit.get(productId)){
 					adjUnitAmtMap = adjPerUnit.get(productId);
 				}
@@ -433,7 +442,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_INSURANCE")){
 					insuranceAmt = adjUnitAmtMap.get("COGS_INSURANCE");
 					addAmt = addAmt+insuranceAmt;
-				}
+				}*/
+				
 				qty = eachItem.quantityAccepted;
 				
 				
@@ -448,33 +458,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				
 				prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 				
-				// Fetch Tax details from order adjustment
-				/*vatPercent = 0;
-				
-				condExpr = [];
-				condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-				condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "VAT_PUR"));
-				vatItems = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-				
-				if(UtilValidate.isNotEmpty(vatItems)){
-					vatPercent = (EntityUtil.getFirst(vatItems)).get("sourcePercentage");
-				}
-				
-				cstPercent = 0;
-				
-				condExpr = [];
-				condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
-				condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "CST_PUR"));
-				cstItems = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-				
-				if(UtilValidate.isNotEmpty(cstItems)){
-					cstPercent = (EntityUtil.getFirst(cstItems)).get("sourcePercentage");
-				}
-				
-				
-				vatAmt = BigDecimal.ZERO;
-				cstAmt = BigDecimal.ZERO;*/
-				
+								
 				unitPrice = (orderItem.unitPrice);
 				
 				JSONObject newObj = new JSONObject();
@@ -555,16 +539,148 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						
 					}
 				}
-				
 				newObj.put("taxAmt", totalTaxAmt);
-				
-				
 				Debug.log("newObj ============="+newObj);
+				
+				totalItemAdjAmt = 0;
+				incBaseAmt = 0;
+				
+				JSONArray itemAdjustmentJSON = new JSONArray();
+				
+				for(int i=0; i<additionalChgTypeIdsList.size(); i++){
+					invItemTypeId = additionalChgTypeIdsList.get(i);
+					Debug.log("invItemTypeId ============="+invItemTypeId);
+					
+					JSONObject newItemAdjObj = new JSONObject();
+					newItemAdjObj.put("orderAdjustmentTypeId", invItemTypeId);
+					
+					/*originalOrderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", eachItem.orderItemSeqId));
+					applicableTo = originalOrderItem.get("itemDescription");
+					*/
+					//newItemAdjObj.put("applicableTo", applicableTo);
+					newItemAdjObj.put("adjValue", 0);
+					newItemAdjObj.put("percentage", 0);
+					newItemAdjObj.put("uomId", "INR");
+					
+					conditionList = [];
+					conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					itemAdditionalChgs = [];
+					if(UtilValidate.isNotEmpty(orderAdjustments)){
+						itemAdditionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+					}
+					
+					
+					if(UtilValidate.isNotEmpty(itemAdditionalChgs)){
+						itemOrdAdj = EntityUtil.filterByCondition(itemAdditionalChgs, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, invItemTypeId));
+						
+						if(UtilValidate.isNotEmpty(itemOrdAdj)){
+							adjItem = EntityUtil.getFirst(itemOrdAdj);
+							
+							itemValue = (adjItem.amount/origQty)*qty;
+							
+							newItemAdjObj.put("adjValue", itemValue);
+							newItemAdjObj.put("percentage", adjItem.sourcePercentage);
+							if(adjItem.isAssessableValue && adjItem.isAssessableValue == "Y"){
+								newItemAdjObj.put("assessableValue", "checked");
+								newObj.put(invItemTypeId + "_INC_BASIC", "TRUE");
+								incBaseAmt = incBaseAmt + itemValue;
+							}
+							else{
+								newObj.put(invItemTypeId + "_INC_BASIC", "FALSE");
+							}
+							
+							// Update adjustments for item
+							
+							newObj.put(invItemTypeId, adjItem.sourcePercentage);
+							newObj.put(invItemTypeId + "_AMT", itemValue);
+							
+							totalItemAdjAmt = totalItemAdjAmt + itemValue;
+						}
+						
+					}
+					
+					itemAdjustmentJSON.add(newItemAdjObj);
+					
+				}
+				Debug.log("itemAdjustmentJSON ========================= "+itemAdjustmentJSON);
+				
+				
+				totalDiscAmt = 0;
+				JSONArray discItemAdjustmentJSON = new JSONArray();
+				
+				for(int i=0; i<discountTypeIdsList.size(); i++){
+					invItemTypeId = discountTypeIdsList.get(i);
+					Debug.log("invItemTypeId ============="+invItemTypeId);
+					
+					JSONObject newItemAdjObj = new JSONObject();
+					newItemAdjObj.put("orderAdjustmentTypeId", invItemTypeId);
+					
+					/*originalOrderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", eachItem.orderItemSeqId));
+					applicableTo = originalOrderItem.get("itemDescription");
+					*/
+					//newItemAdjObj.put("applicableTo", applicableTo);
+					newItemAdjObj.put("adjValue", 0);
+					newItemAdjObj.put("percentage", 0);
+					newItemAdjObj.put("uomId", "INR");
+					
+					conditionList = [];
+					conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					itemAdditionalChgs = [];
+					if(UtilValidate.isNotEmpty(orderAdjustments)){
+						itemAdditionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+					}
+					
+					
+					if(UtilValidate.isNotEmpty(itemAdditionalChgs)){
+						itemOrdAdj = EntityUtil.filterByCondition(itemAdditionalChgs, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, invItemTypeId));
+						
+						if(UtilValidate.isNotEmpty(itemOrdAdj)){
+							adjItem = EntityUtil.getFirst(itemOrdAdj);
+							
+							itemValue = (adjItem.amount/origQty)*qty;
+							
+							newItemAdjObj.put("adjValue", itemValue);
+							newItemAdjObj.put("percentage", adjItem.sourcePercentage);
+							if(adjItem.isAssessableValue && adjItem.isAssessableValue == "Y"){
+								newItemAdjObj.put("assessableValue", "checked");
+								newObj.put(invItemTypeId + "_INC_BASIC", "TRUE");
+								incBaseAmt = incBaseAmt - itemValue;
+							}
+							else{
+								newObj.put(invItemTypeId + "_INC_BASIC", "FALSE");
+							}
+							
+							// Update adjustments for item
+							
+							newObj.put(invItemTypeId, adjItem.sourcePercentage);
+							newObj.put(invItemTypeId + "_AMT", itemValue);
+							
+							totalDiscAmt = totalDiscAmt + itemValue;
+						}
+						
+					}
+					
+					discItemAdjustmentJSON.add(newItemAdjObj);
+					
+				}
+				Debug.log("discItemAdjustmentJSON ========================= "+discItemAdjustmentJSON);
+				
+				
+				
+				
 				
 				amount = unitPrice*qty  ;
 				/*vatAmt = ((unitPrice*vatPercent)/100)*qty;
 				cstAmt = ((unitPrice*cstPercent)/100)*qty;*/
+				newObj.put("additionalChgTypeIdsList", additionalChgTypeIdsList);
+				newObj.put("discountTypeIdsList", discountTypeIdsList);
 				newObj.put("amount", amount);
+				newObj.put("itemAdjustments",itemAdjustmentJSON);
+				newObj.put("discItemAdjustments",discItemAdjustmentJSON);
+				newObj.put("OTH_CHARGES_AMT",totalItemAdjAmt);
+				newObj.put("DISCOUNT_AMT",totalDiscAmt);
+				newObj.put("incBaseAmt",incBaseAmt);
+				
 				/*newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
 				newObj.put("CSTPercent", cstPercent);
@@ -604,7 +720,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				adjustmentTypes.add(tempMap);
 			}*/
 			
-			orderAdjustments.each{ eachOdrAdj ->
+			/*orderAdjustments.each{ eachOdrAdj ->
 				tempMap = [:];
 				adjTypeId = eachOdrAdj.orderAdjustmentTypeId;
 				applicableTo = eachOdrAdj.orderItemSeqId;
@@ -647,7 +763,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			}
 			
 			
-			context.adjustmentJSON = adjustmentJSON;
+			context.adjustmentJSON = adjustmentJSON;*/
 		}
 	}
 	context.invoiceItemsJSON = invoiceItemsJSON;
