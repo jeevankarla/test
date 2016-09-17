@@ -1371,7 +1371,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  	List invoicesList = FastList.newInstance();
 	  	boolean beganTransaction = false;
         Map finaccountAmountMap = FastMap.newInstance();
-        List<Map>finTransCreationList = FastList.newInstance();
+        Map finTransCreationMap = FastMap.newInstance();
         List<String>finAccountTransIds = FastList.newInstance();
 
 	  	//EntityListIterator finIdsList = null;
@@ -1430,9 +1430,9 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		vpffinMap.put("userLogin", userLogin);
 		  	  		vpffinMap.put("amount",employeeFinAmount);
 
-	  	  		finTransCreationList.add(employeefinMap);
-	  	  		finTransCreationList.add(employeerfinMap);
-	  	  		finTransCreationList.add(vpffinMap);
+		  	  	finTransCreationMap.put("EMPCON_"+partyId,employeefinMap);
+		  	  finTransCreationMap.put("EMPRCON_"+partyId,employeerfinMap);
+		  	finTransCreationMap.put("VPFCON_"+partyId,vpffinMap);
 
 			
 	  		  /*if(UtilValidate.isNotEmpty(amountStr)){
@@ -1468,14 +1468,16 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  		//vpffinMap.put("contraRefNum", contraRefNum);
 	  		depositFinTransMap.put("userLogin", userLogin);
 	  		depositFinTransMap.put("amount",depositAmt);
-	  		finTransCreationList.add(depositFinTransMap);
-		Debug.log("finTransCreationList=============================="+finTransCreationList.size());
+	  		finTransCreationMap.put(finAccountId,depositFinTransMap);
   	      try {
-		  		if(UtilValidate.isNotEmpty(finTransCreationList)){
-		  			for(int i=0;i<=finTransCreationList.size();i++){
-		  				Map FinAccountTransMap=finTransCreationList.get(i);
+		  		if(UtilValidate.isNotEmpty(finTransCreationMap)){
+		  			
+		  			 Iterator tempIter = finTransCreationMap.entrySet().iterator();
+		 			while (tempIter.hasNext()) {
+		 				Map.Entry tempEntry = (Entry) tempIter.next();
+		 				String tempFinAccountId = (String) tempEntry.getKey();
+		 				Map FinAccountTransMap = (Map) tempEntry.getValue();
 		  				Debug.log("FinAccountTransMap========================="+FinAccountTransMap);
-		  				String tempFinAccountId=(String)FinAccountTransMap.get("finAccountId");
 		  				Debug.log("tempFinAccountId============================="+tempFinAccountId);
 		  				GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", tempFinAccountId), false);
 				  		List condsList = FastList.newInstance();
