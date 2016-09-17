@@ -559,7 +559,7 @@
 			
 			var tenPercentSubsidy = 0;
 			if(usedQuota){
-				tenPercentSubsidy = .01*(totalAmt/quantity)*usedQuota;
+				tenPercentSubsidy = .1*(saleBaseAmount/quantity)*usedQuota;
 			}
 	    	var totalPayableValue = dataRow["totPayable"];
 			

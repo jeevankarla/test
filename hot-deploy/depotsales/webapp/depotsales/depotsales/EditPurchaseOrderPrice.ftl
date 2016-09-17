@@ -528,6 +528,7 @@
 			dataRow = gridRow;
 			productName = dataRow["cProductName"];
 			
+			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var totalAmt = dataRow["amount"];
 			
 			var purchaseBasicAmount = totalAmt;
@@ -535,9 +536,6 @@
 				purchaseBasicAmount = dataRow["purchaseBasicAmount"];
 			}
 			
-			
-			
-			//alert("data2 ========="+JSON.stringify(data2));
 			
 			var adjustmentIncBasic = 0;
 			
@@ -573,10 +571,12 @@
 															"<td align='left'>Basic Amount: </td>"+
 															"<td><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
 														"</tr>"+
+														<#--
 														"<tr>"+
 															"<td align='left'>Adjustments: </td>"+
 															"<td><input type='text' style='width: 100px;' name='adjIncBasicAmt' id='adjIncBasicAmt' value='"+adjustmentIncBasic+"' readOnly/></td>"+
 														"</tr>"+
+														-->
 														"<tr>"+
 															"<td align='left'>Base Amount: </td>"+
 															"<td><input type='text' style='width: 100px;' name='baseAmount' id='baseAmount' value='"+baseAmt+"' readOnly/></td>"+
@@ -586,6 +586,93 @@
 								"</tr>";
 				message += "</table>";
 				message += "<hr class='style18'></hr>";
+				
+				message += "<table cellspacing=10 cellpadding=10 id='indentAdjustmentTable' >" ;
+				
+					message += "<tr class='h3'><th>Adjustments </th></tr>";
+					
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjustment = orderAdjustmentsList[i];
+						
+						var orderAdjPercent = orderAdjustment.percentage;
+						var orderAdjAmt = orderAdjustment.adjValue;
+						var incBasic = "FALSE";
+						
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId]){
+							orderAdjPercent = dataRow[orderAdjustment.orderAdjustmentTypeId];
+						}
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId+"_AMT"]){
+							orderAdjAmt = dataRow[orderAdjustment.orderAdjustmentTypeId+"_AMT"];
+						}
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC"]){
+							incBasic = dataRow[orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC"];
+						}
+						
+						message += "<tr>"+
+										"<td align='left'>"+orderAdjustment.orderAdjustmentTypeId+": </td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"' id='"+orderAdjustment.orderAdjustmentTypeId+"' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByFieldPercentage(this, basicAmount);'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+purchaseBasicAmount+");'></td>";
+										if(incBasic == "TRUE"){
+											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();' checked/>Inc BasicPrice</td>";
+										}
+										else{
+											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();'/>Inc BasicPrice</td>";
+										}
+										
+										
+										
+										
+									"</tr>";
+						
+						
+					}	
+				
+				message += "</table>";
+				
+				
+				<#--
+				message += "<table cellspacing=10 cellpadding=10 id='indentAdjustmentTable' >" ;
+				
+					message += "<tr class='h3'><th>Adjustments </th></tr>";
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjustment = orderAdjustmentsList[i];
+						
+						
+						
+						var orderAdjPercent = 0;
+						var orderAdjAmt = 0;
+						var incBasic = "FALSE";
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId]){
+							orderAdjPercent = dataRow[orderAdjustment.orderAdjustmentTypeId];
+						}
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId+"_AMT"]){
+							orderAdjAmt = dataRow[orderAdjustment.orderAdjustmentTypeId+"_AMT"];
+						}
+						if(dataRow[orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC"]){
+							incBasic = dataRow[orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC"];
+						}
+						
+						message += "<tr>"+
+										"<td align='left'>"+orderAdjustment.description+": </td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"' id='"+orderAdjustment.orderAdjustmentTypeId+"' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByFieldPercentageSale(this, purchaseAmount);'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmountSale(this,"+totalAmt+");'></td>";
+										if(incBasic == "TRUE"){
+											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' class='saleBasePriceComponent' value='Y' onclick='javascript:adjustBasePriceSale();' checked/>Inc BasicPrice</td>";
+										}
+										else{
+											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_INC_BASIC' class='saleBasePriceComponent' value='Y' onclick='javascript:adjustBasePriceSale();'/>Inc BasicPrice</td>";
+										}
+										
+										
+										
+										
+									"</tr>";
+							
+					}
+				message += "</table>";
+				-->		
 				
 				message += "<table cellspacing=10 cellpadding=10 id='purchaseTaxUpdationTable' >" ;
 					message += "<tr class='h3'>"+
@@ -667,14 +754,36 @@
 		var baseAmount = $("#baseAmount").val();
 		var saleBaseAmt = $("#saleBaseAmt").val();
 		
-				
 		$("#purchaseTaxUpdationTable tr :input:visible").each(function () {
 		    var id = this.id;
 		    if(id != 'undefined' && id != null && id.length){
 		    	if (id.indexOf("_AMT") >= 0){
 			    	var adjValue = $('#'+id).val();
 			    	dataRow[id] = adjValue;
+			    	totalTaxAmt = totalTaxAmt+adjValue/100*100 ;
+			    }
+			    else{
+			    	var adjPercentage = $('#'+id).val();
+			    	dataRow[id] = adjPercentage;
+			    }
+		    }
+		})
+		
+		$("#indentAdjustmentTable tr :input:visible").each(function () {
+		    var id = this.id;
+		   
+		    if(id != 'undefined' && id != null && id.length){
+		    	if (id.indexOf("_AMT") >= 0){
+			    	var adjValue = $('#'+id).val();
+			    	dataRow[id] = adjValue;
 			    	otherChargesValue = otherChargesValue+adjValue/100*100 ;
+			    }
+			    else if (id.indexOf("_INC_BASIC") >= 0){
+			    	if (document.getElementById(id).checked){
+					    dataRow[id] = "TRUE";
+					}else{
+						dataRow[id] = "FALSE";
+					}
 			    }
 			    else{
 			    	var adjPercentage = $('#'+id).val();
@@ -686,8 +795,11 @@
 		//alert("totalTaxAmt = "+totalTaxAmt);
 		
 				
-		dataRow["taxAmt"] = otherChargesValue;
+		dataRow["taxAmt"] = totalTaxAmt;
+		dataRow["OTH_CHARGES_AMT"] = otherChargesValue;
 		//dataRow["totPayable"] = totalPayableValue;
+		dataRow["baseAmount"] = baseAmount;
+		
 		
 		grid.updateRow(rowIndex);
 		grid.render();
@@ -706,6 +818,9 @@
 		var totalTaxAmt = 0;
 		var serviceChargeVal = 0;
 		var totalAmt = dataRow["amount"];
+		
+		var itemAdjustments = dataRow["itemAdjustments"];
+		
 		$("#taxTable tr :input:visible").each(function () {
 		    var id = this.id;
 		    if(id != 'undefined' && id != null && id.length){

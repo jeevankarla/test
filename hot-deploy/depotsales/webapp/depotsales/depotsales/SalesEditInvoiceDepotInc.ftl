@@ -163,6 +163,13 @@
 				var inputTenPercent = jQuery("<input>").attr("type", "hidden").attr("name", "tenPercent_o_" + rowCount).val(tenPercent);
 				jQuery(formId).append(jQuery(inputTenPercent));
 				
+				var saleTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "saleTitleTransferEnumId").val($("#saleTitleTransferEnumId").val());
+				var saleTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "saleTaxType").val($("#saleTaxType").val());
+				jQuery(formId).append(jQuery(saleTitleTransferEnum));
+				jQuery(formId).append(jQuery(saleTaxType));
+				
+				
+				
 				//percentages
 				
 				var inputVATPer = jQuery("<input>").attr("type", "hidden").attr("name", "VatPercent_o_" + rowCount).val(VATPer);
@@ -198,6 +205,53 @@
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
 				}
+				
+				// Sale order Adjustments
+				var orderAdjustmentsList = [];
+				orderAdjustmentsList = data[rowCount]["additionalChgTypeIdsList"];
+				
+				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
+				jQuery(formId).append(jQuery(orderAdjustmentItem));	
+				if(orderAdjustmentsList != undefined){
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjType = orderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
+                
+                
+                var discOrderAdjustmentsList = [];
+				discOrderAdjustmentsList = data[rowCount]["discountTypeIdsList"];
+				
+				var discOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "discOrderAdjustmentsList_o_" + rowCount).val(discOrderAdjustmentsList);
+				jQuery(formId).append(jQuery(discOrderAdjustmentItem));	
+				if(discOrderAdjustmentsList != undefined){
+					for(var i=0;i<discOrderAdjustmentsList.length;i++){
+						var orderAdjType = discOrderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
+				
 				
    			}
 		}
@@ -482,10 +536,10 @@
 	function setupGrid1() {
     
              withOutBedcolumns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:400, minWidth:400, cssClass:"readOnlyColumnClass", focusable :false, sortable:false ,toolTip:""},
-			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter, focusable :false},
-			{id:"UPrice", name:"Unit Price", field:"UPrice", width:130, minWidth:130, cssClass:"readOnlyColumnClass", sortable:false, align:"right", toolTip:"UD Price", focusable :false},
-			{id:"amount", name:"Total Basic Amount", field:"amount", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter},
+			{id:"cProductName", name:"Product", field:"cProductName", width:300, minWidth:300, cssClass:"readOnlyColumnClass", focusable :false, sortable:false ,toolTip:""},
+			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:60, minWidth:60, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter, focusable :false},
+			{id:"UPrice", name:"Unit Price", field:"UPrice", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, align:"right", toolTip:"UD Price", focusable :false},
+			{id:"amount", name:"Total Basic Amount", field:"amount", width:120, minWidth:120, editor:FloatCellEditor, sortable:false, formatter: rateFormatter},
 			<#--{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
 			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},
 			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
@@ -493,6 +547,8 @@
 			{id:"SERVICE_CHARGE_AMT", name:"Serv Chgs", field:"SERVICE_CHARGE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"SurChgPercent", name:"SUR(%)", field:"SurChgPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"OTH_CHARGES_AMT", name:"Charges", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"DISCOUNT_AMT", name:"Disc Amt", field:"DISCOUNT_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"tenPercent", name:"10% Subsidy Value", field:"tenPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right"},
 			{id:"usedQuota", name:"Used Quota", field:"usedQuota", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},

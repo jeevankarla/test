@@ -346,6 +346,7 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
+				<#--
 				<div class="lefthalf">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
@@ -368,6 +369,7 @@ $(document).ready(function(){
 					</div>
 				</div>
 				</div>
+				-->
 				<#assign formAction ='processPurchaseInvoice'>	
 				<#if partyId?exists>
 			    	<div align="center">

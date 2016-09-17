@@ -284,7 +284,28 @@
 					}
 				}
                 
-                 
+                // Sale order Adjustments
+				var orderAdjustmentsList = [];
+				orderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				
+				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
+				jQuery(formId).append(jQuery(orderAdjustmentItem));	
+				if(orderAdjustmentsList != undefined){
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjType = orderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
 				
 				//var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
 				//jQuery(formId).append(jQuery(inputExcisePer));
@@ -622,9 +643,11 @@
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"OTH_CHARGES_AMT", name:"Oth Chgs", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			<#--{id:"VAT_SALE_AMT", name:"VAT", field:"VAT_SALE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"CST_SALE_PUR_AMT", name:"CST", field:"CST_SALE_PUR_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			
 			
-			<#--{id:"cessPercent", name:"CESS (%)", field:"cessPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Cess Percentage", editor:FloatCellEditor},
+			{id:"cessPercent", name:"CESS (%)", field:"cessPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Cess Percentage", editor:FloatCellEditor},
 			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", editor:FloatCellEditor},
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
 			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
@@ -1101,8 +1124,8 @@
 						    data[row]["DEFAULT_PUR_"+key] = value;
 						    data[row]["DEFAULT_PUR_"+key+"_AMT"] = (value) * totalAmt/100;
 						    
-						    data[row][key+"_PUR"] = value;
-						    data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
+						    //data[row][key+"_PUR"] = value;
+						    //data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
 						    
 						    count++;
 						});
