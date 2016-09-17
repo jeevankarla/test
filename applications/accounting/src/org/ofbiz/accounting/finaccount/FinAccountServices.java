@@ -53,8 +53,15 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import java.util.Locale;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilHttp;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 
 public class FinAccountServices {
@@ -1289,4 +1296,238 @@ public class FinAccountServices {
 		result.put("openingBalance", openingBalance);
         return result;
     }
+    
+public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletResponse response) {
+
+	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	  Locale locale = UtilHttp.getLocale(request);
+  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+  	  HttpSession session = request.getSession();
+  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  	  BigDecimal totalAmount = BigDecimal.ZERO;
+  	  List paymentIds = FastList.newInstance();
+  	
+  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  	  if (rowCount < 1) {
+  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+		  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+  		  return "error";
+  	  }
+  	  String paymentMethodId = "";
+  	  String paymentType = "";
+  	  String finAccountId = "";
+  	  String instrumentDateStr = "";
+  	  String paymentDateStr = "";
+  	  String paymentRefNum = "";
+  	  String partyId = "";
+  	  String partyIdFrom = "";
+  	  String paymentGroupId = "";
+  	  String paymentGroupTypeId="";
+  	  String depositAmtStr="";
+  	  Debug.log("paramMap========================"+paramMap);
+
+  	  finAccountId = (String) paramMap.get("finAccountId");
+  	  instrumentDateStr = (String) paramMap.get("instrumentDate");
+  	  paymentDateStr = (String) paramMap.get("paymentDate");
+  	  paymentRefNum = (String) paramMap.get("paymentRefNum");
+  	  paymentGroupTypeId = (String) paramMap.get("paymentGroupTypeId");
+  	  depositAmtStr = (String) paramMap.get("depositAmt");
+
+  	
+  	  Debug.log("finAccountId========================"+finAccountId);
+  	  Debug.log("instrumentDateStr========================"+instrumentDateStr);
+  	  Debug.log("paymentDateStr========================"+paymentDateStr);
+  	  Debug.log("paymentRefNum========================"+paymentRefNum);
+  	  Debug.log("paymentGroupTypeId========================"+paymentGroupTypeId);
+ 
+  	  Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+      if (UtilValidate.isNotEmpty(instrumentDateStr)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+			try {
+				instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ instrumentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
+			}
+	   } 
+       Timestamp paymentDate=UtilDateTime.nowTimestamp();
+       if (UtilValidate.isNotEmpty(paymentDateStr)) {
+		    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ paymentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ paymentDateStr, module);
+			}
+	   }
+        BigDecimal totInvoiceAMount = BigDecimal.ZERO;
+	  	Map invoiceAmountMap = FastMap.newInstance();
+	  	List invoicesList = FastList.newInstance();
+	  	boolean beganTransaction = false;
+        Map finaccountAmountMap = FastMap.newInstance();
+        List<Map>finTransCreationList = FastList.newInstance();
+        List<String>finAccountTransIds = FastList.newInstance();
+
+	  	//EntityListIterator finIdsList = null;
+		for (int i = 0; i < rowCount; i++){
+		  	  Map paymentMap = FastMap.newInstance();
+	  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  		  BigDecimal amount = BigDecimal.ZERO;
+	  		  String amountStr = "";
+	  		  BigDecimal employeeFinAmount=BigDecimal.ZERO;
+	  		  BigDecimal employeerFinAmount=BigDecimal.ZERO;
+	  		  BigDecimal vpfFinAmount=BigDecimal.ZERO;
+	  		  Debug.log("thisSuffix==========================empCon"+thisSuffix);
+	  		  if (paramMap.containsKey("empCon"+ thisSuffix)) {
+	  			employeeFinAmount = new BigDecimal((String)paramMap.get("empCon"+thisSuffix));
+	  		  }
+	  		  Debug.log("employeeFinAmount=========================="+employeeFinAmount);
+
+	  		  if (paramMap.containsKey("emprCon"+ thisSuffix)) {
+	  			employeerFinAmount = new BigDecimal((String) paramMap.get("emprCon"+thisSuffix));
+	  		  }
+	  		  Debug.log("employeerFinAmount=========================="+employeerFinAmount);
+
+	  		  if (paramMap.containsKey("vpfCon"+ thisSuffix)) {
+	  			vpfFinAmount = new BigDecimal((String)paramMap.get("vpfCon"+thisSuffix));
+	  		  }
+	  		  Debug.log("vpfFinAmount=========================="+vpfFinAmount);
+
+	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
+	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
+	  		  }
+	  		  Debug.log("partyId=========================="+partyId);
+
+	  		  
+	  	  		Map employeefinMap = FastMap.newInstance();
+		  	  		employeefinMap.put("partyId",partyId);
+		  	  		employeefinMap.put("finAccountId","EMPCON_"+partyId);
+		  	  		employeefinMap.put("transactionDate",paymentDate);
+		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
+			  		//paymentInputMap.put("contraRefNum", contraRefNum);
+		  	  		employeefinMap.put("userLogin", userLogin);
+		  	  		employeefinMap.put("amount",employeeFinAmount);
+	  	  		Map employeerfinMap = FastMap.newInstance();
+		  	  		employeerfinMap.put("partyId",partyId);
+		  	  		employeerfinMap.put("finAccountId","EMPRCON_"+partyId);
+		  	  		employeerfinMap.put("transactionDate",paymentDate);
+		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
+		  	  		employeerfinMap.put("userLogin", userLogin);
+		  	  		employeerfinMap.put("amount",employeeFinAmount);
+	  	  		Map vpffinMap = FastMap.newInstance();
+		  	  		vpffinMap.put("partyId",partyId);
+		  	  		vpffinMap.put("finAccountId","VPFCON_"+partyId);
+		  	  		vpffinMap.put("transactionDate",paymentDate);
+		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		//vpffinMap.put("contraRefNum", contraRefNum);
+		  	  		vpffinMap.put("userLogin", userLogin);
+		  	  		vpffinMap.put("amount",employeeFinAmount);
+
+	  	  		finTransCreationList.add(employeefinMap);
+	  	  		finTransCreationList.add(employeerfinMap);
+	  	  		finTransCreationList.add(vpffinMap);
+
+			
+	  		  /*if(UtilValidate.isNotEmpty(amountStr)){
+				  try {
+		  			  amount = new BigDecimal(amountStr);
+		  		  } catch (Exception e) {
+		  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + amountStr);
+		  			return "error";
+		  		  }
+	  		  }*/
+	  		  
+	  		  
+	  		  
+	  		 
+		  }
+		BigDecimal depositAmt=BigDecimal.ZERO;
+		 if(UtilValidate.isNotEmpty(depositAmtStr)){
+		  try {
+			  depositAmt = new BigDecimal(depositAmtStr);
+		  } catch (Exception e) {
+			  Debug.logError(e, "Problems parsing amount string: " + depositAmtStr, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + depositAmtStr);
+			return "error";
+		  }
+	  }
+		 
+		Map depositFinTransMap=FastMap.newInstance();
+			depositFinTransMap.put("partyId","Company");
+			depositFinTransMap.put("finAccountId",finAccountId);
+			depositFinTransMap.put("transactionDate",paymentDate);
+	  		depositFinTransMap.put("finAccountTransTypeId","DEPOSIT");
+	  		//vpffinMap.put("contraRefNum", contraRefNum);
+	  		depositFinTransMap.put("userLogin", userLogin);
+	  		depositFinTransMap.put("amount",depositAmt);
+	  		finTransCreationList.add(depositFinTransMap);
+		Debug.log("finTransCreationList=============================="+finTransCreationList.size());
+  	      try {
+		  		if(UtilValidate.isNotEmpty(finTransCreationList)){
+		  			for(int i=0;i<=finTransCreationList.size();i++){
+		  				Map FinAccountTransMap=finTransCreationList.get(i);
+		  				Debug.log("FinAccountTransMap========================="+FinAccountTransMap);
+		  				String tempFinAccountId=(String)FinAccountTransMap.get("finAccountId");
+		  				Debug.log("tempFinAccountId============================="+tempFinAccountId);
+		  				GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", tempFinAccountId), false);
+				  		List condsList = FastList.newInstance();
+			        	if(UtilValidate.isEmpty(finAccount)){
+			        		return "error";
+			        	}
+			        	 Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", FinAccountTransMap);
+					       if (ServiceUtil.isError(createResult)) {
+					       	   Debug.logError("Problems in service batchDepositContraFinAccTrans", module);
+							   request.setAttribute("_ERROR_MESSAGE_", "Error in service batchDepositContraFinAccTrans");
+							   return "error";
+					        }
+	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
+	                        finAccountTransIds.add(finAccountTransId);
+		  				
+		  			}
+		  			Debug.log("finAccountTransIds===================="+finAccountTransIds);
+		  		}
+		  		Debug.log("finAccountTransIds==========================="+finAccountTransIds);
+        	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
+		  		  Map serviceCtx = FastMap.newInstance();
+		  		  serviceCtx.put("finAccountTransIds", finAccountTransIds);
+		  		  serviceCtx.put("instrumentDate", instrumentDate);
+		  		  serviceCtx.put("finAccntTransDate", paymentDate);
+		  		  serviceCtx.put("fromDate", paymentDate);
+		  		  serviceCtx.put("contraRefNum", paymentRefNum);
+		  		  serviceCtx.put("issuingAuthority", finAccountId);
+		  		  serviceCtx.put("amount", totalAmount);
+		  		  serviceCtx.put("statusId", "FNACTTRNSGRP_CREATED");
+		  		  serviceCtx.put("finAccountId", finAccountId);
+		  		  serviceCtx.put("finAcntTrnsGrpTypeId", "FIN_ACNT_TRNS_BATCH");
+		  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("userLogin", userLogin);
+	  			  Map resultCtx = dispatcher.runSync("createFinAccountTransGroupAndMember", serviceCtx);
+	  			 Debug.log("resultCtx============"+resultCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating fin account trans group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating fin account trans group");
+			  			TransactionUtil.rollback();
+			  			return "error";
+		  		  }
+			  	  String finAccntTransGroupId = (String)resultCtx.get("finAccntTransGroupId");
+			  	  Debug.log("finAccntTransGroupId============"+finAccntTransGroupId);
+		  	  }	
+        } catch (Exception ex) {
+	  		    return "error";
+	     }
+			 result = ServiceUtil.returnSuccess("Payment successfully done for Party");
+			 request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for Party");
+		     return "success"; 
+	  	 }      
 }
