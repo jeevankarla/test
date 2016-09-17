@@ -177,6 +177,11 @@
 				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "oritemseq_o_" + rowCount).val(orderItemSeqId);
 				jQuery(formId).append(jQuery(inputorderItemSeqId));
 				
+				var purchaseTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val($("#purchaseTitleTransferEnumId").val());
+				var purchaseTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTaxType").val($("#purchaseTaxType").val());
+				jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
+				jQuery(formId).append(jQuery(purchaseTaxType));
+				
 				<#--
 				if(data[rowCount]["VAT_SALE_PUR"]){
 					var inputVat = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_SALE_PUR_o_" + rowCount).val(data[rowCount]["VAT_SALE_PUR"]);
@@ -254,6 +259,54 @@
 						jQuery(formId).append(jQuery(purInputTaxTypeValue));
 					}
 				}
+                
+                
+                // Sale order Adjustments
+				var orderAdjustmentsList = [];
+				orderAdjustmentsList = data[rowCount]["additionalChgTypeIdsList"];
+				
+				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
+				jQuery(formId).append(jQuery(orderAdjustmentItem));	
+				if(orderAdjustmentsList != undefined){
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjType = orderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
+                
+                
+                var discOrderAdjustmentsList = [];
+				discOrderAdjustmentsList = data[rowCount]["discountTypeIdsList"];
+				
+				var discOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "discOrderAdjustmentsList_o_" + rowCount).val(discOrderAdjustmentsList);
+				jQuery(formId).append(jQuery(discOrderAdjustmentItem));	
+				if(discOrderAdjustmentsList != undefined){
+					for(var i=0;i<discOrderAdjustmentsList.length;i++){
+						var orderAdjType = discOrderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
+                
                 
 				
    			}
@@ -544,6 +597,8 @@
 			
 			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},-->
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"OTH_CHARGES_AMT", name:"Charges", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"DISCOUNT_AMT", name:"Disc Amt", field:"DISCOUNT_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 

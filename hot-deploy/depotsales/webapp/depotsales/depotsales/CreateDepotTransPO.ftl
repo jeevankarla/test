@@ -10,7 +10,6 @@
 <script type="application/javascript">
 
 		
-		
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'dd MM, yy',
@@ -49,7 +48,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	}
 	
     $(document).ready(function(){
-    		populateBranchDepots();
+    	populateBranchDepots();
             $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -74,7 +73,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	return false;
 				    	}
                         supplierName = partyNameObj[supplierId];
-                        if( (supplierName).length < 1 ) {
+                        if( ((supplierName != undefined) && (supplierName).length < 1) ) {
  					    	$('#supplierName').css('background', 'yellow'); 
  					       	setTimeout(function () {
  					           	$('#supplierName').css('background', 'white').focus(); 
@@ -124,7 +123,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 	}
                 	return true;
                 },
-                onFinishing: function (event, currentIndex)
+                 onFinishing: function (event, currentIndex)
                 {	
                     var facilityId = $("#facilityId").val(); 
             	    if( (facilityId).length < 1 || facilityId == 'selected') {
@@ -221,6 +220,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	   var value = $("#supplierId").val();
 	   supplierName = partyNameObj[value];
 	   $("#supplierName").html("<h4>"+supplierName+"</h4>");
+	   calculateTaxApplicability();
 	}    
 	    
 	 var payTermDes;
@@ -257,7 +257,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		  });	
 		}  
 		 
-		var billToPartyId;
+		var billToPartyId; 
 		function populateBranchDepots() {
 			var productStoreId = $("#productStoreId").val();
 			var originFacilityId=$("#originFacilityId").val();
@@ -272,7 +272,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				 success:function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 	                    alert('Error Fetching available courses');
-					}else{					
+					}else{
 						depotsList = result["depotsList"];
 						billToPartyId = result["ownerPartyId"];
 						CreateMPO.billToPartyId.value=billToPartyId;						
@@ -287,7 +287,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								var innerList=list[i];	              			             
 				                optionList += "<option value = " + innerList.facilityId + " >" + innerList.facilityName + "</option>";          			
 				      		}
-				      	}		
+				      	}	
 				      	if(paramName){
 				      		jQuery("[name='"+paramName+"']").html(optionList);
 				      	}
@@ -297,10 +297,93 @@ function makeDatePicker(fromDateId ,thruDateId){
 					alert("record not found");
 				}							
 			});
-			
+			calculateTaxApplicability();
 		} 
+		
+		function calculateTaxApplicability() {
+			var productStoreId = $("#productStoreId").val();
+			var supplierPartyId = $("#supplierId").val();
+			var partyId = "V04109";
+			
+			if( productStoreId != undefined && productStoreId != ""  &&  supplierPartyId != undefined && supplierPartyId != ""  &&    partyId != undefined && partyId != ""  ){
+			
+				$.ajax({
+		             type: "POST",
+		             url: "getTaxApplicabilityDetails",
+		           	 data: {productStoreId : productStoreId, supplierPartyId: supplierPartyId, partyId: partyId } ,
+		           	 dataType: 'json',
+		           	 async: false,
+		        	 success: function(result) {
+			             if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+			       	  		 alert(result["_ERROR_MESSAGE_"]);
+			          	 }
+			          	 else{
+	       	  				 var geoIdsMap =result["geoIdsMap"];
+	       	  				 alert(JSON.stringify(geoIdsMap));
+	       	  				 var checkForE2Form = geoIdsMap["checkForE2Form"];
+	       	  				 var taxTypeApplicable = geoIdsMap["taxTypeApplicable"];
+	       	  				 //alert(taxTypeApplicable);
+	       	  				 //jQuery('#taxTypeValue').html(taxTypeApplicable);
+	       	  				 //$('#orderTaxType').val(taxTypeApplicable).change();
+	       	  				 //$('#orderTaxType option[value=CST_SALE]').prop('selected', 'selected').change();
+	       	  				 
+	       	  				 $('#taxTypeApplicable').val(taxTypeApplicable);
+	       	  				 $('#partyGeoId').val(geoIdsMap["partyGeoId"]);
+	       	  				 $('#supplierGeoId').val(geoIdsMap["supplierGeoId"]);
+	       	  				 $('#branchGeoId').val(geoIdsMap["branchGeoId"]);
+	       	  				 
+	       	  				 //$('#partyGeoLocation').val(geoIdsMap["partyGeoLocation"]);
+	       	  				 //$('#supplierGeoLocation').val(geoIdsMap["supplierGeoLocation"]);
+	       	  				 //$('#branchGeoLocation').val(geoIdsMap["branchGeoLocation"]);
+	       	  				 
+	       	  				 //$("#partyGeoLocationDesc").text("Customer: "+geoIdsMap["partyGeoLocation"]);
+	       	  				 //$("#supplierGeoLocationDesc").text("Supplier: "+geoIdsMap["supplierGeoLocation"]);
+	       	  				//$("#branchGeoLocationDesc").text("Branch: "+geoIdsMap["branchGeoLocation"]);
+	       	  				 
+	       	  				 //$('#orderTaxType').val(geoIdsMap["taxType"]);
+	       	  				 
+	       	  				 $('#purchaseTaxType').val(geoIdsMap["purchaseTaxType"]);
+	       	  				 $('#saleTaxType').val(geoIdsMap["taxType"]);
+	       	  				 
+	       	  				 $('#purchaseTitleTransferEnumId').val(geoIdsMap["purchaseTitleTransferEnumId"]);
+	       	  				 
+	       	  				 $('#saleTitleTransferEnumId').val(geoIdsMap["titleTransferEnumId"]);
+	       	  				 
+	       	  				 
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$('#e2FormCheck').val("Y");
+	       	  				 }
+	       	  				 else{
+	       	  				 	$('#e2FormCheck').val("N");
+	       	  				 }
+	       	  				 
+	       	  				 
+	       	  				 <#--
+	       	  				 if(checkForE2Form == "Y"){
+	       	  				 	$("#E2FormCheck").attr("checked",false);
+	       	  				 	jQuery('#E2FormChecktd').show();
+	       	  				 }
+	       	  				 else{
+	       	  				 	$("#E2FormCheck").attr("checked","checked");
+	       	  				 	jQuery('#E2FormChecktd').hide();
+	       	  				 }
+	       	  				 -->
+	       	  				 
+							         
+			      		 }
+		          	} ,
+		         	error: function() {
+		          		alert(result["_ERROR_MESSAGE_"]);
+		         	}
+		        }); 
+			
+			
+			}
+			
+			
+	    }
 		  
-	    
+		
 </script>
 
 <style type="text/css">
@@ -356,9 +439,24 @@ function makeDatePicker(fromDateId ,thruDateId){
     <h3>PO Header</h3>
     <section>
       <fieldset>
-            <table cellpadding="15" cellspacing="15" class='h3' width="50%">
+            <table cellpadding="8" cellspacing="8" class='h4' width="100%">
                    <tr>
 						<td class="label">Order Type(<font color="red">*</font>) :</td>
+							<#if parameters.partyGeoId?exists && parameters.partyGeoId?has_content>  
+			       				<input type="hidden" name="partyGeoId" id="partyGeoId" value="${partyGeoId?if_exists}"/>
+			       			 <#else>               
+				          		<input type="hidden" name="partyGeoId" id="partyGeoId" value=""/>
+				          	</#if>
+				          	<#if parameters.branchGeoId?exists && parameters.branchGeoId?has_content>  
+			       				<input type="hidden" name="branchGeoId" id="branchGeoId" value="${branchGeoId?if_exists}"/>
+			       			 <#else>               
+				          		<input type="hidden" name="branchGeoId" id="branchGeoId" value=""/>
+				          	</#if>
+				          	<#if parameters.supplierGeoId?exists && parameters.supplierGeoId?has_content>  
+			       				<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${supplierGeoId?if_exists}"/>
+			       			 <#else>               
+				          		<input type="hidden" name="supplierGeoId" id="supplierGeoId" value=""/>
+				          	</#if>
 					    <td>
 						<select name="orderTypeId" id="orderTypeId" onchange="javascript: hideExtPO();">
 					      	   <#list orderTypes as orderType>
@@ -394,12 +492,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly onblur= 'javascript:dispSuppName(this);'/>
-					    		<span> ${orderInfo.get("supplierName")?if_exists}</span>
+					    		<span class="tooltip"> ${orderInfo.get("supplierName")?if_exists}</span>
+					    		
 					    	<#else>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
-					    		<span id="supplierName"></span>
+					    		<span class="tooltip" id="supplierName"></span>
 					    	</#if>
-					      	
+					    	
 					    </td>
 					</tr>
 					<tr>
@@ -490,6 +589,55 @@ function makeDatePicker(fromDateId ,thruDateId){
 						   	</#if> 
         				 </td>
 					</tr>
+					<tr>
+			            <td class="label"><b> Description :</b></td>
+			            <td>
+			            	<#if orderId?exists && orderInfo.get("orderName")?exists>
+					    		<input type="text" name="orderName" id="orderName" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderName")?if_exists}"/>
+					    	<#else>
+					    		<input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
+					    	</#if>
+        				   
+          				</td>
+			        </tr>
+					<tr>
+		       	  		<td align='left' class="label" nowrap="nowrap">Purchase Tax Type:</td>
+		       	  		<td valign='middle'>
+	          				<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
+	          					<#if orderId?exists && orderInfo.get("purchaseTaxType")?exists>
+	          						<#if orderInfo.get("purchaseTaxType") == "Intra-State">
+	          							<option value="Intra-State" selected>With In State</option>
+	          						<#else>
+	          							<option value="Inter-State" selected>Inter State</option>
+	          						</#if> 
+	          					</#if> 
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
+	          				</select>
+	          			</td>
+		          		<td>&nbsp;</td>
+		          		<td align='left' class="label" nowrap="nowrap">Transaction Type:</td>
+		       			<td valign='middle'>
+	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if orderId?exists && orderInfo.get("purchaseTitleTransferEnumId")?exists>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          						</#if> 
+	          					</#if> 
+	          				
+	          				
+	          					<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="NO_E2_FORM"></option>
+	          				</select>
+	          			</td>
+		       		</tr>
 					<!--<tr>
 					    <td class="label"><b>Ref Date:* </b></td>
 					    <td>
@@ -517,17 +665,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					      
         				 </td>
 					</tr>-->
-			        <tr>
-			            <td class="label"><b> Description :</b></td>
-			            <td>
-			            	<#if orderId?exists && orderInfo.get("orderName")?exists>
-					    		<input type="text" name="orderName" id="orderName" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderName")?if_exists}"/>
-					    	<#else>
-					    		<input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
-					    	</#if>
-        				   
-          				</td>
-			        </tr>
+			        
                   </table>
                 </fieldset>  
              </section>
@@ -543,38 +681,45 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<label>Purchase Order</label>
 						</div>
 			 			<div class="screenlet-body" id="FieldsDIV" >
+			 				<#--
 			 				<table width="100%" border="0" cellspacing="10" cellpadding="10">
 				 		        <tr>
-				 		        	<#--<#if includeTax?exists && includeTax=="Y">
+				 		        	<#if includeTax?exists && includeTax=="Y">
 						        	<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" checked /></font></h3></td>
 									<#else>
 									<td align='left' nowrap="nowrap"><h3><font color="red">Include Tax:<input class='h3' type="checkbox" id="incTax" name="incTax" value="true" onClick="javascript: updateGridAmount();" /></font></h3></td>
-									</#if>-->
+									</#if>
 						        	<td align="center"><h2><font color="black">Total PO Value :</font> <font color="green"><span id="totalPOAmount">Rs. 0</span></font></h2></td>
 						        	<td align='right'><input class="styled-button" type="button" id="calculateBtn"  name="calculateBtn" value="Calculate" onClick="javascript: calculatePOValue();"/></td>
 				 		         </tr>
 				        	</table>
+				        	-->
 				        	
 				        	<div class="screenlet-title-bar">
 				        		<div class="grid-header" style="width:80%">
-									<label>Material Details</label>
+									<label style="float:left">Material Details</label>
+									<label style="float:left" id="itemsSelected" class="labelItemHeader"><font color="green">Total PO Value :</font></label>
+									<font color="green"><span id="totalPOAmount">Rs. 0</span></font>
+									<input type="button" style="float:right" class="buttonText" id="calculateBtn" value="Calculate" onclick="javascript:calculatePOValue();" />
 								</div>
 							
-								<div id="myGrid1" style="width:80%;height:150px;">
+								<div id="myGrid1" style="width:100%;height:150px;">
 									<div class="grid-header" style="width:80%">
 									</div>
 			             		</div>
+			             		<#--
 			             		<br/>
 								<center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center>	
-								<br/>		             		
+								<br/>
+								-->		             		
 							</div>
 							
 							<div class="screenlet-title-bar" id="titleScreen">
-								<div class="grid-header" style="width:80%">
+								<div class="grid-header" style="width:75%">
 									<label>Other Charges</label>
 								</div>
-								<div id="myGrid2" style="width:80%;height:150px;">
-									<div class="grid-header" style="width:80%">
+								<div id="myGrid2" style="width:75%;height:150px;">
+									<div class="grid-header" style="width:75%">
 								</div>
 							</div>
 						</div>
@@ -816,16 +961,22 @@ function makeDatePicker(fromDateId ,thruDateId){
  <script type="application/javascript">
  
  $(document).ready(function(){
-    
-    getPayTermDes();
+ 	
+ 	getPayTermDes();
     getDelTermDes();
     
+    $("#titleScreen").show(); 
+    prepareApplicableOptions();
+    setupGrid2();
+    
+    <#--
     <#if orderId?exists && termExists?exists && termExists == "Y">
     	prepareApplicableOptions();
     	setupGrid2();
     <#else>
     	$("#titleScreen").hide();
     </#if>
+    -->
     <#if orderId?exists>
     	calculatePOValue();
     </#if>

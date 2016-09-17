@@ -609,46 +609,7 @@ function populateData(){
 					      	</#if>
         				 </td>
 					</tr>
-					<#assign purchaseTypeFlag = parameters.purchaseTypeFlag?if_exists>
-					<#if purchaseTypeFlag?has_content && purchaseTypeFlag == "contractPurchase">
 					<tr>
-						<td class="label"><b>From Date : </b></td>
-						<td>
-							<#if orderId?exists && orderInfo.get("validFromDate")?exists>
-					    		<input type="text" name="fromDate" id="fromDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validFromDate")?if_exists}"/>
-					    	<#else>
-					    		<input type="text" name="fromDate" id="fromDate" size="18" maxlength="60" autocomplete="off"/>
-					    	</#if>
-						</td>
-					</tr>
-					<tr>
-						<td class="label"><b>Thru Date : </b></td>
-						<td>
-							<#if orderId?exists && orderInfo.get("validThruDate")?exists>
-					    		<input type="text" name="thruDate" id="thruDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validThruDate")?if_exists}"/>
-					    	<#else>
-					    		<input type="text" name="thruDate" id="thruDate" size="18" maxlength="60" autocomplete="off"/>
-					    	</#if>
-						</td>
-					</tr>
-					</#if>
-					<#if orderId?exists && quoteInfo.get("quoteId")?exists>
-	      		        <tr>
-	      		        	<td class="label"><b>Quote No: </b></td>
-						    <td>
-						    	${quoteInfo.get("quoteId")?if_exists}
-	        				 </td>
-						</tr>
-					</#if>
-					<#if orderId?exists && quoteInfo.get("quoteIssueDate")?exists>
-						<tr>
-					    	<td class="label"><b>Quote Date : </b></td>
-					    	<td>
-					    		${quoteInfo.get("quoteIssueDate")?if_exists}
-	        				 </td>
-						</tr>
-					</#if>
-      		        <tr>
 					    <td class="label">Bill To Party :</td>
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
@@ -819,6 +780,7 @@ function populateData(){
 								-->		             		
 							</div>
 							
+							<#--
 							<div class="screenlet-title-bar" id="titleScreen">
 								<div class="grid-header" style="width:75%">
 									<label>Other Charges</label>
@@ -827,6 +789,7 @@ function populateData(){
 									<div class="grid-header" style="width:75%">
 								</div>
 							</div>
+							-->
 						</div>
 					</div>
 				</div>
