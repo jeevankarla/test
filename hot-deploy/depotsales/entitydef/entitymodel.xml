@@ -646,23 +646,52 @@
     <entity entity-name="SchemeGeo"
             package-name="org.ofbiz.product.promo"
             title="Scheme Geo Entity">
-      <field name="schemeId" type="id-ne"></field>
+      <!-- <field name="schemeId" type="id-ne"></field> -->
       <field name="geoId" type="id"></field>
-      <field name="schemeGeoEnumId" type="id"></field>
+      <field name="geoTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="geoName" type="description"></field>
+      <prim-key field="geoId"/>
+      <prim-key field="geoTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="SCHGEO_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="SCHGEO_TYP" rel-entity-name="GeoType">
+        <key-map field-name="geoTypeId"/>
+      </relation>
+    </entity>
+    
+    
+    <entity entity-name="SchemeGeoRate"
+            package-name="org.ofbiz.product.promo"
+            title="Scheme Geo Entity">
+      <field name="schemeId" type="id-ne"></field>
+      <field name="geoTypeId" type="id"></field>
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <field name="schemePercent" type="fixed-point"></field>
       <prim-key field="schemeId"/>
-      <prim-key field="geoId"/>
+      <prim-key field="geoTypeId"/>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" fk-name="SCHGEO_SCHEME" rel-entity-name="Scheme">
         <key-map field-name="schemeId"/>
       </relation>
       <relation type="one" fk-name="SCHGEO_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
-      <relation type="one" fk-name="SCHGEO_ENUM" rel-entity-name="Enumeration">
-        <key-map field-name="schemeGeoEnumId" rel-field-name="enumId"/>
+      <relation type="one" fk-name="SCHGEO_TYP" rel-entity-name="GeoType">
+        <key-map field-name="geoTypeId"/>
       </relation>
+      <relation type="one" fk-name="SCH_PROD_CAT" rel-entity-name="ProductCategory">
+        	<key-map field-name="productCategoryId"/>
+      	</relation>
     </entity>
+    
     
     <entity entity-name="TaxAuthorityTypeTitleTransfer" package-name="org.ofbiz.accounting.tax" title="Tax Authority Rate Type And Title Transfer">
 		<field name="taxAuthorityRateTypeId" type="id-ne"></field>
@@ -683,6 +712,7 @@
     </extend-entity>
     <extend-entity entity-name="InvoiceItem">
     	<field name="isAssessableValue" type="indicator"></field>
+    	<field name="sourcePercentage" type="fixed-point"></field>
     </extend-entity>
     
     
