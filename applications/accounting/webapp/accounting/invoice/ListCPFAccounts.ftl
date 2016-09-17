@@ -261,7 +261,7 @@ under the License.
               <td>
               	<input type="text" name="vpfCon" id="vpfCon" value="" size="10" onblur="javascript:getInvoiceRunningTotal();">
               </td>	
-             <td align="right"><input type="checkbox" id="partyId_${party_index}" name="partyIds" value="${eachParty}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+             <td align="right"><input type="checkbox" id="partyId_${eachParty_index}" name="partyIds" value="${eachParty}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>
