@@ -222,3 +222,24 @@ if(UtilValidate.isNotEmpty(orderTaxTypeList)){
 context.cstJSON=cstJSON;
 context.excJSON=excJSON;
 context.vatJSON=vatJSON;
+
+titleTransferEnumIdsList = [];
+taxAuthorityTypeTitleTransferList = delegator.findList("TaxAuthorityTypeTitleTransfer", null, null, null, null, false);
+titleTransferEnumIdsList = EntityUtil.getFieldListFromEntityList(taxAuthorityTypeTitleTransferList, "titleTransferEnumId", true);
+
+JSONObject transactionTypeTaxMap = new JSONObject();
+for(int i=0; i<titleTransferEnumIdsList.size(); i++){
+	titleTransferEnumId = titleTransferEnumIdsList.get(i);
+	
+	filteredTitleTransfer = EntityUtil.filterByCondition(taxAuthorityTypeTitleTransferList, EntityCondition.makeCondition("titleTransferEnumId", EntityOperator.EQUALS, titleTransferEnumId));
+	taxIdsList = EntityUtil.getFieldListFromEntityList(filteredTitleTransfer, "taxAuthorityRateTypeId", true);
+	
+	JSONArray applicableTaxList = new JSONArray();
+	for(int j=0; j<taxIdsList.size(); j++){
+		applicableTaxList.add(taxIdsList.get(j));
+	}
+	transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
+}
+Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+
+context.transactionTypeTaxMap = transactionTypeTaxMap;
