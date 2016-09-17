@@ -1383,33 +1383,25 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  		  BigDecimal employeeFinAmount=BigDecimal.ZERO;
 	  		  BigDecimal employeerFinAmount=BigDecimal.ZERO;
 	  		  BigDecimal vpfFinAmount=BigDecimal.ZERO;
-	  		  Debug.log("thisSuffix==========================empCon"+thisSuffix);
 	  		  if (paramMap.containsKey("empCon"+ thisSuffix)) {
 	  			employeeFinAmount = new BigDecimal((String)paramMap.get("empCon"+thisSuffix));
 	  		  }
-	  		  Debug.log("employeeFinAmount=========================="+employeeFinAmount);
-
 	  		  if (paramMap.containsKey("emprCon"+ thisSuffix)) {
 	  			employeerFinAmount = new BigDecimal((String) paramMap.get("emprCon"+thisSuffix));
 	  		  }
-	  		  Debug.log("employeerFinAmount=========================="+employeerFinAmount);
 
 	  		  if (paramMap.containsKey("vpfCon"+ thisSuffix)) {
 	  			vpfFinAmount = new BigDecimal((String)paramMap.get("vpfCon"+thisSuffix));
 	  		  }
-	  		  Debug.log("vpfFinAmount=========================="+vpfFinAmount);
-
 	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
 	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
 	  		  }
-	  		  Debug.log("partyId=========================="+partyId);
-
-	  		  
 	  	  		Map employeefinMap = FastMap.newInstance();
 		  	  		employeefinMap.put("partyId",partyId);
 		  	  		employeefinMap.put("finAccountId","EMPCON_"+partyId);
 		  	  		employeefinMap.put("transactionDate",paymentDate);
 		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		employeefinMap.put("entryType","Contra");
 			  		//paymentInputMap.put("contraRefNum", contraRefNum);
 		  	  		employeefinMap.put("userLogin", userLogin);
 		  	  		employeefinMap.put("amount",employeeFinAmount);
@@ -1418,36 +1410,23 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		employeerfinMap.put("finAccountId","EMPRCON_"+partyId);
 		  	  		employeerfinMap.put("transactionDate",paymentDate);
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		employeerfinMap.put("entryType","Contra");
 		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
 		  	  		employeerfinMap.put("userLogin", userLogin);
-		  	  		employeerfinMap.put("amount",employeeFinAmount);
+		  	  		employeerfinMap.put("amount",employeerFinAmount);
 	  	  		Map vpffinMap = FastMap.newInstance();
 		  	  		vpffinMap.put("partyId",partyId);
 		  	  		vpffinMap.put("finAccountId","VPFCON_"+partyId);
 		  	  		vpffinMap.put("transactionDate",paymentDate);
 		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		vpffinMap.put("entryType","Contra");
 		  	  		//vpffinMap.put("contraRefNum", contraRefNum);
 		  	  		vpffinMap.put("userLogin", userLogin);
-		  	  		vpffinMap.put("amount",employeeFinAmount);
+		  	  		vpffinMap.put("amount",vpfFinAmount);
 
-		  	  	finTransCreationMap.put("EMPCON_"+partyId,employeefinMap);
-		  	  finTransCreationMap.put("EMPRCON_"+partyId,employeerfinMap);
-		  	finTransCreationMap.put("VPFCON_"+partyId,vpffinMap);
-
-			
-	  		  /*if(UtilValidate.isNotEmpty(amountStr)){
-				  try {
-		  			  amount = new BigDecimal(amountStr);
-		  		  } catch (Exception e) {
-		  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
-		  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + amountStr);
-		  			return "error";
-		  		  }
-	  		  }*/
-	  		  
-	  		  
-	  		  
-	  		 
+		  	  	finTransCreationMap.put("EMPCON",employeefinMap);
+		  	  	finTransCreationMap.put("EMPRCON",employeerfinMap);
+		  	  	finTransCreationMap.put("VPFCON",vpffinMap);
 		  }
 		BigDecimal depositAmt=BigDecimal.ZERO;
 		 if(UtilValidate.isNotEmpty(depositAmtStr)){
@@ -1465,6 +1444,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 			depositFinTransMap.put("finAccountId",finAccountId);
 			depositFinTransMap.put("transactionDate",paymentDate);
 	  		depositFinTransMap.put("finAccountTransTypeId","DEPOSIT");
+	  		depositFinTransMap.put("entryType","Contra");
 	  		//vpffinMap.put("contraRefNum", contraRefNum);
 	  		depositFinTransMap.put("userLogin", userLogin);
 	  		depositFinTransMap.put("amount",depositAmt);
@@ -1474,16 +1454,14 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  			
 		  			 Iterator tempIter = finTransCreationMap.entrySet().iterator();
 		 			while (tempIter.hasNext()) {
-		 				Map.Entry tempEntry = (Entry) tempIter.next();
+		 				Entry tempEntry = (Entry) tempIter.next();
 		 				String tempFinAccountId = (String) tempEntry.getKey();
 		 				Map FinAccountTransMap = (Map) tempEntry.getValue();
-		  				Debug.log("FinAccountTransMap========================="+FinAccountTransMap);
-		  				Debug.log("tempFinAccountId============================="+tempFinAccountId);
-		  				GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", tempFinAccountId), false);
+		  				/*GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", tempFinAccountId), false);
 				  		List condsList = FastList.newInstance();
 			        	if(UtilValidate.isEmpty(finAccount)){
 			        		return "error";
-			        	}
+			        	}*/
 			        	 Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", FinAccountTransMap);
 					       if (ServiceUtil.isError(createResult)) {
 					       	   Debug.logError("Problems in service batchDepositContraFinAccTrans", module);
@@ -1494,9 +1472,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	                        finAccountTransIds.add(finAccountTransId);
 		  				
 		  			}
-		  			Debug.log("finAccountTransIds===================="+finAccountTransIds);
 		  		}
-		  		Debug.log("finAccountTransIds==========================="+finAccountTransIds);
         	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
 		  		  Map serviceCtx = FastMap.newInstance();
 		  		  serviceCtx.put("finAccountTransIds", finAccountTransIds);
@@ -1515,7 +1491,6 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
 		  		  serviceCtx.put("userLogin", userLogin);
 	  			  Map resultCtx = dispatcher.runSync("createFinAccountTransGroupAndMember", serviceCtx);
-	  			 Debug.log("resultCtx============"+resultCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		    			Debug.logError("Error while creating fin account trans group: " + ServiceUtil.getErrorMessage(resultCtx), module);
 		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating fin account trans group");
