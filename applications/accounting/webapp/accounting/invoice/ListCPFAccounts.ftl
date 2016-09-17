@@ -240,7 +240,7 @@ under the License.
           <td>PARTY CODE</td>
          <#list finAccountIds as eachFinAcctId>
               <#assign FinAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" : eachFinAcctId}, true) />
-          <td>${FinAccountType.description}</td>
+          <td><#if FinAccountType?has_content>${FinAccountType.description?if_exists}<#else></#if></td>
          </#list> 
           <td>select</td>
         </tr>
