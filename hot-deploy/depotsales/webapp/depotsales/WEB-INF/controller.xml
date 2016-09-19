@@ -502,8 +502,8 @@
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
-       <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
-       <response name="error" type="view" value="DepotPurchaseInvoice"/>
+       <response name="success" type="view" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="view" value="FindGRNShipmentsDepot"/>
      </request-map>
      
      
