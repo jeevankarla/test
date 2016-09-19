@@ -81,6 +81,7 @@ import net.sf.json.JSONSerializer;
 
 
 
+
 import java.util.Iterator;
 
 
@@ -93,6 +94,17 @@ public class DepotPurchaseServices{
 
    public static final String module = DepotPurchaseServices.class.getName();
    
+   private static int decimals;
+   private static int rounding;
+    public static final String resource = "AccountingUiLabels";
+    
+    static {
+        decimals = 2;// UtilNumber.getBigDecimalScale("order.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+
+        // set zero to the proper scale
+        //if (decimals != -1) ZERO = ZERO.setScale(decimals);
+    }
       
 	public static String processDepotPurchaseInvoice(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -656,6 +668,58 @@ public class DepotPurchaseServices{
 		}
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		
+		//============================================Rounding Off===============================
+		  List<GenericValue> InvoiceItem = null;
+	    	
+		    List conditionList = FastList.newInstance();
+	    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+	    	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	    	 try{
+	    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	    	 
+	    	 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+				}
+		    
+		    
+	    	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+	        	 
+	    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+	    		 
+	        	for(GenericValue eachInvoiceItem : InvoiceItem){
+	        	
+	        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+	        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+	        		BigDecimal itemValue = quantity.multiply(amount);
+	        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+	        		
+	        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+	        		
+	        		eachInvoiceItem.set("itemValue",roundedAmount);
+	        		
+	        		try{
+	        		eachInvoiceItem.store();
+	        		}catch(GenericEntityException e){
+	        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+	        		}
+	        	}
+	        	
+	        	try{
+	        		
+	        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+	        		
+	        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+	        	InvoiceHeader.store();
+	        	}catch(GenericEntityException e){
+	    			Debug.logError(e, "Failed to Populate Invoice ", module);
+	    		}
+	        	
+	    	 }
+	    	 
+		
+		
 		
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 		
@@ -1419,6 +1483,59 @@ public class DepotPurchaseServices{
 
 	    }
 		
+	    
+	  //============================================Rounding Off===============================
+	    
+	    List<GenericValue> InvoiceItem = null;
+    	
+	    List conditionList = FastList.newInstance();
+    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+    	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+    	 try{
+    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    	 
+    	 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			}
+	    
+	    
+    	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+        	 
+    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+    		 
+        	for(GenericValue eachInvoiceItem : InvoiceItem){
+        	
+        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+        		BigDecimal itemValue = quantity.multiply(amount);
+        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+        		
+        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+        		
+        		eachInvoiceItem.set("itemValue",roundedAmount);
+        		
+        		try{
+        		eachInvoiceItem.store();
+        		}catch(GenericEntityException e){
+        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+        		}
+        	}
+        	
+        	try{
+        		
+        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+        		
+        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+        	InvoiceHeader.store();
+        	}catch(GenericEntityException e){
+    			Debug.logError(e, "Failed to Populate Invoice ", module);
+    		}
+        	
+    	 }
+    	 
+	    
+	    
 		
 		
 	///	Debug.log("invoiceId==================="+invoiceId);
@@ -2486,6 +2603,61 @@ public class DepotPurchaseServices{
 		
 		}
 		//==============update in Purchase=====================
+		
+		
+		
+		
+  //============================================Rounding Off===============================
+	    
+	    List<GenericValue> InvoiceItem = null;
+    	
+	    List conditionList1 = FastList.newInstance();
+	    conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	    conditionList1.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+    	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+    	 try{
+    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+    	 
+    	 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			}
+	    
+	    
+    	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+        	 
+    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+    		 
+        	for(GenericValue eachInvoiceItem : InvoiceItem){
+        	
+        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+        		BigDecimal itemValue = quantity.multiply(amount);
+        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+        		
+        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+        		
+        		eachInvoiceItem.set("itemValue",roundedAmount);
+        		
+        		try{
+        		eachInvoiceItem.store();
+        		}catch(GenericEntityException e){
+        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+        		}
+        	}
+        	
+        	try{
+        		
+        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+        		
+        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+        	InvoiceHeader.store();
+        	}catch(GenericEntityException e){
+    			Debug.logError(e, "Failed to Populate Invoice ", module);
+    		}
+        	
+    	 }
+		
+		
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 	
@@ -2991,6 +3163,58 @@ public class DepotPurchaseServices{
 		
 		}
 		//==============update in Purchase=====================
+		
+		
+		
+  //============================================Rounding Off===============================
+	    
+	    List<GenericValue> InvoiceItem = null;
+    	
+	    List conditionList1 = FastList.newInstance();
+	    conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	    conditionList1.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+    	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+    	 try{
+    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+    	 
+    	 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			}
+	    
+	    
+    	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+        	 
+    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+    		 
+        	for(GenericValue eachInvoiceItem : InvoiceItem){
+        	
+        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+        		BigDecimal itemValue = quantity.multiply(amount);
+        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+        		
+        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+        		
+        		eachInvoiceItem.set("itemValue",roundedAmount);
+        		
+        		try{
+        		eachInvoiceItem.store();
+        		}catch(GenericEntityException e){
+        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+        		}
+        	}
+        	
+        	try{
+        		
+        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+        		
+        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+        	InvoiceHeader.store();
+        	}catch(GenericEntityException e){
+    			Debug.logError(e, "Failed to Populate Invoice ", module);
+    		}
+        	
+    	 }
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 	
