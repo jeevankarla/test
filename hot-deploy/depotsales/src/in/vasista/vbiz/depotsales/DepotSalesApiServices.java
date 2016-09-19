@@ -550,8 +550,33 @@ public class DepotSalesApiServices{
     			Debug.logError(e, module);
     		}
 	    	tempData.put("totDiscountAmt", totDiscountAmt.setScale(decimals, rounding));
-	    	tempData.put("orderItemsList", orderItems);	    	
-	    	
+	    	tempData.put("orderItemsList", orderItems);
+	    	String transporterName = "";
+	    	String transporterId = "";
+	    	try{
+	    		GenericValue OrderAttribute = delegator.findOne("OrderAttribute",UtilMisc.toMap("orderId",eachOrderId,"attrName","TRANSPORTER_PREF"),false);
+	    		if(UtilValidate.isNotEmpty(OrderAttribute)){
+	    			transporterName = OrderAttribute.getString("attrValue");
+	    			if(transporterName != PartyHelper.getPartyName(delegator, transporterName, false)){
+	    				transporterId = transporterName;
+	    				transporterName = PartyHelper.getPartyName(delegator, transporterName, false);
+	    			}else{
+	    				try{
+	    					List<GenericValue> PartyNameList = delegator.findList("PartyNameView", EntityCondition.makeCondition("groupName", EntityOperator.EQUALS, transporterName), null, null, null, false);
+	    					if(UtilValidate.isNotEmpty(PartyNameList)){
+	    						transporterId = EntityUtil.getFirst(PartyNameList).getString("partyId");
+	    					}
+		    			}catch(GenericEntityException e){
+		    				Debug.logWarning(e, module);
+		    			}
+	    			}
+	    			
+	    		}
+	  		}catch(GenericEntityException e){
+	  			Debug.logWarning("Error fetching OrderAttribute with order Id" +eachOrderId + " " +  e.getMessage(), module);
+	  		}
+	    	tempData.put("transporterName",transporterName);
+	    	tempData.put("transporterId",transporterId);
 	    	orderList.add(tempData);
 	    }
 		
