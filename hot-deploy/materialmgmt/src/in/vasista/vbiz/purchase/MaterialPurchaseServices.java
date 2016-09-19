@@ -845,6 +845,64 @@ public class MaterialPurchaseServices {
 			
 		}
 		
+		
+		String Scheam = "";
+ 		try{
+     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+			
+			if(UtilValidate.isNotEmpty(scheamList)){
+				GenericValue orderScheme = EntityUtil.getFirst(scheamList);
+				Scheam = (String) orderScheme.get("attrValue");
+			}
+ 		 }catch(Exception e){
+			 Debug.logError("problem While Fetching OrderAttribute : "+e, module);
+		 } 
+		
+ 		
+ 		if(UtilValidate.isNotEmpty(Scheam) && Scheam != "General")
+ 		{
+	        GenericValue Shipment = null;
+	
+	  		try{
+	  			Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId",shipmentId),false);
+	  			
+	  			
+	  			GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
+				
+					BigDecimal estimatedShipCost=Shipment.getBigDecimal("estimatedShipCost");
+					
+					Timestamp receiptDate1=Shipment.getTimestamp("estimatedShipDate");
+					if(UtilValidate.isEmpty(receiptDate1))
+						receiptDate1=UtilDateTime.nowTimestamp();
+	  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
+		  				ShipmentReimbursement.set("shipmentId", shipmentId);
+		  				ShipmentReimbursement.set("receiptAmount", estimatedShipCost);
+		  				ShipmentReimbursement.set("receiptDate", receiptDate1);
+						delegator.createSetNextSeqId(ShipmentReimbursement);
+		  				
+	  				}
+	  			
+	  		}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to get Shipment ", module);
+			}
+		
+ 		}
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}

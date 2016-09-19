@@ -82,6 +82,9 @@ import net.sf.json.JSONSerializer;
 
 
 
+
+
+
 import java.util.Iterator;
 
 
@@ -1532,12 +1535,116 @@ public class DepotPurchaseServices{
     			Debug.logError(e, "Failed to Populate Invoice ", module);
     		}
         	
+        	
+        	//===============populate Claim Amount in Shipment=======
+        	
+        	
+        	
+        	 conditionList.clear();
+     		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+     		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+     		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderIteSeq));
+     		List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItem =null;
+     		try{
+     			OrderItemBillingAndInvoiceAndInvoiceItem = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+     	      
+     		} catch (Exception e) {
+        		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+     			  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching Order Item billing :" + invoiceId+"....! ");
+     				return "error";
+     		}
+     		
+     		
+     		GenericValue OrderItemBillingAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItem);
+     		String SaleOrderId = OrderItemBillingAndInvoice.getString("orderId");
+        	
+     		String Scheam = "";
+     		try{
+	     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId), null, null, null, false);
+				
+				List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+				
+				if(UtilValidate.isNotEmpty(scheamList)){
+					GenericValue orderScheme = EntityUtil.getFirst(scheamList);
+					Scheam = (String) orderScheme.get("attrValue");
+				}
+     		 }catch(Exception e){
+				 Debug.logError("problem While Fetching OrderAttribute : "+e, module);
+			 } 
+        	
+			
+			if(UtilValidate.isNotEmpty(Scheam) && Scheam != "General"){
+				
+				BigDecimal reimbursementEligibilityPercentage = new BigDecimal(2);
+				
+				BigDecimal DepotreimbursementEligibilityPercentage = new BigDecimal(2);
+				
+				try{
+				GenericValue shipmentObj=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+				
+				
+	  			String partyIdTo = shipmentObj.getString("partyIdTo");
+	  			
+	  			
+	  			//=====================party is IsDepo or not
+	  			
+	  			List conditionListF = FastList.newInstance();
+	  			conditionListF.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyIdTo));
+	  			conditionListF.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+	  			List FacilityList = delegator.findList("Facility", EntityCondition.makeCondition(conditionListF, EntityOperator.AND), null, null, null, false);
+
+	  			String isDepot = "";
+	  			if(UtilValidate.isNotEmpty(FacilityList))
+	  			isDepot ="Y";
+	  			else
+	  			isDepot ="N";
+	  			
+				
+				BigDecimal receiptEligablityAmount=shipmentObj.getBigDecimal("estimatedShipCost");
+				
+				BigDecimal invoiceEligablityAmount=(invoiceGrandTotal.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+				BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
+				
+				
+				BigDecimal depotReimbursmentValue = BigDecimal.ZERO;
+				if(isDepot == "Y"){
+				   
+				   depotReimbursmentValue=(invoiceGrandTotal.multiply(DepotreimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+							
+		  			GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
+					
+						BigDecimal estimatedShipCost=shipmentObj.getBigDecimal("estimatedShipCost");
+						
+						Timestamp receiptDate1=shipmentObj.getTimestamp("estimatedShipDate");
+						if(UtilValidate.isEmpty(receiptDate1))
+							receiptDate1=UtilDateTime.nowTimestamp();
+		  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
+			  				ShipmentReimbursement.set("shipmentId", shipmentId);
+			  				ShipmentReimbursement.set("receiptAmount", depotReimbursmentValue);
+			  				ShipmentReimbursement.set("receiptDate", receiptDate1);
+							delegator.createSetNextSeqId(ShipmentReimbursement);
+			  				
+		  				}
+				
+				}
+				
+				finalEligablityAmount = (finalEligablityAmount.setScale(0, rounding));
+				
+				depotReimbursmentValue = (depotReimbursmentValue.setScale(0, rounding));
+				
+				shipmentObj.set("claimAmount",finalEligablityAmount.add(depotReimbursmentValue));
+				shipmentObj.set("claimStatus","APPLYED");
+				if(finalEligablityAmount.compareTo(BigDecimal.ZERO)<=0){
+					shipmentObj.set("claimStatus","");
+				}
+				shipmentObj.store();
+				 }catch(Exception e){
+					 Debug.logError("populate claim in Shipment Reimbursment : "+e, module);
+				 } 
+				
+			}
     	 }
     	 
-	    
-	    
-		
-		
 	///	Debug.log("invoiceId==================="+invoiceId);
 		
 		//=============================adjustment======================
