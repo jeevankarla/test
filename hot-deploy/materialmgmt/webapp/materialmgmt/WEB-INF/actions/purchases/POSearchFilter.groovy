@@ -77,6 +77,9 @@ if(UtilValidate.isEmpty(parameters.productId)){
 						if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){
 							resultList.add(poEntry);
 						}
+						else if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+							resultList.add(poEntry);
+						}
 					}else{
 						if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){
 							resultList.add(poEntry);
