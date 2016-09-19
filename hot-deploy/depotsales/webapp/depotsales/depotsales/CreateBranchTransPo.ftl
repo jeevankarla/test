@@ -677,19 +677,24 @@ function populateData(){
 	          					<#if orderId?exists && orderInfo.get("purchaseTitleTransferEnumId")?exists>
 	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_CFORM">
 	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          							<option value="CST_NOCFORM">Transaction Without C Form</option>
+		          						<option value="NO_E2_FORM"></option>
 	          						</#if>
 	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_NOCFORM">
 	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          							<option value="CST_CFORM">Transaction With C Form</option>
+	          							<option value="NO_E2_FORM"></option>
 	          						</#if>
 	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "NO_E2_FORM">
 	          							<option value="NO_E2_FORM" selected></option>
+	          							<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          							<option value="CST_CFORM">Transaction With C Form</option>
 	          						</#if> 
-	          					</#if> 
-	          				
-	          				
-	          					<option value="CST_CFORM">Transaction With C Form</option>
-	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
-	          					<option value="NO_E2_FORM"></option>
+	          					<#else> 
+		          					<option value="CST_CFORM">Transaction With C Form</option>
+		          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+		          					<option value="NO_E2_FORM"></option>
+	          					</#if>
 	          				</select>
 	          			</td>
 		       		</tr>
