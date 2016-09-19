@@ -997,9 +997,11 @@
 		var totalAmount = 0;
 		var totalDiscount = 0;
 		var totalPayable = 0;
+		var totalQuantity = 0;
 		for (i = 0; i < data.length; i++) {
 			totalPayable += parseFloat(data[i]["totPayable"]);
 			totalDiscount += parseFloat(data[i]["SUBSIDY"]);
+			totalQuantity += data[i]["quantity"];
 		}
 		var totalAmount = parseFloat(Math.round((totalPayable) * 100) / 100) + parseFloat(Math.round((totalDiscount) * 100) / 100);
 		
@@ -1007,6 +1009,7 @@
 		jQuery("#itemsSelected").html("<b> &nbsp; Selected: "+data.length+" &nbsp; </b>");
 		jQuery("#totalDiscount").html("<b> &nbsp; Subsidy: Rs "+totalDiscount+" &nbsp; </b>");
 		jQuery("#totalPayable").html("<b> &nbsp; Payable: Rs "+totalPayable+" &nbsp; </b>");
+		jQuery("#totalQtyKgs").html("<b> &nbsp; Quantity(Kgs): "+totalQuantity+" &nbsp; </b>");
 		
 	}
 	
