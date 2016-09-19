@@ -13664,6 +13664,8 @@ Debug.log("taxRateList =============="+taxRateList);
   		String roundType = (String) context.get("roundType");
   		String places = (String) context.get("places");
   		
+  		String ro = (String) context.get("ro");
+  		
   		Locale locale = (Locale) context.get("locale");
   		
   		List<GenericValue> shipmentList = null;
@@ -13674,7 +13676,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		
   		List conditionList = FastList.newInstance();
-  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT1"));
+  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
   		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
   		
   		try{
@@ -13777,6 +13779,8 @@ Debug.log("taxRateList =============="+taxRateList);
   		String roundType = (String) context.get("roundType");
   		String places = (String) context.get("places");
   		
+  		String ro = (String) context.get("ro");
+  		
   		Locale locale = (Locale) context.get("locale");
   		
   		List<GenericValue> shipmentList = null;
@@ -13787,7 +13791,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		
   		List conditionList = FastList.newInstance();
-  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT1"));
+  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
   		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
   		
   		try{
