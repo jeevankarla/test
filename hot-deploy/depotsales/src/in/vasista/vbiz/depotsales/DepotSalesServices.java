@@ -13664,6 +13664,8 @@ Debug.log("taxRateList =============="+taxRateList);
   		String roundType = (String) context.get("roundType");
   		String places = (String) context.get("places");
   		
+  		String ro = (String) context.get("ro");
+  		
   		Locale locale = (Locale) context.get("locale");
   		
   		List<GenericValue> shipmentList = null;
