@@ -517,7 +517,10 @@
       <request-map uri="processNewSalesInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewDepotSalesInvoice" global-transaction="true"/>
-       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
+       <response name="success" type="request-redirect" value="DepotSalesInvoice">
+        <redirect-parameter  name="invoiceId"/>
+        <redirect-parameter name="noConditionFind" value="Y"/>     
+        </response>
        <response name="error" type="view" value="DepotSalesInvoice"/>
      </request-map>
      
