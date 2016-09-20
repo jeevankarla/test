@@ -785,6 +785,8 @@
 			}
 			if(args.cell != 1 && args.cell != 2){
 				addServiceCharge(args.row);
+				
+				updateCurrentQuotaTakenQty(args);
 					
 				updateOtherCharges(args.row);
 				updateSaleBaseAmount(args.row);
@@ -806,7 +808,7 @@
 				}
 				updatePayableAmount(args.row);
 				updateTotalIndentAmount();
-				updateCurrentQuota(args.row);
+				
 			} 
 	 	});
 		
@@ -919,6 +921,10 @@
     });
 		
 		mainGrid = grid;
+		for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{
+		       updateCurrentQuota(rowCount);
+		}
 		
 	}
 		
@@ -1049,7 +1055,6 @@
 		if(data[row]["quantity"]){
 			indentQty = data[row]["quantity"];
 		}
-		
 		var subsidy = (saleBaseAmt/indentQty)*usedQuota*.1;
 		data[row]["SUBSIDY"]=subsidy;
 	}
@@ -1442,8 +1447,9 @@
 			}); 				
 		}
 	}
-	function updateCurrentQuota(args){
-	
+	function updateCurrentQuotaTakenQty(args){
+		
+		//alert("args cell = "+args.cell);
 			if(args.cell == 3 || args.cell == 4 || args.cell == 5 || args.cell == 7){
 			var totalQuota=data[args.row]["quota"]+data[args.row]["usedQuota"];
 			   if(!isNaN(totalQuota)){
@@ -1459,6 +1465,7 @@
 				       data[args.row]["warning"] = 'Quota Exceeded';
 				    }
 				    grid.updateRow(args.row);
+				    //updateCurrentQuota(args.row);
 				}
 			}
 	}
