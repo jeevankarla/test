@@ -13666,6 +13666,8 @@ Debug.log("taxRateList =============="+taxRateList);
   		
   		String ro = (String) context.get("ro");
   		
+  		String invoiceId = (String) context.get("invoiceId");
+  		
   		Locale locale = (Locale) context.get("locale");
   		
   		List<GenericValue> shipmentList = null;
@@ -13692,7 +13694,8 @@ Debug.log("taxRateList =============="+taxRateList);
  			conditionList.clear();
  		    if(UtilValidate.isNotEmpty(branchList))	
  		    	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
- 			//conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "27289"));
+ 		     if(UtilValidate.isNotEmpty(invoiceId))	
+ 			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
  		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
@@ -13733,9 +13736,16 @@ Debug.log("taxRateList =============="+taxRateList);
 		        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
 		        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
 		        		BigDecimal itemValue = quantity.multiply(amount);
+		        		
+                           BigDecimal absoluteValue = itemValue.abs();
+		        		
+		        		if ((absoluteValue.compareTo(BigDecimal.ZERO) > 0 && absoluteValue.compareTo(BigDecimal.ONE) < 1))
+		        			itemValue = BigDecimal.ZERO;
+		        		
 		        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
 		        		
 		        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+		        		
 		        		
 		        		eachInvoiceItem.set("itemValue",roundedAmount);
 		        		
@@ -13779,6 +13789,8 @@ Debug.log("taxRateList =============="+taxRateList);
   		String roundType = (String) context.get("roundType");
   		String places = (String) context.get("places");
   		
+  		String invoiceId = (String) context.get("invoiceId");
+  		
   		String ro = (String) context.get("ro");
   		
   		Locale locale = (Locale) context.get("locale");
@@ -13806,7 +13818,8 @@ Debug.log("taxRateList =============="+taxRateList);
  			conditionList.clear();
  		    if(UtilValidate.isNotEmpty(branchList))	
  		    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
- 			//conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "27289"));
+ 		   if(UtilValidate.isNotEmpty(invoiceId))	
+			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
  		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
@@ -13847,6 +13860,13 @@ Debug.log("taxRateList =============="+taxRateList);
 		        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
 		        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
 		        		BigDecimal itemValue = quantity.multiply(amount);
+		        		
+		        		BigDecimal absoluteValue = itemValue.abs();
+		        		
+		        		if ((absoluteValue.compareTo(BigDecimal.ZERO) > 0 && absoluteValue.compareTo(BigDecimal.ONE) < 1))
+		        			itemValue = BigDecimal.ZERO;
+		        		
+		        		
 		        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
 		        		
 		        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
