@@ -97,7 +97,7 @@ Debug.log("dayend==================="+dayend);
 
 
 condList = [];
-condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "20719"));
+//condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "29375"));
 
 if(UtilValidate.isNotEmpty(daystart)){
 	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
@@ -159,13 +159,16 @@ invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
 
-Debug.log("InvoiceItem========================="+InvoiceItem.size());
+Debug.log("InvoiceItem=============1212============"+InvoiceItem.size());
 
 
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.IN , orderIdsFromBilling)  , null, null, null, false );
 
 
 OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("orderId", EntityOperator.IN , orderIdsFromBilling)  , null, null, null, false );
+
+
+Debug.log("OrderHeader=============1212============"+OrderHeader.size());
 
 
 salesAndPurchaseList = [];
@@ -182,13 +185,26 @@ for (eachInvoice in invoice) {
 	
 	invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 	
+	
 	PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
+	
+	
+	Debug.log("eachInvoice.invoiceId============"+eachInvoice.invoiceId);
+	
 	
 	groupName = "";
 	if(PartyGroup)
 	  groupName = PartyGroup.groupName;
+	  
+	  
+	  Debug.log("groupName============"+groupName);
+	  
 	
 	shipmentList = delegator.findOne("Shipment",[shipmentId : eachInvoice.shipmentId] , false);
+	
+	Debug.log("shipmentList============"+shipmentList);
+	
+	
 	primaryOrderId = shipmentList.get("primaryOrderId");
 	
 	Debug.log("primaryOrderId============"+primaryOrderId);
@@ -523,7 +539,6 @@ if(contactMechesDetails){
 			
 			Debug.log("eachAdjment.itemValue===================="+eachAdjment.itemValue);
 			
-			
 			tenPerAmt = tenPerAmt +Double.valueOf(eachAdjment.itemValue);
 		}
 	}
@@ -566,8 +581,14 @@ if(contactMechesDetails){
 	
 	double invoAmt = 0;
 	
+	dontRepeat = [];
+	
 	double grandTotal = 0;
 	for (eachItem in invoiceItemList) {
+		
+		
+		
+		  dontRepeat.add(eachItem.invoiceId);
 		
 		
 		   double invoiceNetAmt = 0;
@@ -700,7 +721,9 @@ if(contactMechesDetails){
 						    
 			double tenPerQty = 0;
 			tenPerQty = schemeQQQty;
+			
 			tempMap.put("schemeQty", schemeQQQty);
+			
 			
 			//=============================Tax Amount======================
 			
@@ -737,7 +760,10 @@ if(contactMechesDetails){
 			
 			tempMap.put("altaxAmt", taxAmt);
 			
+			if(dontRepeat.size() == 1)
 			tempMap.put("allAdjWitOutTEN", allAdjWitOutTEN);
+			else
+			tempMap.put("allAdjWitOutTEN", "");
 			
 			
 			invoiceNetAmt = invoiceNetAmt+taxAmt;
@@ -780,9 +806,9 @@ if(contactMechesDetails){
 			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			  invoiceInnerAdjItemList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 			  
-			  Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList);
+			 // Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList);
 			  
-			  Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList[0].itemValue);
+			 // Debug.log("invoiceInnerAdjItemList===================="+invoiceInnerAdjItemList[0].itemValue);
 			  
 			  
 			  if(invoiceInnerAdjItemList[0]){
@@ -870,6 +896,8 @@ if(contactMechesDetails){
 			
 			//================================purchase Invoice Details=====================
 			
+			Debug.log("itemOrderId============="+itemOrderId);
+			Debug.log("orderItemSeqId============="+orderItemSeqId);
 			
 
 			conditionList.clear();
@@ -889,12 +917,17 @@ if(contactMechesDetails){
 			Debug.log("poOrderId============="+poOrderId);
 			Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
 			
+			Debug.log("eachInvoice.shipmentId============="+eachInvoice.shipmentId);
+			
 			
             conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachInvoice.shipmentId));
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			poInvoices = delegator.findList("Invoice", cond, null, null, null, false);			
+			poInvoices = delegator.findList("Invoice", cond, null, null, null, false);	
+			
+			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, poOrderItemSeqId));
@@ -918,11 +951,14 @@ if(contactMechesDetails){
 			
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, poOrderItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, poInvoiceItemSeqId));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
 			//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			POInvoiceItemList = delegator.findList("InvoiceItem", cond, null, null, null, false);
+			
+			
+			Debug.log("POInvoiceItemList=======1212======"+POInvoiceItemList);
 			
 			
 			popartyId = "";
@@ -1017,7 +1053,7 @@ if(contactMechesDetails){
 			
 			estimatedShipCost = shipmentList.get("estimatedShipCost");
 						
-			if(estimatedShipCost)
+			if(estimatedShipCost && dontRepeat.size() == 1)
 			tempMap.put("freight", estimatedShipCost);
 			else
 			tempMap.put("freight", "");

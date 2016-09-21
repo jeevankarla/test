@@ -13999,6 +13999,159 @@ Debug.log("taxRateList =============="+taxRateList);
 	}
 
     
+    public static Map<String, Object> getReimbursmentPercentage(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		String partyId = (String) context.get("partyId");
+  		
+  		String productId = (String) context.get("productId");
+  		
+  		String schemeTypeId = (String) context.get("schemeTypeId");
+  		
+  		Timestamp invoiceDate = (Timestamp) context.get("invoiceDate");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+  		
+  			String productCategoryId = "";
+  			List productCategoriesList = FastList.newInstance();
+  			List condsList = FastList.newInstance();
+		  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		  	condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "REIMBURSEMENT_SCHEME"));
+		  	condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, invoiceDate));
+		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, invoiceDate)));
+			try {
+				List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
+				
+				
+				GenericValue prodCategoryMember = EntityUtil.getFirst(prodCategoryMembers);
+				productCategoryId = (String)prodCategoryMember.get("productCategoryId");
+				
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+			}
+  			
+  			if(UtilValidate.isEmpty(productCategoryId)){
+				Debug.logError("retrive From ProductCategoryAndMember : "+ partyId, module);
+				return ServiceUtil.returnError("retrive From ProductCategoryAndMember"+partyId);
+  			}
+  			
+  			
+  			
+  	/*	List<GenericValue> contactMechesDetails = null;
+  		
+  		 
+  			List conditionListAddress = FastList.newInstance();
+  			conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+  			conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+  			conditionListAddress.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+  			conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+  			List<String> orderBy2 = UtilMisc.toList("-contactMechId");
+  			contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy2, null, false);
+  		        
+  			
+  			
+  			
+  			String districtGeoId="";
+  			if(UtilValidate.isNotEmpty(contactMechesDetails))	{
+  				contactMec=contactMechesDetails.getFirst();
+  				if(contactMec){
+  					partyPostalAddress=contactMec;
+  					Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+  					if(partyPostalAddress){
+  						if(partyPostalAddress.get("districtGeoId")){
+  							districtGeoId=partyPostalAddress.get("districtGeoId");
+  						}
+  					}
+  				}
+  			}
+  			*/
+  			
+  			
+  			String customerGeoId = null;
+  			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false, "TAX_CONTACT_MECH");
+  			if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+  			customerGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+  			}
+
+  			
+  			if(UtilValidate.isEmpty(customerGeoId)){
+ 				Debug.logError("District Geo is empty for partyId: "+ partyId, module);
+ 				return ServiceUtil.returnError("District Geo is empty for partyId"+partyId);
+   			}
+  			
+  			
+
+  			List<GenericValue> SchemeGeoList = null;
+        	
+  			List conditionList = FastList.newInstance();
+        	conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.EQUALS, customerGeoId));
+        	
+        	String geoTypeId = "";
+        	
+        	 try{
+        		 SchemeGeoList = delegator.findList("SchemeGeo", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+            	 GenericValue SchemeGeo = EntityUtil.getFirst(SchemeGeoList);
+            	 geoTypeId = (String) SchemeGeo.get("geoTypeId");
+            	 
+            	 
+            	 if(UtilValidate.isEmpty(geoTypeId)){
+       				Debug.logError("geoTypeId is not available: "+ partyId, module);
+       				return ServiceUtil.returnError("geoTypeId is not available"+partyId);
+         			}
+            	 
+        	 }catch(GenericEntityException e){
+ 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+ 				return ServiceUtil.returnError("District Geo is empty for partyId"+partyId);
+ 			}
+        	 
+        	 
+        	 
+        	 List<GenericValue> SchemeGeoRateList = null;
+         	
+        	 conditionList.clear();
+         	 conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS, schemeTypeId));
+         	 conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, geoTypeId));
+         	 conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+         	
+         	 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, invoiceDate));
+         	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, invoiceDate)));
+         	
+         	BigDecimal schemePercent = BigDecimal.ZERO;
+         	
+         	 try{
+         		SchemeGeoRateList = delegator.findList("SchemeGeoRate", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+             	 GenericValue SchemeGeoRate = EntityUtil.getFirst(SchemeGeoRateList);
+             	 schemePercent = SchemeGeoRate.getBigDecimal("schemePercent");
+             	 
+             	 if(UtilValidate.isEmpty(geoTypeId)){
+      				Debug.logError("geoTypeId is not available: "+ partyId, module);
+      				return ServiceUtil.returnError("geoTypeId is not available"+partyId);
+        			}
+         	 }catch(GenericEntityException e){
+  				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+  				return ServiceUtil.returnError("District Geo is empty for partyId"+partyId);
+  			}
+        	 
+  			
+ 			
+  	
+  		
+    	  result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
+         
+         return result;
+  	}
+    
+    
+    
+    
+    
+    
     
     
     
