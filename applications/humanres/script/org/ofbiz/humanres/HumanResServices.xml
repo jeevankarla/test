@@ -833,7 +833,14 @@
 		<set field="newEntity.prevEmplFromDate" from-field="parameters.prevEmplFromDate"
 			type="Timestamp" />		
 		<set field="newEntity.employeeId" from-field="parameters.employeeId"></set>
+		
+		<entity-condition list="checkEpf" entity-name="EmployeeDetail">
+		<condition-expr field-name="presentEpf"/>
+		 <condition-expr field-name="presentEpf" operator="equals" from-field="parameters.presentEpf"/>
+		</entity-condition>
+		 <if-not-empty field="checkEpf">
 		<set field="newEntity.presentEpf" from-field="parameters.presentEpf" />
+		 </if-not-empty>
 		<set field="newEntity.previousEsic" from-field="parameters.previousEsic" />
 		<set field="newEntity.presentEsic" from-field="parameters.presentEsic" />
 		<set field="newEntity.previousEpf" from-field="parameters.previousEpf" />
