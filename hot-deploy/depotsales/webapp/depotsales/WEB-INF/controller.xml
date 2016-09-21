@@ -2179,6 +2179,20 @@
        <response name="error" type="view" value="EditProcProducer"/>
      </request-map>
      
+     <request-map uri="CustomerAssoc">
+     	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CustomerAssoc"/>
+    </request-map>    
+    <request-map uri="NewCustomerAssoc">
+     	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NewCustomerAssoc"/>
+    </request-map>
+    <request-map uri="createCustomerAssoc">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="createFacilityParty"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -2434,4 +2448,6 @@
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
 	<view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
+	<view-map name="CustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CustomerAssoc"/>
+	<view-map name="NewCustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewCustomerAssoc"/>
 </site-conf>

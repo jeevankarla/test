@@ -205,6 +205,10 @@
 	      	<link target="Rounding">
         	</link>
 	    </menu-item>
+	    <menu-item name="CustomerAssoc" title="Customer Assoc">
+	      	<link target="CustomerAssoc">
+        	</link>
+	    </menu-item>
        <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>

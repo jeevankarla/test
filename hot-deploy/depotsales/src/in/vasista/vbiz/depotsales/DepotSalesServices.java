@@ -13903,7 +13903,98 @@ Debug.log("taxRateList =============="+taxRateList);
   	}
     
   
-    
+    public static Map<String, Object> createFacilityParty(DispatchContext ctx, Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String partyId = (String) context.get("partyId");
+        String societyPartyId = (String) context.get("societyPartyId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        String fromDate = (String) context.get("fromDate");
+        boolean changedParty = false;
+        
+        String facilityId = "";
+        try{
+	    	List<GenericValue> FacilityList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, societyPartyId), null,null, null, false);
+	    	if(UtilValidate.isEmpty(FacilityList)){
+	    		return ServiceUtil.returnError("Invalid Society"); 
+	    	}
+	    	facilityId = EntityUtil.getFirst(FacilityList).getString("facilityId");
+        }catch(GenericEntityException e){
+			Debug.logError("error while getting Facility"+e.getMessage(), module);
+		}
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+        Timestamp effectiveDate = null;
+        try {
+        	if(UtilValidate.isNotEmpty(fromDate)){
+        		effectiveDate = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
+        	}
+        } catch (ParseException e) {
+        	Debug.logError(e, "Cannot parse date string: " + fromDate, module);
+        }
+        if(UtilValidate.isEmpty(effectiveDate)){
+        	effectiveDate = now;
+        }
+        effectiveDate = UtilDateTime.getDayStart(effectiveDate);
+        List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId));
+        conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+	    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    
+	    List<GenericValue> FacilityPartyList = FastList.newInstance();
+	    try{
+	    	FacilityPartyList = delegator.findList("FacilityParty", condition, null,null, null, false);
+	    	if(UtilValidate.isNotEmpty(FacilityPartyList)){
+	    		return ServiceUtil.returnError("This Customer already mapped to given depot"); 
+	    	}
+	    	else{
+	    		conditionList.clear();
+	            conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	            conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+	            condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		FacilityPartyList = delegator.findList("FacilityParty", condition, null,null, null, false);
+	    	}
+	    }catch(GenericEntityException e){
+			Debug.logError("error while getting FacilityParty"+e.getMessage(), module);
+			result = ServiceUtil.returnError("error while getting FacilityParty"); 
+		}
+	    try{
+	    	if(UtilValidate.isNotEmpty(FacilityPartyList)){
+				GenericValue facilityParty = EntityUtil.getFirst(FacilityPartyList);
+				Timestamp previousDate = UtilDateTime.addDaysToTimestamp(effectiveDate, -1);
+				Timestamp thruDate = UtilDateTime.getDayEnd(previousDate);
+				facilityParty.set("thruDate",thruDate);
+				facilityParty.store();
+				result = ServiceUtil.returnSuccess("Customer "+ partyId +" changed From "+facilityParty.getString("facilityId")+" to "+facilityId+" effective from "+effectiveDate);
+				changedParty = true;
+			}
+	    }catch(GenericEntityException e){
+			Debug.logError("error while populating thru date in FacilityParty"+e.getMessage(), module);
+			result = ServiceUtil.returnError("error while populating thru date in FacilityParty"); 
+		}
+    	GenericValue facilityPartyEntity = delegator.makeValue("FacilityParty");
+    	facilityPartyEntity.set("partyId", partyId);
+    	facilityPartyEntity.set("facilityId", facilityId);
+    	facilityPartyEntity.set("roleTypeId", roleTypeId);
+    	facilityPartyEntity.set("fromDate", effectiveDate);
+    	try {
+    		delegator.createOrStore(facilityPartyEntity);
+    	} catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            return ServiceUtil.returnError("Error while creating Facility Party"); 
+        }
+    	if(!changedParty){
+    		result = ServiceUtil.returnSuccess("Successfully Created! for party Id : "+partyId);
+    	}
+		return result;
+	}
+
     
     
     

@@ -562,5 +562,13 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createFacilityParty" engine="java" auth="true" invoke="createFacilityParty" location="in.vasista.vbiz.depotsales.DepotSalesServices">            
+        <description>Create association between depot and customer(Weaver)</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="societyPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+    </service>
+    
 </services>
 

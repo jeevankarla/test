@@ -2774,7 +2774,7 @@
 					<field-map field-name="entityName" value="Invoice" />
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service>
-				<set field="parameters.invoiceId" value="" />				
+				<!-- <set field="parameters.invoiceId" value="" /> -->				
 				<set field="parameters.partyIdFrom" value="${parameters.tempPartyIdFrom}" />				
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="salesInvoice" />
@@ -8189,6 +8189,63 @@
 					</widgets>
 				</section>
 			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	<screen name="CustomerAssoc">
+		<section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="Customer Association"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="FindSupplier"/>
+                <service service-name="findParty" auto-field-map="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	                      		<link target="NewCustomerAssoc"  text="Create Association" style="buttontext create h2" ></link>
+	                      		</widgets>
+                      	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+	</screen>
+	
+	<screen name="NewCustomerAssoc">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Create Customer Association"/>
+                <set field="tabButtonItem" value="CustomerAssoc"/>
+                <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />   
+            </actions>           
+              
+             <widgets>
+             	<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+ 						<decorator-section name="body"> 
+ 							<section>
+ 								<widgets>
+ 									<screenlet title="Create Customer Association">
+ 										<platform-specific>
+ 												<html><html-template location="component://depotsales/webapp/depotsales/depotsales/FindFacilityParty.ftl" /></html>
+ 										</platform-specific>
+ 									</screenlet>
+ 								</widgets>
+ 							</section>
+ 						</decorator-section>
+    			</decorator-screen>
+            </widgets>
+              
 		</section>
 	</screen>
 	
