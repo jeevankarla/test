@@ -56,6 +56,11 @@ def populateChildren(org, employeeList) {
 		resignDate=UtilDateTime.toDateString(employment.resignationDate,"dd/MM/yyyy");
 		employee.put("resignDate",resignDate);
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employment.partyId, userLogin: userLogin]);
+		
+		personDetails = delegator.findOne("Person", [partyId : employment.partyId], false);
+		birthDate = UtilDateTime.toDateString(personDetails.get("birthDate"), "dd/MM/yyyy");
+		employee.put("birthDate", birthDate);
+		
 		phoneNumber = "";
 		if (partyTelephone != null && partyTelephone.contactNumber != null) {
 			phoneNumber = partyTelephone.contactNumber;
@@ -99,7 +104,7 @@ employeeList.each {employee ->
     employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
 	employeeJSON.add(employee.gender);
-	employeeJSON.add(employee.bloodGroup);	
+	employeeJSON.add(employee.birthDate);	
 	employeesJSON.add(employeeJSON);
 }
 context.employeesJSON = employeesJSON;
