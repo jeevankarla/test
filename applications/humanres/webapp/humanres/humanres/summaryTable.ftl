@@ -34,7 +34,9 @@ $(document).ready(function() {
 			{ "title": "Place of Posting" },		
 			{ "title": "Join Date" },			
 			{ "title": "Phone" },
-			{ "title": "Gender"}],
+			{ "title": "Gender"},
+			{ "title": "birthDate"}],
+			
 			"columnDefs": [
 				{ type: 'date-eu', targets: 4 }
 				],			
@@ -118,6 +120,7 @@ $(document).ready(function() {
                 <th style='width: 10%;'>Join Date date</th>
                 <th style='width: 10%;'>Phone</th>
                 <th style='width: 5%; text-align: center'>Gender</th>
+                 <th style='width: 10%;'>Date of Birth</th>
                        
             </tr>
         </thead>
@@ -132,6 +135,7 @@ $(document).ready(function() {
                 <th><input type="text" style="width: 80px;" placeholder="<Date>" /></th>
                 <th><input type="text" style="width: 80px;" placeholder="<Phone>" /></th>
                 <th><input type="text" style="width: 75px;" placeholder="<Gender>" /></th>
+                <th><input type="text" style="width: 75px;" placeholder="<birthDate>" /></th>
                           
             </tr>
         </tfoot>
