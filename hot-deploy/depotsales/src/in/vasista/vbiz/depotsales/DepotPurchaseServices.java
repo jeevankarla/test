@@ -724,10 +724,11 @@ public class DepotPurchaseServices{
 		
 		
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
-		
-		return "success";
-	}
+	 		String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
+	 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId+" and Sequence : "+invoiceSeq);	  	 
+	 		
+	 		return "success";
+	 	}
 	
 
 	
@@ -2084,11 +2085,12 @@ public class DepotPurchaseServices{
 		*/
 		
 
-		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);
-		request.setAttribute("invoiceId",invoiceId);
-	
-		return "success";
-	}
+    	String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
+ 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId+" and Sequence : "+invoiceSeq);
+ 		request.setAttribute("invoiceId",invoiceId);
+ 	
+ 		return "success";
+ 	}
 
 	
 	
