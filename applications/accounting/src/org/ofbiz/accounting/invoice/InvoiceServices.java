@@ -526,6 +526,8 @@ public class InvoiceServices {
                 //inputAdjustmentsList
                 
                 for (GenericValue adj : itemAdjustments) {
+                	
+                	Debug.log("adj ======================================="+adj);
 
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
@@ -548,7 +550,11 @@ public class InvoiceServices {
                     if (adj.get("amount") == null) { // JLR 17/4/7 : fix a bug coming from POS in case of use of a discount (on item(s) or sale, item(s) here) and a cash amount higher than total (hence issuing change)
                         continue;
                     }
+                    
+                    Debug.log("adjAlreadyInvoicedAmount ================="+adjAlreadyInvoicedAmount);
+                    
                     if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
+                    	Debug.log("test skip =================");
                         continue;
                     }
                     
@@ -594,9 +600,10 @@ public class InvoiceServices {
                     	if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
                             // pro-rate the amount
                             // set decimals = 100 means we don't round this intermediate value, which is very important
-                            amount = adj.getBigDecimal("amount").divide(totalQuota, 100, ROUNDING);
-                            Debug.log("amount ========================="+amount);
-                            amount = amount.multiply(tenPercentAdjQty);
+                            amount = adj.getBigDecimal("amount"); //.divide(totalQuota, 100, ROUNDING);
+                            Debug.log("amount ========== ten percent ==============="+amount);
+                            Debug.log("tenPercentAdjQty ================= "+tenPercentAdjQty);
+                            //amount = amount.multiply(tenPercentAdjQty);
                             // Tax needs to be rounded differently from other order adjustments
                             if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
                                 amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
@@ -694,8 +701,11 @@ public class InvoiceServices {
                             createOrderAdjustmentBillingContext.put("amount", amount);
                             createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
                             createOrderAdjustmentBillingContext.put("userLogin", userLogin);
+                            
+                            Debug.log("createOrderAdjustmentBillingContext ======================================="+createOrderAdjustmentBillingContext);
 
                             Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
+                            Debug.log("createOrderAdjustmentBillingContext ======================================="+createOrderAdjustmentBillingContext);
                             if (ServiceUtil.isError(createOrderAdjustmentBillingResult)) {
                                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingOrderAdjustmentBillingFromOrder",locale), null, null, createOrderAdjustmentBillingContext);
                             }
