@@ -358,10 +358,13 @@ for (eachPartyId in partyIds) {
 	for (eachInvoiceItem in InvoiceItem) {
 		
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
-		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.itemValue);
-		TotalAmount = TotalAmount + (eachInvoiceItem.quantity);
+		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
+		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.quantity);
+		
+		TotalAmount = TotalAmount + (eachInvoiceItem.itemValue);
 		
 	}
 	

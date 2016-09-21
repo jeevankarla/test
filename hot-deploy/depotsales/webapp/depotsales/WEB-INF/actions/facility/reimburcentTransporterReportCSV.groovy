@@ -307,7 +307,9 @@ for (eachInvoiceList in Invoice) {
 	double invoiceQTY = 0;
 	for (eachInvoiceItem in InvoiceItem) {
 		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
+		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+		
+		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
