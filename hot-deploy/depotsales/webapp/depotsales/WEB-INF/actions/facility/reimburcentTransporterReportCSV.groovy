@@ -214,6 +214,41 @@ fieldsToSelect = ["invoiceId"] as Set;
 invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
 //////////////Debug.log("invoice========================="+invoice);
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
+
+
+
+
+Debug.log("invoiceIds======2222==========="+invoiceIds.size());
+
+
+conditionList1 = [];
+conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+conditionList1.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+cond = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
+OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+
+
+orderIds=EntityUtil.getFieldListFromEntityList(OrderItemBilling, "orderId", true);
+
+
+Debug.log("orderIds==============="+orderIds.size());
+
+
+conditionList1.clear();
+conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+conditionList1.add(EntityCondition.makeCondition("attrValue", EntityOperator.IN, ["MGPS_10Pecent","MGPS"]));
+
+orderAttr = delegator.findList("OrderAttribute",EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+
+orderIds=EntityUtil.getFieldListFromEntityList(orderAttr, "orderId", true);
+
+
+OrderItemBillingFilter = EntityUtil.filterByCondition(OrderItemBilling, EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+
+invoiceIds=EntityUtil.getFieldListFromEntityList(OrderItemBillingFilter, "invoiceId", true);
+
+
 condList = [];
 condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
 Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
@@ -415,7 +450,7 @@ for (eachInvoiceList in Invoice) {
 			 }
 			 
 			 
-			 shipmentReimbursementJson.put(shipmentId, tempList);
+			 //shipmentReimbursementJson.put(shipmentId, tempList);
 			 
 			 
 		 }
