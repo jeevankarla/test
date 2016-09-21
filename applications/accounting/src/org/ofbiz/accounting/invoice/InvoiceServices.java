@@ -365,12 +365,14 @@ public class InvoiceServices {
             // sequence for items - all OrderItems or InventoryReservations + all Adjustments
             int invoiceItemSeqNum = 1;
             String invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, INVOICE_ITEM_SEQUENCE_ID_DIGITS);
-            
             // create the item records
             for (GenericValue currentValue : billItems) {
             	String orderItemSeqId = (String) currentValue.get("orderItemSeqId");
-            	List inputAdjustmentsList = (List) itemAdjMap.get(orderItemSeqId);
             	
+            	List inputAdjustmentsList = FastList.newInstance();
+            	if(UtilValidate.isNotEmpty(itemAdjMap)){
+            		inputAdjustmentsList = (List) itemAdjMap.get(orderItemSeqId);
+            	}
                 GenericValue itemIssuance = null;
                 GenericValue orderItem = null;
                 GenericValue shipmentReceipt = null;
@@ -396,7 +398,6 @@ public class InvoiceServices {
                 if (orderItem.get("productId") != null) {
                     product = orderItem.getRelatedOne("Product");
                 }
-
                 // get some quantities
                 BigDecimal billingQuantity = null;
                 if (itemIssuance != null) {
@@ -448,7 +449,6 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
                 //createInvoiceItemContext.put("uomId", "");
                 createInvoiceItemContext.put("userLogin", userLogin);
-
                 String itemIssuanceId = null;
                 if (itemIssuance != null && itemIssuance.get("inventoryItemId") != null) {
                     itemIssuanceId = itemIssuance.getString("itemIssuanceId");
@@ -491,7 +491,6 @@ public class InvoiceServices {
                 if ((shipmentReceipt != null) && (shipmentReceipt.getString("receiptId") != null)) {
                     createOrderItemBillingContext.put("shipmentReceiptId", shipmentReceipt.getString("receiptId"));
                 }
-
                 Map<String, Object> createOrderItemBillingResult = dispatcher.runSync("createOrderItemBilling", createOrderItemBillingContext);
                 if (ServiceUtil.isError(createOrderItemBillingResult)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingOrderItemBillingFromOrder",locale), null, null, createOrderItemBillingResult);
@@ -522,12 +521,10 @@ public class InvoiceServices {
                 if(UtilValidate.isNotEmpty(inputAdjustmentsList)){
                 	itemAdjustments = inputAdjustmentsList;
                 }
-                
                 //inputAdjustmentsList
                 
                 for (GenericValue adj : itemAdjustments) {
                 	
-                	Debug.log("adj ======================================="+adj);
 
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
@@ -551,10 +548,7 @@ public class InvoiceServices {
                         continue;
                     }
                     
-                    Debug.log("adjAlreadyInvoicedAmount ================="+adjAlreadyInvoicedAmount);
-                    
                     if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
-                    	Debug.log("test skip =================");
                         continue;
                     }
                     
@@ -601,8 +595,6 @@ public class InvoiceServices {
                             // pro-rate the amount
                             // set decimals = 100 means we don't round this intermediate value, which is very important
                             amount = adj.getBigDecimal("amount"); //.divide(totalQuota, 100, ROUNDING);
-                            Debug.log("amount ========== ten percent ==============="+amount);
-                            Debug.log("tenPercentAdjQty ================= "+tenPercentAdjQty);
                             //amount = amount.multiply(tenPercentAdjQty);
                             // Tax needs to be rounded differently from other order adjustments
                             if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
@@ -701,11 +693,8 @@ public class InvoiceServices {
                             createOrderAdjustmentBillingContext.put("amount", amount);
                             createOrderAdjustmentBillingContext.put("quantity", tenPercentAdjQty);
                             createOrderAdjustmentBillingContext.put("userLogin", userLogin);
-                            
-                            Debug.log("createOrderAdjustmentBillingContext ======================================="+createOrderAdjustmentBillingContext);
 
                             Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
-                            Debug.log("createOrderAdjustmentBillingContext ======================================="+createOrderAdjustmentBillingContext);
                             if (ServiceUtil.isError(createOrderAdjustmentBillingResult)) {
                                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingOrderAdjustmentBillingFromOrder",locale), null, null, createOrderAdjustmentBillingContext);
                             }
@@ -731,6 +720,9 @@ public class InvoiceServices {
                         invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, INVOICE_ITEM_SEQUENCE_ID_DIGITS);
                     }
                 }
+                
+                
+                
             }
 
             // create header adjustments as line items -- always to tax/shipping last
@@ -738,7 +730,6 @@ public class InvoiceServices {
             Map<GenericValue, BigDecimal> taxAdjustments = FastMap.newInstance();
 
             List<GenericValue> headerAdjustments = orh.getOrderHeaderAdjustments();
-           
             for (GenericValue adj : headerAdjustments) {
             	
             	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
@@ -892,8 +883,6 @@ public class InvoiceServices {
 
             Map<String, Object> resp = ServiceUtil.returnSuccess();
             
-          //  Debug.log("invoiceId=======6666======"+invoiceId);
-
             resp.put("invoiceId", invoiceId);
             resp.put("invoiceTypeId", invoiceType);
             return resp;
