@@ -1099,6 +1099,7 @@ public class DepotPurchaseServices{
 						
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxRateMap);
 						taxRateList.add(orderAdjustment);
+						ignoreAdjustmentsList.add(taxType);
 					}
 				}
 				
@@ -1112,6 +1113,7 @@ public class DepotPurchaseServices{
 						if(tenPercentSubsidy.compareTo(BigDecimal.ZERO)>0){
 							tenPercentSubsidy = tenPercentSubsidy.negate();
 						}
+						
 						Map taxRateMap = FastMap.newInstance();
 						taxRateMap.put("orderAdjustmentTypeId","TEN_PERCENT_SUBSIDY");
 						taxRateMap.put("sourcePercentage",new BigDecimal("10"));
@@ -1142,7 +1144,7 @@ public class DepotPurchaseServices{
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", taxRateMap);
 						taxRateList.add(orderAdjustment);
 						
-						
+						ignoreAdjustmentsList.add("TEN_PERCENT_SUBSIDY");
 						
 					} catch (Exception e) {
 						Debug.logError(e, "Problems parsing ten percent subsidy string: " + tenPercentStr, module);
@@ -1194,7 +1196,7 @@ public class DepotPurchaseServices{
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", tempAdjMap);
 						taxRateList.add(orderAdjustment);
 						
-						
+						ignoreAdjustmentsList.add(orderAdjustmentType);
 						
 						orderAdjustmentList.add(tempAdjMap);
 					}
@@ -1246,11 +1248,12 @@ public class DepotPurchaseServices{
 						taxRateList.add(orderAdjustment);
 						
 						discOrderAdjustmentList.add(tempAdjMap);
+						ignoreAdjustmentsList.add(orderAdjustmentType);
 					}
 				}
 				//Debug.log("assessableAdjustmentAmount ================="+assessableAdjustmentAmount);
 				
-				
+				Debug.log("taxRateList =================== "+taxRateList);
 				
 				
 				
@@ -1388,6 +1391,8 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
+		
+		Debug.log("ignoreAdjustmentsList ================="+ignoreAdjustmentsList);
 	
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
@@ -6728,7 +6733,7 @@ public class DepotPurchaseServices{
   	          } catch (GenericServiceException e) {
   	              
   	              Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(result), module);
-  	  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
+  	  			request.setAttribute("_ERROR_MESSAGE_", "Unable to create Invoice:"+ServiceUtil.getErrorMessage(result));
   	  			return "error";
   	        }
   			

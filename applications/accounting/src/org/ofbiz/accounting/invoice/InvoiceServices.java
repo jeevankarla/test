@@ -525,7 +525,8 @@ public class InvoiceServices {
                 
                 for (GenericValue adj : itemAdjustments) {
                 	
-
+                	Debug.log("adj type id ==============="+adj.get("orderAdjustmentTypeId"));
+                	
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
                     BigDecimal adjAlreadyInvoicedAmount = null;
@@ -541,16 +542,22 @@ public class InvoiceServices {
                         Debug.logError(e, errMsg, module);
                         return ServiceUtil.returnError(errMsg);
                     }
-                
+                    
+                    Debug.log("adjAlreadyInvoicedAmount ==============="+adjAlreadyInvoicedAmount);
+                    Debug.log("adjAlreadyInvoicedQty ==============="+adjAlreadyInvoicedQty);
+                    
                     // If the absolute invoiced amount >= the abs of the adjustment amount, the full amount has already been invoiced,
                     //  so skip this adjustment
                     if (adj.get("amount") == null) { // JLR 17/4/7 : fix a bug coming from POS in case of use of a discount (on item(s) or sale, item(s) here) and a cash amount higher than total (hence issuing change)
                         continue;
                     }
                     
-                    if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
-                        continue;
+                    if(!ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+                    	if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
+                            continue;
+                        }
                     }
+                    
                     
                     BigDecimal amount = ZERO;
                     BigDecimal totalQuota =BigDecimal.ZERO;
@@ -584,53 +591,96 @@ public class InvoiceServices {
 							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 						}
-                    	
+					  	Debug.log("totalQuota ==============="+totalQuota);
 					  	
 					  	tenPercentAdjQty = totalQuota.subtract(adjAlreadyInvoicedQty);
 					  	if(billingQuantity.compareTo(tenPercentAdjQty) < 0){
                         	tenPercentAdjQty = billingQuantity;
                         }
-					  	
-                    	if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
-                            // pro-rate the amount
-                            // set decimals = 100 means we don't round this intermediate value, which is very important
-                            amount = adj.getBigDecimal("amount"); //.divide(totalQuota, 100, ROUNDING);
-                            //amount = amount.multiply(tenPercentAdjQty);
-                            // Tax needs to be rounded differently from other order adjustments
-                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
-                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
-                            } else {
-                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                    	                    	
+                    	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+                    		if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                amount = adj.getBigDecimal("amount"); //.divide(totalQuota, 100, ROUNDING);
+                                //amount = amount.multiply(tenPercentAdjQty);
+                                // Tax needs to be rounded differently from other order adjustments
+                                if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                    amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                                } else {
+                                    amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                                }
                             }
-                        }
+                    	}
+                    	else{
+                    		if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                amount = adj.getBigDecimal("amount").divide(totalQuota, 100, ROUNDING);
+                                amount = amount.multiply(tenPercentAdjQty);
+                                // Tax needs to be rounded differently from other order adjustments
+                                if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                    amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                                } else {
+                                    amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                                }
+                            }
+                    	}
+                    	
+                    	
                     }
                     else{
                     	
-                    	if (adj.get("amount") != null) {
-                            // pro-rate the amount
-                            // set decimals = 100 means we don't round this intermediate value, which is very important
-                            amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                            amount = amount.multiply(billingQuantity);
-                            // Tax needs to be rounded differently from other order adjustments
-                            if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
-                                amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
-                            } else {
+                    	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+                    		if (adj.get("amount") != null) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                amount = adj.getBigDecimal("amount"); //.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                                //amount = amount.multiply(billingQuantity);
+                                // Tax needs to be rounded differently from other order adjustments
+                                if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                    amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                                } else {
+                                    amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                                }
+                            } else if (adj.get("sourcePercentage") != null) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                BigDecimal percent = adj.getBigDecimal("sourcePercentage");
+                                percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
+                                amount = billingAmount.multiply(percent);
+                                amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                                amount = amount.multiply(billingQuantity);
                                 amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
                             }
-                        } else if (adj.get("sourcePercentage") != null) {
-                            // pro-rate the amount
-                            // set decimals = 100 means we don't round this intermediate value, which is very important
-                            BigDecimal percent = adj.getBigDecimal("sourcePercentage");
-                            percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
-                            amount = billingAmount.multiply(percent);
-                            amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
-                            amount = amount.multiply(billingQuantity);
-                            amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
-                        }
+                    	}
+                    	else{
+                    		if (adj.get("amount") != null) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                amount = adj.getBigDecimal("amount").divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                                amount = amount.multiply(billingQuantity);
+                                // Tax needs to be rounded differently from other order adjustments
+                                if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
+                                    amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
+                                } else {
+                                    amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                                }
+                            } else if (adj.get("sourcePercentage") != null) {
+                                // pro-rate the amount
+                                // set decimals = 100 means we don't round this intermediate value, which is very important
+                                BigDecimal percent = adj.getBigDecimal("sourcePercentage");
+                                percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
+                                amount = billingAmount.multiply(percent);
+                                amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
+                                amount = amount.multiply(billingQuantity);
+                                amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                            }
+                    	}
+                    	
+                    	
                     	
                     }
-                    
-                    
                     
                     if (amount.signum() != 0) {
                         Map<String, Object> createInvoiceItemAdjContext = FastMap.newInstance();
@@ -732,9 +782,9 @@ public class InvoiceServices {
             List<GenericValue> headerAdjustments = orh.getOrderHeaderAdjustments();
             for (GenericValue adj : headerAdjustments) {
             	
-            	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+            	/*if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
             		continue;
-            	}
+            	}*/
             	
                 // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 BigDecimal adjAlreadyInvoicedAmount = null;
