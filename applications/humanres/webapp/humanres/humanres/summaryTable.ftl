@@ -35,7 +35,7 @@ $(document).ready(function() {
 			{ "title": "Join Date" },			
 			{ "title": "Phone" },
 			{ "title": "Gender"},
-			{ "title": "birthDate"}],
+			{ "title": "DOB"}],
 			
 			"columnDefs": [
 				{ type: 'date-eu', targets: 4 }
