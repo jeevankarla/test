@@ -94,9 +94,9 @@ employeeList.each {employee ->
 	JSONArray employeeJSON = new JSONArray();
 	employeeJSON.add(employee.name);
 	employeeJSON.add(employee.employeeId);
-	employeeJSON.add(employee.department);
 	employeeJSON.add(employee.position);
-	employeeJSON.add(employee.joinDate);
+	employeeJSON.add(employee.department);
+    employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
 	employeeJSON.add(employee.gender);
 	employeeJSON.add(employee.bloodGroup);	

@@ -30,12 +30,11 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "Employee" },
 			{ "title": "Employee Id" },
-			{ "title": "Department" },
-			{ "title": "Position" },			
+			{ "title": "Designation" },	
+			{ "title": "Place of Posting" },		
 			{ "title": "Join Date" },			
 			{ "title": "Phone" },
-			{ "title": "Gender"},
-			{ "title": "Blood Group"}],
+			{ "title": "Gender"}],
 			"columnDefs": [
 				{ type: 'date-eu', targets: 4 }
 				],			
@@ -114,12 +113,12 @@ $(document).ready(function() {
             <tr>
                 <th style='width: 20%;'>Employee</th>
                 <th style='width: 10%;'>Employee Id</th>
-                <th style='width: 20%;'>Department</th>
-                <th style='width: 20%;'>Position</th>
+                <th style='width: 20%;'>Designation</th>
+                <th style='width: 20%;'>Place of Posting</th>
                 <th style='width: 10%;'>Join Date date</th>
                 <th style='width: 10%;'>Phone</th>
                 <th style='width: 5%; text-align: center'>Gender</th>
-                <th style='width: 5%;'>Blood Group</th>                
+                       
             </tr>
         </thead>
  		<tbody></tbody>
@@ -127,12 +126,13 @@ $(document).ready(function() {
             <tr>
                 <th><input type="text" placeholder="<Name>" /></th>
                 <th><input type="text" style="width: 65px;" placeholder="<Id>" /></th>
+                
                 <th><input type="text" placeholder="<Department>" /></th>
                 <th><input type="text" placeholder="<Position>" /></th>
                 <th><input type="text" style="width: 80px;" placeholder="<Date>" /></th>
                 <th><input type="text" style="width: 80px;" placeholder="<Phone>" /></th>
                 <th><input type="text" style="width: 75px;" placeholder="<Gender>" /></th>
-                <th><input type="text" style="width: 85px;" placeholder="<Blood Group>" /></th>                 
+                          
             </tr>
         </tfoot>
 		</table>
