@@ -120,7 +120,7 @@ $(document).ready(function() {
                 <th style='width: 10%;'>Join Date date</th>
                 <th style='width: 10%;'>Phone</th>
                 <th style='width: 5%; text-align: center'>Gender</th>
-                 <th style='width: 10%;'>birthDate</th>
+                 <th style='width: 10%;'>Date of Birth</th>
                        
             </tr>
         </thead>
