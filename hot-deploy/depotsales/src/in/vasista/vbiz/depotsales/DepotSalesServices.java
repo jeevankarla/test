@@ -74,6 +74,7 @@ import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.depotsales.DepotPurchaseServices;
+import org.ofbiz.party.party.PartyHelper;
 
 public class DepotSalesServices{
 
@@ -13951,7 +13952,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	    try{
 	    	FacilityPartyList = delegator.findList("FacilityParty", condition, null,null, null, false);
 	    	if(UtilValidate.isNotEmpty(FacilityPartyList)){
-	    		return ServiceUtil.returnError("This Customer already mapped to given depot"); 
+	    		return ServiceUtil.returnError("Customer already mapped to this depot"); 
 	    	}
 	    	else{
 	    		conditionList.clear();
@@ -13971,7 +13972,9 @@ Debug.log("taxRateList =============="+taxRateList);
 				Timestamp thruDate = UtilDateTime.getDayEnd(previousDate);
 				facilityParty.set("thruDate",thruDate);
 				facilityParty.store();
-				result = ServiceUtil.returnSuccess("Customer "+ partyId +" changed From "+facilityParty.getString("facilityId")+" to "+facilityId+" effective from "+effectiveDate);
+				GenericValue fromParty = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityParty.getString("facilityId")),false);
+				GenericValue toParty = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+				result = ServiceUtil.returnSuccess("Customer "+ PartyHelper.getPartyName(delegator, partyId, false) +" changed From "+fromParty.getString("facilityName")+" to "+toParty.getString("facilityName")+" effective from "+effectiveDate);
 				changedParty = true;
 			}
 	    }catch(GenericEntityException e){
@@ -13990,7 +13993,7 @@ Debug.log("taxRateList =============="+taxRateList);
             return ServiceUtil.returnError("Error while creating Facility Party"); 
         }
     	if(!changedParty){
-    		result = ServiceUtil.returnSuccess("Successfully Created! for party Id : "+partyId);
+    		result = ServiceUtil.returnSuccess("Successfully Created! for Customer : "+PartyHelper.getPartyName(delegator, partyId, false)+ "["+partyId+"]");
     	}
 		return result;
 	}
