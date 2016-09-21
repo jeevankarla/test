@@ -752,6 +752,7 @@ under the License.emplpunch
 			<exclude field-name="partyId" />
 		</auto-attributes>
 		<attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+		 <attribute name="alternatemobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
         <attribute name="postalAddContactMechPurpTypeId" type="String" mode="IN" optional="false"/>
@@ -1928,6 +1929,7 @@ under the License.emplpunch
         <attribute name="emergencyContactRelationship" mode="IN" type="String" optional="true"></attribute>
         <attribute name="countryCode" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="alternatemobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="address1" mode="IN" type="String" optional="false"></attribute>
         <attribute name="address2" mode="IN" type="String" optional="true"></attribute>
         <attribute name="city" mode="IN" type="String" optional="false"></attribute>
