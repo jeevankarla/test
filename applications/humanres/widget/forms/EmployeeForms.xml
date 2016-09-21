@@ -1138,7 +1138,7 @@
         </field> -->
 <!--         <field name="appointmentDate" entry-name="employment.appointmentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
  -->        
-         <field name="appointmentDate" title="Date of joining at kmf" entry-name="employment.appointmentDate">
+         <field name="appointmentDate" title="Date of joining at NHDC" entry-name="employment.appointmentDate">
             <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
                 <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
