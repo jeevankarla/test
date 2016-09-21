@@ -8201,23 +8201,27 @@
                 <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="Customer Association"/>
                 <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="FindSupplier"/>
-                <service service-name="findParty" auto-field-map="parameters"/>
+                <set field="tabButtonItem" value="CustomerAssoc"/>                
             </actions>
             <widgets>
-                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                      <decorator-section name="body">   
-                      	<section>
-	                      	  <condition>
-	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
-	                         </condition>
-	                      		<widgets>
-	                      		<link target="NewCustomerAssoc"  text="Create Association" style="buttontext create h2" ></link>
-	                      		</widgets>
-                      	</section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
+				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="NewCustomerAssoc" text="Create Association" style="buttontext create h2"></link>
+								</container>
+							</widgets>
+						</section>
+						<screenlet title="Search-Options">
+							<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="FindFacilityParty" />
+						</screenlet>
+						<screenlet title="Search-Results">
+							<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="ListFacilityParty" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
         </section>
 	</screen>
 	

@@ -3238,7 +3238,34 @@
          <field name="AvailableSILK_YARN" title="_"><display/></field>
      </form>
      
-     
+     <form name="FindFacilityParty" title="" type="single" target="${CustomerAssoc}" header-row-style="header-row" default-table-style="basic-table">
+     	<field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="partyId" parameter-name="partyId" title="Customer"><lookup target-form-name="LookupPartyName"/></field>
+        <field title="From Date" name="fromDate"><date-time/></field>
+        <field title="From Date" name="thruDate"><date-time/></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+     <form name="ListFacilityParty" type="list" list-name="listIt" paginate-target="CustomerAssoc"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityParty"/>
+                <field-map field-name="orderBy" value="partyId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+        	<entity-one value-field="facilityName" entity-name="Facility">
+				<field-map field-name="facilityId" from-field="facilityId"/>
+			</entity-one>
+        </row-actions>
+        <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>
+        <field name="facilityId" title="Depot"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}[${facilityId}]"/> </field>
+        <field name="fromDate"><display></display></field>
+        <field name="thruDate"><display></display></field> 
+    </form>
      
         
 </forms>
