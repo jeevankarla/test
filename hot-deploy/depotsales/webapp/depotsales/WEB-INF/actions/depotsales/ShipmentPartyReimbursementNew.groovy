@@ -421,6 +421,7 @@ for (eachInvoiceList in Invoice) {
 		//invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
 		if(eachInvoiceItem.itemValue)
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
