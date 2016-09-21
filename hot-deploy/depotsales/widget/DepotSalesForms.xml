@@ -3243,7 +3243,7 @@
         <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
         <field name="facilityId" title="Depot"><lookup target-form-name="LookupFacility"/></field>
         <field title="From Date" name="fromDate"><date-time/></field>
-        <field title="From Date" name="thruDate"><date-time/></field> 
+        <field title="Thru Date" name="thruDate"><date-time/></field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
      <form name="ListFacilityParty" type="list" list-name="listIt" paginate-target="CustomerAssoc"
