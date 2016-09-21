@@ -1399,6 +1399,7 @@ public class HumanresService {
 			String bloodGroup =(String)context.get("bloodGroup");
 			String gender =(String)context.get("gender");
 			String maritalStatus =(String)context.get("maritalStatus");
+			String alternatemobileNumber =(String)context.get("alternatemobileNumber");
 			String emergencyContactName =(String)context.get("emergencyContactName");
 			String emergencyContactNumber =(String)context.get("emergencyContactNumber");
 			String emergencyContactRelationship =(String)context.get("emergencyContactRelationship");
@@ -1502,6 +1503,23 @@ public class HumanresService {
 		            }
 				}
 				
+				if (UtilValidate.isNotEmpty(alternatemobileNumber)){
+					if (UtilValidate.isEmpty(countryCode)){
+						countryCode	="91";
+					}
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactNumber",alternatemobileNumber);
+		            input.put("contactMechPurposeTypeId","SECONDARY_PHONE");
+		            input.put("countryCode",countryCode);	
+		            input.put("partyId", ownerPartyId);
+		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service create party alternate contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+			
 				// create PostalAddress
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
