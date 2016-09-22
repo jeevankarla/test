@@ -15,7 +15,7 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
+-->  
 
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 
@@ -138,13 +138,69 @@ function datepick()
 	
 //<![CDATA[
 
+ 
+  function getInvoiceRunning(){
+
+
+	var selectedInvoices = [];
+
+var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
+        jQuery.each(invoices, function() {
+            if (jQuery(this).is(':checked')) {
+            	var invId = $(this).val();
+            	selectedInvoices.push(invId);
+            }
+            
+        });
+        
+        
+        if(selectedInvoices.length){
+        var dataJson = {"selectedInvoices": JSON.stringify(selectedInvoices)};
+		
+		jQuery.ajax({
+                url: 'getSalePurchaseValues',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						var invoiceItemList = result["invoiceItemList"];
+					var totalAmout = invoiceItemList[0].totalAmout;
+					
+					var totalQuantity = invoiceItemList[0].totalQuantity;
+						
+						jQuery('#showInvoiceRunningTotal').html(totalAmout + '  (' + selectedInvoices.length + ')');
+						
+						jQuery('#showInvoiceRunningTotalQuantity').html(totalQuantity);
+               		}
+               	}							
+		});
+        
+        }else{
+        
+             jQuery('#showInvoiceRunningTotal').html('')
+        
+        		jQuery('#showInvoiceRunningTotalQuantity').html('');
+        }
+        
+        
+
+}
+
+ 
+
+
+
+
     function toggleInvoiceId(master) {
         var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
 
         jQuery.each(invoices, function() {
             this.checked = master.checked;
         });
-        getInvoiceRunningTotal();
+        getInvoiceRunning();
     }
 
     function getInvoiceRunningTotal() {
@@ -465,6 +521,13 @@ function roundingInvoiceItems(invoiceId){
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
+    
+    
+      <span class="label">Quntity : </span>
+    
+    <span class="label" id="showInvoiceRunningTotalQuantity"></span>
+    
+    
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -499,8 +562,8 @@ function roundingInvoiceItems(invoiceId){
       <thead>
         <tr class="header-row-2">
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
-         <#--> <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>-->
-         <td>Rounding</td>
+         <#--> <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
+         <td>Rounding</td>-->
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Shipment Id</td> 
           <td>${uiLabelMap.CommonStatus}</td>
@@ -510,7 +573,8 @@ function roundingInvoiceItems(invoiceId){
           <td>Branch</td>
           <td>Customer</td>
           <td>PurInv.BasAmt</td>
-          <td>SaleInv.BasAmt</td>
+          <td>SaleBaseValue</td>
+           <td>SaleInvoiceTotal</td>
           <#--><td>${uiLabelMap.AccountingAmount}</td>-->
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
@@ -519,7 +583,7 @@ function roundingInvoiceItems(invoiceId){
           <td>Payment Advice</td>
           <td>Invoice voucher</td>
           <td>Cancel</td>
-         <#--> <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>-->
+         <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
       <tbody>
@@ -536,7 +600,7 @@ function roundingInvoiceItems(invoiceId){
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>-->
               
-              <td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>
+              <#--><td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>-->
               
               <td>${(invoice.invoiceDate)?if_exists}</td>
                 <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialShipmentOverview?shipmentId=${invoice.shipmentId}</@ofbizUrl>">${invoice.shipmentId}</a></td>
@@ -588,12 +652,14 @@ function roundingInvoiceItems(invoiceId){
  		   	       <td></td>
  			  </#if>
               <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
+              
  			  <#--><td>${saleBasicAmt}</td> -->
- 			  
+ 			  <#assign outStandingAmt = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>
               <#--><td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
+              <td><@ofbizCurrency amount=saleBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount= outStandingAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
                
                
         <#-->       <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
@@ -632,7 +698,7 @@ function roundingInvoiceItems(invoiceId){
               <#else>
                <td align="center"></td>
                </#if> -->
-            <#-->  <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>-->
+              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunning();"/></td>
            
             </tr>
             <#-- toggle the row color -->

@@ -112,6 +112,18 @@ public class InvoiceServices {
     private static final int INVOICE_ITEM_SEQUENCE_ID_DIGITS = 5; // this is the number of digits used for invoiceItemSeqId: 00001, 00002...
 
     public static final String resource = "AccountingUiLabels";
+    
+    
+    private static int decimals;
+    private static int rounding;
+     
+     static {
+         decimals = 2;// UtilNumber.getBigDecimalScale("order.decimals");
+         rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+
+         // set zero to the proper scale
+         //if (decimals != -1) ZERO = ZERO.setScale(decimals);
+     }
 
     // service to create an invoice for a complete order by the system userid
     public static Map<String, Object> createInvoiceForOrderAllItems(DispatchContext dctx, Map<String, Object> context) {
@@ -6108,6 +6120,9 @@ public class InvoiceServices {
 	            BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
 	            BigDecimal unitpPce = invoiceItem.getBigDecimal("amount");
 	            BigDecimal amount = quantity.multiply(unitpPce);
+	            
+	            amount = (amount.setScale(0, rounding));
+	            
 	            invoiceItemBasicVal = invoiceItemBasicVal.add(amount);
         	}
         } catch (GenericEntityException e) {
