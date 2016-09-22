@@ -369,7 +369,7 @@ under the License.
 	        	<if-not-empty field="finAccount">
 	        	 <set field="finTransMap.finAccountTransTypeId" value="WITHDRAWAL"/>
 	       		 <set field="finTransMap.paymentId" from-field="parameters.paymentId"/>
-	       		 <set field="finTransMap.partyId" from-field="payment.partyId"/>
+	       		 <set field="finTransMap.partyId" from-field="finAccount.ownerPartyId"/>
 	       		 <set field="finTransMap.amount" from-field="payment.amount"/>
 	       		 <set field="finTransMap.finAccountId" from-field="finAccountId"/>
 	       		 <call-service service-name="createFinAccoutnTransFromPayment" in-map-name="finTransMap"/>
