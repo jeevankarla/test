@@ -887,7 +887,7 @@
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
-        <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+        <field name="partyId" title="Branch"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
          <!-- <field use-when="&quot;${orderTypeId}&quot; == &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="LetterOfIndentReport.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>

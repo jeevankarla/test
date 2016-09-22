@@ -171,6 +171,7 @@
 				<set field="tabButtonItem" value="FindDepotTransPO" />
 				<set field="tabButtonItem2" value="FindDepotTransPO" />
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/poRefNoSearch.groovy"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/DepotTransROSearchFilter.groovy" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -179,13 +180,13 @@
 				</service>
 				<set field="targetRequest" value="FindDepotTransPO" />
 			<!-- 	<set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />  -->
-				<set field="partyId" from-field="parameters.partyId" />
+				<!-- <set field="partyId" from-field="parameters.partyId" /> -->
 				<set field="roleTypeId" value="BILL_FROM_VENDOR" />
 				<set field="parameters.roleTypeId" from-field="roleTypeId" />
 				<set field="parameters.noConditionFind" value="N"></set>
 				<set field="parameters.purposeTypeId" value="DEPOT_PURCHASE"></set>
 			<!-- 	<set field="parameters.salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"></set>  -->
-
+				<set field="parameters.partyId" value="${tempPartyId}" />
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy" />
 			</actions>
