@@ -553,8 +553,17 @@ public class DepotSalesApiServices{
 	    	tempData.put("orderItemsList", orderItems);
 	    	String transporterName = "";
 	    	String transporterId = "";
+	    	String scheme = "";
 	    	try{
 	    		GenericValue OrderAttribute = delegator.findOne("OrderAttribute",UtilMisc.toMap("orderId",eachOrderId,"attrName","TRANSPORTER_PREF"),false);
+	    		GenericValue schemeDetails = delegator.findOne("OrderAttribute",UtilMisc.toMap("orderId",eachOrderId,"attrName","SCHEME_CAT"),false);
+	    		if(UtilValidate.isNotEmpty(schemeDetails)){
+	    			scheme = schemeDetails.getString("attrValue");
+	    			if(scheme.equalsIgnoreCase("MGPS_10Pecent")){
+	    				scheme = "MGPS+10%"; 
+	    			}
+	    		}
+	    		
 	    		if(UtilValidate.isNotEmpty(OrderAttribute)){
 	    			transporterName = OrderAttribute.getString("attrValue");
 	    			if(transporterName != PartyHelper.getPartyName(delegator, transporterName, false)){
@@ -577,6 +586,7 @@ public class DepotSalesApiServices{
 	  		}
 	    	tempData.put("transporterName",transporterName);
 	    	tempData.put("transporterId",transporterId);
+	    	tempData.put("scheme",scheme);
 	    	orderList.add(tempData);
 	    }
 		
