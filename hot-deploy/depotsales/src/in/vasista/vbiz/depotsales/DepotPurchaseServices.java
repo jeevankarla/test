@@ -1593,18 +1593,6 @@ public class DepotPurchaseServices{
 	  			
 	  			
 	  			//=====================party is IsDepo or not
-	  			
-	  			List conditionListF = FastList.newInstance();
-	  			conditionListF.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyIdTo));
-	  			conditionListF.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
-	  			List FacilityList = delegator.findList("Facility", EntityCondition.makeCondition(conditionListF, EntityOperator.AND), null, null, null, false);
-
-	  			String isDepot = "";
-	  			if(UtilValidate.isNotEmpty(FacilityList))
-	  			isDepot ="Y";
-	  			else
-	  			isDepot ="N";
-	  			
 				
 				BigDecimal receiptEligablityAmount=shipmentObj.getBigDecimal("estimatedShipCost");
 				
@@ -1612,33 +1600,9 @@ public class DepotPurchaseServices{
 				BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
 				
 				
-				BigDecimal depotReimbursmentValue = BigDecimal.ZERO;
-				if(isDepot == "Y"){
-				   
-				   depotReimbursmentValue=(invoiceGrandTotal.multiply(DepotreimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
-							
-		  			GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
-					
-						BigDecimal estimatedShipCost=shipmentObj.getBigDecimal("estimatedShipCost");
-						
-						Timestamp receiptDate1=shipmentObj.getTimestamp("estimatedShipDate");
-						if(UtilValidate.isEmpty(receiptDate1))
-							receiptDate1=UtilDateTime.nowTimestamp();
-		  				if(UtilValidate.isNotEmpty(estimatedShipCost)){
-			  				ShipmentReimbursement.set("shipmentId", shipmentId);
-			  				ShipmentReimbursement.set("receiptAmount", depotReimbursmentValue);
-			  				ShipmentReimbursement.set("receiptDate", receiptDate1);
-							delegator.createSetNextSeqId(ShipmentReimbursement);
-			  				
-		  				}
-				
-				}
-				
 				finalEligablityAmount = (finalEligablityAmount.setScale(0, rounding));
 				
-				depotReimbursmentValue = (depotReimbursmentValue.setScale(0, rounding));
-				
-				shipmentObj.set("claimAmount",finalEligablityAmount.add(depotReimbursmentValue));
+				shipmentObj.set("claimAmount",finalEligablityAmount);
 				shipmentObj.set("claimStatus","APPLYED");
 				if(finalEligablityAmount.compareTo(BigDecimal.ZERO)<=0){
 					shipmentObj.set("claimStatus","");

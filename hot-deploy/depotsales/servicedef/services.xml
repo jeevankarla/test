@@ -570,5 +570,21 @@
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
     </service>
     
+    
+      <service name="getReimbursmentPercentage" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getReimbursmentPercentage" transaction-timeout="6000000">
+        <description>get Reimbursment Percentage</description>
+         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+         <attribute name="productId" type="String" mode="IN" optional="false"/>
+         <attribute name="schemeTypeId" type="String" mode="IN" optional="false"/>
+         <attribute name="invoiceDate" type="Timestamp" mode="IN" optional="false"/>
+         <attribute name="schemePercent" type="BigDecimal" mode="OUT" optional="false"/>
+    </service>
+    
+     <service name="populatePartyDistrict" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populatePartyDistrict" transaction-timeout="6000000">
+        <description>get populatePartyDistrict</description>
+         <attribute name="bo" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    
 </services>
 
