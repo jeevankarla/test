@@ -276,7 +276,28 @@
 					}
 				}
                 
-                 
+                // Sale order Adjustments
+				var orderAdjustmentsList = [];
+				orderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				
+				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
+				jQuery(formId).append(jQuery(orderAdjustmentItem));	
+				if(orderAdjustmentsList != undefined){
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjType = orderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
 				
 				//var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
 				//jQuery(formId).append(jQuery(inputExcisePer));
@@ -617,6 +638,15 @@
 			{id:"baleQty", name:"Bale Qty", field:"baleQty", width:70, minWidth:70, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"OTH_CHARGES_AMT", name:"Oth Chgs", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			<#--{id:"VAT_SALE_AMT", name:"VAT", field:"VAT_SALE_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"CST_SALE_PUR_AMT", name:"CST", field:"CST_SALE_PUR_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			
+			
+			{id:"cessPercent", name:"CESS (%)", field:"cessPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Cess Percentage", editor:FloatCellEditor},
+			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", editor:FloatCellEditor},
+			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
+			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
+			-->
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
@@ -865,6 +895,9 @@
 			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:350, minWidth:350, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
 			{id:"adjValue", name:"Value", field:"adjValue", width:100, minWidth:100, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Value"},
 			{id:"uomId", name:"Rs/Percent", field:"uomId", width:100, minWidth:100, options: "INR,PERCENT", editor: SelectCellEditor, sortable:false, align:"right", toolTip:"Unit Of Measure"},
+			<#--{id:"termDays", name:"Term Days", field:"termDays", width:80, minWidth:80, editor:IntegerCellEditor, sortable:false, align:"right", toolTip:"Term Days"},
+			{id:"description", name:"Description", field:"description", width:200, minWidth:200, editor:LongTextCellEditor, sortable:false, align:"right", toolTip:"Term Description"},
+			-->
 			{id:"assessableValue", name:"Inc In Tax", field:"assessableValue", width:100, minWidth:100, cssClass:"cell-title",editor:YesNoCheckboxCellEditor, sortable:true}
 		];
 		
@@ -941,7 +974,15 @@
             }
         });
          
-        grid2.onAddNewRow.subscribe(function (e, args) {
+        <#-- 
+        grid2.onClick.subscribe(function (e, args) {
+    		if (args.cell == 4) {
+				var adjustmentTypeId = data[args.row]["adjustmentTypeId"];
+			}
+  		});
+  		-->	 
+         
+    	grid2.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var itemLabel = item['adjustmentTypeId'];
       		
@@ -1092,8 +1133,8 @@
 						    data[row]["DEFAULT_PUR_"+key] = value;
 						    data[row]["DEFAULT_PUR_"+key+"_AMT"] = (value) * totalAmt/100;
 						    
-						    data[row][key+"_PUR"] = value;
-						    data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
+						    //data[row][key+"_PUR"] = value;
+						    //data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
 						    
 						    count++;
 						});
