@@ -582,7 +582,7 @@
     
      <service name="populatePartyDistrict" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populatePartyDistrict" transaction-timeout="6000000">
         <description>get populatePartyDistrict</description>
-         <attribute name="ro" type="String" mode="IN" optional="true"/>
+         <attribute name="bo" type="String" mode="IN" optional="true"/>
     </service>
     
     
