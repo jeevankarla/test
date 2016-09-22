@@ -396,6 +396,7 @@ for (eachInvoiceList in Invoice) {
 	condList.clear();
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
@@ -413,7 +414,7 @@ for (eachInvoiceList in Invoice) {
 		productId = InvoiceItem[0].productId;
 		
 		
-		
+		   
 	double invoiceAMT = 0;
 	double invoiceQTY = 0;
 	for (eachInvoiceItem in InvoiceItem) {
@@ -421,7 +422,6 @@ for (eachInvoiceList in Invoice) {
 		//invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
 		if(eachInvoiceItem.itemValue)
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
@@ -455,6 +455,24 @@ for (eachInvoiceList in Invoice) {
 	if(!percentage)
 	percentage = 2.5;
 	
+	
+	/*inputCtx = [:];
+	 inputCtx.put("userLogin",userLogin);
+	 inputCtx.put("partyId", eachInvoiceList.partyId);
+	 inputCtx.put("productId", productId);
+	 inputCtx.put("schemeTypeId", "SHIP_REIMBURSEMENT");
+	 inputCtx.put("invoiceDate", eachInvoiceList.invoiceDate);
+	 try{
+	  resultCtx = dispatcher.runSync("getReimbursmentPercentage", inputCtx);
+	  
+	  Debug.log("resultCtx============================"+resultCtx);
+	  
+	  //percentage = resultCtx.schemePercent;
+	  
+	 // schemePercent
+	  
+	 }catch(Exception e){}
+	 */
 	
 	////Debug.log("percentage==============="+percentage);
 	

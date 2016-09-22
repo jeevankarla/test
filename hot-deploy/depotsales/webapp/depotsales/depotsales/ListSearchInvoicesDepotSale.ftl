@@ -15,7 +15,7 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
+-->  
 
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 
@@ -105,13 +105,69 @@ function datepick()
 	}
 //<![CDATA[
 
+
+   function getInvoiceRunning(){
+
+
+	var selectedInvoices = [];
+
+var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
+        jQuery.each(invoices, function() {
+            if (jQuery(this).is(':checked')) {
+            	var invId = $(this).val();
+            	selectedInvoices.push(invId);
+            }
+            
+        });
+        
+        
+        if(selectedInvoices.length){
+        var dataJson = {"selectedInvoices": JSON.stringify(selectedInvoices)};
+		
+		jQuery.ajax({
+                url: 'getSalePurchaseValues',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						var invoiceItemList = result["invoiceItemList"];
+						
+					var totalAmout = invoiceItemList[0].totalAmout;
+					
+					var totalQuantity = invoiceItemList[0].totalQuantity;
+						
+						jQuery('#showInvoiceRunningTotal').html(totalAmout + '  (' + selectedInvoices.length + ')');
+						
+						
+						jQuery('#showInvoiceRunningTotalQuantity').html(totalQuantity);
+               		}
+               	}							
+		});
+        
+        }else{
+        
+             jQuery('#showInvoiceRunningTotal').html('')
+        
+        		jQuery('#showInvoiceRunningTotalQuantity').html('');
+        }
+        
+        
+
+}
+  
+    
+
+
     function toggleInvoiceId(master) {
         var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
 
         jQuery.each(invoices, function() {
             this.checked = master.checked;
         });
-        getInvoiceRunningTotal();
+        getInvoiceRunning();
     }
 
     function getInvoiceRunningTotal() {
@@ -354,6 +410,13 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
+    
+    
+    <span class="label">Quntity : </span>
+    
+    <span class="label" id="showInvoiceRunningTotalQuantity"></span>
+    
+    
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -382,7 +445,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
-	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />
+	  <#--><input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />-->
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
@@ -397,7 +460,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>Customer</td>
           <td>Supplier</td>
           <td>Branch</td>
-          <td>${uiLabelMap.AccountingAmount}</td>
+          <td>Purchase Base Price</td>
+          <td>Purchase Total Value</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <td>Edit Invoice</td>
@@ -467,9 +531,14 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               
              <#-->  <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
               
+              
+              <#assign purchaseBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
+              <#assign outStanding = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>
+              
+               <td><@ofbizCurrency amount=purchaseBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=outStanding isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
               <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
@@ -496,7 +565,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                <td align="center"></td>
                </#if> -->
               <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
-              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunning();"/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

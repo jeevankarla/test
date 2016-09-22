@@ -323,6 +323,7 @@ for (eachPartyId in partyIds) {
 	condList.clear();
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -333,11 +334,7 @@ for (eachPartyId in partyIds) {
 	//Debug.log("InvoiceItem================="+InvoiceItem.size());
 	
 	if(InvoiceItem){
-
-		
-		
-		
-		
+				      
 		passNo = "";
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
@@ -358,12 +355,9 @@ for (eachPartyId in partyIds) {
 	for (eachInvoiceItem in InvoiceItem) {
 		
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
-		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		TotalQuantiy = TotalQuantiy + (eachInvoiceItem.quantity);
-		
 		TotalAmount = TotalAmount + (eachInvoiceItem.itemValue);
 		
 	}

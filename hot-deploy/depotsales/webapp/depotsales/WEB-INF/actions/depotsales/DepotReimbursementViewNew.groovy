@@ -48,9 +48,9 @@ branchId = parameters.branchId;
 
 
 
-Debug.log("partyfromDate================"+partyfromDate);
+//Debug.log("partyfromDate================"+partyfromDate);
 
-Debug.log("partythruDate================"+partythruDate);
+//Debug.log("partythruDate================"+partythruDate);
 
 
 inputList = [];
@@ -156,7 +156,7 @@ branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, 
 
 
 
-//Debug.log("branchList=================="+branchList);
+////Debug.log("branchList=================="+branchList);
 productIds = [];
 
 productCategoryIds = [];
@@ -188,7 +188,7 @@ if(!partyId){
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	
 }
-//Debug.log("productIds================"+productIds.size());
+////Debug.log("productIds================"+productIds.size());
   
 daystart = null;
 dayend = null;
@@ -200,7 +200,7 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
 		daystart = UtilDateTime.getDayStart(fromDate);
 		 } catch (ParseException e) {
-			 //////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+			 ////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			 }
    
 }
@@ -214,7 +214,7 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   dayend = UtilDateTime.getDayEnd(thruDate);
 	   
    } catch (ParseException e) {
-	   //////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+	   ////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
   
@@ -229,9 +229,9 @@ if(daystart == null && inputList.size() == 0 ){
 }
 	
 
-Debug.log("daystart================"+daystart);
+//Debug.log("daystart================"+daystart);
 
-Debug.log("dayend================"+dayend);
+//Debug.log("dayend================"+dayend);
 
 
 
@@ -302,13 +302,13 @@ condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUAL
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-////Debug.log("cond================="+cond);
+//////Debug.log("cond================="+cond);
 
 
 fieldsToSelect = ["invoiceId"] as Set;
 
 invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
-//////////////Debug.log("invoice========================="+invoice);
+////////////////Debug.log("invoice========================="+invoice);
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
 
 
@@ -361,7 +361,7 @@ for (eachInvoiceList in Invoice) {
 		invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
 		invoiceSequence = invoiceSeqDetails.invoiceSequence;
 		
-		//Debug.log("invoiceSequence======2121==========="+invoiceSequence);
+		////Debug.log("invoiceSequence======2121==========="+invoiceSequence);
 		
 		tempMap.put("billno", invoiceSequence);
 	}else{
@@ -370,14 +370,14 @@ for (eachInvoiceList in Invoice) {
 	
 	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
 		   
-	 ////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
+	 //////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
 	 
 	 
    
 	condList.clear();
 	
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
 	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
@@ -386,7 +386,7 @@ for (eachInvoiceList in Invoice) {
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
 	  
 	
-	Debug.log("InvoiceItem================="+InvoiceItem.size());
+	//Debug.log("InvoiceItem================="+InvoiceItem.size());
 	
 	if(InvoiceItem){
 		
@@ -396,11 +396,10 @@ for (eachInvoiceList in Invoice) {
 		
 		//invoiceAMT = invoiceAMT+(eachInvoiceItem.amount*eachInvoiceItem.quantity);
 		
-		Debug.log("InvoiceItem================="+eachInvoiceItem.itemValue);
+		//Debug.log("InvoiceItem================="+eachInvoiceItem.itemValue);
 		
 		if(eachInvoiceItem.itemValue)
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-		if(eachInvoiceItem.invoiceItemTypeId == "INV_FPROD_ITEM")
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 		
 	}
@@ -422,7 +421,7 @@ for (eachInvoiceList in Invoice) {
 	tempMap.put("invoiceQTY", invoiceQTY);
 	
 	
-	////Debug.log("invoiceAMT================="+invoiceAMT);
+	//////Debug.log("invoiceAMT================="+invoiceAMT);
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
@@ -430,11 +429,11 @@ for (eachInvoiceList in Invoice) {
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
    
-	////Debug.log("OrderItemBilling======================"+OrderItemBilling);
+	//////Debug.log("OrderItemBilling======================"+OrderItemBilling);
 		   
 	 itemOrderId  = OrderItemBilling[0].orderId;
 	 
-	 //Debug.log("itemOrderId================="+itemOrderId);
+	 ////Debug.log("itemOrderId================="+itemOrderId);
 	 
 	 conditionList = [];
 	 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
@@ -464,7 +463,7 @@ for (eachInvoiceList in Invoice) {
 	 if(supplier)
 	 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
 	 
-	 //Debug.log("supplierName================="+supplierName);
+	 ////Debug.log("supplierName================="+supplierName);
 	 
 	 tempMap.put("supplierName", supplierName);
 	 
@@ -578,7 +577,7 @@ for (eachInvoiceList in Invoice) {
 		 tempMap.put("estimatedShipDate", "");
 		 
 		 carrierName = shipmentList.get("carrierName");
-		 //Debug.log("carrierName================="+carrierName);
+		 ////Debug.log("carrierName================="+carrierName);
 		 
 		 if(carrierName)
 		 tempMap.put("transporter", carrierName);

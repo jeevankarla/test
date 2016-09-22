@@ -6,9 +6,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
 http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,7 +14,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#escape x as x?xml>
+<#escape x as x?xml>   
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".1in" margin-bottom=".1in" margin-left=".3in" margin-right=".5in">
@@ -307,7 +305,9 @@ under the License.
 	</fo:table>
 	
 	</fo:block>
+	<#if scheme == "MGPS_10Pecent">
 	<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${tempTotAmount?if_exists}</fo:block>
+	</#if>
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
 	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier :                                                                         OTHER CHARGES :</fo:block>
