@@ -14,3 +14,27 @@ if(UtilValidate.isNotEmpty(parameters.refrenceNo)){
   poReferNumDetails = EntityUtil.getFirst(poReferNumDetails);
   parameters.orderId=poReferNumDetails.orderId;
 }
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+Map formatMap = [:];
+List formatList = [];
+List branchIds = [];
+for (eachList in resultCtx.get("productStoreList")) {
+	formatMap = [:];
+	formatMap.put("storeName",eachList.get("storeName"));
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+	branchIds.add(eachList.get("payToPartyId"));
+}
+
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+
+for(eachRO in roPartyList){
+	formatMap = [:];
+	formatMap.put("storeName",eachRO.get("groupName"));
+	formatMap.put("payToPartyId",eachRO.get("partyId"));
+	formatList.addAll(formatMap);
+}
+context.branchList = formatList;
