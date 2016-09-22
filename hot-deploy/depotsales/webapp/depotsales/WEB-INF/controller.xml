@@ -609,6 +609,17 @@
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="partyClassificationTree.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
+    
+    
+     <request-map uri="getSalePurchaseValues">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getSalePurchaseValues.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    
+    
      <request-map uri="ApproveMaterialRequirement">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApproveMaterialRequirement"/>
