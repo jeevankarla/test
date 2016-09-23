@@ -653,9 +653,9 @@ function roundingInvoiceItems(invoiceId){
  			  </#if>
               <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
               
- 			  <#--><td>${saleBasicAmt}</td> -->
- 			  <#assign outStandingAmt = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>
-              <#--><td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
+ 			  <#--<td>${saleBasicAmt}</td> -->
+ 			   <#--<#assign outStandingAmt = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)> -- >
+              <#--<td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
               <td><@ofbizCurrency amount=saleBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
