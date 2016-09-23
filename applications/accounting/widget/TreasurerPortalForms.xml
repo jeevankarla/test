@@ -452,7 +452,6 @@ under the License.
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
-                    <entity-constraint name="ownerPartyId" value="Company"/>
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
@@ -686,10 +685,12 @@ under the License.
         </field>        
         <field name="finAccountTransId"><hidden/></field>
         <field name="entryType"   ><hidden value="Contra"/></field>       
-        <field name="finAccountTransTypeId" action="javascript:setPaymentType();" event="onChange"> 
-            <drop-down>
-            	<option key="All" description="All">ALL</option>
-               
+        <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
+            <drop-down no-current-selected-key="WITHDRAWAL">
+                <entity-options description="${description}" entity-name="FinAccountTransType">  
+                	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
+                    <entity-order-by field-name="-description"/>
+                </entity-options>
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->

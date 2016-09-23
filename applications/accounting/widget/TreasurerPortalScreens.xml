@@ -4944,7 +4944,7 @@
                 <!-- get Company BankAccounts -->
     			<entity-condition entity-name="FinAccount" list="companyFinAccountsList" >
 	    			<condition-list>
-	    				<condition-expr field-name="ownerPartyId" value="Company"/>
+	    				<!-- <condition-expr field-name="ownerPartyId" value="Company"/> -->
 	    				<condition-expr field-name="statusId" value="FNACT_ACTIVE"/>
 	    				<condition-expr field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
 	    			</condition-list>
@@ -4958,8 +4958,8 @@
 				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
 				<entity-condition list="finAccountList" entity-name="FinAccount">
 					<having-condition-list combine="and">
-						<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
-						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<!-- <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
 						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
 						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
 					</having-condition-list>
