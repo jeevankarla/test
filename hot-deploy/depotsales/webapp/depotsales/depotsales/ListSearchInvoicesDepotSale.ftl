@@ -533,12 +533,12 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               
               
               <#assign purchaseBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
-              <#assign outStanding = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>
+              <#--><#assign outStanding = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>-->
               
                <td><@ofbizCurrency amount=purchaseBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=outStanding isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
               <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
