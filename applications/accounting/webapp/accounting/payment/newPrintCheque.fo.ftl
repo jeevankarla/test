@@ -40,8 +40,9 @@ under the License.
 </fo:root>
 </#escape>
 <#else>
-<#--  Axis Bank --> 
-<#if finAccountId?exists && (finAccountId == "FIN_ACCNT7" || finAccountId == "FIN_ACCNT8" || finAccountId == "FIN_ACCNT17")>
+<#--  Axis Bank -->
+
+<#if finAccountId?exists>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
