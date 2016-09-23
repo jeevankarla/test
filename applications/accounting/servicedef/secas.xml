@@ -129,11 +129,11 @@ under the License.
         <action service="finAccountReplenish" mode="sync" run-as-user="system"/>
     </eca>
     
-    <eca service="createFinAccountTrans" event="commit">
+   <!--  <eca service="createFinAccountTrans" event="commit">
         <condition field-name="glAccountId" operator="is-not-empty"/>
         <condition field-name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>
         <action service="postFinAccountTransToGl" mode="sync"/>
-    </eca>
+    </eca> -->
 	<eca service="createFinAccountTrans" event="commit">
         <condition field-name="finAccountId" operator="is-not-empty"/>
         <action service="createFinAcctTransSequence" mode="sync"/>

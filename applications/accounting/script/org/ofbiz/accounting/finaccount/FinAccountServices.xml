@@ -725,7 +725,8 @@ under the License.
 				 <set field="postFinAccountTransToGlMap.paymentId" from-field="payment.paymentId"/>					
                 <set field="postFinAccountTransToGlMap.finAccountTransId" from-field="finAccountTransId"/>
                 <set field="postFinAccountTransToGlMap.glAccountId" from-field="paymentMethodTypeGlAccount.glAccountId"/>
-                <call-service service-name="postFinAccountTransToGl" in-map-name="postFinAccountTransToGlMap"/>
+               <!-- Deposite AccountTrans disabled  -->
+                <!-- <call-service service-name="postFinAccountTransToGl" in-map-name="postFinAccountTransToGlMap"/> --> 
                 <clear-field field="postFinAccountTransToGlMap"/>
             </iterate>
             <set-service-fields service-name="checkAndCreateBatchForValidPayments" map="parameters" to-map="checkAndCreateBatchForValidPaymentsMap"/>
