@@ -114,7 +114,7 @@ under the License.
 			            		  <#else>
 			            			  <#assign partyId = paymentListReport.partyIdFrom>
 			            		  </#if>
-        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>      						 
         						 	<fo:table-row>
 		        						<fo:table-cell>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
@@ -126,7 +126,8 @@ under the License.
 		        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 				    								 <fo:table-column column-width="10%"/>
 				   									 <fo:table-column column-width="60%"/>
-				   									 <fo:table-column column-width="45%"/>
+				   									 <fo:table-column column-width="22%"/>
+				   									 <fo:table-column column-width="22%"/>
 				   									 <fo:table-column column-width="27%"/>	
 				   									 <fo:table-body>
 				   									 <fo:table-row>
@@ -137,6 +138,11 @@ under the License.
 		        							  		  <fo:table-cell border-style="solid">
 		        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 		        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; DESCRIPTION </fo:block>
+		        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+		        							  		  </fo:table-cell>
+		        							  		  <fo:table-cell border-style="solid">
+		        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+		        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; INVOICE ID </fo:block>
 		        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 		        							  		  </fo:table-cell>
 		        							  		  <fo:table-cell border-style="solid">
@@ -159,7 +165,8 @@ under the License.
 	        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 			    								 <fo:table-column column-width="10%"/>
 			   									 <fo:table-column column-width="60%"/>
-			   									 <fo:table-column column-width="45%"/>
+			   									 <fo:table-column column-width="22%"/>
+			   									 <fo:table-column column-width="22%"/>
 			   									 <fo:table-column column-width="27%"/>	
 			   									 <fo:table-body>
 			   									 <fo:table-row>
@@ -168,6 +175,9 @@ under the License.
 	        							  		  </fo:table-cell>
 	        							  		  <fo:table-cell border-style="solid">
 	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyName?if_exists} </fo:block>
+	        							  		  </fo:table-cell>
+	        							  		  <fo:table-cell border-style="solid">
+	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${paymentListReport.invoiceId?if_exists}</fo:block>
 	        							  		  </fo:table-cell>
 	        							  		  <fo:table-cell border-style="solid">
 	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyId?if_exists}</fo:block>
