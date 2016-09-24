@@ -81,7 +81,8 @@ paymentGroupId = parameters.paymentGroupId;
 
 paymentGroup = delegator.findOne("PaymentGroup", UtilMisc.toMap("paymentGroupId", paymentGroupId), false);
 paymentMethodType = paymentGroup.paymentMethodTypeId;
-if(paymentMethodType && paymentMethodType == "CHEQUE_PAYIN"){
+//if(paymentMethodType && paymentMethodType == "CHEQUE_PAYIN"){
+if(paymentMethodType && paymentMethodType.contains("CHEQUE")){
 	finAccountId = paymentGroup.finAccountId;
 	amount = paymentGroup.amount;
 	amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
@@ -108,3 +109,5 @@ if(paymentMethodType && paymentMethodType == "CHEQUE_PAYIN"){
 		context.put("attrValue",inFavor);
 	}
 }
+
+

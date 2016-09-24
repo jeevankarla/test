@@ -306,9 +306,9 @@ function datepick()
     			<td><span class="label">Cheque in Favor (<font color='red'>*</font>):</span><input class='h3' type='text' id='inFavor' name='inFavor'/></td>	
     		</tr>
     		<tr>
-    			<td><span class="label"> Issuing Authority:</span>
+    			<#--<td><span class="label"> Issuing Authority:</span>
     				<input class='h3' type='text' id='issuingAuthority' name='issuingAuthority'/>
-    			</td>
+    			</td>-->
     			<td><span class="label">Fin Account</span>
     				<select name="finAccountId" id="finAccountId" style="width:50%">
     				<option value=""></option>
