@@ -154,7 +154,7 @@ context.actionName=actionName;
 condList.clear();
 condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+//condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 finAccountList = delegator.findList("FinAccount", cond, null, ["finAccountName"], null, false);
 context.finAccountList = finAccountList;
