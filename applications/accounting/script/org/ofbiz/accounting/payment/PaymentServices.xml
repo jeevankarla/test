@@ -368,6 +368,7 @@ under the License.
         	</entity-one>
 	        	<if-not-empty field="finAccount">
 	        	 <set field="finTransMap.finAccountTransTypeId" value="WITHDRAWAL"/>
+	        	 <set field="finTransMap.statusId" value="FINACT_TRNS_CREATED"/>
 	       		 <set field="finTransMap.paymentId" from-field="parameters.paymentId"/>
 	       		 <set field="finTransMap.partyId" from-field="finAccount.ownerPartyId"/>
 	       		 <set field="finTransMap.amount" from-field="payment.amount"/>
