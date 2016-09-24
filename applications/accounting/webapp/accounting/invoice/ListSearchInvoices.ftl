@@ -82,7 +82,8 @@ under the License.
 	//endof qtip;
 
 
-function cancelForm(){		 
+function cancelForm(){
+		jQuery('#paymentButton').removeAttr('disabled');		 
 		return false;
 	}
 	function disableGenerateButton(){			
@@ -299,7 +300,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		jQuery("#inFavourOf").val(partyName);
 		jQuery("#comments").val(comments);
 		
-		
+
 		$('#paymentMethodTypeId').html(paymentMethodList.join(''));
 		//$("#paymentMethodTypeId").addOption(paymentMethodList, false); 
 		//$("#paymentMethodTypeId")[0].options.add(paymentMethodList);
@@ -312,7 +313,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     	jQuery(current).attr( "disabled", "disabled");
     	var index = 0;
     	var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
-    	var appendStr = "<table id=parameters>";
+    	var appendStr = "";
+     	appendStr = "<table id=parameters>";
         jQuery.each(invoices, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -341,6 +343,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             
         });
         appendStr += "</table>";
+        $("#parameters").remove();
         $("#paymentSubmitForm").append(appendStr);
         
         var form = $("#paymentSubmitForm");

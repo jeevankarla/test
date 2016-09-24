@@ -20,7 +20,7 @@ under the License.
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
-
+<#include "massPayments.ftl" />
 
 <script type="text/javascript">
 
@@ -82,7 +82,8 @@ under the License.
 	//endof qtip;
 
 
-function cancelForm(){		 
+function cancelForm(){
+		jQuery('#paymentButton').removeAttr('disabled');		 
 		return false;
 	}
 	function disableGenerateButton(purposeTypeId1){	
@@ -298,7 +299,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     	jQuery(current).attr( "disabled", "disabled");
     	var index = 0;
     	var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
-    	var appendStr = "<table id=parameters>";
+    	var appendStr = "";
+     	appendStr = "<table id=parameters>";
         jQuery.each(invoices, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -327,6 +329,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             
         });
         appendStr += "</table>";
+        $("#parameters").remove();
         $("#paymentSubmitForm").append(appendStr);
         
         var form = $("#paymentSubmitForm");
