@@ -138,11 +138,11 @@ if("SALES_INVOICE"==parentTypeId){
 	paymentMethodLike="%_PAYIN%";
 	actionName="createArVoucherPayment";
 }else if("PURCHASE_INVOICE"==parentTypeId){
-context.paymentTypes=apPaymentTypes;
-paymentMethodLike="%_PAYOUT%";
-actionName="createApVoucherPayment";
+	context.paymentTypes=apPaymentTypes;
+	paymentMethodLike="%_PAYOUT%";
+	actionName="createApVoucherPayment";
 }else{
-context.paymentTypes=paymentTypes;
+	context.paymentTypes=paymentTypes;
 }
 if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
 actionName="createOtherVoucherPayment";
@@ -184,7 +184,14 @@ if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
 }else{
-condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
+
+condList.add(
+	EntityCondition.makeCondition(
+			EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike), 
+			EntityOperator.OR, 
+			EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CHEQUE")));
+
+
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"MONEY"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
@@ -212,20 +219,30 @@ cashPaymentMethodList = delegator.findList("PaymentMethodType", cond, null, null
 bankPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(bankPaymentMethodList, "paymentMethodTypeId", false);
 cashPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(cashPaymentMethodList, "paymentMethodTypeId", false);
 
+
+allPaymentMethods = []; 
+
 if("SALES_INVOICE"==parentTypeId){
 	cashPaymentMethodList.each{ methodTypeEach->
 		JSONObject newPMethodObj = new JSONObject();
 		newPMethodObj.put("value",methodTypeEach.paymentMethodTypeId);
 		newPMethodObj.put("text", methodTypeEach.description);
 		cashMethodItemsJSON.add(newPMethodObj);
-		allMethodItemsJSON.add(newPMethodObj);
+		if(!allPaymentMethods.contains(methodTypeEach.paymentMethodTypeId)){
+			allMethodItemsJSON.add(newPMethodObj);
+			allPaymentMethods.add(methodTypeEach.paymentMethodTypeId);
+		}
+		
 	}
 	bankPaymentMethodList.each{ methodTypeEach->
 		JSONObject newPMethodObj = new JSONObject();
 		newPMethodObj.put("value",methodTypeEach.paymentMethodTypeId);
 		newPMethodObj.put("text", methodTypeEach.description);
 		bankMethodItemsJSON.add(newPMethodObj);
-		allMethodItemsJSON.add(newPMethodObj);
+		if(!allPaymentMethods.contains(methodTypeEach.paymentMethodTypeId)){
+			allMethodItemsJSON.add(newPMethodObj);
+			allPaymentMethods.add(methodTypeEach.paymentMethodTypeId);
+		}
 	}
 }else if("PURCHASE_INVOICE"==parentTypeId){
 		bankPaymentMethodList = delegator.findList("PaymentMethod", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,bankPaymentMethodIdsList), null, null, null, false);

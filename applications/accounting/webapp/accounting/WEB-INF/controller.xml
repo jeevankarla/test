@@ -3807,9 +3807,8 @@ under the License.
     <request-map uri="createApVoucherPaymentTreasurer">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
-        <response name="success" type="request-redirect-noparam" value="ApInvoices">
-        <redirect-parameter  name="invoiceId"/> 
-         <redirect-parameter  name="parentTypeId"/> 
+        <response name="success" type="request-redirect-noparam" value="paymentOverview">
+         <redirect-parameter  name="paymentId"/> 
         </response>
         <response name="error" type="request-redirect-noparam" value="ApInvoices">
         <redirect-parameter name="invoiceId"/>
