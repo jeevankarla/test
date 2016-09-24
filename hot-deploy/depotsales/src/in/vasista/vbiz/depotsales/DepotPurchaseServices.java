@@ -4562,6 +4562,9 @@ public class DepotPurchaseServices{
 		String partyIdTo = (String) request.getParameter("shipToPartyId");
 		String partyGeoId = (String) request.getParameter("supplierGeoId");
 		
+		String purchaseTitleTransferEnumId = (String) request.getParameter("purchaseTitleTransferEnumId");
+		String purchaseTaxType = (String) request.getParameter("purchaseTaxType");
+		
 		// contact Details
 		String city = (String) request.getParameter("city");
 		String address1 = (String) request.getParameter("address1");
@@ -5042,6 +5045,9 @@ public class DepotPurchaseServices{
 				//processOrderContext.put("thruDate", (String)UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp()));
 				processOrderContext.put("estimatedDeliveryDate", estimatedDeliveryDate);
 				processOrderContext.put("incTax", "Y");
+				
+				processOrderContext.put("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
+				processOrderContext.put("purchaseTaxType", purchaseTaxType);
 				result = CreateMaterialPO(dctx, processOrderContext);
 				if(ServiceUtil.isError(result)){
 					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -5260,6 +5266,10 @@ public class DepotPurchaseServices{
 		String thruDate = (String)context.get("thruDate");
 		String billToPartyId = (String) context.get("billFromVendorPartyId");
 		String districtGeoId = (String) context.get("districtGeoId");
+		
+		String purchaseTitleTransferEnumId = (String) context.get("purchaseTitleTransferEnumId");
+		String purchaseTaxType = (String) context.get("purchaseTaxType");
+		
 		if(UtilValidate.isEmpty(billToPartyId)){
 			billToPartyId="Company";
 		}
@@ -5327,6 +5337,12 @@ public class DepotPurchaseServices{
 			}
 			if(UtilValidate.isNotEmpty(districtGeoId)){
 				cart.setOrderAttribute("DST_ADDR",districtGeoId);
+			}
+			if(UtilValidate.isNotEmpty(purchaseTitleTransferEnumId)){
+				cart.setOrderAttribute("purchaseTitleTransferEnumId",purchaseTitleTransferEnumId);
+			}
+			if(UtilValidate.isNotEmpty(purchaseTaxType)){
+				cart.setOrderAttribute("purchaseTaxType",purchaseTaxType);
 			}
 		} catch (Exception e) {
 			
