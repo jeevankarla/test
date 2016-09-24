@@ -1395,6 +1395,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		employeefinMap.put("finAccountId","EMPCON_"+partyId);
 		  	  		employeefinMap.put("transactionDate",paymentDate);
 		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		employeefinMap.put("statusId","FINACT_TRNS_CREATED");
 //		  	  		employeefinMap.put("entryType","Adjustment");
 			  		//paymentInputMap.put("contraRefNum", contraRefNum);
 		  	  		employeefinMap.put("userLogin", userLogin);
@@ -1403,6 +1404,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		employeerfinMap.put("partyId",partyId);
 		  	  		employeerfinMap.put("finAccountId","EMPRCON_"+partyId);
 		  	  		employeerfinMap.put("transactionDate",paymentDate);
+		  	  		employeerfinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
 //		  	  		employeerfinMap.put("entryType","Adjustment");
 		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
@@ -1413,6 +1415,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		vpffinMap.put("finAccountId","VPFCON_"+partyId);
 		  	  		vpffinMap.put("transactionDate",paymentDate);
 		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
 //		  	  		vpffinMap.put("entryType","Adjustment");
 		  	  		//vpffinMap.put("contraRefNum", contraRefNum);
 		  	  		vpffinMap.put("userLogin", userLogin);
@@ -1438,6 +1441,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 			depositFinTransMap.put("finAccountId",finAccountId);
 			depositFinTransMap.put("transactionDate",paymentDate);
 	  		depositFinTransMap.put("finAccountTransTypeId","DEPOSIT");
+	  		depositFinTransMap.put("statusId","FINACT_TRNS_CREATED");
 //	  		depositFinTransMap.put("entryType","Adjustment");
 	  		//vpffinMap.put("contraRefNum", contraRefNum);
 	  		depositFinTransMap.put("userLogin", userLogin);
