@@ -531,6 +531,11 @@
         <attribute name="partyList" mode="OUT" type="List" optional="true"/>
     </service>
     
+    <service name="getRegionalOfficesForIndentListings" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getRegionalOfficesForIndentListings" auth="true">
+    	<description>get Regional Offices</description>
+        <attribute name="partyList" mode="OUT" type="List" optional="true"/>
+    </service>
+    
     <service name="populateShipmentReimbursment" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateShipmentReimbursment" transaction-timeout="6000000">
         <description>Weaver relation delete</description>
                 <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
@@ -584,6 +589,12 @@
         <description>get populatePartyDistrict</description>
          <attribute name="bo" type="String" mode="IN" optional="true"/>
     </service>
+    
+     <service name="populateEligibilityAmountInShipment" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populateEligibilityAmountInShipment" transaction-timeout="6000000">
+        <description>get populatePartyDistrict</description>
+         <attribute name="ro" type="String" mode="IN" optional="true"/>
+    </service>
+    
     
     
 </services>

@@ -10030,6 +10030,7 @@ Debug.log("taxRateList =============="+taxRateList);
 		        conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
 				conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 //				conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_PAID"));
 				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				List<GenericValue> invoiceAndItemList=delegator.findList("InvoiceAndItem",condition,null,null,null,false);
@@ -10043,6 +10044,9 @@ Debug.log("taxRateList =============="+taxRateList);
 					}
 					
 				}
+
+				invoiceAmount = (invoiceAmount.setScale(0, rounding));
+				
 				invoiceEligablityAmount=(invoiceAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
 				BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
 				
@@ -14015,6 +14019,15 @@ Debug.log("taxRateList =============="+taxRateList);
   		Locale locale = (Locale) context.get("locale");
   		
   		
+  		Debug.log("productId==============="+productId);
+  		
+  		Debug.log("schemeTypeId==============="+schemeTypeId);
+  		
+  		Debug.log("invoiceDate==============="+invoiceDate);
+  		
+  		Debug.log("partyId==============="+partyId);
+  		
+  		
   			String productCategoryId = "";
   			List productCategoriesList = FastList.newInstance();
   			List condsList = FastList.newInstance();
@@ -14031,12 +14044,14 @@ Debug.log("taxRateList =============="+taxRateList);
 				productCategoryId = (String)prodCategoryMember.get("productCategoryId");
 				
 			} catch (GenericEntityException e) {
-				//Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 			}
+			
+			Debug.log("productCategoryId==============="+productCategoryId);
   			
   			if(UtilValidate.isEmpty(productCategoryId)){
-				//Debug.logError("retrive From ProductCategoryAndMember : "+ partyId, module);
+				Debug.logError("retrive From ProductCategoryAndMember : "+ partyId, module);
 				return ServiceUtil.returnError("retrive From ProductCategoryAndMember"+partyId);
   			}
   			
@@ -14061,7 +14076,7 @@ Debug.log("taxRateList =============="+taxRateList);
   			contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAdd, null, orderBy2, null, false);
   		        
   			}catch (GenericEntityException e) {
-				//Debug.logError(e, "Failed to PartyContactDetailByPurpose ", module);
+				Debug.logError(e, "Failed to PartyContactDetailByPurpose ", module);
 				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 			}
   			if(UtilValidate.isNotEmpty(contactMechesDetails))	{
@@ -14082,11 +14097,11 @@ Debug.log("taxRateList =============="+taxRateList);
 
   			
   			if(UtilValidate.isEmpty(customerGeoId)){
- 				//Debug.logError("District Geo is empty for partyId: "+ partyId, module);
+ 				Debug.logError("District Geo is empty for partyId: "+ partyId, module);
  				return ServiceUtil.returnError("District Geo is empty for partyId"+partyId);
    			}
   			
-  	  		//Debug.log("customerGeoId==================="+customerGeoId);
+  	  		Debug.log("customerGeoId==================="+customerGeoId);
 
 
   			List<GenericValue> SchemeGeoList = null;
@@ -14102,17 +14117,17 @@ Debug.log("taxRateList =============="+taxRateList);
             	 geoTypeId = (String) SchemeGeo.get("geoTypeId");
             	 
         	 }catch(GenericEntityException e){
- 				//Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+ 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
  				return ServiceUtil.returnError("District Geo is empty for partyId"+partyId);
  			}
         	 
         	 
-   	  		//Debug.log("geoTypeId==================="+geoTypeId);
+   	  		Debug.log("geoTypeId==================="+geoTypeId);
 
         	 
         	 
         	 if(UtilValidate.isEmpty(geoTypeId)){
-    				//Debug.logError("geoTypeId is not available: "+ partyId, module);
+    				Debug.logError("geoTypeId is not available: "+ partyId, module);
     				return ServiceUtil.returnError("geoTypeId is not available"+partyId);
       			}
         	 
@@ -14137,16 +14152,16 @@ Debug.log("taxRateList =============="+taxRateList);
              	 
              	
          	 }catch(GenericEntityException e){
-  				//Debug.logError(e, "Failed to retrive SchemeGeoRate ", module);
+  				Debug.logError(e, "Failed to retrive SchemeGeoRate ", module);
   				return ServiceUtil.returnError("Failed to retrive SchemeGeoRate"+partyId);
   			}
          	 
          	 
-    	  		//Debug.log("schemePercent==================="+schemePercent);
+    	  		Debug.log("schemePercent==================="+schemePercent);
 
          	 
          	 if(UtilValidate.isEmpty(schemePercent)){
-   				//Debug.logError("schemePercent is not available: "+ partyId, module);
+   				Debug.logError("schemePercent is not available: "+ partyId, module);
    				return ServiceUtil.returnError("geoTypeId is not available"+partyId);
      			}
          	 
@@ -14232,6 +14247,212 @@ Debug.log("taxRateList =============="+taxRateList);
     
     
     
+    
+    public static Map<String, Object> populateEligibilityAmountInShipment(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		
+  		String ro = (String) context.get("ro");
+  		
+  		String invoiceId = (String) context.get("invoiceId");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+  		List<GenericValue> shipmentList = null;
+  		List<GenericValue> PartyRelationship = null;
+  		List<GenericValue> Invoice = null;
+  		List branchList =  FastList.newInstance();
+  		
+  		
+  		List conditionList = FastList.newInstance();
+  		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
+  		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+  		
+  		try{
+  		PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+
+  	     branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+  		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+		}
+  		
+  		
+  		Debug.log("branchList============="+branchList);
+  		
+ 		 try{
+ 			conditionList.clear();
+ 		    if(UtilValidate.isNotEmpty(branchList))	
+ 		    	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+ 		     if(UtilValidate.isNotEmpty(invoiceId))	
+ 			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+ 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+ 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+ 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+ 			 
+ 		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","shipmentId"), null, null, false);
+				
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive Invoice ", module);
+			}
+  		 
+ 		 
+ 		Debug.log("Invoice============="+Invoice.size());
+ 		 
+ 		BigDecimal reimbursementEligibilityPercentage = new BigDecimal(2);
+ 		
+ 		  
+ 		if(UtilValidate.isNotEmpty(Invoice)){
+ 			
+	        for(GenericValue eachInvoice : Invoice){
+  				
+	        	String eacinvoiceId = eachInvoice.getString("invoiceId");
+	        	String shipmentId = eachInvoice.getString("shipmentId");
+	        	
+	        	BigDecimal receiptEligablityAmount = BigDecimal.ZERO;
+	        	
+	        	 GenericValue Shipment = null;
+	        	
+	        	 try{
+	        	     Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId",shipmentId),false);	
+	        	 }catch(GenericEntityException e){
+		 				Debug.logError(e, "Failed to retrive Shipment ", module);
+		 			}
+	        	
+	        	List<GenericValue> ShipmentReimbursementList = null;
+	        	conditionList.clear();
+	        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	        	 try{
+	        		 ShipmentReimbursementList = delegator.findList("ShipmentReimbursement", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	        	 
+	        	 }catch(GenericEntityException e){
+	 				Debug.logError(e, "Failed to retrive ShipmentReimbursement ", module);
+	 			}
+	        	
+	        	 if(UtilValidate.isNotEmpty(ShipmentReimbursementList)){
+		        	 for(GenericValue eachReimbursment : ShipmentReimbursementList){
+		        		 receiptEligablityAmount = receiptEligablityAmount.add(eachReimbursment.getBigDecimal("receiptAmount"));
+		        	 }
+	        	 }
+	        	
+	        	BigDecimal estimatedShipCost = eachInvoice.getBigDecimal("estimatedShipCost");
+	        	
+	        	List<GenericValue> InvoiceItem = null;
+	        	
+	        	conditionList.clear();
+	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eacinvoiceId));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+	        	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+	        	 try{
+	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	        	 
+	        	 }catch(GenericEntityException e){
+	 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+	 			}
+	        	 
+	        	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+	        	 
+	        		 BigDecimal invoiceAmount = BigDecimal.ZERO;
+	        		 
+		        	for(GenericValue eachInvoiceItem : InvoiceItem){
+		        	
+		        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+		        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+		        		BigDecimal itemValue = quantity.multiply(amount);
+		        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+		        		invoiceAmount = invoiceAmount.add(roundedAmount);
+		        	}
+		        	
+		        	
+		        	BigDecimal invoiceEligablityAmount = BigDecimal.ZERO;
+		        	
+		        	invoiceEligablityAmount=(invoiceAmount.multiply(reimbursementEligibilityPercentage)).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+					BigDecimal finalEligablityAmount=receiptEligablityAmount.compareTo(invoiceEligablityAmount)>0?invoiceEligablityAmount:receiptEligablityAmount;
+		        	
+					
+					Shipment.set("claimAmount",finalEligablityAmount);
+					Shipment.set("claimStatus","APPLYED");
+					if(finalEligablityAmount.compareTo(BigDecimal.ZERO)<=0){
+						Shipment.set("claimStatus","");
+					}
+					try{
+					 Shipment.store();
+					}catch(GenericEntityException e){
+		 				Debug.logError(e, "Failed to populate claime ", module);
+		 			}
+					
+					
+					
+					
+	        	 }
+	        	 
+  			}
+ 			
+ 		}
+ 		 
+  		
+    	  result = ServiceUtil.returnSuccess("Populate Eligibility In Shipment Has been successfully Updated");
+         
+         return result;
+  	}
+
+    
+    
+    public static Map<String, Object> getRegionalOfficesForIndentListings(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		String partyId = (String) context.get("partyId");
+        if(UtilValidate.isEmpty(partyId)){
+        	partyId = (String) userLogin.get("partyId");
+        }
+        List conditions = FastList.newInstance();
+        List<GenericValue> PartyRelationship = null;
+        try{
+			conditions.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			conditions.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "BRANCH_EMPLOYEE"));
+			PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+        }catch(GenericEntityException e){
+        	Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+        }
+        
+        conditions.clear();
+        if(UtilValidate.isNotEmpty(PartyRelationship)){
+        	List branchIdList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdFrom", true);
+        	try{
+        		conditions.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchIdList));
+        		conditions.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        		conditions.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+    			PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+    			conditions.clear();
+    			if(UtilValidate.isNotEmpty(PartyRelationship)){
+    				List roIdsList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+    				conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList));
+    			}
+        	}catch(GenericEntityException e){
+        		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+        	}
+        	
+        }
+        conditions.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+        
+		List<GenericValue> PartyClassification = null;
+		try{
+		
+			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false);
+			if(UtilValidate.isNotEmpty(PartyClassification)){
+				List partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
+				List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				result.put("partyList",partyGroup);
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive RegionalOffices ", module);
+		}
+		return result;
+    }
     
     
     
