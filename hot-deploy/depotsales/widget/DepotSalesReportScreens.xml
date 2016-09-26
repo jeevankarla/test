@@ -122,7 +122,7 @@
 				 <set field="parameters.multifinAccount" value="Y"></set>
 					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
 					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
-					<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
+					<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistoryCmrl.groovy" />
 			</actions>
 			<widgets>
 				<section>
