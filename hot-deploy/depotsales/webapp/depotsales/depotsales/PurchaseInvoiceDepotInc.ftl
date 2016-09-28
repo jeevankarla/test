@@ -153,7 +153,7 @@
 			var taxAmt = data[rowCount]["taxAmt"];
 			
 			
-			
+			  
 			
 		
 	 		if (!isNaN(qty)) {	 		
@@ -243,7 +243,14 @@
 				// Purchase taxes
 				
 				var purTaxList = [];
-				purTaxList = data[rowCount]["purTaxList"];
+			//	purTaxList = data[rowCount]["purTaxList"];
+				
+				purTaxList.push("VAT_SALE");
+				purTaxList.push("CST_SALE");
+				purTaxList.push("VAT_SURCHARGE");
+				purTaxList.push("CST_SURCHARGE");
+				
+				//alert("purTaxList============"+JSON.stringify(purTaxList));
 				
 				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
 				jQuery(formId).append(jQuery(purTaxListItem));	
