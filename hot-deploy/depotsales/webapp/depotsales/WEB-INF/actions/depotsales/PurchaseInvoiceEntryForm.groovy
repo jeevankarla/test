@@ -494,8 +494,13 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						purTaxItem = taxItem.replace("_SALE", "_PUR");
 						
 						Debug.log("taxItemtaxItem ============="+taxItem);
+						
+						
+						surChargeList = [];
+						if(defaultTaxMap){
 						taxInfo = defaultTaxMap.get(taxItem);
 						surChargeList = taxInfo.get("surchargeList");
+						}
 						
 						condExpr = [];
 						condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
