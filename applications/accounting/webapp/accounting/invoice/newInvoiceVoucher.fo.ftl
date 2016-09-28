@@ -197,7 +197,7 @@ under the License.
 				<#if invoiceDetail.get("quantity")?has_content>
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>&#160;</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists}<#else>&#160;</#if></fo:block>
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
 				
 				
@@ -231,13 +231,13 @@ under the License.
 				<#assign totSchemeQty = totSchemeQty+invoiceDetail.get("schemeQty")>
 				</#if>
 				
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<#if invoiceDetail.get("mgpsQty")?has_content>
 				<#assign TotalmgpsQty=TotalmgpsQty+(invoiceDetail.get("mgpsQty"))>
 				</#if>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")?string("#0.000")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")}</fo:block>
 				</fo:table-cell>
 				
 				<fo:table-cell border-style="solid">
@@ -282,14 +282,14 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >TOTAL</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${totQuantity?string("#0.000")} </fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${totQuantity} </fo:block>
 				
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${totSchemeQty?string("#0.000")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${totSchemeQty}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${TotalmgpsQty?string("#0.000")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${TotalmgpsQty}</fo:block>
 				</fo:table-cell>
 				
 				<fo:table-cell border-style="solid">
@@ -606,7 +606,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>${0.00}</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#assign totAmount = totAmount+invoiceDetail.get("amount")>
@@ -642,7 +642,7 @@ under the License.
 				<fo:block text-align="right"  font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${totQuantity?string("#0.000")}</fo:block>
+				<fo:block text-align="center"  font-size="10pt" >${totQuantity}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${totAmount}</fo:block>
