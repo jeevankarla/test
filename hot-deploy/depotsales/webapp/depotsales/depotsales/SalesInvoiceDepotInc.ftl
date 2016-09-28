@@ -189,7 +189,13 @@
 				
 				
 				var taxList = [];
-				taxList = data[rowCount]["taxList"]
+				//taxList = data[rowCount]["taxList"]
+				
+				taxList.push("VAT_SALE");
+				taxList.push("CST_SALE");
+				taxList.push("VAT_SURCHARGE");
+				taxList.push("CST_SURCHARGE");
+				
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	

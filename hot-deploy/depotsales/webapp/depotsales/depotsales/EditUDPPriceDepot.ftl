@@ -129,6 +129,7 @@
 	var customerContactList={};
 	function showCustomerDetailsToolTip(gridRow, index) {
 	
+	
 	    dataRow = gridRow;
 		var  partyId= dataRow["customerId"];
 		if(customerContactList[partyId] == undefined){

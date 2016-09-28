@@ -64,31 +64,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList; 
 
 import net.sf.json.JSONSerializer; 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import java.util.Iterator;
-
-
-
 
 import java.util.Collection;
 
@@ -1030,18 +1006,30 @@ public class DepotPurchaseServices{
 				
 				if (paramMap.containsKey("VAT" + thisSuffix)) {
 					vatStr = (String) paramMap.get("VAT" + thisSuffix);
+					
+					Debug.log("vatStr=============="+vatStr);
+					
 				}
 				
 				if (paramMap.containsKey("CST" + thisSuffix)) {
 					cstStr = (String) paramMap.get("CST" + thisSuffix);
+					
+					Debug.log("cstStr=============="+cstStr);
+					
 				}
 				
 				if (paramMap.containsKey("VatPercent" + thisSuffix)) {
 					VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
+					
+					Debug.log("VatPercentStr=============="+VatPercentStr);
+					
 				}
 				
 				if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
 					CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
+					
+					Debug.log("CSTPercentStr=============="+CSTPercentStr);
+					
 				}
 				
 				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
@@ -1052,6 +1040,8 @@ public class DepotPurchaseServices{
 					taxListStr = (String) paramMap.get("taxList"
 							+ thisSuffix);
 					
+					Debug.log("taxListStr=============="+taxListStr);
+
 					
 					String[] taxList = taxListStr.split(",");
 					for (int j = 0; j < taxList.length; j++) {
@@ -1158,6 +1148,8 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("orderAdjustmentsList" + thisSuffix)) {
 					orderAdjustmentsListStr = (String) paramMap.get("orderAdjustmentsList"+ thisSuffix);
 					
+					Debug.log("orderAdjustmentsListStr=============="+orderAdjustmentsListStr);
+					
 					String[] orderAdjustmentsList = orderAdjustmentsListStr.split(",");
 					for (int j = 0; j < orderAdjustmentsList.length; j++) {
 						String orderAdjustmentType = orderAdjustmentsList[j];
@@ -1205,6 +1197,8 @@ public class DepotPurchaseServices{
 				
 				if (paramMap.containsKey("discOrderAdjustmentsList" + thisSuffix)) {
 					discOrderAdjustmentsListStr = (String) paramMap.get("discOrderAdjustmentsList"+ thisSuffix);
+					
+					Debug.log("discOrderAdjustmentsListStr================="+discOrderAdjustmentsListStr);
 					
 					String[] orderAdjustmentsList = discOrderAdjustmentsListStr.split(",");
 					for (int j = 0; j < orderAdjustmentsList.length; j++) {
@@ -1278,6 +1272,9 @@ public class DepotPurchaseServices{
 				try {
 					if (!vatStr.equals("")) {
 						vat = new BigDecimal(vatStr);
+						
+						Debug.log("vat================"+vat);
+						
 					}
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing VAT string: " + vatStr, module);
@@ -1288,6 +1285,9 @@ public class DepotPurchaseServices{
 				try {
 					if (!cstStr.equals("")) {
 						cst = new BigDecimal(cstStr);
+						
+						Debug.log("cst================"+cst);
+						
 					}
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing CST string: " + cstStr, module);
@@ -1299,6 +1299,9 @@ public class DepotPurchaseServices{
 				try {
 					if (!VatPercentStr.equals("")) {
 						vatPercent = new BigDecimal(VatPercentStr);
+						
+						Debug.log("vatPercent================"+vatPercent);
+						
 					}
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing VatPercent string: " + VatPercentStr, module);
@@ -1309,6 +1312,9 @@ public class DepotPurchaseServices{
 				try {
 					if (!CSTPercentStr.equals("")) {
 						cstPercent = new BigDecimal(CSTPercentStr);
+						
+						Debug.log("cstPercent================"+cstPercent);
+						
 					}
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing CSTPercent string: " + CSTPercentStr, module);
@@ -1392,8 +1398,12 @@ public class DepotPurchaseServices{
 			return "success";
 		}
 		
-		Debug.log("ignoreAdjustmentsList ================="+ignoreAdjustmentsList);
+		Debug.log("vamsi======begin================");
+		
+		Debug.log("ignoreAdjustmentsList ========vamsi 121212========="+ignoreAdjustmentsList);
 	
+		Debug.log("itemAdjMap =========vadfafd12121212========"+itemAdjMap);
+		
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
 		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap);
