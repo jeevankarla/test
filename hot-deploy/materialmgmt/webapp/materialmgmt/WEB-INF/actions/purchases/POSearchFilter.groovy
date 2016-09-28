@@ -56,6 +56,16 @@ context.branchList = formatList;
  
  
  
+ if(parameters.partyIdFrom){
+	 customerCondList = [];
+	 customerCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+	 customerCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyIdFrom));
+	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(customerCondList, EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(orderRoleList)){
+		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
+	 }
+ }
+ 
 if(UtilValidate.isEmpty(parameters.productId)){
 	
 	
