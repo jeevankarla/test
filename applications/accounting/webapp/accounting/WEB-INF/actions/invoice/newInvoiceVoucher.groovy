@@ -161,7 +161,7 @@ invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, fal
 invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 
-invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
+invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
 invoiceItemLevelAdjustments = [:];
 
 
@@ -193,14 +193,20 @@ for (eachList in invoiceItemList) {
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
 		
-		  if(eachItem.description != "Service Charge" && eachItem.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY"){
+		 
+		   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 		  tempMap = [:];
+		  
+		  invoiceForPercentage = delegator.findOne("Invoice",[invoiceId : eachItem.invoiceId] , false);
 		  
 		  tempMap.put("invoiceId", eachItem.invoiceId);
 		  tempMap.put("invoiceItemTypeId", eachItem.invoiceItemTypeId);
-		  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"){
+		 
+			  
+			  itemValue = eachItem.itemValue;
+			  
 			  invoiceItemTypes = delegator.findOne("InvoiceItemType",[invoiceItemTypeId : eachItem.invoiceItemTypeId] , false);
-			  tempMap.put("description", invoiceItemTypes.description);
+			 
 			  orderItemBillings = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachItem.invoiceId), null, null, null, false);
 			  orderItemBillings = EntityUtil.getFirst(orderItemBillings);
 			  conditionList.clear();
@@ -209,11 +215,20 @@ for (eachList in invoiceItemList) {
 			  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			  orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 			  orderAdjustments = EntityUtil.getFirst(orderAdjustments);
-			  tempMap.put("percentage", orderAdjustments.sourcePercentage);
 			  
-		  }else{
+			  if(orderAdjustments){
+			  tempMap.put("percentage", orderAdjustments.sourcePercentage);
+			  }else{
+			  invoiceGrandTotal = invoiceForPercentage.invoiceGrandTotal;
+			  percentage = invoiceGrandTotal/itemValue;
+			  tempMap.put("percentage", percentage);
+			  }
+			  
+			   if(eachItem.description)
 		       tempMap.put("description", eachItem.description);
-		  }	   
+			   else
+			   tempMap.put("description", invoiceItemTypes.description);
+			   
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  tempMap.put("itemValue", eachItem.itemValue);
