@@ -217,7 +217,7 @@ under the License.
 				         <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				
                           <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.quantity}</fo:block>
+				         <#--><fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.quantity}</fo:block>-->
 				         </#if>
 				        </#list>
 				       </#if>
