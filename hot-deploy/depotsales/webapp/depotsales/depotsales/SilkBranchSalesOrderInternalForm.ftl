@@ -1287,6 +1287,7 @@
 	   	  				
 	   	  				//var taxList = [];
 	   	  				
+	   	  				// To get the tax applicability base on Title transfer enum(like With C form, No C Form)
 	   	  				var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
 						var validSaleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
 						
@@ -1296,6 +1297,9 @@
 							var saleTaxValue = taxValueMap[salesTax];
 							var saleTaxAmount = saleTaxValue*(totalAmt)*0.01;
 							totalTaxAmt = totalTaxAmt + saleTaxAmount;
+							
+							// Tax children
+							
 							if(defaultTaxMap[salesTax] != 'undefined' || defaultTaxMap[salesTax] != null){
 								var surchargeList = defaultTaxMap[salesTax]["surchargeList"];
 								
@@ -1308,6 +1312,7 @@
 							}
 						}
 						
+						// To reset tax values
 	   	  				var count = 0;
 						$.each(taxValueMap, function(key, value) {
 						    data[row]["DEFAULT_"+key] = value;

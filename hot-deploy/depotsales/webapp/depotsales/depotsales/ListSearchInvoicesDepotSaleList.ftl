@@ -644,6 +644,10 @@ function roundingInvoiceItems(invoiceId){
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)} [${(invoice.partyId)?if_exists}]</a></td>
               <#assign purchaseInvoice = delegator.findByAnd("Invoice", {"shipmentId" : invoice.shipmentId, "invoiceTypeId" : "PURCHASE_INVOICE" })?if_exists />
+ 		     
+ 		      <#assign purchaseInvoice = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceFromShipment(delegator, invoice.invoiceId)?if_exists/>
+ 		     
+ 		     <#--
  		      <#if purchaseInvoice?has_content && purchaseInvoice[0].invoiceId?has_content>
  		         <#assign purInvoiceId = purchaseInvoice[0].invoiceId>
  			     <#assign purchaseBasAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, purInvoiceId)?if_exists/>
@@ -651,6 +655,12 @@ function roundingInvoiceItems(invoiceId){
  		   	     <#else>
  		   	       <td></td>
  			  </#if>
+ 			  -->
+ 			  
+ 			    <#assign purchaseBasAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, purchaseInvoice)?if_exists/>
+ 			    
+ 		   	     <td><@ofbizCurrency amount=purchaseBasAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
+ 			  
               <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
               
  			  <#--<td>${saleBasicAmt}</td> -->

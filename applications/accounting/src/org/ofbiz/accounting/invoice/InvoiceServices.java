@@ -6131,4 +6131,48 @@ public class InvoiceServices {
         return invoiceItemBasicVal; 
     }
 	
+	
+	public static String getInvoiceFromShipment(Delegator delegator, String invoiceId) {
+		BigDecimal invoiceItemBasicVal = BigDecimal.ZERO;
+		String oppositeInvoice = "";
+        try {
+        	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+        	String invoicetypeId = (String) invoice.getString("invoiceTypeId");
+        	
+        	String shipmentId = (String) invoice.getString("shipmentId");
+        	
+    		List conditionList = FastList.newInstance();
+    		List<GenericValue> Invoice = FastList.newInstance();
+        	if(invoicetypeId.equals("PURCHASE_INVOICE")){
+        		//conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+        		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+        		conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+        		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+        		Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, true);
+        	}
+        	if(invoicetypeId.equals("SALES_INVOICE")){
+        		//conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+        		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+        		conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+        		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+        		Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, true);
+        	}
+        	
+        	
+        	if (UtilValidate.isNotEmpty(Invoice)) {
+        		
+        		GenericValue invoiceFirst = EntityUtil.getFirst(Invoice);
+        		oppositeInvoice = (String) invoiceFirst.getString("invoiceId");
+        		
+        	}
+        	
+        	
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error,while getting Basic Amount of Invoice", module);
+        }
+        return oppositeInvoice; 
+    }
+	
+	
+	
 }

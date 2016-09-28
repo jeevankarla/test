@@ -1,26 +1,36 @@
 	
 	import in.vasista.vbiz.purchase.PurchaseStoreServices;
-	import org.ofbiz.party.party.PartyHelper;
+
+import org.ofbiz.party.party.PartyHelper;
 	
 	import org.ofbiz.base.util.*;
-	import org.ofbiz.entity.Delegator;
-	import org.ofbiz.entity.util.EntityUtil;
-	import org.ofbiz.entity.condition.EntityCondition;
-	import org.ofbiz.entity.condition.EntityOperator;
-	import net.sf.json.JSONObject;
-	import net.sf.json.JSONArray;
-	import javolution.util.FastMap;
-	import java.sql.Timestamp;
-	import org.ofbiz.base.util.UtilDateTime;
-	import java.text.SimpleDateFormat;
-	import java.text.ParseException;
-	import org.ofbiz.service.ServiceUtil;
-	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-	import in.vasista.vbiz.byproducts.ByProductServices;
-	import org.ofbiz.product.product.ProductWorker;
-	import in.vasista.vbiz.facility.util.FacilityUtil;
-	import in.vasista.vbiz.byproducts.icp.ICPServices;
-	import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import javolution.util.FastMap;
+
+import java.sql.Timestamp;
+
+import org.ofbiz.base.util.UtilDateTime;
+
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+import org.ofbiz.service.ServiceUtil;
+
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import in.vasista.vbiz.byproducts.ByProductServices;
+
+import org.ofbiz.product.product.ProductWorker;
+
+import in.vasista.vbiz.facility.util.FacilityUtil;
+import in.vasista.vbiz.byproducts.icp.ICPServices;
+
+import org.ofbiz.party.contact.ContactMechWorker;
 	
 	partyId = parameters.partyId;
 	
@@ -239,14 +249,29 @@
 		productCategorySelect = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 		productCategorySelectIds = EntityUtil.getFieldListFromEntityList(productCategorySelect, "productCategoryId", true);
 		
+		
+		List condsList = [];
+		condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productIds[0]));
+		condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+		/*condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, invoiceDate));
+		condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+			  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, invoiceDate)));
+*/	 
+		 prodCategoryMembers = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("primaryParentCategoryId"), null, null, true);
+		  
+		  
+		  prodCategoryMember = EntityUtil.getFirst(prodCategoryMembers);
+		  productCategoryId = (String)prodCategoryMember.get("primaryParentCategoryId");
+		  
+		
 		JSONArray productCategoryJSON = new JSONArray();
-		category="";
+		category=productCategoryId;
 		catType="";
 		productCategorySelectIds.each{eachCatId ->
-			category=eachCatId;
 			productCategoryJSON.add(eachCatId);
 		}
-		Debug.log("category==================="+category);
+		
+		
 		if(category.contains("SILK")){
 			catType="Silk";
 		}else if(category.contains("COTTON") || category.contains("HANK")){
@@ -265,10 +290,6 @@
 		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
 	
 		orderAdjustmentsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, null, null, false);
-		
-		
-		
-		
 		
 		//Quotas handling
 		
