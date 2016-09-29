@@ -3347,7 +3347,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			if(schemeCategory.equals("General")){
 			
 			List<GenericValue> SaleOrderItems = null;
-			 try{
+			 try{  
 					if(UtilValidate.isNotEmpty(orderId)){
 						SaleOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 					}

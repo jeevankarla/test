@@ -545,7 +545,7 @@
 			productName = dataRow["cProductName"];
 			if(typeof(dataRow["orderAdjustmentsList"]) != 'undefined' || dataRow["orderAdjustmentsList"] != null){
 				orderAdjustmentsList = dataRow["orderAdjustmentsList"];	
-			}  
+			}   
 			productName = dataRow["cProductName"];
 			var totalAmt = dataRow["amount"];
 			
