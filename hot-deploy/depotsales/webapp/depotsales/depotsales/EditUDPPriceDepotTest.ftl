@@ -543,8 +543,8 @@
 			rowIndex = index;
 			dataRow = gridRow;
 			productName = dataRow["cProductName"];
-			if(dataRow["orderAdjustmentsList"] != 'undefined' || dataRow["orderAdjustmentsList"] != null){
-				orderAdjustmentsList = dataRow["orderAdjustmentsList"];
+			if(typeof(dataRow["orderAdjustmentsList"]) != 'undefined' || dataRow["orderAdjustmentsList"] != null){
+				orderAdjustmentsList = dataRow["orderAdjustmentsList"];	
 			}
 			productName = dataRow["cProductName"];
 			var totalAmt = dataRow["amount"];
