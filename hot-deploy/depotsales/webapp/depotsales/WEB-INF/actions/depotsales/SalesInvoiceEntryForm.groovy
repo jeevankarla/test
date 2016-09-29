@@ -216,21 +216,9 @@ if(shipments){
 		orderItemBillingList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null ,false);
 		
 		
-		
-		
-		
 		orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 		Debug.log("orderItems======================="+orderItems);
 		productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
-		
-	
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		/*exprCondList=[];
@@ -714,7 +702,7 @@ if(shipments){
 				if(OrderAdjustmentForServiceCha){
 					newObj.put("SERVICE_CHARGE_AMT", ((qty*unitPrice)*2)/100);
 				}else{
-				newObj.put("SERVICE_CHARGE_AMT", "");
+				newObj.put("SERVICE_CHARGE_AMT", 0);
 				}
 				
 				

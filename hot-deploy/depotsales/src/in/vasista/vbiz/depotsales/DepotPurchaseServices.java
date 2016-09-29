@@ -64,8 +64,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList; 
 
 import net.sf.json.JSONSerializer; 
-import java.util.Iterator;
 
+import java.util.Iterator;
 import java.util.Collection;
 
 
@@ -1558,6 +1558,58 @@ public class DepotPurchaseServices{
 			return "error";
 		}
 	    
+        
+        List<GenericValue> InvoiceServiceItem = null;
+        String invoiceItemSeqId = "";
+	    List conditionList = FastList.newInstance();
+    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INVOICE_ITM_ADJ"));
+    	conditionList.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS,"Service Charge"));
+    	 try{
+    		 InvoiceServiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    		 
+      		GenericValue InvoiceService = EntityUtil.getFirst(InvoiceServiceItem);
+
+      		invoiceItemSeqId = (String)InvoiceService.get("invoiceItemSeqId");
+    		 
+    	 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			}
+        
+        
+    	 List<GenericValue> orderAdjServiceCharge = null;
+     	
+    	 String orderAdjustmentId = "";
+ 	    conditionList.clear();
+     	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+     	conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"SERVICE_CHARGE"));
+     	 try{
+     		orderAdjServiceCharge = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+       		GenericValue orderAdjServiceChargeItem = EntityUtil.getFirst(orderAdjServiceCharge);
+       		 orderAdjustmentId = (String)orderAdjServiceChargeItem.get("orderAdjustmentId");
+     		 
+     	 }catch(GenericEntityException e){
+ 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+ 			}
+    	 
+    	 
+
+   		GenericValue newItemAttr = delegator.makeValue("OrderAdjustmentBilling");    
+   		
+				newItemAttr.set("orderAdjustmentId", orderAdjustmentId);
+				newItemAttr.set("invoiceId", invoiceId);
+				newItemAttr.set("invoiceItemSeqId", invoiceItemSeqId);
+				newItemAttr.set("quantity", BigDecimal.ZERO);
+				newItemAttr.set("amount",SERVICE_CHARGEBigDecimal);
+				 try{
+			  	   newItemAttr.create();
+				 }catch (Exception e) {
+					 request.setAttribute("_ERROR_MESSAGE_", "Error in populating OrderAdjustmentBilling : ");
+						return "error";
+		 	 	}
+    	 
+    	 
+        
 	    }
 	    
 	  //============================================Rounding Off===============================
