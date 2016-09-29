@@ -3344,7 +3344,6 @@ Debug.log("taxRateList =============="+taxRateList);
 	            }
 			}
 			
-			
 			if(schemeCategory.equals("General")){
 			
 			List<GenericValue> SaleOrderItems = null;
