@@ -81,8 +81,8 @@ if(shipments){
 	invoice = delegator.findList("Invoice", condition1, null, null, null, false);
 	
 	orderId = actualOrderId;
-	
 	primaryOrderId = shipments.primaryOrderId;
+	
 	
 	invoiceLists = EntityUtil.getFirst(invoice);
 	
