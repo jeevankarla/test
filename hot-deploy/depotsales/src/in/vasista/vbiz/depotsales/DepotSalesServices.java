@@ -74,6 +74,7 @@ import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.depotsales.DepotPurchaseServices;
+
 import org.ofbiz.party.party.PartyHelper;
 
 public class DepotSalesServices{
@@ -14495,7 +14496,120 @@ Debug.log("taxRateList =============="+taxRateList);
     }
     
     
+    public static Map<String, Object> recalculateInvoiceTenPercentSubsidy(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+		String invoiceId = (String) context.get("invoiceId");
+		String partyId = (String) context.get("partyId");
+        if(UtilValidate.isEmpty(partyId)){
+        	partyId = (String) userLogin.get("partyId");
+        }
+        List conditions = FastList.newInstance();
+        List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItem = null;
+        
+			
+			conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			
+			try{
+			OrderItemBillingAndInvoiceAndInvoiceItem = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+			}catch(Exception e){
+				 Debug.logError("problem While Fetching OrderItemBillingAndInvoiceAndInvoiceItem : "+e, module);
+			 } 
+        
+			GenericValue OrderItemBillingAndInvoiceAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItem);
+        
+			String orderId = (String) OrderItemBillingAndInvoiceAndInvoice.get("orderId");
+			
+			
+			
+			String Scheam = "";
+     		try{
+	     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				
+				List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+				
+				if(UtilValidate.isNotEmpty(scheamList)){
+					GenericValue orderScheme = EntityUtil.getFirst(scheamList);
+					Scheam = (String) orderScheme.get("attrValue");
+				}
+     		 }catch(Exception e){
+				 Debug.logError("problem While Fetching OrderAttribute : "+e, module);
+			 } 
+        	
+			
+			if(UtilValidate.isNotEmpty(Scheam) && Scheam == "MGPS_10Pecent"){
+				
+				
+               List<GenericValue> InvoiceItem = null;
+	        	
+	        	List conditionList = FastList.newInstance();;
+	        	
+	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+	        	 try{
+	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	        	 
+	        	 }catch(GenericEntityException e){
+	 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+	 			}
+	        	 
+	        	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+	        	 
+		        	for(GenericValue eachInvoiceItem : InvoiceItem){
+			        	
+		        		
+		        		 List<GenericValue> InvoiceItem1 = null;
+		        		
+		        		 
+		        		 
+		        		 BigDecimal itemValue = BigDecimal.ZERO;
+		        		 BigDecimal tenPercentAmount = BigDecimal.ZERO;
+		        		conditionList.clear();
+			        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceItem.getString("parentInvoiceId")));
+			        	conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachInvoiceItem.getString("parentInvoiceItemSeqId")));
+			        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+			        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+			        	 try{
+			        		 InvoiceItem1 = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			        		 
+			       			GenericValue InvoiceItem1List = EntityUtil.getFirst(InvoiceItem1);
+
+			       			itemValue = InvoiceItem1List.getBigDecimal("itemValue");
+			        		 
+			       			tenPercentAmount = (itemValue.multiply(new BigDecimal(10))).divide(new BigDecimal(100));
+			       			
+			       			 tenPercentAmount = (tenPercentAmount.setScale(0, rounding));
+			       			
+			        	 }catch(GenericEntityException e){
+			 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			 			}
+		        		
+		        		
+			        	eachInvoiceItem.set("amount",tenPercentAmount); 
+		        		eachInvoiceItem.set("itemValue",tenPercentAmount);
+		        		
+		        		try{
+		        		eachInvoiceItem.store();
+		        		}catch(GenericEntityException e){
+		        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+		        		}
+		        	}
+		        	
+			}else{
+					Debug.logError("Invoice Not MGPS_10Pecent Scheme  = "+invoiceId, module);
+					return ServiceUtil.returnError("Invoice Not MGPS_10Pecent Scheme  = : "+invoiceId);
+			}
+	        	 
+			}
+			
+        
+		return result;
     
-    
+    }    
     
 }

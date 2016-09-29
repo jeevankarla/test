@@ -595,6 +595,11 @@
          <attribute name="ro" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="recalculateInvoiceTenPercentSubsidy" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="recalculateInvoiceTenPercentSubsidy" transaction-timeout="6000000">
+        <description>get populatePartyDistrict</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     
     
 </services>
