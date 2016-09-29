@@ -824,6 +824,8 @@ public class DepotPurchaseServices{
 		String applicableTo = "ALL";
 		String applicableToDisc = "ALL";
 		
+		BigDecimal SERVICE_CHARGEBigDecimal = BigDecimal.ZERO;
+		
 		Map itemAdjMap = FastMap.newInstance();
 		for (int i = 0; i < rowCount; i++) {
 			
@@ -865,12 +867,15 @@ public class DepotPurchaseServices{
 			String productId = "";
 			String quantityStr = "";
 			String unitPriceStr = "";
+			String SERVICE_CHARGEStr = "";
 			String orderItemSeqId = "";
 			String assessableValue = "";
 			String discAssessableValue = "";
 			
 			BigDecimal quantity = BigDecimal.ZERO;
 			BigDecimal uPrice = BigDecimal.ZERO;
+			
+			
 			
 			
 			
@@ -995,6 +1000,13 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
+				
+				if (paramMap.containsKey("SERVICE_CHARGE" + thisSuffix)) {
+					SERVICE_CHARGEStr = (String) paramMap.get("SERVICE_CHARGE" + thisSuffix);
+					
+					Debug.log("SERVICE_CHARGEStr============="+SERVICE_CHARGEStr);
+				}
+				
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
@@ -1316,11 +1328,28 @@ public class DepotPurchaseServices{
 						Debug.log("cstPercent================"+cstPercent);
 						
 					}
+					
+					
+					
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing CSTPercent string: " + CSTPercentStr, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 					return "error";
 				}
+				
+				
+				try {
+					if (!SERVICE_CHARGEStr.equals("")) {
+						SERVICE_CHARGEBigDecimal = new BigDecimal(SERVICE_CHARGEStr);
+						Debug.log("SERVICE_CHARGEBigDecimal================"+SERVICE_CHARGEBigDecimal);
+					}
+					}catch (Exception e) {
+						Debug.logError(e, "Problems parsing CSTPercent string: " + SERVICE_CHARGEStr, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + SERVICE_CHARGEStr);
+						return "error";
+					}
+					
+				
 			}
 			GenericValue orderItemValue = null;
 
@@ -1501,7 +1530,35 @@ public class DepotPurchaseServices{
     		}
 
 	    }
-		
+	    
+	    
+	  //============================================Service Charge===============================
+	    
+	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
+    	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+	    
+	    createInvoiceItemContext.put("invoiceId",invoiceId);
+        createInvoiceItemContext.put("invoiceItemTypeId", "INVOICE_ITM_ADJ");
+        createInvoiceItemContext.put("parentInvoiceId", invoiceId);
+        createInvoiceItemContext.put("description", "Service Charge");
+        createInvoiceItemContext.put("quantity",BigDecimal.ONE);
+        createInvoiceItemContext.put("amount",SERVICE_CHARGEBigDecimal);
+        createInvoiceItemContext.put("productId", "");
+        createInvoiceItemContext.put("userLogin", userLogin);
+        try{
+        	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+    	    Debug.log("createInvoiceItemResult========Service Charge========="+createInvoiceItemResult);
+
+        	if(ServiceUtil.isError(createInvoiceItemResult)){
+      			  request.setAttribute("_ERROR_MESSAGE_", "Error in populating invoice purpose :" + invoiceId+"....! ");
+      				return "error";
+      		}
+        } catch (Exception e) {
+        	request.setAttribute("_ERROR_MESSAGE_", "Error in populating Service Charge : ");
+			return "error";
+		}
+	    
+	    }
 	    
 	  //============================================Rounding Off===============================
 	    

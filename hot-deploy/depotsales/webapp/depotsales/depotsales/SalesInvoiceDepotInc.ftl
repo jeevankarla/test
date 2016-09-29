@@ -126,6 +126,8 @@
 			var bedCess = data[rowCount]["bedCessAmount"];
 			var bedSecCess = data[rowCount]["bedSecCessAmount"];
 			
+			var SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
+			
 			var VATPer = data[rowCount]["VatPercent"];
 			var CSTPer = data[rowCount]["CSTPercent"];
 			var ExcisePer = data[rowCount]["ExcisePercent"];
@@ -140,6 +142,11 @@
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				
+				var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
+				
+				jQuery(formId).append(jQuery(SERVICE_CHARGE));
+				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
 				
