@@ -3343,6 +3343,45 @@ Debug.log("taxRateList =============="+taxRateList);
 				     Debug.logError("Problems adjusting order header status for order #" + orderId, module);
 	            }
 			}
+			
+			if(schemeCategory.equals("General")){
+			
+			List<GenericValue> SaleOrderItems = null;
+			 try{  
+					if(UtilValidate.isNotEmpty(orderId)){
+						SaleOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+					}
+				 }catch (Exception e) {
+					  Debug.logError(e, "Error While Fetching OrderItem ", module);
+					  return ServiceUtil.returnError("Error While  Fetching OrderItem : "+orderId);
+		 	 	}
+			 
+			 
+				 for (GenericValue eachSaleItem : SaleOrderItems) {
+					 
+					 GenericValue newItemAttr = delegator.makeValue("OrderItemAssoc");    
+					 //Debug.log("orderId============1212========"+eachSaleItem.getString("orderId"));
+					 //Debug.log("orderItemSeqId=======1212============="+eachSaleItem.getString("orderItemSeqId"));
+					 //Debug.log("purchaseOrderId=======21212============="+purchaseOrderId);
+						newItemAttr.set("orderId", eachSaleItem.getString("orderId"));
+						newItemAttr.set("orderItemSeqId", eachSaleItem.getString("orderItemSeqId"));
+						newItemAttr.set("shipGroupSeqId", "_NA_");
+						newItemAttr.set("toOrderId", purchaseOrderId);
+						newItemAttr.set("toOrderItemSeqId",eachSaleItem.getString("orderItemSeqId"));
+						newItemAttr.set("toShipGroupSeqId", "_NA_");
+						newItemAttr.set("orderItemAssocTypeId", "BackToBackOrder");
+						 try{
+					  	   newItemAttr.create();
+						 }catch (Exception e) {
+							  Debug.logError(e, "Error While populating OrderItemAssoc ", module);
+							  return ServiceUtil.returnError("Error While  populating OrderItemAssoc : "+orderId);
+				 	 	}
+					
+				}
+			 
+			}
+			
+			
 		}
 		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
