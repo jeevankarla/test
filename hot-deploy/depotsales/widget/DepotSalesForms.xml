@@ -953,18 +953,18 @@
 			<option key="BANK" description="Bank Voucher" ></option>
 			</drop-down>
 		</field> -->
-		<field name="partyIdFrom" title="Supplier"  use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="SupplierLookupPartyName" target-parameter="roleTypeId"/></field>
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.Customer}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)"><lookup target-form-name="LookupBranchCustomers"/></field> 
-		<field name="partyId" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
+        <field name="partyId" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
+        <field name="partyId" title="${uiLabelMap.Customer}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)"><lookup target-form-name="LookupBranchCustomers"/></field> 
+		<field name="partyIdFrom" title="Supplier"  use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="SupplierLookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="schemeCategory" title="Scheme Category" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
         	<drop-down allow-empty="true">
         		<option key="MGPS_10Pecent" description="MGPS+10% Scheme"/>
@@ -1777,6 +1777,11 @@
     
     <form name="FindDepotTransMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
+        <field name="partyIdTo" title="Branch">
+			<drop-down allow-empty="true">
+				<list-options key-name="payToPartyId" list-name="branchList" description="${productStoreName}"/>
+			</drop-down>
+		</field>
         <field name="facilityId" title="Depot">
 			<drop-down allow-empty="true"   >
 				<entity-options description="${facilityName}" entity-name="Facility" >
