@@ -32,6 +32,8 @@ import org.ofbiz.service.ServiceUtil;
 
 
 invoiceId = parameters.invoiceId;
+
+
 billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
 if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
@@ -40,7 +42,11 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 }else{
 	context.invoiceId = invoiceId;
 }
+
+
+
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+
 partyId = invoiceList.get("partyId");
 
 tallySalesNo = invoiceList.get("referenceNumber");
@@ -94,6 +100,8 @@ destination = "";
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+
+
 orderId = shipmentList.get("primaryOrderId");
 
 estimatedShipDate = shipmentList.get("estimatedShipDate");
@@ -169,6 +177,7 @@ invoiceItemLevelAdjustments = [:];
 double totTaxAmount = 0;
 
 double mgpsAmt = 0;
+
 
 
 
@@ -265,6 +274,7 @@ context.totTaxAmount = totTaxAmount;
 
 context.mgpsAmt = mgpsAmt;
 
+context.mgpsAmtPositive = Math.abs(mgpsAmt);
 
 
 orderAttrForPo = [];
@@ -484,7 +494,7 @@ OrderHeader = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId","
 indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 indentDate = indentDetails[0].get("orderDate");
 
-externalOrderId = indentDetails[0].get("externalId");
+//externalOrderId = indentDetails[0].get("externalId");
 PODetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 poDate = PODetails[0].get("orderDate");
 
@@ -555,7 +565,7 @@ context.supplier = supplier;
 context.destination = destination;
 context.soceity = soceity;
 context.onbehalf = onbehalf;
-context.externalOrderId = externalOrderId;
+//context.externalOrderId = externalOrderId;
 
 
 
