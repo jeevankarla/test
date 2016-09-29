@@ -7463,6 +7463,8 @@
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
 				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+				<set field="parameters.partyId" value="${parameters.tempPartyId}" />
+				<set field="parameters.partyIdFrom" value="${parameters.tempPartyIdFrom}" />
 				<script
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
 			</actions>
