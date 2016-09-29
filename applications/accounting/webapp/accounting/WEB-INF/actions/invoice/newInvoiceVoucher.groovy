@@ -220,7 +220,12 @@ for (eachList in invoiceItemList) {
 			  tempMap.put("percentage", orderAdjustments.sourcePercentage);
 			  }else{
 			  invoiceGrandTotal = invoiceForPercentage.invoiceGrandTotal;
+			  
+			  if(itemValue != 0)
 			  percentage = invoiceGrandTotal/itemValue;
+			  else
+			  percentage = 0;
+			  
 			  tempMap.put("percentage", percentage);
 			  }
 			  
@@ -728,7 +733,7 @@ context.externalOrderId = externalOrderId;
 				 OrderAdjustmentAndBilling = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
 	 
 				 if(OrderAdjustmentAndBilling[0])
-				 schemeQQQty = Math.round(OrderAdjustmentAndBilling[0].quantity);
+				 schemeQQQty = OrderAdjustmentAndBilling[0].quantity;
 				
 			}
 			
