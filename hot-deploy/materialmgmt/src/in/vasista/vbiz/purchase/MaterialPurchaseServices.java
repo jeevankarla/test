@@ -6029,6 +6029,28 @@ catch(Exception e){
 	  		return ServiceUtil.returnError(e.toString());
         }
         Iterator entries = loomsMap.entrySet().iterator();
+        
+        
+        Map<String,Integer> loomsTypeMap = FastMap.newInstance();
+        
+        loomsTypeMap.put("COTTON_40ABOVE",10);
+        loomsTypeMap.put("COTTON_UPTO40",30);
+        loomsTypeMap.put("SILK_YARN",4);
+        loomsTypeMap.put("WOOLYARN_10STO39NM",10);
+        loomsTypeMap.put("WOOLYARN_40SNMABOVE",10);
+        loomsTypeMap.put("WOOLYARN_BELOW10NM",10);
+        
+        
+        Timestamp targetDate =null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+			targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
+		} catch (Exception e) {
+			Debug.logError(e, "Failed to covert date ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+        
+        
         while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry) entries.next();
             String key = (String)entry.getKey();
@@ -6036,7 +6058,11 @@ catch(Exception e){
            Debug.log("Key = " + key + ", Value = " + value);
            
            
-        // Create Party Loom
+           int noOf = Integer.valueOf(loomsTypeMap.get(key));
+           
+           BigDecimal quotaPerLoom = value.multiply(new BigDecimal(noOf));
+           
+       /* // Create Party Loom
            inMap.clear();
            inMap.put("userLogin", userLogin);
            inMap.put("partyId", partyId);
@@ -6050,7 +6076,32 @@ catch(Exception e){
    	    }catch(GenericServiceException e){
    	  		Debug.logError(e, e.toString(), module);
    	  		return ServiceUtil.returnError(e.toString());
-     		}
+     		}*/
+           
+           
+           
+           if(UtilValidate.isNotEmpty(partyId)){
+   	        try{
+   				GenericValue PartyLoom = delegator.makeValue("PartyLoom");
+   				PartyLoom.set("partyId", partyId);
+   				PartyLoom.set("loomTypeId", key);
+   				PartyLoom.set("quantity", value);
+   				PartyLoom.set("fromDate", targetDate);
+   				PartyLoom.set("quotaPerLoom", quotaPerLoom);
+   				
+   					delegator.createOrStore(PartyLoom);
+   			}catch (Exception e) {
+   				Debug.logError(e, module);
+   				return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
+   			}
+           }
+           
+           
+           
+           
+           
+           
+           
         }
 		SimpleDateFormat SimpleDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
