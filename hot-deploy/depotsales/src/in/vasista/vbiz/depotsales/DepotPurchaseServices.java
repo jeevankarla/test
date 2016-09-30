@@ -4643,6 +4643,9 @@ public class DepotPurchaseServices{
 		String refNo = (String) request.getParameter("refNo");
 		String quotationNo = (String) request.getParameter("quotationNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
+		
+		Debug.log("orderDateStr=================="+orderDateStr);
+		
 		String effectiveDateStr = (String) request.getParameter("orderDate");
 		String partyIdTo = (String) request.getParameter("shipToPartyId");
 		String partyGeoId = (String) request.getParameter("supplierGeoId");
@@ -4669,6 +4672,9 @@ public class DepotPurchaseServices{
 		Timestamp effectiveDate = UtilDateTime.nowTimestamp();
 		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		
+		SimpleDateFormat sdfPo = new SimpleDateFormat("dd MMMMM, yyyy");   
+		
 		List<Map> itemDetail = FastList.newInstance();
 		List<Map> otherChargesList = FastList.newInstance();
 		Timestamp orderDate = UtilDateTime.nowTimestamp();
@@ -5073,7 +5079,7 @@ public class DepotPurchaseServices{
 			
 				if (UtilValidate.isNotEmpty(orderDateStr)) { 
 					try {
-						orderDate = new java.sql.Timestamp(sdf.parse(orderDateStr).getTime());
+						orderDate = new java.sql.Timestamp(sdfPo.parse(orderDateStr).getTime());
 					} catch (ParseException e) {
 						Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
 					} catch (NullPointerException e) {
@@ -5083,7 +5089,7 @@ public class DepotPurchaseServices{
 			
 				if (UtilValidate.isNotEmpty(effectiveDateStr)) { 
 					try {
-						effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+						effectiveDate = new java.sql.Timestamp(sdfPo.parse(effectiveDateStr).getTime());
 					} catch (ParseException e) {
 						Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
 					} catch (NullPointerException e) {

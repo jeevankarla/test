@@ -252,8 +252,8 @@
 		branchId = orderInfoDetail.get("billToPartyId");
 		supplierId = orderInfoDetail.get("supplierId");
 		
-		Debug.log("branchId =================" +branchId);
-		Debug.log("supplierId ================" +supplierId);
+		//Debug.log("branchId =================" +branchId);
+		//Debug.log("supplierId ================" +supplierId);
 		
 		String supplierGeoId = null;
 		List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplierId, false, "TAX_CONTACT_MECH");
@@ -267,8 +267,8 @@
 			branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
 		}
 		
-		Debug.log("supplierGeoId =================" +supplierGeoId);
-		Debug.log("branchGeoId ================" +branchGeoId);
+		//Debug.log("supplierGeoId =================" +supplierGeoId);
+		//Debug.log("branchGeoId ================" +branchGeoId);
 		
 		orderInfoDetail.putAt("supplierGeoId", supplierGeoId);
 		orderInfoDetail.putAt("branchGeoId", branchGeoId);
@@ -286,10 +286,10 @@
 		orderInfoDetail.putAt("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
 		context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
 		
-		Debug.log("orderId =================="+orderId);
+		//Debug.log("orderId =================="+orderId);
 		orderEditParamMap.putAt("orderHeader", orderInfoDetail);
 		orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-		Debug.log("orderAdjustments =================="+orderAdjustments);
+		//Debug.log("orderAdjustments =================="+orderAdjustments);
 		
 		/*orderAdjDetail = [:];
 		orderAdjustments.each{ eachAdj ->
@@ -403,7 +403,7 @@
 			}
 			transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
 		}
-		Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+		//Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
 		context.transactionTypeTaxMap = transactionTypeTaxMap;
 		
 		
@@ -412,7 +412,7 @@
 			orderDtlMap.put("userLogin", userLogin);	
 			result = dispatcher.runSync("getOrderItemSummary",orderDtlMap);
 			if(ServiceUtil.isError(result)){
-				Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
+				//Debug.logError("Unable get Order item: " + ServiceUtil.getErrorMessage(result), module);
 				return ServiceUtil.returnError(null, null, null,result);
 			}
 			productSummaryMap=result.get("productSummaryMap");
@@ -493,7 +493,7 @@
 				
 			
 		
-		//Debug.log("orderitemdetails================="+orderItemDetails)
+		////Debug.log("orderitemdetails================="+orderItemDetails)
 		
 		adjCondList = [];
 		adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
@@ -505,7 +505,7 @@
 		if(UtilValidate.isNotEmpty(orderAdjustments)){
 			additionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, orderAdjustmentTypeIdsList));
 		}
-		Debug.log("additionalChgs =================="+additionalChgs);
+		//Debug.log("additionalChgs =================="+additionalChgs);
 		
 		JSONArray orderItemsJSON = new JSONArray();
 		orderItems.each{ eachItem ->
@@ -520,9 +520,9 @@
 				Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 				prodCatTaxCtx.put("productId", eachItem.productId);
 				prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
-				Debug.log("prodCatTaxCtx ====="+prodCatTaxCtx);
+				//Debug.log("prodCatTaxCtx ====="+prodCatTaxCtx);
 				taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
-				Debug.log("taxResultCtx ====="+taxResultCtx);
+				//Debug.log("taxResultCtx ====="+taxResultCtx);
 				taxValueMap = taxResultCtx.get("taxValueMap");
 			}
 			
@@ -598,7 +598,7 @@
 				itemAdjustmentJSON.add(newItemAdjObj);
 				
 			}
-			Debug.log("itemAdjustmentJSON ========================= "+itemAdjustmentJSON);	
+			//Debug.log("itemAdjustmentJSON ========================= "+itemAdjustmentJSON);	
 			
 			
 			remarks="";
@@ -775,11 +775,11 @@
 		}
 		adjustmentJSON.add(newObj);
 	}
-	Debug.log("adjustmentJSON =================="+adjustmentJSON);
+	//Debug.log("adjustmentJSON =================="+adjustmentJSON);
 	context.orderAdjustmentJSON = adjustmentJSON;
 	
 	InvoiceItem = delegator.findList("InvoiceItem", null, null, null, null, false);
 	
-	Debug.log("InvoiceItem =================="+EntityUtil.getFieldListFromEntityList(InvoiceItem, "invoiceItemTypeId", true));
+	//Debug.log("InvoiceItem =================="+EntityUtil.getFieldListFromEntityList(InvoiceItem, "invoiceItemTypeId", true));
 	
 	
