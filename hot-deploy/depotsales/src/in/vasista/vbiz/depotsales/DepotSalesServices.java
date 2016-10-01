@@ -3513,7 +3513,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				// Scheme Calculation
 							List productCategoriesList = FastList.newInstance();
 							List condsList = FastList.newInstance();
-						  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
 						  	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
 						  	/*condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 						  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
