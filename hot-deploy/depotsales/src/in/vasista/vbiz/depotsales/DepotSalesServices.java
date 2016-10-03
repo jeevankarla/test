@@ -5609,11 +5609,36 @@ Debug.log("taxRateList =============="+taxRateList);
    				// TODO: handle exception
    	    		Debug.logError(e, module);
    			}
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			List roList = FastList.newInstance();
+			try{
+				roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+				if(UtilValidate.isNotEmpty(roList)){
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true)));
+					conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+		  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+					conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+					roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdTo"), null, false);
+					List ros = EntityUtil.getFieldListFromEntityList(roList, "partyIdTo", true);
+				}
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
+			
         	
 			if(UtilValidate.isNotEmpty(orgsList)){
 				
+				List payToPartyIdList = EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true);
+				payToPartyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdTo", true));
 	   	    	condList.clear();
-	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true)));
+	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, payToPartyIdList));
 	   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
 	   	    	EntityCondition prodStrCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	   	    	try{
@@ -13398,6 +13423,15 @@ Debug.log("taxRateList =============="+taxRateList);
 			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false);
 			if(UtilValidate.isNotEmpty(PartyClassification)){
 				List partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+	  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+				List roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+				if(UtilValidate.isNotEmpty(roList)){
+					partyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true));
+				}
 				List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
 				result.put("partyList",partyGroup);
 			}
