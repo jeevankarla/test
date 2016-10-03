@@ -1503,12 +1503,12 @@
          	<field name="EditLoom" title="Edit Loom" widget-style="buttontext">
              	<hyperlink  target-type="plain" description="Edit"  target="javascript:LoomEditForm('${partyId}','${loomTypeId}','${quantity}','${fromDate}','${thruDate}');"></hyperlink>
         	</field>
-            <field name="deleteLink" title="Delete" widget-style="buttontext">
+           <!--  <field name="deleteLink" title="Delete" widget-style="buttontext">
                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
                    <parameter param-name="partyId"/>
                    <parameter param-name="partyIdentificationTypeId"/>
                 </hyperlink>
-            </field>
+            </field> -->
         </form>
         
         <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
@@ -1520,6 +1520,8 @@
      	       		</drop-down>
      	       	</field>
      	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" ></text> </field>
+     	       	 <field name="fromDate" title="From Date"><date-time type="date" ></date-time></field>
+      		     <!-- <field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field>  -->
      	       	<field name="submit" title="update"><submit/></field>
      	      </form>
      	      <form name="ProducerProfilePicture"  type="upload" target="createWeaverContent" 	header-row-style="header-row">
