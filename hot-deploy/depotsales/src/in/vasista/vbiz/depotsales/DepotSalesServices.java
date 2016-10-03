@@ -10415,21 +10415,46 @@ Debug.log("taxRateList =============="+taxRateList);
 		EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		List<GenericValue> PartyLoomList = delegator.findList("PartyLoom", condition, null, null, null, false);
 		  
+		
+		
+		 Map<String,Integer> loomsTypeMap = FastMap.newInstance();
+	        
+	        loomsTypeMap.put("COTTON_40ABOVE",10);
+	        loomsTypeMap.put("COTTON_UPTO40",30);
+	        loomsTypeMap.put("SILK_YARN",4);
+	        loomsTypeMap.put("WOOLYARN_10STO39NM",10);
+	        loomsTypeMap.put("WOOLYARN_40SNMABOVE",10);
+	        loomsTypeMap.put("WOOLYARN_BELOW10NM",10);
+		
 
 		Timestamp nowTimestamp =UtilDateTime.nowTimestamp();
+		
+		
 		
 		if(UtilValidate.isNotEmpty(PartyLoomList)){
 			GenericValue partyLoom = EntityUtil.getFirst(PartyLoomList);
 
-			partyLoom.set("quantity", new BigDecimal(numberOfCattle));
+			BigDecimal numberOfCattleBigDecimal = new BigDecimal(numberOfCattle);
+			int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+	        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
+			
+			partyLoom.set("quantity", numberOfCattleBigDecimal);
+			partyLoom.set("quotaPerLoom", quotaPerLoom);
 			partyLoom.store();
 		}else{
-				
+
+			BigDecimal numberOfCattleBigDecimal = new BigDecimal(numberOfCattle);
+			
+			int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+	           
+	           BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
+			
 				GenericValue newPartyLoom = delegator.makeValue("PartyLoom");        	 
 				newPartyLoom.set("partyId", partyId);
 				newPartyLoom.set("loomTypeId", loomTypeId);
 				newPartyLoom.set("fromDate", nowTimestamp);
-				newPartyLoom.set("quantity", new BigDecimal(numberOfCattle));
+				newPartyLoom.set("quantity", numberOfCattleBigDecimal);
+				newPartyLoom.set("quotaPerLoom", quotaPerLoom);
 				newPartyLoom.create();
 				
 			}
@@ -13191,9 +13216,29 @@ Debug.log("taxRateList =============="+taxRateList);
 	       	GenericValue partyLoom = delegator.findOne("PartyLoom",UtilMisc.toMap("partyId",partyId, "loomTypeId",loomTypeId, "fromDate", oldFromDate),false);
 	       	Debug.log("partyLoom======================="+partyLoom);
 	       	
+	       	
+
+			 Map<String,Integer> loomsTypeMap = FastMap.newInstance();
+		        
+		        loomsTypeMap.put("COTTON_40ABOVE",10);
+		        loomsTypeMap.put("COTTON_UPTO40",30);
+		        loomsTypeMap.put("SILK_YARN",4);
+		        loomsTypeMap.put("WOOLYARN_10STO39NM",10);
+		        loomsTypeMap.put("WOOLYARN_40SNMABOVE",10);
+		        loomsTypeMap.put("WOOLYARN_BELOW10NM",10);
+	       	
+	       	
+	       	
+	       	
 	       	if(UtilValidate.isNotEmpty(partyLoom)){
 	       		if(oldFromDate.compareTo(fromDate) == 0){
-	       			partyLoom.set("quantity", new BigDecimal(quantity));
+	       			
+	       			BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
+					int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+			        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
+					
+			        partyLoom.set("quantity", numberOfCattleBigDecimal);
+			        partyLoom.set("quotaPerLoom", quotaPerLoom);
 					partyLoom.store();
 	       		}
 	       		else{
@@ -13205,7 +13250,13 @@ Debug.log("taxRateList =============="+taxRateList);
 					if(UtilValidate.isNotEmpty(thruDate)){
 						newPartyLoom.set("thruDate", thruDate);
 					}
-					newPartyLoom.set("quantity", new BigDecimal(quantity));
+					
+					BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
+					int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+			        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
+					
+			        newPartyLoom.set("quantity", numberOfCattleBigDecimal);
+			        newPartyLoom.set("quotaPerLoom", quotaPerLoom);
 					newPartyLoom.create();
 	       		}
 	       	}
@@ -13217,7 +13268,13 @@ Debug.log("taxRateList =============="+taxRateList);
 				if(UtilValidate.isNotEmpty(thruDate)){
 					newPartyLoom.set("thruDate", thruDate);
 				}
-				newPartyLoom.set("quantity", new BigDecimal(quantity));
+				
+				BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
+				int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+		        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
+				
+				newPartyLoom.set("quantity", numberOfCattleBigDecimal);
+				newPartyLoom.set("quotaPerLoom", quotaPerLoom);
 				newPartyLoom.create();
 	       	}
 			
@@ -14633,5 +14690,114 @@ Debug.log("taxRateList =============="+taxRateList);
 		return result;
     
     }    
+    
+    
+    public static Map<String, Object> populatePartyLoomQuta(DispatchContext dctx, Map context) {
+  		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+  		LocalDispatcher dispatcher = dctx.getDispatcher();
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		GenericValue userLogin = (GenericValue) context.get("userLogin");
+  		
+  		
+  		String partyIdFrom = (String) context.get("partyIdFrom");
+  		String partyIdTo = (String) context.get("partyIdTo");
+  		
+  		Locale locale = (Locale) context.get("locale");
+  		
+  		List<GenericValue> PartyLoom = null;
+  		List<GenericValue> PartyRelationship = null;
+  		List<GenericValue> Invoice = null;
+  		List<String> partyIds =  FastList.newInstance();
+  		
+  		
+  		List conditionList = FastList.newInstance();
+  		if(UtilValidate.isNotEmpty(partyIdFrom))	
+  		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.GREATER_THAN, partyIdFrom));
+  		if(UtilValidate.isNotEmpty(partyIdTo))	
+  		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.LESS_THAN, partyIdTo));
+  		//conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+  		try{
+  			PartyLoom = delegator.findList("PartyLoom", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false);
+
+  			partyIds=EntityUtil.getFieldListFromEntityList(PartyLoom, "partyId", true);
+  		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive PartyLoom ", module);
+		}
+  		
+  		
+  		 Map<String,Integer> loomsTypeMap = FastMap.newInstance();
+         
+         loomsTypeMap.put("COTTON_40ABOVE",10);
+         loomsTypeMap.put("COTTON_UPTO40",30);
+         loomsTypeMap.put("SILK_YARN",4);
+         loomsTypeMap.put("WOOLYARN_10STO39NM",10);
+         loomsTypeMap.put("WOOLYARN_40SNMABOVE",10);
+         loomsTypeMap.put("WOOLYARN_BELOW10NM",10);
+  		
+  		
+  		for(String eachParty :partyIds){
+  			
+  			
+  			List<GenericValue> eachPartyLoom = EntityUtil.filterByCondition(PartyLoom, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
+  			
+  			for(GenericValue eachPartyLoomDetail : eachPartyLoom){
+  				
+  				String partyId = eachPartyLoomDetail.getString("PartyId");
+  				
+  				String loomTypeId = eachPartyLoomDetail.getString("loomTypeId");
+  				
+  				BigDecimal quantity = eachPartyLoomDetail.getBigDecimal("quantity");
+  				
+  				 int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
+  	           
+  	             BigDecimal quotaPerLoom = quantity.multiply(new BigDecimal(noOf));
+  				
+  	             
+  				Timestamp targetDate =null;
+  				try {
+  					SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+  					targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
+  				} catch (Exception e) {
+  					Debug.logError(e, "Failed to covert date ", module);
+  					return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+  				}
+  				
+  				if(UtilValidate.isNotEmpty(partyId)){
+  		   	        try{
+  		   				GenericValue PartyLoomValue = delegator.makeValue("PartyLoom");
+						PartyLoomValue.set("partyId", partyId);
+						PartyLoomValue.set("loomTypeId", loomTypeId);
+						PartyLoomValue.set("quantity", quantity);
+						PartyLoomValue.set("fromDate", targetDate);
+						PartyLoomValue.set("quotaPerLoom", quotaPerLoom);
+  		   				
+  		   					delegator.createOrStore(PartyLoomValue);
+  		   			}catch (Exception e) {
+  		   				Debug.logError(e, module);
+  		   				return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
+  		   			}
+  		           }
+  				
+  				
+  			}
+  		  try {
+ 	           delegator.removeAll(eachPartyLoom);
+ 	           }
+ 	         catch (Exception e) {
+					Debug.logError(e, "Failed to Delete eachPartyLoom ", module);
+					return ServiceUtil.returnError("Failed to Delete eachPartyLoom" + e);
+				}
+  			
+  		}
+  		
+  		
+         
+         return result;
+  	}
+
+    
+    
+    
+    
     
 }
