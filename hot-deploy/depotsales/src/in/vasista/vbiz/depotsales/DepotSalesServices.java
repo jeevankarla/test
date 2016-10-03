@@ -13478,20 +13478,22 @@ Debug.log("taxRateList =============="+taxRateList);
 		List<GenericValue> PartyClassification = null;
 		try{
 			PartyClassification = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false);
+			List partyIdList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(PartyClassification)){
-				List partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
-				List conditionList = FastList.newInstance();
-				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
-	  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
-				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-				List roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
-				if(UtilValidate.isNotEmpty(roList)){
-					partyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true));
-				}
-				List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
-				result.put("partyList",partyGroup);
+				partyIdList = EntityUtil.getFieldListFromEntityList(PartyClassification, "partyId", true);
 			}
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			List roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+			if(UtilValidate.isNotEmpty(roList)){
+				partyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true));
+			}
+			List<GenericValue> partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+			result.put("partyList",partyGroup);
+			
 		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive RegionalOffices ", module);
 		}
