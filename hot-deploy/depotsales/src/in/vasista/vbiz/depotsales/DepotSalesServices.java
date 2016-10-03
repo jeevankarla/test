@@ -14735,22 +14735,39 @@ Debug.log("taxRateList =============="+taxRateList);
          loomsTypeMap.put("WOOLYARN_BELOW10NM",10);
   		
   		
+         Debug.log("partyIds======================"+partyIds);
+         
   		for(String eachParty :partyIds){
   			
   			
   			List<GenericValue> eachPartyLoom = EntityUtil.filterByCondition(PartyLoom, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
   			
+  	         Debug.log("eachPartyLoom======================"+eachPartyLoom);
+
+  			
   			for(GenericValue eachPartyLoomDetail : eachPartyLoom){
   				
-  				String partyId = eachPartyLoomDetail.getString("PartyId");
+  				String partyId = eachParty;
+  				
+  	  	         Debug.log("partyId======================"+partyId);
+
   				
   				String loomTypeId = eachPartyLoomDetail.getString("loomTypeId");
   				
+ 	  	         Debug.log("loomTypeId======================"+loomTypeId);
+
+  				
   				BigDecimal quantity = eachPartyLoomDetail.getBigDecimal("quantity");
+  				
+ 	  	         Debug.log("quantity======================"+quantity);
+
   				
   				 int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
   	           
   	             BigDecimal quotaPerLoom = quantity.multiply(new BigDecimal(noOf));
+  	             
+  	  	         Debug.log("quotaPerLoom======================"+quotaPerLoom);
+
   				
   	             
   				Timestamp targetDate =null;
@@ -14761,6 +14778,9 @@ Debug.log("taxRateList =============="+taxRateList);
   					Debug.logError(e, "Failed to covert date ", module);
   					return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
   				}
+  				
+ 	  	         Debug.log("targetDate======================"+targetDate);
+
   				
   				if(UtilValidate.isNotEmpty(partyId)){
   		   	        try{
