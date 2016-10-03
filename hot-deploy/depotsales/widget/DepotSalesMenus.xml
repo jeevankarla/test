@@ -170,7 +170,7 @@
             <link target="searchProduct">
             </link>
         </menu-item>
-        <menu-item name="analytics" title="${uiLabelMap.Analytics}">
+        <menu-item name="analytics" title="Dashboard">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
