@@ -74,14 +74,14 @@ $(document).ready(function () {
                 sortable: true,
                 ready: function()
                 {
-                /*
+                
                      var rows = $("#treeGrid").jqxTreeGrid('getRows');
 	                   for (var i = 0; i < rows.length; i++) {
 	                       var key = $("#treeGrid").jqxTreeGrid('getKey', rows[i]);
 	                       $("#treeGrid").jqxTreeGrid('expandRow', key);
 	                   }
-	                   */
-	                   $("#treeGrid").jqxTreeGrid('expandAll');
+	                   
+	                  // $("#treeGrid").jqxTreeGrid('expandAll');
 
                 },    
                 editable: true,
