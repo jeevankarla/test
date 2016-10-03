@@ -5632,12 +5632,14 @@ Debug.log("taxRateList =============="+taxRateList);
    	    		Debug.logError(e, module);
    			}
 			
-        	
+			List payToPartyIdList = FastList.newInstance();
 			if(UtilValidate.isNotEmpty(orgsList)){
 				
-				List payToPartyIdList = EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true);
-				payToPartyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdTo", true));
-	   	    	condList.clear();
+				payToPartyIdList = EntityUtil.getFieldListFromEntityList(orgsList, "partyIdFrom", true);
+			}
+			payToPartyIdList.addAll(EntityUtil.getFieldListFromEntityList(roList, "partyIdTo", true));
+			if(UtilValidate.isNotEmpty(payToPartyIdList)){
+				condList.clear();
 	   	    	condList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.IN, payToPartyIdList));
 	   	    	condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(cfcList, "productStoreId", true)));
 	   	    	EntityCondition prodStrCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
