@@ -606,6 +606,15 @@
          <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
       </service>
     
+     <service name="createPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createPartyLooms" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="loomTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+    </service>
+    
     
 </services>
 

@@ -129,6 +129,10 @@ AllLoomDetails.each{ eachloom ->
 }
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate),
+	EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
 PartyClassificationDetails = EntityUtil.getFirst(delegator.findList("PartyClassification",condition,null,null,null,false));

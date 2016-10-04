@@ -1512,17 +1512,17 @@
         </form>
         
         <form name="CreateCattleInformation" odd-row-style="alternate-row" header-row-style="header-row-2" type="single" 
-     	     			list-name="LoomDetails" default-table-style="basic-table" target="editPartyLooms" >    
+     	     			list-name="LoomDetails" default-table-style="basic-table" target="createPartyLooms" >    
      	       	<field name="partyId"><hidden/></field>
      	       	<field name="loomTypeId" title="Loom Type">
      	       		<drop-down allow-empty="false">
      	       			<entity-options description="${description}" entity-name="LoomType"></entity-options>
      	       		</drop-down>
      	       	</field>
-     	       	<field name="numberOfCattle" title="Number Of Looms"><text size="10" ></text> </field>
+     	       	<field name="quantity" title="Number Of Looms"><text size="10" ></text> </field>
      	       	 <field name="fromDate" title="From Date"><date-time type="date" ></date-time></field>
       		     <!-- <field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field>  -->
-     	       	<field name="submit" title="update"><submit/></field>
+     	       	<field name="submit" title="Create"><submit/></field>
      	      </form>
      	      <form name="ProducerProfilePicture"  type="upload" target="createWeaverContent" 	header-row-style="header-row">
 				<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="150"/></field>
@@ -2364,10 +2364,10 @@
         <field name="districtGeoId" title="District"><display/></field>
         <field name="cluster" title="Cluster"><display/></field>
         <field name="stateProvinceGeoId" title="State"><display/></field>
-        <field name="storeName" title="Branch"><display/></field>
+        <field name="branchName" title="Branch"><display/></field>
         
-        <field name="partyClassificationGroupId" title="Agency Type"><display/></field>
-        <field name="depot" title="Depot Status"><display/></field>
+        <field name="partyClassification" title="Agency Type"><display/></field>
+        <field name="isDepot" title="Depot Status"><display/></field>
         <field name="daoDate" title="Date Of Depot Allotment"><display/></field>
         
         <field name="passbookId" title="Passbook No"><display/></field>

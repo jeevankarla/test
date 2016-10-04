@@ -271,7 +271,7 @@
             </condition>  
         	<link target="IndentAnalytics"/>
         </menu-item>   
-        <menu-item name="channelSalesChart" title="Sales Mix Trend">
+     <!--    <menu-item name="channelSalesChart" title="Sales Mix Trend">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -288,7 +288,7 @@
             	</or>            
             </condition>  
         	<link target="QuotaAnalytics"/>
-        </menu-item>  
+        </menu-item>   -->
        <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>
