@@ -245,11 +245,11 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Loom Type Id:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='loomTypeId' name='loomTypeId' value='"+loomTypeId+"'/></td></tr>";
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Quantity:</td><td align='left' width='50%'><input class='h3' type='number' id='quantity' name='quantity' value='"+quantity+"'/></td></tr>";
 		
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>From Date:</td><td align='left' width='50%'><input type='text' size='30' name='fromDate' id='fromDate' value='"+fromDate+"' onmouseover='datepick()'><input class='h3' type='hidden' readonly id='oldFromDate' name='oldFromDate' value='"+oldFromDate+"'/></td></tr>";
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Thru Date:</td><td align='left' width='50%'><input type='text' size='30' name='thruDate' id='thruDate' onmouseover='datepick()'></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>From Date:</td><td align='left' width='50%'><input type='text' size='30' name='fromDate' id='fromDate1' value='"+fromDate+"' readonly><input class='h3' type='hidden' readonly id='oldFromDate' name='oldFromDate' value='"+oldFromDate+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Thru Date:</td><td align='left' width='50%'><input type='text' size='30' name='thruDate' id='thruDate' value='"+thruDate+"' onmouseover='datepick()'></td></tr>";
 		
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Accept' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		title = "<center>Accept Shipment<center><br />";
+		title = "<center>Update Looms<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};

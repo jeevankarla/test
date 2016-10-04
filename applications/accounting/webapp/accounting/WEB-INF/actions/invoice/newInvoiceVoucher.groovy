@@ -169,16 +169,12 @@ invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, fal
 invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 
-invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
+invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY","ENTRY_TAX")));
 invoiceItemLevelAdjustments = [:];
 
 
-
 double totTaxAmount = 0;
-
 double mgpsAmt = 0;
-
-
 
 
 int i=0;
@@ -194,16 +190,13 @@ for (eachList in invoiceItemList) {
 	// Debug.log("invoiceAdjItemList====+"+i+"======="+invoiceAdjItemList);
 	
 	
-	
-	
-	
 	 itemAdjustList = [];
 	  
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
 		
 		 
-		   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+		   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE" || eachItem.invoiceItemTypeId=="ENTRY_TAX"){
 		  tempMap = [:];
 		  
 		  invoiceForPercentage = delegator.findOne("Invoice",[invoiceId : eachItem.invoiceId] , false);
@@ -230,10 +223,15 @@ for (eachList in invoiceItemList) {
 			  }else{
 			  invoiceGrandTotal = invoiceForPercentage.invoiceGrandTotal;
 			  
-			  if(itemValue != 0)
+			  if(itemValue != 0){
 			  percentage = invoiceGrandTotal/itemValue;
-			  else
+			   if(eachItem.invoiceItemTypeId == "ENTRY_TAX")
+			     percentage = 1;
+			  }else{
 			  percentage = 0;
+			  }
+			  
+			  
 			  
 			  tempMap.put("percentage", percentage);
 			  }
