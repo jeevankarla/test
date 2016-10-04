@@ -13314,11 +13314,9 @@ Debug.log("taxRateList =============="+taxRateList);
 							 
 							 Debug.log("schemeTimePeriodId================="+schemeTimePeriodId);
 							
-						 }else{
+						 }/*else{
 							 return ServiceUtil.returnError("There no active Year scheme Time Periods"); 
-						 }
-						
-						
+						 }*/
 						
 						
 						if(UtilValidate.isNotEmpty(schemeTimePeriodId)){
