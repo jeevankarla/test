@@ -1500,9 +1500,11 @@
          	<field name="fromDate" title="${uiLabelMap.fromDate}"><display/></field>
          	<field name="thruDate" title="${uiLabelMap.thruDate}"><display/></field>
          	<field name="quotaPerLoom" title="Total Eligibility"><display description="${(SchemeCatQty[0].maxQty)*(quantity)}"></display></field>
-         	<field name="EditLoom" title="Edit Loom" widget-style="buttontext">
+         <!-- 	<field name="EditLoom" title="Edit Loom" widget-style="buttontext">
              	<hyperlink  target-type="plain" description="Edit"  target="javascript:LoomEditForm('${partyId}','${loomTypeId}','${quantity}','${fromDate}','${thruDate}');"></hyperlink>
-        	</field>
+        	</field>  -->
+        	
+        	
            <!--  <field name="deleteLink" title="Delete" widget-style="buttontext">
                 <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
                    <parameter param-name="partyId"/>
