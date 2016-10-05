@@ -244,7 +244,8 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<div class="lefthalf">
+			<#--	
+			<div class="lefthalf">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
@@ -265,7 +266,7 @@ $(document).ready(function(){
 						</div>
 					</div>
 				</div>
-				</div>
+				</div>-->
 				<#assign formAction ='processNewSalesInvoice'>	
 				<#if partyId?exists>
 			    	<div align="center">
