@@ -13205,11 +13205,12 @@ Debug.log("taxRateList =============="+taxRateList);
 		String oldFromDateStr = (String)context.get("oldFromDate");
 		String thruDateStr = (String)context.get("thruDate");
 		
+		TimeZone timeZone = null;
+		timeZone = TimeZone.getDefault();
+		
 		Timestamp fromDate = null;
 		Timestamp thruDate = null;
 		Timestamp oldFromDate = null;
-		
-		try{
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	       	if(UtilValidate.isNotEmpty(fromDateStr)){
@@ -13240,17 +13241,131 @@ Debug.log("taxRateList =============="+taxRateList);
 	         	 }
 	       	} 
 	       	
-	       	
-	       	fromDate = UtilDateTime.getDayStart(fromDate);
-	       	
+		
+		
+		 Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
+		 
+		 getRelavantNoOfMonths.put("01",3);
+		 getRelavantNoOfMonths.put("02",2);
+		 getRelavantNoOfMonths.put("03",1);
+		 
+		 getRelavantNoOfMonths.put("04",3);
+		 getRelavantNoOfMonths.put("05",2);
+		 getRelavantNoOfMonths.put("06",1);
+		 
+		 getRelavantNoOfMonths.put("07",3);
+		 getRelavantNoOfMonths.put("08",2);
+		 getRelavantNoOfMonths.put("09",1);
+		 
+		 getRelavantNoOfMonths.put("10",3);
+		 getRelavantNoOfMonths.put("11",2);
+		 getRelavantNoOfMonths.put("12",1);
+		 
+		
+		 List DatesList = FastList.newInstance();
+		 
+		String fromDateArray[] = fromDateStr.split("-");
+		
+		String fromDateMonth = fromDateArray[1];
+		
+		int dateRangCount = getRelavantNoOfMonths.get(fromDateMonth);
+		
+		Debug.log("fromDateMonth========================="+fromDateMonth);
 
+		Debug.log("dateRangCount========================="+dateRangCount);
+		
+	     fromDate = UtilDateTime.getDayStart(fromDate);
+	     
 	       	
-	       	GenericValue partyLoom = delegator.findOne("PartyLoom",UtilMisc.toMap("partyId",partyId, "loomTypeId",loomTypeId, "fromDate", fromDate),false);
+	     Timestamp currentMonthStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(fromDate)); 
+	     
+	     
+         Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(currentMonthStart,timeZone, locale);
+	       	
+ 		Debug.log("currentMonthStart========================="+currentMonthStart);
+		//Debug.log("currentMonthEnd========================="+currentMonthEnd);
+		
+		if(dateRangCount == 1){
+  		 DatesList.add(currentMonthStart);
+		}
+		
+		if(dateRangCount == 2){
+	         Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+		     
+	 		Debug.log("nextMonthDate========================="+nextMonthDate);
+
+	         
+	  		 DatesList.add(currentMonthStart);
+	  		 DatesList.add(nextMonthDate);
+		}
+		
+		if(dateRangCount == 3){
+	         Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+		     
+	         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
+	         
+	         Timestamp thirdMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(nextMonthEnd, 1)); 
+	         
+	 		 Debug.log("thirdMonthDate========================="+thirdMonthDate);
+
+	         
+	  		 DatesList.add(currentMonthStart);
+	  		 DatesList.add(nextMonthDate);
+	  		 DatesList.add(thirdMonthDate);
+		}
+	       	
+ 		
+ 		
+		 Debug.log("DatesList========================="+DatesList);
+
+		 
+		 
+		 List<String> schemeTimePeriodList = FastList.newInstance();
+		 for (Object eachTimestampObject : DatesList) {
+			
+			 
+			 Timestamp eachTimestamp = null;
+			 
+				if(UtilValidate.isNotEmpty(eachTimestampObject)){
+		       		 try {
+		       			eachTimestamp = new java.sql.Timestamp(sdf.parse(String.valueOf(eachTimestampObject)).getTime());
+		         	 } catch (ParseException e) {
+		         		Debug.logError(e, "Cannot parse date string: "+ eachTimestampObject, module);			
+		         		return ServiceUtil.returnError("Cannot parse date string: "+ eachTimestampObject);
+		         	 }
+		       	}
+			 
+		 
+		 String schemeTimePeriodId = "";
+		 List<GenericValue> yearSchemeTimePeriodList =null;
+		 List conditionList = FastList.newInstance();
+		 try{
+			 conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"TEN_PERC_PERIOD"));
+			 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS,new java.sql.Date(eachTimestamp.getTime())));
+			 EntityCondition schemeyearCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			 yearSchemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeyearCondition, null, null, null,false); 
+			 
+			 Debug.log("yearSchemeTimePeriodList================="+yearSchemeTimePeriodList);
+			 
+			if(UtilValidate.isNotEmpty(yearSchemeTimePeriodList)){
+	  		     GenericValue yearSchemeTimePeriod = EntityUtil.getFirst(yearSchemeTimePeriodList);
+				 schemeTimePeriodId=yearSchemeTimePeriod.getString("schemeTimePeriodId");
+				 schemeTimePeriodList.add(schemeTimePeriodId);
+			 }
+		 }catch(Exception e){
+	        	Debug.logError(e, module);
+	        	
+	        }
+		 
+		 
+		 }
+		 Debug.log("schemeTimePeriodList================="+schemeTimePeriodList);
+
+ 		/*
+	      	GenericValue partyLoom = delegator.findOne("PartyLoom",UtilMisc.toMap("partyId",partyId, "loomTypeId",loomTypeId, "fromDate", fromDate),false);
 	       	Debug.log("partyLoom======================="+partyLoom);
 	       	
-	       	
 	        if(UtilValidate.isNotEmpty(partyLoom)){
-	       	
 
 	        	BigDecimal availableQuantity =  partyLoom.getBigDecimal("quantity");
 	        	
@@ -13283,43 +13398,19 @@ Debug.log("taxRateList =============="+taxRateList);
 			        partyLoom.set("quantity", numberOfCattleBigDecimal);
 			        partyLoom.set("quotaPerLoom", quotaPerLoom);
 			        
-			         Timestamp currentMonthStart = UtilDateTime.getMonthStart(fromDate); 
-			         //Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(fromDate);
+			        if(UtilValidate.isNotEmpty(thruDate)){
+				        partyLoom.set("thruDate", thruDate);
+				     }
+				    try{
+						partyLoom.store();
+				      }catch(Exception e){
+				        	Debug.logError(e, module);
+				        	
+				      }
+
 			        
-					 Debug.log("currentMonthStart================="+currentMonthStart);
-
-			         
-			        List conditionList = FastList.newInstance();
-					 String schemeTimePeriodId = "";
-					 List<GenericValue> yearSchemeTimePeriodList =null;
-					 
-					 
-					try{
-						 conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"TEN_PERC_PERIOD"));
-						 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS,new java.sql.Date(currentMonthStart.getTime())));
-						 
-						 EntityCondition schemeyearCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-						 yearSchemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeyearCondition, null, null, null,false); 
-						 
-
-						 Debug.log("yearSchemeTimePeriodList================="+yearSchemeTimePeriodList);
-
-						 
-						if(UtilValidate.isNotEmpty(yearSchemeTimePeriodList)){
-							
-				  		     GenericValue yearSchemeTimePeriod = EntityUtil.getFirst(yearSchemeTimePeriodList);
-
-							 schemeTimePeriodId=yearSchemeTimePeriod.getString("schemeTimePeriodId");
-							 
-							 
-							 Debug.log("schemeTimePeriodId================="+schemeTimePeriodId);
-							
-						 }/*else{
-							 return ServiceUtil.returnError("There no active Year scheme Time Periods"); 
-						 }*/
 						
-						
-						if(UtilValidate.isNotEmpty(schemeTimePeriodId)){
+					if(UtilValidate.isNotEmpty(schemeTimePeriodId)){
 						
 							 int res = availableQuantity.compareTo(numberOfCattleBigDecimal);
 
@@ -13398,78 +13489,14 @@ Debug.log("taxRateList =============="+taxRateList);
 										  }
 									}
 							 }
-						}
-					}catch(Exception e){
-			        	Debug.logError(e, module);
-			        	
-			        }
-		        }
-		        if(UtilValidate.isNotEmpty(thruDate)){
-		        partyLoom.set("thruDate", thruDate);
-		        }
-		        try{
-				partyLoom.store();
-		        }catch(Exception e){
-		        	Debug.logError(e, module);
-		        	
-		        }
-	        }
-	       	
-	      /* 	if(UtilValidate.isNotEmpty(partyLoom)){
-	       		if(oldFromDate.compareTo(fromDate) == 0){
-	       			
-	       			BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
-					int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
-			        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
-					
-			        partyLoom.set("quantity", numberOfCattleBigDecimal);
-			        partyLoom.set("quotaPerLoom", quotaPerLoom);
-					partyLoom.store();
-	       		}
-	       		else{
-					delegator.removeValue(partyLoom);
-					GenericValue newPartyLoom = delegator.makeValue("PartyLoom");        	 
-					newPartyLoom.set("partyId", partyId);
-					newPartyLoom.set("loomTypeId", loomTypeId);
-					newPartyLoom.set("fromDate", fromDate);
-					if(UtilValidate.isNotEmpty(thruDate)){
-						newPartyLoom.set("thruDate", thruDate);
-					}
-					
-					BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
-					int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
-			        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
-					
-			        newPartyLoom.set("quantity", numberOfCattleBigDecimal);
-			        newPartyLoom.set("quotaPerLoom", quotaPerLoom);
-					newPartyLoom.create();
-	       		}
-	       	}
-	       	else{
-	       		GenericValue newPartyLoom = delegator.makeValue("PartyLoom");        	 
-				newPartyLoom.set("partyId", partyId);
-				newPartyLoom.set("loomTypeId", loomTypeId);
-				newPartyLoom.set("fromDate", fromDate);
-				if(UtilValidate.isNotEmpty(thruDate)){
-					newPartyLoom.set("thruDate", thruDate);
 				}
-				
-				BigDecimal numberOfCattleBigDecimal = new BigDecimal(quantity);
-				int noOf = Integer.valueOf(loomsTypeMap.get(loomTypeId));
-		        BigDecimal quotaPerLoom = numberOfCattleBigDecimal.multiply(new BigDecimal(noOf));
-				
-				newPartyLoom.set("quantity", numberOfCattleBigDecimal);
-				newPartyLoom.set("quotaPerLoom", quotaPerLoom);
-				newPartyLoom.create();
-	       	}
-			*/
-		  
-		}catch(Exception e) {
-			// TODO: handle exception
-	    	Debug.logError(e, module);
-		}	
+						
+		        }
+		        
+	        }
+		       */	        
 		
-		return result;
+		 return result;
     }
 	
     
@@ -13491,6 +13518,9 @@ Debug.log("taxRateList =============="+taxRateList);
 		
 		Timestamp fromDate = null;
 		Timestamp thruDate = null;
+		
+		TimeZone timeZone = null;
+		timeZone = TimeZone.getDefault();
 		
 		
 		Debug.log("fromDateStr==============="+fromDateStr);
@@ -13516,6 +13546,245 @@ Debug.log("taxRateList =============="+taxRateList);
 	         		return ServiceUtil.returnError("Cannot parse date string: "+ thruDateStr);
 	         	 }
 	       	}
+	       	
+	       	List DatesList = FastList.newInstance();
+	       	
+	       	Debug.log("loomTypeId==============="+loomTypeId);
+	       	
+	       	if(loomTypeId.equals("COTTON_40ABOVE")){
+			
+			 Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
+			 
+			 getRelavantNoOfMonths.put("01",3);
+			 getRelavantNoOfMonths.put("02",2);
+			 getRelavantNoOfMonths.put("03",1);
+			 
+			 getRelavantNoOfMonths.put("04",3);
+			 getRelavantNoOfMonths.put("05",2);
+			 getRelavantNoOfMonths.put("06",1);
+			 
+			 getRelavantNoOfMonths.put("07",3);
+			 getRelavantNoOfMonths.put("08",2);
+			 getRelavantNoOfMonths.put("09",1);
+			 
+			 getRelavantNoOfMonths.put("10",3);
+			 getRelavantNoOfMonths.put("11",2);
+			 getRelavantNoOfMonths.put("12",1);
+			 
+			
+			 
+			 
+			String fromDateArray[] = fromDateStr.split("-");
+			
+			String fromDateMonth = fromDateArray[1];
+			
+			int dateRangCount = getRelavantNoOfMonths.get(fromDateMonth);
+			
+			Debug.log("fromDateMonth========================="+fromDateMonth);
+
+			Debug.log("dateRangCount========================="+dateRangCount);
+			
+		     fromDate = UtilDateTime.getDayStart(fromDate);
+		     
+		       	
+		     Timestamp currentMonthStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(fromDate)); 
+		     
+		     
+	         Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(currentMonthStart,timeZone, locale);
+		       	
+	 		Debug.log("currentMonthStart========================="+currentMonthStart);
+			//Debug.log("currentMonthEnd========================="+currentMonthEnd);
+			
+			if(dateRangCount == 1){
+	  		 DatesList.add(currentMonthStart);
+			}
+			
+			if(dateRangCount == 2){
+		         Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+			     
+		 		Debug.log("nextMonthDate========================="+nextMonthDate);
+
+		         
+		  		 DatesList.add(currentMonthStart);
+		  		 DatesList.add(nextMonthDate);
+			}
+			
+			if(dateRangCount == 3){
+		         Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+			     
+		         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
+		         
+		         Timestamp thirdMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(nextMonthEnd, 1)); 
+		         
+		 		 Debug.log("thirdMonthDate========================="+thirdMonthDate);
+
+		         
+		  		 DatesList.add(currentMonthStart);
+		  		 DatesList.add(nextMonthDate);
+		  		 DatesList.add(thirdMonthDate);
+			}
+			
+	       	}else if(loomTypeId.equals("COTTON_UPTO40")){
+	       		
+	       		Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
+				 
+				 getRelavantNoOfMonths.put("01",2);
+				 getRelavantNoOfMonths.put("02",1);
+				 
+				 getRelavantNoOfMonths.put("03",2);
+				 getRelavantNoOfMonths.put("04",1);
+				 
+				 getRelavantNoOfMonths.put("05",2);
+				 getRelavantNoOfMonths.put("06",1);
+				 
+				 getRelavantNoOfMonths.put("07",2);
+				 getRelavantNoOfMonths.put("08",1);
+				 
+				 getRelavantNoOfMonths.put("09",2);
+				 getRelavantNoOfMonths.put("10",1);
+				 
+				 getRelavantNoOfMonths.put("11",2);
+				 getRelavantNoOfMonths.put("12",1);
+				 
+				 
+				String fromDateArray[] = fromDateStr.split("-");
+				
+				String fromDateMonth = fromDateArray[1];
+				
+				int dateRangCount = getRelavantNoOfMonths.get(fromDateMonth);
+				
+				Debug.log("fromDateMonth========================="+fromDateMonth);
+
+				Debug.log("dateRangCount========================="+dateRangCount);
+				
+			     fromDate = UtilDateTime.getDayStart(fromDate);
+			     
+			       	
+			     Timestamp currentMonthStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(fromDate)); 
+			     
+			     
+		         Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(currentMonthStart,timeZone, locale);
+			       	
+		 		Debug.log("currentMonthStart========================="+currentMonthStart);
+				//Debug.log("currentMonthEnd========================="+currentMonthEnd);
+				
+				if(dateRangCount == 1){
+		  		 DatesList.add(currentMonthStart);
+				}
+				
+				if(dateRangCount == 2){
+			         Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+				     
+			 		Debug.log("nextMonthDate========================="+nextMonthDate);
+
+			         
+			  		 DatesList.add(currentMonthStart);
+			  		 DatesList.add(nextMonthDate);
+				}
+				
+	       		
+	       	}else{
+	       		
+	       		Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
+				 
+				 getRelavantNoOfMonths.put("01",1);
+				 getRelavantNoOfMonths.put("02",1);
+				 
+				 getRelavantNoOfMonths.put("03",1);
+				 getRelavantNoOfMonths.put("04",1);
+				 
+				 getRelavantNoOfMonths.put("05",1);
+				 getRelavantNoOfMonths.put("06",1);
+				 
+				 getRelavantNoOfMonths.put("07",1);
+				 getRelavantNoOfMonths.put("08",1);
+				 
+				 getRelavantNoOfMonths.put("09",1);
+				 getRelavantNoOfMonths.put("10",1);
+				 
+				 getRelavantNoOfMonths.put("11",1);
+				 getRelavantNoOfMonths.put("12",1);
+				 
+				String fromDateArray[] = fromDateStr.split("-");
+				
+				String fromDateMonth = fromDateArray[1];
+				
+				int dateRangCount = getRelavantNoOfMonths.get(fromDateMonth);
+				
+				Debug.log("fromDateMonth========================="+fromDateMonth);
+
+				Debug.log("dateRangCount========================="+dateRangCount);
+				
+			     fromDate = UtilDateTime.getDayStart(fromDate);
+			     
+			       	
+			     Timestamp currentMonthStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(fromDate)); 
+			     
+			     
+		         Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(currentMonthStart,timeZone, locale);
+			       	
+		 		Debug.log("currentMonthStart========================="+currentMonthStart);
+				//Debug.log("currentMonthEnd========================="+currentMonthEnd);
+				
+				if(dateRangCount == 1){
+		  		 DatesList.add(currentMonthStart);
+				}
+	       		
+	       	}
+		       	
+	       	
+	 		
+	 		
+			 Debug.log("DatesList========================="+DatesList);
+
+			 
+			 
+			 List<String> schemeTimePeriodList = FastList.newInstance();
+			 for (Object eachTimestampObject : DatesList) {
+				
+				 
+				 Timestamp eachTimestamp = null;
+				 
+					if(UtilValidate.isNotEmpty(eachTimestampObject)){
+			       		 try {
+			       			eachTimestamp = new java.sql.Timestamp(sdf.parse(String.valueOf(eachTimestampObject)).getTime());
+			         	 } catch (ParseException e) {
+			         		Debug.logError(e, "Cannot parse date string: "+ eachTimestampObject, module);			
+			         		return ServiceUtil.returnError("Cannot parse date string: "+ eachTimestampObject);
+			         	 }
+			       	}
+				 
+			 
+			 String schemeTimePeriodId = "";
+			 List<GenericValue> yearSchemeTimePeriodList =null;
+			 List conditionList = FastList.newInstance();
+			 try{
+				 conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"TEN_PERC_PERIOD"));
+				 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS,new java.sql.Date(eachTimestamp.getTime())));
+				 EntityCondition schemeyearCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				 yearSchemeTimePeriodList = delegator.findList("SchemeTimePeriod", schemeyearCondition, null, null, null,false); 
+				 
+				 Debug.log("yearSchemeTimePeriodList================="+yearSchemeTimePeriodList);
+				 
+				if(UtilValidate.isNotEmpty(yearSchemeTimePeriodList)){
+		  		     GenericValue yearSchemeTimePeriod = EntityUtil.getFirst(yearSchemeTimePeriodList);
+					 schemeTimePeriodId=yearSchemeTimePeriod.getString("schemeTimePeriodId");
+					 schemeTimePeriodList.add(schemeTimePeriodId);
+				 }
+			 }catch(Exception e){
+		        	Debug.logError(e, module);
+		        	
+		        }
+			 
+			 
+			 }
+			 Debug.log("schemeTimePeriodList================="+schemeTimePeriodList);
+
+	       	
+	       	
+	       	
+	       	
+	       	//===================================================================================
 		        
 		        List<GenericValue> PartyLoom = null;
 		  		List<GenericValue> PartyRelationship = null;
@@ -13584,8 +13853,79 @@ Debug.log("taxRateList =============="+taxRateList);
   		   				Debug.logError(e, module);
   		   				return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
   		   			}
+  		   	        
+  		   	        
+  		   	        
+  		   	        
+  		   	   List<GenericValue> PartyQuotaBalanceHistoryList =null;
+  		   	   
+  		   	   
+  		   	   int sharePerCentage = schemeTimePeriodList.size();
+  		   	   
+  		   	   
+  		   	   Debug.log("sharePerCentage================="+sharePerCentage);
+  		   	   
+  		   	   BigDecimal updateEligibleAmount =  quotaPerLoom.divide(new BigDecimal(sharePerCentage));
+  		   	   
+  		   	   updateEligibleAmount = (updateEligibleAmount.setScale(0, rounding));
+  		   	   
+  		   	   Debug.log("updateEligibleAmount================="+updateEligibleAmount);
+  		   	   
+				 
+				 conditionList.clear();
+					try{
+						 conditionList.add(EntityCondition.makeCondition("schemeId", EntityOperator.EQUALS,"TEN_PERCENT_MGPS"));
+						 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+						 conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,loomTypeId));
+						 conditionList.add(EntityCondition.makeCondition("schemeTimePeriodId", EntityOperator.IN,schemeTimePeriodList));
+						 EntityCondition PartyQuotaBalanceCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+						 PartyQuotaBalanceHistoryList = delegator.findList("PartyQuotaBalanceHistory", PartyQuotaBalanceCondition, null, null, null,false); 
+					}catch(Exception e){
+			        	Debug.logError(e, module);
+			        	
+			        }
+  		   	        
+  		   	        Debug.log("PartyQuotaBalanceHistoryList==========================="+PartyQuotaBalanceHistoryList);
+  		   	        
+  		   	        
+  		   	        
+  		   	        for (GenericValue eachBalanceHistory : PartyQuotaBalanceHistoryList) {
+  		   	        	
+  		   	        	BigDecimal quotaEligibility = eachBalanceHistory.getBigDecimal("quotaEligibility");
+  		   	        	
+  		   	            BigDecimal usedQuota = eachBalanceHistory.getBigDecimal("usedQuota");
+  		   	       
+  		   	            BigDecimal availableBalancequota = eachBalanceHistory.getBigDecimal("balancequota");
+  		   	            
+  		   	             BigDecimal balancequota = updateEligibleAmount.subtract(usedQuota);
+  		   	        	
+  		   	          if(balancequota.compareTo(BigDecimal.ZERO) < 0){
+  		   	              eachBalanceHistory.set("quotaEligibility",BigDecimal.ZERO);
+  		   	              eachBalanceHistory.set("usedQuota",BigDecimal.ZERO);
+  		   	              eachBalanceHistory.set("balancequota",BigDecimal.ZERO);
+  		   	              
+  		   	              try{
+  		   	              eachBalanceHistory.store();
+  		   	              }catch(Exception e) {
+  		   	 			// TODO: handle exception
+  		   	 	    	   Debug.logError(e, module);
+  		   	 		     }	
+  		   	              
+  		   	              
+  		   	          }else{
+  		   	        	  eachBalanceHistory.set("quotaEligibility",updateEligibleAmount);
+		   	              eachBalanceHistory.set("balancequota",balancequota);
+		   	              
+		   	              try{
+		   	              eachBalanceHistory.store();
+		   	              }catch(Exception e) {
+	  		   	 			// TODO: handle exception
+	  		   	 	    	   Debug.logError(e, module);
+	  		   	 		   }	
+		   	              
+  		   	          }
+					}
   		           }
-		        
 		  
 		}catch(Exception e) {
 			// TODO: handle exception
