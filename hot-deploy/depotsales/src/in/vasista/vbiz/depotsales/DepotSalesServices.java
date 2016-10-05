@@ -13865,11 +13865,11 @@ Debug.log("taxRateList =============="+taxRateList);
   		   	   
   		   	   Debug.log("sharePerCentage================="+sharePerCentage);
   		   	   
-  		   	   BigDecimal updateEligibleAmount =  quotaPerLoom.divide(new BigDecimal(sharePerCentage));
+  		   	   //BigDecimal updateEligibleAmount =  quotaPerLoom.divide(new BigDecimal(sharePerCentage));
   		   	   
-  		   	   updateEligibleAmount = (updateEligibleAmount.setScale(0, rounding));
+  		   	  // updateEligibleAmount = (updateEligibleAmount.setScale(0, rounding));
   		   	   
-  		   	   Debug.log("updateEligibleAmount================="+updateEligibleAmount);
+  		   	 //  Debug.log("updateEligibleAmount================="+updateEligibleAmount);
   		   	   
 				 
 				 conditionList.clear();
@@ -13897,7 +13897,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		   	       
   		   	            BigDecimal availableBalancequota = eachBalanceHistory.getBigDecimal("balancequota");
   		   	            
-  		   	             BigDecimal balancequota = updateEligibleAmount.subtract(usedQuota);
+  		   	             BigDecimal balancequota = quotaPerLoom.subtract(usedQuota);
   		   	        	
   		   	          if(balancequota.compareTo(BigDecimal.ZERO) < 0){
   		   	              eachBalanceHistory.set("quotaEligibility",BigDecimal.ZERO);
@@ -13913,7 +13913,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		   	              
   		   	              
   		   	          }else{
-  		   	        	  eachBalanceHistory.set("quotaEligibility",updateEligibleAmount);
+  		   	        	  eachBalanceHistory.set("quotaEligibility",quotaPerLoom);
 		   	              eachBalanceHistory.set("balancequota",balancequota);
 		   	              
 		   	              try{
