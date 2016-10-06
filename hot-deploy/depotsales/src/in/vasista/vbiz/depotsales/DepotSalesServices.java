@@ -13525,7 +13525,6 @@ Debug.log("taxRateList =============="+taxRateList);
 		
 		Debug.log("fromDateStr==============="+fromDateStr);
 		
-		try{
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	       	if(UtilValidate.isNotEmpty(fromDateStr)){
 	       		 try {
@@ -13551,7 +13550,65 @@ Debug.log("taxRateList =============="+taxRateList);
 	       	
 	       	Debug.log("loomTypeId==============="+loomTypeId);
 	       	
-	       	if(loomTypeId.equals("COTTON_40ABOVE")){
+	       	
+	         String fromDateArray[] = fromDateStr.split("-");
+				
+				String fromDateMonth = fromDateArray[1];
+				
+				
+				Debug.log("fromDateMonth========================="+fromDateMonth);
+				
+			     fromDate = UtilDateTime.getDayStart(fromDate);
+			     
+			       	
+			     Timestamp currentMonthStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(fromDate)); 
+		         Timestamp currentMonthEnd = UtilDateTime.getMonthEnd(currentMonthStart,timeZone, locale);
+
+	       	
+		      	if(loomTypeId.equals("COTTON_40ABOVE")){
+		         
+                 Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+			     
+		         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
+		         
+		         Timestamp thirdMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(nextMonthEnd, 1)); 
+		         
+		         if(fromDateMonth.equals("02") || fromDateMonth.equals("03")){
+		        	 DatesList.add(currentMonthStart);
+		         }else	 
+		         DatesList.add(currentMonthStart);
+		  		 DatesList.add(nextMonthDate);
+		  		 DatesList.add(thirdMonthDate);
+	      	     }
+		      	if(loomTypeId.equals("COTTON_UPTO40")){
+			         
+	                 Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+				     
+			         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
+			         
+			         if(fromDateMonth.equals("02") || fromDateMonth.equals("03")){
+			        	 DatesList.add(currentMonthStart);
+			         }else{	 
+			         DatesList.add(currentMonthStart);
+			  		 DatesList.add(nextMonthDate);
+		      	     }
+			         
+			         
+			      	}else{
+			      		
+			      		 Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
+				         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
+				         DatesList.add(currentMonthStart);
+			      		
+			      		
+			      		
+			      	}
+		      	
+		         
+	       	
+	       	
+       	
+	     /*  	if(loomTypeId.equals("COTTON_40ABOVE")){
 			
 			 Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
 			 
@@ -13731,7 +13788,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				}
 	       		
 	       	}
-		       	
+		     	*/
 	       	
 	 		
 	 		
@@ -13926,11 +13983,6 @@ Debug.log("taxRateList =============="+taxRateList);
   		   	          }
 					}
   		           }
-		  
-		}catch(Exception e) {
-			// TODO: handle exception
-	    	Debug.logError(e, module);
-		}	
 		
 		return result;
     }
