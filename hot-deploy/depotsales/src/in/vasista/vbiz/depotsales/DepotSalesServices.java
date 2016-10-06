@@ -13525,7 +13525,6 @@ Debug.log("taxRateList =============="+taxRateList);
 		
 		Debug.log("fromDateStr==============="+fromDateStr);
 		
-		try{
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	       	if(UtilValidate.isNotEmpty(fromDateStr)){
 	       		 try {
@@ -13574,20 +13573,25 @@ Debug.log("taxRateList =============="+taxRateList);
 		         
 		         Timestamp thirdMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(nextMonthEnd, 1)); 
 		         
+		         if(fromDateMonth.equals("02") || fromDateMonth.equals("03")){
+		        	 DatesList.add(currentMonthStart);
+		         }else	 
 		         DatesList.add(currentMonthStart);
 		  		 DatesList.add(nextMonthDate);
 		  		 DatesList.add(thirdMonthDate);
-		         
-		         
-		      	}if(loomTypeId.equals("COTTON_UPTO40")){
+	      	     }
+		      	if(loomTypeId.equals("COTTON_UPTO40")){
 			         
 	                 Timestamp nextMonthDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(currentMonthEnd, 1)); 
 				     
 			         Timestamp nextMonthEnd = UtilDateTime.getMonthEnd(nextMonthDate,timeZone, locale);
 			         
-			         
+			         if(fromDateMonth.equals("02") || fromDateMonth.equals("03")){
+			        	 DatesList.add(currentMonthStart);
+			         }else{	 
 			         DatesList.add(currentMonthStart);
 			  		 DatesList.add(nextMonthDate);
+		      	     }
 			         
 			         
 			      	}else{
@@ -13599,11 +13603,12 @@ Debug.log("taxRateList =============="+taxRateList);
 			      		
 			      		
 			      	}
+		      	
 		         
 	       	
 	       	
-/*	       	
-	       	if(loomTypeId.equals("COTTON_40ABOVE")){
+       	
+	     /*  	if(loomTypeId.equals("COTTON_40ABOVE")){
 			
 			 Map<String,Integer> getRelavantNoOfMonths = FastMap.newInstance();
 			 
@@ -13783,7 +13788,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				}
 	       		
 	       	}
-		     */  	
+		     	*/
 	       	
 	 		
 	 		
@@ -13978,11 +13983,6 @@ Debug.log("taxRateList =============="+taxRateList);
   		   	          }
 					}
   		           }
-		  
-		}catch(Exception e) {
-			// TODO: handle exception
-	    	Debug.logError(e, module);
-		}	
 		
 		return result;
     }
