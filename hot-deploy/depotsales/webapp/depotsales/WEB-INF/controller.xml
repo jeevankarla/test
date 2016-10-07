@@ -139,6 +139,10 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="CustomerDetails.csv">
+        <security https="true" auth="true"/>
+	    <response name="success" type="view" value="CustomerDetails"/>
+    </request-map>
      <request-map uri="otherAddressStore">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="otherAddressStore.groovy"/> 
@@ -2461,4 +2465,5 @@
 	<view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
 	<view-map name="CustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CustomerAssoc"/>
 	<view-map name="NewCustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewCustomerAssoc"/>
+	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
 </site-conf>
