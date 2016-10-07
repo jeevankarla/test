@@ -215,6 +215,10 @@
 	conditionDeopoList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,null));
 	conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
 	facilityDepoList = delegator.findList("Facility",conditionDepo,null,null,null,false);
+	
+	//Debug.log("facilityDepoList========w3232======"+facilityDepoList);
+	
+	
 	cond = [];
 	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
 	if(facilityDepoList && facilityDepoList.ownerPartyId){
@@ -222,6 +226,10 @@
 	}
 	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
 	societyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
+	
+	//Debug.log("societyList========w3232======"+societyList);
+	
+	
 	if(societyList){
 		societyList.each{ society ->
 			JSONObject newObj = new JSONObject();

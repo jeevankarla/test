@@ -103,12 +103,24 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityDepo = EntityUtil.getFirst(delegator.findList("Facility",condition,null,null,null,false));
 String Depo="NO";
 String DAO="";
+
+facilityType = "";
+
+
+
 if(UtilValidate.isNotEmpty(facilityDepo)){
    Depo="YES";
 	   if(UtilValidate.isNotEmpty(facilityDepo.openedDate)){
 	   	  DAO=UtilDateTime.toDateString(facilityDepo.openedDate,"dd-MM-yyyy");
 	   }
+	   
+	   if(facilityDepo.facilityTypeId == "YARN_HUB")
+	    facilityType = "(Yarn Hub)";
+	   
    }
+
+context.facilityType = facilityType;
+
 AllLoomDetails = delegator.findList("LoomType",null,null,null,null,false);
 
 AllLoomDetails.each{ eachloom ->
@@ -222,6 +234,7 @@ partyJSON.put("address2",address2);
 partyJSON.put("city",city);
 partyJSON.put("postalCode",postalCode);
 partyJSON.put("Depo",Depo);
+partyJSON.put("facilityType",facilityType);
 partyJSON.put("DAO",DAO);
 partyJSON.put("issueDate",issueDate);
 partyJSON.put("partyType",partyType);

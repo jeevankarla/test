@@ -589,6 +589,7 @@
 		       	  				   var Depo=contactDetails["Depo"];
 		       	  				   var DAO=contactDetails["DAO"];
 		       	  				   var issueDate=contactDetails["issueDate"];
+		       	  				   var facilityType=contactDetails["facilityType"];
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var partyType=contactDetails["partyType"];
@@ -610,7 +611,7 @@
 		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
-		       	  				   	$("#partyType").html("<h4>"+partyType+"</h4>");
+		       	  				   	$("#partyType").html("<h4>"+partyType+" "+facilityType+"</h4>");
 		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
 		       	  				    $('#loomTypes tr:last').after(tableElement);	
 		       	  				    
