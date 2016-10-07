@@ -15530,13 +15530,15 @@ Debug.log("taxRateList =============="+taxRateList);
 
     
     
-    public static Map<String, Object> roundingOfAdjustmentProblem(DispatchContext ctx, Map context) {
+    public static Map<String, Object> roundingOfAdjustmentAddition(DispatchContext ctx, Map context) {
     	Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		
 		String invoiceId = (String) context.get("invoiceId");
+		
+		BigDecimal amount = (BigDecimal) context.get("amount");
 		
 				
         invoiceId = invoiceId.trim();
@@ -15558,7 +15560,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	        	
 	        	
 	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
-	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,roundingList));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"ROUNDING_CHARGES"));
 	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
 	        	 try{
 	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -15574,8 +15576,72 @@ Debug.log("taxRateList =============="+taxRateList);
 	        	 
 		        	for(GenericValue eachInvoiceItem : InvoiceItem){
 			        	
-			        	eachInvoiceItem.set("amount",BigDecimal.ZERO); 
-		        		eachInvoiceItem.set("itemValue",BigDecimal.ZERO);
+			        	eachInvoiceItem.set("amount",amount); 
+		        		eachInvoiceItem.set("itemValue",amount);
+		        		
+		        		try{
+		        		eachInvoiceItem.store();
+		        		}catch(GenericEntityException e){
+		        			//Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+		        		}
+		        	}
+		        	
+			} 
+			
+        
+		return result;
+    
+    }    
+    
+    
+    public static Map<String, Object> roundingOfAdjustmentSubtraction(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+		String invoiceId = (String) context.get("invoiceId");
+		
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		
+				
+        invoiceId = invoiceId.trim();
+        
+        String invoiceIdArry[] = invoiceId.split(",");
+        
+         List invoiceIds = Arrays.asList(invoiceIdArry);
+        
+            List conditions = FastList.newInstance();
+        
+               List<GenericValue> InvoiceItem = null;
+	        	
+	        	List conditionList = FastList.newInstance();;
+	        	
+	        	List<String> roundingList = FastList.newInstance();;
+	        	
+	        	roundingList.add("ROUNDING_CHARGES");
+	        	roundingList.add("ROUNDING_OFF");
+	        	
+	        	
+	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"ROUNDING_OFF"));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+	        	 try{
+	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	        	 
+	        	 }catch(GenericEntityException e){
+	 				//Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+	 			}
+	        	 
+	        	 
+	        	 //Debug.log("InvoiceItem================"+InvoiceItem);
+	        	 
+	        	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+	        	 
+		        	for(GenericValue eachInvoiceItem : InvoiceItem){
+			        	
+			        	eachInvoiceItem.set("amount",amount.negate()); 
+		        		eachInvoiceItem.set("itemValue",amount.negate());
 		        		
 		        		try{
 		        		eachInvoiceItem.store();
