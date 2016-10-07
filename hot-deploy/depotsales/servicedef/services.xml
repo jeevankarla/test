@@ -615,6 +615,11 @@
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
     
+    <service name="roundingOfAdjustmentProblem" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="roundingOfAdjustmentProblem" transaction-timeout="6000000">
+        <description>roundingOfAdjustmentProblem</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     
 </services>
 
