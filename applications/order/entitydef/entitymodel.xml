@@ -3643,5 +3643,40 @@ under the License.
       	<field name="esevaCharges" type="currency-amount"></field>   
       	<field name="aponlineCharges" type="currency-amount"></field>       	         	    	   
         <prim-key field="salesDate"/>
-    </entity>    
+    </entity>
+    
+     <entity entity-name="IndentSummaryDetails"
+             package-name="org.ofbiz.order"
+             title="Indent Summary  Details Entity">
+      <field name="indentId" type="id-ne"></field>
+<!--       <field name="productId" type="id-ne"></field> -->
+      <field name="indentDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="salesChannel" type="id"></field>
+      <field name="supplierId" type="id-ne"></field>
+      <field name="branchId" type="id-ne"></field>
+      <field name="regionId" type="id-ne"></field>
+      <field name="schemeCategory" type="id-ne"></field>
+      <field name="totalAmount" type="currency-amount"></field>
+      <field name="discountAmount" type="currency-amount"></field>
+      <field name="quantity" type="fixed-point"></field>
+      <field name="shippedQty" type="fixed-point"></field>
+      <field name="quotaQty" type="fixed-point"></field>
+      
+      <prim-key field="indentId"/>
+<!--       <prim-key field="productId"/> -->
+      
+		<relation type="one" fk-name="ORA_SPTY" title="suplierPartyId"
+			rel-entity-name="Party">
+			<key-map field-name="suplierPartyId" rel-field-name="partyId" />
+		</relation>
+		<!-- <relation type="one" fk-name="ORA_PRD" title="productId"
+			rel-entity-name="Product">
+			<key-map field-name="productId" rel-field-name="productId" />
+		</relation> -->
+		<relation type="one" fk-name="ORA_ORD" title="indentId"
+			rel-entity-name="OrderHeader">
+			<key-map field-name="indentId" rel-field-name="orderId" />
+		</relation>
+    </entity>  
 </entitymodel>
