@@ -71,6 +71,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row">
+			<form id="CustomerDetails" name="CustomerDetails" method="post" action="<@ofbizUrl>CustomerDetails.csv</@ofbizUrl>" target="_blank">	
+				<td width="30%">New Customer Masters</td>
+				<td width="15%"></td>
+			    <td width="15%"></td>
+      			 <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
+      			<td width="15%"></td>
+				<td width="10%">
+				<input type="submit" value="CSV" onClick="javascript:appendParams('CustomerDetails', '<@ofbizUrl>CustomerDetails.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+        </tr>
+      	<tr class="alternate-row">
 			<form id="customerMasters" name="customerMasters" method="post" action="<@ofbizUrl>CustomerMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Customer Masters</td>
 				<td width="15%"></td>
