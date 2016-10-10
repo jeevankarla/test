@@ -12598,6 +12598,7 @@ Debug.log("taxRateList =============="+taxRateList);
   		GenericValue userLogin = (GenericValue) context.get("userLogin");
   		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
   		String orderId = (String) context.get("orderId");
+  		String shipmentId = (String) context.get("shipmentId");
   		String invoiceDateStr = (String) context.get("invoiceDate");
   		String tallyRefNo = (String) context.get("tallyRefNo");
   		Locale locale = (Locale) context.get("locale");
@@ -12606,7 +12607,6 @@ Debug.log("taxRateList =============="+taxRateList);
 		Timestamp effectiveDate=UtilDateTime.nowTimestamp();
 			Map<String, Object> createInvoice = FastMap.newInstance();
 			
-			Debug.log("invoiceDateStr========================="+invoiceDateStr);
 			
 			if (UtilValidate.isNotEmpty(invoiceDateStr)) { //2011-12-25 18:09:45
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");             
@@ -12623,7 +12623,6 @@ Debug.log("taxRateList =============="+taxRateList);
 			}
 			
 
-			Debug.log("invoiceDate1========================="+invoiceDate);
 
   		/*try{
   		createInvoice = dispatcher.runSync("createInvoiceForOrder", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));
@@ -12675,10 +12674,14 @@ Debug.log("taxRateList =============="+taxRateList);
 			 try {
 			
   		Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", orderItems, "eventDate", invoiceDate, "userLogin", userLogin);
-        //serviceContext.put("shipmentId",shipmentId);
+        serviceContext.put("shipmentId",shipmentId);
   		//serviceContext.put("purposeTypeId","DEPOT_YARN_SALE");
-       
-  		  createInvoice = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+  		createInvoice = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
+  		if(ServiceUtil.isError(createInvoice)){
+			Debug.logError("Unable to generate Invoice: " + ServiceUtil.getErrorMessage(createInvoice), module);
+			return ServiceUtil.returnError("Unable to generate Invoice  For party :");
+			
+		}
           //  String invoiceId1 = (String) result.get("invoiceId");
             
           //  Debug.log("result==============="+result);

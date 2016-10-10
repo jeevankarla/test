@@ -226,16 +226,17 @@ under the License.
         	<call-service service-name="createPayrolInvoiceItems" in-map-name="inputMap">
         	</call-service>        
         </if-compare> -->
-
-        <if-compare field="parameters.isPartyGroupInvoice" operator="equals" value="Y">
-            <set from-field="newEntity.invoiceId" field="inputMap.invoiceId"/>
-            <set from-field="newEntity.invoiceTypeId" field="inputMap.invoiceTypeId"/>            
-            <set from-field="newEntity.partyId" field="inputMap.partyId"/>  
-           <set from-field="parameters.currencyUomId" field="inputMap.currencyUomId"/>                               
-        	<call-service service-name="createPartyGroupInvoiceItems" in-map-name="inputMap">
-        	</call-service>        
-        </if-compare>
-                
+        
+         <if-not-empty field="parameters.isPartyGroupInvoice">
+	        <if-compare field="parameters.isPartyGroupInvoice" operator="equals" value="Y">
+	            <set from-field="newEntity.invoiceId" field="inputMap.invoiceId"/>
+	            <set from-field="newEntity.invoiceTypeId" field="inputMap.invoiceTypeId"/>            
+	            <set from-field="newEntity.partyId" field="inputMap.partyId"/>  
+	           <set from-field="parameters.currencyUomId" field="inputMap.currencyUomId"/>  
+	        	<call-service service-name="createPartyGroupInvoiceItems" in-map-name="inputMap">
+	        	</call-service>        
+	        </if-compare>
+		</if-not-empty>
     </simple-method>
 
     <simple-method method-name="copyInvoice" short-description="Create a new Invoice from an existing invoice">

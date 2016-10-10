@@ -270,10 +270,10 @@ public class InvoiceServices {
                 // call service, not direct entity op: delegator.create(invoice);
                 invoiceId = (String) createInvoiceResult.get("invoiceId");
                 
-                GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
-                invoicetypeId = (String) invoice.getString("invoiceTypeId");
-                
-                Debug.log("invoiceId=======232======"+invoiceId);
+                GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
+                if(UtilValidate.isNotEmpty(invoice)){
+                   invoicetypeId = (String) invoice.getString("invoiceTypeId");
+                }  
             }
 
             // order roles to invoice roles
@@ -537,7 +537,6 @@ public class InvoiceServices {
                 
                 for (GenericValue adj : itemAdjustments) {
                 	
-                	Debug.log("adj type id ==============="+adj.get("orderAdjustmentTypeId"));
                 	
                     // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
                 	BigDecimal adjAlreadyInvoicedQty = BigDecimal.ZERO;
@@ -563,13 +562,13 @@ public class InvoiceServices {
                     if (adj.get("amount") == null) { // JLR 17/4/7 : fix a bug coming from POS in case of use of a discount (on item(s) or sale, item(s) here) and a cash amount higher than total (hence issuing change)
                         continue;
                     }
-                    
-                    if(!ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
-                    	if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
-                            continue;
-                        }
-                    }
-                    
+                    if(UtilValidate.isNotEmpty(ignoreAdjustmentsList)){
+	                    if(!ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+	                    	if (adjAlreadyInvoicedAmount.abs().compareTo(adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING).abs()) > 0) {
+	                            continue;
+	                        }
+	                    }
+                    }    
                     
                     BigDecimal amount = ZERO;
                     BigDecimal totalQuota =BigDecimal.ZERO;
@@ -610,7 +609,7 @@ public class InvoiceServices {
                         	tenPercentAdjQty = billingQuantity;
                         }
                     	                    	
-                    	if(ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId"))){
+                    	if((UtilValidate.isNotEmpty(ignoreAdjustmentsList)) && (ignoreAdjustmentsList.contains(adj.getString("orderAdjustmentTypeId")))){
                     		if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(ZERO) > 0) ) {
                                 // pro-rate the amount
                                 // set decimals = 100 means we don't round this intermediate value, which is very important

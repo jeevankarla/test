@@ -293,7 +293,7 @@ under the License.
                  <td>${eachOrder.paidAmt?if_exists}</td>
            
                 <#if (eachOrder.salesButton) == "Y" >
-               <td><input type="button" name="salesInvoice" id="salesInvoice" value="SalesInvoice" onclick="javascript: raiseDepotInvoiceFromBranch('${eachOrder.orderId}');"/></td>
+               <td><input type="button" name="salesInvoice" id="salesInvoice" value="SalesInvoice" onclick="javascript: raiseDepotInvoiceFromBranch('${eachOrder.orderId}','${eachOrder.shipmentId}');"/></td>
                 <#else>
                 <td>${(eachOrder.salesNo)?if_exists}</td>
                 </#if>

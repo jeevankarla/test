@@ -866,11 +866,11 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		
 	}
 	
-	function raiseDepotInvoiceFromBranch(orderId) {	
+	function raiseDepotInvoiceFromBranch(orderId,shipmentId) {	
 		var message = "";
 		message += "<form action='raiseSalesInvoiceForDepotSales' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
 	   
-	    message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='orderId' name='orderId' value='"+orderId+"'/></td></tr>";
+	    message +=  "<tr class='h3'><td align='left' class='h3' width='50%'></td><td align='left' width='50%'><input class='h3' type='hidden' readonly id='orderId' name='orderId' value='"+orderId+"'/><input class='h3' type='hidden' id='shipmentId' name='shipmentId' value='"+shipmentId+"'/></td></tr>";
 	    
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Invoice Date:</td><td align='left' width='50%'><input type='text' name='invoiceDate' id='invoiceDate' onmouseover='datepick()'></td></tr>";
 		
