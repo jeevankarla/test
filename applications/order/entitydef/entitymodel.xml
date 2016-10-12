@@ -3648,9 +3648,9 @@ under the License.
      <entity entity-name="IndentSummaryDetails"
              package-name="org.ofbiz.order"
              title="Indent Summary  Details Entity">
-      <field name="indentId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
 <!--       <field name="productId" type="id-ne"></field> -->
-      <field name="indentDate" type="date-time"></field>
+      <field name="orderDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
       <field name="salesChannel" type="id"></field>
       <field name="supplierId" type="id-ne"></field>
@@ -3663,7 +3663,7 @@ under the License.
       <field name="shippedQty" type="fixed-point"></field>
       <field name="quotaQty" type="fixed-point"></field>
       
-      <prim-key field="indentId"/>
+      <prim-key field="orderId"/>
 <!--       <prim-key field="productId"/> -->
       
 		<relation type="one" fk-name="ORA_SPTY" title="suplierPartyId"
@@ -3674,9 +3674,9 @@ under the License.
 			rel-entity-name="Product">
 			<key-map field-name="productId" rel-field-name="productId" />
 		</relation> -->
-		<relation type="one" fk-name="ORA_ORD" title="indentId"
+		<relation type="one" fk-name="ORA_ORD" title="orderId"
 			rel-entity-name="OrderHeader">
-			<key-map field-name="indentId" rel-field-name="orderId" />
+			<key-map field-name="orderId" rel-field-name="orderId" />
 		</relation>
     </entity>  
 </entitymodel>

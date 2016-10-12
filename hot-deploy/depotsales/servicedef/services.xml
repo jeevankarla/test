@@ -615,6 +615,16 @@
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
     
+     <service name="runPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateIndentSummaryDetails">
+        <description>populate Order Summary </description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
+    </service>
+     <service name="getOrderSummary" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSummary">
+        <description>Populate Order Details </description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderSummaryMap" mode="OUT" type="Map"></attribute>
+    </service>
     
 </services>
 
