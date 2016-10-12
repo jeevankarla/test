@@ -2209,6 +2209,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         String orderId = (String) context.get("orderId");
         List orderIdsList =FastList.newInstance();
         String supplierId="";
+        String branchId="";
         List orderIdList = (List) context.get("orderIdList");
         if(UtilValidate.isNotEmpty(orderIdList)){
         	orderIdsList=orderIdList;
@@ -2224,7 +2225,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
             List condRoleList = FastList.newInstance();
             condRoleList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIdsList));
-            condRoleList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+//            condRoleList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, "SUPPLIER"));
                 //List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdList));
             cond1 = EntityCondition.makeCondition(condRoleList, EntityOperator.AND);
             EntityListIterator eli = null;
@@ -2251,28 +2252,52 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
     				}
                     try{
 	                    Map resultCtx = dispatcher.runSync("getOrderSummary", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
-	                    Map orderSummaryMap=(Map)resultCtx.get("orderSummaryMap");
-	                    BigDecimal quantity=(BigDecimal)orderSummaryMap.get("quantity");
-	                    BigDecimal discountAmount=(BigDecimal)orderSummaryMap.get("discountAmount");
-	                    BigDecimal quotaQty=(BigDecimal)orderSummaryMap.get("quotaQty");
 	                    if (ServiceUtil.isError(resultCtx)) {
 	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
 	    	  		  		Debug.logError(errMsg , module);
 	    	  		  		return ServiceUtil.returnError(errMsg);
 	    	  		  	}
-	    		    	GenericValue supplierDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,indentId)));
+	                    Map orderSummaryMap=(Map)resultCtx.get("orderSummaryMap");
+	                    BigDecimal quantity=(BigDecimal)orderSummaryMap.get("quantity");
+	                    BigDecimal discountAmount=(BigDecimal)orderSummaryMap.get("discountAmount");
+	                    BigDecimal quotaQty=(BigDecimal)orderSummaryMap.get("quotaQty");
+	                    List conditionList = FastList.newInstance();
+	        			conditionList.add(EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,indentId));
+	        			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+	        			EntityCondition sppCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		    	GenericValue supplierDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(orderRoles,sppCond));
 	                    if(UtilValidate.isNotEmpty(supplierDetails)){
 		    		    	supplierId=supplierDetails.getString("partyId");
 	                    }
+	                    conditionList.clear();
+	                    conditionList.add(EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,indentId));
+	        			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	        			EntityCondition branchcond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		    	GenericValue branchDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(orderRoles,branchcond));
+	                    if(UtilValidate.isNotEmpty(branchDetails)){
+		    		    	branchId=branchDetails.getString("partyId");
+	                    }
+	                    Map ShipresultCtx = dispatcher.runSync("getOrderShippedQty", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
+	                    if (ServiceUtil.isError(ShipresultCtx)) {
+	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(ShipresultCtx);
+	    	  		  		Debug.logError(errMsg , module);
+	    	  		  		return ServiceUtil.returnError(errMsg);
+	    	  		  	}
+	                    BigDecimal shippedQuantity=(BigDecimal)ShipresultCtx.get("shippedQuantity");
+	                    BigDecimal poQuantity=(BigDecimal)ShipresultCtx.get("quantity");
+	                    Debug.log("shippedQuantity=============================="+shippedQuantity);
 	                    GenericValue indentSummaryDetails = delegator.makeValue("IndentSummaryDetails");
 	                    indentSummaryDetails.set("orderId", indentId);
 	                    indentSummaryDetails.set("orderDate", indentDate);
 	                    indentSummaryDetails.set("schemeCategory", scheme);
+	                    indentSummaryDetails.set("branchId", branchId);
 	                    indentSummaryDetails.set("statusId", statusId);
 	                    indentSummaryDetails.set("discountAmount", discountAmount);
 	                    indentSummaryDetails.set("supplierId", supplierId);
 	                    indentSummaryDetails.set("quantity", quantity);
+	                    indentSummaryDetails.set("poQuantity", poQuantity);
 	                    indentSummaryDetails.set("quotaQty", quotaQty);
+	                    indentSummaryDetails.set("shippedQty", shippedQuantity);
 	                    indentSummaryDetails.set("totalAmount", totalAmount);
 	                    indentSummaryDetails.set("salesChannel", salesChannelEnumId);
 						delegator.createOrStore(indentSummaryDetails);
@@ -2327,6 +2352,68 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
        orderSummaryMap.put("discountAmount",discountAmount);
        orderSummaryMap.put("quotaQty",quotaQty);
         result.put("orderSummaryMap",orderSummaryMap);
+	   return result;
+	}
+	public static Map<String,Object> getOrderShippedQty(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        String orderId = (String) context.get("orderId");
+        EntityCondition cond = null;
+        EntityCondition itemcond = null;
+        String extPOId="";
+        BigDecimal quantity =BigDecimal.ZERO;
+        BigDecimal poQuantity =BigDecimal.ZERO;
+        List condList = FastList.newInstance();
+        condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+        condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+        
+            EntityListIterator eli = null;
+        try {
+		        List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+				
+				if(UtilValidate.isNotEmpty(orderAssoc)){
+					extPOId = (EntityUtil.getFirst(orderAssoc)).getString("orderId");
+				}
+				condList.clear();
+		        condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
+		            cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		        List itemCondList = FastList.newInstance();
+			    itemCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
+			    itemCondList.add(EntityCondition.makeCondition("orderItemTypeId", EntityOperator.EQUALS, "PRODUCT_ORDER_ITEM"));
+			    itemcond = EntityCondition.makeCondition(itemCondList, EntityOperator.AND);    
+				Debug.log("extPOId===================================="+extPOId);
+				if(UtilValidate.isNotEmpty(extPOId)){
+					EntityListIterator ItemItr = delegator.find("OrderItem", itemcond, null, null, null, null);
+						if (ItemItr != null) {
+			                // reset each order
+			                GenericValue item = null;
+			                while ((item = ItemItr.next()) != null) {
+			                	 poQuantity = poQuantity.add(item.getBigDecimal("quantity"));
+			                }
+			                ItemItr.close();
+			            }
+					
+			            eli = delegator.find("ShipmentReceipt", cond, null, null, null, null);
+			            if (eli != null) {
+			                // reset each order
+			                GenericValue shipmentReceipt = null;
+			                while ((shipmentReceipt = eli.next()) != null) {
+			                	 quantity = quantity.add(shipmentReceipt.getBigDecimal("quantityAccepted"));
+			                }
+			                eli.close();
+			            }
+				}
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+		
+        result.put("quantity",poQuantity);
+        result.put("shippedQuantity",quantity);
 	   return result;
 	}
   	

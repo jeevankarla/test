@@ -3660,6 +3660,7 @@ under the License.
       <field name="totalAmount" type="currency-amount"></field>
       <field name="discountAmount" type="currency-amount"></field>
       <field name="quantity" type="fixed-point"></field>
+      <field name="poQuantity" type="fixed-point"></field>
       <field name="shippedQty" type="fixed-point"></field>
       <field name="quotaQty" type="fixed-point"></field>
       
