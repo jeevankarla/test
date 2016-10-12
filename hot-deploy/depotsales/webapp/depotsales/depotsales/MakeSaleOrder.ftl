@@ -179,6 +179,7 @@
 	 }
 	 	 	   
 	function showInventorySaleQTip(productId, productName,quantityOnHandTotal, unitCost, inventoryItemId, productStoreId, uom, bundleWeight,bundleUnitPrice,balancedQty) {
+	var bundleUnitPrice=bundleUnitPrice.replace(/,/g,'');
 		var message = "";
 		message += "<form action='processInventorySalesOrder' method='post' onsubmit='return disableSubmitButton();' name='createSaleIndent' id='createSaleIndent'><table cellspacing=10 cellpadding=10>";
 		
