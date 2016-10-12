@@ -71,7 +71,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			}
 		}
 //	 Debug.log("===partyIdNameMap=====>"+partyIdNameMap);
-	 Debug.log("===branchROMap=====>"+branchROMap);
+//	 Debug.log("===branchROMap=====>"+branchROMap);
 		
  conditionList.clear();
  
@@ -103,7 +103,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
 			 partyId = eachItem.getAt("branchId");
-			 Debug.log("partyId============================="+eachItem.get("shippedQty"));
 			 
 			 completed = 0;
 				 if (eachItem.get("shippedQty")) {
@@ -114,7 +113,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 totalQty = new BigDecimal(eachItem.getAt("quantity"));
 			 totalPoQty = new BigDecimal(eachItem.getAt("poQuantity"));
 			 
-			 Debug.log("totalQty============================="+totalQty);
 			 if (DataMap.containsKey(partyId)) {
 				 branchDetails = DataMap.get(partyId);
 				 branchDetails.putAt("poQty", totalPoQty+ branchDetails.get("poQty"));
