@@ -2285,7 +2285,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    	  		  	}
 	                    BigDecimal shippedQuantity=(BigDecimal)ShipresultCtx.get("shippedQuantity");
 	                    BigDecimal poQuantity=(BigDecimal)ShipresultCtx.get("quantity");
-	                    Debug.log("shippedQuantity=============================="+shippedQuantity);
 	                    GenericValue indentSummaryDetails = delegator.makeValue("IndentSummaryDetails");
 	                    indentSummaryDetails.set("orderId", indentId);
 	                    indentSummaryDetails.set("orderDate", indentDate);
@@ -2385,7 +2384,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			    itemCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
 			    itemCondList.add(EntityCondition.makeCondition("orderItemTypeId", EntityOperator.EQUALS, "PRODUCT_ORDER_ITEM"));
 			    itemcond = EntityCondition.makeCondition(itemCondList, EntityOperator.AND);    
-				Debug.log("extPOId===================================="+extPOId);
 				if(UtilValidate.isNotEmpty(extPOId)){
 					EntityListIterator ItemItr = delegator.find("OrderItem", itemcond, null, null, null, null);
 						if (ItemItr != null) {
