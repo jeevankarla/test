@@ -616,6 +616,12 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderSummaryMap" mode="OUT" type="Map"></attribute>
     </service>
+      <service name="getOrderShippedQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderShippedQty">
+        <description>Populate Order Details </description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="shippedQuantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="quantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
+    </service>
     
     
      <service name="createPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createPartyLooms" >
