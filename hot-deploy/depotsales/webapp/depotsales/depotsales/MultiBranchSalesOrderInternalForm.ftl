@@ -314,7 +314,13 @@
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
+				//orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
+				
+				orderAdjustmentsList.push("CESS");
+				orderAdjustmentsList.push("INSURANCE_CHGS");
+				orderAdjustmentsList.push("OTHER_CHARGES");
+				orderAdjustmentsList.push("PACKING_FORWARDIG");
+				
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
@@ -367,7 +373,13 @@
 				
 				// Purchase Order Adjustments list
 				var purOrderAdjustmentsList = [];
-				purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				//purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				
+				purOrderAdjustmentsList.push("CESS");
+				purOrderAdjustmentsList.push("INSURANCE_CHGS");
+				purOrderAdjustmentsList.push("OTHER_CHARGES");
+				purOrderAdjustmentsList.push("PACKING_FORWARDIG");
+				
 				
 				var purOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "purOrderAdjustmentsList_o_" + rowCount).val(purOrderAdjustmentsList);
 				jQuery(formId).append(jQuery(purOrderAdjustmentItem));	
@@ -1250,6 +1262,9 @@
 	   	  				var defaultTaxMapPur =result["defaultTaxMap"];
 	   	  				var taxValueMapPur =result["taxValueMap"];
 	   	  				
+	   	  				//alert(JSON.stringify(defaultTaxMapPur));
+	   	  				//alert(JSON.stringify(taxValueMapPur));
+	   	  				
 	   	  				var purOrderAdjustmentsList = result["orderAdjustmentsList"];
 	   	  				data[row]["purOrderAdjustmentsList"] = purOrderAdjustmentsList;
 	   	  				
@@ -1262,6 +1277,10 @@
 	   	  				
 	   	  				data[row]["defaultTaxMapPur"] = defaultTaxMapPur;
 	   	  				data[row]["taxValueMapPur"] = taxValueMapPur;
+	   	  				
+	   	  				
+	   	  				//alert(JSON.stringify(data[row]["defaultTaxMapPur"]));
+	   	  				
 	   	  				
 	   	  				var count = 0;
 						$.each(taxValueMapPur, function(key, value) {
@@ -1332,13 +1351,24 @@
 	   	  				var defaultTaxMap =result["defaultTaxMap"];
 	   	  				var taxValueMap =result["taxValueMap"];
 	   	  				
+	   	  				//alert("defaultTaxMap==============="+JSON.stringify(defaultTaxMap));
+	   	  				
+	   	  				//alert("taxValueMap==============="+JSON.stringify(taxValueMap));
+	   	  				
 	   	  				var orderAdjustmentsList =result["orderAdjustmentsList"];
+	   	  				
+	   	  				//alert("orderAdjustmentsList==============="+JSON.stringify(orderAdjustmentsList));
+	   	  				
 	   	  				data[row]["orderAdjustmentsList"] = orderAdjustmentsList;
 	   	  				
 	   	  				var totalOtherCharges = 0;
 	   	  				var orderAdjustmentTypeList = [];
 	   	  				for(var i=0;i<orderAdjustmentsList.length;i++){
 	   	  					var orderAdjustmentType = orderAdjustmentsList[i];
+	   	  					
+	   	  					//alert("orderAdjustmentType==============="+JSON.stringify(orderAdjustmentType));
+	   	  					
+	   	  					//alert("orderAdjustmentTypeId==============="+JSON.stringify(orderAdjustmentType["orderAdjustmentTypeId"]));
 	   	  					orderAdjustmentTypeList.push(orderAdjustmentType["orderAdjustmentTypeId"]);
 	   	  					
 	   	  					if(data[row][orderAdjustmentType["orderAdjustmentTypeId"]]){

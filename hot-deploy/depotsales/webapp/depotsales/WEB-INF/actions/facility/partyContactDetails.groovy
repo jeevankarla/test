@@ -100,21 +100,23 @@ if(contactMechesDetails){
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,parameters.partyId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-facilityDepo = EntityUtil.getFirst(delegator.findList("Facility",condition,null,null,null,false));
+facilityDepo = delegator.findList("Facility",condition,null,null,null,false);
 String Depo="NO";
 String DAO="";
 
 facilityType = "";
 
 
-
 if(UtilValidate.isNotEmpty(facilityDepo)){
+	
+	facilityTypeIds = EntityUtil.getFieldListFromEntityList(facilityDepo, "facilityTypeId", true);
+	
    Depo="YES";
-	   if(UtilValidate.isNotEmpty(facilityDepo.openedDate)){
-	   	  DAO=UtilDateTime.toDateString(facilityDepo.openedDate,"dd-MM-yyyy");
+	   if(UtilValidate.isNotEmpty(facilityDepo[0].openedDate)){
+	   	  DAO=UtilDateTime.toDateString(facilityDepo[0].openedDate,"dd-MM-yyyy");
 	   }
 	   
-	   if(facilityDepo.facilityTypeId == "YARN_HUB")
+	   if(facilityTypeIds.contains("YARN_HUB"))
 	    facilityType = "(Yarn Hub)";
 	   
    }
