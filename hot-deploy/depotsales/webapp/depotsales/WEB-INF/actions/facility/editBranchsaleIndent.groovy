@@ -463,7 +463,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("amount", amount);
 			
 			// Temporatily Preparing for taxes until login is been build to get it from the UI. 
-			totalTaxAmt = 0;
+			/*totalTaxAmt = 0;
 			cond=[];
 			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
 			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE"]));
@@ -522,6 +522,152 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				newObj.put("checkE2Form", (checkE2FormAttr.get(0)).get("attrValue"));
 			}
 			
+			List orderAdjustmentsList = [];
+			adjCondList = [];
+			adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
+				orderAdjustmentsList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
+						
+				newObj.put("orderAdjustmentsList", orderAdjustmentsList);
+				
+			Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
+			
+			
+			*/
+			
+			
+			
+			//populate Taxes Details====================
+			
+			
+			resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
+			
+			defaultTaxMap = resultCtx.defaultTaxMap;
+			
+			taxValueMap = resultCtx.taxValueMap;
+			
+			
+			totalTaxAmt = 0;
+			cond=[];
+			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE"]));
+			
+			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
+	
+			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
+			for(i=0; i<taxList.size(); i++){
+				totalTaxAmt += (taxList.get(i)).get("amount");
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_AMT", (taxList.get(i)).get("amount"));
+			}
+			
+			
+			serviceChgPercent = 0;
+			serviceChg = 0;
+			cond1=[];
+			cond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond1.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, ["SERVICE_CHARGE"]));
+			
+			expr1 = EntityCondition.makeCondition(cond1,EntityOperator.AND);
+			serviceChargeList = EntityUtil.filterByCondition(orderAdjustmentsList,expr1);
+			if(UtilValidate.isNotEmpty(serviceChargeList)){
+				serviceChg = (serviceChargeList.get(0)).get("amount");
+				serviceChgPercent = (serviceChargeList.get(0)).get("sourcePercentage");
+			}
+			newObj.put("taxAmt", totalTaxAmt);
+			newObj.put("SERVICE_CHARGE_AMT", serviceChg);
+			newObj.put("SERVICE_CHARGE", serviceChgPercent);
+			
+			//========orderAdjustments===============
+			
+			adjustmentTotal = 0
+			cond.clear();
+			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE"]));
+			
+			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
+	
+			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
+			for(i=0; i<taxList.size(); i++){
+				adjustmentTotal += (taxList.get(i)).get("amount");
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_AMT", (taxList.get(i)).get("amount"));
+			}
+
+			
+			newObj.put("OTH_CHARGES_AMT", adjustmentTotal);
+			
+			
+			subsidyAmt = 0
+			cond.clear();
+			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+			
+			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
+	
+			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
+			
+			if(taxList){
+				for(i=0; i<taxList.size(); i++){
+					subsidyAmt += (taxList.get(i)).get("amount");
+				}
+			}
+
+			newObj.put("SUBSIDY", subsidyAmt);
+			
+			Debug.log("amount==============="+amount);
+			
+			Debug.log("totalTaxAmt==============="+totalTaxAmt);
+			
+			Debug.log("serviceChg==============="+serviceChg);
+			
+			Debug.log("adjustmentTotal==============="+adjustmentTotal);
+			
+			Debug.log("subsidyAmt==============="+subsidyAmt);
+			
+			totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+subsidyAmt);
+			
+			newObj.put("totPayable", totPayable);
+			
+			newObj.put("defaultTaxMap", defaultTaxMap);
+			
+			newObj.put("taxValueMap", taxValueMap);
+			
+			
+			//Debug.log("resultCtx=============="+resultCtx);
+			
+			
+			List orderAdjustmentsList = [];
+			adjCondList = [];
+			adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
+				orderAdjustmentsList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
+						
+				newObj.put("orderAdjustmentsList", orderAdjustmentsList);
+			
+			
+				
+				
+				
+				taxList1 = [];
+				taxList1.add("VAT_SALE");
+				taxList1.add("CST_SALE");
+				taxList1.add("VAT_SURCHARGE");
+				taxList1.add("CST_SURCHARGE");
+					
+					newObj.put("taxList", taxList1);
+				
+				
+			    purTaxList = [];
+				purTaxList.add("VAT_SALE");
+				purTaxList.add("CST_SALE");
+				purTaxList.add("VAT_SURCHARGE");
+				purTaxList.add("CST_SURCHARGE");
+					 
+					 
+					 newObj.put("purTaxList", purTaxList);
+					 
+				
+				
+			
 			orderItemsJSON.add(newObj);
 			if(OrderItemUIJSON.get(eachItem.productId)){
 				JSONObject existsObj = new JSONObject();
@@ -534,6 +680,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				OrderItemUIJSON.put(eachItem.productId, newObj);
 			}
 			
+		
 		}
 		
 		context.orderId = updateOrderId;

@@ -8363,8 +8363,8 @@ Debug.log("taxRateList =============="+taxRateList);
 			
 		}
 		
-		Debug.log("defaultTaxMap ============="+defaultTaxMap);
-		Debug.log("taxValueMap ============="+taxValueMap);
+		//Debug.log("defaultTaxMap ============="+defaultTaxMap);
+		//Debug.log("taxValueMap ============="+taxValueMap);
 		
 		result.put("defaultTaxMap", defaultTaxMap);
 		result.put("taxValueMap", taxValueMap);

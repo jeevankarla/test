@@ -411,11 +411,25 @@
 	}	
 	
 	function updateAmountByFieldPercentageSale(taxPercentItem, amtField){
+	
+	    // alert("taxPercentItem============="+JSON.stringify(taxPercentItem));
+	
+		//  alert("amtField============="+JSON.stringify(amtField));
+	
 		var amtFieldId = amtField.id;
 	 	var totalAmt = $('#'+amtFieldId).val()
 	 	var percentage = taxPercentItem.value;
+	 	
+	 			//  alert("percentage============="+JSON.stringify(percentage));
+	 	
+	 	
 	 	var taxPercItemId = taxPercentItem.id;
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
+	 	
+	 	//alert("taxPercItemId============="+JSON.stringify(taxPercItemId));
+	 	
+	 	//alert("taxValueItemId============="+JSON.stringify(taxValueItemId));
+	 	
 	 	if(percentage != 'undefined' && percentage != null && percentage.length){
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
@@ -543,6 +557,11 @@
 			rowIndex = index;
 			dataRow = gridRow;
 			productName = dataRow["cProductName"];
+			
+			//alert("orderAdjustmentsList=============="+JSON.stringify(dataRow));
+			
+			//alert("orderAdjustmentsList=============="+JSON.stringify(dataRow["orderAdjustmentsList"]));
+			
 			if(typeof(dataRow["orderAdjustmentsList"]) != 'undefined' || dataRow["orderAdjustmentsList"] != null){
 				orderAdjustmentsList = dataRow["orderAdjustmentsList"];	
 			}   
@@ -592,8 +611,14 @@
 			var defaultTaxMap = dataRow["defaultTaxMap"];
 			var taxValueMap = dataRow["taxValueMap"];
 			
+			//alert("defaultTaxMap==============="+JSON.stringify(defaultTaxMap));
+			
+			//alert("taxValueMap==============="+JSON.stringify(taxValueMap));
+			
 			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
 			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
+			
+			//alert("saleTaxList==============="+JSON.stringify(saleTaxList));
 			
 			var message = "";
 			var title = "";
