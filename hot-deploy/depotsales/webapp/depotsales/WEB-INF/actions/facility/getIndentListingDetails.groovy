@@ -32,6 +32,8 @@ Map boothsPaymentsDetail = [:];
 
 partyId = userLogin.get("partyId");
 
+Debug.log("partyId=============="+partyId);
+
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
@@ -73,6 +75,13 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 
 if(!branchList)
 branchList.add(branchId);
+}else if(!branchId && partyId){
+
+formatList1 = [];
+for (eachList in formatList) {
+	formatList1.add(eachList.payToPartyId);
+}
+branchList = formatList1;
 }
 
 
@@ -202,6 +211,9 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 	custCondList = [];
 	//custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 	// query based on branch
+	
+	
+	Debug.log("branchList================="+branchList);
 	
 	orderHeaderbefo = [];
 	branchbasedIds = [];

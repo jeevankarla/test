@@ -454,7 +454,13 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				
 				//newObj.put("usedQuota",20);
 			}else{
+			
+			if(eachItem.bundleUnitPrice){
+				newObj.put("unitPrice",eachItem.bundleUnitPrice);
+			}else{
 				newObj.put("unitPrice",eachItem.unitPrice);
+			}
+			
 				amount=eachItem.unitPrice*eachItem.quantity;
 				
 			}
