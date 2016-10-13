@@ -102,16 +102,16 @@ if(UtilValidate.isNotEmpty(thruDate)){
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
-			 partyId = eachItem.getAt("branchId");
-			 
+		 partyId = eachItem.getAt("branchId");
+		 
 			 completed = 0;
 				 if (eachItem.get("shippedQty")) {
 					 completed = eachItem.get("shippedQty");
 				 }
 
 			 roId = branchROMap.get(partyId);
-			 totalQty = new BigDecimal(eachItem.getAt("quantity"));
-			 totalPoQty = new BigDecimal(eachItem.getAt("poQuantity"));
+			 totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(2, 0);
+			 totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(2, 0);
 			 
 			 if (DataMap.containsKey(partyId)) {
 				 branchDetails = DataMap.get(partyId);

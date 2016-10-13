@@ -2347,9 +2347,9 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             return ServiceUtil.returnError(e.getMessage());
         }
        Map orderSummaryMap=FastMap.newInstance();
-       orderSummaryMap.put("quantity",quantity);
-       orderSummaryMap.put("discountAmount",discountAmount);
-       orderSummaryMap.put("quotaQty",quotaQty);
+       orderSummaryMap.put("quantity",quantity.setScale(2, BigDecimal.ROUND_HALF_UP));
+       orderSummaryMap.put("discountAmount",discountAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
+       orderSummaryMap.put("quotaQty",quotaQty.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("orderSummaryMap",orderSummaryMap);
 	   return result;
 	}
@@ -2410,10 +2410,61 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	            return ServiceUtil.returnError(e.getMessage());
 	        }
 		
-        result.put("quantity",poQuantity);
-        result.put("shippedQuantity",quantity);
+        result.put("quantity",poQuantity.setScale(2, BigDecimal.ROUND_HALF_UP));
+        result.put("shippedQuantity",quantity.setScale(2, BigDecimal.ROUND_HALF_UP));
 	   return result;
 	}
   	
+	
+	
+	public static Map<String, Object> periodPopulationIndentSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        EntityCondition cond = null;
+        List condList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+        	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+        	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+       }
+		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+        //List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdList));
+            cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+            EntityListIterator eli = null;
+        try {
+            eli = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
+            if (eli != null) {
+                // reset each order
+            	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(eli, "orderId", true);
+                    try{
+	                    Map resultCtx = dispatcher.runSync("runPopulateIndentSummaryDetails", UtilMisc.toMap("userLogin", userLogin, "orderIdList", orderIdList));
+	                    if (ServiceUtil.isError(resultCtx)) {
+	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+	    	  		  		Debug.logError(errMsg , module);
+	    	  		  		return ServiceUtil.returnError(errMsg);
+	    	  		  	}
+	                   
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }	
+                
+                eli.close();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        result = ServiceUtil.returnSuccess("Successfully Populated Data In IndentSummaryDetails : ");
+
+        return result;	
+	}
+	
   	
 }
