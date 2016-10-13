@@ -582,17 +582,23 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			adjustmentTotal = 0
 			cond.clear();
 			cond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,eachItem.orderItemSeqId));
-			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE"]));
+			cond.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, ["VAT_SALE","VAT_SURCHARGE","CST_SALE","CST_SURCHARGE","TEN_PERCENT_SUBSIDY"]));
 			
 			expr = EntityCondition.makeCondition(cond,EntityOperator.AND);
 	
 			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
+			
+			Debug.log("taxList============="+taxList);
+			
+			
 			for(i=0; i<taxList.size(); i++){
 				adjustmentTotal += (taxList.get(i)).get("amount");
 				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
 				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_AMT", (taxList.get(i)).get("amount"));
 			}
 
+			
+			Debug.log("adjustmentTotal============="+adjustmentTotal);
 			
 			newObj.put("OTH_CHARGES_AMT", adjustmentTotal);
 			

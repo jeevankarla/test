@@ -309,7 +309,14 @@
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
+				//orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
+				
+				orderAdjustmentsList.push("CESS");
+				orderAdjustmentsList.push("INSURANCE_CHGS");
+				orderAdjustmentsList.push("OTHER_CHARGES");
+				orderAdjustmentsList.push("PACKING_FORWARDIG");
+				
+				
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
@@ -362,7 +369,16 @@
 				
 				// Purchase Order Adjustments list
 				var purOrderAdjustmentsList = [];
-				purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				//purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				
+				
+				purOrderAdjustmentsList.push("CESS");
+				purOrderAdjustmentsList.push("INSURANCE_CHGS");
+				purOrderAdjustmentsList.push("OTHER_CHARGES");
+				purOrderAdjustmentsList.push("PACKING_FORWARDIG");
+				
+				
+				
 				
 				var purOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "purOrderAdjustmentsList_o_" + rowCount).val(purOrderAdjustmentsList);
 				jQuery(formId).append(jQuery(purOrderAdjustmentItem));	
