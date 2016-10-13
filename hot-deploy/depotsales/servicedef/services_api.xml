@@ -110,5 +110,12 @@
         <attribute type="Map" mode="OUT" name="transportersMap" optional="true"/>
     </service>
     
+    <service name="getSupplierDetails" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.SupplierApiServices" invoke="getSupplierDetails">
+        <description>Get Supplier Details</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute type="Map" mode="OUT" name="supplierDetails" optional="true"/>
+    </service>
+    
 </services>
 
