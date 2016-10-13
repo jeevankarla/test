@@ -611,6 +611,11 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
     </service>
+     <service name="runPeriodPopulationIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails">
+         <description>populate Order Summary </description>
+         <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
+         <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
+    </service>
      <service name="getOrderSummary" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSummary">
         <description>Populate Order Details </description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
@@ -622,6 +627,7 @@
         <attribute name="shippedQuantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="quantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
+    
     
     
      <service name="createPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createPartyLooms" >
