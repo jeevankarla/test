@@ -216,10 +216,10 @@ public class InvoiceServices {
             String billToCustomerPartyId = orh.getBillToParty().getString("partyId");
             String billFromVendorPartyId = orh.getBillFromParty().getString("partyId");
 
-            //Debug.log("billToCustomerPartyId=================="+billToCustomerPartyId);
+            ////Debug.log("billToCustomerPartyId=================="+billToCustomerPartyId);
             
-           // Debug.log("billFromVendorPartyId=================="+billFromVendorPartyId);
-            
+           // //Debug.log("billFromVendorPartyId=================="+billFromVendorPartyId);
+              
             // get some price totals
             BigDecimal shippableAmount = orh.getShippableTotal(null);
             BigDecimal orderSubTotal = orh.getOrderItemsSubTotal();
@@ -443,14 +443,14 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
                 
-              //  Debug.log("invoicetypeId========================="+invoicetypeId);
+              //  //Debug.log("invoicetypeId========================="+invoicetypeId);
                 if(!invoicetypeId.equals("PURCHASE_INVOICE")){
                 createInvoiceItemContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, (orderItem.getString("orderItemTypeId")), (product == null ? null : product.getString("productTypeId")), invoiceType, "INV_FPROD_ITEM"));
-               // Debug.log("invoicetypeId=============INNN============"+invoicetypeId);
+               // //Debug.log("invoicetypeId=============INNN============"+invoicetypeId);
                 }
                 else{
                 createInvoiceItemContext.put("invoiceItemTypeId", "INV_RAWPROD_ITEM");	
-              //  Debug.log("invoicetypeId============OUTTTTT============="+invoicetypeId);
+              //  //Debug.log("invoicetypeId============OUTTTTT============="+invoicetypeId);
                 }
                 
                 createInvoiceItemContext.put("description", orderItem.get("itemDescription"));
@@ -530,6 +530,12 @@ public class InvoiceServices {
 
                 // create the item adjustment as line items
                 List<GenericValue> itemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orh.getAdjustments());
+                
+                Debug.log("inputAdjustmentsList==================="+inputAdjustmentsList);
+                Debug.log("ignoreAdjustmentsList==================="+ignoreAdjustmentsList);
+                
+                
+                
                 if(UtilValidate.isNotEmpty(inputAdjustmentsList)){
                 	itemAdjustments = inputAdjustmentsList;
                 }
@@ -554,8 +560,8 @@ public class InvoiceServices {
                         return ServiceUtil.returnError(errMsg);
                     }
                     
-                    Debug.log("adjAlreadyInvoicedAmount ==============="+adjAlreadyInvoicedAmount);
-                    Debug.log("adjAlreadyInvoicedQty ==============="+adjAlreadyInvoicedQty);
+                    ////Debug.log("adjAlreadyInvoicedAmount ==============="+adjAlreadyInvoicedAmount);
+                   // //Debug.log("adjAlreadyInvoicedQty ==============="+adjAlreadyInvoicedQty);
                     
                     // If the absolute invoiced amount >= the abs of the adjustment amount, the full amount has already been invoiced,
                     //  so skip this adjustment
@@ -571,6 +577,7 @@ public class InvoiceServices {
                     }    
                     
                     BigDecimal amount = ZERO;
+                    BigDecimal sourcePercentage = ZERO;
                     BigDecimal totalQuota =BigDecimal.ZERO;
                     BigDecimal tenPercentAdjQty =BigDecimal.ZERO;
                     if( (UtilValidate.isNotEmpty(adj.get("orderAdjustmentTypeId") )) &&    ( (adj.get("orderAdjustmentTypeId")).equals("TEN_PERCENT_SUBSIDY")  )  ){
@@ -602,7 +609,7 @@ public class InvoiceServices {
 							Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 							return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 						}
-					  	Debug.log("totalQuota ==============="+totalQuota);
+					  	//Debug.log("totalQuota ==============="+totalQuota);
 					  	
 					  	tenPercentAdjQty = totalQuota.subtract(adjAlreadyInvoicedQty);
 					  	if(billingQuantity.compareTo(tenPercentAdjQty) < 0){
@@ -653,11 +660,20 @@ public class InvoiceServices {
                                     amount = amount.setScale(TAX_DECIMALS, TAX_ROUNDING);
                                 } else {
                                     amount = amount.setScale(invoiceTypeDecimals, ROUNDING);
+                                    
+                                     sourcePercentage = adj.getBigDecimal("sourcePercentage");
+                                    
+                                    Debug.log("amount=======INNNNN3232323========"+amount);
+                                    
+                                    Debug.log("sourcePercentage=======INNNNN3232323========"+sourcePercentage);
+                                    
                                 }
                             } else if (adj.get("sourcePercentage") != null) {
                                 // pro-rate the amount
                                 // set decimals = 100 means we don't round this intermediate value, which is very important
                                 BigDecimal percent = adj.getBigDecimal("sourcePercentage");
+        					  	//Debug.log("percent ==============="+percent);
+
                                 percent = percent.divide(new BigDecimal(100), 100, ROUNDING);
                                 amount = billingAmount.multiply(percent);
                                 amount = amount.divide(originalOrderItem.getBigDecimal("quantity"), 100, ROUNDING);
@@ -704,6 +720,8 @@ public class InvoiceServices {
                         createInvoiceItemAdjContext.put("productFeatureId", orderItem.get("productFeatureId"));
                         createInvoiceItemAdjContext.put("overrideGlAccountId", adj.get("overrideGlAccountId"));
                         createInvoiceItemAdjContext.put("parentInvoiceId", invoiceId);
+                        createInvoiceItemAdjContext.put("sourcePercentage", sourcePercentage);
+                        
                         createInvoiceItemAdjContext.put("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
                         if(UtilValidate.isNotEmpty(adj.get("isAssessableValue")) && (adj.get("isAssessableValue").equals("Y")) ){
                         	createInvoiceItemAdjContext.put("isAssessableValue", "Y");

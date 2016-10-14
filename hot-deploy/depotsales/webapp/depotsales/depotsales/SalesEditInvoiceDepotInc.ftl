@@ -134,14 +134,22 @@
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			var purchaseInvoiceId = data[rowCount]["purchaseInvoiceId"];
 			
+			var invoiceItemSeqId = data[rowCount]["invoiceItemSeqId"];
+			
+			  
+			
+			
 			var tenPercent = data[rowCount]["tenPercent"];
 			
 			var taxAmt = data[rowCount]["taxAmt"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var invoiceItemSeqId1 = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemSeqId_o_" + rowCount).val(invoiceItemSeqId);
+				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(invoiceItemSeqId1));
 				
 				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "UPrice_o_" + rowCount).val(UPrice);
 				jQuery(formId).append(jQuery(inputPrice));
