@@ -250,7 +250,7 @@ $(document).ready(function(){
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<div class="lefthalf">
+			  <#--	<div class="lefthalf">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
@@ -269,7 +269,7 @@ $(document).ready(function(){
 					<div id="myGrid3" style="width:100%;height:180px;">
 						<div class="grid-header" style="width:100%">
 						</div>
-					</div>
+					</div>-->
 				</div>
 				</div>
 				<#assign formAction ='processEditSalesInvoice'>	
