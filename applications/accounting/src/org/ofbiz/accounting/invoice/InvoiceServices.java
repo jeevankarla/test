@@ -219,7 +219,7 @@ public class InvoiceServices {
             ////Debug.log("billToCustomerPartyId=================="+billToCustomerPartyId);
             
            // //Debug.log("billFromVendorPartyId=================="+billFromVendorPartyId);
-            
+              
             // get some price totals
             BigDecimal shippableAmount = orh.getShippableTotal(null);
             BigDecimal orderSubTotal = orh.getOrderItemsSubTotal();

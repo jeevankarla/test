@@ -905,7 +905,7 @@ public class DepotPurchaseServices{
 			}
 			//Debug.logassessableValue ============="+assessableValue);
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
-				
+				  
 				ignoreAdjustmentsList.add(invoiceItemTypeId);
 				
 				Map<String, Object> invItemMap = FastMap.newInstance();

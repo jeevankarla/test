@@ -136,7 +136,7 @@
 			
 			var invoiceItemSeqId = data[rowCount]["invoiceItemSeqId"];
 			
-			
+			  
 			
 			
 			var tenPercent = data[rowCount]["tenPercent"];

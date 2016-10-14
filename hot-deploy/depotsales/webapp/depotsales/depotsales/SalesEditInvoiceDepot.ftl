@@ -258,7 +258,7 @@ $(document).ready(function(){
 					<div id="myGrid2" style="width:100%;height:180px;">
 						<div class="grid-header" style="width:100%">
 						</div>
-					</div>
+					</div> 
 				</div>
 				</div>
 				<div class="righthalf" >

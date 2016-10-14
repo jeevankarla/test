@@ -53,7 +53,7 @@
 			invoDate = invoiceList.get("invoiceDate");
 			SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM, yyyy");
 			invoDate = formatter.format(invoDate);
-		}
+		}  
 	
 		context.invoDate = invoDate;
 	
