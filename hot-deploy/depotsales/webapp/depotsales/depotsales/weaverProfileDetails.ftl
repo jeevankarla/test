@@ -1,6 +1,6 @@
 <script type="application/javascript">
 function datepick()	{
-		$( "#daoDate" ).datetimepicker({
+		$('#daoDate').datetimepicker({
 			dateFormat:'yy-mm-dd',
 			showSecond: true,
 			timeFormat: 'hh:mm:ss',
@@ -23,6 +23,19 @@ function datepick()	{
 	  				  $('#daoDatelabel').hide();
 				      $('#daoDate').hide();
 			     </#if>
+
+		$('#daoDate').datetimepicker({
+			dateFormat:'yy-mm-dd',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
+			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
+	        //    var nowTime = new Date(); 
+	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
+	        //    $('#transactionDate').val(onlyDate);
+	        //},
+	        changeMonth: false,
+			numberOfMonths: 1});
+			
 	});
 function setDAO(){
 	var  Depot =$( "#Depot   option:selected" ).val();
@@ -61,9 +74,9 @@ function setDAO(){
 				<td>    
 				<#if facilityList?has_content>
                           <#assign facilityDetail = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(facilityList) />
-				    <input class='h3' type="text" name="daoDate" id="daoDate" value="${facilityDetail.openedDate?if_exists}" onmouseover='datepick()'/>           		
+				    <input class='h3' type="text" name="daoDate" id="daoDate" value="${facilityDetail.openedDate?if_exists}" />           		
 				<#else>
-					<input class='h3' type="text" name="daoDate" id="daoDate"  onmouseover='datepick()'/>           		
+					<input class='h3' type="text" name="daoDate" id="daoDate" />           		
 				
 				</#if>
 				</td>

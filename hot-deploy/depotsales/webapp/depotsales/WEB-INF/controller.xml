@@ -2141,7 +2141,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseInvoiceDetailsPDFReport"/>
     </request-map>
-    
+    <request-map uri="indentOverViewReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="indentOverViewReport"/>
+    </request-map>
      <request-map uri="reimburcentTransporterReport.csv">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="reimburcentTransporterReportCSV"/>
@@ -2447,6 +2450,7 @@
      <view-map name="processIndentBranchSales" type="screen" page="component://depotsales/widget/IndentorScreens.xml#processIndentBranchSales"/>
      <view-map name="claimReportDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsCSV" content-type="text/csv"/>
      <view-map name="purchaseInvoiceDetailsPDFReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseInvoiceDetailsPDFReport" content-type="application/pdf"/>
+     <view-map name="indentOverViewReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentOverViewReport" content-type="application/pdf"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
      <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>

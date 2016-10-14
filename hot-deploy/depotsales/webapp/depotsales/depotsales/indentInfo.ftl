@@ -36,6 +36,7 @@ under the License.
          	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend Indent</a></li>
         	</#if>
+	        <li><a href="indentOverViewReport?orderId=${orderHeader.orderId}">Indent Report</a></li>
         	<#--<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED" && currentStatus.statusCode != "SUSPENDED" && currentStatus.statusCode != "CREATED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareSuspendPOForm('${orderId}')">Suspend PO</a></li>
         	</#if>-->
@@ -63,7 +64,7 @@ under the License.
                   <#list orderHeaderStatuses as orderHeaderStatus>
                     <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem")>
                     <#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin")>
-                    <div>
+                    <div> 
                       ${loopStatusItem.get("description",locale)} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderHeaderStatus.statusDatetime, "dd-MMM-yyyy")}  &nbsp;
                       ${uiLabelMap.CommonBy} - <#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userlogin.getString("partyId"), true)}--> [${orderHeaderStatus.statusUserLogin}]
                     </div>
