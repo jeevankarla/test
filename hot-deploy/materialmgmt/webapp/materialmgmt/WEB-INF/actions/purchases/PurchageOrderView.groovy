@@ -542,7 +542,7 @@ if (orderItems) {
    paymentIds=[];
    finalMap=[:];
    statusHistory=[];
-   if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
+//if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
 	   exprCond=[];
 	   exprCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	   EntityCondition condn = EntityCondition.makeCondition(exprCond, EntityOperator.AND);
@@ -564,7 +564,7 @@ if (orderItems) {
 	   if(OrderAss){
 		   orderId=OrderAss.orderId;
 	   }
-   }
+   //}
    orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
    ShipmentList = delegator.findList("Shipment", orderCondition, null, null, null, false);
    if(parameters.isSalesIndent && parameters.isSalesIndent == "Y"){
@@ -630,7 +630,21 @@ if (orderItems) {
 		   }
 	   }
    }
-   context.statusHistory=statusHistory;
+   List condsList = [];
+   
+   OrderAttributeList = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+   condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), EntityOperator.OR,
+	   EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId)));
+   OrderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, false);
+   orderAssoc=EntityUtil.getFirst(OrderAssocList);
+   if(UtilValidate.isNotEmpty(invoiceIds)){
+	   shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderAssoc.orderId), null, null, null, false);
+   }
+   context.shipmentReceipts=shipmentReceipts;
+   context.statusHistory=statusHistory; 
+   context.OrderAssocList=OrderAssocList;
+   context.OrderAttributeList=OrderAttributeList;
+   context.OrderAssocList=OrderAssocList;
    context.invoiceDetailList=invoiceDetailList;
    context.finalMap=finalMap;
    context.paymentIds=paymentIds;

@@ -91,6 +91,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       		 <td width="10%">Thru<input  type="text" size="15pt" id="reimburcentTransporterTHRU" readonly  name="partythruDate"  /></td>
                       <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId" required>
+				 	 <option value=''></option> 
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
@@ -119,9 +120,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
            </form>
         </tr> 
-        
-        
-        
+   
         <tr class="alternate-row">
       	   <form id="depotReimburcentReport" name="depotReimburcentReport" method="post" action="<@ofbizUrl>depotReimburcentReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Depot Reimbursment Report</td>
@@ -129,6 +128,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       		 <td width="10%">Thru<input  type="text" size="15pt" id="depotReimburcentReportTHRU" readonly  name="partythruDate" required /></td>
                       <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId" required>
+					<option value=''></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 

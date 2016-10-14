@@ -60,7 +60,6 @@ conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUA
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-
 indentDate = "";
 itemOrderId  = OrderItemBilling[0].orderId;
 destinationDepot = "";
@@ -89,7 +88,6 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
  //=========================get supplier Id=========================================
  
  
- 
  conditionList = [];
  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , itemOrderId));
  conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
@@ -112,7 +110,6 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
  }
  
  shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
- 
  
  supplierInvoiceId ="";
  if(shipmentList.get("supplierInvoiceId"))
@@ -138,7 +135,6 @@ context.supplierInvoDate = supplierInvoiceDate;
 	 poOrderId = shipmentList.primaryOrderId;
 	 
  }
- 
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
  conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER_AGENT"]));
@@ -172,7 +168,6 @@ fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
 
 
-
 isDepot = "";
 if(FacilityList)
 isDepot ="Y"
@@ -191,7 +186,6 @@ PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, 
 if(PartyIdentificationList){
 passNo = PartyIdentificationList[0].get("idValue");
 }
-
 poNumber = "";
 orderId  = "";
 shipmentDate = "";
@@ -245,7 +239,6 @@ context.deliveryChallanDate = deliveryChallanDate;
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 
 
-
 if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 	draftPoNum = orderSeqDetails.orderNo;
@@ -274,8 +267,6 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,null));
 invoiceItemLevelAdjustments = [:];
-
-
 
 double totTaxAmount = 0;
 
@@ -347,22 +338,18 @@ for (eachList in invoiceItemList) {
 context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
-
 context.totTaxAmount = totTaxAmount;
 context.mgpsAmt = mgpsAmt;
-
 
 context.tallySalesNo = tallySalesNo;
 allDetailsMap = [:];
 orderAttrForPo = [];
-OrderHeaderList = [];
+GenericValue OrderHeaderList=null;
 if(orderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
-
-if(OrderHeaderList[0])
-tallyRefNo = OrderHeaderList[0].get("tallyRefNo");
-
+if(UtilValidate.isNotEmpty(OrderHeaderList))
+tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -388,7 +375,6 @@ if(shipmentListForPOInvoiceId){
 }
  
 }
- 
 context.piTotal = piTotal;
 
 /*conditionList.clear();
@@ -403,7 +389,6 @@ if(purInvoiceId){
 	if(purInvoiceList.referenceNumber)
 	tallyRefNo = purInvoiceList.referenceNumber;
 }
-
 
 if(tallySalesNo)
 tallyRefNo = tallySalesNo;
@@ -421,7 +406,7 @@ else if(invoiceId == "10390")
 tallyRefNo= "YRPR/4/16-17";
 */
 context.tallyRefNo = tallyRefNo;
-productStoreId = OrderHeaderList[0].get("productStoreId");
+productStoreId = OrderHeaderList.get("productStoreId");
 branchId="";
 if (productStoreId) {
 	productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
@@ -497,8 +482,8 @@ context.BOEmail=BOEmail;
 }
 
 grandTotal = "";
-if(OrderHeaderList[0])
-grandTotal = OrderHeaderList[0].get("grandTotal");
+if(OrderHeaderList)
+grandTotal = OrderHeaderList.get("grandTotal");
 
 context.grandTotal = grandTotal;
 
