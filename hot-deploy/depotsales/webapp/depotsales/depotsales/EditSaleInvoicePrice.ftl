@@ -832,7 +832,7 @@
 			
 				message += "<hr class='style18'></hr>";
 			
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><#--<td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td>--></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			

@@ -2768,12 +2768,11 @@ public class DepotPurchaseServices{
 						adjTypeMap.put("isAssessableValue", "N");
 					}
 					
-					
-					
 					Map tempAdjMap = FastMap.newInstance();
 					tempAdjMap.putAll(adjTypeMap);
 					
 					discOrderAdjustmentList.add(tempAdjMap);
+					
 				}
 				
 				Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
@@ -2790,7 +2789,7 @@ public class DepotPurchaseServices{
 						
 						Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
 
-						adjItemCtx.put("invoiceItemTypeId", ((String)adjMap.get("orderAdjustmentTypeId")).trim());
+						adjItemCtx.put("invoiceItemTypeId", adjMap.get("orderAdjustmentTypeId"));
 						
 						Debug.log("amount====================="+adjMap.get("amount"));
 						
@@ -2798,7 +2797,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("quantity", BigDecimal.ONE);
 						adjItemCtx.put("invoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceId", invoiceId);
-						
+						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 						
 						Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
@@ -2827,14 +2826,9 @@ public class DepotPurchaseServices{
 			            	Map<String, Object> createInvoiceItemResult1 = dispatcher.runSync("createInvoiceItem", adjItemCtx);
 			            	
 							Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
-
 			            	
-			            	if(ServiceUtil.isError(createInvoiceItemResult1)){
-			            		request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-								return "error";
-			          		}
 			            } catch (Exception e) {
-			            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
+			            	 Debug.logError(e, "Error in fetching InvoiceItem ", module);
 							return "error";
 			    		}
 					}
