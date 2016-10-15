@@ -292,13 +292,13 @@
 			 	}
 		 	}
 	 	}
-	 	adjustBasePrice();
+	 	//adjustBasePrice();
 	 	
 	}	
 	
 	function adjustBasePrice(){
 		
-		var baseAmount = parseFloat($('#basicAmount').val());
+		var baseAmount = parseInt($('#basicAmount').val());
 		var basePriceComponents = $('input:checkbox:checked.basePriceComponent').map(function () {
 								  	return this.id;
 								  }).get();
@@ -307,57 +307,37 @@
 			var basePriceComponentId = (basePriceComponents[i]).replace("_INC_BASIC", "_AMT"); 
 	    	var baseComponentAmt = $('#'+basePriceComponentId).val();
 	    	if(baseComponentAmt){
-	    		baseAmount = baseAmount + parseFloat(baseComponentAmt);
+	    		baseAmount = baseAmount + parseInt(baseComponentAmt);
 	    	}
 		}									
-	
-		var basePriceDiscComponents = $('input:checkbox:checked.basePriceDiscComponent').map(function () {
-								  	return this.id;
-								  }).get();
-											
-		for(var i = 0; i < basePriceDiscComponents.length; i++){
-			var basePriceComponentId = (basePriceDiscComponents[i]).replace("_INC_BASIC", "_AMT"); 
-	    	var baseComponentAmt = $('#'+basePriceComponentId).val();
-	    	if(baseComponentAmt){
-	    		baseAmount = baseAmount - parseFloat(baseComponentAmt);
-	    	}
-		}	
 	
 		$('#baseAmount').val(baseAmount);
 		updatePurchasePrice();
 	}
 	
 	function updatePurchasePrice(){
-		var totalPurchaseValue = parseFloat($('#basicAmount').val());
+		var totalPurchaseValue = parseInt($('#basicAmount').val());
 		$('#purchaseAdjustmentTable').find('input:text').each(function () {
 			var purComponentValue = this.value;
        		if(purComponentValue){
-		        totalPurchaseValue = totalPurchaseValue + parseFloat(purComponentValue);
+		        totalPurchaseValue = totalPurchaseValue + parseInt(purComponentValue);
 		    }
     	});
-    	
-    	$('#purchaseDiscountTable').find('input:text').each(function () {
-			var purComponentValue = this.value;
-       		if(purComponentValue){
-		        totalPurchaseValue = totalPurchaseValue - parseFloat(purComponentValue);
-		    }
-    	});
-    	
     	$('#purchaseTaxUpdationTable').find('input:text').each(function () {
 			var purComponentValue = this.value;
        		if(purComponentValue){
-		        totalPurchaseValue = totalPurchaseValue + parseFloat(purComponentValue);
+		        totalPurchaseValue = totalPurchaseValue + parseInt(purComponentValue);
 		    }
     	});
     	$('#purchaseAmount').val(totalPurchaseValue);
     	
     	//updatePurchasePriceSale();
-    	//adjustBasePriceSale();
+    	adjustBasePriceSale();
     	
     	<#--
     	var saleBasePrice = totalPurchaseValue;
     	
-    	saleBasePrice = saleBasePrice + parseFloat($('#serviceChargeAmt').val());
+    	saleBasePrice = saleBasePrice + parseInt($('#serviceChargeAmt').val());
     	$('#saleBaseAmt').val(saleBasePrice);
     	
     	var usedQuota = dataRow["usedQuota"];
@@ -387,7 +367,7 @@
 	}
 	
 	function updatePercentageByAmountSale(taxAmountItem, totalAmt){
-		totalAmt = parseFloat($('#purchaseAmount').val());
+		totalAmt = parseInt($('#purchaseAmount').val());
 	 	var taxAmount = taxAmountItem.value;
 	 	var taxAmtItemId = taxAmountItem.id;
 	 	var taxPercItemId = (taxAmountItem.id).replace("_AMT", ""); 
@@ -462,13 +442,15 @@
 		 	}
 	 	}
 	 	adjustBasePriceSale();
+	 	//updatePurchasePriceSale();
 	 	
 	}	
 	
 	function adjustBasePriceSale(){
 		
-		var baseAmount = parseFloat($('#purchaseAmount').val());
-		var basePriceComponents = $('input:checkbox:checked.saleBasePriceComponent').map(function () {
+		var baseAmount = parseInt($('#basicAmount').val());
+		
+		var basePriceComponents = $('input:checkbox:checked.basePriceComponent').map(function () {
 								  	return this.id;
 								  }).get();
 											
@@ -478,21 +460,27 @@
 	    	if(baseComponentAmt){
 	    		baseAmount = baseAmount + parseFloat(baseComponentAmt);
 	    	}
-		}									
-	
+		}			
+		
+		var basePriceDiscComponents = $('input:checkbox:checked.basePriceDiscComponent').map(function () {
+								  	return this.id;
+								  }).get();
+											
+		for(var i = 0; i < basePriceDiscComponents.length; i++){
+			var basePriceComponentId = (basePriceDiscComponents[i]).replace("_INC_BASIC", "_AMT"); 
+	    	var baseComponentAmt = $('#'+basePriceComponentId).val();
+	    	if(baseComponentAmt){
+	    		baseAmount = baseAmount - parseFloat(baseComponentAmt);
+	    	}
+		}							
+		
 		$('#saleBaseAmt').val(baseAmount);
 		updatePurchasePriceSale();
 	}
 	
 	function updatePurchasePriceSale(){
-		var totalSaleValue = parseFloat($('#purchaseAmount').val());
-		$('#indentAdjustmentTable').find('input:text').each(function () {
-			var saleComponentValue = this.value;
-       		if(saleComponentValue){
-		        totalSaleValue = totalSaleValue + parseFloat(saleComponentValue);
-		    }
-    	});
-    	
+		var totalSaleValue = parseInt($('#basicAmount').val());
+		    	
     	var salesTaxAmt = 0;
     	$('#salesTaxUpdationTable').find('input:text').each(function () {
 			var saleComponentValue = this.value;
@@ -501,13 +489,31 @@
 		        salesTaxAmt = salesTaxAmt+parseFloat(saleComponentValue)/100*100 ;
 		    }
     	});
+    	$('#purchaseAdjustmentTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totalSaleValue = totalSaleValue + parseFloat(purComponentValue);
+		    }
+    	});
+    	$('#purchaseDiscountTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totalSaleValue = totalSaleValue - parseFloat(purComponentValue);
+		    }
+    	});
+    	
+    	
     	$('#saleAmount').val(totalSaleValue);
     	
     	var saleBasePrice = $('#saleBaseAmt').val();
     	
     	// Service Charge Recalculation
     	
-    	var serviceChargePercent = dataRow["SERVICE_CHARGE"];
+    	var serviceChargePercent = 0;
+		if(dataRow["SERVICE_CHARGE"]){
+			serviceChargePercent = dataRow["SERVICE_CHARGE"];
+		}
+    	
     	var serviceCharge = (serviceChargePercent/100)*(saleBasePrice);
     	
     	$('#serviceChargeAmt').val(serviceCharge);
@@ -525,7 +531,6 @@
 		}
     	$('#tenPercentSubsidy').val(tenPercentSubsidy);
     	
-    	<#--
     	var salesTaxAmt = 0;
     	$("#salesTaxUpdationTable tr :input:visible").each(function () {
 		    var id = this.id;
@@ -536,7 +541,9 @@
 			    }
 		    }
 		})
-		--> 
+		
+		//var tenPercentSubsidy = dataRow["tenPercent"];
+		
     	var totalPayableValue = totalSaleValue - tenPercentSubsidy + serviceCharge;
     	
     	$('#totalPayableValue').val(totalPayableValue); 
@@ -583,18 +590,39 @@
 						if(adjustment["adjAmount"]){
 							adjustmentIncBasic = adjustmentIncBasic + (adjustment["adjAmount"]);
 						}
-						
 					}
 				}
 			}
+			//var baseAmt = purchaseBasicAmount + adjustmentIncBasic;
+			
 			var baseAmt = purchaseBasicAmount + incBaseAmt;
-			var totalPurAmt = purchaseBasicAmount + dataRow["OTH_CHARGES_AMT"] + dataRow["taxAmt"];
 			
-			var defaultTaxMapPur = dataRow["defaultTaxMapPur"];
-			var taxValueMapPur = dataRow["taxValueMapPur"];
 			
-			var purchaseTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
-			var purTaxList = transactionTypeTaxMap[purchaseTitleTransferEnumId];
+			var defaultTaxMap = dataRow["defaultTaxMap"];
+			var taxValueMap = dataRow["taxValueMap"];
+			
+			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
+			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
+			
+			var serviceCharge = 0;
+			if(dataRow["SERVICE_CHARGE"]){
+				serviceCharge = dataRow["SERVICE_CHARGE"];
+			}
+			
+			var serviceChargeAmt = 0;
+			if(dataRow["SERVICE_CHARGE_AMT"]){
+				serviceChargeAmt = dataRow["SERVICE_CHARGE_AMT"];
+			}
+			
+			var tenPercentSubsidy = 0;
+			if(dataRow["tenPercent"]){
+				tenPercentSubsidy = dataRow["tenPercent"];
+			}
+			
+			var totalPayableValue = 0;
+			if(dataRow["totPayable"]){
+				totalPayableValue = dataRow["totPayable"];
+			}
 			
 			var message = "";
 			var title = "";
@@ -604,7 +632,7 @@
 					message += "<tr class='h3'><th>Price </th></tr>";
 					message += "<tr>"+
 									"<td align='left'>";
-										message += "<table cellspacing=10 cellpadding=10 id='purchasePriceTable' >"+
+										message += "<table cellspacing=10 cellpadding=10 id='SalePriceTable' >"+
 														"<tr>"+
 															"<td align='left'>Basic Amount: </td>"+
 															"<td><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
@@ -617,7 +645,7 @@
 														-->
 														"<tr>"+
 															"<td align='left'>Base Amount: </td>"+
-															"<td><input type='text' style='width: 100px;' name='baseAmount' id='baseAmount' value='"+baseAmt+"' readOnly/></td>"+
+															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+baseAmt+"' readOnly/></td>"+
 														"</tr>";
 										message += "</table>"+
 									"</td>"+
@@ -717,74 +745,94 @@
 				message += "</table>";
 				
 				
-				message += "<hr class='style18'></hr>";
 				
-				message += "<table cellspacing=10 cellpadding=10 id='purchaseTaxUpdationTable' >" ;
-					message += "<tr class='h3'>"+
-									"<th>Purchase Taxation: </th>"+
-									"<th>"+$("#purchaseTaxType").val()+" </th>"+
-									"<th></th>"+
-									"<th>"+$("#purchaseTitleTransferEnumId option:selected").text()+" </th>"+
-								"</tr>";
-								
-					for(var i=0;i<purTaxList.length;i++){
-						var purTax = purTaxList[i];
-						var purTaxValue = taxValueMapPur[purTax];
-						var purTaxAmount = purTaxValue*(totalAmt)*0.01;
-						if(defaultTaxMapPur[purTax] != 'undefined' || defaultTaxMapPur[purTax] != null){
-							var taxDetails = defaultTaxMapPur[purTax]["taxDetails"];
+				
+				message += "<table cellspacing=10 cellpadding=10 id='salesTaxUpdationTable' >" ;
+				message += "<hr class='style17'></hr>";
+				message += "<tr class='h3'>"+
+								"<th>Sale Taxation: </th>"+
+								"<th>"+$("#saleTaxType").val()+" </th>"+
+								"<th></th>"+
+								"<th>"+$("#saleTitleTransferEnumId option:selected").text()+" </th>"+
+							"</tr>";
 							
-							if(dataRow[taxDetails.taxAuthorityRateTypeId+"_PUR"]){
-								purTaxValue = dataRow[taxDetails.taxAuthorityRateTypeId+"_PUR"];
-							}
-							if(dataRow[taxDetails.taxAuthorityRateTypeId+"_PUR_AMT"]){
-								purTaxAmount = dataRow[taxDetails.taxAuthorityRateTypeId+"_PUR_AMT"];
-							}
-							
-							message += "<tr>"+
-											"<td align='left'>"+taxDetails.description+": </td>"+
-											"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+taxDetails.taxAuthorityRateTypeId+"_PUR' id='"+taxDetails.taxAuthorityRateTypeId+"_PUR' value='"+purTaxValue+"' onblur='javascript:updateAmountByFieldPercentage(this, baseAmount);'/></td>"+
-											"<td align='left'> Amt: </td>"+
-											"<td><input type='text' style='width: 100px;' name='"+taxDetails.taxAuthorityRateTypeId+"_PUR_AMT' id='"+taxDetails.taxAuthorityRateTypeId+"_PUR_AMT' value='"+purTaxAmount+"' readOnly></td>"+
-										"</tr>";
-							
-							var surchargeList = defaultTaxMapPur[purTax]["surchargeList"];
-							
-							for(var j=0;j<surchargeList.length;j++){
-								var surchargeDetails = surchargeList[j];
-								var surchargeValue = taxValueMapPur[surchargeDetails.taxAuthorityRateTypeId];
-								var surchargeAmount = surchargeValue*purTaxAmount*0.01;
-								
-								if(dataRow[surchargeDetails.taxAuthorityRateTypeId+"_PUR"]){
-									surchargeValue = dataRow[surchargeDetails.taxAuthorityRateTypeId+"_PUR"];
-								}
-								if(dataRow[surchargeDetails.taxAuthorityRateTypeId+"_PUR_AMT"]){
-									surchargeAmount = dataRow[surchargeDetails.taxAuthorityRateTypeId+"_PUR_AMT"];
-								}
-								
-								message += "<tr>"+
-												"<td align='left'>"+surchargeDetails.description+": </td>"+
-												"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+surchargeDetails.taxAuthorityRateTypeId+"_PUR' id='"+surchargeDetails.taxAuthorityRateTypeId+"_PUR' value='"+surchargeValue+"' onblur='javascript:updateAmountByFieldPercentage(this, "+taxDetails.taxAuthorityRateTypeId+"_PUR_AMT);'/></td>"+
-												"<td align='left'> Amt: </td><td><input type='text' style='width: 100px;' name='"+surchargeDetails.taxAuthorityRateTypeId+"_PUR_AMT' id='"+surchargeDetails.taxAuthorityRateTypeId+"_PUR_AMT' value='"+surchargeAmount+"' readOnly></td>"+
-											"</tr>";
-							}
-						}
+				for(var i=0;i<saleTaxList.length;i++){
+					var salesTax = saleTaxList[i];
+					var saleTaxValue = taxValueMap[salesTax];
+					var saleTaxAmount = saleTaxValue*(totalAmt)*0.01;
 					
+					if(defaultTaxMap[salesTax] != 'undefined' || defaultTaxMap[salesTax] != null){
+						var taxDetails = defaultTaxMap[salesTax]["taxDetails"];
+						
+						if(dataRow[taxDetails.taxAuthorityRateTypeId]){
+							saleTaxValue = dataRow[taxDetails.taxAuthorityRateTypeId];
+						}
+						if(dataRow[taxDetails.taxAuthorityRateTypeId+"_AMT"]){
+							saleTaxAmount = dataRow[taxDetails.taxAuthorityRateTypeId+"_AMT"];
+						}
+						
+						message += "<tr>"+
+										"<td align='left'>"+taxDetails.description+": </td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+taxDetails.taxAuthorityRateTypeId+"' id='"+taxDetails.taxAuthorityRateTypeId+"' value='"+saleTaxValue+"' onblur='javascript:updateAmountByFieldPercentageSale(this, saleBaseAmt);'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+taxDetails.taxAuthorityRateTypeId+"_AMT' id='"+taxDetails.taxAuthorityRateTypeId+"_AMT' value='"+saleTaxAmount+"' readOnly></td>"+
+									"</tr>";
+						
+						var surchargeList = defaultTaxMap[salesTax]["surchargeList"];
+						
+						for(var j=0;j<surchargeList.length;j++){
+							var surchargeDetails = surchargeList[j];
+							var surchargeValue = taxValueMap[surchargeDetails.taxAuthorityRateTypeId];
+							var surchargeAmount = surchargeValue*saleTaxAmount*0.01;
+							
+							if(dataRow[surchargeDetails.taxAuthorityRateTypeId]){
+								surchargeValue = dataRow[surchargeDetails.taxAuthorityRateTypeId];
+							}
+							if(dataRow[surchargeDetails.taxAuthorityRateTypeId+"_AMT"]){
+								surchargeAmount = dataRow[surchargeDetails.taxAuthorityRateTypeId+"_AMT"];
+							}
+							message += "<tr>"+
+											"<td align='left'>"+surchargeDetails.description+": </td>"+
+											"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+surchargeDetails.taxAuthorityRateTypeId+"' id='"+surchargeDetails.taxAuthorityRateTypeId+"' value='"+surchargeValue+"' onblur='javascript:updateAmountByFieldPercentageSale(this, "+taxDetails.taxAuthorityRateTypeId+"_AMT);'/></td>"+
+											"<td align='left'> Amt: </td>"+
+											"<td><input type='text' style='width: 100px;' name='"+surchargeDetails.taxAuthorityRateTypeId+"_AMT' id='"+surchargeDetails.taxAuthorityRateTypeId+"_AMT' value='"+surchargeAmount+"' readOnly></td>"+
+										"</tr>";
+						}
 					}
 					
-				message += "</table>";
+					
+				
+				}
+				
+			message += "</table>";
+			
+			message += "<hr class='style18'></hr>";
+			
+			message += "<table cellspacing=10 cellpadding=10 id='salesDiscountsAndChgs' >" ;
+				message += "<tr>"+
+							"<td align='left'>Purchase Value: </td>"+
+							"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+totalAmt+"' readOnly/>"+
+						"</tr>";
+			<#-->	message += "<tr>"+
+							"<td align='left'>Service Charge("+serviceCharge+"%): </td>"+
+							"<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
+						"</tr>";
+				
+				message += "<tr>"+
+							"<td align='left'>10% Subsidy Amount: </td>"+
+							"<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
+						"</tr>";
+				message += "<tr>"+
+							"<td align='left'>Total Payable Value: </td>"+
+							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
+						"</tr>";-->
+			
+			message += "</table>";				
+			
 			
 				message += "<hr class='style18'></hr>";
-				
-				message += "<table cellspacing=10 cellpadding=10 id='purchaseValueTable' >" ;
-					message += "<tr>"+
-								"<td align='left'>Purchase Value: </td>"+
-								"<td><input type='text' style='width: 100px;' name='purchaseAmount' id='purchaseAmount' value='"+totalPurAmt+"' readOnly/>"+
-							"</tr>";
-				message += "</table>";
-				
 			
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><#--<td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td>--></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
@@ -796,25 +844,25 @@
 		var serviceChargeVal = 0;
 		var otherChargesValue = 0;
 		var discountValue = 0;
+		
 		var totalAmt = dataRow["amount"];
 		var quantity = parseFloat(dataRow["quantity"]);
 		
-		var purchaseBasicAmount = $("#basicAmount").val();
-		var saleBasicAmount = $("#purchaseAmount").val();
+		//var purchaseBasicAmount = $("#basicAmount").val();
+		//var saleBasicAmount = $("#purchaseAmount").val();
 		var tenPercentSubsidy = $("#tenPercentSubsidy").val();
 		var serviceChargeAmt = $("#serviceChargeAmt").val();
 		var totalPayableValue = $("#totalPayableValue").val();
 		var baseAmount = $("#baseAmount").val();
 		var saleBaseAmt = $("#saleBaseAmt").val();
-		
 				
-		$("#purchaseTaxUpdationTable tr :input:visible").each(function () {
+		$("#salesTaxUpdationTable tr :input:visible").each(function () {
 		    var id = this.id;
 		    if(id != 'undefined' && id != null && id.length){
 		    	if (id.indexOf("_AMT") >= 0){
 			    	var adjValue = $('#'+id).val();
 			    	dataRow[id] = adjValue;
-			    	totalTaxAmt = totalTaxAmt+adjValue/100*100 ;
+			    	//otherChargesValue = otherChargesValue+adjValue/100*100 ;
 			    }
 			    else{
 			    	var adjPercentage = $('#'+id).val();
@@ -822,6 +870,29 @@
 			    }
 		    }
 		})
+		
+		$("#salesTaxUpdationTable tr :input:visible").each(function () {
+		    var id = this.id;
+		    if(id != 'undefined' && id != null && id.length){
+		    	if (id.indexOf("_AMT") >= 0){
+			    	var taxValue = $('#'+id).val();
+			    	dataRow[id] = taxValue;
+			    	totalTaxAmt = totalTaxAmt+taxValue/100*100 ;
+			    }
+			    else{
+			    	var taxPercentage = $('#'+id).val();
+			    	dataRow[id] = taxPercentage;
+			    }
+		    }
+		}) 
+		
+		$("#salesTaxUpdationTable tr :input:hidden").each(function () {
+		    var id = this.id;
+		    if(id != 'undefined' && id != null && id.length){
+		    	dataRow[id] = 0;
+		    }
+		})
+		
 		
 		$("#purchaseAdjustmentTable tr :input:visible").each(function () {
 		    var id = this.id;
@@ -869,15 +940,25 @@
 			    }
 		    }
 		})
+		 
 		
-		
-		//alert("totalTaxAmt = "+totalTaxAmt);
-		
-				
-		dataRow["taxAmt"] = totalTaxAmt;
+		dataRow["baseAmount"] = baseAmount;
+		dataRow["saleBaseAmt"] = saleBaseAmt;
+		//dataRow["purchaseBasicAmount"] = purchaseBasicAmount;
+		//dataRow["amount"] = saleBasicAmount;
+		//dataRow["unitPrice"] = saleBasicAmount/quantity;
+		dataRow["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
 		dataRow["OTH_CHARGES_AMT"] = otherChargesValue;
 		dataRow["DISCOUNT_AMT"] = discountValue;
-		//dataRow["totPayable"] = totalPayableValue;
+		dataRow["tenPercent"] = tenPercentSubsidy;		
+				
+				
+		dataRow["taxAmt"] = totalTaxAmt;
+		dataRow["totPayable"] = totalPayableValue;
+		
+		
+		
+		
 		
 		grid.updateRow(rowIndex);
 		grid.render();
