@@ -36,7 +36,7 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "PurchaseInvoiceEditDepotInc.ftl"/>
-
+<#include "EditPurchaseInvoicePrice.ftl"/>
 <div class="full">
 	
 		<div class="screenlet-title-bar">
@@ -46,100 +46,180 @@ $(document).ready(function(){
 	     </div>
 	      
 	    <div class="screenlet-body">
-	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit" class="form-style-8">  
-	      <table width="60%"  border="0" cellspacing="0" cellpadding="0">  
-	        <tr>
-	          <input type="hidden" name="isFormSubmitted"  value="YES" />
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Date :</div></td>
-	          <#if invoDate?exists && invoDate?has_content>  
-		  	  	<#--<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>-->  
-	          	<td valign='middle'>
-	            	<#--<div class='tabletext h3'>${invoDate}</div>-->
-	            	<input type="text" class='h3' name="effectiveDate" id="effectiveDate" value="${invoDate}"/>
-	          	</td>       
-	       	  <#else> 
-	          	  	<td valign='middle'>          
-	            		<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
-	            	</td>
-	       	  </#if>
-	       	  
-	       	  
-	       	  
-	       	  
-	        </tr>
-	        <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Shipment Date:</div></td>
-				<#if shipmentDate?exists && shipmentDate?has_content>  
-		  	  		<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>
-	            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
-	            		</div>
-	          		</td>       
-	          	</#if>
-	        </tr> 
+	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit">  
+	      <table width="60%" border="0" cellspacing="0" cellpadding="0">
+			    	<tr>
+				        <td width="40%">
+			    			<table  border="0" cellspacing="0" cellpadding="0" class="form-style-8">
+				        		<tr>
+	          						<input type="hidden" name="isFormSubmitted"  value="YES" />
+							        <input type="hidden" id="invoiceId" name="invoiceId"  value="${invoiceId}" />
+	         						<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
+							        <#if invoDate?exists && invoDate?has_content>  
+								  	 	<#--<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>-->  
+							          	<td valign='middle'>
+	            							<#--<div class='tabletext h3'>${invoDate}</div>-->
+	            							<input type="text" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>
+	          							</td>     
+							       	<#else> 
+							          	<td valign='middle'><font color="green">          
+							           		<input class='h4' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+							           	</td>
+							       	</#if>
+							       	
+							       	<td><br/></td>
+							       	<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Shipment Date:</div></td>
+									<#if shipmentDate?exists && shipmentDate?has_content>  
+					  	  				<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
+						          		<td valign='middle'>
+						            		<div class='tabletext h4'><font color="green">
+						            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
+						            		</div>
+						          		</td>
+				          			</#if>
+	        				   </tr>
+	        				   
+	        				   
 	        <tr><td><br/></td></tr>
 	        <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
-				<#if partyIdFrom?exists && partyIdFrom?has_content>  
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Supplier:</div></td>
+				<#if partyId?exists && partyId?has_content>  
 		  	  		  <#--  <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  -->
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>
-	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : partyIdFrom}, true) />
-	               			${partyIdFrom?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
+	          		<td valign='middle' colspan="5">
+	            		<div class='tabletext h4'><font color="green">
+	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : partyId}, true) />
+	               			${partyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
 	            		</div>
 	          		</td>       
 	          	</#if>
 	        </tr>
 	         <#-- Showing BillToParty: -->
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>BillToParty:</div></td>
+	         <tr>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>BillToParty:</div></td>
 				<#if billToPartyId?exists && billToPartyId?has_content>  
 		  	  	  <#--	<input type="hidden" name="partyId" id="partyId" value="${billToPartyId?if_exists}"/>  -->
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>
+	          		<td valign='middle' colspan="5">
+	            		<div class='tabletext h4'><font color="green">
 	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : billToPartyId}, true) />
 	               			${billToPartyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
 	            		</div>
 	          		</td>       
 	          	</#if>
 	        </tr>
+	        <tr>
+	        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Branch:</div></td>
+	        <#if branchPartyId?exists && branchPartyId?has_content>  
+	      		<td valign='middle'>
+	        		<div class='tabletext h3'>
+	        			<#assign branchName = delegator.findOne("PartyNameView", {"partyId" : branchPartyId}, true) />
+	           			${branchPartyId?if_exists} [ ${branchName.groupName?if_exists} ${branchName.firstName?if_exists} ${branchName.lastName?if_exists}]             
+	        		</div>
+	      		</td>       
+	         </#if>
+	        </tr>
 	        <tr><td><br/></td></tr>
 	        <tr>
 	          <input type="hidden" name="isFormSubmitted"  value="YES" />
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Tally Reference No :</div></td>
-		            <#if tallyRefNo?exists && tallyRefNo?has_content>  
-	       	  		<td valign='middle'>          
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Tally Reference No :</div></td>
+            <#-->	<#if tallyRefNo?exists && tallyRefNo?has_content>  
+		  	  	<input type="hidden" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo?if_exists}"/>  
+	          	<td valign='middle'>
+	            	<div class='tabletext h3'>${tallyRefNo?if_exists}         
+	            	</div>
+	          	</td>       
+	       	  <#else> 
+	          	  	<td valign='middle'>          
 	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
 	            	</td>
+	       	  </#if> -->
+	       	  <#if tallyRefNo?exists && tallyRefNo?has_content>  
+	       	  <td valign='middle'><font color="green">          
+	            		<input class='h4' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
+	            	</td>
 	            	<#else>
-	            	<td valign='middle'>          
-	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" />           		
+	            	<td valign='middle'><font color="green">          
+	            		<input class='h4' type="text" name="tallyrefNo" id="tallyrefNo" />           		
 	            	</td>
 	            	</#if>
 	       	  
 	        </tr>
-	        <tr><td><br/></td></tr>
-	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Invoice Id</div></td>
+	       <tr>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>invoiceId:</div></td>
 				<#if invoiceId?exists && invoiceId?has_content>  
 		  	  		<input type="hidden" name="invoiceId" id="invoiceId" value="${invoiceId?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>${invoiceId?if_exists}</div> 
-	          		</td>       
+	          		<td valign='middle'><font color="green">
+	            		<div class='tabletext h4'>${invoiceId?if_exists}</div> 
+	              	</td>       
 	          	</#if>
-	        </tr> 
+	        </tr>  
+	       	
+	        <tr><td><br/></td></tr>
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Purchase Order No:</div></td>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Purchase Order No:</div></td>
 				<#if orderId?exists && orderId?has_content>  
-		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h3'>${orderId?if_exists}</div> 
-	          		</td>       
+		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/> 
+		  	  		<#if orderNo?exists && orderNo?has_content>   
+		          		<td valign='middle' colspan="5"><font color="green">
+                   <div class='tabletext h4'>${orderNo?if_exists}</div> 
+		           </td>   
+		          	<#else>	
+			           <td valign='middle' colspan="5"><font color="green">
+		                   <div class='tabletext h4'>${orderId?if_exists}</div> 
+		          	   </td> 
+	          		</#if>   
 	          	</#if>
 	        </tr>
-	                  
-	      </table>
-	      <div id="sOFieldsDiv" >
+	        
+	        <tr>
+	        	
+		       	  		<td align='left' nowrap="nowrap"><div class='h4'>Purchase Tax Type:</div></td>
+		       	  		<td valign='middle'>
+	          				<select name="saleTaxType" id="saleTaxType" class='h4' style="width:120px">
+	          					<#if saleTaxType?exists && saleTaxType?has_content>
+	          						<#if saleTaxType == "Intra-State">
+	          							<option value="Intra-State" selected>With In State</option>
+	          						<#else>
+	          							<option value="Inter-State" selected>Inter State</option>
+	          						</#if> 
+	          					</#if> 
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
+	          				</select>
+	          				<#if customerGeoId?exists && customerGeoId?has_content>
+					    		<input type="hidden" name="customerGeoId" id="customerGeoId" size="18" maxlength="60" value="${customerGeoId}" readonly/>
+					    	</#if>
+					      	<#if branchGeoId?exists && branchGeoId?has_content>
+					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${branchGeoId}" readonly/>
+					    	</#if>
+	          			</td>
+		          		<td>&nbsp;</td>
+		          		<td align='left' nowrap="nowrap"><div class='h4'>Tax Form:</div></td>
+		       			<td valign='middle'>
+	          				<select name="saleTitleTransferEnumId" id="saleTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if saleTitleTransferEnumId?exists && saleTitleTransferEnumId?has_content>
+	          						<#if saleTitleTransferEnumId == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          						</#if>
+	          						<#if saleTitleTransferEnumId == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          						</#if>
+	          						<#if saleTitleTransferEnumId == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          						</#if> 
+	          					</#if> 
+	          				
+	          				
+	          					<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="NO_E2_FORM"></option>
+	          				</select>
+	          			</td>
+		       		</tr>  
+		       	</table>
+		       	</td>
+		       	
+		       </table>	
+	    	<div id="sOFieldsDiv" >
 	      </div> 
 	</form>
 	<br/>
@@ -150,7 +230,7 @@ $(document).ready(function(){
 		 <#else> 
 		 		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
 		 </#if>
-		<input type="hidden" name="shipmentId" id="shipmentId" value="${shipmentId?if_exists}"/>
+		<input type="hidden" name="shipmentId" id="billToPartyId" value="${parameters.shipmentId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>
 		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>
 		<input type="hidden" name="isDisableAcctg" id="isDisableAcctg" value="N"/>
@@ -165,30 +245,30 @@ $(document).ready(function(){
 				<label>Purchase Items</label><span id="totalAmount"></span>
 			</div>
 			 <div class="screenlet-body" id="FieldsDIV" >
-				<div id="myGrid1" style="width:100%;height:200px;">
+				<div id="myGrid1" style="width:100%;height:150px;">
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<div class="lefthalf" >
-				<div class="screenlet-title-bar">
-					<div class="grid-header" style="width:100%">
-						<label>Discounts</label><span id="totalAmount"></span>
-					</div>
-					<div id="myGrid3" style="width:100%;height:150px;">
-						<div class="grid-header" style="width:100%">
-						</div>
-					</div>
-				</div>
-				</div>
-				<div class="righthalf">
+			  <#--	<div class="lefthalf">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
 					</div>
-					<div id="myGrid2" style="width:100%;height:150px;">
+					<div id="myGrid2" style="width:100%;height:180px;">
 						<div class="grid-header" style="width:100%">
 						</div>
+					</div> 
+				</div>
+				</div>
+				<div class="righthalf" >
+				<div class="screenlet-title-bar">
+					<div class="grid-header" style="width:100%">
+						<label>Discounts</label><span id="totalAmount"></span>
 					</div>
+					<div id="myGrid3" style="width:100%;height:180px;">
+						<div class="grid-header" style="width:100%">
+						</div>
+					</div>-->
 				</div>
 				</div>
 				<#assign formAction ='processEditPurchaseInvoice'>	
