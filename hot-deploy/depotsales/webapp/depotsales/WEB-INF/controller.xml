@@ -500,6 +500,11 @@
        <response name="error" type="view" value="MaterialSalesInvoiceInit"/>
      </request-map>
      
+     <request-map uri="DepotMaterialSalesInvoiceInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotMaterialSalesInvoiceInit"/>
+       <response name="error" type="view" value="DepotMaterialSalesInvoiceInit"/>
+     </request-map>
      
       <request-map uri="MaterialSalesEditInvoiceInit">
        <security https="true" auth="true"/>
@@ -2351,6 +2356,11 @@
     <view-map name="MRRreportDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
     <view-map name="MaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesInvoiceInit"/>
+    
+    <view-map name="DepotMaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotMaterialSalesInvoiceInit"/>
+    
+    
+    
     
     <view-map name="MaterialSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
