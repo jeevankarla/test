@@ -558,6 +558,10 @@
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
 			
+			alert("orderAdjustmentsList============="+JSON.stringify(orderAdjustmentsList));
+			
+			alert("discOrderAdjustmentsList============="+JSON.stringify(discOrderAdjustmentsList));
+			
 			var incBaseAmt = 0;
 			if(dataRow["incBaseAmt"]){
 				incBaseAmt = dataRow["incBaseAmt"];
@@ -600,6 +604,10 @@
 			
 			var defaultTaxMap = dataRow["defaultTaxMap"];
 			var taxValueMap = dataRow["taxValueMap"];
+			
+			alert("defaultTaxMap============="+JSON.stringify(defaultTaxMap));
+			
+			alert("taxValueMap============="+JSON.stringify(taxValueMap));
 			
 			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
 			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];

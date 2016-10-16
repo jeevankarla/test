@@ -6873,7 +6873,12 @@ public class DepotPurchaseServices{
   			String partyIdFrom = "";
   			String shipmentId = (String) request.getParameter("shipmentId");
   			String purposeTypeId = "DEPOT_YARN_SALE";
-  		  
+  			
+  			String purchaseTitleTransferEnumId = (String) request.getParameter("purchaseTitleTransferEnumId");
+  			String purchaseTaxType = (String) request.getParameter("purchaseTaxType");
+  			
+  			String purTaxListStr = null;
+  			
   			Timestamp invoiceDate = null;
   			Timestamp suppInvDate = null;
   			
@@ -6949,26 +6954,27 @@ public class DepotPurchaseServices{
   			}	
   			*/
   			
-  			
+  			String orderAdjustmentsListStr = null;
+  			String discOrderAdjustmentsListStr = null;
   			
   			List productQtyList = FastList.newInstance();
-  			List<Map> invoiceAdjChargesList = FastList.newInstance();
-  			List<Map> invoiceDiscountsList = FastList.newInstance();
-  			
-  			List toBillItems = FastList.newInstance();
+  			List invoiceAdjChargesList = FastList.newInstance();
+  			List invoiceDiscountsList = FastList.newInstance();
   			
   			String applicableTo = "ALL";
   			String applicableToDisc = "ALL";
   			for (int i = 0; i < rowCount; i++) {
   				
+  				List purTaxRateList = FastList.newInstance();
   				Map prodQtyMap = FastMap.newInstance();
+  				List orderAdjustmentList = FastList.newInstance();
+  				List discOrderAdjustmentList = FastList.newInstance();
   				
   				String invoiceItemTypeId = "";
   				String adjAmtStr = "";
   				BigDecimal adjAmt = BigDecimal.ZERO;
-  				String orderItemSeqId = "";
-
-  				
+  				String assessableValue = "";
+  				String discAssessableValue = "";
   				String invoiceItemDiscTypeId = "";
   				String adjAmtDiscStr = "";
   				String discQtyStr = "";
@@ -6993,27 +6999,119 @@ public class DepotPurchaseServices{
   				String productId = "";
   				String quantityStr = "";
   				String unitPriceStr = "";
-  				String orderItemSeq = "";
   				
   				BigDecimal quantity = BigDecimal.ZERO;
   				BigDecimal uPrice = BigDecimal.ZERO;
   				
-  				if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
+  				
+  				
+  				if (paramMap.containsKey("orderAdjustmentsList" + thisSuffix)) {
+  					orderAdjustmentsListStr = (String) paramMap.get("orderAdjustmentsList"+ thisSuffix);
+  					
+  					
+  					String[] orderAdjustmentsList = orderAdjustmentsListStr.split(",");
+  					for (int j = 0; j < orderAdjustmentsList.length; j++) {
+  						String orderAdjustmentType = orderAdjustmentsList[j];
+  						Map adjTypeMap = FastMap.newInstance();
+  						adjTypeMap.put("orderAdjustmentTypeId",orderAdjustmentType);
+  						adjTypeMap.put("sourcePercentage",BigDecimal.ZERO);
+  						adjTypeMap.put("amount",BigDecimal.ZERO);
+  						//adjTypeMap.put("taxAuthGeoId", partyGeoId);
+  						
+  						if (paramMap.containsKey(orderAdjustmentType + thisSuffix)) {
+  							String adjPercentage = (String) paramMap.get(orderAdjustmentType + thisSuffix);
+  							if(UtilValidate.isNotEmpty(adjPercentage) && !(adjPercentage.equals("NaN"))){
+  								adjTypeMap.put("sourcePercentage",new BigDecimal(adjPercentage));
+  							}
+  							
+  						}
+  						if (paramMap.containsKey(orderAdjustmentType+ "_AMT" + thisSuffix)) {
+  							String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
+  							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+  								adjTypeMap.put("amount",new BigDecimal(taxAmt));
+  							}
+  						}
+  						if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
+  							String isAssessableValue = (String) paramMap.get(orderAdjustmentType+ "_INC_BASIC" + thisSuffix);
+  							if(UtilValidate.isNotEmpty(isAssessableValue) && !(isAssessableValue.equals("NaN"))){
+  								if(isAssessableValue.equals("TRUE")){
+  									adjTypeMap.put("isAssessableValue", "Y");
+  									//assessableAdjustmentAmount = assessableAdjustmentAmount.add((BigDecimal) adjTypeMap.get("amount"));
+  								}
+  							}
+  						}
+  						Map tempAdjMap = FastMap.newInstance();
+  						tempAdjMap.putAll(adjTypeMap);
+  						
+  						orderAdjustmentList.add(tempAdjMap);
+  					}
+  				}
+  				//Debug.log("assessableAdjustmentAmount ================="+assessableAdjustmentAmount);
+  				
+  				if (paramMap.containsKey("discOrderAdjustmentsList" + thisSuffix)) {
+  					discOrderAdjustmentsListStr = (String) paramMap.get("discOrderAdjustmentsList"+ thisSuffix);
+  					
+  					String[] orderAdjustmentsList = discOrderAdjustmentsListStr.split(",");
+  					for (int j = 0; j < orderAdjustmentsList.length; j++) {
+  						String orderAdjustmentType = orderAdjustmentsList[j];
+  						Map adjTypeMap = FastMap.newInstance();
+  						adjTypeMap.put("orderAdjustmentTypeId",orderAdjustmentType);
+  						adjTypeMap.put("sourcePercentage",BigDecimal.ZERO);
+  						adjTypeMap.put("amount",BigDecimal.ZERO);
+  						//adjTypeMap.put("taxAuthGeoId", partyGeoId);
+  						
+  						if (paramMap.containsKey(orderAdjustmentType + thisSuffix)) {
+  							String adjPercentage = (String) paramMap.get(orderAdjustmentType + thisSuffix);
+  							if(UtilValidate.isNotEmpty(adjPercentage) && !(adjPercentage.equals("NaN"))){
+  								adjTypeMap.put("sourcePercentage",new BigDecimal(adjPercentage));
+  							}
+  							
+  						}
+  						if (paramMap.containsKey(orderAdjustmentType+ "_AMT" + thisSuffix)) {
+  							String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
+  							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+  								BigDecimal taxAmtBd = new BigDecimal(taxAmt);
+  								if(taxAmtBd.compareTo(BigDecimal.ZERO)>0){
+  									taxAmtBd = taxAmtBd.negate();
+  								}
+  								adjTypeMap.put("amount",taxAmtBd);
+  							}
+  						}
+  						if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
+  							String isAssessableValue = (String) paramMap.get(orderAdjustmentType+ "_INC_BASIC" + thisSuffix);
+  							if(UtilValidate.isNotEmpty(isAssessableValue) && !(isAssessableValue.equals("NaN"))){
+  								if(isAssessableValue.equals("TRUE")){
+  									adjTypeMap.put("isAssessableValue", "Y");
+  									//assessableAdjustmentAmount = assessableAdjustmentAmount.add((BigDecimal) adjTypeMap.get("amount"));
+  								}
+  							}
+  						}
+  						Map tempAdjMap = FastMap.newInstance();
+  						tempAdjMap.putAll(adjTypeMap);
+  						
+  						discOrderAdjustmentList.add(tempAdjMap);
+  					}
+  				}
+  				//Debug.log("assessableAdjustmentAmount ================="+assessableAdjustmentAmount);
+  				
+  				
+  				
+  				
+  				/*if (paramMap.containsKey("invoiceItemTypeId" + thisSuffix)) {
   					invoiceItemTypeId = (String) paramMap.get("invoiceItemTypeId" + thisSuffix);
   				}
-  			//	Debug.log("invoiceItemTypeId==============="+invoiceItemTypeId);
 
   				if (paramMap.containsKey("applicableTo" + thisSuffix)) {
   					applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
   				}
-  				Debug.log("applicableTo==============="+applicableTo);
 
   				if (paramMap.containsKey("adjAmt" + thisSuffix)) {
   					adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
   				}
-  				
-  				Debug.log("adjAmtStr==============="+adjAmtStr);
-
+  				if (paramMap.containsKey("assessableValue" + thisSuffix)) {
+  					assessableValue = (String) paramMap.get("assessableValue" + thisSuffix);
+  				}
+  				Debug.log("assessableValue ============="+assessableValue);
   				if(UtilValidate.isNotEmpty(adjAmtStr)){
   					try {
   						adjAmt = new BigDecimal(adjAmtStr);
@@ -7024,49 +7122,44 @@ public class DepotPurchaseServices{
   					}
   				}
   				
-  				Debug.log("adjAmt==============="+adjAmt);
-
   				if(UtilValidate.isNotEmpty(invoiceItemTypeId) && adjAmt.compareTo(BigDecimal.ZERO)>0){
   					Map invItemMap = FastMap.newInstance();
   					invItemMap.put("adjustmentTypeId", invoiceItemTypeId);
   					invItemMap.put("amount", adjAmt);
   					invItemMap.put("uomId", "INR");
   					invItemMap.put("applicableTo", applicableTo);
-  					invoiceAdjChargesList.add(invItemMap);	
+  					if(UtilValidate.isNotEmpty(assessableValue) && (assessableValue.equals("true") || (assessableValue.equals("Y")) ) ){
+  						invItemMap.put("assessableValue", "Y");
+  					}
+  					Debug.log("invItemMap ============="+invItemMap);
+  					
+  					Map tempInvItemMap = FastMap.newInstance();
+  					tempInvItemMap.putAll(invItemMap);
+  					
+  					
+  					invoiceAdjChargesList.add(tempInvItemMap);	
+  					Debug.log("invoiceAdjChargesList ============="+invoiceAdjChargesList);
   				}
-  				
-  				Debug.log("invoiceAdjChargesList==============="+invoiceAdjChargesList);
   				
   				if (paramMap.containsKey("invoiceItemTypeDiscId" + thisSuffix)) {
   					invoiceItemDiscTypeId = (String) paramMap.get("invoiceItemTypeDiscId" + thisSuffix);
   				}
-  				Debug.log("invoiceItemDiscTypeId==============="+invoiceItemDiscTypeId);
 
   				if (paramMap.containsKey("applicableToDisc" + thisSuffix)) {
   					applicableToDisc = (String) paramMap.get("applicableToDisc" + thisSuffix);
   				}
 
-  				Debug.log("applicableToDisc==============="+applicableToDisc);
-
   				if (paramMap.containsKey("adjDiscAmt" + thisSuffix)) {
   					adjAmtDiscStr = (String) paramMap.get("adjDiscAmt" + thisSuffix);
   				}
   				
-  				Debug.log("adjAmtDiscStr==============="+adjAmtDiscStr);
-
-  				
   				if (paramMap.containsKey("discQty" + thisSuffix)) {
   					discQtyStr = (String) paramMap.get("discQty" + thisSuffix);
   				}
-  				
-  				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
-  					orderItemSeqId = (String) paramMap.get("oritemseq" + thisSuffix);
-  					
+  				if (paramMap.containsKey("assessableValueDisc" + thisSuffix)) {
+  					discAssessableValue = (String) paramMap.get("assessableValueDisc" + thisSuffix);
   				}
-  				
-  				Debug.log("discQtyStr==============="+discQtyStr);
-
-  				
+  				Debug.log("discAssessableValue ============="+discAssessableValue);
   				if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
   					try {
   						adjDiscAmt = new BigDecimal(adjAmtDiscStr);
@@ -7077,8 +7170,6 @@ public class DepotPurchaseServices{
   					}
   				}
   				
-  				Debug.log("adjDiscAmt==============="+adjDiscAmt);
-
   				if(UtilValidate.isNotEmpty(discQtyStr)){
   					try {
   						discQty = new BigDecimal(discQtyStr);
@@ -7089,8 +7180,6 @@ public class DepotPurchaseServices{
   					}
   				}
   				
-  				Debug.log("discQty==============="+discQty);
-
   				if(UtilValidate.isNotEmpty(invoiceItemDiscTypeId) && adjDiscAmt.compareTo(BigDecimal.ZERO)>0){
   					
   					BigDecimal adjQty = BigDecimal.ONE;
@@ -7109,11 +7198,16 @@ public class DepotPurchaseServices{
   					invItemMap.put("quantity", adjQty);
   					invItemMap.put("uomId", "INR");
   					invItemMap.put("applicableTo", applicableToDisc);
-  					invoiceDiscountsList.add(invItemMap);	
-  				}
-  				
-  				Debug.log("invoiceDiscountsList==============="+invoiceDiscountsList);
-
+  					if(UtilValidate.isNotEmpty(discAssessableValue) && (discAssessableValue.equals("true") || (assessableValue.equals("Y")) ) ){
+  						invItemMap.put("assessableValue", "Y");
+  					}
+  					Debug.log("invItemMap ============="+invItemMap);
+  					Map tempInvItemMap = FastMap.newInstance();
+  					tempInvItemMap.putAll(invItemMap);
+  					
+  					invoiceDiscountsList.add(tempInvItemMap);	
+  					Debug.log("invoiceDiscountsList ============="+invoiceDiscountsList);
+  				}*/
   				
   				if (paramMap.containsKey("productId" + thisSuffix)) {
   					productId = (String) paramMap.get("productId" + thisSuffix);
@@ -7123,6 +7217,7 @@ public class DepotPurchaseServices{
   					if (paramMap.containsKey("quantity" + thisSuffix)) {
   						quantityStr = (String) paramMap.get("quantity" + thisSuffix);
   					}
+  					
   					if(UtilValidate.isEmpty(quantityStr)){
   						request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
   						return "error";	
@@ -7131,6 +7226,7 @@ public class DepotPurchaseServices{
   					if (paramMap.containsKey("UPrice" + thisSuffix)) {
   					   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
   					}
+  					
   					if (paramMap.containsKey("VAT" + thisSuffix)) {
   						vatStr = (String) paramMap.get("VAT" + thisSuffix);
   					}
@@ -7142,12 +7238,46 @@ public class DepotPurchaseServices{
   					if (paramMap.containsKey("VatPercent" + thisSuffix)) {
   						VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
   					}
+  					
   					if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
   						CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
   					}
   					
-  					if (paramMap.containsKey("oritemseq" + thisSuffix)) {
-  						orderItemSeq = (String) paramMap.get("oritemseq" + thisSuffix);
+  					// Purchase tax list
+  					
+  					if (paramMap.containsKey("purTaxList" + thisSuffix)) {
+  						purTaxListStr = (String) paramMap.get("purTaxList"
+  								+ thisSuffix);
+  						
+  						String[] taxList = purTaxListStr.split(",");
+  						for (int j = 0; j < taxList.length; j++) {
+  							String taxType = taxList[j];
+  							Map taxRateMap = FastMap.newInstance();
+  							String purTaxType = taxType.replace("_SALE", "_PUR");
+  							taxRateMap.put("orderAdjustmentTypeId",purTaxType);
+  							taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
+  							taxRateMap.put("amount",BigDecimal.ZERO);
+  							//taxRateMap.put("taxAuthGeoId", partyGeoId);
+  							
+  							if (paramMap.containsKey(taxType + "_PUR" + thisSuffix)) {
+  								String taxPercentage = (String) paramMap.get(taxType + "_PUR" + thisSuffix);
+  								if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
+  									taxRateMap.put("sourcePercentage",new BigDecimal(taxPercentage));
+  								}
+  								
+  							}
+  							if (paramMap.containsKey(taxType+ "_PUR_AMT" + thisSuffix)) {
+  								String taxAmt = (String) paramMap.get(taxType+ "_PUR_AMT" + thisSuffix);
+  								if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+  									taxRateMap.put("amount",new BigDecimal(taxAmt));
+  								}
+  							}
+  							
+  							Map tempTaxMap = FastMap.newInstance();
+  							tempTaxMap.putAll(taxRateMap);
+  							
+  							purTaxRateList.add(tempTaxMap);
+  						}
   					}
   					
   					try {
@@ -7157,6 +7287,7 @@ public class DepotPurchaseServices{
   						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
   						return "error";
   					}
+  					
   					try {
   						if (!unitPriceStr.equals("")) {
   							uPrice = new BigDecimal(unitPriceStr);
@@ -7166,6 +7297,7 @@ public class DepotPurchaseServices{
   						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
   						return "error";
   					} 
+  					
   					try {
   						if (!vatStr.equals("")) {
   							vat = new BigDecimal(vatStr);
@@ -7196,6 +7328,7 @@ public class DepotPurchaseServices{
   						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VatPercent string: " + VatPercentStr);
   						return "error";
   					}
+  					
   					try {
   						if (!CSTPercentStr.equals("")) {
   							cstPercent = new BigDecimal(CSTPercentStr);
@@ -7232,372 +7365,267 @@ public class DepotPurchaseServices{
   					prodQtyMap.put("vatPercent", vatPercent);
   					prodQtyMap.put("cstPercent", cstPercent);
   					prodQtyMap.put("bedPercent", BigDecimal.ZERO);
+  					prodQtyMap.put("purTaxRateList", purTaxRateList);
+  					prodQtyMap.put("orderAdjustmentList", orderAdjustmentList);
+  					prodQtyMap.put("discOrderAdjustmentList", discOrderAdjustmentList);
   					productQtyList.add(prodQtyMap);
   				}
-  				
-  				//=============================purchase Invoice==================================
-  				
-  				
-                 
-  				List<GenericValue> purchaseOrderitems = null;
-  				
-  				 try {
-  					     List itemAssocCond = FastList.newInstance();
-  				    	itemAssocCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-  				    	itemAssocCond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeq));
-  				    	itemAssocCond.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-  			    		
-  				      	purchaseOrderitems = delegator.findList("OrderItem", EntityCondition.makeCondition(itemAssocCond, EntityOperator.AND), null, UtilMisc.toList("orderItemSeqId"), null, false);
-  				    } catch (GenericEntityException e) {
-  				    	/* Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(salesOrderitems), module);
-  				  			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(salesOrderitems));
-  		               */	return "error";
-  			        }
-
-  					GenericValue eachItem = null;
-  				 
-  					if(UtilValidate.isNotEmpty(purchaseOrderitems)){
-  						eachItem = EntityUtil.getFirst(purchaseOrderitems);
-  						
-  						BigDecimal billedQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(eachItem);
-
-  						
-  						if(UtilValidate.isNotEmpty(quantity))
-  						eachItem.set("quantity", quantity.add(billedQuantity));
-  						if(UtilValidate.isNotEmpty(uPrice))
-  						eachItem.set("unitPrice", uPrice);
-  							
-  						toBillItems.add(eachItem);
-  	        
-  				}
-  				
   			}//end row count for loop
+  			
   			if( UtilValidate.isEmpty(productQtyList)){
   				Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
   				request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
   				return "success";
   			}
   			
-  			 Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin);
-  	          serviceContext.put("shipmentId",shipmentId);
-  	          try {
-  	               result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
-  	              String invoiceId1 = (String) result.get("invoiceId");
-  	              
-  	             // Debug.log("invoiceId1==============="+invoiceId1);
-  	              
-  	          } catch (GenericServiceException e) {
-  	              
-  	              Debug.logError("AccountingTroubleCallingCreateInvoiceForOrderService: " + ServiceUtil.getErrorMessage(result), module);
-  	  			request.setAttribute("_ERROR_MESSAGE_", "Unable to create Invoice:"+ServiceUtil.getErrorMessage(result));
-  	  			return "error";
-  	        }
-  			
   			// Get Purpose type based on product
   			
   			String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
-  			
-  			/*try{
+
+  			try{
   		  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
   		  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
   		  	}catch (GenericServiceException e) {
   		  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
   				request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
   				return "error";
-  		  	}*/
+  		  	}
   			
   			Map processInvoiceContext = FastMap.newInstance();
   			processInvoiceContext.put("userLogin", userLogin);
   			processInvoiceContext.put("productQtyList", productQtyList);
   			processInvoiceContext.put("partyId", partyId);
   			processInvoiceContext.put("tallyrefNo", tallyrefNo);
-  			processInvoiceContext.put("purposeTypeId", purposeTypeId);
+  			processInvoiceContext.put("purposeTypeId", "DEPOT_YARN_SALE");
   			processInvoiceContext.put("vehicleId", vehicleId);
   			processInvoiceContext.put("orderId", orderId);
-  			processInvoiceContext.put("shipmentId", "");
+  			processInvoiceContext.put("shipmentId", shipmentId);
   			processInvoiceContext.put("invoiceDate", invoiceDate);
-  			processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
-  			processInvoiceContext.put("invoiceDiscountsList", invoiceDiscountsList);
+  			processInvoiceContext.put("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
+  			processInvoiceContext.put("purchaseTaxType", purchaseTaxType);
+  			//processInvoiceContext.put("saleTitleTransferEnumId", saleTitleTransferEnumId);
+  			//processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
+  			//processInvoiceContext.put("invoiceDiscountsList", invoiceDiscountsList);
   			
   			if(UtilValidate.isNotEmpty(isDisableAcctg)){
   				processInvoiceContext.put("isDisableAcctg", isDisableAcctg);
   			}
-  			/*result = createDepotInvoice(dctx, processInvoiceContext);
+  			result = createDepotInvoice(dctx, processInvoiceContext);
   			if(ServiceUtil.isError(result)){
   				Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
   				request.setAttribute("_ERROR_MESSAGE_", "Unable to generate invoice  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
   				return "error";
-  			}*/
-  			
-  		//	Debug.log("result================="+result);
+  			}
   			
   			String invoiceId =  (String)result.get("invoiceId");
   			
+  			//============================================Rounding Off===============================
+  			  List<GenericValue> InvoiceItem = null;
+  		    	
+  			    List conditionList = FastList.newInstance();
+  		    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+  		    	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+  		    	 try{
+  		    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		    	 
+  		    	 }catch(GenericEntityException e){
+  						Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+  					}
+  			    
+  			    
+  		    	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+  		        	 
+  		    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+  		    		 
+  		        	for(GenericValue eachInvoiceItem : InvoiceItem){
+  		        	
+  		        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+  		        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+  		        		BigDecimal itemValue = quantity.multiply(amount);
+  		        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+  		        		
+  		        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+  		        		
+  		        		eachInvoiceItem.set("itemValue",roundedAmount);
+  		        		
+  		        		try{
+  		        		eachInvoiceItem.store();
+  		        		}catch(GenericEntityException e){
+  		        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+  		        		}
+  		        	}
+  		        	
+  		        	try{
+  		        		
+  		        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+  		        		
+  		        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+  		        	InvoiceHeader.store();
+  		        	}catch(GenericEntityException e){
+  		    			Debug.logError(e, "Failed to Populate Invoice ", module);
+  		    		}
+  		        	
+  		    	 }
+  		    	 
   			
-  			 purposeTypeId = "DEPOT_YARN_SALE";
-  			
-  		    if(UtilValidate.isNotEmpty(purposeTypeId)){
-  	       	 try{
-  	    	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
-  	    	    	invoice.set("purposeTypeId", purposeTypeId);
-  	    	    	if(UtilValidate.isNotEmpty(tallyrefNo))
-  	    	    	invoice.set("referenceNumber", tallyrefNo);
-  	    	    	
-  	   			invoice.store();
-  	    		} catch (Exception e) {
-  	    	       Debug.logError(e, "Error in fetching InvoiceItem ", module);
-  	   			  request.setAttribute("_ERROR_MESSAGE_", "Error in populating invoice purpose :" + invoiceId+"....! ");
-  	   				return "error";
-  	    		}
 
-  		    }
-  			
-  		    
-  		  if(UtilValidate.isNotEmpty(invoiceAdjChargesList)){
-  	        for (Map<String, Object> adjustMap : invoiceAdjChargesList) {
-  				
-  	        	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+  		    	 //================= get purchase Invoice Details===============================
+  		    	  		   
+  		    	             conditionList.clear();
+  		    	  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		    	  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
+  		    	  			List<GenericValue> invoiceItemListAdj =null;
+  		    	  			
+  		    	  			try{
+  		    	  				invoiceItemListAdj = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		    	  		      
+  		    	  			} catch (Exception e) {
+  		    	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		    	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+  		    	  					return "error";
+  		    	  			}
 
-  	        	BigDecimal amount = BigDecimal.ZERO;
-  	        	
-  	        	
-  	        	createInvoiceItemContext.put("invoiceId",invoiceId);
-  	            createInvoiceItemContext.put("invoiceItemTypeId", adjustMap.get("adjustmentTypeId"));
-  	            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
-  	            //createInvoiceItemContext.put("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
-  	            //createInvoiceItemContext.put("description", eachItem.get("description"));
-  	            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
-  	            
-  	            if(UtilValidate.isNotEmpty(adjustMap.get("amount"))){
-  					amount = (BigDecimal)adjustMap.get("amount");
-  					createInvoiceItemContext.put("amount",amount);
-  				}
-  	            
-  	            //createInvoiceItemContext.put("productId", eachItem.get("productId"));
-  	            createInvoiceItemContext.put("userLogin", userLogin);
-  	            try{
-  	            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-  	            	
-  	            	if(ServiceUtil.isError(createInvoiceItemResult)){
-  	            		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
-  	                    Debug.logError(errMsg, module);
-  	                    return ServiceUtil.returnError(errMsg);
-  						*/  request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-  							return "error";
-  	                    
-  	          		}
-  	            } catch (Exception e) {
-  	            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-  					return "error";
-  	    		}
-  				
-  			   }
-  			
-  			}
-  	        
-  			
-  			if(UtilValidate.isNotEmpty(invoiceDiscountsList)){
-  			
-  			for (Map<String, Object> adjustMap : invoiceDiscountsList) {
-  				
-  				
-  				
-  				Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+  		    	  			if(UtilValidate.isNotEmpty(invoiceItemListAdj)){
+  		    	  			
+  		    	  			
+  		    	  			
+  		    	  			BigDecimal invoiceAdjTotal = BigDecimal.ZERO;
+  		    	  			for (int i = 0; i < invoiceItemListAdj.size(); i++) {
+  		    	  				
+  		    					GenericValue eachInvoiceList = (GenericValue)invoiceItemListAdj.get(i);
+  		    					invoiceAdjTotal = invoiceAdjTotal.add(eachInvoiceList.getBigDecimal("amount"));
+  		    	           
+  		    	  			}
+  		    	  			
+  		    	  			
+  		    	  			
+  		    	  			conditionList.clear();
+  		    	  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		    	  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+  		    	  			List<GenericValue> invoiceItemList =null;
+  		    	  			
+  		    	  			try{
+  		    	  		      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		    	  		      
+  		    	  			} catch (Exception e) {
+  		    	  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		    	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+  		    	  					return "error";
+  		    	  			}
+  		    	  			
+  		    	             for (int i = 0; i < invoiceItemList.size(); i++) {
+  		    	  				
+  		    					GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
+  		    					
+  		    					String invoiceIdItem = eachInvoiceList.getString("invoiceId");
+  		    					
+  		    					String invoiceItemSeqIdItem = eachInvoiceList.getString("invoiceItemSeqId");
+  		    					
+  		    					BigDecimal quantity = eachInvoiceList.getBigDecimal("quantity");
+  		    					
+  		    					BigDecimal amount = eachInvoiceList.getBigDecimal("amount");
+  		    					
+  		    					BigDecimal itemTotal = quantity.multiply(amount);
+  		    					
+  		    					//Debug.log("itemTotal=============="+itemTotal);
+  		    					
+  		    					//Debug.log("invoiceAdjTotal=============="+invoiceAdjTotal);
+  		    					
+  		    					BigDecimal AdjWithInvoAmt = itemTotal.add(invoiceAdjTotal);
+  		    					
+  		    					//Debug.log("AdjWithInvoAmt=============="+AdjWithInvoAmt);
 
-  	        	BigDecimal amount = BigDecimal.ZERO;
-  	        	
-  	        	
-  	        	createInvoiceItemContext.put("invoiceId",invoiceId);
-  	            createInvoiceItemContext.put("invoiceItemTypeId", adjustMap.get("adjustmentTypeId"));
-  	            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
-  	            //createInvoiceItemContext.put("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
-  	            //createInvoiceItemContext.put("description", eachItem.get("description"));
-  	            createInvoiceItemContext.put("quantity", adjustMap.get("quantity"));
-  	            
-  	            if(UtilValidate.isNotEmpty(adjustMap.get("amount"))){
-  					amount = (BigDecimal)adjustMap.get("amount");
-  					createInvoiceItemContext.put("amount",amount.negate());
-  				}
-  	            
-  	            //createInvoiceItemContext.put("productId", eachItem.get("productId"));
-  	            createInvoiceItemContext.put("userLogin", userLogin);
-  	            try{
-  	            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-  	            	if(ServiceUtil.isError(createInvoiceItemResult)){
-  	            		/*String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCreateInvoiceForOrderService", locale);
-  	                    Debug.logError(errMsg, module);
-  	                    return ServiceUtil.returnError(errMsg);
-  						*/  request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-  							return "error";
-  	                    
-  	          		}
-  	            } catch (Exception e) {
-  	            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-  					return "error";
-  	    		}
-  	        	
-  				
-  			}
-  			
-  			}
+  		    					
+  		    					double addTOInventoryUnitPrice = 0;
+  		    					if(quantity.doubleValue() > 0)
+  		    					 addTOInventoryUnitPrice = AdjWithInvoAmt.doubleValue()/quantity.doubleValue();
+  		    					
+  		    					BigDecimal addToInventory = new BigDecimal(addTOInventoryUnitPrice);
+  		    					
+  		    					//Debug.log("addTOInventoryUnitPrice=============="+addTOInventoryUnitPrice);
 
-  		    //================= get purchase Invoice Details===============================
-  		   
-  			List conditionList = FastList.newInstance();
-  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("INV_RAWPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE")));
-  			List<GenericValue> invoiceItemListAdj =null;
-  			
-  			try{
-  				invoiceItemListAdj = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-  		      
-  			} catch (Exception e) {
-  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
-  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
-  					return "error";
-  			}
+  		    					//Debug.log("addToInventory=============="+addToInventory);
 
-  			if(UtilValidate.isNotEmpty(invoiceItemListAdj)){
-  			
-  			
-  			
-  			BigDecimal invoiceAdjTotal = BigDecimal.ZERO;
-  			for (int i = 0; i < invoiceItemListAdj.size(); i++) {
-  				
-				GenericValue eachInvoiceList = (GenericValue)invoiceItemListAdj.get(i);
-				invoiceAdjTotal = invoiceAdjTotal.add(eachInvoiceList.getBigDecimal("amount"));
-           
-  			}
-  			
-  			
-  			
-  			conditionList.clear();
-  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-  			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
-  			List<GenericValue> invoiceItemList =null;
-  			
-  			try{
-  		      invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-  		      
-  			} catch (Exception e) {
-  	   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
-  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
-  					return "error";
-  			}
-  			
-             for (int i = 0; i < invoiceItemList.size(); i++) {
-  				
-				GenericValue eachInvoiceList = (GenericValue)invoiceItemList.get(i);
-				
-				String invoiceIdItem = eachInvoiceList.getString("invoiceId");
-				
-				String invoiceItemSeqIdItem = eachInvoiceList.getString("invoiceItemSeqId");
-				
-				BigDecimal quantity = eachInvoiceList.getBigDecimal("quantity");
-				
-				BigDecimal amount = eachInvoiceList.getBigDecimal("amount");
-				
-				BigDecimal itemTotal = quantity.multiply(amount);
-				
-				//Debug.log("itemTotal=============="+itemTotal);
-				
-				//Debug.log("invoiceAdjTotal=============="+invoiceAdjTotal);
-				
-				BigDecimal AdjWithInvoAmt = itemTotal.add(invoiceAdjTotal);
-				
-				//Debug.log("AdjWithInvoAmt=============="+AdjWithInvoAmt);
+  		    					
+  		    					//=====================get relevent Order and Seq==========================
+  		    					
+  		    					
+  		    					
+  		    					conditionList.clear();
+  		    		  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdItem));
+  		    		  			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdItem));
+  		    		  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+  		    		  			List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItemList =null;
+  		    		  			
+  		    		  			try{
+  		    		  				OrderItemBillingAndInvoiceAndInvoiceItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		    		  		      
+  		    		  			} catch (Exception e) {
+  		    		  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		    		  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+  		    		  					return "error";
+  		    		  			}
+  		    					
+  		    		  			GenericValue OrderItemBillingAndInvoiceAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItemList);
+  		    					
+  		    		  			String orderIdBill = "";
+  		    		  			String orderItemSeqIdBill = "";
+  		    		  			if(UtilValidate.isNotEmpty(OrderItemBillingAndInvoiceAndInvoice)){
+  		    		  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderId");
+  		    		  				orderItemSeqIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderItemSeqId");
+  		    		  			}
+  		    		  			
+  		    		  			conditionList.clear();
+  		    		  			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderIdBill));
+  		    		  			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqIdBill));
+  		    		  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+  		    		  			List<GenericValue> ShipmentAndReceiptList =null;
+  		    		  			
+  		    		  			try{
+  		    		  				ShipmentAndReceiptList = delegator.findList("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  		    		  		      
+  		    		  			} catch (Exception e) {
+  		    		  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		    		  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
+  		    		  					return "error";
+  		    		  			}
+  		    	                GenericValue ShipmentAndReceipt = EntityUtil.getFirst(ShipmentAndReceiptList);
+  		    	      			////Debug.log("addToInventory====================="+addToInventory);
 
-				
-				double addTOInventoryUnitPrice = 0;
-				if(quantity.doubleValue() > 0)
-				 addTOInventoryUnitPrice = AdjWithInvoAmt.doubleValue()/quantity.doubleValue();
-				
-				BigDecimal addToInventory = new BigDecimal(addTOInventoryUnitPrice);
-				
-				//Debug.log("addTOInventoryUnitPrice=============="+addTOInventoryUnitPrice);
+  		    		  			String inventoryItemId = "";
+  		    		  			if(UtilValidate.isNotEmpty(ShipmentAndReceipt)){
+  		    		  				inventoryItemId = (String)ShipmentAndReceipt.get("inventoryItemId");
+  		    		  			}
+  		    		  			
+  		    		  			// Map<String, Object> inventoryItemMap = UtilMisc.toMap("inventoryItemId", inventoryItemId,"unitCost",addToInventory, "userLogin", userLogin);
+  		    		  	          try {
+  		    		  	              // result = dispatcher.runSync("updateInventoryItem", inventoryItemMap);
+  		    		  	      			////Debug.log("result====================="+result);
+  		    			  	      		////Debug.log("inventoryItemId====================="+inventoryItemId);
 
-				//Debug.log("addToInventory=============="+addToInventory);
-
-				
-				//=====================get relevent Order and Seq==========================
-				
-				
-				
-				conditionList.clear();
-	  			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdItem));
-	  			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdItem));
-	  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	  			List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItemList =null;
-	  			
-	  			try{
-	  				OrderItemBillingAndInvoiceAndInvoiceItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	  		      
-	  			} catch (Exception e) {
-	  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
-	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
-	  					return "error";
-	  			}
-				
-	  			GenericValue OrderItemBillingAndInvoiceAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItemList);
-				
-	  			String orderIdBill = "";
-	  			String orderItemSeqIdBill = "";
-	  			if(UtilValidate.isNotEmpty(OrderItemBillingAndInvoiceAndInvoice)){
-	  				orderIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderId");
-	  				orderItemSeqIdBill = (String)OrderItemBillingAndInvoiceAndInvoice.get("orderItemSeqId");
-	  			}
-	  			
-	  			conditionList.clear();
-	  			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderIdBill));
-	  			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqIdBill));
-	  			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
-	  			List<GenericValue> ShipmentAndReceiptList =null;
-	  			
-	  			try{
-	  				ShipmentAndReceiptList = delegator.findList("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	  		      
-	  			} catch (Exception e) {
-	  	   		  //Debug.logError(e, "Error in fetching InvoiceItem ", module);
-	  				  request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceItem :" + invoiceId+"....! ");
-	  					return "error";
-	  			}
-                GenericValue ShipmentAndReceipt = EntityUtil.getFirst(ShipmentAndReceiptList);
-      			////Debug.log("addToInventory====================="+addToInventory);
-
-	  			String inventoryItemId = "";
-	  			if(UtilValidate.isNotEmpty(ShipmentAndReceipt)){
-	  				inventoryItemId = (String)ShipmentAndReceipt.get("inventoryItemId");
-	  			}
-	  			
-	  			// Map<String, Object> inventoryItemMap = UtilMisc.toMap("inventoryItemId", inventoryItemId,"unitCost",addToInventory, "userLogin", userLogin);
-	  	          try {
-	  	              // result = dispatcher.runSync("updateInventoryItem", inventoryItemMap);
-	  	      			////Debug.log("result====================="+result);
-		  	      		////Debug.log("inventoryItemId====================="+inventoryItemId);
-
-	  	      		 GenericValue InventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
-	  	   		
-	  	      		////Debug.log("InventoryItem====================="+InventoryItem);
-	  	      		InventoryItem.set("unitCost",addToInventory);
-	  	      	    InventoryItem.store();
-	  	               
-	  	          } catch (Exception e) {
-	  	        	  
-	  	        	 //Debug.logError(e, "Error while populating updateInventoryItem ", module);
-	  				  request.setAttribute("_ERROR_MESSAGE_", "Error while populating updateInventoryItem :" + invoiceId+"....! ");
-	  					return "error";
-	  	          }
-  			 }
-  			
-  		  }  
-  			
-  			
-  			
-  			
-  			request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
-  			
-  			return "success";
-  		}
+  		    		  	      		 GenericValue InventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+  		    		  	   		
+  		    		  	      		////Debug.log("InventoryItem====================="+InventoryItem);
+  		    		  	      		InventoryItem.set("unitCost",addToInventory);
+  		    		  	      	    InventoryItem.store();
+  		    		  	               
+  		    		  	          } catch (Exception e) {
+  		    		  	        	  
+  		    		  	        	 //Debug.logError(e, "Error while populating updateInventoryItem ", module);
+  		    		  				  request.setAttribute("_ERROR_MESSAGE_", "Error while populating updateInventoryItem :" + invoiceId+"....! ");
+  		    		  					return "error";
+  		    		  	          }
+  		    	  			 }
+  		    	  			
+  		    	  		  } 
+  		    	 
+  		    	 
+  		 		String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
+  		 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId+" and Sequence : "+invoiceSeq);	  	 
+  		 		
+  		 		return "success";
+  		 	}
   		
 	    
 }

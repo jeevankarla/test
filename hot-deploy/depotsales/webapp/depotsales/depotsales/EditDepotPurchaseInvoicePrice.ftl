@@ -558,6 +558,10 @@
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
 			
+		//	alert("orderAdjustmentsList==========="+JSON.stringify(orderAdjustmentsList));
+			
+			//alert("discOrderAdjustmentsList==========="+JSON.stringify(discOrderAdjustmentsList));
+			
 			var incBaseAmt = 0;
 			if(dataRow["incBaseAmt"]){
 				incBaseAmt = dataRow["incBaseAmt"];
@@ -601,8 +605,17 @@
 			var defaultTaxMap = dataRow["defaultTaxMap"];
 			var taxValueMap = dataRow["taxValueMap"];
 			
-			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
+		//	alert("defaultTaxMap==========="+JSON.stringify(defaultTaxMap));
+			
+		//	alert("taxValueMap==========="+JSON.stringify(taxValueMap));
+			
+			var saleTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
 			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
+			
+			//alert("saleTitleTransferEnumId==========="+JSON.stringify(saleTitleTransferEnumId));
+			
+			//			alert("saleTaxList==========="+JSON.stringify(saleTaxList));
+			
 			
 			var serviceCharge = 0;
 			if(dataRow["SERVICE_CHARGE"]){
@@ -810,10 +823,10 @@
 			
 			message += "<table cellspacing=10 cellpadding=10 id='salesDiscountsAndChgs' >" ;
 				message += "<tr>"+
-							"<td align='left'>Sale Value: </td>"+
+							"<td align='left'>Purchase Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+totalAmt+"' readOnly/>"+
 						"</tr>";
-				message += "<tr>"+
+			<#-->	message += "<tr>"+
 							"<td align='left'>Service Charge("+serviceCharge+"%): </td>"+
 							"<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
 						"</tr>";
@@ -825,7 +838,7 @@
 				message += "<tr>"+
 							"<td align='left'>Total Payable Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
-						"</tr>";
+						"</tr>";-->
 			
 			message += "</table>";				
 			
@@ -1037,7 +1050,7 @@
 		dataRow["taxApplicabilityList"] = taxApplicabilityList;
 		grid.updateRow(rowIndex);
 		grid.render();
-		updateTotalIndentAmount();
+		//updateTotalIndentAmount();
 		cancelForm();
 	}	
 		
