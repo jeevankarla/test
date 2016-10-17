@@ -1133,7 +1133,7 @@ if(shipments){
 			
 			newObj.put("amount", (eachItem.unitPrice*eachItem.quantity));
 			
-			
+			amount = amount+(eachItem.unitPrice*eachItem.quantity);
 			
 			
 			condExpr = [];
@@ -1262,9 +1262,22 @@ if(shipments){
 				}
 			}
 
-			newObj.put("SUBSIDY", subsidyAmt);
+			newObj.put("tenPercent", subsidyAmt);
 			
+			double usedQuota = 0;
+				
+				List tenPercCond = [];
+				tenPercCond.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+				tenPercCond.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+				OrderItemDetail = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(tenPercCond, EntityOperator.AND), null, null, null, false);
+				
+				if(UtilValidate.isNotEmpty(OrderItemDetail)){
+					for (eachDetail in OrderItemDetail) {
+						usedQuota = usedQuota+eachDetail.quotaQuantity;
+					}
+				}
 			
+				newObj.put("usedQuota", usedQuota);
 			Debug.log("totalTaxAmt==============="+totalTaxAmt);
 			
 			Debug.log("serviceChg==============="+serviceChg);
@@ -1436,6 +1449,34 @@ if(shipments){
 					 
 					 
 					 newObj.put("totPayable", totPayable);
+					 
+					 
+							 newObj.put("orderAdjustmentTypeList", additionalChgTypeIdsList);
+						 
+						 newObj.put("discountTypeIdsList", discountTypeIdsList);
+					 
+					 
+						 
+						 
+						 
+						 taxList1 = [];
+						 taxList1.add("VAT_SALE");
+						 taxList1.add("CST_SALE");
+						 taxList1.add("VAT_SURCHARGE");
+						 taxList1.add("CST_SURCHARGE");
+							 
+							 newObj.put("taxList", taxList1);
+						 
+						 
+						 purTaxList = [];
+						 purTaxList.add("VAT_SALE");
+						 purTaxList.add("CST_SALE");
+						 purTaxList.add("VAT_SURCHARGE");
+						 purTaxList.add("CST_SURCHARGE");
+							  
+							  
+							  newObj.put("purTaxList", purTaxList);
+							  
 					 
 			
 			invoiceItemsJSON.add(newObj);
