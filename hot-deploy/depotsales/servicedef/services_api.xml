@@ -124,5 +124,29 @@
         <attribute type="Map" mode="OUT" name="supplierPOList" optional="true"/>
     </service>
     
+    <service name="createSupplierDispatch" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.SupplierApiServices" invoke="createSupplierDispatch">
+        <description>Create Shipment Dispatch</description>
+        <attribute name="supplierId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="suppInvoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="suppInvoiceDate" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="deliveryChallanDate" type="String" mode="IN" optional="true"/>
+        <attribute name="deliveryChallanNo" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="lrDate" type="String" mode="IN" optional="true"/>
+        <attribute name="lrNumber" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="vehicleId" type="String" mode="IN" optional="true"/>
+        <attribute name="carrierName" type="String" mode="IN" optional="true"/>
+        <attribute name="freightCharges" type="String" mode="IN" optional="true"/>
+        <attribute name="remarks" type="String" mode="IN" optional="true"/>
+        
+        <attribute name="shipmentItems" type="List" mode="IN" optional="false"/>
+        <attribute type="Map" mode="OUT" name="shipmentResult" optional="true"/>
+    </service>
+    
 </services>
 
