@@ -312,8 +312,17 @@ orderHeader.each{ eachHeader ->
 	
 	if(!OrderItemBillingList){
 	tempData.put("salesButton", "Y");
+	
+	tempData.put("invoiceId", "");
+	tempData.put("statusId", "");
+	
 	}else{
 		billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , OrderItemBillingList[0].invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+		
+		
+		invoiceList = delegator.findOne("Invoice",[invoiceId : OrderItemBillingList[0].invoiceId] , false);
+		
+		statusId = invoiceList.statusId;
 		
 		invoiceSequence = "";
 		
@@ -326,6 +335,12 @@ orderHeader.each{ eachHeader ->
 		tempData.put("salesButton", "N");
 		
 		tempData.put("salesNo", invoiceSequence);
+		
+		tempData.put("statusId", statusId);
+		
+		
+		tempData.put("invoiceId", OrderItemBillingList[0].invoiceId);
+		
 	}
 	
 	

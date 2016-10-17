@@ -512,6 +512,12 @@
        <response name="error" type="view" value="MaterialSalesEditInvoiceInit"/>
      </request-map>
      
+       <request-map uri="MaterialDepotSalesEditInvoiceInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialDepotSalesEditInvoiceInit"/>
+       <response name="error" type="view" value="MaterialDepotSalesEditInvoiceInit"/>
+     </request-map>
+     
      <request-map uri="purchaseInvoiceEdit">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="purchaseInvoiceEdit"/>
@@ -548,6 +554,14 @@
        <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
        <response name="error" type="view" value="DepotSalesInvoice"/>
      </request-map>
+     
+      <request-map uri="processDepotEditSalesInvoice">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotEditSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoiceView"/>
+       <response name="error" type="view" value="DepotSalesInvoiceView"/>
+     </request-map>
+     
      <request-map uri="processEditPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditPurchaseInvoice" global-transaction="true"/>
@@ -2375,6 +2389,8 @@
     
     
     <view-map name="MaterialSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesEditInvoiceInit"/>
+    
+    <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
    
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>

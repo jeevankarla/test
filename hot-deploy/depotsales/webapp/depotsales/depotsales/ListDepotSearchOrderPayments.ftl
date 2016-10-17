@@ -224,6 +224,7 @@ under the License.
           <#--> <td>Advance Payments</td> -->
              <td>Received Amount</td>
              <td>Sales Invoice</td>
+              <#--<td>Edit Sales Invoice</td> -->
              <td>Cancel Indent</td>
              
              
@@ -299,6 +300,13 @@ under the License.
                 <#else>
                 <td>${(eachOrder.salesNo)?if_exists}</td>
                 </#if>
+                
+              <#--  <#if eachOrder.statusId != "INVOICE_CANCELLED" && eachOrder.invoiceId?has_content> <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialDepotSalesEditInvoiceInit?invoiceId=${eachOrder.invoiceId}&amp;partyId=${eachOrder.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, eachOrder.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+                <#else>
+ 		   	       <td></td>
+              </#if>-->
+                
+                
        			<td><#if (eachOrder.salesButton) == "Y"><input type="button" name="viewOrder" id="viewOrder" value="cancel" onclick="javascript:cancelDepotSaleOrderCaution('${eachOrder.orderId}','${eachOrder.partyId}')"></#if></td>
            
             <#--<#if orderPreferenceMap.get(eachOrder.orderId)?exists>
