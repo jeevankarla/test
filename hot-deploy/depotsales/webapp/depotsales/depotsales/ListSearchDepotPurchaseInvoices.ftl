@@ -399,7 +399,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
-          <#--<td>Rise Sales Invoice</td>-->
+          <td>Edit Purchase Invoice</td>
          <#--- <td>Invoice voucher</td>-->
          <#-- <td>Make Payment</td> 
          <td>Cancel</td> 
@@ -449,7 +449,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
-               <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+            <#--   <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
               		  <#if invoice.purposeTypeId?has_content>
               		  	<#assign purposeTypeId=invoice.purposeTypeId>
@@ -460,7 +460,11 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                	  </#if>
                 <#else>
                 	<td align="center"></td>
-              </#if>
+              </#if>-->
+               <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceEdit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+                  <#else>
+ 		   	          <td></td>
+               </#if>
               <#--><td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
             <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>

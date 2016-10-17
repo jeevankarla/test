@@ -523,6 +523,14 @@
        <response name="success" type="view" value="purchaseInvoiceEdit"/>
        <response name="error" type="view" value="purchaseInvoiceEdit"/>
      </request-map>
+     
+     <request-map uri="DepotpurchaseInvoiceEdit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotpurchaseInvoiceEdit"/>
+       <response name="error" type="view" value="DepotpurchaseInvoiceEdit"/>
+     </request-map>
+     
+     
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
@@ -568,6 +576,14 @@
        <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
      </request-map>
+     
+     <request-map uri="processEditPurchaseInvoiceDEPOT">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditPurchaseInvoiceDEPOT" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoiceView"/>
+       <response name="error" type="view" value="DepotPurchaseInvoiceView"/>
+     </request-map>
+     
      <request-map uri="processSalesInvoice">
        <security https="true" auth="true"/>
        <event type="service" invoke="createBranchSaleInvoice"/>
@@ -2392,6 +2408,10 @@
     
     <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
+    
+    <view-map name="DepotpurchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotpurchaseInvoiceEdit"/>
+   
+   
    
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
