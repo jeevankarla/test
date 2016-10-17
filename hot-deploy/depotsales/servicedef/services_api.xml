@@ -117,5 +117,12 @@
         <attribute type="Map" mode="OUT" name="supplierDetails" optional="true"/>
     </service>
     
+    <service name="getSupplierPO" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.SupplierApiServices" invoke="getSupplierPO">
+        <description>Get Supplier PO</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute type="Map" mode="OUT" name="supplierPOList" optional="true"/>
+    </service>
+    
 </services>
 
