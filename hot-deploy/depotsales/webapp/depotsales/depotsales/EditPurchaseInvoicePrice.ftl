@@ -821,11 +821,11 @@
 				message += "<tr>"+
 							"<td align='left'>10% Subsidy Amount: </td>"+
 							"<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
-						"</tr>";
+						"</tr>";-->
 				message += "<tr>"+
 							"<td align='left'>Total Payable Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
-						"</tr>";-->
+						"</tr>";
 			
 			message += "</table>";				
 			
