@@ -435,6 +435,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
            <td>Payment Advice</td>
          <#--> <td>Payment Advice</td>-->
+         <td>Edit Sales Invoice</td> 
           <td>Invoice voucher</td> 
           <td>Cancel</td>
          <#--> <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>-->
@@ -507,6 +508,12 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if>
               
+                
+              <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialDepotSalesEditInvoiceInit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+                <#else>
+ 		   	       <td></td>
+              </#if>
+              
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>newInvoiceDEPOTVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td> 
               <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
               
@@ -517,9 +524,6 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                </#if> -->
             <#-->  <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>-->
            
-              	
-           
-             
            
            
             </tr>

@@ -126,8 +126,6 @@
 			var bedCess = data[rowCount]["bedCessAmount"];
 			var bedSecCess = data[rowCount]["bedSecCessAmount"];
 			
-			var SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
-			
 			var VATPer = data[rowCount]["VatPercent"];
 			var CSTPer = data[rowCount]["CSTPercent"];
 			var ExcisePer = data[rowCount]["ExcisePercent"];
@@ -136,19 +134,22 @@
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			var purchaseInvoiceId = data[rowCount]["purchaseInvoiceId"];
 			
+			var invoiceItemSeqId = data[rowCount]["invoiceItemSeqId"];
+			
+			  
+			
+			
 			var tenPercent = data[rowCount]["tenPercent"];
 			
 			var taxAmt = data[rowCount]["taxAmt"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
-				
-				var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
-				
-				jQuery(formId).append(jQuery(SERVICE_CHARGE));
+				var invoiceItemSeqId1 = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemSeqId_o_" + rowCount).val(invoiceItemSeqId);
 				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(invoiceItemSeqId1));
 				
 				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "UPrice_o_" + rowCount).val(UPrice);
 				jQuery(formId).append(jQuery(inputPrice));
@@ -196,13 +197,7 @@
 				
 				
 				var taxList = [];
-				//taxList = data[rowCount]["taxList"]
-				
-				taxList.push("VAT_SALE");
-				taxList.push("CST_SALE");
-				taxList.push("VAT_SURCHARGE");
-				taxList.push("CST_SURCHARGE");
-				
+				taxList = data[rowCount]["taxList"]
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
@@ -218,31 +213,6 @@
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
 				}
-				
-				<#--
-				// Sale order Adjustments
-				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
-				
-				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
-				jQuery(formId).append(jQuery(orderAdjustmentItem));	
-				if(orderAdjustmentsList != undefined){
-					for(var i=0;i<orderAdjustmentsList.length;i++){
-						var orderAdjType = orderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
-						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
-						
-						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
-						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
-						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
-						
-						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
-						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
-						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
-					}
-				}
-				-->
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];
@@ -367,17 +337,17 @@
 		});*/
 		var invoiceDate = $("#effectiveDate").val();
 		var tallyrefNo = $("#tallyrefNo").val();
-		var purchaseInvoiceId = $("#purchaseInvoiceId").val();
+		var invoiceId = $("#invoiceId").val();
 		
 		
 		
 		var invoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "invoiceDate").val(invoiceDate);
 		var tallyrefNoField=jQuery("<input>").attr("type", "hidden").attr("name", "tallyrefNo").val(tallyrefNo);
-		var purchaseInvoiceIdField=jQuery("<input>").attr("type", "hidden").attr("name", "purchaseInvoiceId").val(purchaseInvoiceId);
+		var SalesInvoiceIdField=jQuery("<input>").attr("type", "hidden").attr("name", "invoiceId").val(invoiceId);
 		
 		jQuery(formId).append(jQuery(invoiceDateField));
 		jQuery(formId).append(jQuery(tallyrefNoField));
-		jQuery(formId).append(jQuery(purchaseInvoiceIdField));
+		jQuery(formId).append(jQuery(SalesInvoiceIdField));
 		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();
