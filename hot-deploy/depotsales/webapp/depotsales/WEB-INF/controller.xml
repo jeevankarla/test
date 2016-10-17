@@ -1430,12 +1430,24 @@
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
     
-     <request-map uri="raiseSalesInvoiceForDepotSales">
+   <!--   <request-map uri="raiseSalesInvoiceForDepotSales">
         <security https="true" auth="true"/>
         <event type="service" invoke="raiseSalesInvoiceForDepotSales"/>
         <response name="success" type="view" value="DepotSalesInvoiceView"/>
         <response name="error" type="view" value="DepotSalesInvoiceView"/>
-    </request-map>
+    </request-map> -->
+    
+    
+    
+     <request-map uri="processNewSalesInvoiceDepot">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewSalesInvoiceDepot" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="DepotSalesInvoiceView">
+        <redirect-parameter  name="invoiceId"/>
+        <redirect-parameter name="noConditionFind" value="Y"/>     
+        </response>
+       <response name="error" type="view" value="DepotSalesInvoiceView"/>
+     </request-map>
     
      <request-map uri="preferenceCancel">
         <security https="true" auth="true"/>

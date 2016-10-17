@@ -76,14 +76,8 @@
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	//var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var data = ${StringUtil.wrapString(invoiceItemsJSON)!'[]'};
-	
-		alert("data==============="+JSON.stringify(data));
-	
-	
 	var data3 = ${StringUtil.wrapString(invoiceDiscountJSON)!'[]'};
-	
 	var data2 = ${StringUtil.wrapString(invoiceAdditionalJSON)!'[]'};
-	
 	
 	
 	//var data2 = ${StringUtil.wrapString(adjustmentJSON)!'[]'};
@@ -251,7 +245,10 @@
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["additionalChgTypeIdsList"];
+				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"];
+				
+				alert("orderAdjustmentsList======"+JSON.stringify(orderAdjustmentsList));
+				
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
@@ -275,6 +272,9 @@
                 
                 var discOrderAdjustmentsList = [];
 				discOrderAdjustmentsList = data[rowCount]["discountTypeIdsList"];
+				
+								alert("discOrderAdjustmentsList======"+JSON.stringify(discOrderAdjustmentsList));
+				
 				
 				var discOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "discOrderAdjustmentsList_o_" + rowCount).val(discOrderAdjustmentsList);
 				jQuery(formId).append(jQuery(discOrderAdjustmentItem));	

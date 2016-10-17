@@ -267,7 +267,7 @@ $(document).ready(function(){
 					</div>
 				</div>
 				</div>-->
-				<#assign formAction ='processNewSalesInvoice'>	
+				<#assign formAction ='processNewSalesInvoiceDepot'>	
 				<#if partyId?exists>
 			    	<div align="center">
 			    		<h3>
