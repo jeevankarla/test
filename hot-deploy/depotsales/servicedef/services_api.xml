@@ -148,5 +148,14 @@
         <attribute type="Map" mode="OUT" name="shipmentResult" optional="true"/>
     </service>
     
+    <service name="getSupplierPayments" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.depotsales.SupplierApiServices" invoke="getSupplierPayments">
+        <description>List Orders</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentId" type="String" mode="IN" optional="true"/>
+        
+        <attribute type="Map" mode="OUT" name="paymentSearchResults" optional="true"/>
+    </service>
+    
 </services>
 
