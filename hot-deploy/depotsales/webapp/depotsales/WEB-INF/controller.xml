@@ -46,6 +46,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalyticsInternal"/>
     </request-map>
+    <request-map uri="IndentSupplyAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="supplyAnalytics"/>
+    </request-map>
+    <request-map uri="IndentSupplyAnalyticsInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="supplyAnalyticsInternal"/>
+    </request-map>
     
     <request-map uri="IndentQtyAnalytics">
         <security https="true" auth="true"/>
@@ -54,6 +62,14 @@
     <request-map uri="IndentQtyAnalyticsInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentQtyAnalyticsInternal"/>
+    </request-map>
+     <request-map uri="IndentPurchaseAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentPurchaseAnalytics"/>
+    </request-map>
+    <request-map uri="IndentPurchaseAnalyticsInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentPurchaseAnalyticsInternal"/>
     </request-map>
     <request-map uri="QuotaAnalytics">
         <security https="true" auth="true"/>
@@ -2321,6 +2337,14 @@
 	<view-map name="IndentAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsInternal"/>
 	<view-map name="IndentQtyAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentQtyAnalytics"/>
 	<view-map name="IndentQtyAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentQtyAnalyticsInternal"/>
+	
+	<view-map name="supplyAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentSupplyAnalytics"/>
+	<view-map name="supplyAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentSupplyAnalyticsInternal"/>
+	
+	<view-map name="IndentPurchaseAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPurchaseAnalytics"/>
+	<view-map name="IndentPurchaseAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPurchaseAnalyticsInternal"/>
+
+
 	<view-map name="QuotaAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaAnalytics"/>
 	<view-map name="QuotaAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaAnalyticsInternal"/>
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
