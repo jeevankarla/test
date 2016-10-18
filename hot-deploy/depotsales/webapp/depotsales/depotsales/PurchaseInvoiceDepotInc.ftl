@@ -257,9 +257,8 @@
 				if(purTaxList != undefined){
 					for(var i=0;i<purTaxList.length;i++){
 						var taxType = purTaxList[i];
-						var taxPercentage = data[rowCount][taxType + "_PUR"];
-						var taxValue = data[rowCount][taxType + "_PUR_AMT"];
-						
+						var taxPercentage = data[rowCount][taxType];
+						var taxValue = data[rowCount][taxType + "_AMT"];
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
 						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
 						jQuery(formId).append(jQuery(purInputTaxTypePerc));

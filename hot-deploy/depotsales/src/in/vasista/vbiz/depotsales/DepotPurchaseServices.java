@@ -4261,7 +4261,7 @@ public class DepotPurchaseServices{
 			 //======================Edit Taxes List==================
 		    
 		    
-		    if (paramMap.containsKey("taxList" + thisSuffix)) {
+		   /* if (paramMap.containsKey("taxList" + thisSuffix)) {
 				String taxListStr = (String) paramMap.get("taxList"
 						+ thisSuffix);
 				
@@ -4300,6 +4300,61 @@ public class DepotPurchaseServices{
 					}
 		            
 		            
+					
+				}
+			}*/
+			
+			
+			if (paramMap.containsKey("purTaxList" + thisSuffix)) {
+				String purTaxListStr = (String) paramMap.get("purTaxList"
+						+ thisSuffix);
+				
+				String[] taxList = purTaxListStr.split(",");
+				for (int j = 0; j < taxList.length; j++) {
+					String taxType = taxList[j];
+					Map taxRateMap = FastMap.newInstance();
+					String purTaxType = taxType.replace("_SALE", "_PUR");
+					
+					
+					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+
+		        	BigDecimal amount = BigDecimal.ZERO;
+		        	createInvoiceItemContext.put("invoiceId",invoiceId);
+		            createInvoiceItemContext.put("invoiceItemTypeId", purTaxType);
+		            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
+		            createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
+		            createInvoiceItemContext.put("userLogin", userLogin);
+					
+					
+					/*taxRateMap.put("orderAdjustmentTypeId",purTaxType);
+					taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
+					taxRateMap.put("amount",BigDecimal.ZERO);
+					//taxRateMap.put("taxAuthGeoId", partyGeoId);
+*/					
+					if (paramMap.containsKey(taxType + "_PUR" + thisSuffix)) {
+						String taxPercentage = (String) paramMap.get(taxType + "_PUR" + thisSuffix);
+						if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
+							 createInvoiceItemContext.put("sourcePercentage", new BigDecimal(taxPercentage));
+						}
+					}
+					if (paramMap.containsKey(taxType+ "_PUR_AMT" + thisSuffix)) {
+						String taxAmt = (String) paramMap.get(taxType+ "_PUR_AMT" + thisSuffix);
+						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+							 createInvoiceItemContext.put("amount", new BigDecimal(taxAmt));
+							 try{
+					            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+					            	
+					            	if(ServiceUtil.isError(createInvoiceItemResult)){
+					            		request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
+										return "error";
+					          		}
+					            } catch (Exception e) {
+					            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
+									return "error";
+					    		}
+						}
+					}
 					
 				}
 			}
@@ -6339,6 +6394,7 @@ public class DepotPurchaseServices{
 							taxItemCtx.put("invoiceId", invoiceId);
 							taxItemCtx.put("parentInvoiceId", invoiceId);
 							taxItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+							taxItemCtx.put("sourcePercentage", (BigDecimal) taxMap.get("sourcePercentage"));
 							taxItemCtx.put("userLogin", userLogin);
 							result = dispatcher.runSync("createInvoiceItem", taxItemCtx);
 							if (ServiceUtil.isError(result)) {

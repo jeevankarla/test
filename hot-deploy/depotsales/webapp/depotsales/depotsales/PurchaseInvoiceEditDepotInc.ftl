@@ -196,23 +196,37 @@
 				jQuery(formId).append(jQuery(inputbedSecCessPer));
 				
 				
-				var taxList = [];
-				taxList = data[rowCount]["taxList"]
+				var purTaxList = [];
+			//	purTaxList = data[rowCount]["purTaxList"];
 				
-				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
-				jQuery(formId).append(jQuery(taxListItem));	
-				if(taxList != undefined){
-					for(var i=0;i<taxList.length;i++){
-						var taxType = taxList[i];
+				purTaxList.push("VAT_SALE");
+				purTaxList.push("CST_SALE");
+				purTaxList.push("VAT_SURCHARGE");
+				purTaxList.push("CST_SURCHARGE");
+				
+				//alert("purTaxList============"+JSON.stringify(purTaxList));
+				
+				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
+				jQuery(formId).append(jQuery(purTaxListItem));	
+				if(purTaxList != undefined){
+					for(var i=0;i<purTaxList.length;i++){
+						var taxType = purTaxList[i];
+						
+						
 						var taxPercentage = data[rowCount][taxType];
+						
+						
 						var taxValue = data[rowCount][taxType + "_AMT"];
 						
-						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
-						jQuery(formId).append(jQuery(inputTaxTypePerc));
-						jQuery(formId).append(jQuery(inputTaxTypeValue));
+						
+						
+						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
+						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
+						jQuery(formId).append(jQuery(purInputTaxTypePerc));
+						jQuery(formId).append(jQuery(purInputTaxTypeValue));
 					}
 				}
+                
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];

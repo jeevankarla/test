@@ -105,51 +105,55 @@ if(invoiceId){
 	//Debug.log("customer =================="+billToPartyId);
 	//Debug.log("branch =================="+branchPartyId);
 	
-	String customerGeoId = null;
-	List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, billToPartyId, false, "TAX_CONTACT_MECH");
-	if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
-		customerGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
-	}
-	
-	String branchGeoId = null;
-	List branchContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, branchPartyId, false, "TAX_CONTACT_MECH");
-	if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
-		branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
-	}
-	
-	//Debug.log("customerGeoId =================" +customerGeoId);
-	//Debug.log("branchGeoId ================" +branchGeoId);
-	
-	context.customerGeoId = customerGeoId;
-	context.branchGeoId = branchGeoId;
-	
-	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-	
-	saleTaxType = null;
-	saleTitleTransferEnumId = null;
-	orderAttr.each{ eachAttr ->
-		if(eachAttr.attrName == "saleTaxType"){
-			saleTaxType =  eachAttr.attrValue;
-		}
-		if(eachAttr.attrName == "saleTitleTransferEnumId"){
-			saleTitleTransferEnumId = eachAttr.attrValue;
-		}
-	}
-	if(UtilValidate.isEmpty(saleTitleTransferEnumId)){
-		if(customerGeoId == branchGeoId){
-			saleTaxType = "Intra-State";
-			saleTitleTransferEnumId = "NO_E2_FORM";
-		}
-		else{
-			saleTaxType = "Inter-State";
-			saleTitleTransferEnumId = "CST_CFORM";
-		}
-	}
-	
-	context.saleTaxType = saleTaxType;
-	context.saleTitleTransferEnumId = saleTitleTransferEnumId;
-	
-	taxList = transactionTypeTaxMap.get(saleTitleTransferEnumId);
+		String supplierGeoId = null;
+			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false, "TAX_CONTACT_MECH");
+			if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+				supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+			}
+			
+			String branchGeoId = null;
+			List branchContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, billToPartyId, false, "TAX_CONTACT_MECH");
+			if(UtilValidate.isNotEmpty(branchContactMechValueMaps)){
+				branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+			}
+			
+			//Debug.log("supplierGeoId =================" +supplierGeoId);
+			//Debug.log("branchGeoId ================" +branchGeoId);
+			
+			context.supplierGeoId = supplierGeoId;
+			context.branchGeoId = branchGeoId;
+			
+			
+			orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			purchaseTaxType = null;
+			purchaseTitleTransferEnumId = null;
+			orderAttr.each{ eachAttr ->
+				if(eachAttr.attrName == "purchaseTaxType"){
+					purchaseTaxType =  eachAttr.attrValue;
+				}
+				if(eachAttr.attrName == "purchaseTitleTransferEnumId"){
+					purchaseTitleTransferEnumId = eachAttr.attrValue;
+				}
+			}
+			if(UtilValidate.isEmpty(purchaseTitleTransferEnumId)){
+				if(supplierGeoId == branchGeoId){
+					purchaseTaxType = "Intra-State";
+					purchaseTitleTransferEnumId = "NO_E2_FORM";
+				}
+				else{
+					purchaseTaxType = "Inter-State";
+					purchaseTitleTransferEnumId = "CST_CFORM";
+				}
+			}
+			
+			context.purchaseTaxType = purchaseTaxType;
+			context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
+			
+			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
+			context.purTaxListReady = purTaxList;
+			
+			
 	
 	invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
 	////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
@@ -215,7 +219,13 @@ if(invoiceId){
 		}
 
 		context.tenperValue = tenperValue;*/
-
+		condExpr = [];
+		condExpr.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
+		cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+		taxDetails = delegator.findList("InvoiceItem", cond, null, null, null, false);
+		Debug.log("taxDetails=================="+taxDetails);
+	
 
 		for (eachItem in invoiceItemList) {
 			
@@ -249,73 +259,80 @@ if(invoiceId){
 				productName = prod.get("productName");
 			}
 			
-			totalTaxAmt = 0;
-			
-			condExpr = [];
-			condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-			condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
-			tenPercentItems = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-			
-			if(saleTitleTransferEnumId){
-				//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
-				for(int i=0; i<taxList.size(); i++){
-					taxItem = taxList.get(i);
-					//Debug.log("taxItemtaxItem ============="+taxItem);
-					taxInfo = defaultTaxMap.get(taxItem);
-					surChargeList = taxInfo.get("surchargeList");
-					
-					condExpr = [];
-					condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-					condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, taxItem));
-					//Debug.log("condExpr ============="+condExpr);
-					taxItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-					
-					taxPercent = 0;
-					taxValue = 0;
-					actualTaxValue = 0;
-					if(UtilValidate.isNotEmpty(taxItemList)){
-						taxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
-						taxPercent = (taxValue*100)/(eachItem.amount*eachItem.quantity);
-						//taxValue = (actualTaxValue/origQty)*qty;
-					}
-					newObj.put(taxItem, taxPercent);
-					newObj.put(taxItem+"_AMT", taxValue);
-					
-					totalTaxAmt = totalTaxAmt + taxValue;
-					
-					if(taxValue > 0){
+				totalTaxAmt = 0;
+				if(purchaseTitleTransferEnumId){
+					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
+					for(int i=0; i<purTaxList.size(); i++){
+						taxItem = purTaxList.get(i);
+						Debug.log("taxItem =======3333333======"+taxItem);
+						purTaxItem = taxItem.replace("_SALE", "_PUR");
+						
+						Debug.log("purTaxItem ============="+purTaxItem);
+						
+						
+						surChargeList = [];
+						if(defaultTaxMap){
+						taxInfo = defaultTaxMap.get(taxItem);
+						surChargeList = taxInfo.get("surchargeList");
+						}
+						
+						Debug.log("invoiceId ============="+invoiceId);
+						
+						Debug.log("invoiceItemSeqId ============="+eachItem.invoiceItemSeqId);
+						
+						
+						condExpr = [];
+						condExpr.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, invoiceId));
+						condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+						condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, purTaxItem.trim()));
+						taxItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+						Debug.log("taxItemList ============="+taxItemList);
+						
+						
+						taxPercent = 0;
+						taxValue = 0;
+						actualTaxValue = 0;
+						if(UtilValidate.isNotEmpty(taxItemList)){
+							taxPercent = (EntityUtil.getFirst(taxItemList)).get("sourcePercentage");
+							taxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
+						}
+						//Debug.log("taxValue ============="+taxValue);
+						/*newObj.put(taxItem+"_PUR", taxPercent);
+						newObj.put(taxItem+"_PUR_AMT" , taxValue);*/
+						
+						newObj.put(taxItem, taxPercent);
+						newObj.put(taxItem+"_AMT", taxValue);
+						
+						totalTaxAmt = totalTaxAmt + taxValue;
 						//Debug.log("totalTaxAmt ============="+totalTaxAmt);
 						for(int j=0; j<surChargeList.size(); j++){
 							surchargeItem = (surChargeList.get(j)).get("taxAuthorityRateTypeId");
 							//Debug.log("surchargeItem ============="+surchargeItem);
 							condExpr = [];
-							condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-							condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, surchargeItem));
-							surItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+							condExpr.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, invoiceId));
+						    condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+						    condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, surchargeItem.trim()));
+							surItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
 							
 							surTaxPercent = 0;
 							surTaxValue = 0;
 							if(UtilValidate.isNotEmpty(surItemList)){
-								//surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
-								surTaxValue = (EntityUtil.getFirst(surItemList)).get("amount");
-								surTaxPercent = (surTaxValue*100)/(taxValue);
+								surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
+								surTaxValue = (surTaxPercent/100)*taxValue;
 							}
+							/*newObj.put(surchargeItem+"_PUR", surTaxPercent);
+							newObj.put(surchargeItem+"_PUR_AMT" , surTaxValue);*/
+							
 							newObj.put(surchargeItem, surTaxPercent);
 							newObj.put(surchargeItem+"_AMT", surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							
 						}
+						
 					}
-					
-					
-					
 				}
-			}
-			
-			//Debug.log("totalTaxAmt =========="+totalTaxAmt);
-			
-			newObj.put("taxAmt", totalTaxAmt);
+				newObj.put("taxAmt", totalTaxAmt);
 			
 			
 			totalItemAdjAmt = 0;
@@ -483,25 +500,15 @@ if(invoiceId){
 				tenPercent = (amount * -10)/100;
 			}*/
 			
+			resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
 			
-			if(UtilValidate.isNotEmpty(tenPercentItems)){
-				
-				tenPercItem = EntityUtil.getFirst(tenPercentItems);
-				
-				tenPercent = tenPercItem.get("amount");
-				tenPercSeq = tenPercItem.get("invoiceItemSeqId");
-				
-				List tenPercCond = [];
-				tenPercCond.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-				tenPercCond.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, tenPercSeq));
-				tenPercAdjBilling = delegator.findList("OrderAdjustmentBilling", EntityCondition.makeCondition(tenPercCond, EntityOperator.AND), null, null, null, false);
-				
-				if(UtilValidate.isNotEmpty(tenPercAdjBilling)){
-					usedQuota = (EntityUtil.getFirst(tenPercAdjBilling)).get("quantity");
-				}
-				
-			}
+			defaultTaxMap = resultCtx.defaultTaxMap;
 			
+			taxValueMap = resultCtx.taxValueMap;
+			
+			newObj.put("taxValueMap",taxValueMap);
+			
+			newObj.put("defaultTaxMap",defaultTaxMap);
 			
 			newObj.put("cProductName",productName);
 			newObj.put("quantity",eachItem.quantity);
@@ -514,7 +521,7 @@ if(invoiceId){
 			newObj.put("VAT", 0.00);
 			newObj.put("CSTPercent", 0.00);
 			newObj.put("CST", 0.00);
-			newObj.put("totPayable", ((eachItem.amount)*(eachItem.quantity)) + totalTaxAmt + totalItemAdjAmt - totalDiscAmt + tenPercent);
+			newObj.put("totPayable", ((eachItem.amount)*(eachItem.quantity)) + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
 			
 			invoiceItemsJSON.add(newObj);
 

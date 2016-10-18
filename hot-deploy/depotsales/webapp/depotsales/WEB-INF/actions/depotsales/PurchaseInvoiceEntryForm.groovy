@@ -339,7 +339,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				taxResultCtx = 0;
 				taxValueMap = [:];
 				defaultTaxMap = [:];
-				if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+				/*if( (UtilValidate.isNotEmpty(supplierGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
 					Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 					prodCatTaxCtx.put("productId", eachItem.productId);
 					prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
@@ -347,7 +347,10 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					taxResultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",prodCatTaxCtx);
 					taxValueMap = taxResultCtx.get("taxValueMap");
 					defaultTaxMap = taxResultCtx.get("defaultTaxMap");
-				}
+				}*/
+				
+				
+				
 				
 				tempMap = [:];
 				tempMap.put("productId", eachItem.productId);
@@ -466,6 +469,16 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				newObj.put("cProductName",prodValue.description);
 				newObj.put("quantity",qty);
 				newObj.put("UPrice", unitPrice);
+				
+				resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
+				
+				defaultTaxMap = resultCtx.defaultTaxMap;
+				
+				taxValueMap = resultCtx.taxValueMap;
+				
+				newObj.put("taxValueMap",taxValueMap);
+				
+				newObj.put("defaultTaxMap",defaultTaxMap);
 				
 				if(UtilValidate.isNotEmpty(orderId)){
 					List conditionlist=[];

@@ -601,8 +601,9 @@
 			var defaultTaxMap = dataRow["defaultTaxMap"];
 			var taxValueMap = dataRow["taxValueMap"];
 			
-			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
+			var saleTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
 			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
+			
 			
 			var serviceCharge = 0;
 			if(dataRow["SERVICE_CHARGE"]){
@@ -866,6 +867,9 @@
 			    }
 			    else{
 			    	var adjPercentage = $('#'+id).val();
+			    	
+			    	alert(adjPercentage);
+			    	
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
