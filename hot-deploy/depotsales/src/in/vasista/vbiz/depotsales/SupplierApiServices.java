@@ -326,9 +326,9 @@ public class SupplierApiServices {
 						itemMap.put("itemName",itemName);
 						itemMap.put("specification",spec);
 						itemMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
-						itemMap.put("quantity",quantity.setScale(decimals, rounding));
-						itemMap.put("shippedQuantity",shippedQuantity.setScale(decimals, rounding));
-						itemMap.put("balQuantity",balQuantity.setScale(decimals, rounding));
+						itemMap.put("indentQuantity",quantity.setScale(decimals, rounding));
+						itemMap.put("dispatchedQty",shippedQuantity.setScale(decimals, rounding));
+						itemMap.put("balanceQty",balQuantity.setScale(decimals, rounding));
 						orderItems.add(itemMap);
 					}
 				}
@@ -423,7 +423,7 @@ public class SupplierApiServices {
 	    String supplierInvoiceDateStr = (String) context.get("suppInvoiceDate");
 	    String withoutPO = (String) context.get("withoutPO");
 	    //GRN on PO then override this supplier with PO supplier
-	    String supplierId = (String) context.get("supplierId");
+	    String supplierId = (String) context.get("partyId");
 	    String deliveryChallanDateStr = (String) context.get("deliveryChallanDate");
 	    String lrDateStr = (String) context.get("lrDate");
 	    String deliveryChallanNo = (String) context.get("deliveryChallanNo");
