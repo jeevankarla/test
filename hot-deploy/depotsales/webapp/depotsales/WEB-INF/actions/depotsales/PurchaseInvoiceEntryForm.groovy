@@ -61,7 +61,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		def sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		 effectiveDateBegin= UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
 		 effectiveDateEnd = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse((String)shipment.createdDate).getTime()));
-		// //Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
+		// ////Debug.log("effectiveDateBegin========"+effectiveDateBegin+"effectiveDateEnd========"+effectiveDateEnd);
 		if(!invoice && orderId){
 			
 			orderedInvoice = Boolean.FALSE;
@@ -161,11 +161,11 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				}
 				transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
 			}
-			Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+			//Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
 			context.transactionTypeTaxMap = transactionTypeTaxMap;
 			
-			Debug.log("supplier =================="+partyId);
-			Debug.log("branch =================="+billToPartyId);
+			//Debug.log("supplier =================="+partyId);
+			//Debug.log("branch =================="+billToPartyId);
 			
 			String supplierGeoId = null;
 			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, false, "TAX_CONTACT_MECH");
@@ -179,8 +179,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				branchGeoId = (String)((GenericValue) ((Map) branchContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
 			}
 			
-			Debug.log("supplierGeoId =================" +supplierGeoId);
-			Debug.log("branchGeoId ================" +branchGeoId);
+			//Debug.log("supplierGeoId =================" +supplierGeoId);
+			//Debug.log("branchGeoId ================" +branchGeoId);
 			
 			context.supplierGeoId = supplierGeoId;
 			context.branchGeoId = branchGeoId;
@@ -231,17 +231,17 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			invoiceItemTypes = delegator.findList("InvoiceItemType", condit, null, null, null, false);
 			invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
 			
-			////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+			//////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 			additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 			dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
-			Debug.log("additionalChgs =========="+additionalChgs);
+			//Debug.log("additionalChgs =========="+additionalChgs);
 			
 			additionalChgTypeIdsList = EntityUtil.getFieldListFromEntityList(additionalChgs, "invoiceItemTypeId", true);
 			discountTypeIdsList = EntityUtil.getFieldListFromEntityList(dicounts, "invoiceItemTypeId", true);
 			
 			
 			
-			////Debug.log("dicounts =========="+dicounts);
+			//////Debug.log("dicounts =========="+dicounts);
 			
 			// Other Charges
 			
@@ -257,7 +257,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				invoiceAdjLabelIdJSON.put(eachItem.description +" [ " +eachItem.invoiceItemTypeId+"]", eachItem.invoiceItemTypeId);
 				
 			}
-			Debug.log("invoiceAdjItemsJSON =========="+invoiceAdjItemsJSON);
+			//Debug.log("invoiceAdjItemsJSON =========="+invoiceAdjItemsJSON);
 			context.invoiceAdjItemsJSON = invoiceAdjItemsJSON;
 			context.invoiceAdjLabelJSON = invoiceAdjLabelJSON;
 			context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
@@ -329,13 +329,13 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				otherCharges.add(tempMap);
 			}*/
 			
-			//Debug.log("orderItems=================="+orderItems);
+			////Debug.log("orderItems=================="+orderItems);
 			
 			
 			productQty = [];
 			orderItems.each{ eachItem ->
 				
-				Debug.log("orderId =========="+eachItem.orderId);
+				//Debug.log("orderId =========="+eachItem.orderId);
 				taxResultCtx = 0;
 				taxValueMap = [:];
 				defaultTaxMap = [:];
@@ -375,12 +375,12 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
-					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
 					
 					if(OrderItemChangeDetails)
 					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
 					
-					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
 					
 					if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
 						tempMap.put("UPrice",OrderItemChangeDetails.unitPrice);
@@ -399,7 +399,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			}
 			Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");*/
 			
-			//Debug.log("resultCtx=================="+resultCtx);
+			////Debug.log("resultCtx=================="+resultCtx);
 			
 			
 			JSONObject productIdLabelJSON = new JSONObject();
@@ -410,7 +410,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
 			cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 			taxDetails = delegator.findList("OrderAdjustment", cond, null, null, null, false);
-			Debug.log("taxDetails=================="+taxDetails);
+			//Debug.log("taxDetails=================="+taxDetails);
 			
 			
 			
@@ -476,7 +476,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 					def orderBy = UtilMisc.toList("changeDatetime");
 					OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain1 , null ,orderBy, null, false );
-					////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					//////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
 					
 					if(OrderItemChangeDetails)
 					OrderItemChangeDetails=(OrderItemChangeDetails).getLast();
@@ -490,10 +490,10 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 					for(int i=0; i<purTaxList.size(); i++){
 						taxItem = purTaxList.get(i);
-						Debug.log("taxItem ============="+taxItem);
+						//Debug.log("taxItem ============="+taxItem);
 						purTaxItem = taxItem.replace("_SALE", "_PUR");
 						
-						Debug.log("taxItemtaxItem ============="+taxItem);
+						//Debug.log("taxItemtaxItem ============="+taxItem);
 						
 						
 						surChargeList = [];
@@ -506,7 +506,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 						condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, purTaxItem));
 						taxItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-						Debug.log("taxItemList ============="+taxItemList);
+						//Debug.log("taxItemList ============="+taxItemList);
 						taxPercent = 0;
 						taxValue = 0;
 						actualTaxValue = 0;
@@ -515,15 +515,15 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							actualTaxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
 							taxValue = (actualTaxValue/origQty)*qty;
 						}
-						Debug.log("taxValue ============="+taxValue);
+						//Debug.log("taxValue ============="+taxValue);
 						newObj.put(taxItem+"_PUR", taxPercent);
 						newObj.put(taxItem+"_PUR_AMT" , taxValue);
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
-						Debug.log("totalTaxAmt ============="+totalTaxAmt);
+						//Debug.log("totalTaxAmt ============="+totalTaxAmt);
 						for(int j=0; j<surChargeList.size(); j++){
 							surchargeItem = (surChargeList.get(j)).get("taxAuthorityRateTypeId");
-							Debug.log("surchargeItem ============="+surchargeItem);
+							//Debug.log("surchargeItem ============="+surchargeItem);
 							condExpr = [];
 							condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 							condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, surchargeItem));
@@ -545,7 +545,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					}
 				}
 				newObj.put("taxAmt", totalTaxAmt);
-				Debug.log("newObj ============="+newObj);
+				//Debug.log("newObj ============="+newObj);
 				
 				totalItemAdjAmt = 0;
 				incBaseAmt = 0;
@@ -554,7 +554,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				
 				for(int i=0; i<additionalChgTypeIdsList.size(); i++){
 					invItemTypeId = additionalChgTypeIdsList.get(i);
-					Debug.log("invItemTypeId ============="+invItemTypeId);
+					//Debug.log("invItemTypeId ============="+invItemTypeId);
 					
 					JSONObject newItemAdjObj = new JSONObject();
 					newItemAdjObj.put("orderAdjustmentTypeId", invItemTypeId);
@@ -607,7 +607,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					itemAdjustmentJSON.add(newItemAdjObj);
 					
 				}
-				Debug.log("itemAdjustmentJSON ========================= "+itemAdjustmentJSON);
+				//Debug.log("itemAdjustmentJSON ========================= "+itemAdjustmentJSON);
 				
 				
 				totalDiscAmt = 0;
@@ -615,7 +615,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				
 				for(int i=0; i<discountTypeIdsList.size(); i++){
 					invItemTypeId = discountTypeIdsList.get(i);
-					Debug.log("invItemTypeId ============="+invItemTypeId);
+					//Debug.log("invItemTypeId ============="+invItemTypeId);
 					
 					JSONObject newItemAdjObj = new JSONObject();
 					newItemAdjObj.put("orderAdjustmentTypeId", invItemTypeId);
@@ -668,7 +668,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					discItemAdjustmentJSON.add(newItemAdjObj);
 					
 				}
-				Debug.log("discItemAdjustmentJSON ========================= "+discItemAdjustmentJSON);
+				//Debug.log("discItemAdjustmentJSON ========================= "+discItemAdjustmentJSON);
 				
 				
 				
@@ -702,7 +702,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			context.productIdLabelJSON = productIdLabelJSON;
 			context.productLabelIdJSON = productLabelIdJSON;
 			
-			//Debug.log("productIdLabelJSON=================="+productIdLabelJSON);
+			////Debug.log("productIdLabelJSON=================="+productIdLabelJSON);
 			
 			//shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 			JSONArray adjustmentJSON = new JSONArray();
@@ -760,7 +760,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 					newObj.put("assessableValue", true);
 				}
 				if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_DISC_BASIC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
-					Debug.log("adjTypeId ============="+adjTypeId);
+					//Debug.log("adjTypeId ============="+adjTypeId);
 					adjustmentJSON.add(newObj);
 				}
 				
