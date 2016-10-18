@@ -189,5 +189,9 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRODUCT_CREATE"/>
 
    
+<SecurityGroup description="Mobile Supplier" groupId="MOB_SUPPLIER"/>
+<SecurityPermission description="Mobile Supplier dashboard permission." permissionId="MOB_SUPLR_DB_VIEW"/>
+<SecurityGroupPermission groupId="MOB_SUPPLIER" permissionId="MOB_SUPLR_DB_VIEW"/>
+   
 	
 </entity-engine-xml>

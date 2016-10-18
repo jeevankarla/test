@@ -96,6 +96,30 @@ public class SupplierApiServices {
         //if (decimals != -1) ZERO = ZERO.setScale(decimals);
     }
     
+    /*
+     * Security check to make userLogin partyId must equal facility owner party Id if the user
+     * is a retailer (has MOB_RTLR_DB_VIEW). If user is a sales rep (MOB_SREP_DB_VIEW permission), 
+     * then we just return true.
+     */
+    static boolean hasFacilityAccess(DispatchContext dctx, Map<String, ? extends Object> context) {  
+        Security security = dctx.getSecurity();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	GenericValue party = (GenericValue) context.get("party");
+        if (security.hasEntityPermission("MOB_SREP_DB", "_VIEW", userLogin)) {
+            return true;
+        } 		
+        if (security.hasEntityPermission("MOB_SUPLR_DB", "_VIEW", userLogin)) {
+        	if (userLogin != null && userLogin.get("partyId") != null) {
+        		String userLoginParty = (String)userLogin.get("partyId");
+        		String ownerParty = (String)party.get("partyId");
+        		if (userLoginParty.equals(ownerParty)) {
+        			return true;
+        		}
+        	}
+        }
+    	return false;
+    }
+    
     public static Map<String, Object> getSupplierDetails(DispatchContext dctx,Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -103,6 +127,25 @@ public class SupplierApiServices {
 		Map result = ServiceUtil.returnSuccess();
 		
 		String partyId = (String) context.get("partyId");
+		
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Empty party Id", module);
+			return ServiceUtil.returnError("Empty party Id");	   
+		}
+		GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyId);	   
+  		}
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Supplier Details: " + partyId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
+		
+		
 		GenericValue partyDetail = null;
 		Map resultMap = FastMap.newInstance();
 		try{
@@ -202,7 +245,19 @@ public class SupplierApiServices {
         Map result = ServiceUtil.returnSuccess();
         
         String partyId = (String)context.get("partyId");
-        //OrderHeaderAndSequenceAndRoles
+        
+        GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyId);	   
+  		}
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Purchase Orders: " + partyId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
         
         List conditionList = FastList.newInstance();
         conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
@@ -1114,7 +1169,7 @@ public class SupplierApiServices {
 			Debug.logError("Empty party Id", module);
 			return ServiceUtil.returnError("Empty party Id");	   
 		}
-		/*GenericValue party = null;
+		GenericValue party = null;
   		try{
   			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyIdTo),false);
   		}catch(GenericEntityException e){
@@ -1125,7 +1180,7 @@ public class SupplierApiServices {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
             		userLogin.get("userLoginId") + " attempt to access Payments: " + partyIdTo, module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");        	
-        }*/
+        }
 		
 		List condList= FastList.newInstance();
 		condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo));
