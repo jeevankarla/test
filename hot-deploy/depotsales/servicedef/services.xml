@@ -611,7 +611,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
     </service>
-     <service name="runPeriodPopulationIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails">
+     <service name="runPeriodPopulationIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
          <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
          <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
