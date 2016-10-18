@@ -748,6 +748,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				newObj.put("DISCOUNT_AMT",totalDiscAmt);
 				newObj.put("incBaseAmt",incBaseAmt);
 				
+				newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
+				
 				/*newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
 				newObj.put("CSTPercent", cstPercent);
