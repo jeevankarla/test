@@ -42,6 +42,16 @@
 		}
 	}
 	
+	if(UtilValidate.isEmpty(partyIdFrom)){
+		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+		List branchIds = [];
+		for (eachList in resultCtx.get("productStoreList")) {
+			branchIds.add(eachList.get("payToPartyId"));
+		}
+		partyIdFrom = branchIds;
+	}
+	
+	
 	List roleTypeList=[];
 	if(parameters.ajaxLookup == 'Y'){
 		roleTypeId=parameters.roleTypeId;
