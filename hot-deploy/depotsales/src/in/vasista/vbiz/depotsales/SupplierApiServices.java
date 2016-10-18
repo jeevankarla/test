@@ -1098,4 +1098,151 @@ public class SupplierApiServices {
  		result.put("shipmentResult",shipmentResult);
 		return result;
     }
+    
+    public static Map<String, Object> getSupplierPayments(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+  		String partyIdTo = (String) context.get("partyId");
+  		String paramPaymentId = (String) context.get("paymentId");
+		List paymentSearchResultsList = FastList.newInstance();
+		
+		if (UtilValidate.isEmpty(partyIdTo)) {
+			Debug.logError("Empty party Id", module);
+			return ServiceUtil.returnError("Empty party Id");	   
+		}
+		/*GenericValue party = null;
+  		try{
+  			party = delegator.findOne("Party",UtilMisc.toMap("partyId",partyIdTo),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching party " +partyIdTo + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching party " + partyIdTo);	   
+  		}
+        if (!hasFacilityAccess(ctx, UtilMisc.toMap("userLogin", userLogin, "party", party))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access Payments: " + partyIdTo, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }*/
+		
+		List condList= FastList.newInstance();
+		condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo));
+		if(UtilValidate.isNotEmpty(paramPaymentId))
+		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paramPaymentId));
+		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+		
+		List<GenericValue> paymentList = null;
+		try {
+			paymentList = delegator.findList("Payment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive paymentList ", module);
+			return ServiceUtil.returnError("Failed to retrive paymentList " + e);
+		}
+		 
+    	List paymentIds = EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
+    	List paymentApplicationList =  FastList.newInstance();
+    	try {
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,paymentIds));
+		 paymentApplicationList = delegator.findList("PaymentApplication", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+    	} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+			return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+		}
+		
+    	 if(UtilValidate.isNotEmpty(paymentList)){
+    	
+		for (int i=0; i<paymentList.size(); i++) {
+			
+			Map tempMap = FastMap.newInstance();
+			GenericValue eachPaymentList = (GenericValue) paymentList.get(i);
+			String paymentId = (String) eachPaymentList.get("paymentId");
+			BigDecimal paymentAmt = eachPaymentList.getBigDecimal("amount");
+			List eachpaymentApplication = EntityUtil.filterByCondition(paymentApplicationList, EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
+			BigDecimal appliedAmt = BigDecimal.ZERO;
+
+	        if(UtilValidate.isNotEmpty(eachpaymentApplication)){
+	        	
+	        	for (int j=0; j<eachpaymentApplication.size(); j++) {
+	        		
+	        		GenericValue eachPaymentAppList = (GenericValue) eachpaymentApplication.get(j);
+	    	        BigDecimal amountApplied = eachPaymentAppList.getBigDecimal("amountApplied");
+	        		appliedAmt = appliedAmt.add(amountApplied);
+
+	        	}
+	            	
+	        	if(paymentAmt.doubleValue() != appliedAmt.doubleValue()){
+	        		
+	        		tempMap.put("paymentId",paymentId);
+	        		tempMap.put("paidAmount",eachPaymentList.get("amount"));
+	        		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
+	        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+	        		
+	        		
+	        		
+	        		String menthodType = "";
+	        		try {
+	        			condList.clear();
+	        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
+	        			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+	        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+	        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
+	        		
+	        		} catch (GenericEntityException e) {
+	        				Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+	        				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+	        			}
+	        		
+	        		tempMap.put("menthodTypeDescription",menthodType);
+	        		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
+	        		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
+	        		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
+	        		tempMap.put("statusId",eachPaymentList.get("statusId"));
+	        		
+	        		paymentSearchResultsList.add(tempMap);
+	        	}
+	        }else{
+	        	
+	        	tempMap.put("paymentId",paymentId);
+        		tempMap.put("paidAmount",eachPaymentList.get("amount"));
+        		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
+        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+        		
+        		
+        		String menthodType = "";
+        		try {
+        			condList.clear();
+        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
+        			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
+        		
+        		} catch (GenericEntityException e) {
+        				Debug.logError(e, "Failed to retrive PaymentApplication ", module);
+        				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
+        			}
+        		
+        		tempMap.put("menthodTypeDescription",menthodType);
+        		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
+        		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
+        		tempMap.put("partyIdTo",eachPaymentList.get("partyIdTo"));
+        		tempMap.put("statusId",eachPaymentList.get("statusId"));
+        		
+        		paymentSearchResultsList.add(tempMap);
+	        	
+	        }
+		}
+		
+    }
+
+		Map paymentSearchResults = FastMap.newInstance();
+		paymentSearchResults.put("paymentSearchResultsList",paymentSearchResultsList);
+
+		result.put("paymentSearchResults",paymentSearchResults);
+		
+        return result;
+		
+	}
 }
