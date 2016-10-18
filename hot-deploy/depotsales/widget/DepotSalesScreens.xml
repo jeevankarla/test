@@ -83,7 +83,8 @@
                	<set field="titleProperty" value="Indent Analytics"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="indentAnalytics" />
-				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>                      
+				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>  
+				<set field="parameters.screenflag" value="indentAnalytics"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
@@ -8269,6 +8270,7 @@
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+            	<set field="parameters.screenflag" value="indentQtyAnalytics"/>
             </actions>
             <widgets>
 				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
@@ -8312,6 +8314,8 @@
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+                 <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
+           
             </actions>
             <widgets>
 				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
@@ -8354,6 +8358,7 @@
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+                 <set field="parameters.screenflag" value="indentPurchaseAnalytics"/>
             </actions>
             <widgets>
 				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
@@ -8380,6 +8385,44 @@
                 	<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentPurchaseAnalyticsDetail.ftl"/></html>
                 </platform-specific>                 
 
+            </widgets>
+        </section>
+    </screen>
+    <screen name="indentAnalyticsCSV">
+        <section>      
+    		<actions>
+    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+    			<set field="parameters.screenflag" from-field="parameters.screenFlag"/>
+    		    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentQtyAnalyticsCsv.groovy" />
+    		</actions>          
+            <widgets>
+             <section>
+                  <condition>
+						<if-compare field="parameters.screenflag" operator="equals" value="indentQtyAnalytics"  />
+				  </condition>
+					<widgets>
+                          <include-form name="indentQtyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                     </widgets>
+              </section> 
+              <section>
+                 <condition>
+					<if-compare field="parameters.screenflag" operator="equals" value="indentSupplyAnalytics"  />
+				 </condition>
+				 <widgets>
+                          <include-form name="indentSupplyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 </widgets>
+              </section>  
+              <section>
+                  <condition>
+						<if-compare field="parameters.screenflag" operator="equals" value="indentPurchaseAnalytics"  />
+				  </condition>
+				 <widgets>
+                          <include-form name="indentPurchaseAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 </widgets>
+              </section>  
+            	
             </widgets>
         </section>
     </screen>

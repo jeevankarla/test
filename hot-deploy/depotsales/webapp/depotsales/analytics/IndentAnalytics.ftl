@@ -100,6 +100,15 @@ $(document).ready(function(){
             "html"  
         );  
     });
+    	$("#getTreeGridCsv").click(function(){  
+          var fromDate= $("#fromDate").val();
+          var thruDate= $("#thruDate").val();
+          $("#fromDateCsv").val(fromDate);
+          $("#thruDateCsv").val(thruDate);
+         var screenFlag="${parameters.screenflag}";
+          $("#screenFlag").val(screenFlag);
+          $('#csvForm').submit();
+    });
 });
 
 </script>
@@ -111,7 +120,13 @@ $(document).ready(function(){
     <div class="screenlet-body">
 		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
-		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" /> 		
+		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
+		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
+		<input type="hidden" name="fromDateCsv" id="fromDateCsv"/> 
+		<input type="hidden" name="thruDateCsv" id="thruDateCsv"/> 
+		<input type="hidden" name="screenFlag" id="screenFlag"/> 
+		<input type="submit" value="CSV" id="getTreeGridCsv" class="smallSubmit" /> 
+		</form>		
     </div>
 </div>
 

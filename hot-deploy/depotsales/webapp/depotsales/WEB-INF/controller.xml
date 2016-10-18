@@ -59,6 +59,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentQtyAnalytics"/>
     </request-map>
+    <request-map uri="indentAnalytics.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="indentAnalyticsCsv"/>
+    </request-map>
+    
     <request-map uri="IndentQtyAnalyticsInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentQtyAnalyticsInternal"/>
@@ -2251,6 +2256,8 @@
 	 <view-map name="reimburcentTransporterReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportCSV" content-type="text/csv"/>
 	 
 	 <view-map name="depotReimburcentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentReportCSV" content-type="text/csv"/>
+	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
+
 	
 	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
