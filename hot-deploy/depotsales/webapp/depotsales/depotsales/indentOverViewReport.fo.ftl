@@ -36,8 +36,10 @@ under the License.
                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">  ${reportHeader.description?if_exists} </fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">  ${reportSubHeader.description?if_exists}  </fo:block>
-          			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    white-space-collapse="false">INDENT OVERVIEW</fo:block>
+          			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    white-space-collapse="false">INDENT OVERVIEW</fo:block> 
           			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    font-size="15pt"  white-space-collapse="false">${orderId?if_exists}</fo:block>
+					<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, displayParty.partyId, true)>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    font-size="15pt"  white-space-collapse="false">${partyName?if_exists}[${displayParty.partyId?if_exists}]</fo:block>
           			<fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           	 <fo:block >
           	 	  <fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block> 
@@ -530,9 +532,9 @@ under the License.
 	                     		<fo:table-cell ><fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block><fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block></fo:table-cell>       			
 	                     		<fo:table-cell  ><fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block><fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block></fo:table-cell>       		
                        		</fo:table-row>
-						<#-- 	<fo:table-row>
+							<#-- <fo:table-row>
 					  			<fo:table-cell border-style="solid"><fo:block text-align="left"  font-size="14pt"  font-weight="bold">CONTACT INFORMATION</fo:block></fo:table-cell>
-	                     		<fo:table-cell border-style="solid" ><fo:block text-align="left" font-size="14pt"  font-weight="bold">SUPPLY PRODUCTS TILL DATE</fo:block></fo:table-cell>       		
+	                     	 	<fo:table-cell border-style="solid" ><fo:block text-align="left" font-size="14pt"  font-weight="bold">SUPPLY PRODUCTS TILL DATE</fo:block></fo:table-cell>       		
                       		</fo:table-row>
 							
 							<fo:table-row >
