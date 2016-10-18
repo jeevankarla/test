@@ -2285,6 +2285,14 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    	  		  	}
 	                    BigDecimal shippedQuantity=(BigDecimal)ShipresultCtx.get("shippedQuantity");
 	                    BigDecimal poQuantity=(BigDecimal)ShipresultCtx.get("quantity");
+	                    Map saleBillresultCtx = dispatcher.runSync("getOrderSaleBillQty", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
+	                    if (ServiceUtil.isError(saleBillresultCtx)) {
+	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(saleBillresultCtx);
+	    	  		  		Debug.logError(errMsg , module);
+	    	  		  		return ServiceUtil.returnError(errMsg);
+	    	  		  	}
+	                    BigDecimal saleBillQty=(BigDecimal)saleBillresultCtx.get("saleBillQty");
+	                    BigDecimal saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
 	                    GenericValue indentSummaryDetails = delegator.makeValue("IndentSummaryDetails");
 	                    indentSummaryDetails.set("orderId", indentId);
 	                    indentSummaryDetails.set("orderDate", indentDate);
@@ -2299,6 +2307,8 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("shippedQty", shippedQuantity);
 	                    indentSummaryDetails.set("totalAmount", totalAmount);
 	                    indentSummaryDetails.set("salesChannel", salesChannelEnumId);
+	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
+	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
 						delegator.createOrStore(indentSummaryDetails);
                     } catch (GenericServiceException e) {
                         Debug.logError(e, module);
@@ -2415,6 +2425,47 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	   return result;
 	}
   	
+	public static Map<String,Object> getOrderSaleBillQty(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        String orderId = (String) context.get("orderId");
+        EntityCondition cond = null;
+        EntityCondition itemcond = null;
+        String extPOId="";
+        BigDecimal saleBillAmt =BigDecimal.ZERO;
+        BigDecimal saleBillQty =BigDecimal.ZERO;
+        BigDecimal price =BigDecimal.ZERO;
+
+        List condList = FastList.newInstance();
+        condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+            EntityListIterator eli = null;
+        try {
+        	    EntityListIterator orderItemBillingItr = delegator.find("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
+				EntityListIterator ItemItr = delegator.find("OrderItem", itemcond, null, null, null, null);
+				if (orderItemBillingItr != null) {
+			                // reset each order
+	                GenericValue item = null;
+	                while ((item = orderItemBillingItr.next()) != null) {
+	                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
+	                	price = item.getBigDecimal("amount");
+	                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
+	                	saleBillAmt = saleBillAmt.add(amount);
+	                }
+	                orderItemBillingItr.close();
+			     }
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+		
+        result.put("saleBillQty",saleBillQty.setScale(2, BigDecimal.ROUND_HALF_UP));
+        result.put("saleBillAmt",saleBillAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
+	    return result;
+	}
 	
 	
 	public static Map<String, Object> periodPopulationIndentSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
