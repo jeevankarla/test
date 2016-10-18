@@ -174,9 +174,9 @@ $(document).ready(function(){
 	        	
 		       	  		<td align='left' nowrap="nowrap"><div class='h4'>Purchase Tax Type:</div></td>
 		       	  		<td valign='middle'>
-	          				<select name="saleTaxType" id="saleTaxType" class='h4' style="width:120px">
-	          					<#if saleTaxType?exists && saleTaxType?has_content>
-	          						<#if saleTaxType == "Intra-State">
+	          				<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
+	          					<#if purchaseTaxType?exists && purchaseTaxType?has_content>
+	          						<#if purchaseTaxType == "Intra-State">
 	          							<option value="Intra-State" selected>With In State</option>
 	          						<#else>
 	          							<option value="Inter-State" selected>Inter State</option>
@@ -185,8 +185,8 @@ $(document).ready(function(){
 	          					<option value="Intra-State">With In State</option>
 	          					<option value="Inter-State">Inter State</option>
 	          				</select>
-	          				<#if customerGeoId?exists && customerGeoId?has_content>
-					    		<input type="hidden" name="customerGeoId" id="customerGeoId" size="18" maxlength="60" value="${customerGeoId}" readonly/>
+	          				<#if supplierGeoId?exists && supplierGeoId?has_content>
+					    		<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${supplierGeoId}" readonly/>
 					    	</#if>
 					      	<#if branchGeoId?exists && branchGeoId?has_content>
 					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${branchGeoId}" readonly/>
@@ -195,15 +195,15 @@ $(document).ready(function(){
 		          		<td>&nbsp;</td>
 		          		<td align='left' nowrap="nowrap"><div class='h4'>Tax Form:</div></td>
 		       			<td valign='middle'>
-	          				<select name="saleTitleTransferEnumId" id="saleTitleTransferEnumId" class='h4' style="width:205px">
-	          					<#if saleTitleTransferEnumId?exists && saleTitleTransferEnumId?has_content>
-	          						<#if saleTitleTransferEnumId == "CST_CFORM">
+	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if purchaseTitleTransferEnumId?exists && purchaseTitleTransferEnumId?has_content>
+	          						<#if purchaseTitleTransferEnumId == "CST_CFORM">
 	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
 	          						</#if>
-	          						<#if saleTitleTransferEnumId == "CST_NOCFORM">
+	          						<#if purchaseTitleTransferEnumId == "CST_NOCFORM">
 	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
 	          						</#if>
-	          						<#if saleTitleTransferEnumId == "NO_E2_FORM">
+	          						<#if purchaseTitleTransferEnumId == "NO_E2_FORM">
 	          							<option value="NO_E2_FORM" selected></option>
 	          						</#if> 
 	          					</#if> 

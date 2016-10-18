@@ -263,13 +263,13 @@ if(shipments){
 		
 		
 		
-		 tenperValue = 0;
+		/* tenperValue = 0;
 		if(orderAdjustForTen){
 			amount=(EntityUtil.getFirst(orderAdjustForTen)).getString("amount");
 			tenperValue = Double.valueOf(amount);
 		}
 		
-		context.tenperValue = tenperValue;
+		context.tenperValue = tenperValue;*/
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -990,8 +990,11 @@ if(shipments){
 					if ( (adj.get("amount") != null) && (tenPercentAdjQty.compareTo(BigDecimal.ZERO) > 0) ) {
 						// pro-rate the amount
 						// set decimals = 100 means we don't round this intermediate value, which is very important
-						tenPercent = (adj.getBigDecimal("amount").divide(totalQuota, 100, ROUNDING)).setScale(2, ROUNDING);;
-						Debug.log("tenPercent ========================="+tenPercent);
+						
+						//tenPercent = (adj.getBigDecimal("amount").divide(totalQuota, 100, ROUNDING)).setScale(2, ROUNDING);;
+						
+						tenPercent = adj.getBigDecimal("amount").doubleValue()/totalQuota.doubleValue();
+						
 						tenPercent = tenPercent.multiply(tenPercentAdjQty);
 						// Tax needs to be rounded differently from other order adjustments
 						/*if (adj.getString("orderAdjustmentTypeId").equals("SALES_TAX")) {
