@@ -3303,6 +3303,33 @@
         <field name="fromDate"><display></display></field>
         <field name="thruDate"><display></display></field> 
     </form>
+     <form name="indentQtyAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
+<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
+                 <field name="branch" title="Branch"><display/></field>   
+       <field name="totalRevenue" title=" Total Quantity"><display/></field>
+       <field name="totalIndents" title="Total Purchase Qty"><display/></field>
+       <field name="inProcess" title="Pending Qty"><display/></field>
+       <field name="completed" title="Shipped Qty"><display/></field>
+     </form> 
+       <form name="indentSupplyAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
+<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
+                 <field name="branch" title="Branch"><display/></field>   
+       <field name="totalRevenue" title=" Total Quantity"><display/></field>
+       <field name="totalSaleQty" title="Total Sale Bill Qty"><display/></field>
+       <field name="inProcess" title="Pending Qty"><display/></field>
+     </form> 
+       <form name="indentPurchaseAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
+<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
+                 <field name="branch" title="Branch"><display/></field>   
+       <field name="totalRevenue" title=" Total Quantity"><display/></field>
+       <field name="totalIndents" title="Total Purchase Qty"><display/></field>
+       <field name="inProcess" title="Pending Qty"><display/></field>
+       <field name="completed" title="Shipped Qty"><display/></field>
+     </form> 
+    
      
         
 </forms>
