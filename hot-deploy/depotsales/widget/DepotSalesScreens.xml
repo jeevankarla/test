@@ -8692,4 +8692,89 @@
     </screen>
 	
 	
+		<screen name="IndentSupplyAnalytics">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="Indent  Supply Analytics"/>
+  				<set field="tabButtonItem" value="analytics" />		            
+				<set field="tabButtonItem2" value="IndentSupplyAnalytics" />
+				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>                      
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
+				
+				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+            </actions>
+            <widgets>
+				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+					<decorator-section name="body">
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+                    		<platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific> 
+					</decorator-section>
+				</decorator-screen>	                    	               
+            </widgets>
+        </section>
+    </screen>
+	<screen name="IndentSupplyAnalyticsInternal">
+        <section>      
+    		<actions>
+    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+    			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentSupplyAnalytics.groovy" />
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentSupplyAnalyticsDetail.ftl"/></html>
+                </platform-specific>                 
+
+            </widgets>
+        </section>
+    </screen>
+	
+		<screen name="IndentPurchaseAnalytics">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="Indent Analytics"/>
+  				<set field="tabButtonItem" value="analytics" />		            
+				<set field="tabButtonItem2" value="IndentPurchaseAnalytics" />
+				<set field="ajaxUrl" value="IndentPurchaseAnalyticsInternal" type="String" global="true"/>                      
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
+				
+				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+            </actions>
+            <widgets>
+				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+					<decorator-section name="body">
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+                    		<platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific> 
+					</decorator-section>
+				</decorator-screen>	                    	               
+            </widgets>
+        </section>
+    </screen>
+	<screen name="IndentPurchaseAnalyticsInternal">
+        <section>      
+    		<actions>
+    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+    			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentPurchaseAnalytics.groovy" />
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentPurchaseAnalyticsDetail.ftl"/></html>
+                </platform-specific>                 
+
+            </widgets>
+        </section>
+    </screen>
+	
+	
 </screens>

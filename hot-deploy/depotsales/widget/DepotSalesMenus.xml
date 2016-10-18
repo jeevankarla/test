@@ -279,7 +279,26 @@
             	</or>            
             </condition>  
         	<link target="IndentQtyAnalytics"/>
-        </menu-item>   
+        </menu-item>  
+        <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>  
+        	<link target="IndentSupplyAnalytics"/>
+        </menu-item>
+        <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>  
+        	<link target="IndentPurchaseAnalytics"/>
+        </menu-item> 
+          
      <!--    <menu-item name="channelSalesChart" title="Sales Mix Trend">
         	<condition>
 				<or>
