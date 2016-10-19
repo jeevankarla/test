@@ -867,9 +867,6 @@
 			    }
 			    else{
 			    	var adjPercentage = $('#'+id).val();
-			    	
-			    	alert(adjPercentage);
-			    	
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
