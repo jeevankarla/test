@@ -507,14 +507,16 @@
     	
     	var saleBasePrice = $('#saleBaseAmt').val();
     	
+    	
+    	var saleAmount = $('#saleAmount').val();
     	// Service Charge Recalculation
     	
     	var serviceChargePercent = 0;
 		if(dataRow["SERVICE_CHARGE"]){
 			serviceChargePercent = dataRow["SERVICE_CHARGE"];
 		}
-    	
-    	var serviceCharge = (serviceChargePercent/100)*(saleBasePrice);
+		
+    	var serviceCharge = (serviceChargePercent/100)*(saleAmount);
     	
     	$('#serviceChargeAmt').val(serviceCharge);
     	

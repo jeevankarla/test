@@ -498,6 +498,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						unitPrice=OrderItemChangeDetails.unitPrice;
 					}
 				}
+				
+				amount = unitPrice*qty;
+				
 				totalTaxAmt = 0;
 				if(purchaseTitleTransferEnumId){
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
@@ -519,7 +522,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 						condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, purTaxItem));
 						taxItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-						//Debug.log("taxItemList ============="+taxItemList);
+						Debug.log("taxItemList ============="+taxItemList);
 						taxPercent = 0;
 						taxValue = 0;
 						actualTaxValue = 0;
@@ -527,10 +530,16 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							taxPercent = (EntityUtil.getFirst(taxItemList)).get("sourcePercentage");
 							actualTaxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
 							taxValue = (actualTaxValue/origQty)*qty;
+							
+							
 						}
 						//Debug.log("taxValue ============="+taxValue);
 						newObj.put(taxItem+"_PUR", taxPercent);
 						newObj.put(taxItem+"_PUR_AMT" , taxValue);
+						
+						newObj.put(taxItem, taxPercent);
+						newObj.put(taxItem+"_AMT" , taxValue);
+						
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
 						//Debug.log("totalTaxAmt ============="+totalTaxAmt);
@@ -550,6 +559,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							}
 							newObj.put(surchargeItem+"_PUR", surTaxPercent);
 							newObj.put(surchargeItem+"_PUR_AMT" , surTaxValue);
+							
+							newObj.put(surchargeItem, surTaxPercent);
+							newObj.put(surchargeItem+"_AMT" , surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							
@@ -677,6 +689,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						}
 						
 					}
+					
+					newObj.put("totPayable", amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
 					
 					discItemAdjustmentJSON.add(newItemAdjObj);
 					

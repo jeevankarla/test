@@ -8969,7 +8969,13 @@
 				<set field="contactMechId" from-field="parameters.contactMechId" />
 				<set field="transporterId" from-field="parameters.transporterId" />
 				<set field="suplierAdd" from-field="parameters.suplierAdd" />
-				
+				<set field="productId" from-field="parameters.productId" />
+				<set field="productName" from-field="parameters.productName" />
+				<set field="quantityOnHandTotal" from-field="parameters.quantityOnHandTotal" />
+				<set field="uom" from-field="parameters.uom" />
+				<set field="bundleWeight" from-field="parameters.bundleWeight" />
+				<set field="bundleUnitPrice" from-field="parameters.bundleUnitPrice" />
+				<set field="balancedQty" from-field="parameters.balancedQty" />
 				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelperDepot.groovy" />

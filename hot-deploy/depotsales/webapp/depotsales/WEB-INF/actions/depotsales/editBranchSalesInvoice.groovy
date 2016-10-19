@@ -283,6 +283,25 @@
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
 						
+						
+						condExpr = [];
+						//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+						condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
+						condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
+						//Debug.log("condExpr ============="+condExpr);
+						serviceChrAmt = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+
+						serviceChgValue = 0;
+						serviceChgPercent = 0;
+						if(UtilValidate.isNotEmpty(serviceChrAmt)){
+							serviceChgValue = (EntityUtil.getFirst(serviceChrAmt)).get("amount");
+							serviceChgPercent = (taxValue*100)/(eachItem.itemValue);
+							//taxValue = (actualTaxValue/origQty)*qty;
+						}
+						newObj.put("SERVICE_CHARGE_AMT", serviceChgValue);
+						newObj.put("SERVICE_CHARGE", serviceChgPercent);
+						
+						
 						if(taxValue > 0){
 							//Debug.log("totalTaxAmt ============="+totalTaxAmt);
 							for(int j=0; j<surChargeList.size(); j++){
