@@ -481,26 +481,40 @@ context.productItemJSON = productItemJSON;
 
 
 
-JSONArray orderItemsJSON = new JSONArray();
+JSONArray dataJSON = new JSONArray();
 
 JSONObject newObj = new JSONObject();
 
 
+productId = parameters.productId;
+productName = parameters.productName;
+quantityOnHandTotal = parameters.quantityOnHandTotal;
+uom = parameters.uom;
+bundleWeight = parameters.bundleWeight;
+bundleUnitPrice = parameters.bundleUnitPrice;
+balancedQty = parameters.balancedQty;
+
+Debug.log("productId================="+productId);
+
+newObj.put("cProductId", productId);
+newObj.put("cProductName", productName);
+newObj.put("cottonUom", uom);
+newObj.put("unitCost", unitCost);
 
 
 
 
+/*newObj.put("quantityOnHandTotal", quantityOnHandTotal);
+newObj.put("bundleWeight", bundleWeight);
+newObj.put("bundleUnitPrice", bundleUnitPrice);
+newObj.put("balancedQty", balancedQty);
+*/
+
+dataJSON.add(newObj);
 
 
 
-
-
-
-
-
-
-
-
+context.dataJSON = dataJSON;
 
 
 titleTransferEnumIdsList = [];

@@ -1008,6 +1008,22 @@ function fillPartyQuota(partyId){
 		
 				      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				               	
+				               	
+				               	<input type="hidden" name="productId" id="productId" value="${parameters.productId?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="productName" id="productName" value="${parameters.productName?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="quantityOnHandTotal" id="quantityOnHandTotal" value="${parameters.quantityOnHandTotal?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="uom" id="uom" value="${parameters.uom?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="bundleWeight" id="bundleWeight" value="${parameters.bundleWeight?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="bundleUnitPrice" id="bundleUnitPrice" value="${parameters.bundleUnitPrice?if_exists}"/>  
+				               	
+				               	<input type="hidden" name="balancedQty" id="balancedQty" value="${parameters.balancedQty?if_exists}"/>  
+				               	
+				               	
 				               	<tr>
 						           	<td>&nbsp;</td>
 									<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
