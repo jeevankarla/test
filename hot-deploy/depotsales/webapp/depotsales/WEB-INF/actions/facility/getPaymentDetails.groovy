@@ -49,13 +49,44 @@ for (eachList in productStoreList) {
 }
 context.formatList = formatList;
 
-branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
+/*branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
 if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 	branchList.clear();
 	branchList.add(parameters.partyIdFrom)
 }
+*/
+
+
 
 //branchId = parameters.partyIdFrom;
+
+branchId = parameters.partyIdFrom;
+
+branchList = [];
+
+if(branchId){
+condListb = [];
+
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchList)
+branchList.add(branchId);
+}else if(!branchId && partyId){
+
+formatList1 = [];
+for (eachList in formatList) {
+	formatList1.add(eachList.payToPartyId);
+}
+branchList = formatList1;
+}
+
+Debug.log("branchList================"+branchList);
 
 salesChannel = parameters.salesChannelEnumId;
 
@@ -149,7 +180,7 @@ forIndentsCount = null;
 
 double totalIndents = 0
 
-if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==1){
+if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()>=1){
 
 	
 	custCondList = [];
@@ -157,7 +188,7 @@ if(facilityStatusId || searchOrderId || facilityDateStart || branchList.size()==
 	// query based on branch
 	
 	orderHeaderbefo = [];
-	if(branchList.size()==1){
+	if(branchList.size()>=1){
 		custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
 	
 	custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
