@@ -32,7 +32,7 @@ under the License.
 			</drop-down>
 		</field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+       <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
         <field name="description"><text-find ignore-case="true"/></field>
         <field position="1" name="invoiceTypeId">
             <drop-down allow-empty="true">

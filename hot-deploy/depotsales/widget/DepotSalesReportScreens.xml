@@ -518,7 +518,6 @@
 					
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy" />
-                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/indentOverViewReport.groovy"/>
             </actions>
             <widgets>
 				<platform-specific> 

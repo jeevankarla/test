@@ -583,6 +583,7 @@ if (orderItems) {
 		   }
 	   }
    }
+   invoiceIds=[];
   // ShipmentList = EntityUtil.getFieldListFromEntityList(ShipmentList, "shipmentId", true);   
    if(UtilValidate.isNotEmpty(ShipmentList)){
 	   ShipmentList.each{shipment->
@@ -639,8 +640,9 @@ if (orderItems) {
    orderAssoc=EntityUtil.getFirst(OrderAssocList);
    if(UtilValidate.isNotEmpty(invoiceIds)){
 	   shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderAssoc.orderId), null, null, null, false);
+	   context.shipmentReceipts=shipmentReceipts;
    }
-   context.shipmentReceipts=shipmentReceipts;
+   
    context.statusHistory=statusHistory; 
    context.OrderAssocList=OrderAssocList;
    context.OrderAttributeList=OrderAttributeList;
