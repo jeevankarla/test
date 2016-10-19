@@ -495,6 +495,55 @@
         	   
 	      
        </menu>
+       
+       
+        <menu name="VariantIndentPortalTabDepot" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem3">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <!-- <menu-item name="SilkIndent" title="${uiLabelMap.SilkIndent}">
+				    <link target="SilkBranchSalesOrder">
+				    <parameter param-name="menuName" value="SilkIndent"/>
+				   </link>
+				</menu-item> -->
+				<!-- <menu-item name="CottonIndent" title="Sale Indent">
+				    <link target="DepotSalesOrder">
+					<parameter param-name="menuName" value="CottonIndent"/>
+				   </link>
+				</menu-item> -->
+			<!-- 	<menu-item name="OtherIndent" title="${uiLabelMap.OtherIndent}">
+				    <link target="OtherBranchSalesOrder">
+						<parameter param-name="menuName" value="OtherIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="DyesIndent" title="${uiLabelMap.DyesIndent}">
+				    <link target="DyesBranchSalesOrder">
+						<parameter param-name="menuName" value="DyesIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
+				    <link target="ChemicalBranchSalesOrder">
+						<parameter param-name="menuName" value="ChemicalIndent"/>
+				   </link>
+				</menu-item>
+				<menu-item name="FebricIndent" title="Fabric Indent">
+				    <link target="FebricBranchSalesOrder">
+						<parameter param-name="menuName" value="FebricIndent"/>
+				   </link>
+				</menu-item> -->
+	      
+        	   
+	      
+       </menu>
+       
+       
+       
+       
        <menu name="VariantIndentorIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem3">
 			<actions> 
@@ -591,6 +640,64 @@
 	        	<link target="FindDepotBranchSalesShipment" />
 	        </menu-item> -->
        </menu>
+       
+       
+        <menu name="CottonBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="${uiLabelMap.DirectIndent}">
+				    <link target="CottonBranchSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	<link target="CottonMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+       
+       
+       
+        <menu name="CottonBranchIndentPortalTabDepot" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="${uiLabelMap.DirectIndent}">
+				    <link target="CottonBranchSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	<link target="CottonMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+       
+       
+       
 <!--        other indent entry tab bar -->
 
        <menu name="OtherBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1240,6 +1347,19 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item> 
+		
+		   <menu-item name="DepotSalesOrder" title="Indent Entry">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="DepotSalesOrder">
+				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+			</link>
+		</menu-item> 
+		
         <menu-item name="invoiceOverView" title="Invoice OverView">
 	        <condition>
 	        	<not>
