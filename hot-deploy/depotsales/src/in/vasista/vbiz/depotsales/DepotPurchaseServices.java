@@ -6567,7 +6567,7 @@ public class DepotPurchaseServices{
 						}
 					}
 					*/
-					List<GenericValue> receipts = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				/*	List<GenericValue> receipts = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 					if(UtilValidate.isNotEmpty(receipts)){
 						String inventoryItemId = (EntityUtil.getFirst(receipts)).getString("inventoryItemId");
 						
@@ -6577,7 +6577,7 @@ public class DepotPurchaseServices{
 							inventoryItem.set("unitCost", unitListPrice);
 							inventoryItem.store();
 						}
-					}
+					}*/
 					
 					i++;
 				}
@@ -9539,6 +9539,9 @@ public class DepotPurchaseServices{
   		    	  					return "error";
   		    	  			}
 
+  		    	  			
+  		    	  			Debug.log("invoiceItemListAdj==================="+invoiceItemListAdj);
+  		    	  			
   		    	  			if(UtilValidate.isNotEmpty(invoiceItemListAdj)){
   		    	  			
   		    	  			
