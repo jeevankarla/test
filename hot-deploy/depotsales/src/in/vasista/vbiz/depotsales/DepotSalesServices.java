@@ -1757,6 +1757,9 @@ public class DepotSalesServices{
 		String belowContactMechId = (String) request.getParameter("belowContactMechId");
 		String transporterId = (String) request.getParameter("transporterId");
 		String manualQuotaStr = (String) request.getParameter("manualQuota");
+		String depotSalesFlagObj = (String) request.getParameter("depotSalesFlag");
+		
+		String inventoryItemId = (String) request.getParameter("inventoryItemId");
 
 		
 		String cfcId = (String) request.getParameter("cfcId");
@@ -2549,6 +2552,69 @@ Debug.log("taxRateList =============="+taxRateList);
 						return "error";
 				 }
 		}
+		
+		
+		if(UtilValidate.isNotEmpty(depotSalesFlagObj) && depotSalesFlagObj.equals("DepotSaleOrder")){
+		
+			if (inventoryItemId == "" || UtilValidate.isEmpty(inventoryItemId)) {
+				request.setAttribute("_ERROR_MESSAGE_","inventoryItemId Id is empty");
+				return "error";
+			}
+			
+			//inventoryItemId = inventoryItemId.replaceAll("{}","");
+			
+			inventoryItemId = inventoryItemId.replaceAll("\\{", "").replaceAll("\\}","");
+			
+			String  inventoryItemArray[] = inventoryItemId.split(",");
+			
+			inventoryItemId = inventoryItemArray[0];
+			
+			
+		if(UtilValidate.isNotEmpty(orderId)){
+			
+			try{
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				orderHeader.set("purposeTypeId", "DEPOT_SALES");
+				orderHeader.store();
+			
+			}catch (GenericEntityException e) {
+				Debug.logError("Problem while Creating  PurPose type for orderId:"+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  PurPose type for orderId: : "+orderId);
+				return "error";
+			}
+			
+		}
+		
+		Debug.log("orderId============="+orderId);
+		
+		
+		if(UtilValidate.isNotEmpty(orderId)){
+		
+		List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
+		
+		Debug.log("orderItems====2323========="+orderItems);
+
+		
+		for(GenericValue orderItem : orderItems){
+			if(UtilValidate.isNotEmpty(orderItem)){
+				
+				GenericValue newItemAttr = delegator.makeValue("OrderItemAttribute");        	 
+				newItemAttr.set("orderId", orderItem.getString("orderId"));
+				newItemAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+				newItemAttr.set("attrName", "ORDRITEM_INVENTORY_ID");
+				newItemAttr.set("attrValue", inventoryItemId);
+				newItemAttr.create();
+				
+			}
+		}
+		
+		}
+		
+		
+		}
+		
+		
+		
 		Map resultCtx = FastMap.newInstance();
 		
 				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));

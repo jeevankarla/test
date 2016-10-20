@@ -8989,6 +8989,8 @@
 				<set field="bundleUnitPrice" from-field="parameters.bundleUnitPrice" />
 				<set field="balancedQty" from-field="parameters.balancedQty" />
 				<set field="unitCost" from-field="parameters.unitCost" />
+				<set field="bookedQuantity" from-field="parameters.bookedQuantity" />
+				<set field="inventoryItemId" from-field="parameters.inventoryItemId" />
 				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelperDepot.groovy" />

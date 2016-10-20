@@ -1041,6 +1041,19 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="orderPayment"/>
     </request-map>
+    
+    
+     <request-map uri="processDepotSalesOrderDepot">
+      <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="FindSalesIndentPayment">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="FindSalesIndentPayment"/>
+    </request-map>
+    
+    
      <request-map uri="IndentorprocessBranchSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEvent" global-transaction="true"/>

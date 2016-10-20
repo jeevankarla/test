@@ -1024,6 +1024,12 @@ function fillPartyQuota(partyId){
 				               	<input type="hidden" name="balancedQty" id="balancedQty" value="${parameters.balancedQty?if_exists}"/> 
 				               	
 				               	<input type="hidden" name="unitCost" id="unitCost" value="${parameters.unitCost?if_exists}"/>
+				               	
+				               	<input type="hidden" name="bookedQuantity" id="bookedQuantity" value="${parameters.bookedQuantity?if_exists}"/>
+				               	
+				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
+				               	
+				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
 				               	 
 				               	
 				               	
@@ -1751,7 +1757,7 @@ function fillPartyQuota(partyId){
 			    <div class="screenlet-body">
 					<div id="myGrid1" style="width:100%;height:210px;"></div>
 						  
-						<#assign formAction='processBranchSalesOrder'>			
+						<#assign formAction='processDepotSalesOrderDepot'>			
 						
 						
 						<#if booth?exists || party?exists || partyId?exists >
@@ -1769,7 +1775,7 @@ function fillPartyQuota(partyId){
 					    	<div align="center">
 					    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"  />
 					    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processOrdersBranchSales</@ofbizUrl>');"/>   	
+					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processDepotSalesOrderDepot</@ofbizUrl>');"/>   	
 					    	</div>     
 						</#if>
 						

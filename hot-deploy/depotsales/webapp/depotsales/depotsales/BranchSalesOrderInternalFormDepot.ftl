@@ -374,6 +374,10 @@
 			var transporterId = $("#transporterId").val();
 			var tallyReferenceNo = $("#tallyReferenceNo").val();
 			var ediTallyRefNo = $("#ediTallyRefNo").val();
+			var inventoryItemId = $("#inventoryItemId").val();
+			
+			var depotSalesFlag = "DepotSaleOrder";
+			
 			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
@@ -383,6 +387,8 @@
 			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var cfc = jQuery("<input>").attr("type", "hidden").attr("name", "cfcId").val(cfcId);
+			
+			var depotSalesFlagObj = jQuery("<input>").attr("type", "hidden").attr("name", "depotSalesFlag").val(depotSalesFlag);
 			
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var bilngType = jQuery("<input>").attr("type", "hidden").attr("name", "billingType").val(billingType);
@@ -394,6 +400,7 @@
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
+			var inventoryItemId = jQuery("<input>").attr("type", "hidden").attr("name", "inventoryItemId").val(inventoryItemId);
 			
 			var purchaseTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val($("#purchaseTitleTransferEnumId").val());
 			var saleTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "saleTitleTransferEnumId").val($("#saleTitleTransferEnumId").val());
@@ -423,6 +430,10 @@
 			jQuery(formId).append(jQuery(transporterId));
 			jQuery(formId).append(jQuery(tallyReferenceNo));
 			jQuery(formId).append(jQuery(ediTallyRefNo));
+			jQuery(formId).append(jQuery(inventoryItemId));
+			jQuery(formId).append(jQuery(depotSalesFlagObj));
+			
+			
 			
 			jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
 			jQuery(formId).append(jQuery(saleTitleTransferEnum));
@@ -564,6 +575,7 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor,cssClass:"readOnlyColumnClass" ,focusable :false, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantityOnHandTotal", name:"Stock", field:"quantityOnHandTotal", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
+			{id:"bookedQuantity", name:"Booked Quantity", field:"bookedQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
