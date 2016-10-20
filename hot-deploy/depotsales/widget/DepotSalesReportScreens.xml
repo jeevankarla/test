@@ -110,7 +110,29 @@
 			</widgets>
 		</section>
 	</screen>
-	
+	<screen name="productCategoryReportPdf">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/productCategoryReportPdf.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/productCategoryReportPdf.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="PartyFinancialHistoryWithDrCrDepotPDF">
 		<section>
 			<actions>
@@ -592,7 +614,7 @@
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/employeeFinAccObReport.groovy" />
 			</actions>
-			<widgets>
+			<widgets> 
 				<section>
 					<widgets>
 						<platform-specific>
@@ -606,4 +628,6 @@
 			</widgets>
 		</section>
 	</screen>
+	
 </screens>
+

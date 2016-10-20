@@ -162,7 +162,7 @@ under the License.
 				<#assign tempScheamQty = tempScheamQty+invoiceDetail.get("schemeQty")>
 					
 				
-                 <#if invoiceItemLevelAdjustments?has_content>		
+                 <#if invoiceItemLevelAdjustments?has_content && !kanAndKalRo?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -175,7 +175,7 @@ under the License.
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 				        
 				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				       <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0")}%)</#if></fo:block>
+				        <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0")}%)</#if></fo:block>
 				       
 				       </#if>
 				        </#list>
@@ -241,7 +241,12 @@ under the License.
 				</fo:table-cell>
 				
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
+					
+			    <#if kanAndKalRo?has_content> 
+					<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("unitPriceIncTax")?has_content>${invoiceDetail.get("unitPriceIncTax")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
+			    <#else>
+					<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")} <#else>${0.00}</#if></fo:block>
+				</#if>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("ToTamount")?has_content>
@@ -250,7 +255,7 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${(invoiceDetail.get("ToTamount"))?string("#0.00")}</fo:block>
 				
                  
-				 <#if invoiceItemLevelAdjustments?has_content>		
+				 <#if invoiceItemLevelAdjustments?has_content  && !kanAndKalRo?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -296,7 +301,11 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
+				<#if !kanAndKalRo?has_content>
+		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
+				<#else>
+					<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
+	            </#if>
 				</fo:table-cell>
 								
 				</fo:table-row>
@@ -310,8 +319,9 @@ under the License.
 	</#if>
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
+	<#if !kanAndKalRo?has_content>
 	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier :                                                                         OTHER CHARGES :</fo:block>
-	
+	</#if>
 	 <fo:block>
 	      
     <fo:table width="100%"   align="right" table-layout="fixed"  font-size="10pt"> 
@@ -328,6 +338,7 @@ under the License.
 			</fo:table-row>
 
              <#assign remainingAdjustMents = 0>
+		<#if !kanAndKalRo?has_content>
             <#list invoiceRemainigAdjItemList as eachList>
 			<fo:table-row white-space-collapse="false">
 			 <fo:table-cell >
@@ -347,6 +358,7 @@ under the License.
 				</fo:table-cell>
 			</fo:table-row>
 			</#list>
+		</#if>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell number-columns-spanned="2" >
          			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
@@ -383,7 +395,12 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
-  				<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
+				<#if !kanAndKalRo?has_content>
+					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
+				<#else>
+					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((grandTotal+totTaxAmount2)+mgpsAmt)?string("#0.00")}</fo:block>
+				</#if>
+  				
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
@@ -502,7 +519,7 @@ under the License.
 				<fo:block text-align="left"    font-size="10pt" >NHDC Sale Inv Date             : <#if supplier?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="left"    font-size="10pt" >NHDC Indent No.                : ${indentNo?if_exists}</fo:block>
 				<fo:block text-align="left"    font-size="10pt" >NHDC Sale Inv No.              : ${invoiceId?if_exists}</fo:block>
-				
+				   
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="left"     font-size="10pt" >Supplier Name         : <#if supplier?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</#if></fo:block>
@@ -519,7 +536,7 @@ under the License.
 				</fo:table-cell>
 		
 			</fo:table-row>
-		</fo:table-body>
+		</fo:table-body>   
 	</fo:table>
 	</fo:block>
           		     <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
@@ -569,7 +586,7 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >Value (Net of Subsidy)</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
-				</fo:table-body>
+				</fo:table-body>   
 				
 	     </fo:table>
 	    </fo:block>
@@ -627,7 +644,7 @@ under the License.
 				<#assign grandTot = grandTot+(amt-quotaQty)>
 				<fo:block text-align="center"  font-size="10pt" >${(amt-quotaQty)?if_exists}</fo:block>
 				</fo:table-cell>
-				</fo:table-row>
+				</fo:table-row>   
 		   
 		      <#assign sr = sr+1> 
 		   
