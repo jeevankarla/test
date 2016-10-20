@@ -93,7 +93,7 @@
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
             </actions>
             <widgets>
-				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                     		<platform-specific> 
@@ -8665,7 +8665,7 @@
             	<set field="parameters.screenflag" value="indentQtyAnalytics"/>
             </actions>
             <widgets>
-				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                     		<platform-specific> 
@@ -8710,7 +8710,7 @@
            
             </actions>
             <widgets>
-				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                     		<platform-specific> 
@@ -8753,7 +8753,7 @@
                  <set field="parameters.screenflag" value="indentPurchaseAnalytics"/>
             </actions>
             <widgets>
-				<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                     		<platform-specific> 
@@ -8812,6 +8812,18 @@
 				  </condition>
 				 <widgets>
                           <include-form name="indentPurchaseAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 </widgets>
+              </section>  
+               <section>
+                  <condition>
+						<if-compare field="parameters.screenflag" operator="equals" value="indentAnalytics"  />
+				  </condition>
+				  <actions>
+				  
+				  </actions>
+				 <widgets>
+				 
+                          <include-form name="indentAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
                  </widgets>
               </section>  
             	
