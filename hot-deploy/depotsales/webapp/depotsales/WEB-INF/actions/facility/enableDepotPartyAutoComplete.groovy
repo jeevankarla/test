@@ -16,11 +16,13 @@
 	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	import in.vasista.vbiz.purchase.MaterialHelperServices;
 	import org.ofbiz.party.party.PartyHelper;
+	import org.ofbiz.party.contact.ContactMechWorker;
 	
 	JSONArray branchJSON = new JSONArray();
 	JSONObject branchPartyObj = new JSONObject();
 	JSONArray partyJSON = new JSONArray();
 	JSONObject partyNameObj = new JSONObject();
+	JSONObject partyGeoObj = new JSONObject();
 	dctx = dispatcher.getDispatchContext();
 	
 	userPartyId = userLogin.partyId;
@@ -201,6 +203,12 @@
 			newObj.put("label",partyName+"["+supplier.partyId+"]");
 			supplierIdJson.put(supplier.partyId, partyName);
 			supplierJSON.add(newObj);
+			String supplierGeoId = null;
+			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplier.partyId, false, "TAX_CONTACT_MECH");
+			if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
+				supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
+			}
+			   partyGeoObj.put(supplier.partyId,supplierGeoId);
 			}
 			
 		}
@@ -208,6 +216,7 @@
 	context.supplierJSON=supplierJSON;
 	context.supplierIdJson=supplierIdJson;
 	context.partyNameObj = partyNameObj;
+	context.partyGeoObj = partyGeoObj;
 	
 	//societyParty  json.
 	JSONArray societyJSON = new JSONArray();
