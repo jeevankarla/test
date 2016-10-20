@@ -1,3 +1,4 @@
+
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <script type= "text/javascript">
 	
@@ -86,6 +87,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
       			<td width="15%"></td>
 				<td width="10%">
 				<input type="submit" value="CSV" onClick="javascript:appendParams('CustomerDetails', '<@ofbizUrl>CustomerDetails.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+        </tr>
+        <tr class="alternate-row">
+			<form id="productCategoryReport" name="productCategoryReport" method="post" action="<@ofbizUrl>productCategoryReportPdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Product Category Report</td>
+				<td width="15%"></td>
+			    <td width="15%"></td>
+      			 <td width="15%"><span class='h3'>Category
+							    <select name="categoryId" id="categoryId">
+							          <option value="ALL">ALL</option>
+							          <option value='COTTON'>COTTON</option>
+							       	  <option value='SILK'>SILK</option>
+							       	  <option value='OTHERS'>OTHERS</option>
+							    </select>    								
+					  	 </span></td>
+      			<td width="15%"></td>
+				<td width="10%">
+				<input type="submit" value="PDF" onClick="javascript:appendParams('productCategoryReport', '<@ofbizUrl>productCategoryReportPdf</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
         </tr>
       	<tr class="alternate-row">
