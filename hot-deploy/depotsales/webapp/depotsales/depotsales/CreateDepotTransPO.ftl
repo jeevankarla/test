@@ -219,7 +219,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 	var supplierName;
 	function dispSuppName(selection){
 	   var value = $("#supplierId").val();
+	   supplierGeoId = partyGeoObj[value];
 	   supplierName = partyNameObj[value];
+	   $("#supplierGeoId").val(supplierGeoId); 
 	   $("#supplierName").html("<h4>"+supplierName+"</h4>");
 	}    
 	    
@@ -395,9 +397,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
 	    	<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly onblur= 'javascript:dispSuppName(this);'/>
 	    	<span> ${orderInfo.get("supplierName")?if_exists}</span>
+	    	<input type="hidden" name="supplierGeoId" id="supplierGeoId" value="${orderInfo.get("supplierGeoId")}" size="18" maxlength="60"/>
 	    	<#else>
 	    	<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
 	    	<span id="supplierName"></span>
+	    	<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60"/>
 	    	</#if>
 	      	
 	    </td>
@@ -528,6 +532,49 @@ function makeDatePicker(fromDateId ,thruDateId){
         	   
           	</td>
 	        </tr>
+	        <tr>
+		  		<td align='left' class="label" nowrap="nowrap">Purchase Tax Type:</td>
+		  		<td valign='middle'>
+					<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
+						<#if orderId?exists && orderInfo.get("purchaseTaxType")?exists>
+							<#if orderInfo.get("purchaseTaxType") == "Intra-State">
+								<option value="Intra-State" selected>With In State</option>
+							<#else>
+								<option value="Inter-State" selected>Inter State</option>
+							</#if> 
+						</#if> 
+						<option value="Intra-State">With In State</option>
+						<option value="Inter-State">Inter State</option>
+					</select>
+				</td>
+				<td>&nbsp;</td>
+		          		<td align='left' class="label" nowrap="nowrap">Transaction Type:</td>
+		       			<td valign='middle'>
+	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if orderId?exists && orderInfo.get("purchaseTitleTransferEnumId")?exists>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_CFORM">
+	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
+	          							<option value="CST_NOCFORM">Transaction Without C Form</option>
+		          						<option value="NO_E2_FORM"></option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "CST_NOCFORM">
+	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
+	          							<option value="CST_CFORM">Transaction With C Form</option>
+	          							<option value="NO_E2_FORM"></option>
+	          						</#if>
+	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "NO_E2_FORM">
+	          							<option value="NO_E2_FORM" selected></option>
+	          							<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          							<option value="CST_CFORM">Transaction With C Form</option>
+	          						</#if> 
+	          					<#else> 
+		          					<option value="CST_CFORM">Transaction With C Form</option>
+		          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+		          					<option value="NO_E2_FORM"></option>
+	          					</#if>
+	          				</select>
+	          			</td>
+		            </tr>		
                   </table>
                 </fieldset>  
              </section>

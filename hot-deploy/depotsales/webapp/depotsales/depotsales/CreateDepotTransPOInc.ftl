@@ -32,7 +32,8 @@
 	    margin: 0% 1% 1% 0%;
 	    width: 29%;
 	}	
-</style>			
+</style>		
+<#include "EditDepoPurchaseOrderPrice.ftl"/>			
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 
@@ -76,6 +77,7 @@
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
 	var supplierJSON = ${StringUtil.wrapString(supplierJSON)!'[]'};
 	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
+	var partyGeoObj = ${StringUtil.wrapString(partyGeoObj)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
 	var otherTermsTags = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
@@ -89,7 +91,11 @@
 		else
 			return {valid:true, msg:null};
 	}
-	 function calculateBundlePrice(balQuty,uom,org2){
+	function editClickHandlerEvent(row){
+		getProductPurchaseTaxDetails($("#supplierGeoId").val(), row, $("#purchaseTaxType").val());
+		showItemAdjustmentsAndTaxes(data[row], row);
+	}
+	function calculateBundlePrice(balQuty,uom,org2){
 	  var result=0;
 	    if(uom == "Bale"){
 			result = Math.round(balQuty*org2*40);
@@ -283,12 +289,9 @@
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
-		{ 
-			var productId = data[rowCount]["cProductId"];
-			var orderItemSeqId;
-			if(data[rowCount]["orderItemSeqId"]){
-			orderItemSeqId=data[rowCount]["orderItemSeqId"];
-			}
+		{ 			
+		
+			var productId = data[rowCount]["cProductId"];			
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
@@ -298,45 +301,99 @@
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
 			var bedPercent = data[rowCount]["bedPercent"];
-			
+
+			var taxAmt = data[rowCount]["taxAmt"];
 			
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
 			var yarnUOM = data[rowCount]["cottonUom"];
 			var bundleWeight = data[rowCount]["bundleWeight"];
 			var bundleUnitPrice = data[rowCount]["unitPrice"];
 			var remarks = data[rowCount]["remarks"];
-			var unitPrice = data[rowCount]["KgunitPrice"];			
+			var unitPrice = data[rowCount]["KgunitPrice"];
+			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
+			
+			var vatPercent = data[rowCount]["vatPercent"];
+			var cstPercent = data[rowCount]["cstPercent"];
+			var cessPercent = data[rowCount]["cessPercent"];
+			//var bedPercent = data[rowCount]["bedPercent"];
 			
 		
-	 		if (!isNaN(qty)) {	 		
+	 		if (!isNaN(qty)) {	
+	 			var inputSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId); 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
-				var inputorderItemSeqId = jQuery("<input>").attr("type", "hidden").attr("name", "orderItemSeqId_o_" + rowCount).val(orderItemSeqId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputbundleUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "bundleUnitPrice_o_" + rowCount).val(bundleUnitPrice);			
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
-
-				jQuery(formId).append(jQuery(inputProd));
-				jQuery(formId).append(jQuery(inputorderItemSeqId));				
+				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputBaleQty));
 				jQuery(formId).append(jQuery(inputYarnUOM));
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputbundleUnitPrice));			
-							
-				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				jQuery(formId).append(jQuery(inputSeqId));
+				
+				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);				
 				jQuery(formId).append(jQuery(inputPrice));
+				var inputTaxAmt = jQuery("<input>").attr("type", "hidden").attr("name", "taxAmt_o_" + rowCount).val(taxAmt);				
+				jQuery(formId).append(jQuery(inputTaxAmt));				
 				var inputVATPer = jQuery("<input>").attr("type", "hidden").attr("name", "vatPercent_o_" + rowCount).val(vatPercent);
 				jQuery(formId).append(jQuery(inputVATPer));
+				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_" + rowCount).val(cstPercent);				
+				jQuery(formId).append(jQuery(inputCSTPer));				
+				var inputCESSPer = jQuery("<input>").attr("type", "hidden").attr("name", "cessPercent_o_" + rowCount).val(cessPercent);
+				jQuery(formId).append(jQuery(inputCESSPer));				
+				//var remarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				
-				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_" + rowCount).val(cstPercent);
-				jQuery(formId).append(jQuery(inputCSTPer));
+				//jQuery(formId).append(jQuery(remarks));
+                 
+                
+                // Purchase taxes
 				
-				var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
-				jQuery(formId).append(jQuery(inputExcisePer));
+				var purTaxList = [];
+				purTaxList = data[rowCount]["purTaxList"]				
+				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
+				jQuery(formId).append(jQuery(purTaxListItem));	
+				if(purTaxList != undefined){
+					for(var i=0;i<purTaxList.length;i++){
+						var taxType = purTaxList[i];
+						var taxPercentage = data[rowCount][taxType + "_PUR"];
+						var taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						
+						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
+						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
+						jQuery(formId).append(jQuery(purInputTaxTypePerc));
+						jQuery(formId).append(jQuery(purInputTaxTypeValue));
+					}
+				}
+                
+                // Purchase order Adjustments
+				var orderAdjustmentsList = [];
+				orderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				data[rowCount]["itemAdjustments"] = orderAdjustmentsList;				
+				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);				
+				jQuery(formId).append(jQuery(orderAdjustmentItem));	
+				if(orderAdjustmentsList != undefined){
+					for(var i=0;i<orderAdjustmentsList.length;i++){
+						var orderAdjType = orderAdjustmentsList[i];
+						var adjPercentage = data[rowCount][orderAdjType];
+						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
+						
+						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
+						
+						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeValue));
+						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
+					}
+				} 
+				//var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
+				//jQuery(formId).append(jQuery(inputExcisePer));
    			}
 		}
 		
@@ -362,6 +419,11 @@
 				termDays = data2[rowCount]["termDays"];
 			}
 			
+			var assessableValue = "";
+			if(data2[rowCount]["assessableValue"]){
+				assessableValue = data2[rowCount]["assessableValue"];
+			}
+			
 			var description = "";
 			
 			if(data2[rowCount]["description"]){
@@ -375,6 +437,7 @@
 				var inputUom = jQuery("<input>").attr("type", "hidden").attr("name", "uomId_o_" + rowCount).val(uomId);
 				var inputDays = jQuery("<input>").attr("type", "hidden").attr("name", "termDays_o_" + rowCount).val(termDays);
 				var inputDescription = jQuery("<input>").attr("type", "hidden").attr("name", "description_o_" + rowCount).val(description);
+				var inputAssessableVal = jQuery("<input>").attr("type", "hidden").attr("name", "assessableValue_o_" + rowCount).val(assessableValue);
 				
 				jQuery(formId).append(jQuery(inputTermId));				
 				jQuery(formId).append(jQuery(inputApplicable));
@@ -382,6 +445,7 @@
 				jQuery(formId).append(jQuery(inputUom));
 				jQuery(formId).append(jQuery(inputDays));				
 				jQuery(formId).append(jQuery(inputDescription));
+				jQuery(formId).append(jQuery(inputAssessableVal));
 			}
 		}
 		
@@ -396,6 +460,10 @@
 			var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 			var orderDesc = jQuery("<input>").attr("type", "hidden").attr("name", "orderName").val(orderName);
 		    var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
+		    var refNo = $("#refNo").val();
+			var quotationNo = $("#quotationNo").val();			
+		    var refNum= jQuery("<input>").attr("type", "hidden").attr("name", "refNo").val(refNo);
+		    var quotationNum = jQuery("<input>").attr("type", "hidden").attr("name", "quotationNo").val(quotationNo);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			if(isIncTax){
 			    var incTaxEl = jQuery("<input>").attr("type", "hidden").attr("name", "incTax").val(isIncTax);
@@ -411,7 +479,9 @@
 			jQuery(formId).append(jQuery(order));
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(POField));
-			jQuery(formId).append(jQuery(productStore));
+            jQuery(formId).append(jQuery(refNum));
+            jQuery(formId).append(jQuery(quotationNum)); 
+			jQuery(formId).append(jQuery(productStore));            
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -653,10 +723,13 @@
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:80, minWidth:80, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100,sortable:false, formatter: rateFormatter, editor:FloatCellEditor},
-			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
-			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
-			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", availableTags: cstlableTags, editor: AutoCompleteEditor,validator:cstValidator},
-			
+			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"OTH_CHARGES_AMT", name:"Oth Chgs", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
+ 				formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
+ 				}
+ 			},
 		];
             
 		var options = {
@@ -1102,6 +1175,111 @@
            $('#FieldsDIV').show();
     }
     
+    function getProductPurchaseTaxDetails(taxAuthGeoId, row, taxType){
+    
+    	var productId = data[row]["cProductId"];
+    	var totalAmt = data[row]["amount"]; 
+         if( taxAuthGeoId != undefined && taxAuthGeoId != "" &&  taxType != undefined && taxType != "" ){	         
+	         $.ajax({
+	        	type: "POST",
+	         	url: "calculateTaxesByGeoIdTest",
+	       	 	data: {taxAuthGeoId: taxAuthGeoId, productId: productId } ,
+	       	 	dataType: 'json',
+	       	 	async: false,
+	    	 	success: function(result) {
+	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	   	  				alert(result["_ERROR_MESSAGE_"]);
+	      			}else{
+	   	  				
+	   	  				var defaultTaxMapPur =result["defaultTaxMap"];
+	   	  				var taxValueMapPur =result["taxValueMap"];	   	  				
+	   	  				var purOrderAdjustmentsList = result["orderAdjustmentsList"];	   	  				
+	   	  				data[row]["itemAdjustments"] = purOrderAdjustmentsList;
+	   	  				
+	   	  				var purOrderAdjustmentTypeList = [];
+	   	  				for(var i=0;i<purOrderAdjustmentsList.length;i++){
+	   	  					var purOrderAdjustmentType = purOrderAdjustmentsList[i];
+	   	  					purOrderAdjustmentTypeList.push(purOrderAdjustmentType["orderAdjustmentTypeId"]);
+	   	  				}
+	   	  				data[row]["purOrderAdjustmentTypeList"] = purOrderAdjustmentTypeList;
+	   	  				
+	   	  				data[row]["defaultTaxMapPur"] = defaultTaxMapPur;
+	   	  				data[row]["taxValueMapPur"] = taxValueMapPur;
+	   	  				
+	   	  				<#--
+	   	  				var purTaxList = [];
+	   	  				
+	   	  				var purchaseTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
+						var validPurchaseTaxList = transactionTypeTaxMap[purchaseTitleTransferEnumId];
+						
+						for(var i=0;i<validPurchaseTaxList.length;i++){
+							var purchaseTax = validPurchaseTaxList[i];
+							purTaxList.push(purchaseTax);
+							if(defaultTaxMapPur[purchaseTax] != 'undefined' || defaultTaxMapPur[purchaseTax] != null){
+								var surchargeList = defaultTaxMapPur[purchaseTax]["surchargeList"];
+								
+								for(var j=0;j<surchargeList.length;j++){
+									var surchargeDetails = surchargeList[j];
+									purTaxList.push(surchargeDetails.taxAuthorityRateTypeId);
+								}
+							}
+						}
+						-->
+						
+	   	  				var count = 0;
+						$.each(taxValueMapPur, function(key, value) {
+						    data[row]["DEFAULT_PUR_"+key] = value;
+						    data[row]["DEFAULT_PUR_"+key+"_AMT"] = (value) * totalAmt/100;
+						    
+						    //data[row][key+"_PUR"] = value;
+						    //data[row][key+"_PUR_AMT"] = (value) * totalAmt/100;
+						    
+						    count++;
+						});
+	   	  				
+	   	  				var purTaxList = [];
+						purTaxList.push("VAT_SALE");
+						purTaxList.push("CST_SALE");
+						purTaxList.push("VAT_SURCHARGE");
+						purTaxList.push("CST_SURCHARGE");
+	   	  				
+	   	  				data[row]["purTaxList"] = purTaxList;
+	   	  				
+	   	  				grid.updateRow(row);
+	   	  				
+	   	  				//updateTotalIndentAmount();
+	   	  				//data[row]["remarks"].setActiveCell();
+	   	  				return false; 
+	  				}
+	           
+	      		} ,
+	     	 	error: function() {
+	      	 		alert(result["_ERROR_MESSAGE_"]);
+	     	 	}
+	    	});
+	    }	
+	    else{
+	    	
+			var purTaxList = [];
+			purTaxList.push("VAT_SALE");
+			purTaxList.push("CST_SALE");
+			purTaxList.push("VAT_SURCHARGE");
+			purTaxList.push("CST_SURCHARGE");
+	   	  				
+	   	  	
+	   	  	data[row]["purTaxList"] = purTaxList;
+	   	  	
+	   	  	//updatePayableAmount(row);			
+			//addServiceCharge(row);
+	   	  	grid.updateRow(row);
+	   	  	
+	   	  	//updateTotalIndentAmount();
+	   	  	
+	   	  	
+	    }			
+	}
+    
+    
+    
     
 </script>			
-
