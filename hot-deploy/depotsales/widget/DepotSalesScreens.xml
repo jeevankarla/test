@@ -8819,11 +8819,10 @@
                   <condition>
 						<if-compare field="parameters.screenflag" operator="equals" value="indentAnalytics"  />
 				  </condition>
-				  <actions>
-				  
+				   <actions>
+    		   		 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalyticsCsv.groovy" />
 				  </actions>
 				 <widgets>
-				 
                           <include-form name="indentAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
                  </widgets>
               </section>  
