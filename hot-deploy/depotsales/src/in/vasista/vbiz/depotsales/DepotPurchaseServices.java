@@ -2296,6 +2296,7 @@ public class DepotPurchaseServices{
 	    List<GenericValue> toBillItems = FastList.newInstance();
 	    
 	    List<String> orderItemSeqIdList = FastList.newInstance();
+	    BigDecimal SERVICE_CHARGEBigDecimal = BigDecimal.ZERO;
 		
 		String applicableTo = "ALL";
 		String applicableToDisc = "ALL";
@@ -2339,6 +2340,7 @@ public class DepotPurchaseServices{
 			String unitPriceStr = "";
 			String orderItemSeqId = "";
 			String invoiceItemSeqId = "";
+			String SERVICE_CHARGEStr = "";
 			BigDecimal quantity = BigDecimal.ZERO;
 			BigDecimal uPrice = BigDecimal.ZERO;
 			
@@ -2459,6 +2461,12 @@ public class DepotPurchaseServices{
 					return "error";	
 				}
 				
+				if (paramMap.containsKey("SERVICE_CHARGE" + thisSuffix)) {
+					SERVICE_CHARGEStr = (String) paramMap.get("SERVICE_CHARGE" + thisSuffix);
+					
+					//Debug.logSERVICE_CHARGEStr============="+SERVICE_CHARGEStr);
+				}
+				
 				if (paramMap.containsKey("UPrice" + thisSuffix)) {
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
 				}
@@ -2494,6 +2502,17 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
 					return "error";
 				} 
+				
+				try {
+					if (!SERVICE_CHARGEStr.equals("")) {
+						SERVICE_CHARGEBigDecimal = new BigDecimal(SERVICE_CHARGEStr);
+						//Debug.logSERVICE_CHARGEBigDecimal================"+SERVICE_CHARGEBigDecimal);
+					}
+					}catch (Exception e) {
+						Debug.logError(e, "Problems parsing SERVICE_CHARGEStr string: " + SERVICE_CHARGEStr, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing SERVICE_CHARGEStr string: " + SERVICE_CHARGEStr);
+						return "error";
+					}
 
 				/*try {
 					if (!vatStr.equals("")) {
@@ -2599,19 +2618,22 @@ public class DepotPurchaseServices{
 		            if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 						String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
 						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
-							createInvoiceItemContext.put("amount",new BigDecimal(taxAmt));
-							try{
-				            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
-				            	
-				            	if(ServiceUtil.isError(createInvoiceItemResult)){
-				            		request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
+							if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
+								createInvoiceItemContext.put("amount",new BigDecimal(taxAmt));
+								try{
+					            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+					            	
+					            	if(ServiceUtil.isError(createInvoiceItemResult)){
+					            		request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
+										return "error";
+					          		}
+					            } catch (Exception e) {
+					            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
 									return "error";
-				          		}
-				            } catch (Exception e) {
-				            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
-								return "error";
-				    		}
+					    		}
 						}
+							
+						}		
 					}
 		            
 		            
@@ -2968,6 +2990,85 @@ public class DepotPurchaseServices{
 		
 		}*/
 		//==============update in Purchase=====================
+	    
+	    
+	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
+	    	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+		    
+		    createInvoiceItemContext.put("invoiceId",invoiceId);
+	        createInvoiceItemContext.put("invoiceItemTypeId", "INVOICE_ITM_ADJ");
+	        createInvoiceItemContext.put("parentInvoiceId", invoiceId);
+	        createInvoiceItemContext.put("description", "Service Charge");
+	        createInvoiceItemContext.put("quantity",BigDecimal.ONE);
+	        createInvoiceItemContext.put("amount",SERVICE_CHARGEBigDecimal);
+	        createInvoiceItemContext.put("productId", "");
+	        createInvoiceItemContext.put("userLogin", userLogin);
+	        try{
+	        	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+	    	    //Debug.logcreateInvoiceItemResult========Service Charge========="+createInvoiceItemResult);
+
+	        	if(ServiceUtil.isError(createInvoiceItemResult)){
+	      			  request.setAttribute("_ERROR_MESSAGE_", "Error in populating invoice purpose :" + invoiceId+"....! ");
+	      				return "error";
+	      		}
+	        } catch (Exception e) {
+	        	request.setAttribute("_ERROR_MESSAGE_", "Error in populating Service Charge : ");
+				return "error";
+			}
+		    
+	        
+	        List<GenericValue> InvoiceServiceItem = null;
+	        String invoiceItemSeqId = "";
+		    List conditionList1 = FastList.newInstance();
+		    conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		    conditionList1.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INVOICE_ITM_ADJ"));
+		    conditionList1.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS,"Service Charge"));
+	    	 try{
+	    		 InvoiceServiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+	    		 
+	      		GenericValue InvoiceService = EntityUtil.getFirst(InvoiceServiceItem);
+
+	      		invoiceItemSeqId = (String)InvoiceService.get("invoiceItemSeqId");
+	    		 
+	    	 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+				}
+	        
+	        
+	    /*	 List<GenericValue> orderAdjServiceCharge = null;
+	     	
+	    	 String orderAdjustmentId = "";
+	 	    conditionList.clear();
+	     	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	     	conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"SERVICE_CHARGE"));
+	     	 try{
+	     		orderAdjServiceCharge = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	       		GenericValue orderAdjServiceChargeItem = EntityUtil.getFirst(orderAdjServiceCharge);
+	       		 orderAdjustmentId = (String)orderAdjServiceChargeItem.get("orderAdjustmentId");
+	     		 
+	     	 }catch(GenericEntityException e){
+	 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+	 			}
+	    	 
+	    	 
+
+	   		GenericValue newItemAttr = delegator.makeValue("OrderAdjustmentBilling");    
+	   		
+					newItemAttr.set("orderAdjustmentId", orderAdjustmentId);
+					newItemAttr.set("invoiceId", invoiceId);
+					newItemAttr.set("invoiceItemSeqId", invoiceItemSeqId);
+					newItemAttr.set("quantity", BigDecimal.ZERO);
+					newItemAttr.set("amount",SERVICE_CHARGEBigDecimal);
+					 try{
+				  	   newItemAttr.create();
+					 }catch (Exception e) {
+						 request.setAttribute("_ERROR_MESSAGE_", "Error in populating OrderAdjustmentBilling : ");
+							return "error";
+			 	 	}*/
+	    	 
+	    	 
+	        
+		    }
 		
 		
 		
@@ -3441,6 +3542,8 @@ public class DepotPurchaseServices{
 		            if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 						String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
 						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+							
+							if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
 							createInvoiceItemContext.put("amount",new BigDecimal(taxAmt));
 							try{
 				            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
@@ -3453,6 +3556,7 @@ public class DepotPurchaseServices{
 				            	request.setAttribute("_ERROR_MESSAGE_", "Error in populating InvoiceItem : ");
 								return "error";
 				    		}
+						}
 						}
 					}
 		            

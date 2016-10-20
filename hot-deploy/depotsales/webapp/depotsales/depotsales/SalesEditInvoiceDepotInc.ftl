@@ -136,7 +136,7 @@
 			
 			var invoiceItemSeqId = data[rowCount]["invoiceItemSeqId"];
 			
-			  
+			  var SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
 			
 			var tenPercent = data[rowCount]["tenPercent"];
@@ -146,6 +146,10 @@
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var invoiceItemSeqId1 = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemSeqId_o_" + rowCount).val(invoiceItemSeqId);
+				
+				var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
+				
+				jQuery(formId).append(jQuery(SERVICE_CHARGE));
 				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
