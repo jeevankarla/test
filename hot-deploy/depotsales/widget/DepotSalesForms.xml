@@ -3329,6 +3329,15 @@
        <field name="inProcess" title="Pending Qty"><display/></field>
        <field name="completed" title="Shipped Qty"><display/></field>
      </form> 
+          <form name="indentAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
+<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
+                 <field name="branch" title="Branch"><display/></field>   
+       <field name="totalRevenue" title=" Total Revenue"><display/></field>
+       <field name="totalIndents" title="Total Indents"><display/></field>
+       <field name="inProcess" title="Pending "><display/></field>
+       <field name="completed" title="completed"><display/></field>
+     </form> 
     
      
         
