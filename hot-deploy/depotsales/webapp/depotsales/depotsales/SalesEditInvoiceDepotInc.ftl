@@ -1586,7 +1586,7 @@
 			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
-	   	  	updateTotalIndentAmount();
+	   	  	//updateTotalIndentAmount();
 	   	  	
 	   	  	
 	    }			

@@ -1021,7 +1021,10 @@ function fillPartyQuota(partyId){
 				               	
 				               	<input type="hidden" name="bundleUnitPrice" id="bundleUnitPrice" value="${parameters.bundleUnitPrice?if_exists}"/>  
 				               	
-				               	<input type="hidden" name="balancedQty" id="balancedQty" value="${parameters.balancedQty?if_exists}"/>  
+				               	<input type="hidden" name="balancedQty" id="balancedQty" value="${parameters.balancedQty?if_exists}"/> 
+				               	
+				               	<input type="hidden" name="unitCost" id="unitCost" value="${parameters.unitCost?if_exists}"/>
+				               	 
 				               	
 				               	
 				               	<tr>

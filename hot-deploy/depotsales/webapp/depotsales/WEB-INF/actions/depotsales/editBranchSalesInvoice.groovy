@@ -221,7 +221,7 @@
 				
 				taxValueMap = [:];
 				defaultTaxMap = [:];
-				//if( (UtilValidate.isNotEmpty(customerGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+				/*//if( (UtilValidate.isNotEmpty(customerGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
 					Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 					prodCatTaxCtx.put("productId", eachItem.productId);
 					prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
@@ -230,10 +230,15 @@
 					taxValueMap = taxResultCtx.get("taxValueMap");
 					defaultTaxMap = taxResultCtx.get("defaultTaxMap");
 				//}
-				
-				Debug.log("taxValueMap==============="+taxValueMap);
-				
-				Debug.log("defaultTaxMap==============="+defaultTaxMap);
+				*/
+					
+					
+					resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
+					
+					defaultTaxMap = resultCtx.defaultTaxMap;
+					
+					taxValueMap = resultCtx.taxValueMap;
+					
 				
 				
 				JSONObject newObj = new JSONObject();
@@ -241,7 +246,8 @@
 				newObj.put("invoiceItemSeqId",eachItem.invoiceItemSeqId);
 				
 				
-				
+				newObj.put("taxValueMap",taxValueMap);
+				newObj.put("defaultTaxMap",defaultTaxMap);
 				
 				productName = ""
 				prod=delegator.findOne("Product",[productId:eachItem.productId],false);

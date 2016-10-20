@@ -1038,7 +1038,7 @@
 		dataRow["taxApplicabilityList"] = taxApplicabilityList;
 		grid.updateRow(rowIndex);
 		grid.render();
-		updateTotalIndentAmount();
+		//updateTotalIndentAmount();
 		cancelForm();
 	}	
 		

@@ -484,7 +484,7 @@ if(shipments){
 			taxResultCtx = 0;
 			taxValueMap = [:];
 			defaultTaxMap = [:];
-			if( (UtilValidate.isNotEmpty(customerGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
+			/*if( (UtilValidate.isNotEmpty(customerGeoId)) && (UtilValidate.isNotEmpty(branchGeoId))   ){
 				Map prodCatTaxCtx = UtilMisc.toMap("userLogin",userLogin);
 				prodCatTaxCtx.put("productId", eachItem.productId);
 				prodCatTaxCtx.put("taxAuthGeoId", branchGeoId);
@@ -494,7 +494,15 @@ if(shipments){
 				
 				taxValueMap = taxResultCtx.get("taxValueMap");
 				defaultTaxMap = taxResultCtx.get("defaultTaxMap");
-			}
+			}*/
+			
+			resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
+			
+			defaultTaxMap = resultCtx.defaultTaxMap;
+			
+			taxValueMap = resultCtx.taxValueMap;
+			
+			
 			
 			tempMap = [:];
 			tempMap.put("productId", eachItem.productId);
@@ -563,10 +571,6 @@ if(shipments){
 				orderId = OrderItemAssoc[0].orderId;
 				
 				orderItemSeqId = OrderItemAssoc[0].orderItemSeqId;
-				
-				
-			
-				
 				
 				
 				relOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
@@ -789,6 +793,10 @@ if(shipments){
 				//Debug.log("totalTaxAmt =========="+totalTaxAmt);
 				
 				newObj.put("taxAmt", totalTaxAmt);
+				
+				newObj.put("taxValueMap",taxValueMap);
+				
+				newObj.put("defaultTaxMap",defaultTaxMap);
 				
 				//Debug.log("newObj ============="+newObj);
 				

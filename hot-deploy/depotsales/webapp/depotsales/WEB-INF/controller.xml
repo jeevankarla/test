@@ -89,7 +89,7 @@
         <response name="success" type="view" value="IndentCSV"/>
       </request-map>
     
-    <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
+    <request-map uri="DepotSalesOrderNew"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNew"/></request-map>
      
     <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
@@ -2358,7 +2358,7 @@
     <view-map name="BranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#BranchSalesOrder"/>
     <view-map name="SilkBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkBranchSalesOrder"/>
     
-    <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
+    <view-map name="DepotSalesOrderNew" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrderNew"/>
     
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
