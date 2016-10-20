@@ -8819,7 +8819,7 @@
         </section>
     </screen>
     
-     <screen name="DepotSalesOrder">
+     <screen name="DepotSalesOrderNew">
 		<section>
 			<actions>
 				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
@@ -8829,7 +8829,7 @@
 				<set field="tabButtonItem4" value="DirectIndent" />
 				<set field="changeFlag" value="DepotSales" />
 				<set field="parameters.screenFlag" value="CottonIndent"/>
-				<set field="parameters.formAction" value="DepotSalesOrder"/>
+				<set field="parameters.formAction" value="DepotSalesOrderNew"/>
 				<set field="priceTypeId" from-field="parameters.priceTypeId" />
 				<set field="orderStatus" from-field="parameters.orderStatus" />
 				<set field="orderId" from-field="parameters.orderId" />
@@ -8976,6 +8976,7 @@
 				<set field="bundleWeight" from-field="parameters.bundleWeight" />
 				<set field="bundleUnitPrice" from-field="parameters.bundleUnitPrice" />
 				<set field="balancedQty" from-field="parameters.balancedQty" />
+				<set field="unitCost" from-field="parameters.unitCost" />
 				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelperDepot.groovy" />

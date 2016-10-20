@@ -493,13 +493,17 @@ uom = parameters.uom;
 bundleWeight = parameters.bundleWeight;
 bundleUnitPrice = parameters.bundleUnitPrice;
 balancedQty = parameters.balancedQty;
-
+unitCost = parameters.unitCost;
 Debug.log("productId================="+productId);
 
 newObj.put("cProductId", productId);
 newObj.put("cProductName", productName);
 newObj.put("cottonUom", uom);
-newObj.put("unitCost", unitCost);
+newObj.put("quantityOnHandTotal", quantityOnHandTotal);
+newObj.put("bundleWeight", bundleWeight);
+newObj.put("unitPrice", bundleUnitPrice);
+newObj.put("balancedQty", balancedQty);
+newObj.put("KgunitPrice", unitCost);
 
 
 
