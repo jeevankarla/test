@@ -494,7 +494,8 @@ bundleWeight = parameters.bundleWeight;
 bundleUnitPrice = parameters.bundleUnitPrice;
 balancedQty = parameters.balancedQty;
 unitCost = parameters.unitCost;
-Debug.log("productId================="+productId);
+bookedQuantity = parameters.bookedQuantity;
+Debug.log("bookedQuantity================="+bookedQuantity);
 
 newObj.put("cProductId", productId);
 newObj.put("cProductName", productName);
@@ -504,6 +505,7 @@ newObj.put("bundleWeight", bundleWeight);
 newObj.put("unitPrice", bundleUnitPrice);
 newObj.put("balancedQty", balancedQty);
 newObj.put("KgunitPrice", unitCost);
+newObj.put("bookedQuantity", bookedQuantity);
 
 
 
