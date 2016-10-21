@@ -25,6 +25,7 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 
 branchId = parameters.branchId;
+partyId = parameters.partyId;
 //passbookNumber = parameters.passbookNumber;
 //partyId = parameters.partyId;
 //partyClassification = parameters.partyClassification;
@@ -42,37 +43,57 @@ List CustomerDetails = FastList.newInstance();
 
 //checking Is it RO or not
 branchList = [];
-if(branchId){
-	condListb = [];
-	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
-	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
-	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-}
-if(UtilValidate.isEmpty(branchList) && UtilValidate.isNotEmpty(branchId))
-{
-	branchList.add(branchId);
-}
-partyList = [];
-condListba = [];
-condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
-condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
-partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
-branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
-	
 List condList = [];
-if(branchpartyIdsList || branchId)
-{
-	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
+branchpartyIdsList = [];
+if(UtilValidate.isEmpty(partyId)){
+	if(branchId){
+		condListb = [];
+		condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+		condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+		PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+		branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+	}
+	if(UtilValidate.isEmpty(branchList) && UtilValidate.isNotEmpty(branchId))
+	{
+		branchList.add(branchId);
+	}
+	
+	partyList = [];
+	condListba = [];
+	condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+	condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+	condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
+	partyIdsList = delegator.findList("PartyRelationship", condListb, UtilMisc.toSet("partyIdTo"), null, null, false);
+	partyClassification = parameters.partyClassification;
+	if(partyClassification){
+		partyClassificationIdList = EntityUtil.getFieldListFromEntityList(delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS,partyClassification), UtilMisc.toSet("partyId"), null, null, false), "partyId", true);
+		partyIdsList = EntityUtil.filterByCondition(partyIdsList,EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyClassificationIdList));
+	}
+	branchpartyIdsList = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyIdTo", true);
+	
+	if(branchpartyIdsList || branchId)
+	{
+		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
+	}
+	if(branchList.size() == 1){
+		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS, branchId));
+	}
 }
-if(branchList.size() == 1){
-	condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS, branchId));
-}		
+else{
+	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
+}
+
+//partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
+//branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
+	
+
+	
 condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
+
+
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 fieldsToSelect = ["partyId","idValue","partyIdFrom"] as Set;
 List<String> payOrderBy = UtilMisc.toList("idValue");
@@ -82,7 +103,7 @@ partyIdRepeat = []as HashSet;
 resultList.each{ partyList ->
 	Map tempData = FastMap.newInstance();
 	partyId = "";
-	partyClassification = parameters.partyClassification;
+	//partyClassification = parameters.partyClassification;
 	partyId = partyList.partyId;
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
