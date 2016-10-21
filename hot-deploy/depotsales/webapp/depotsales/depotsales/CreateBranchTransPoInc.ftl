@@ -99,10 +99,23 @@
 	
 	function calculatePOValue(){
 		
-		var isIncTax = $('#incTax').is(':checked');
+	var basicAmount = 0;
+	var taxAmount = 0;
+	var ocAmount = 0;	
+	var grandTotal = 0;
+	for(var rowCount=0; rowCount<data.length; ++rowCount){
+		basicAmount += data[rowCount]["amount"];
+		taxAmount += data[rowCount]["taxAmt"];
+		ocAmount += data[rowCount]["OTH_CHARGES_AMT"];
+	}	
+	grandTotal = basicAmount + taxAmount + ocAmount;
+	$("#totalPOAmount").html("<b>"+grandTotal+"</b>");
+			
+	/*
+	var isIncTax = $('#incTax').is(':checked');
 		var dataMap = {};
-					
-		for (var rowCount=0; rowCount < data.length; ++rowCount)
+	
+	for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			
 			var productId = data[rowCount]["cProductId"];
@@ -192,6 +205,11 @@
 				alert("record not found :: Error code:-  "+xhr.status);
 			}
         });
+	
+	
+	
+	*/
+		
 	}
 	function displayChargesGrid(){
 		$("#titleScreen").show();
