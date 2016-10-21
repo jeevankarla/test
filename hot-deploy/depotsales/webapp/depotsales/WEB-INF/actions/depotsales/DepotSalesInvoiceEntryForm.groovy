@@ -42,7 +42,7 @@ import applications.accounting.src.org.ofbiz.accounting.invoice.Object;
 import applications.accounting.src.org.ofbiz.accounting.invoice.String;*/
 
 
-conditionList=[];
+/*conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, parameters.shipmentId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_REJECTED")));
 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
@@ -52,7 +52,7 @@ if(UtilValidate.isNotEmpty(invoice)){
 	Debug.log("Sales Invoice Already Created with invoiceId :"+invoice[0].invoiceId,"");
 	context.errorMessage = "Sales Invoice Already Created with invoiceId :"+invoice[0].invoiceId;
 	return "error";
-}
+}*/
 purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
 purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");

@@ -32,10 +32,13 @@ Map boothsPaymentsDetail = [:];
 
 partyId = userLogin.get("partyId");
 
-Debug.log("partyId=============="+partyId);
+//debug.log("partyId=============="+partyId);
 
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+
+////debug.log("resultCtx=============="+resultCtx);
 
 
 Map formatMap = [:];
@@ -202,7 +205,7 @@ forIndentsCount = [];
 
 double totalIndents = 0
 
-//Debug.log("facilityPartyId=================="+facilityPartyId);
+////debug.log("facilityPartyId=================="+facilityPartyId);
 
 
 if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId || branchList.size()>=1) && (UtilValidate.isEmpty(facilityOrderId))){
@@ -213,7 +216,7 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 	// query based on branch
 	
 	
-	Debug.log("branchList================="+branchList);
+	//debug.log("branchList================="+branchList);
 	
 	orderHeaderbefo = [];
 	branchbasedIds = [];
@@ -268,7 +271,7 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 	
 	   totalIndents = forIndentsCount.size();
 	   
-	   //Debug.log("totalIndents================================================="+totalIndents);
+	   ////debug.log("totalIndents================================================="+totalIndents);
 	   
 	}
 
@@ -593,9 +596,9 @@ NavigableSet nset=sortedOrderMap.descendingKeySet();
 		
 	}
 	
-	Debug.log("===================== basedList=====" +basedList.size());*/
+	//debug.log("===================== basedList=====" +basedList.size());*/
 
-//Debug.log("orderList=================="+orderList)
+////debug.log("orderList=================="+orderList)
 
 
 request.setAttribute("orderList", orderList);
