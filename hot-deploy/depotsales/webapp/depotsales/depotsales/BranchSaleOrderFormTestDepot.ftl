@@ -732,10 +732,13 @@
 	  			alert("Branch is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
 	  		}
-	  		if(indententryinit.suplierPartyId.value.length < 1){
+	  	<#--	if(indententryinit.suplierPartyId.value.length < 1){
 	  			alert("Supplier Party ID is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
 	  		}
+	  		
+	  		-->
+	  		
 	  		if(indententryinit.partyId.value.length < 1){
 	  			alert("Party ID is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
@@ -983,7 +986,7 @@ function fillPartyQuota(partyId){
 	<#else>
 		<#include "BranchSalesOrderInternalFormDepot.ftl"/>
 	</#if>
-	<#include "EditUDPPriceDepot.ftl"/>
+	<#include "EditUDPPriceDepotTest.ftl"/>
 	<div class="top" id="exp_outer">
 		<div class="full"  style="margin: auto; position: relative;">
 			<div class="lefthalf" id="chld1">
@@ -1265,7 +1268,7 @@ function fillPartyQuota(partyId){
 							            	</td>
 						       	  		</#if>
 						       	  		
-					       	  		<#if changeFlag?exists && changeFlag != "EditDepotSales">
+					       	  	<#--	<#if changeFlag?exists && changeFlag != "EditDepotSales">
 										<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Recd Date by NHDC:</div></td>
 										<#if indentReceivedDate?exists && indentReceivedDate?has_content>  
 							  				<input type="hidden" name="indentReceivedDate" id="indentReceivedDate" value="${indentReceivedDate}"/>  
@@ -1279,7 +1282,7 @@ function fillPartyQuota(partyId){
 							 				</td>
 										</#if>
 									</#if>
-					       	  </tr>	
+					       	  </tr>	-->
 					       	  
 					       	  <#--
 			                      <tr>
@@ -1394,57 +1397,14 @@ function fillPartyQuota(partyId){
 				               	</tr>	               
 				               	-->      	
 				               	<tr>
-					       			<td>&nbsp;</td>
-					       			<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
-						          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-										<#if suplierPartyId?exists && suplierPartyId?has_content>  
-								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
-							          		<td valign='middle'>
-							            		<div><font color="green">
-							               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-							            		</div>
-							          		</td>       
-							          	</#if>
-							    	<#else>
-										<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>  
-								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
-							          		<td valign='middle'>
-							            		<div><font color="green">
-							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-							            		</div>
-							          		</td>       
-							          	<#else>
-							          		<td valign='middle'>
-							          			<input type="text" name="suplierPartyId" id="suplierPartyId"  />
-							          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
-							          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
-							          		</td>
-							          		
-							          	</#if>
-						        	</#if>
-						        	
-						        	<#if parameters.suplierAdd?exists && parameters.suplierAdd?has_content>  
-						        	  <td width="10%" keep-together="always" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAddress" style="color: green">${parameters.suplierAdd}</label></td>
-									<#else>
-									  <td width="10%" keep-together="always" align="left"><font color="green" > Supplier Address : </font></td><td width="50%"><span  align="left" id="suplierPartyName" style="color: blue"></span> <p><label  align="left" id="supplierAddress" style="color: blue"></label><p></td>
-									  <input type="hidden" name="suplierAdd" id="suplierAdd" />  
-									</#if>
-									
-									
-				               	</tr>
-				               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
-								<tr>
-								</tr>
-								<#else>
 				               		<tr>
 					       	  		<td>&nbsp;</td>
 					       			<td>&nbsp;</td>
 					       			<td align='left' valign='middle' nowrap="nowrap">
-					       				<#-->	<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' /> -->
+					       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' /> 
 					       			</td>
 				               		
 									</tr>
-				               	</#if>
 				                 <#--	
 				               	<tr>
 				               		<td>&nbsp;</td>

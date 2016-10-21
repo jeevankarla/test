@@ -517,6 +517,45 @@ newObj.put("bookedQuantity", bookedQuantity);
 newObj.put("availableQuantity", availableQuantity);
 
 
+resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",productId));
+
+defaultTaxMap = resultCtx.defaultTaxMap;
+
+taxValueMap = resultCtx.taxValueMap;
+
+newObj.put("defaultTaxMap", defaultTaxMap);
+
+newObj.put("taxValueMap", taxValueMap);
+
+List orderAdjustmentsList = [];
+adjCondList = [];
+adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
+	orderAdjustmentsList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
+			
+	newObj.put("orderAdjustmentsList", orderAdjustmentsList);
+
+
+	
+	
+	
+	taxList1 = [];
+	taxList1.add("VAT_SALE");
+	taxList1.add("CST_SALE");
+	taxList1.add("VAT_SURCHARGE");
+	taxList1.add("CST_SURCHARGE");
+		
+		newObj.put("taxList", taxList1);
+	
+	
+	purTaxList = [];
+	purTaxList.add("VAT_SALE");
+	purTaxList.add("CST_SALE");
+	purTaxList.add("VAT_SURCHARGE");
+	purTaxList.add("CST_SURCHARGE");
+		 
+		 
+		 newObj.put("purTaxList", purTaxList);
+
 
 
 /*newObj.put("quantityOnHandTotal", quantityOnHandTotal);
