@@ -195,6 +195,8 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		}
 		row.putAt("bookedQuantity", bookedQuantity);
 		
+		row.putAt("availbleQuantity", row.get("quantityOnHandTotal")-bookedQuantity);
+		
 		String uom ="";
 		bundleWeight =0;
 		bundleUnitPrice =0;

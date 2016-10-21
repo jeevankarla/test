@@ -576,12 +576,13 @@
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantityOnHandTotal", name:"Stock", field:"quantityOnHandTotal", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			{id:"bookedQuantity", name:"Booked Quantity", field:"bookedQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
+			{id:"availableQuantity", name:"Available Quantity", field:"availableQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"unitPrice", name:"${uiLabelMap.UnitPrice} (Bundle)", field:"unitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"unitPrice", name:"${uiLabelMap.UnitPrice} (Bundle)", field:"unitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter,cssClass:"readOnlyColumnClass" ,focusable :false,  align:"right", editor:FloatCellEditor},
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
-			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right",cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt.(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -731,8 +732,9 @@
 			var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
 			var price = parseFloat(data[args.row]["unitPrice"]);
 			var amt = parseFloat(data[args.row]["amount"]);
-
+			var availableQuantity = parseFloat(data[args.row]["availableQuantity"]);
 			var roundedAmount =calculateBundlePrice(balQuty,uom,price);
+			
 			if(args.cell != 7){
 		  		if(uom!="KGs"){
 		   			kgUnitPrice=price/bundleWeight;
@@ -750,11 +752,40 @@
 					kgUnitPrice = 0;
 			  	}	
 			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+			  	
 			  	data[args.row]["quantity"]=quantity;
 			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
 			  	data[args.row]["amount"] = roundedAmount;
 			  	data[args.row]["totPayable"] = roundedAmount;
+			  	
 			}
+			
+			if (args.cell == 5) {
+			  	if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+			  	}
+			  	if(isNaN(kgUnitPrice)){
+					kgUnitPrice = 0;
+			  	}	
+			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+			  	
+			  	data[args.row]["quantity"]=quantity;
+			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
+			  	data[args.row]["amount"] = roundedAmount;
+			  	data[args.row]["totPayable"] = roundedAmount;
+			  	
+			}
+			
+			
+			if(balQuty > availableQuantity){
+			
+			alert("Quantity is greater than stock available...!!");
+			
+			  data[args.row]["baleQuantity"] = "";
+			  data[args.row]["quantity"] = "";
+			}
+			
+			
 			else if(args.cell == 3){
 				quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 				

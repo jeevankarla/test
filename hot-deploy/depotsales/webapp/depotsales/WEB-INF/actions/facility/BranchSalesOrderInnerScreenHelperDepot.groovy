@@ -495,8 +495,16 @@ bundleUnitPrice = parameters.bundleUnitPrice;
 balancedQty = parameters.balancedQty;
 unitCost = parameters.unitCost;
 bookedQuantity = parameters.bookedQuantity;
-Debug.log("bookedQuantity================="+bookedQuantity);
 
+bookedQuantity1 = Double.valueOf(bookedQuantity);
+quantityOnHandTotal1 = Double.valueOf(quantityOnHandTotal);
+
+availableQuantity = quantityOnHandTotal1-bookedQuantity1;
+
+/*if(quantityOnHandTotal && bookedQuantity)
+availableQuantity = Integer.valueOf(quantityOnHandTotal)-Integer.ValueOf(bookedQuantity);
+Debug.log("bookedQuantity================="+bookedQuantity);
+*/
 newObj.put("cProductId", productId);
 newObj.put("cProductName", productName);
 newObj.put("cottonUom", uom);
@@ -506,6 +514,7 @@ newObj.put("unitPrice", bundleUnitPrice);
 newObj.put("balancedQty", balancedQty);
 newObj.put("KgunitPrice", unitCost);
 newObj.put("bookedQuantity", bookedQuantity);
+newObj.put("availableQuantity", availableQuantity);
 
 
 
