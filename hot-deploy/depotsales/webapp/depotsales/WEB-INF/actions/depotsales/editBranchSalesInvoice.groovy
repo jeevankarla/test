@@ -290,22 +290,6 @@
 						totalTaxAmt = totalTaxAmt + taxValue;
 						
 						
-						condExpr = [];
-						//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-						condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
-						condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
-						//Debug.log("condExpr ============="+condExpr);
-						serviceChrAmt = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-
-						serviceChgValue = 0;
-						serviceChgPercent = 0;
-						if(UtilValidate.isNotEmpty(serviceChrAmt)){
-							serviceChgValue = (EntityUtil.getFirst(serviceChrAmt)).get("amount");
-							serviceChgPercent = (taxValue*100)/(eachItem.itemValue);
-							//taxValue = (actualTaxValue/origQty)*qty;
-						}
-						newObj.put("SERVICE_CHARGE_AMT", serviceChgValue);
-						newObj.put("SERVICE_CHARGE", serviceChgPercent);
 						
 						
 						if(taxValue > 0){
@@ -488,7 +472,8 @@
 					
 					discItemAdjustmentJSON.add(newItemAdjObj);
 					
-				}
+					
+		
 				//Debug.log("discItemAdjustmentJSON ========================= "+discItemAdjustmentJSON);
 				
 				newObj.put("additionalChgTypeIdsList", additionalChgTypeIdsList);
@@ -539,7 +524,43 @@
 				newObj.put("VAT", 0.00);
 				newObj.put("CSTPercent", 0.00);
 				newObj.put("CST", 0.00);
-				newObj.put("totPayable", ((eachItem.amount)*(eachItem.quantity)) + totalTaxAmt + totalItemAdjAmt - totalDiscAmt + tenPercent);
+				
+				
+				condExpr = [];
+				//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+				condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
+				condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
+				//Debug.log("condExpr ============="+condExpr);
+				serviceChrAmt = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+
+				serviceChgValue = 0;
+				serviceChgPercent = 0;
+				if(UtilValidate.isNotEmpty(serviceChrAmt)){
+					
+					serviceTot = (eachItem.itemValue + totalTaxAmt  + totalItemAdjAmt+totalDiscAmt+tenPercent);
+					
+					
+					serviceChgValue = (EntityUtil.getFirst(serviceChrAmt)).get("amount");
+					serviceChgPercent = (serviceChgValue)/(serviceTot);
+					
+					serviceChgPercent = serviceChgPercent*100;
+					
+					//taxValue = (actualTaxValue/origQty)*qty;
+				}
+				newObj.put("SERVICE_CHARGE_AMT", serviceChgValue);
+				newObj.put("SERVICE_CHARGE", serviceChgPercent);
+				
+				
+				
+			}
+				
+				
+				totPayable = (eachItem.itemValue + totalTaxAmt + serviceChgValue + totalItemAdjAmt+totalDiscAmt+tenPercent);
+				
+				newObj.put("totPayable", totPayable);
+				/*totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+tenPercent);
+				
+				newObj.put("totPayable", totPayable);*/
 				
 				invoiceItemsJSON.add(newObj);
 	
