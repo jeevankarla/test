@@ -778,7 +778,7 @@
 	//Debug.log("adjustmentJSON =================="+adjustmentJSON);
 	context.orderAdjustmentJSON = adjustmentJSON;
 	
-	InvoiceItem = delegator.findList("InvoiceItem", null, null, null, null, false);
+	//InvoiceItem = delegator.findList("InvoiceItem", null, null, null, null, false);
 	
 	//Debug.log("InvoiceItem =================="+EntityUtil.getFieldListFromEntityList(InvoiceItem, "invoiceItemTypeId", true));
 	

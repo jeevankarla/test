@@ -168,5 +168,8 @@ statesList.each{ eachState ->
 context.stateListJSON = stateListJSON;
 
 
+partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
+context.partyClassificationList = partyClassificationList;
+
 //Debug.log("stateListJSON============"+stateListJSON);
 
