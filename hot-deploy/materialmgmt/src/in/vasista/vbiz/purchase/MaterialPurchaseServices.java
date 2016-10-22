@@ -2390,6 +2390,7 @@ public class MaterialPurchaseServices {
 		BigDecimal yarnUOM1=BigDecimal.ZERO;
 		BigDecimal bundleWeight1=BigDecimal.ZERO;
 		BigDecimal baleQuantity1=BigDecimal.ZERO;
+		BigDecimal bundleUnitPrice1=BigDecimal.ZERO;
 		
 		
 		String orderAdjustmentsListStr = null;
@@ -2473,6 +2474,7 @@ public class MaterialPurchaseServices {
 			String yarnUOM = "";
 			String bundleWeight = "";
 			String baleQuantity = "";
+			String bundleUnitPrice = "";
 			
 			
 			if (UtilValidate.isNotEmpty(productInput)) {
@@ -2493,13 +2495,23 @@ public class MaterialPurchaseServices {
 				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
 					yarnUOM = (String) paramMap.get("yarnUOM" + thisSuffix);
 				}
-				if (paramMap.containsKey("bundleWeight" + bundleWeight)) {
+				if (paramMap.containsKey("bundleWeight" + thisSuffix)) {
 					bundleWeight = (String) paramMap.get("bundleWeight" + thisSuffix);
 				}
 				
-				if (paramMap.containsKey("baleQuantity" + baleQuantity)) {
+				Debug.log("bundleWeight==========="+bundleWeight);
+				
+				if (paramMap.containsKey("baleQuantity" + thisSuffix)) {
 					baleQuantity = (String) paramMap.get("baleQuantity" + thisSuffix);
 				}
+				
+				
+				if (paramMap.containsKey("bundleUnitPrice" + thisSuffix)) {
+					bundleUnitPrice = (String) paramMap.get("bundleUnitPrice" + thisSuffix);
+				}
+				
+				
+				Debug.log("baleQuantity==========="+baleQuantity);
 				
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
@@ -2675,6 +2687,12 @@ public class MaterialPurchaseServices {
 					if (UtilValidate.isNotEmpty(baleQuantity)) {
 						baleQuantity1 = new BigDecimal(baleQuantity);
 					}
+					
+					if (UtilValidate.isNotEmpty(bundleUnitPrice)) {
+						bundleUnitPrice1 = new BigDecimal(bundleUnitPrice);
+					}
+					
+					
 					
 					
 				} catch (Exception e) {
@@ -3300,8 +3318,8 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
 					bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 				}
-				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQty"))){
-					baleQty = (BigDecimal)prodQtyMap.get("baleQty");
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
+					baleQty = (BigDecimal)prodQtyMap.get("baleQuantity");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("cessPercent"))){
 					cessPercent = (BigDecimal)prodQtyMap.get("cessPercent");

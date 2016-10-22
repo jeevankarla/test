@@ -505,6 +505,9 @@ availableQuantity = quantityOnHandTotal1-bookedQuantity1;
 availableQuantity = Integer.valueOf(quantityOnHandTotal)-Integer.ValueOf(bookedQuantity);
 Debug.log("bookedQuantity================="+bookedQuantity);
 */
+
+
+
 newObj.put("cProductId", productId);
 newObj.put("cProductName", productName);
 newObj.put("cottonUom", uom);
