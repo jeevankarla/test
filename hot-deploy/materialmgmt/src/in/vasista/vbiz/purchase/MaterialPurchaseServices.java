@@ -3795,7 +3795,14 @@ public class MaterialPurchaseServices {
 					budlWeight =  (BigDecimal)prodQtyMap.get("bundleWeight");
 				}
 				
-				
+				if(UtilValidate.isNotEmpty(specification)){
+					GenericValue orderItemAttr = delegator.makeValue("OrderItemAttribute");
+					orderItemAttr.set("orderId", orderId);
+					orderItemAttr.set("orderItemSeqId",orderItemSeqId);
+					orderItemAttr.set("attrName", "remarks");
+					orderItemAttr.set("attrValue", specification);
+					delegator.createOrStore(orderItemAttr);
+				}
 	        	Map<String, Object> orderItemDetail = FastMap.newInstance();
 				orderItemDetail.put("orderId",orderId);
 				orderItemDetail.put("orderItemSeqId",orderItemSeqId);

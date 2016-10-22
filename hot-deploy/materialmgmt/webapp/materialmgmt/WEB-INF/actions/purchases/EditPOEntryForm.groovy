@@ -270,7 +270,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		if(UtilValidate.isNotEmpty(orderItemDtl)){
-			remarks = (orderItemDtl.get(0)).get("remarks");
+			//remarks = (orderItemDtl.get(0)).get("remarks");
 			uom = (orderItemDtl.get(0)).get("Uom");
 			baleQty = (orderItemDtl.get(0)).get("baleQuantity");
 			bundleWght=(orderItemDtl.get(0)).get("bundleWeight");
@@ -279,6 +279,10 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 				uom="KGs";
 			}
 			
+		}
+		orderItemAttributes = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId", eachItem.orderId,"orderItemSeqId",eachItem.orderItemSeqId,"attrName","remarks"), false);
+		if(UtilValidate.isNotEmpty(orderItemAttributes)){
+			remarks = orderItemAttributes.attrValue;
 		}
 		newObj.put("KgunitPrice",eachItem.unitPrice);
 		newObj.put("KgunitPrice",eachItem.unitPrice);
