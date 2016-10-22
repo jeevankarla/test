@@ -186,10 +186,10 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , bookedOrderIds));
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		OrderItemDetailList = delegator.findList("OrderItemDetail",  cond,null, null, null, false );
+		OrderItemDetailList = delegator.findList("OrderItem",  cond,null, null, null, false );
 		
 		for (eachOrderItem in OrderItemDetailList) {
-			bookedQuantity = bookedQuantity+eachOrderItem.baleQuantity;
+			bookedQuantity = bookedQuantity+eachOrderItem.quantity;
 		}
 		
 		}
