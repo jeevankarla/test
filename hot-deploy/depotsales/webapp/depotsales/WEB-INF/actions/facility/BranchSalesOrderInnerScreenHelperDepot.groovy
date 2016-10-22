@@ -530,6 +530,38 @@ newObj.put("defaultTaxMap", defaultTaxMap);
 
 newObj.put("taxValueMap", taxValueMap);
 
+
+
+List condsList = [];
+condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+/*condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, invoiceDate));
+condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+	  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, invoiceDate)));
+*/
+ prodCategoryMembers = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("primaryParentCategoryId"), null, null, true);
+  
+  
+  prodCategoryMember = EntityUtil.getFirst(prodCategoryMembers);
+  productCategoryId = (String)prodCategoryMember.get("primaryParentCategoryId");
+  
+
+category=productCategoryId;
+
+
+if(category.contains("SILK")){
+	catType="Silk";
+}else if(category.contains("COTTON") || category.contains("HANK")){
+	catType="Cotton";
+}else{
+	catType="other";
+}
+
+Debug.log("catType====================="+catType);
+context.catType=catType;
+
+
+
 List orderAdjustmentsList = [];
 adjCondList = [];
 adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
