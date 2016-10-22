@@ -612,7 +612,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	</div>
 	             	</div>
 	             	<br/>
-	<center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center>	
+	<#--- <center><input class="styled-button" type="button" id="otherChargesBtn"  name="otherChargesBtn" value="Add Charges" onClick="javascript: displayChargesGrid();"/></center> -->	
 	<br/>	             	
 	</div>
 	
