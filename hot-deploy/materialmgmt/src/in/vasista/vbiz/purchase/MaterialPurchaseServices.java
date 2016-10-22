@@ -2505,13 +2505,12 @@ public class MaterialPurchaseServices {
 					baleQuantity = (String) paramMap.get("baleQuantity" + thisSuffix);
 				}
 				
-				
 				if (paramMap.containsKey("bundleUnitPrice" + thisSuffix)) {
 					bundleUnitPrice = (String) paramMap.get("bundleUnitPrice" + thisSuffix);
 				}
 				
-				
-				Debug.log("baleQuantity==========="+baleQuantity);
+				Debug.log("bundleUnitPrice==========="+bundleUnitPrice);
+
 				
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
@@ -2710,6 +2709,7 @@ public class MaterialPurchaseServices {
 				productQtyMap.put("yarnUOM", yarnUOM);
 				productQtyMap.put("bundleWeight", bundleWeight1);
 				productQtyMap.put("baleQuantity", baleQuantity1);
+				productQtyMap.put("bundleUnitPrice", bundleUnitPrice1);
 				productQtyMap.put("unitListPrice", unitPrice);
 				productQtyMap.put("basicPrice", basicPrice);
 				productQtyMap.put("bedPrice", bedPrice);
