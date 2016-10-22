@@ -256,7 +256,11 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 		schemeOrderIds=EntityUtil.getFieldListFromEntityListIterator(schemeOrderIdsList, "orderId", true);
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,schemeOrderIds));
 	 }
-	
+	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
+		
+	}
 		
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
