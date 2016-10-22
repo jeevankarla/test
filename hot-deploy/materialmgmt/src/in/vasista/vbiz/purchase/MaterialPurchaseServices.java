@@ -2387,6 +2387,11 @@ public class MaterialPurchaseServices {
 		BigDecimal tcsPercent=BigDecimal.ZERO;
 		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
 		
+		BigDecimal yarnUOM1=BigDecimal.ZERO;
+		BigDecimal bundleWeight1=BigDecimal.ZERO;
+		BigDecimal baleQuantity1=BigDecimal.ZERO;
+		
+		
 		String orderAdjustmentsListStr = null;
 		for (int i = 0; i <= rowCount; i++) {
 			
@@ -2464,6 +2469,12 @@ public class MaterialPurchaseServices {
 			}
 			String productInput= (String) paramMap.get("productId" + thisSuffix);
 			//invoke if only not empty
+			
+			String yarnUOM = "";
+			String bundleWeight = "";
+			String baleQuantity = "";
+			
+			
 			if (UtilValidate.isNotEmpty(productInput)) {
 
 				if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -2477,7 +2488,18 @@ public class MaterialPurchaseServices {
 				
 				if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
 					orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
-				} 
+				}
+				
+				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
+					yarnUOM = (String) paramMap.get("yarnUOM" + thisSuffix);
+				}
+				if (paramMap.containsKey("bundleWeight" + bundleWeight)) {
+					bundleWeight = (String) paramMap.get("bundleWeight" + thisSuffix);
+				}
+				
+				if (paramMap.containsKey("baleQuantity" + baleQuantity)) {
+					baleQuantity = (String) paramMap.get("baleQuantity" + thisSuffix);
+				}
 				
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
@@ -2647,6 +2669,12 @@ public class MaterialPurchaseServices {
 					if (UtilValidate.isNotEmpty(cstPercentStr)) {
 						cstPercent = new BigDecimal(cstPercentStr);
 					}
+					if (UtilValidate.isNotEmpty(bundleWeight)) {
+						bundleWeight1 = new BigDecimal(bundleWeight);
+					}
+					if (UtilValidate.isNotEmpty(baleQuantity)) {
+						baleQuantity1 = new BigDecimal(baleQuantity);
+					}
 					
 					
 				} catch (Exception e) {
@@ -2661,6 +2689,9 @@ public class MaterialPurchaseServices {
 				productQtyMap.put("quantity", quantity);
 				productQtyMap.put("unitPrice", unitPrice);
 				productQtyMap.put("remarks", remarksStr);
+				productQtyMap.put("yarnUOM", yarnUOM);
+				productQtyMap.put("bundleWeight", bundleWeight1);
+				productQtyMap.put("baleQuantity", baleQuantity1);
 				productQtyMap.put("unitListPrice", unitPrice);
 				productQtyMap.put("basicPrice", basicPrice);
 				productQtyMap.put("bedPrice", bedPrice);
@@ -2960,6 +2991,8 @@ public class MaterialPurchaseServices {
 			String productId = "";
 			int count = 0;
 			BigDecimal totalBasicAmount = BigDecimal.ZERO;
+			
+			
 			for (Map<String, Object> prodQtyMap : productQtyList) {
 				List taxList=FastList.newInstance();
 				String istemSeq=String.format("%05d", itemIndex);
@@ -3006,14 +3039,15 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
 					yarnUOM = (String)prodQtyMap.get("yarnUOM");
 				}
+				
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
 					bundleUnitPrice = (BigDecimal)prodQtyMap.get("bundleUnitPrice");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
 					bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 				}
-				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQty"))){
-					baleQty = (BigDecimal)prodQtyMap.get("baleQty");
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
+					baleQty = (BigDecimal)prodQtyMap.get("baleQuantity");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("cessPercent"))){
 					cessPercent = (BigDecimal)prodQtyMap.get("cessPercent");
@@ -3212,68 +3246,108 @@ public class MaterialPurchaseServices {
 		
 			orderId = (String) orderCreateResult.get("orderId");
 			
+			int orderItemDetailSeq = 1;
 			//populating orderItem Detail
-			for (Map prodItemMap : poItemSeqProductList) {
-				String customerId = "";
-				//BigDecimal basicPrice = BigDecimal.ZERO;
-				String prodId="";
-				String  budlUnitPriceStr="";
-				BigDecimal budlWeight=BigDecimal.ZERO;
-				BigDecimal budlUnitPrice=BigDecimal.ZERO;
-				BigDecimal blQuantity=BigDecimal.ZERO;
-				BigDecimal Kgquantity=BigDecimal.ZERO;
-				BigDecimal prdPrice=BigDecimal.ZERO;
-				BigDecimal quotaAvbl = BigDecimal.ZERO;
-				String Uom="";
-				String specification="";
-				if(UtilValidate.isNotEmpty(prodItemMap.get("productId"))){
-					prodId = (String)prodItemMap.get("productId");
-				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("customerId"))){
-					customerId = (String)prodItemMap.get("customerId");
-				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("remarks"))){
-					specification = (String)prodItemMap.get("remarks");
-				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("baleQuantity"))){
-					blQuantity =(BigDecimal)  prodItemMap.get("baleQuantity");
-				}
+			for (Map<String, Object> prodQtyMap : productQtyList) {
+				List taxList=FastList.newInstance();
+				String orderItemSeq=String.format("%05d", orderItemDetailSeq);
+				Map productQtyMap = FastMap.newInstance();
 				
-				if(UtilValidate.isNotEmpty(prodItemMap.get("bundleUnitPrice"))){
-					budlUnitPrice = (BigDecimal)(prodItemMap.get("bundleUnitPrice"));
+				BigDecimal quantity = BigDecimal.ZERO;
+				BigDecimal unitPrice = BigDecimal.ZERO;
+				BigDecimal unitListPrice = BigDecimal.ZERO;
+				BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+			    BigDecimal bundleWeight = BigDecimal.ZERO;
+			    BigDecimal baleQty = BigDecimal.ZERO;
+				String remarks = "";
+				String yarnUOM= "";
+				BigDecimal vatPercent = BigDecimal.ZERO;
+				BigDecimal vatAmount = BigDecimal.ZERO;
+				//BigDecimal cstAmount = BigDecimal.ZERO;
+				BigDecimal cstAmount = BigDecimal.ZERO;
+				BigDecimal cstPercent = BigDecimal.ZERO;
+				BigDecimal cessPercent = BigDecimal.ZERO;
+				String orderItemSeqId = null;
+				/*BigDecimal bedAmount = BigDecimal.ZERO;
+				BigDecimal bedPercent = BigDecimal.ZERO;
+				BigDecimal bedcessPercent = BigDecimal.ZERO;
+				BigDecimal bedcessAmount = BigDecimal.ZERO;
+				BigDecimal bedseccessAmount = BigDecimal.ZERO;
+				BigDecimal bedseccessPercent = BigDecimal.ZERO;*/
+				
+				
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+					productId = (String)prodQtyMap.get("productId");
 				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("quantity"))){
-					Kgquantity =  (BigDecimal)(prodItemMap.get("quantity"));
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+					quantity = (BigDecimal)prodQtyMap.get("quantity");
 				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("yarnUOM"))){
-					Uom = (String)prodItemMap.get("yarnUOM");
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+					unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
 				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("bundleWeight"))){
-					budlWeight =  (BigDecimal)prodItemMap.get("bundleWeight");
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
+					unitListPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
 				}
-				if(UtilValidate.isNotEmpty(prodItemMap.get("basicPrice"))){
-					prdPrice = (BigDecimal)prodItemMap.get("basicPrice");
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
+					remarks = (String)prodQtyMap.get("remarks");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("yarnUOM"))){
+					yarnUOM = (String)prodQtyMap.get("yarnUOM");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleUnitPrice"))){
+					bundleUnitPrice = (BigDecimal)prodQtyMap.get("bundleUnitPrice");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bundleWeight"))){
+					bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQty"))){
+					baleQty = (BigDecimal)prodQtyMap.get("baleQty");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("cessPercent"))){
+					cessPercent = (BigDecimal)prodQtyMap.get("cessPercent");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+					vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+					vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
+				}
+				/*if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+					cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
+				}*/
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+					cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
+					orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
 				}
 				
 	        	Map<String, Object> orderItemDetail = FastMap.newInstance();
-				String orderItemSeqId="";
-				orderItemSeqId=(String)prodItemMap.get("orderItemSeqId");
+				//String orderItemSeqId="";
+				//orderItemSeqId=(String)prodItemMap.get("orderItemSeqId");
 				BigDecimal quotaQuantity = BigDecimal.ZERO;
 				BigDecimal discountAmount = BigDecimal.ZERO;
 				orderItemDetail.put("orderId",orderId);
-				orderItemDetail.put("orderItemSeqId",orderItemSeqId);
+				orderItemDetail.put("orderItemSeqId",orderItemSeq);
 				orderItemDetail.put("userLogin",userLogin);
-				orderItemDetail.put("partyId",customerId);
-				orderItemDetail.put("unitPrice",prdPrice);
+				orderItemDetail.put("partyId",partyId);
+				if(UtilValidate.isNotEmpty(unitPrice))
+				orderItemDetail.put("unitPrice",unitPrice);
+				if(UtilValidate.isNotEmpty(discountAmount))
 				orderItemDetail.put("discountAmount",discountAmount);
-				orderItemDetail.put("Uom",Uom);
-				orderItemDetail.put("productId",prodId);
-				orderItemDetail.put("baleQuantity",blQuantity);
-				orderItemDetail.put("bundleWeight",budlWeight);
-				orderItemDetail.put("bundleUnitPrice",budlUnitPrice);
-				orderItemDetail.put("remarks",specification);
+				orderItemDetail.put("Uom",yarnUOM);
+				orderItemDetail.put("productId",productId);
+				if(UtilValidate.isNotEmpty(baleQty))
+				orderItemDetail.put("baleQuantity",baleQty);
+				if(UtilValidate.isNotEmpty(bundleWeight))
+				orderItemDetail.put("bundleWeight",bundleWeight);
+				if(UtilValidate.isNotEmpty(bundleUnitPrice))
+				orderItemDetail.put("bundleUnitPrice",bundleUnitPrice);
+				orderItemDetail.put("remarks",remarks);
+				if(UtilValidate.isNotEmpty(quotaQuantity))
 				orderItemDetail.put("quotaQuantity",quotaQuantity);
-				orderItemDetail.put("quantity",Kgquantity);
+				if(UtilValidate.isNotEmpty(quantity))
+				orderItemDetail.put("quantity",quantity);
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
 				try{
@@ -3288,7 +3362,7 @@ public class MaterialPurchaseServices {
 			  		return ServiceUtil.returnError( "Error in Order Item Detail");
 			  	}
 				
-				
+				orderItemDetailSeq++;
 				
 				
 			}
@@ -5413,6 +5487,8 @@ public class MaterialPurchaseServices {
 			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_RECEIVED"));
 			List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			
+			Debug.log("shipmentReceipts================"+shipmentReceipts);
 			if(UtilValidate.isNotEmpty(shipmentReceipts)){
 				for(GenericValue receipt:shipmentReceipts){
 		        	GenericValue shipmentValue = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
@@ -5426,6 +5502,9 @@ public class MaterialPurchaseServices {
 				        	inputMap.put("receiptId", receipt.get("receiptId"));
 
 				        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
+				        	
+				        	Debug.log("resultReceipt=====sendReceiptQtyForQC==========="+resultReceipt);
+				        	
 				        	/*if(ServiceUtil.isError(resultReceipt)){
 				        		Debug.logError("Error While Sending Receipt to QC", module);
 				  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
@@ -5435,6 +5514,18 @@ public class MaterialPurchaseServices {
 				  	  			return ServiceUtil.returnError("Error While Accepting Receipt "+receipt.get("receiptId"));
 				        	}
 			        	//send QC in same time
+				        	
+							Debug.log("resultReceipt=======acceptReceiptQtyByQC========="+resultReceipt);
+							
+							Debug.log("receiptId=======acceptReceiptQtyByQC========="+receipt.get("receiptId"));
+
+							Debug.log("shipmentItemSeqId=======acceptReceiptQtyByQC========="+receipt.get("shipmentItemSeqId"));
+
+							Debug.log("quantityAccepted=======acceptReceiptQtyByQC========="+receipt.get("quantityAccepted"));
+
+							
+
+				        	
 			        	inputMap.clear();
 			        	resultReceipt.clear();
 						
@@ -5445,6 +5536,9 @@ public class MaterialPurchaseServices {
 						inputMap.put("quantityAccepted",receipt.get("quantityAccepted"));
 						inputMap.put("userLogin",userLogin);
 						resultReceipt = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
+						
+						
+						Debug.log("resultReceipt=======acceptReceiptQtyByQC========="+resultReceipt);
 						
 						if (ServiceUtil.isError(resultReceipt)) {
 							Debug.logError("Error While Accepting ", module);
@@ -5465,6 +5559,8 @@ public class MaterialPurchaseServices {
 						GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receipt.get("receiptId")), false);
 						
 						GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", receipt.get("shipmentItemSeqId")), false);
+						
+
 						BigDecimal origReceiptQty=BigDecimal.ZERO;
 						origReceiptQty = shipmentItem.getBigDecimal("quantity");
 						BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
@@ -5478,6 +5574,7 @@ public class MaterialPurchaseServices {
 						shipmentReceipt.put("statusId", shipStatusId);
 						shipmentReceipt.store();
 						
+
 						
 						if(UtilValidate.isNotEmpty(receipt.get("receiptId"))){
 							GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
