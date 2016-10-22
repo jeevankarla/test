@@ -2285,6 +2285,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    	  		  	}
 	                    BigDecimal shippedQuantity=(BigDecimal)ShipresultCtx.get("shippedQuantity");
 	                    BigDecimal poQuantity=(BigDecimal)ShipresultCtx.get("quantity");
+	                    BigDecimal poAmount=(BigDecimal)ShipresultCtx.get("poAmount");
 	                    Map saleBillresultCtx = dispatcher.runSync("getOrderSaleBillQty", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
 	                    if (ServiceUtil.isError(saleBillresultCtx)) {
 	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(saleBillresultCtx);
@@ -2303,6 +2304,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("supplierId", supplierId);
 	                    indentSummaryDetails.set("quantity", quantity);
 	                    indentSummaryDetails.set("poQuantity", poQuantity);
+	                    indentSummaryDetails.set("poAmount", poAmount);
 	                    indentSummaryDetails.set("quotaQty", quotaQty);
 	                    indentSummaryDetails.set("shippedQty", shippedQuantity);
 	                    indentSummaryDetails.set("totalAmount", totalAmount);
@@ -2376,6 +2378,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         String extPOId="";
         BigDecimal quantity =BigDecimal.ZERO;
         BigDecimal poQuantity =BigDecimal.ZERO;
+        BigDecimal poAmount =BigDecimal.ZERO;
         List condList = FastList.newInstance();
         condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
         condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -2401,6 +2404,8 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                GenericValue item = null;
 			                while ((item = ItemItr.next()) != null) {
 			                	 poQuantity = poQuantity.add(item.getBigDecimal("quantity"));
+				                 BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("unitPrice"));
+				                 poAmount = poAmount.add(amount);
 			                }
 			                ItemItr.close();
 			            }
@@ -2421,6 +2426,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	        }
 		
         result.put("quantity",poQuantity.setScale(2, BigDecimal.ROUND_HALF_UP));
+        result.put("poAmount",poAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("shippedQuantity",quantity.setScale(2, BigDecimal.ROUND_HALF_UP));
 	   return result;
 	}

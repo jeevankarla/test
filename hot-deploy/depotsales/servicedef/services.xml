@@ -611,7 +611,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
     </service>
-     <service name="runPeriodPopulationIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
+     <service name="runPeriodPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
          <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
          <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
@@ -626,6 +626,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="shippedQuantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="quantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="poAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>
