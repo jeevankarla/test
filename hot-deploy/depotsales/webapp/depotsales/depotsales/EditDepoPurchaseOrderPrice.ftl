@@ -744,6 +744,7 @@
 	
 	function addDataToGridTest(){
 		var totalTaxAmt = 0;
+		var totPayable = 0;
 		var serviceChargeVal = 0;
 		var otherChargesValue = 0;
 		var totalAmt = dataRow["amount"];
@@ -797,15 +798,16 @@
 		
 		//alert("totalTaxAmt = "+totalTaxAmt);
 		
-				
+		totPayable = parseFloat(baseAmount)+parseFloat(totalTaxAmt)+parseFloat(otherChargesValue);	
 		dataRow["taxAmt"] = totalTaxAmt;
 		dataRow["OTH_CHARGES_AMT"] = otherChargesValue;
 		//dataRow["totPayable"] = totalPayableValue;
 		dataRow["baseAmount"] = baseAmount;
-		
+		dataRow["totPayable"] = totPayable;
 		
 		grid.updateRow(rowIndex);
 		grid.render();
+		$("#calculateBtn").click();
 		//updateTotalIndentAmount();
 		cancelForm();
 	}

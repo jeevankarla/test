@@ -190,7 +190,8 @@
 		 { 
 			
 			
-			 totAmt = totAmt+data[rowCount]["amount"];
+			 totAmt = totAmt+data[rowCount]["totPayable"];
+			totAmt= parseFloat(totAmt).toFixed(2)
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -725,6 +726,7 @@
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100,sortable:false, formatter: rateFormatter, editor:FloatCellEditor},
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"OTH_CHARGES_AMT", name:"Oth Chgs", field:"OTH_CHARGES_AMT", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
+			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
@@ -930,6 +932,7 @@
 				//updatePayablePrice(args.row);
 				//updateTotalIndentAmount();
 			}
+			$("#calculateBtn").click();
 	}); 
 		
 		
@@ -1278,7 +1281,6 @@
 	   	  	
 	    }			
 	}
-    
     
     
     
