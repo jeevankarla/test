@@ -1908,7 +1908,7 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListPhysicalInventoryDepotForSale" type="list" list-name="physicalInventory" use-row-submit="true"
+  <form name="ListPhysicalInventoryDepotForSale" type="list" list-name="physicalInventory" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
         <row-actions>
         	<entity-one value-field="product" entity-name="Product">
@@ -1924,18 +1924,42 @@
         <field name="poRefNum" title="PORef.No"><display></display></field>
         <field name="fromPartyId"><hidden/></field>
         <field name="productStoreId"><hidden/></field>
+        <field name="branchId"><hidden/></field>
         <field name="estimatedShipDate" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="inventoryItemId" > <hidden/></field>
+        <field name="branchName" > <hidden/></field>
        <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}"></display-entity>
         </field>
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="bookedQuantity" title="Booked Quantity"><display/></field>
+        <field name="availbleQuantity" title="Available Quantity"><display/></field>
         <field name="unitCost"><display/></field>
-        <field name="Sale" title="Sale Indent" widget-style="buttontext">
+<!--         <field name="Sale" title="Sale Indent" widget-style="buttontext">
               <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${productName}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}','${balancedQty}');"></hyperlink>
         </field>
+ -->
+         <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
+             <hyperlink target="DepotSalesOrderNew" description="Sale Indent">
+		      <parameter param-name="productId"/>
+		       <parameter param-name="productName"/>
+		        <parameter param-name="quantityOnHandTotal"/>
+		         <!-- <parameter param-name="productStoreId"/> -->
+		         <parameter param-name="uom"/>
+		         <parameter param-name="bundleWeight"/>
+		         <parameter param-name="bundleUnitPrice"/>
+		         <parameter param-name="balancedQty"/>
+		         <parameter param-name="unitCost"/>
+		          <parameter param-name="bookedQuantity"/>
+		          <parameter param-name="inventoryItemId"/>
+		           <parameter param-name="productStoreId"/>
+		            <parameter param-name="branchName"/>
+		           
+		           
+            </hyperlink>
+        </field>
+
         <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
         </field> -->

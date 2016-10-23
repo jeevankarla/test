@@ -894,7 +894,10 @@ function fillPartyQuota(partyId){
 	       	  				  var tableElement="";
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
+	       	  				   
+	       	  				        if(item['schemeId'] != "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
+		       	  				
 		       	  				 });
 		       	  			$('#schemeCategory').empty().append(tableElement);	 
 
@@ -1032,8 +1035,10 @@ function fillPartyQuota(partyId){
 				               	
 				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
 				               	
-				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
+				               	<input type="hidden" name="branchId" id="branchId" value="${parameters.branchId?if_exists}"/>
 				               	 
+				               	
+				               	
 				               	
 				               	
 				               	<tr>
@@ -1078,7 +1083,7 @@ function fillPartyQuota(partyId){
 							          		</td>
 							          	</#if>
 						        	</#if>
-					       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
+					       	  		<td><span class="tooltip" id="branchName"  >${parameters.branchName}</span></td>
 				               	</tr>
 				               	
 				               	<tr>
