@@ -8969,7 +8969,6 @@
 				<set field="productCategoryId" from-field="parameters.productCategoryId" />
 				<set field="vehicleId" from-field="parameters.vehicleId" />
 				<set field="disableAcctgFlag" value="Y" />
-				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
 				<set field="partyId" from-field="parameters.partyId" />
 				<set field="cfcs" from-field="parameters.cfcs" />
 				<set field="salesChannel" from-field="parameters.salesChannel" />
@@ -8991,6 +8990,9 @@
 				<set field="unitCost" from-field="parameters.unitCost" />
 				<set field="bookedQuantity" from-field="parameters.bookedQuantity" />
 				<set field="inventoryItemId" from-field="parameters.inventoryItemId" />
+				<set field="productStoreId" from-field="parameters.branchId" />
+				
+				
 				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelperDepot.groovy" />
