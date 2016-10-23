@@ -1400,7 +1400,8 @@ function fillPartyQuota(partyId){
 							          	</#if>
 						        	</#if>
 				               	</tr>	               
-				               	-->      	
+				               	-->  
+				               	<#if parameters.submitFlag?exists && parameters.submitFlag != "YES">    	
 				               	<tr>
 				               		<tr>
 					       	  		<td>&nbsp;</td>
@@ -1410,6 +1411,8 @@ function fillPartyQuota(partyId){
 					       			</td>
 				               		
 									</tr>
+									
+									</#if>
 				                 <#--	
 				               	<tr>
 				               		<td>&nbsp;</td>
