@@ -513,7 +513,11 @@ newObj.put("cProductName", productName);
 newObj.put("cottonUom", uom);
 newObj.put("quantityOnHandTotal", quantityOnHandTotal);
 newObj.put("bundleWeight", bundleWeight);
+if(Double.valueOf(bundleUnitPrice) > 0)
 newObj.put("unitPrice", bundleUnitPrice);
+else
+newObj.put("unitPrice", unitCost);
+
 newObj.put("balancedQty", balancedQty);
 newObj.put("KgunitPrice", unitCost);
 newObj.put("bookedQuantity", bookedQuantity);
@@ -529,6 +533,7 @@ taxValueMap = resultCtx.taxValueMap;
 newObj.put("defaultTaxMap", defaultTaxMap);
 
 newObj.put("taxValueMap", taxValueMap);
+
 
 
 

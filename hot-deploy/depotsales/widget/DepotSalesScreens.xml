@@ -8991,6 +8991,8 @@
 				<set field="bookedQuantity" from-field="parameters.bookedQuantity" />
 				<set field="inventoryItemId" from-field="parameters.inventoryItemId" />
 				<set field="productStoreId" from-field="parameters.branchId" />
+				<set field="submitFlag" value="YES"/>
+				
 				
 				
 				
