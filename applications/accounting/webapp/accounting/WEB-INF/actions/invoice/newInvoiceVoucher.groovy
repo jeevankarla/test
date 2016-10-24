@@ -223,8 +223,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 				  orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 				  orderAdjustments = EntityUtil.getFirst(orderAdjustments);
 				  
-				  if(orderAdjustments){
-				  tempMap.put("percentage", orderAdjustments.sourcePercentage);
+				  
+				  if(eachItem.sourcePercentage){
+				  tempMap.put("percentage", eachItem.sourcePercentage);
 				  }else{
 				  invoiceGrandTotal = invoiceForPercentage.invoiceGrandTotal;
 				  
@@ -1234,8 +1235,8 @@ for (eachList in invoiceItemList) {
 			  orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 			  orderAdjustments = EntityUtil.getFirst(orderAdjustments);
 			  
-			  if(orderAdjustments){
-			  tempMap.put("percentage", orderAdjustments.sourcePercentage);
+			  if(eachItem.sourcePercentage){
+			  tempMap.put("percentage", eachItem.sourcePercentage);
 			  }else{
 			  invoiceGrandTotal = invoiceForPercentage.invoiceGrandTotal;
 			  
