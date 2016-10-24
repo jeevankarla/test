@@ -12,24 +12,43 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 tallyRefNoList=[];
 parameters.tallyRefsearch="N";
-if(UtilValidate.isNotEmpty(parameters.tallyRefNo)){
-	
+listIt=[];
+if(UtilValidate.isNotEmpty(parameters.productId)){
 	condList=[];
-	condList.add(EntityCondition.makeCondition("tallyRefNo", EntityOperator.LIKE, "%"+parameters.tallyRefNo+"%"));
-	condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+	condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	orderDetList = delegator.findList("OrderHeader", cond, null, null, null, false);
-	if(orderDetList){
-		condList.clear();
-		condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, orderDetList.orderId));
-		cond1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
-		OrderAssoc = EntityUtil.getFirst(delegator.findList("OrderAssoc", cond1, null, null, null, false));		
-		if(OrderAssoc.orderId){
-			parameters.orderId=OrderAssoc.orderId;
-			parameters.refNo=parameters.tallyRefNo;
-			parameters.tallyRefNo="";
-		}
+	orderItemList = delegator.findList("OrderItem", cond, UtilMisc.toSet("orderId"), null, null, false);
+	if(orderItemList){
+		orderIds = EntityUtil.getFieldListFromEntityList(orderItemList, "orderId", true);
+		parameters.orderId=orderIds;
+		parameters.orderId_op="in";
 	}
-	parameters.tallyRefsearch="Y";
-	
+}else{
+	if(UtilValidate.isNotEmpty(parameters.tallyRefNo)){
+		condList=[];
+		condList.add(EntityCondition.makeCondition("tallyRefNo", EntityOperator.LIKE, "%"+parameters.tallyRefNo+"%"));
+		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		orderDetList = delegator.findList("OrderHeader", cond, null, null, null, false);
+		if(orderDetList){
+			condList.clear();
+			condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, orderDetList.orderId));
+			cond1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			OrderAssoc = EntityUtil.getFirst(delegator.findList("OrderAssoc", cond1, null, null, null, false));
+			if(OrderAssoc.orderId){
+				parameters.orderId=OrderAssoc.orderId;
+				parameters.refNo=parameters.tallyRefNo;
+				parameters.tallyRefNo="";
+				
+			}
+		}
+		parameters.tallyRefsearch="Y";
+	}
 }
+
+
+
+
+
+
+

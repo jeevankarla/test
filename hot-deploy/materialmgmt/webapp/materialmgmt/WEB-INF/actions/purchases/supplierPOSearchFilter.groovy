@@ -44,9 +44,7 @@ context.branchList = formatList;
 		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
 	 }
  }
- 
- Debug.log("supplierFilteredOrderIds===================="+supplierFilteredOrderIds);
- 
+  
  // To filter based on Branch
  if(parameters.partyIdFrom){
 	 branchCondList = [];
@@ -96,9 +94,7 @@ if(UtilValidate.isEmpty(parameters.productId)){
 					
 				}
 //			}
-			
-			
-			
+		
 		}
 		sortedOrderMap =  [:]as TreeMap;
 		for (eachList in resultList) {
@@ -116,13 +112,11 @@ if(UtilValidate.isEmpty(parameters.productId)){
 }
 else{
 productId = parameters.productId;
-
 if(UtilValidate.isNotEmpty(result.listIt)){
 	list=result.listIt;
 	poListNew=[];
 	GenericValue poEntry = null;
-	while ((poEntry=list.next()) != null) {
-		
+	while (list.hasNext() && (poEntry=list.next()) != null) {
 		if(UtilValidate.isNotEmpty(supplierFilteredOrderIds)){
 			if(!supplierFilteredOrderIds.contains(poEntry.orderId)){
 				continue;
@@ -137,10 +131,9 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 			poListNew.add(poEntry);
 			}
 		}
-	list.close();
+	//list.close();
 	}
 context.listIt=poListNew;
-
 }
  
 if(UtilValidate.isNotEmpty(context.orderId)){
@@ -168,3 +161,4 @@ if(UtilValidate.isNotEmpty(context.orderId)){
 	
 	
 }
+

@@ -466,7 +466,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <td>Edit Invoice</td>
           <#--<td>Rise Sales Invoice</td>-->
-         <#--- <td>Invoice voucher</td>-->
+          <td>Invoice voucher</td>
           <td>Make Payment</td> 
           <#--<td>Payment Advice</td>-->
          <#-- <td>Cheque</td>-->
@@ -475,6 +475,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
         </tr>
       </thead>
       <tbody>
+      
         <#assign alt_row = false>
         <#list invoiceList as invoice>
           <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
@@ -539,10 +540,11 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
-              <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
+             
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
                <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>purchaseInvoiceEdit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+                <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
                   <#else>
  		   	          <td></td>
                </#if>
