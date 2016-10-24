@@ -271,6 +271,15 @@ public class SupplierApiServices {
 	    } catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+        
+        List<GenericValue> statusItemList = null;
+	  	try{
+	  		statusItemList = delegator.findList("StatusItem",EntityCondition.makeCondition("statusTypeId",EntityOperator.IN, UtilMisc.toList("ORDER_STATUS", "ORDER_ITEM_STATUS")), null, null, null, false);
+	   	}catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive StatusItem ", module);
+			return ServiceUtil.returnError("Failed to retrive StatusItem " + e);
+		}
+	  	
         GenericValue eachHeader;
         Map ordersMap = FastMap.newInstance();
         while( orderHeaderList != null && (eachHeader = orderHeaderList.next()) != null) {
@@ -279,7 +288,10 @@ public class SupplierApiServices {
         	tempData.put("orderDate", String.valueOf(eachHeader.get("orderDate")).substring(0,10));
         	tempData.put("orderId",eachOrderId);
         	tempData.put("orderNo",eachHeader.get("orderNo"));
-        	tempData.put("statusId",eachHeader.get("statusId"));
+        	
+        	GenericValue filteredOrderStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
+        	
+        	tempData.put("statusId", filteredOrderStatus.getString("description"));
         	List<GenericValue> shipReceiptList = null;
         	try{
         		shipReceiptList = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId), null, null, null, false);
