@@ -432,12 +432,12 @@ public class SupplierApiServices {
 	    }
 	    String hideQCflow = (String) context.get("hideQCflow");
 	    String supplierInvoiceId = (String) context.get("suppInvoiceId");
-	    String supplierInvoiceDateStr = (String) context.get("suppInvoiceDate");
 	    String withoutPO = (String) context.get("withoutPO");
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) context.get("partyId");
 	    String deliveryChallanDateStr = (String) context.get("deliveryChallanDate");
 	    String lrDateStr = (String) context.get("lrDate");
+	    String supplierInvoiceDateStr = (String) context.get("suppInvoiceDate");
 	    String deliveryChallanNo = (String) context.get("deliveryChallanNo");
 	    String remarks = (String) context.get("remarks");
 	    String freightCharges = (String) context.get("freightCharges");
@@ -455,7 +455,7 @@ public class SupplierApiServices {
 			return ServiceUtil.returnError("Cannot process receipts without orderId: "+ orderId);
 		}
 		Timestamp receiptDate = null;
-		Timestamp supplierInvoiceDate = null;
+		
 		
 		List<Map<String, Object>> shipmentItems = (List<Map<String, Object>>) context.get("shipmentItems");
 		Debug.log("shipmentItems ==================="+shipmentItems);
@@ -485,7 +485,8 @@ public class SupplierApiServices {
 		  	}
         }
         
-	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
+        Timestamp supplierInvoiceDate = (Timestamp)context.get("suppInvoiceDate");
+	  	/*if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
 	  			supplierInvoiceDate = new java.sql.Timestamp(dateSdf.parse(supplierInvoiceDateStr).getTime());
@@ -495,9 +496,11 @@ public class SupplierApiServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	}
-	  	}
-	  	Timestamp lrDateTimeStamp = null;
-	  	if(UtilValidate.isNotEmpty(lrDateStr)){
+	  	}*/
+	  	
+	  	
+	  	Timestamp lrDateTimeStamp = (Timestamp)context.get("lrDate");
+	  	/*if(UtilValidate.isNotEmpty(lrDateStr)){
 	  		try {
 	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
 	  			lrDateTimeStamp = new java.sql.Timestamp(dateSdf.parse(lrDateStr).getTime());
@@ -507,18 +510,19 @@ public class SupplierApiServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + lrDateStr, module);
 		  	}
-	  	}
+	  	}*/
 	  	
 	  	Timestamp deliveryChallanDate=null;
-	  	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
-	  		try {
+	  	if(UtilValidate.isNotEmpty(context.get("deliveryChallanDate"))){
+	  		/*try {
 	  			SimpleDateFormat dateSdf = new SimpleDateFormat("dd MMMMM, yyyy");    
 	  			deliveryChallanDate = new java.sql.Timestamp(dateSdf.parse(deliveryChallanDateStr).getTime());
 		  	} catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
-		  	}
+		  	}*/
+	  		deliveryChallanDate = (Timestamp)context.get("deliveryChallanDate");
 	  	}else{
 		  	 deliveryChallanDate=UtilDateTime.nowTimestamp();
 	  	}
