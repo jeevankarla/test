@@ -352,7 +352,7 @@ under the License.
 				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
 				
 				<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
-				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue+grandTotal)?string("#0.00")}</#if></fo:block>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				<#else>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>

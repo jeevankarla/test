@@ -171,7 +171,7 @@ under the License.
 				        <#list eachOne.getValue() as each>  
 				        
 				        <#if each.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY">
-				         <#assign mgpsAndTotalDeductions = mgpsAndTotalDeductions+each.amount>
+				         <#assign mgpsAndTotalDeductions = mgpsAndTotalDeductions+each.itemValue>
 				        </#if>
 				        
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
@@ -260,7 +260,7 @@ under the License.
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.amount}</fo:block>
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue}</fo:block>
 				         </#if>
 				        </#list>
 				       </#if>
@@ -337,8 +337,12 @@ under the License.
 				<fo:block text-align="left"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.amount*eachList.quantity)>
-				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.amount*eachList.quantity)?string("#0.00")}</#if></fo:block>
+				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
+				<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
+				<#else>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
+				</#if>
 				</fo:table-cell>
 			</fo:table-row>
 			</#list>

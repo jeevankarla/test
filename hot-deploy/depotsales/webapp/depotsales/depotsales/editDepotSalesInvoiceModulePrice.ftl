@@ -292,6 +292,61 @@
 			 	}
 		 	}
 	 	}
+	 	
+	 	
+	 	
+	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId == "ENTRY_TAX"){
+	 	
+	 	
+	 	
+	 	var totaladjValueTaxForEntry = 0;
+	 	$('#purchaseAdjustmentTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(purComponentValue);
+		    }
+    	});
+	 	
+    	$('#salesTaxUpdationTable').find('input:text').each(function () {
+			var saleComponentValue = this.value;
+       		if(saleComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(saleComponentValue);
+		    }
+    	});
+	 	
+	 
+	    $('#purchaseDiscountTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry - parseFloat(purComponentValue);
+		    }
+    	});		 	
+	 		 	
+	 		 	var saleBaseAmt = $("#saleBaseAmt").val();
+	 		 	
+	 		 	totaladjValueTaxForEntry = totaladjValueTaxForEntry+parseFloat(saleBaseAmt);
+	 	
+	 	//alert("totaladjValueTaxForEntry============="+totaladjValueTaxForEntry); 
+	 	
+	 	//alert("amtFieldId============="+amtFieldId);
+	 	
+	 	//alert("totalAmt============="+totalAmt);
+	 	
+	 	//alert("percentage============="+percentage);
+	 	
+	 	//alert("taxPercItemId============="+taxPercItemId);
+	 	
+	 	//alert("taxValueItemId============="+taxValueItemId);
+	 	
+	 	var entryTaxAmt = (totaladjValueTaxForEntry*percentage)/100;
+	 	//alert("entryTaxAmt============="+entryTaxAmt); 
+
+		$('#'+taxPercItemId).val(percentage);
+		$('#'+taxValueItemId).val(entryTaxAmt);
+	 	
+	 	}
+	 	
+	 	
 	 	//adjustBasePrice();
 	 	
 	}	

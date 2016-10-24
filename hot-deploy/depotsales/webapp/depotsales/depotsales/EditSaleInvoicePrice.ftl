@@ -342,8 +342,8 @@
 	 	var entryTaxAmt = (totaladjValueTaxForEntry*percentage)/100;
 	 	//alert("entryTaxAmt============="+entryTaxAmt); 
 
-		$('#'+taxPercItemId).val(Math.round(percentage));
-		$('#'+taxValueItemId).val(Math.round(entryTaxAmt));
+		$('#'+taxPercItemId).val(percentage);
+		$('#'+taxValueItemId).val(entryTaxAmt);
 	 	
 	 	}
 	 	
