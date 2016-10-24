@@ -131,12 +131,12 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         
         <attribute name="suppInvoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="suppInvoiceDate" type="String" mode="IN" optional="false"/>
+        <attribute name="suppInvoiceDate" type="Timestamp" mode="IN" optional="false"/>
         
-        <attribute name="deliveryChallanDate" type="String" mode="IN" optional="true"/>
+        <attribute name="deliveryChallanDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="deliveryChallanNo" type="String" mode="IN" optional="true"/>
         
-        <attribute name="lrDate" type="String" mode="IN" optional="true"/>
+        <attribute name="lrDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="lrNumber" type="String" mode="IN" optional="true"/>
         
         <attribute name="vehicleId" type="String" mode="IN" optional="true"/>
