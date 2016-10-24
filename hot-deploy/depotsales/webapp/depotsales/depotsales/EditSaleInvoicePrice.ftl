@@ -267,7 +267,7 @@
 	 	var percentage = taxPercentItem.value;
 	 	var taxPercItemId = taxPercentItem.id;
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
-	 	
+	 	   
 	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId != "ENTRY_TAX"){
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);

@@ -223,7 +223,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 				  orderAdjustments = delegator.findList("OrderAdjustment", cond, null, null, null, false);
 				  orderAdjustments = EntityUtil.getFirst(orderAdjustments);
 				  
-				  
+				    
 				  if(eachItem.sourcePercentage){
 				  tempMap.put("percentage", eachItem.sourcePercentage);
 				  }else{
