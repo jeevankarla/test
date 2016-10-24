@@ -346,14 +346,18 @@ under the License.
 				<fo:block text-align="left"    font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
+				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
 				<fo:block text-align="left"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
+				</#if>
 				</fo:table-cell>
 				<fo:table-cell >
 				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
-				
-				<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
+			<#--	<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				<#else>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
+				</#if>-->
+				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
@@ -384,6 +388,21 @@ under the License.
 				
 			</fo:table-row>
 			</#if>
+			
+			<fo:table-row white-space-collapse="false">
+			 <fo:table-cell >
+				<fo:block text-align="left"    font-size="10pt" ></fo:block>
+				</fo:table-cell>
+				
+				<fo:table-cell number-columns-spanned="2">
+				<#list invoiceRemainigAdjItemList as eachList>
+				<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
+				<fo:block text-align="right"    font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;${eachList.itemValue?if_exists}</fo:block>
+				</#if>
+				</#list>
+				</fo:table-cell>
+				
+			</fo:table-row>
 			
 			<fo:table-row white-space-collapse="false">
 			 <fo:table-cell >
