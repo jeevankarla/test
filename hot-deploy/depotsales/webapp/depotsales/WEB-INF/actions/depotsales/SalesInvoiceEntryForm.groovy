@@ -1023,7 +1023,7 @@ if(shipments){
 				newObj.put("tenPercent", tenPercent);
 				newObj.put("usedQuota", tenPercentAdjQty);
 				newObj.put("CST", cstAmt);
-				
+				newObj.put("saleAmount",amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
 				newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt + tenPercent);
 				
 				invoiceItemsJSON.add(newObj);

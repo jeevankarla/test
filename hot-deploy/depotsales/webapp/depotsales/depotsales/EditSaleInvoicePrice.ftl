@@ -267,7 +267,8 @@
 	 	var percentage = taxPercentItem.value;
 	 	var taxPercItemId = taxPercentItem.id;
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
-	 	if(percentage != 'undefined' && percentage != null && percentage.length){
+	 	   
+	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId != "ENTRY_TAX"){
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
 	 		if(taxPercItemId == "VAT_SALE"){
@@ -292,6 +293,62 @@
 			 	}
 		 	}
 	 	}
+	 	
+	 	
+	 	
+	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId == "ENTRY_TAX"){
+	 	
+	 	
+	 	
+	 	var totaladjValueTaxForEntry = 0;
+	 	$('#purchaseAdjustmentTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(purComponentValue);
+		    }
+    	});
+	 	
+    	$('#salesTaxUpdationTable').find('input:text').each(function () {
+			var saleComponentValue = this.value;
+       		if(saleComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(saleComponentValue);
+		    }
+    	});
+	 	
+	 
+	    $('#purchaseDiscountTable').find('input:text').each(function () {
+			var purComponentValue = this.value;
+       		if(purComponentValue){
+		        totaladjValueTaxForEntry = totaladjValueTaxForEntry - parseFloat(purComponentValue);
+		    }
+    	});		 	
+	 		 	
+	 		 	var saleBaseAmt = $("#saleBaseAmt").val();
+	 		 	
+	 		 	totaladjValueTaxForEntry = totaladjValueTaxForEntry+parseFloat(saleBaseAmt);
+	 	
+	 	//alert("totaladjValueTaxForEntry============="+totaladjValueTaxForEntry); 
+	 	
+	 	//alert("amtFieldId============="+amtFieldId);
+	 	
+	 	//alert("totalAmt============="+totalAmt);
+	 	
+	 	//alert("percentage============="+percentage);
+	 	
+	 	//alert("taxPercItemId============="+taxPercItemId);
+	 	
+	 	//alert("taxValueItemId============="+taxValueItemId);
+	 	
+	 	var entryTaxAmt = (totaladjValueTaxForEntry*percentage)/100;
+	 	//alert("entryTaxAmt============="+entryTaxAmt); 
+
+		$('#'+taxPercItemId).val(Math.round(percentage));
+		$('#'+taxValueItemId).val(Math.round(entryTaxAmt));
+	 	
+	 	}
+	 	
+	 	
+	 	
 	 	//adjustBasePrice();
 	 	
 	}	
@@ -416,6 +473,8 @@
 	 	var percentage = taxPercentItem.value;
 	 	var taxPercItemId = taxPercentItem.id;
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
+	 	
+	 	
 	 	if(percentage != 'undefined' && percentage != null && percentage.length){
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
@@ -556,6 +615,7 @@
 			rowIndex = index;
 			dataRow = gridRow;
 			productName = dataRow["cProductName"];
+			
 			
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
@@ -837,6 +897,7 @@
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><#--<td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td>--></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
+			
 			
 			Alert(message, title);
 	};
