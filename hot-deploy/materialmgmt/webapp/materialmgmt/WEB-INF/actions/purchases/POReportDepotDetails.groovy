@@ -579,6 +579,43 @@ listSize=0;
 bedPercent=0;
 orderTerms= delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 parentMap=[:];
+
+orderAdjustmentsMap=[:];
+List Newcondition = [];
+Newcondition.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+newcond=EntityCondition.makeCondition(Newcondition,EntityOperator.AND);
+orderAdjts= delegator.findList("OrderAdjustment",newcond , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+if(orderAdjts){
+	orderAdjts.each{orderAdjt->
+		if(orderAdjt.orderAdjustmentTypeId == "VAT_PUR"){
+			if(orderAdjt.amount){
+			  orderAdjustmentsMap.put("VATAmount", orderAdjt.amount)
+			}
+	   }
+	   if(orderAdjt.orderAdjustmentTypeId == "CST_PUR"){
+			if(orderAdjt.amount){
+				orderAdjustmentsMap.put("CSTAmount", orderAdjt.amount)
+			  }
+		}
+	   if(orderAdjt.orderAdjustmentTypeId == "CESS"){
+		   if(orderAdjt.amount){
+			   orderAdjustmentsMap.put("CESS", orderAdjt.amount)
+			 }
+	   }
+	   if(orderAdjt.orderAdjustmentTypeId == "INSURANCE_CHGS"){
+		   if(orderAdjt.amount){
+			   orderAdjustmentsMap.put("INSURANCE_CHGS", orderAdjt.amount)
+			 }
+	   }
+	   if(orderAdjt.orderAdjustmentTypeId == "OTHER_CHARGES"){
+		   if(orderAdjt.amount){
+			   orderAdjustmentsMap.put("OTHER_CHARGES", orderAdjt.amount)
+			 }
+	   }
+	 }
+}
+context.orderAdjustmentsMap=orderAdjustmentsMap;
+
 if(UtilValidate.isNotEmpty(orderTerms)){
 	orderTerms.each{orderTerm ->
 		Amount=0;

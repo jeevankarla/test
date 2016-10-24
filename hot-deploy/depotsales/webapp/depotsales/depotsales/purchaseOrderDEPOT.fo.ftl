@@ -228,7 +228,51 @@ under the License.
            </fo:table>
        </fo:block>
        <#--><fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>-->
-        
+     <#assign totalAdjAmount=0>  <#if orderAdjustmentsMap?has_content>
+	 <fo:block>
+      	<fo:table width="100%" align="right" table-layout="fixed"  font-size="11pt">
+      	<fo:table-column column-width="50%"/>
+      	<fo:table-column column-width="50%"/>               
+			<fo:table-body>
+			<#if orderAdjustmentsMap.get("VATAmount")?has_content>
+               <fo:table-row>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold"><Vat/fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="right"  font-size="11pt">${orderAdjustmentsMap.get("VATAmount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+               <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("VATAmount")>
+            </#if>
+			<#if orderAdjustmentsMap.get("CSTAmount")?has_content>
+               <fo:table-row>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cst</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("CSTAmount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+               <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("CSTAmount")>
+            </#if>
+            <#if orderAdjustmentsMap.get("CESS")?has_content>
+               <fo:table-row>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cess </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("CESS")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+               <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("CESS")>
+            </#if>
+            <#if orderAdjustmentsMap.get("INSURANCE_CHGS")?has_content >
+               <fo:table-row>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Insurance </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("INSURANCE_CHGS")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+               <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("INSURANCE_CHGS")>
+            </#if>
+            <#if orderAdjustmentsMap.get("OTHER_CHARGES")?has_content>
+               <fo:table-row>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold" >Other Charges </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("OTHER_CHARGES")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+               <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("OTHER_CHARGES")>
+            </#if>
+	        </fo:table-body>
+	   </fo:table>
+	 </fo:block>
+	 </#if>
         
         <#assign grandToT = 0>
         <#assign typeBase=typeBasedMap.entrySet()>
@@ -239,12 +283,26 @@ under the License.
 	       <#assign typeOFListValues=typeBaseList.getValue().entrySet()>
 	        <#list typeOFListValues as eaValue>
 	         <#assign grandToT = grandToT+eaValue.getValue()>
+ 
            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                     ${typeBaseList.getKey()?if_exists} as ${eaValue.getKey()} % : &#160;${eaValue.getValue()?if_exists}  </fo:block>
             </#list>
         </#list>
       
        <#if allDetailsMap.get("total")?has_content> 
-       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(allDetailsMap.get("total")+grandToT)?if_exists?string("##0.00")}</fo:block> </#if>
+       
+        
+			<fo:block>
+      	<fo:table width="100%" align="right" table-layout="fixed"  font-size="11pt">
+      	<fo:table-column column-width="100%"/>
+			<fo:table-body>
+               <fo:table-row>
+				  <fo:table-cell><fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> TOTAL VALUE (RS) : &#160;${(allDetailsMap.get("total")+grandToT+totalAdjAmount?if_exists)?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+               </fo:table-row>
+	        </fo:table-body>
+	   </fo:table>
+	 </fo:block> 
+
+		</#if>
 	   
 	<!-- <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >${C2E2Form?if_exists} </fo:block> -->
 	   
