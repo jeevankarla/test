@@ -44,8 +44,7 @@ context.branchList = formatList;
 		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
 	 }
  }
- 
- 
+  
  // To filter based on Branch
  if(parameters.partyIdFrom){
 	 branchCondList = [];

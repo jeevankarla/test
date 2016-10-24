@@ -62,6 +62,7 @@ if(UtilValidate.isNotEmpty(partyLocationDetails)){
 	purchasePartyDetailsMap.put("postalCode", partyLocationDetail.postalCode)
 	purchasePartyDetailsMap.put("contactNumber", partyLocationDetail.contactNumber)
 }
+
 if(UtilValidate.isNotEmpty(partytTelecomDetails)){
 	partytTelecomDetail=EntityUtil.getFirst(partytTelecomDetails)
 	purchasePartyDetailsMap.put("telecomNumber", partytTelecomDetail.contactNumber)

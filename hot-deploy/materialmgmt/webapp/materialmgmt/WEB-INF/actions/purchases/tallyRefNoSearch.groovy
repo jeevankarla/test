@@ -39,6 +39,7 @@ if(UtilValidate.isNotEmpty(parameters.productId)){
 				parameters.orderId=OrderAssoc.orderId;
 				parameters.refNo=parameters.tallyRefNo;
 				parameters.tallyRefNo="";
+				
 			}
 		}
 		parameters.tallyRefsearch="Y";

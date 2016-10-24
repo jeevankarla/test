@@ -32,7 +32,6 @@ under the License.
     	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
     	<fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
         <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>
-           
     </fo:static-content>
     <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
     <#if purchasePartyDetailsMap?has_content>
