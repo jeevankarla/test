@@ -127,11 +127,11 @@
     <service name="createSupplierDispatch" engine="java" auth="true" export="true"
         location="in.vasista.vbiz.depotsales.SupplierApiServices" invoke="createSupplierDispatch">
         <description>Create Shipment Dispatch</description>
-        <attribute name="supplierId" type="String" mode="IN" optional="true"/>
-        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
         
-        <attribute name="suppInvoiceId" type="String" mode="IN" optional="true"/>
-        <attribute name="suppInvoiceDate" type="String" mode="IN" optional="true"/>
+        <attribute name="suppInvoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="suppInvoiceDate" type="String" mode="IN" optional="false"/>
         
         <attribute name="deliveryChallanDate" type="String" mode="IN" optional="true"/>
         <attribute name="deliveryChallanNo" type="String" mode="IN" optional="true"/>
