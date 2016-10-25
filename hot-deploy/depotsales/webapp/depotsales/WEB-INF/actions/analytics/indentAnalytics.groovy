@@ -70,7 +70,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				branchROMap.put(branchParty.partyIdTo, ro.ownerPartyId);	
 			}
 		}
-//	 Debug.log("===partyIdNameMap=====>"+partyIdNameMap);			 	
+//	 Debug.log("===partyIdNameMap=====>"+partyIdNameMap);
 //	 Debug.log("===branchROMap=====>"+branchROMap);
 		
  conditionList.clear();
@@ -89,37 +89,65 @@ if(UtilValidate.isNotEmpty(thruDate)){
  
 
  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
- conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+// conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
  
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+//conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+
  
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- salesOrderList = delegator.findList("OrderHeaderAndRoles", condition, UtilMisc.toSet("orderId","statusId","partyId","grandTotal"), null, null, false);
+ salesOrderList = delegator.findList("IndentSummaryDetails", condition,null, null, null, false);
  
  //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
 	  
- ROOT_ID = "NHDC"; //::TODO::	  
+ ROOT_ID = "NHDC"; //::TODO::
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
-		 	partyId = eachItem.getAt("partyId");
+		 partyId = eachItem.getAt("branchId");
 		 	completed = 0;
 		 		if (eachItem.get("statusId") == "ORDER_COMPLETED") {
 		 			completed = 1;
 		 		}
-
+				 
 		 	roId = branchROMap.get(partyId);	
-		 	grandTotal = (new BigDecimal(eachItem.getAt("grandTotal"))).setScale(0, RoundingMode.HALF_UP);	 	
+		 	grandTotal = (new BigDecimal(eachItem.getAt("totalAmount"))).setScale(0, RoundingMode.HALF_UP);	 
+			totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(0, 0);
+			totalPoQty=0;
+			totalshipQty = 0;
+			totalPoAmt = 0;
+			if(UtilValidate.isNotEmpty(eachItem.getAt("poQuantity"))){
+			    totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(0, 0);
+		    } 
+			if(UtilValidate.isNotEmpty(eachItem.getAt("shippedQty"))){
+		        totalshipQty = new BigDecimal(eachItem.getAt("shippedQty")).setScale(0, 0);
+		    }
+			if(UtilValidate.isNotEmpty(eachItem.getAt("poAmount"))){
+			   totalPoAmt =  new BigDecimal(eachItem.getAt("poAmount")).setScale(0, 0);
+			}
 		 	if (DataMap.containsKey(partyId)) {
 		 		branchDetails = DataMap.get(partyId);
 		 		totIndents = branchDetails.get("totIndents");
 		 		branchDetails.putAt("totIndents", ++totIndents);
-		 		branchDetails.putAt("completed", completed + branchDetails.get("completed"));		 		
+				if(totalPoQty>0){
+					branchDetails.putAt("totPurchases", ++totPurchases);
+				}
+				branchDetails.putAt("poQty", totalPoQty+ branchDetails.get("poQty"));
+				branchDetails.putAt("poAmt", totalPoAmt+ branchDetails.get("poAmt"));
+				branchDetails.putAt("totQty", totalQty + branchDetails.get("totQty"));
+				branchDetails.putAt("shipQty", totalshipQty + branchDetails.get("shipQty"));
+		 		branchDetails.putAt("completed", completed + branchDetails.get("completed"));
 		 		branchDetails.putAt("totRevenue", grandTotal + branchDetails.get("totRevenue"));		 		
 		 	}
 		 	else {
 		 		branchDetails = [:];
 		 		branchDetails.putAt("totIndents", 1);
+				if(totalPoQty>0){
+					 branchDetails.putAt("totPurchases", 1);
+				}
+				branchDetails.putAt("poQty", totalPoQty);
+				branchDetails.putAt("poAmt", totalPoAmt);
+				branchDetails.putAt("shipQty", totalshipQty);
+				branchDetails.putAt("totQty", totalQty);
 		 		branchDetails.putAt("totRevenue", grandTotal);
 		 		branchDetails.putAt("completed", completed);		 		
 		 		DataMap.putAt(partyId, branchDetails);		 	
@@ -127,6 +155,14 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	if (DataMap.containsKey(roId)) {
 		 		roDetails = DataMap.get(roId);
 		 		totIndents = roDetails.get("totIndents");
+				totPurchases = roDetails.get("totPurchases");
+				roDetails.putAt("totQty", totalQty + roDetails.get("totQty"));
+				if(totalPoQty>0){
+					roDetails.putAt("totPurchases", ++totPurchases);
+				}
+			    roDetails.putAt("poQty", totalPoQty+roDetails.get("poQty"));
+				roDetails.putAt("poAmt", totalPoAmt+ roDetails.get("poAmt"));
+				roDetails.putAt("shipQty", totalshipQty + roDetails.get("shipQty"));
 		 		roDetails.putAt("totIndents", ++totIndents);
 		 		roDetails.putAt("completed", completed + roDetails.get("completed"));		 				 		
 		 		roDetails.putAt("totRevenue", grandTotal + roDetails.get("totRevenue"));		 				 		
@@ -134,6 +170,13 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	else {
 		 		roDetails = [:];
 		 		roDetails.putAt("totIndents", 1);
+				if(totalPoQty>0){
+					 roDetails.putAt("totPurchases", 1);
+				}
+				roDetails.putAt("totQty", totalQty);
+				roDetails.putAt("poQty", totalPoQty);
+				roDetails.putAt("poAmt", totalPoAmt);
+				roDetails.putAt("shipQty", totalshipQty);
 		 		roDetails.putAt("totRevenue", grandTotal);	
 		 		roDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(roId, roDetails);	 	
@@ -141,13 +184,27 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	if (DataMap.containsKey(ROOT_ID)) {
 		 		totDetails = DataMap.get(ROOT_ID);
 		 		totIndents = totDetails.get("totIndents");
+				totPurchases = totDetails.get("totPurchases");
+				if(totalPoQty>0){
+					 totDetails.putAt("totPurchases", ++totPurchases);
+				}
 		 		totDetails.putAt("totIndents", ++totIndents);
+				poQty = totDetails.get("poQty");
+				totDetails.putAt("poQty", totalPoQty+poQty);
+				totDetails.putAt("poAmt", totalPoAmt+ totDetails.get("poAmt"));
+				totDetails.putAt("shipQty", totalshipQty + totDetails.get("shipQty"));
+				totDetails.putAt("totQty", totalQty + totDetails.get("totQty"));
 		 		totDetails.putAt("completed", completed + totDetails.get("completed"));		 				 		
 		 		totDetails.putAt("totRevenue", grandTotal + totDetails.get("totRevenue"));		 				 		
 		 	}
 		 	else {
 		 		totDetails = [:];
 		 		totDetails.putAt("totIndents", 1);
+				totDetails.putAt("totPurchases", 1);
+				totDetails.putAt("totQty", totalQty);
+				totDetails.putAt("poQty", totalPoQty);
+				totDetails.putAt("poAmt", totalPoAmt);
+				totDetails.putAt("shipQty", totalshipQty);
 		 		totDetails.putAt("totRevenue", grandTotal);	
 		 		totDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(ROOT_ID, totDetails);	 	
@@ -165,37 +222,70 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 	 		entryValue = entry.getValue();
 	 		if (branchROMap.containsKey(partyId)) {
 	 			roId = branchROMap.get(partyId);
+				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
+				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
+				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", partyIdNameMap.get(partyId));
 				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
-				newObj.put("avgTAT","");			
+				newObj.put("avgTAT","");
+				newObj.put("indentQty", entryValue.get("totQty"));
 				newObj.put("totalRevenue", entryValue.get("totRevenue"));
+				newObj.put("totPurchases", entryValue.get("totPurchases"));
+				newObj.put("totalPoQty", entryValue.get("poQty"));
+				newObj.put("totalPoAmt", entryValue.get("poAmt"));
+				newObj.put("pendingQty", pendingQty);
+				newObj.put("pendingAmt", pendingAmt);
+				newObj.put("totalShippedQty",entryValue.get("shipQty"));
+				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("totalIndents", entryValue.get("totIndents"));				
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");		
 	 		}
 	 		else if (partyId == ROOT_ID) {
+				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
+				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
+				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				newObj.put("partyId", ROOT_ID );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", "");
 				newObj.put("ro", ROOT_ID);
-				newObj.put("avgTAT","");	
-				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
+				newObj.put("avgTAT","");
+				newObj.put("indentQty", entryValue.get("totQty"));
+				newObj.put("totalRevenue", entryValue.get("totRevenue"));
+				newObj.put("totPurchases", entryValue.get("totPurchases"));
+				newObj.put("totalPoQty", entryValue.get("poQty"));
+				newObj.put("totalPoAmt", entryValue.get("poAmt"));
+				newObj.put("pendingQty", pendingQty);
+				newObj.put("pendingAmt", pendingAmt);
+				newObj.put("totalShippedQty",entryValue.get("shipQty"));
+				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("totalIndents", entryValue.get("totIndents"));
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));	 		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");	 		
 	 		}	 		
 	 		else {
+				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
+				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
+				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
-				newObj.put("avgTAT","");	
-				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
+				newObj.put("avgTAT","");
+				newObj.put("indentQty", entryValue.get("totQty"));
+				newObj.put("totalRevenue", entryValue.get("totRevenue"));
+				newObj.put("totPurchases", entryValue.get("totPurchases"));
+				newObj.put("totalPoQty", entryValue.get("poQty"));
+				newObj.put("totalPoAmt", entryValue.get("poAmt"));
+				newObj.put("pendingQty", pendingQty);
+				newObj.put("pendingAmt", pendingAmt);
+				newObj.put("totalShippedQty",entryValue.get("shipQty"));
 				newObj.put("totalIndents", entryValue.get("totIndents"));
+				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));	 		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");	 		
 	 		}
 	 		dataList.add(newObj);			
 	 }		
