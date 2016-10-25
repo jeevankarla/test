@@ -414,6 +414,11 @@ public class SupplierApiServices {
     }
     
     public static Map<String, Object> createSupplierDispatch(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+    	Debug.log("context================="+context);
+    	
+    	
+    	
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Locale locale = (Locale) context.get("locale");
@@ -436,8 +441,8 @@ public class SupplierApiServices {
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) context.get("partyId");
 	    String deliveryChallanDateStr = (String) context.get("deliveryChallanDate");
-	    String lrDateStr = (String) context.get("lrDate");
-	    String supplierInvoiceDateStr = (String) context.get("suppInvoiceDate");
+	    String lrDateStr = (String) context.get("lrDateStr");
+	    //String supplierInvoiceDateStr = (String) context.get("suppInvoiceDate");
 	    String deliveryChallanNo = (String) context.get("deliveryChallanNo");
 	    String remarks = (String) context.get("remarks");
 	    String freightCharges = (String) context.get("freightCharges");
@@ -522,7 +527,7 @@ public class SupplierApiServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}*/
-	  		deliveryChallanDate = (Timestamp)context.get("deliveryChallanDate");
+	  		//deliveryChallanDate = (Timestamp)context.get("deliveryChallanDate");
 	  	}else{
 		  	 deliveryChallanDate=UtilDateTime.nowTimestamp();
 	  	}
