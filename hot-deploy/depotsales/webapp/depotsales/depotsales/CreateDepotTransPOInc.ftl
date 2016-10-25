@@ -182,16 +182,15 @@
 		 }
 	 }
 	function calculatePOValue(){
-		
 		var isIncTax = $('#incTax').is(':checked');
 		var dataMap = {};
-		var totAmt = 0;			
+		var totAmt = 0;
+		var totAmt2 = 0;	
 		 for (var rowCount=0; rowCount < data.length; ++rowCount)
 		 { 
-			
-			
-			 totAmt = totAmt+data[rowCount]["totPayable"];
-			totAmt= parseFloat(totAmt).toFixed(2)
+			var temp =parseInt(data[rowCount]["totPayable"]);
+			totAmt=totAmt+temp;
+			totAmt2= parseFloat(totAmt).toFixed(2)
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -208,8 +207,8 @@
 			dataMap["cstPercent_o_"+rowCount] = cstPercent;
 			var bedPercent = data[rowCount]["bedPercent"];
 			dataMap["bedPercent_o_"+rowCount] = bedPercent;
+			
 		}
-		
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{
 		
@@ -266,7 +265,11 @@
 				alert("record not found :: Error code:-  "+xhr.status);
 			}
         });
-	}
+        grid.updateRowCount();
+        grid.render();
+        
+	}     //calculate po value func closed here 
+	
 	function displayChargesGrid(){
 		$("#titleScreen").show();
 		prepareApplicableOptions();
