@@ -2254,10 +2254,11 @@ public class MaterialPurchaseServices {
 		String productId = null;
 		String quantityStr = null;
 		String unitPriceStr=null;
-		
+		String bundleUnitPriceStr=null;
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal unitPrice = BigDecimal.ZERO;
+		BigDecimal bundleUnitPrice = BigDecimal.ZERO;
 		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
 		Timestamp orderDate = UtilDateTime.nowTimestamp();
 		HttpSession session = request.getSession();
@@ -2390,7 +2391,6 @@ public class MaterialPurchaseServices {
 		BigDecimal yarnUOM1=BigDecimal.ZERO;
 		BigDecimal bundleWeight1=BigDecimal.ZERO;
 		BigDecimal baleQuantity1=BigDecimal.ZERO;
-		BigDecimal bundleUnitPrice1=BigDecimal.ZERO;
 		
 		
 		String orderAdjustmentsListStr = null;
@@ -2474,7 +2474,6 @@ public class MaterialPurchaseServices {
 			String yarnUOM = "";
 			String bundleWeight = "";
 			String baleQuantity = "";
-			String bundleUnitPrice = "";
 			
 			
 			if (UtilValidate.isNotEmpty(productInput)) {
@@ -2499,18 +2498,9 @@ public class MaterialPurchaseServices {
 					bundleWeight = (String) paramMap.get("bundleWeight" + thisSuffix);
 				}
 				
-				Debug.log("bundleWeight==========="+bundleWeight);
-				
 				if (paramMap.containsKey("baleQuantity" + thisSuffix)) {
 					baleQuantity = (String) paramMap.get("baleQuantity" + thisSuffix);
 				}
-				
-				if (paramMap.containsKey("bundleUnitPrice" + thisSuffix)) {
-					bundleUnitPrice = (String) paramMap.get("bundleUnitPrice" + thisSuffix);
-				}
-				
-				Debug.log("bundleUnitPrice==========="+bundleUnitPrice);
-
 				
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
@@ -2527,6 +2517,10 @@ public class MaterialPurchaseServices {
 				
 				if (paramMap.containsKey("unitPrice" + thisSuffix)) {
 					unitPriceStr = (String) paramMap.get("unitPrice"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("bundleUnitPrice" + thisSuffix)) {
+					bundleUnitPriceStr = (String) paramMap.get("bundleUnitPrice"
 							+ thisSuffix);
 				}
 				
@@ -2652,6 +2646,9 @@ public class MaterialPurchaseServices {
 					if (UtilValidate.isNotEmpty(unitPriceStr)) {
 						unitPrice = new BigDecimal(unitPriceStr);
 					}
+					if (UtilValidate.isNotEmpty(bundleUnitPriceStr)) {
+						bundleUnitPrice = new BigDecimal(bundleUnitPriceStr);
+					}
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
 						basicPrice = new BigDecimal(basicPriceStr);
 					}
@@ -2687,12 +2684,6 @@ public class MaterialPurchaseServices {
 						baleQuantity1 = new BigDecimal(baleQuantity);
 					}
 					
-					if (UtilValidate.isNotEmpty(bundleUnitPrice)) {
-						bundleUnitPrice1 = new BigDecimal(bundleUnitPrice);
-					}
-					
-					
-					
 					
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing quantity string: "
@@ -2709,8 +2700,8 @@ public class MaterialPurchaseServices {
 				productQtyMap.put("yarnUOM", yarnUOM);
 				productQtyMap.put("bundleWeight", bundleWeight1);
 				productQtyMap.put("baleQuantity", baleQuantity1);
-				productQtyMap.put("bundleUnitPrice", bundleUnitPrice1);
 				productQtyMap.put("unitListPrice", unitPrice);
+				productQtyMap.put("bundleUnitPrice",bundleUnitPrice);
 				productQtyMap.put("basicPrice", basicPrice);
 				productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cessPrice", bedPrice);
@@ -3276,7 +3267,7 @@ public class MaterialPurchaseServices {
 				BigDecimal unitListPrice = BigDecimal.ZERO;
 				BigDecimal bundleUnitPrice = BigDecimal.ZERO;
 			    BigDecimal bundleWeight = BigDecimal.ZERO;
-			    BigDecimal baleQty = BigDecimal.ZERO;
+			    BigDecimal baleQuantity = BigDecimal.ZERO;
 				String remarks = "";
 				String yarnUOM= "";
 				BigDecimal vatPercent = BigDecimal.ZERO;
@@ -3319,7 +3310,7 @@ public class MaterialPurchaseServices {
 					bundleWeight = (BigDecimal)prodQtyMap.get("bundleWeight");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
-					baleQty = (BigDecimal)prodQtyMap.get("baleQuantity");
+					baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("cessPercent"))){
 					cessPercent = (BigDecimal)prodQtyMap.get("cessPercent");
@@ -3351,18 +3342,18 @@ public class MaterialPurchaseServices {
 				orderItemDetail.put("partyId",partyId);
 				if(UtilValidate.isNotEmpty(unitPrice))
 				orderItemDetail.put("unitPrice",unitPrice);
-				if(UtilValidate.isNotEmpty(discountAmount))
+				//if(UtilValidate.isNotEmpty(discountAmount))
 				orderItemDetail.put("discountAmount",discountAmount);
 				orderItemDetail.put("Uom",yarnUOM);
 				orderItemDetail.put("productId",productId);
-				if(UtilValidate.isNotEmpty(baleQty))
-				orderItemDetail.put("baleQuantity",baleQty);
+				if(UtilValidate.isNotEmpty(baleQuantity))
+				orderItemDetail.put("baleQuantity",baleQuantity);
 				if(UtilValidate.isNotEmpty(bundleWeight))
 				orderItemDetail.put("bundleWeight",bundleWeight);
 				if(UtilValidate.isNotEmpty(bundleUnitPrice))
 				orderItemDetail.put("bundleUnitPrice",bundleUnitPrice);
 				orderItemDetail.put("remarks",remarks);
-				if(UtilValidate.isNotEmpty(quotaQuantity))
+				//if(UtilValidate.isNotEmpty(quotaQuantity))
 				orderItemDetail.put("quotaQuantity",quotaQuantity);
 				if(UtilValidate.isNotEmpty(quantity))
 				orderItemDetail.put("quantity",quantity);
