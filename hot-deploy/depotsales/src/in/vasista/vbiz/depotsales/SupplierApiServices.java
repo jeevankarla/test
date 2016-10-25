@@ -417,8 +417,6 @@ public class SupplierApiServices {
     	
     	Debug.log("context================="+context);
     	
-    	
-    	
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Locale locale = (Locale) context.get("locale");
@@ -656,7 +654,10 @@ public class SupplierApiServices {
 	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
             delegator.createSetNextSeqId(newEntity);            
             shipmentId = (String) newEntity.get("shipmentId");
-	       
+ 	       
+            
+            Debug.log("shipmentId==============================="+shipmentId);
+            
 			/*List<Map> prodQtyList = FastList.newInstance();*/
 			
             BigDecimal landingCharges = BigDecimal.ZERO;
@@ -784,7 +785,7 @@ public class SupplierApiServices {
 				if (UtilValidate.isNotEmpty( shipmentItem.get("termTypeId"))) {
 					termTypeId = (String) shipmentItem.get("termTypeId");
 				}
-			  
+				
 				if (UtilValidate.isNotEmpty( shipmentItem.get("amount"))) {
 					amountStr = (String) shipmentItem.get("amount");
 				}
@@ -1094,10 +1095,10 @@ public class SupplierApiServices {
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("orderId", rlatedId);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("material", smsContent);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("transporter", carrierName);
-		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrNo", lrNumber);
-		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
-		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
-		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("estimatedReadyDate", lrDateStr);
+		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrNo", lrNumber);
+		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
+		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
+		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("estimatedReadyDate", lrDateStr);
 		if(UtilValidate.isNotEmpty(customerId)){
 			String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,supplierId, false);
 			Map<String, Object> getTelParams = FastMap.newInstance();
@@ -1172,6 +1173,8 @@ public class SupplierApiServices {
  		Map shipmentResult = FastMap.newInstance();
  		shipmentResult.put("shipmentId",shipmentId);
  		result.put("shipmentResult",shipmentResult);
+ 		
+ 		Debug.log("shipmentResult=================="+shipmentResult);
 		return result;
     }
     
