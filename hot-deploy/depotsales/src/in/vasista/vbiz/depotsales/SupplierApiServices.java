@@ -335,13 +335,16 @@ public class SupplierApiServices {
 						BigDecimal balQuantity = quantity.subtract(shippedQuantity);
 						Map itemMap = FastMap.newInstance();
 						itemMap.put("productId",productId);
+						itemMap.put("orderItemSeqId",eachItem.get("orderItemSeqId"));
 						itemMap.put("itemName",itemName);
 						itemMap.put("specification",spec);
 						itemMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
 						itemMap.put("indentQuantity",quantity.setScale(decimals, rounding));
 						itemMap.put("dispatchedQty",shippedQuantity.setScale(decimals, rounding));
 						itemMap.put("balanceQty",balQuantity.setScale(decimals, rounding));
-						orderItems.add(itemMap);
+						if ((balQuantity.setScale(decimals, rounding)).compareTo(BigDecimal.ZERO) > 0){
+							orderItems.add(itemMap);
+						}
 					}
 				}
 		    } catch (GenericEntityException e) {
