@@ -182,16 +182,15 @@
 		 }
 	 }
 	function calculatePOValue(){
-		
 		var isIncTax = $('#incTax').is(':checked');
 		var dataMap = {};
-		var totAmt = 0;			
+		var totAmt = 0;
+		var totAmt2 = 0;	
 		 for (var rowCount=0; rowCount < data.length; ++rowCount)
 		 { 
-			
-			
-			 totAmt = totAmt+data[rowCount]["totPayable"];
-			totAmt= parseFloat(totAmt).toFixed(2)
+			var temp =parseInt(data[rowCount]["totPayable"]);
+			totAmt=totAmt+temp;
+			totAmt2= parseFloat(totAmt).toFixed(2)
 			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
@@ -208,8 +207,8 @@
 			dataMap["cstPercent_o_"+rowCount] = cstPercent;
 			var bedPercent = data[rowCount]["bedPercent"];
 			dataMap["bedPercent_o_"+rowCount] = bedPercent;
+			
 		}
-		
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{
 		
@@ -266,7 +265,11 @@
 				alert("record not found :: Error code:-  "+xhr.status);
 			}
         });
-	}
+        grid.updateRowCount();
+        grid.render();
+        
+	}     //calculate po value func closed here 
+	
 	function displayChargesGrid(){
 		$("#titleScreen").show();
 		prepareApplicableOptions();
@@ -297,8 +300,8 @@
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
 			}
-			var qty = parseFloat(data[rowCount]["quantity"]);
-			var unitPrice = data[rowCount]["unitPrice"];
+			//var qty = parseFloat(data[rowCount]["quantity"]);
+			//var unitPrice = data[rowCount]["unitPrice"];
 			var vatPercent = data[rowCount]["vatPercent"];
 			var cstPercent = data[rowCount]["cstPercent"];
 			var bedPercent = data[rowCount]["bedPercent"];
@@ -307,10 +310,11 @@
 			
 			var balqty = parseFloat(data[rowCount]["baleQuantity"]);
 			var yarnUOM = data[rowCount]["cottonUom"];
-			var bundleWeight = data[rowCount]["bundleWeight"];
-			var bundleUnitPrice = data[rowCount]["unitPrice"];
+			var bundleWeight = data[rowCount]["bundleWeight"];			
+			var bundleUnitPrice = data[rowCount]["unitPrice"];			
 			var remarks = data[rowCount]["remarks"];
-			var unitPrice = data[rowCount]["KgunitPrice"];
+			var qty = parseFloat(data[rowCount]["quantity"]);
+			var unitPrice = data[rowCount]["KgunitPrice"];			
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
 			var vatPercent = data[rowCount]["vatPercent"];
@@ -844,70 +848,67 @@
 			var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
 			var price = parseFloat(data[args.row]["unitPrice"]);
 			var amt = parseFloat(data[args.row]["amount"]);
-			var roundedAmount=0;
-			if( uom == "KGs" ){
-			 	roundedAmount =calculateBundlePrice(balQuty,uom,kgUnitPrice);
-			}else{
-			 	roundedAmount =calculateBundlePrice(balQuty,uom,price);
-			}
+			var roundedAmount =calculateBundlePrice(balQuty,uom,price);
+			if(args.cell != 7){
+		  		if(uom!="KGs"){
+		   			kgUnitPrice=price/bundleWeight;		   			
+		  		}
+				else{
+				    kgUnitPrice=price;				    
+				}				
+		 	}
 
 			if (args.cell == 2) {
-
-		  		if(isNaN(roundedAmount)){
+			  	if(isNaN(roundedAmount)){
 					roundedAmount = 0;
-		  		}
-		  		if(isNaN(kgUnitPrice)){
+			  	}
+			  	if(isNaN(kgUnitPrice)){
 					kgUnitPrice = 0;
-		  		}	
-		  
-		  		quantity=calculateBundleWeight(balQuty,uom,bundleWeight);		  		
-		  		data[args.row]["quantity"]=quantity;
-		  		data[args.row]["KgunitPrice"] = kgUnitPrice;
-		  		data[args.row]["amount"] = roundedAmount;
-		  		data[args.row]["totPayable"] = roundedAmount;
-		  
+			  	}	
+			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+			  	data[args.row]["quantity"]=quantity;
+			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
+			  	data[args.row]["amount"] = roundedAmount;
+			  	data[args.row]["totPayable"] = roundedAmount;
 			}
 		else if(args.cell == 3){
-			quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-			data[args.row]["KgunitPrice"] = kgUnitPrice;
-			data[args.row]["quantity"] = quantity;
-			data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-			data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-		
-		}
-		else if(args.cell == 4){
-		  quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-		  kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
-		  data[args.row]["KgunitPrice"] = kgUnitPrice;
-		  data[args.row]["quantity"] = quantity;
-		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-		}
-		else if(args.cell == 5){
-		  kgUnitPrice=reverseCalculationBundleToKG(bundleWeight,price);
-		  data[args.row]["KgunitPrice"] = kgUnitPrice;
-		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-		
-		}
-		else if(args.cell == 6){
-		  baleQty=calculateKgs(quantity,uom,bundleWeight);
-		  data[args.row]["baleQuantity"]=baleQty;
-		  data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-		  data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-		}
-		else if(args.cell == 7){
-		  var upb=0;
-		  var roundedAmount=0;
-	      upb=reverseCalculationKGToBundle(bundleWeight,kgUnitPrice);
-	      if( uom == "KGs" ){
-		   		roundedAmount=calculateBundlePrice(balQuty,uom,kgUnitPrice);
-			}else{
-			 	roundedAmount=calculateBundlePrice(balQuty,uom,upb);
+				quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+				
+				data[args.row]["KgunitPrice"] = kgUnitPrice;
+				data[args.row]["quantity"] = quantity;
+				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			
 			}
-		  data[args.row]["amount"] = roundedAmount;
-		  data[args.row]["unitPrice"] = upb;
-		}
+			else if(args.cell == 4){
+			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
+			  	data[args.row]["quantity"] = quantity;
+			 	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			}
+			else if(args.cell == 5){
+			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
+			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			}
+			else if(args.cell == 6){
+			  	baleQty=calculateKgs(quantity,uom,bundleWeight);
+			  	data[args.row]["baleQuantity"]=baleQty;
+			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			}
+		    else if(args.cell == 7){
+			  	var upb=0;
+			  	if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
+					upb=kgUnitPrice*bundleWeight;
+				}
+			  	else if(uom == "KGs" ){
+					upb=kgUnitPrice;
+			 	}
+			  	var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
+			  	data[args.row]["amount"] = roundedAmount;
+			  	data[args.row]["unitPrice"] = upb;
+			}
 		else if(args.cell == 8){
 		    var upb=0;
 			var bundle=0;
