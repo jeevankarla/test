@@ -262,9 +262,9 @@
         <menu-item name="indentAnalytics" title="Indent Analytics">
         	<link target="IndentAnalytics"/>
         </menu-item>  
-         <menu-item name="indentQtyAnalytics" title="Indent Quantity Analytics">
+         <!-- <menu-item name="indentQtyAnalytics" title="Indent Quantity Analytics">
         	<link target="IndentQtyAnalytics"/>
-        </menu-item>  
+        </menu-item>  --> 
         <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
         	<link target="IndentSupplyAnalytics"/>
         </menu-item>

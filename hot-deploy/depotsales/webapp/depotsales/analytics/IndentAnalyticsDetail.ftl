@@ -96,11 +96,11 @@ $(document).ready(function () {
                   { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
                   { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
                   { text: 'Total Indents', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Qty (Kgs)', width:'15%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Amt (Rs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Total Purchases', width:'15%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Purchase Qty (Kgs)', width:'15%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Purchase Amt (Rs)', width:'15%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Indent Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Indent Amt (Rs in Lakhs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Purchase Order Issued', width:'15%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Purchase Order Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Purchase Amt (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                
