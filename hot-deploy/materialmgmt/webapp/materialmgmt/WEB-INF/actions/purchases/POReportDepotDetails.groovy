@@ -47,7 +47,6 @@ allDetailsMap["grandTotal"]=BigDecimal.ZERO;
 roundedGrandTotal=BigDecimal.ZERO;
 orderHeader=null;
 orderDesctioption="";
-
 productStoreId = "";
 if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
@@ -584,32 +583,37 @@ orderAdjustmentsMap=[:];
 List Newcondition = [];
 Newcondition.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 newcond=EntityCondition.makeCondition(Newcondition,EntityOperator.AND);
-orderAdjts= delegator.findList("OrderAdjustment",newcond , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+orderAdjts= delegator.findList("OrderAdjustment",newcond , UtilMisc.toSet("orderAdjustmentTypeId","amount","sourcePercentage"), null, null, false );
 if(orderAdjts){
 	orderAdjts.each{orderAdjt->
 		if(orderAdjt.orderAdjustmentTypeId == "VAT_PUR"){
 			if(orderAdjt.amount){
 			  orderAdjustmentsMap.put("VATAmount", orderAdjt.amount)
+			  orderAdjustmentsMap.put("VATPer", orderAdjt.sourcePercentage)
 			}
 	   }
 	   if(orderAdjt.orderAdjustmentTypeId == "CST_PUR"){
 			if(orderAdjt.amount){
 				orderAdjustmentsMap.put("CSTAmount", orderAdjt.amount)
+				orderAdjustmentsMap.put("CSTPer", orderAdjt.sourcePercentage)
 			  }
 		}
 	   if(orderAdjt.orderAdjustmentTypeId == "CESS"){
 		   if(orderAdjt.amount){
 			   orderAdjustmentsMap.put("CESS", orderAdjt.amount)
+			   orderAdjustmentsMap.put("CessPer", orderAdjt.sourcePercentage)
 			 }
 	   }
 	   if(orderAdjt.orderAdjustmentTypeId == "INSURANCE_CHGS"){
 		   if(orderAdjt.amount){
 			   orderAdjustmentsMap.put("INSURANCE_CHGS", orderAdjt.amount)
+			   orderAdjustmentsMap.put("InsuPer", orderAdjt.sourcePercentage)
 			 }
 	   }
 	   if(orderAdjt.orderAdjustmentTypeId == "OTHER_CHARGES"){
 		   if(orderAdjt.amount){
 			   orderAdjustmentsMap.put("OTHER_CHARGES", orderAdjt.amount)
+			   orderAdjustmentsMap.put("OtherPer", orderAdjt.sourcePercentage)
 			 }
 	   }
 	 }

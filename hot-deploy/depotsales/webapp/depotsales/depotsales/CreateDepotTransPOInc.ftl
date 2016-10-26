@@ -908,6 +908,7 @@
 			  	var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
 			  	data[args.row]["amount"] = roundedAmount;
 			  	data[args.row]["unitPrice"] = upb;
+				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 			}
 		else if(args.cell == 8){
 		    var upb=0;
