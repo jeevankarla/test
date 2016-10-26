@@ -236,35 +236,35 @@ under the License.
 			<fo:table-body>
 			<#if orderAdjustmentsMap.get("VATAmount")?has_content>
                <fo:table-row>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold"><Vat/fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold"> Vat(${orderAdjustmentsMap.get("VATPer")?if_exists}%)</fo:block></fo:table-cell>
 				  <fo:table-cell><fo:block text-align="right"  font-size="11pt">${orderAdjustmentsMap.get("VATAmount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
                </fo:table-row>
                <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("VATAmount")>
             </#if>
 			<#if orderAdjustmentsMap.get("CSTAmount")?has_content>
                <fo:table-row>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cst</fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cst(${orderAdjustmentsMap.get("CSTPer")?if_exists}%)</fo:block></fo:table-cell>
 				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("CSTAmount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
                </fo:table-row>
                <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("CSTAmount")>
             </#if>
             <#if orderAdjustmentsMap.get("CESS")?has_content>
                <fo:table-row>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cess </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Cess(${orderAdjustmentsMap.get("CessPer")?if_exists}%) </fo:block></fo:table-cell>
 				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("CESS")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
                </fo:table-row>
                <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("CESS")>
             </#if>
             <#if orderAdjustmentsMap.get("INSURANCE_CHGS")?has_content >
                <fo:table-row>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Insurance </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold">Insurance(${orderAdjustmentsMap.get("InsuPer")?if_exists}%) </fo:block></fo:table-cell>
 				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("INSURANCE_CHGS")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
                </fo:table-row>
                <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("INSURANCE_CHGS")>
             </#if>
             <#if orderAdjustmentsMap.get("OTHER_CHARGES")?has_content>
                <fo:table-row>
-				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold" >Other Charges </fo:block></fo:table-cell>
+				  <fo:table-cell><fo:block text-align="left" font-size="11pt" font-weight="bold" >Other Charges(${orderAdjustmentsMap.get("OtherPer")?if_exists}%)</fo:block></fo:table-cell>
 				  <fo:table-cell><fo:block text-align="right" font-size="11pt">${orderAdjustmentsMap.get("OTHER_CHARGES")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
                </fo:table-row>
                <#assign totalAdjAmount=totalAdjAmount+orderAdjustmentsMap.get("OTHER_CHARGES")>
