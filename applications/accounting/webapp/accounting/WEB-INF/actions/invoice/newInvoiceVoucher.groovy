@@ -1250,7 +1250,7 @@ for (eachList in invoiceItemList) {
 			  
 			  
 			  
-			  tempMap.put("percentage", percentage);
+			  tempMap.put("percentage", 0);
 			  }
 			  
 			   if(eachItem.description)
