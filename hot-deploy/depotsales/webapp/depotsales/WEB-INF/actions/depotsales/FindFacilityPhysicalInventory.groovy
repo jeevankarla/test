@@ -32,9 +32,78 @@ import org.ofbiz.party.party.PartyHelper;
 facilityId = parameters.facilityId;
 
 //find shipmentIds by filter criteria
+
+
+dctx = dispatcher.getDispatchContext();
+Map boothsPaymentsDetail = [:];
+
+partyId = userLogin.get("partyId");
+
+//debug.log("partyId=============="+partyId);
+
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+
+////debug.log("resultCtx=============="+resultCtx);
+
+
+Map formatMap = [:];
+List formatList = [];
+List productStoreList = resultCtx.get("productStoreList");
+context.productStoreList = productStoreList;
+
+for (eachList in productStoreList) {
+	formatMap = [:];
+	formatMap.put("productStoreName",eachList.get("storeName"));
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+}
+
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+
+for(eachRO in roPartyList){
+	formatMap = [:];
+	formatMap.put("productStoreName",eachRO.get("groupName"));
+	formatMap.put("payToPartyId",eachRO.get("partyId"));
+	formatList.addAll(formatMap);
+}
+context.formatList = formatList;
+
+
+branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
+if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	branchList.clear();
+	branchList.add(parameters.partyIdFrom)
+}
+
+
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["BILL_TO_CUSTOMER"]));
+expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
+
+purorderIds = EntityUtil.getFieldListFromEntityList(OrderRoleList, "orderId", true);
+
+
+/*
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, purorderIds));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["BILL_TO_CUSTOMER"]));
+expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
+*/
+
+
 conditionList =[];
 if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "DEPOT_SHIPMENT"));
+	
+	if(purorderIds)
+	conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, purorderIds));
+	
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,parameters.partyId));
 	}

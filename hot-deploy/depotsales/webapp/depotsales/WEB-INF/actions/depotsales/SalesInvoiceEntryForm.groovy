@@ -97,6 +97,14 @@ if(shipments){
 	 invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	
 	 
+	 roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+	 roPartyList = roList.get("partyList");
+	 
+	 Debug.log("roPartyList================"+roPartyList);
+	 
+	 ro = roPartyList[0].partyId;
+	 
+	 
      JSONArray invoiceDiscountJSON = new JSONArray();
 	 JSONArray invoiceAdditionalJSON = new JSONArray();
 	 
@@ -683,6 +691,9 @@ if(shipments){
 				JSONObject newObj = new JSONObject();
 				newObj.put("cProductId",OrderItem[0].productId);
 				newObj.put("orderItemSeqId",OrderItem[0].orderItemSeqId);
+				newObj.put("ro",ro);
+				
+				
 				
 				
 				productName = ""

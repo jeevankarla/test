@@ -267,10 +267,40 @@
 	 	var percentage = taxPercentItem.value;
 	 	var taxPercItemId = taxPercentItem.id;
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
+	 	
+	 	
+	 	
+	 	var serviceChargePer = $('#serviceChargePer').val();
+	 	
+	 	
+	 	var ro = $('#ro').val();
+	 	
+	 	var totalAmtHyd = 0;
+	 	
+	 	if(ro == "INT5"){
+	 	
+	 		 	//alert("totalAmt============="+totalAmt);
+	 		 	
+	 		 	var serviceCharge = (serviceChargePer/100)*(saleBaseAmt);
+	 		 	
+	 		 	var saleBaseAmt = $('#saleBaseAmt').val();
+	 		
+	 		totalAmtHyd = parseFloat(serviceCharge)+parseFloat(saleBaseAmt); 	
+	 	
+	 	}//end
+	 	
 	 	   
 	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId != "ENTRY_TAX"){
-	 		var taxValue = (percentage) * (totalAmt/100) ;
+	 		
+	 		
+	 		if(ro == "INT5" && (taxPercItemId == "VAT_SALE" || taxPercItemId == "CST_SALE") ){
+	 		
+	 		
+	 		//alert("totalAmtHyd=============="+totalAmtHyd);
+	 		
+	 		var taxValue = (percentage) * (totalAmtHyd/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
+	 		
 	 		if(taxPercItemId == "VAT_SALE"){
 		 		if(vatSurchargeList != 'undefined' && vatSurchargeList != null && vatSurchargeList.length){
 		 			for(var i=0;i<vatSurchargeList.length;i++){
@@ -281,6 +311,39 @@
 					}
 			 	}
 		 	}
+		 	
+		 	
+		 	if(taxPercItemId == "CST_SALE"){
+		 		if(cstSurchargeList != 'undefined' && cstSurchargeList != null && cstSurchargeList.length){
+		 			for(var i=0;i<cstSurchargeList.length;i++){
+						var taxType = cstSurchargeList[i];
+						var taxPercentage = $('#'+taxType).val();
+						var surchargeValue = taxPercentage * taxValue/100;
+						$('#'+taxType + '_AMT').val(surchargeValue);
+					}
+			 	}
+		 	}
+	 		
+	 		
+	 		
+	 		}else{
+	 		
+	 		
+	 		
+	 		var taxValue = (percentage) * (totalAmt/100) ;
+	 		$('#'+taxValueItemId).val(taxValue);
+	 		
+	 		if(taxPercItemId == "VAT_SALE"){
+		 		if(vatSurchargeList != 'undefined' && vatSurchargeList != null && vatSurchargeList.length){
+		 			for(var i=0;i<vatSurchargeList.length;i++){
+						var taxType = vatSurchargeList[i];
+						var taxPercentage = $('#'+taxType).val();
+						var surchargeValue = taxPercentage * taxValue/100;
+						$('#'+taxType + '_AMT').val(surchargeValue);
+					}
+			 	}
+		 	}
+		 	
 		 	
 		 	if(taxPercItemId == "CST_SALE"){
 		 		if(cstSurchargeList != 'undefined' && cstSurchargeList != null && cstSurchargeList.length){
@@ -294,7 +357,7 @@
 		 	}
 	 	}
 	 	
-	 	
+	 	}
 	 	
 	 	if(percentage != 'undefined' && percentage != null && percentage.length && taxPercItemId == "ENTRY_TAX"){
 	 	
@@ -568,6 +631,15 @@
     	
     	
     	var saleAmount = $('#saleAmount').val();
+    	
+    	var saleBaseAmt = $('#saleBaseAmt').val();
+    	
+    	var basicAmount = $('#basicAmount').val();
+    	
+    	
+    	var ro = $('#ro').val();
+    	
+    	
     	// Service Charge Recalculation
     	
     	var serviceChargePercent = 0;
@@ -575,7 +647,12 @@
 			serviceChargePercent = dataRow["SERVICE_CHARGE"];
 		}
 		
-    	var serviceCharge = (serviceChargePercent/100)*(saleAmount);
+		var serviceCharge = 0;
+		
+		if(ro == "INT5")
+    	serviceCharge = (serviceChargePercent/100)*(basicAmount);
+    	else
+    	serviceCharge = (serviceChargePercent/100)*(saleAmount);
     	
     	$('#serviceChargeAmt').val(serviceCharge);
     	
@@ -616,6 +693,9 @@
 			dataRow = gridRow;
 			productName = dataRow["cProductName"];
 			
+			ro = dataRow["ro"];
+			
+			//alert(ro);
 			
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
@@ -697,7 +777,7 @@
 										message += "<table cellspacing=10 cellpadding=10 id='SalePriceTable' >"+
 														"<tr>"+
 															"<td align='left'>Basic Amount: </td>"+
-															"<td><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
+															"<td><input type='hidden' id='ro' value='"+ro+"'><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
 														"</tr>"+
 														<#--
 														"<tr>"+
@@ -877,7 +957,7 @@
 						"</tr>";
 				message += "<tr>"+
 							"<td align='left'>Service Charge("+serviceCharge+"%): </td>"+
-							"<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
+							"<td><input type='hidden' id='serviceChargePer' value='"+serviceCharge+"'><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
 						"</tr>";
 				
 				message += "<tr>"+

@@ -1897,6 +1897,13 @@
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
 <!--         <field name="primaryOrderId" title="PO no"><text-find/></field> -->
+
+		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
+
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="referenceNo" title="PORef.No"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
