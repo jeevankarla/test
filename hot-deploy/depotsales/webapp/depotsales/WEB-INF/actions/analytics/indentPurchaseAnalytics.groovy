@@ -110,9 +110,11 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 }
 
 			 roId = branchROMap.get(partyId);
+			 totalPoQty =0;
 			 totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(2, 0);
-			 totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(2, 0);
-			 
+			 if(UtilValidate.isNotEmpty(eachItem.getAt("poQuantity"))){
+			     totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(2, 0);
+			 }	 
 			 if (DataMap.containsKey(partyId)) {
 				 branchDetails = DataMap.get(partyId);
 				 branchDetails.putAt("poQty", totalPoQty+ branchDetails.get("poQty"));
@@ -172,9 +174,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("poQty"));
-				newObj.put("inProcess",entryValue.get("poQty") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));
+				newObj.put("totalIndents", (entryValue.get("poQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("poQty") - entryValue.get("completed"))/100000).setScale(2, 0));
+				newObj.put("completed", (entryValue.get("completed")/100000).setScale(2, 0));
 			 }
 			 else if (partyId == ROOT_ID) {
 				newObj.put("partyId", ROOT_ID );
@@ -183,9 +185,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("poQty"));
-				newObj.put("inProcess",entryValue.get("poQty") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));
+				newObj.put("totalIndents", (entryValue.get("poQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("poQty") - entryValue.get("completed"))/100000).setScale(2, 0));
+				newObj.put("completed", (entryValue.get("completed")/100000).setScale(2, 0));
 			 }
 			 else {
 				newObj.put("partyId", partyId );
@@ -194,9 +196,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("poQty"));
-				newObj.put("inProcess",entryValue.get("poQty") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));
+				newObj.put("totalIndents", (entryValue.get("poQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("poQty") - entryValue.get("completed"))/100000).setScale(2, 0));
+				newObj.put("completed", (entryValue.get("completed")/100000).setScale(2, 0));
 			 }
 			 dataList.add(newObj);
 	 }

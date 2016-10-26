@@ -94,9 +94,9 @@ $(document).ready(function () {
                   { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
                   { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
                  // { text: 'Total Quanty', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Total Purchase Qty', width:'20%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Shipped Qty', width:'20%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
-                  { text: 'Pending Qty', width:'20%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Total Purchase Qty (Kgs in Lakhs)', width:'20%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Shipped Qty (Kgs in Lakhs)', width:'20%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Pending Qty (Kgs in Lakhs)', width:'20%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
                 ],
               
                

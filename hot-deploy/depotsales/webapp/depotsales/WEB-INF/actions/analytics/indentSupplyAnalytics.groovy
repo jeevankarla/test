@@ -173,9 +173,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("saleQty"));
-				newObj.put("inProcess",entryValue.get("totQty") - entryValue.get("saleQty"));
+				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
+				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 else if (partyId == ROOT_ID) {
@@ -184,9 +184,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", "");
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("saleQty"));
-				newObj.put("inProcess",entryValue.get("totQty") - entryValue.get("saleQty"));
+				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
+				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 else {
@@ -195,9 +195,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", entryValue.get("totQty"));
-				newObj.put("totalIndents", entryValue.get("saleQty"));
-				newObj.put("inProcess",entryValue.get("totQty") - entryValue.get("saleQty"));
+				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
+				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 dataList.add(newObj);
