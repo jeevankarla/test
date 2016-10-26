@@ -30,6 +30,7 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
+
  <#if orderDetailsList?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 	<fo:static-content flow-name="xsl-region-before">

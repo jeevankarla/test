@@ -47,7 +47,6 @@ allDetailsMap["grandTotal"]=BigDecimal.ZERO;
 roundedGrandTotal=BigDecimal.ZERO;
 orderHeader=null;
 orderDesctioption="";
-
 productStoreId = "";
 if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
