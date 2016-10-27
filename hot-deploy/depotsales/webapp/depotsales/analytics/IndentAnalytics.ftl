@@ -56,13 +56,18 @@ $(document).ready(function(){
 			dateFormat:'MM d, yy',
 			changeMonth: true,
 			onSelect: function( selectedDate ) {					
-				date = $(this).datepicker('getDate');
+			    date = $(this).datepicker('getDate');
+		        y = date.getFullYear(),
+		        m = date.getMonth();
+		        d = date.getDate();
+		        var maxDate = new Date(y+1, m, d);
 				$( "#thruDate" ).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
 			}
-		}).datepicker("setDate",new Date(2016, 03, 01)) ;
+		});
 		$( "#thruDate" ).datepicker({
 			dateFormat:'MM d, yy',
 			changeMonth: true,
+			changeYear: true,
 			onSelect: function( selectedDate ) {
 				$( "#fromDate" ).datepicker( "option", "maxDate", selectedDate );
 			}
