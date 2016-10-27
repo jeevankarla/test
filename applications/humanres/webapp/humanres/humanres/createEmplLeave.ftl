@@ -198,17 +198,23 @@ function viewGHandSS(){
  function displayLeaveBalance(){
     var leaveTypeId = $('select[name=leaveTypeId]').val();
     var employeeId = $('input[name=partyId]').val();
-    
+    var dayFractionId = $('input[name=dayFractionId]');
     $('[name="fromDate"]').datepicker( "option", "dateFormat", "yy-mm-dd");
     var fromDate = jQuery("#fromDate").val();
     $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
+    
+     if(leaveTypeId == "CL" || leaveTypeId =="ML"){
+     	$(dayFractionId).closest("tr").show();
+      }else{
+      	$(dayFractionId).closest("tr").hide();
+      }
     
     var flag="creditLeaves";
     var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId+"&flag="+flag;
     data = data+"&balanceDate="+fromDate;
     
     $('#leaveBalance').html('');
-    jQuery('#ghssDropDown').hide();
+   jQuery('#ghssDropDown').hide();
     jQuery('#chDate').html('')
     if(employeeId =="" || leaveTypeId=="" || fromDate==""){
           return false;
@@ -351,7 +357,7 @@ function viewGHandSS(){
                 </td>
               </tr>
                <tr>
-                <td class="label">Thru Date :</td>
+                <td class="label">To Date :</td>
                 <td>
                    <input type="text" name="thruDate" id="thruDate" value="${thruDate?if_exists}" readonly/>
                 </td>
@@ -365,14 +371,14 @@ function viewGHandSS(){
 					<em style="color:red; font-size:20pt; font-style:bold">*</em>
                 </td>
               </tr>
-              <tr>
+              <tr id="halfDay" style="display: none;">
                 <td class="label">First/Second Half :</td>
                 <td>
                    <#list dayFractionList as dayFraction>
                        <#if dayFractionId?exists && (dayFractionId == dayFraction.enumId)>
-      					     <input type="radio" name="dayFractionId" value="${dayFractionId}" checked="checked">${dayFraction.description}
+      					     <input type="radio" name="dayFractionId" id="dayFractionId" value="${dayFractionId}" checked="checked">${dayFraction.description}
 			      		<#else> 
-                       		<input type="radio" name="dayFractionId" value="${dayFraction.enumId}">${dayFraction.description}
+                       		<input type="radio" name="dayFractionId" id="dayFractionId" value="${dayFraction.enumId}">${dayFraction.description}
                        </#if>
 				   </#list>
 				   <span class="tooltip" id="punchDetails" name="punchDetails"></span>

@@ -152,7 +152,7 @@ $("#fromDate").glDatePicker(
                 </#if>        	
         		<td align="right" width="10%"><span class='h3'>From Date: </span></td>
             	<td width="20%"><input class="mycalendar" type="text" id="fromDate" name="fromDate"/></td>        	
-        		<td align="right" width="10%"><span class='h3'>Thru Date: </span></td>
+        		<td align="right" width="10%"><span class='h3'>To Date: </span></td>
             	<td width="20%"><input class="mycalendar" type="text" id="thruDate" name="thruDate"/></td>
 				<td><input type="submit" value="Submit" id="getEmployeeAttendance" class="smallSubmit" /></td>
 			</tr>

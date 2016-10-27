@@ -674,7 +674,7 @@
 		<field name="insuranceTypeId" title="Insurance Type"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="premiumAmount" title="Amount"><display></display></field>
 		<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}" also-hidden="true"/></field>
-		<field name="thruDate"><date-time type="date"/></field>
+		<field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
 		<field name="submitButton" title="Update" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" separate-column="true">
             <submit button-type="button"/></field>
         <field name="deleteLink" title="Delete" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" widget-style="buttontext">
@@ -961,6 +961,7 @@
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <auto-fields-service service-name="createPartyQual"/>
         <field name="partyId"><hidden/></field>
+       
         <field name="partyQualTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
@@ -984,6 +985,7 @@
                 </entity-options>
             </drop-down>
         </field>
+         <field name="thruDate" title="${uiLabelMap.toDate}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeQualification" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeQualification" paginate-target="FindPartyQuals"
@@ -1016,6 +1018,7 @@
                 </entity-options>
             </drop-down>
         </field>
+       <field name="thruDate" title="${uiLabelMap.toDate}"> <display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
@@ -1071,7 +1074,7 @@
             </drop-down>
         </field>
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" title="${uiLabelMap.toDate}"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>

@@ -29,10 +29,10 @@
         <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="partyId" use-when="${groovy:((security.hasEntityPermission(&quot;MYPORTAL&quot;, &quot;_HREMPLVIEW&quot;, session)))}"><display size="200" default-value="${partyName}[${userLogin.partyId}]"></display></field>
         <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
-        <field name="leaveTypeId">
+        <field name="leaveTypeId" id-name="leaveTypeId" event="onchange" action="javascript:hideHalfDayLeave();">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
-            </drop-down>
+            </drop-down> 
         </field>
         <field name="emplLeaveReasonTypeId">
             <drop-down allow-empty="true">
@@ -40,13 +40,13 @@
             </drop-down>
         </field>
         <field name="fromDate" parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
-        <field name="thruDate" parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
-       <field name="dayFractionId" position="1" title="First/Second Half">
+        <field name="thruDate" parameter-name="tDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
+       <field name="dayFractionId" position="1" title="First/Second Half" id-name="dayFractionId">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                    <entity-constraint name="enumTypeId" operator="equals" value="LEAVE_DAY_TYPE"/>
                 </entity-options>
-            </radio>
+            </radio> 
         </field>
         <field name="leaveStatus">
             <drop-down allow-empty="true">
@@ -54,7 +54,7 @@
                     <entity-constraint name="statusTypeId" operator="equals" value="LEAVE_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> 
         </field>
         <field name="lossOfPayDays"><hidden/></field>
         <field name="effectedCreditDays"><hidden/></field>
@@ -104,7 +104,7 @@
 		<field name="emplLeaveReasonTypeId" title="Reason"></field>                
         <field name="comment" title="Description" ><display size="20"/></field> 
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
-        <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+        <field name="thruDate" red-when="never" title="${uiLabelMap.toDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
 		<field name="dayFractionId" title="1st/2nd Half"></field>
 		<field name="GHSSdays" title="Comp off Leave Days"><display></display></field>
         <field name="approverPartyId">
@@ -210,7 +210,7 @@
             </drop-down>
         </field>
         <field name="fromDate" parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
-        <field name="thruDate" parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
+        <field name="thruDate" parameter-name="tDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
        <field name="dayFractionId" position="1" title="First/Second Half">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -270,7 +270,7 @@
 		<field name="leaveTypeId" title="Type"><display></display></field>      
 		<field name="emplLeaveReasonTypeId" title="Reason"><display></display></field>                		          
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
-        <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+        <field name="thruDate" red-when="never" title="${uiLabelMap.toDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
 		<field name="leaveCountDays" title="Total no.of days"><display/></field> 
 		<field name="appliedBy" title="Applied By"><display></display></field>
 		<field name="dayFractionId" title="1st/2nd Half"><display></display></field>
