@@ -91,7 +91,7 @@ under the License.
 										</#list>
 			  						</select>
 			  						<b>From Date :</b> <input  type="text" size="10pt" id="ruleFromDate"   name="ruleFromDate" value="${(PayrollBenDedRule.fromDate)?if_exists?string("MMMM dd, yyyy")}"/>
-									<b>To Date :</b> <input  type="text" size="10pt" id="ruleThruDate"   name="ruleThruDate" <#if PayrollBenDedRule.thruDate?has_content>value="${(PayrollBenDedRule.thruDate)?if_exists?string("MMMM dd, yyyy")}</#if>"/>
+									<b>${uiLabelMap.toDate} :</b> <input  type="text" size="10pt" id="ruleThruDate"   name="ruleThruDate" <#if PayrollBenDedRule.thruDate?has_content>value="${(PayrollBenDedRule.thruDate)?if_exists?string("MMMM dd, yyyy")}</#if>"/>
 			  						<form method="post" action="<@ofbizUrl>createOrUpdatePayHeadRules</@ofbizUrl>">
 						            	<input type="hidden" name="payrollBenDedRuleId" value="${(PayrollBenDedRule.payrollBenDedRuleId)?if_exists}" />
 						            	<input type="submit" value="${uiLabelMap.CommonUpdate}" />
@@ -109,7 +109,7 @@ under the License.
 									</#list>
 		  						</select>
 		  						<b>From Date :</b> <input  type="text" size="10pt" id="ruleFromDate"   name="ruleFromDate" />
-								<b>To Date :</b> <input  type="text" size="10pt" id="ruleThruDate"   name="ruleThruDate" />
+								<b>${uiLabelMap.toDate} :</b> <input  type="text" size="10pt" id="ruleThruDate"   name="ruleThruDate" />
 		  						<input type="submit" value="${uiLabelMap.CommonCreate}" />
     						</#if>
 	  					</form>
@@ -237,7 +237,7 @@ under the License.
 									                     <td>
 									                    <b>Amount : </b><input type="text" size="10pt" name="amount" value="${(PayHeadPriceAction.amount)?if_exists}"/>
 									                    <b>From Date : </b><input  type="text" size="10pt" id="actionFromDate"   name="actionFromDate" value="${(PayHeadPriceAction.fromDate)?if_exists?string("MMMM dd, yyyy")}"/>
-														<b>To Date : </b><input  type="text" size="10pt" id="actionThruDate"   name="actionThruDate" <#if PayHeadPriceAction.thruDate?has_content>value="${(PayHeadPriceAction.thruDate)?if_exists?string("MMMM dd, yyyy")}"</#if>/>
+														<b>${uiLabelMap.toDate} : </b><input  type="text" size="10pt" id="actionThruDate"   name="actionThruDate" <#if PayHeadPriceAction.thruDate?has_content>value="${(PayHeadPriceAction.thruDate)?if_exists?string("MMMM dd, yyyy")}"</#if>/>
 					              						<form method="post">
 											            	<input type="hidden" name="payHeadPriceActionSeqId" value="${(PayHeadPriceAction.payHeadPriceActionSeqId)?if_exists}" />
 											            	<input type="submit" value="${uiLabelMap.CommonUpdate}" />
@@ -267,7 +267,7 @@ under the License.
 								                     <td>
 								                    <b>Amount : </b><input type="text" size="10pt" name="amount" value=""/>
 								                    <b>From Date : </b><input  type="text" size="10pt" id="actFromDate"   name="actionFromDate"/>
-													<b>To Date : </b><input  type="text" size="10pt" id="actThruDate"   name="actionThruDate"/>
+													<b>${uiLabelMap.toDate} : </b><input  type="text" size="10pt" id="actThruDate"   name="actionThruDate"/>
 				              						<input type="submit" value="${uiLabelMap.CommonCreate}" />
 		              						 	</td>
 		              						</form>
@@ -293,7 +293,7 @@ under the License.
 								                     <td>
 								                    <b>Amount : </b><input type="text" size="10pt" name="amount" value=""/>
 								                    <b>From Date : </b><input  type="text" size="10pt" id="actionFromDate"   name="actionFromDate"/>
-													<b>To Date : </b><input  type="text" size="10pt" id="actionThruDate"   name="actionThruDate"/>
+													<b>${uiLabelMap.toDate} : </b><input  type="text" size="10pt" id="actionThruDate"   name="actionThruDate"/>
 				              						<input type="submit" value="${uiLabelMap.CommonCreate}" />
 		              						 	</td>
 		              						</form>
