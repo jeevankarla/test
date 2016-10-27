@@ -2521,7 +2521,102 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         result = ServiceUtil.returnSuccess("Successfully Populated Data In IndentSummaryDetails : ");
 
         return result;	
+	}		              
+	
+public static Map<String, Object> periodPopulateShipmentTotals(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        EntityCondition cond = null;
+        List condList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+        	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+        	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+        }
+		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+        cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        EntityListIterator orderItr = null;
+        try {
+        	    orderItr = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
+                // reset each order
+            	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(orderItr, "orderId", true);
+            	List conditionlist = FastList.newInstance();
+				conditionlist.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, orderIdList));
+				conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+				EntityCondition condition =EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+				
+				try{
+					EntityListIterator shipmentItr = delegator.find("Shipment", condition, null,  UtilMisc.toSet("shipmentId","primaryOrderId","createdDate"), null, null);
+					if (shipmentItr != null) {
+		                // reset each order
+		                GenericValue shipment = null;
+		                while ((shipment = shipmentItr.next()) != null) {
+		                	 String shipmentId = shipment.getString("shipmentId");
+		                	 String orderId = shipment.getString("primaryOrderId");
+		     	        	 Timestamp  createdDate = shipment.getTimestamp("createdDate");
+		                	 condList.clear();
+		                	 condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		                     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		                     EntityListIterator shipmentItemItr  = delegator.find("ShipmentItem",cond, null,UtilMisc.toSet("shipmentId","quantity","productId"), null, null);
+		                     GenericValue shipmentItem = null;
+		                     BigDecimal shipmentTotal = BigDecimal.ZERO;
+				             while ((shipmentItem = shipmentItemItr.next()) != null) {
+				                String productId= shipmentItem.getString("productId");
+				                BigDecimal quantity= shipmentItem.getBigDecimal("quantity");
+				                condList.clear();
+			                	condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			                	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			                    cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+								List orderItems = delegator.findList("OrderItem", cond, UtilMisc.toSet("orderId","orderItemSeqId","quantity","unitPrice") ,null, null, false );
+								GenericValue orderItem = EntityUtil.getFirst(orderItems);
+			     	        	String orderItemSeqId = orderItem.getString("orderItemSeqId");
+			     	        	BigDecimal unitPrice = orderItem.getBigDecimal("unitPrice");
+			     	        	BigDecimal amount = (quantity.multiply(unitPrice)).setScale(decimals, rounding);
+								shipmentTotal =shipmentTotal.add(amount);
+			     	        	condList.clear();
+			                	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			                	condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+			                	condList.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+			                	condList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, createdDate));
+								cond=EntityCondition.makeCondition(condList,EntityOperator.AND);
+								FastList<GenericValue> OrderItemChangeDetails = FastList.newInstance();
+								OrderItemChangeDetails = (FastList)delegator.findList("OrderItemChange", cond, null ,UtilMisc.toList("changeDatetime"), null, false );
+								if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
+									GenericValue lastItemChange = OrderItemChangeDetails.getLast();
+									unitPrice = lastItemChange.getBigDecimal("unitPrice");
+									amount = (quantity.multiply(unitPrice)).setScale(decimals, rounding);
+									shipmentTotal =shipmentTotal.add(amount);
+								}
+				             }
+				             shipmentItemItr.close();
+				             GenericValue shipmentDeatil = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+				             shipmentDeatil.set("grandTotal",shipmentTotal);
+				             shipmentDeatil.store();
+		                }
+		                shipmentItr.close();
+		            }
+					
+				}catch(GenericEntityException e){
+					Debug.logError(e, module);
+				}
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        result = ServiceUtil.returnSuccess("Successfully Populate GrandTotal for Shipment: ");
+
+        return result;	
 	}
+	
+	
+	
 	
   	
 }
