@@ -1458,7 +1458,7 @@
     		</drop-down>
     	</field>
     	<field name="fromDate" required-field="true" tooltip="Required" widget-style="required" ><date-time type="date"/> </field>
-    	<field name="thruDate" ><date-time type="date"/></field>
+    	<field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
     	<field name="rateAmount" required-field="true" widget-style="required" tooltip="Required"><text size="10" /></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
@@ -1475,7 +1475,7 @@
     <form name="ListVariables" type="list" list-name="VariableList" header-row-style="header-row" default-table-style="basic-table" target="updateRateAmountVariables" separate-columns="true">
     <field name="rateTypeId" title="Rate Type"><display-entity  entity-name="RateType"  key-field-name="rateTypeId" description="${description}"></display-entity></field>
     <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
-    <field name="thruDate"><date-time type="date" /></field>
+    <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date" /></field>
     <field name="rateAmount" title="Amount" ><text size="10" /></field>
     <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     <field name="deleteLink" title="Delete" widget-style="buttontext">
@@ -1727,7 +1727,7 @@
             </drop-down>
         </field>
         <field name="fromDate" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
-        <field name="thruDate" id-name="thruDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+        <field name="thruDate" id-name="thruDate" tooltip="${uiLabelMap.CommonRequired}" title="${uiLabelMap.toDate}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="TimePeriodResults" list-name="timePeriodList" type="list"
@@ -1743,7 +1743,7 @@
         </actions>
         <field name="periodTypeId" title = "Period Type Id"><display ></display></field>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
-        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+        <field name="thruDate" title="${uiLabelMap.toDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
     </form>
     <form name="findCustomTimePeriod" type="single" title="" target="findCustomTimePeriod"
             header-row-style="header-row" default-table-style="basic-table">
@@ -1757,7 +1757,7 @@
             </drop-down>
         </field>
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> 
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>  
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" title="${uiLabelMap.toDate}"><date-time type="date"/></field>  
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="FindPayHead" type="single" header-row-style="header-row" default-table-style="basic-table" target = "PayHeadRules">

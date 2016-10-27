@@ -46,3 +46,11 @@ function picker(){
 		}
 	});
 }
+function hideHalfDayLeave(){
+	var leaveTypeId = $('select[name=leaveTypeId]').val();
+    if(leaveTypeId != "CL" && leaveTypeId !="ML"){
+    	jQuery("#dayFractionId_title").parent().parent().hide();
+    }else{
+    	jQuery("#dayFractionId_title").parent().parent().show();
+    }
+}

@@ -194,7 +194,7 @@ function setOrgPartyId() {
 										<td><input type="hidden" name="partyId" class="commonPartyId"></td>
 										<td width="50%"><span class='h3'>
 												From Date<input  type="text" size="18pt" id="fromDate"   name="FromDate"/>
-												Thru Date<input  type="text" size="18pt" id="thruDate"   name="ThruDate"/>
+												${uiLabelMap.toDate}<input  type="text" size="18pt" id="thruDate"   name="ThruDate"/>
 											</span>
 										</td>
 										<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -283,7 +283,7 @@ function setOrgPartyId() {
 										<td width="24%"><span class='h3'>Cadre Ranking Report</span></td>
 										<td width="45%"><span class='h3'>
 												From Date<input  type="text" size="18pt" id="CadrefromDate"   name="CadrefromDate"/>
-												Thru Date<input  type="text" size="18pt" id="CadrethruDate"   name="CadrethruDate"/>
+												${uiLabelMap.toDate}<input  type="text" size="18pt" id="CadrethruDate"   name="CadrethruDate"/>
 											</span>
 										</td>
 										<td width="5%"><input type="hidden" name="partyIdFrom" class="commonPartyId"/> 
@@ -302,7 +302,7 @@ function setOrgPartyId() {
 										<td width="24%"><span class='h3'>Department Cadre Ranking Report</span></td>
 										<td width="40%"><span class='h3'>
 												From Date<input  type="text" size="18pt" id="DepartmentCadrefromDate"   name="CadrefromDate"/>
-												Thru Date<input  type="text" size="18pt" id="DepartmentCadrethruDate"   name="CadrethruDate"/>
+												${uiLabelMap.toDate}<input  type="text" size="18pt" id="DepartmentCadrethruDate"   name="CadrethruDate"/>
 											</span>
 										</td>
 										<td width="5%"><input type="hidden" name="partyIdFrom" class="commonPartyId"/> 
@@ -357,7 +357,7 @@ function setOrgPartyId() {
 										<td width="24%"><span class='h3'>New Employee Joining Report</span></td>
 										<td width="50%"><span class='h3'>
 												From Date<input  type="text" size="18pt" id="NewEmplfromDate"   name="NewEmplfromDate"/>
-												Thru Date<input  type="text" size="18pt" id="NewEmplthruDate"   name="NewEmplthruDate"/>
+												${uiLabelMap.toDate}<input  type="text" size="18pt" id="NewEmplthruDate"   name="NewEmplthruDate"/>
 											</span>
 										</td>
 										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmplJoiningReport', '<@ofbizUrl>EmplJoiningReport.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -394,7 +394,7 @@ function setOrgPartyId() {
 									</select>
 								</td>
 								<td width="10%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
-								<td width="10%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
+								<td width="10%">${uiLabelMap.toDate}<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
 								<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 								</td>
 							</form>
@@ -486,7 +486,7 @@ function setOrgPartyId() {
 											<td width="21%"><span class='h3'>Attendence And Leave Checklist</span></td>
 											<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="MonthlyAttendenceChecklist" name="partyIdTo" id="prtyId" fieldFormName="LookupEmployeeName"/></span></td>
 											<td width="15%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="mclfromDate"   name="mclFromDate"/></td>
-											<td width="15%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="mclthruDate"   name="mclThruDate"/></td>
+											<td width="15%"><span class='h3'>${uiLabelMap.toDate}</span><input  type="text" size="18pt" id="mclthruDate"   name="mclThruDate"/></td>
 											<td width="20%"><span class='h3'></span><input type="submit" value="Download" class="buttontext"></td> 
 										</tr>
 									</table>	
@@ -501,7 +501,7 @@ function setOrgPartyId() {
 									<tr class="alternate-row">
 										<td width="20%"><span class='h3'>Employee Mis Punch Data</span></td>
 										<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="MPfromDate"   name="MPfromDate"/></td>
-										<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="MPthruDate"   name="MPthruDate"/></td>
+										<td width="20%"><span class='h3'>${uiLabelMap.toDate}</span><input  type="text" size="18pt" id="MPthruDate"   name="MPthruDate"/></td>
 										<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
 								</table>
@@ -515,7 +515,7 @@ function setOrgPartyId() {
 									<tr class="alternate-row">
 							      	   	<td width="20%"><span class='h3'>Employee Punch Data</td></span></td>
 							      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="EPfromDate" size="18pt" name="EPfromDate"/></td>
-							  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="EPthruDate" size="18pt" name="EPthruDate"/></td>
+							  			<td width="20%"><span class='h3'>${uiLabelMap.toDate}</span><input  type="text"  id="EPthruDate" size="18pt" name="EPthruDate"/></td>
 										<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
 								</table>	
@@ -651,7 +651,7 @@ function setOrgPartyId() {
 									<tr class="alternate-row">
 							      	   	<td width="20%"><span class='h3'>Bus Arrival Report</td></span></td>
 							      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="BusfromDate" size="18pt" name="BusfromDate"/></td>
-							  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="BusthruDate" size="18pt" name="BusthruDate"/></td>
+							  			<td width="20%"><span class='h3'>${uiLabelMap.toDate}</span><input  type="text"  id="BusthruDate" size="18pt" name="BusthruDate"/></td>
 										<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
 								</table>	
@@ -665,7 +665,7 @@ function setOrgPartyId() {
 									<tr class="alternate-row">
 							      	   	<td width="25%"><span class='h3'>OOD Report</td></span></td>
 							      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="OODfromDate" size="18pt" name="OODfromDate"/></td>
-							  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="OODthruDate" size="18pt" name="OODthruDate"/></td>
+							  			<td width="20%"><span class='h3'>${uiLabelMap.toDate}</span><input  type="text"  id="OODthruDate" size="18pt" name="OODthruDate"/></td>
 										<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="OODReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 										<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
@@ -1298,7 +1298,7 @@ function setOrgPartyId() {
 									<td width="19%"><span class='h3'>IT Earnings Report<input  type="hidden"  value="ITEarningsReport"   name="reportTypeFlag"/></span></td>
 									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="ITEarningsReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITEarningsfromDate"   name="fromDate"/></span></td>
-									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITEarningsthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="ITEarningsthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
@@ -1313,7 +1313,7 @@ function setOrgPartyId() {
 									<td width="19%"><span class='h3'>IT Deductions Report<input  type="hidden"  value="ITDeductionsReport"   name="reportTypeFlag"/></span></td>
 									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="ITDeductionsReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITDeductionsfromDate"   name="fromDate"/></span></td>
-									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITDeductionsthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="ITDeductionsthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
@@ -1484,7 +1484,7 @@ function setOrgPartyId() {
 								<tr class="alternate-row">
 									<td width="15%"><span class='h3'>IT Form 24Q<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
 									<td width="15%"><span class='h3'>From Date: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
-			      		 			<td width="15%"><span class='h3'>Thru Date: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+			      		 			<td width="15%"><span class='h3'>${uiLabelMap.toDate}: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
 			      		 			<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
 			      		 			<option value="deductee">Deductee</option>
 			      		 			<option value="deductor">Deductor</option>
@@ -1504,7 +1504,7 @@ function setOrgPartyId() {
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>ESI Form 6</span></td>
 									<td width="32%"><span class='h3'>From Date<input  type="text"  id="ESIForm6fromDate"   name="fromDate"/></span></td>
-									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="ESIForm6thruDate"   name="thruDate"/></span></td>	
+									<td width="32%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="ESIForm6thruDate"   name="thruDate"/></span></td>	
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
@@ -1518,7 +1518,7 @@ function setOrgPartyId() {
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>ESI Form 7</span></td>
 									<td width="32%"><span class='h3'>From Date<input  type="text"  id="ESIForm7fromDate"   name="fromDate"/></span></td>
-									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="ESIForm7thruDate"   name="thruDate"/></span></td>	
+									<td width="32%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="ESIForm7thruDate"   name="thruDate"/></span></td>	
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
@@ -1532,7 +1532,7 @@ function setOrgPartyId() {
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>Gratuity Support Report</span></td>
 									<td width="32%"><span class='h3'>From Date<input  type="text"  id="GSfromDate"   name="fromDate"/></span></td>
-									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="GSthruDate"   name="thruDate"/></span></td>
+									<td width="32%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="GSthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><input type="submit" value="PDF" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
@@ -1547,7 +1547,7 @@ function setOrgPartyId() {
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>EDLIS Report</span></td>
 									<td width="32%"><span class='h3'>From Date<input  type="text"  id="EDLISfromDate"   name="fromDate"/></span></td>
-									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="EDLISthruDate"   name="thruDate"/></span></td>
+									<td width="32%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="EDLISthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><input type="submit" value="PDF" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
@@ -1748,7 +1748,7 @@ function setOrgPartyId() {
 									</select>
 								</td>
 								<td width="20%"><span class='h3'>From Date<input  type="text"  id="loanFromDate"   name="fromDate"/></span></td>
-						    	<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="loanThruDate"   name="thruDate"/></span></td>
+						    	<td width="15%"><span class='h3'>${uiLabelMap.toDate}<input  type="text"  id="loanThruDate"   name="thruDate"/></span></td>
 								<td width="10%"></td>
 								<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 								</td>
