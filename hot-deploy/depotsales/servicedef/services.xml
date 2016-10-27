@@ -657,6 +657,10 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
          <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
     </service>
-    
+    <service name="periodPopulateShipmentTotals" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulateShipmentTotals" transaction-timeout="6000000">
+         <description>populate Shipment Grand Total </description>
+         <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
+         <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
+    </service>
     
 </services>
