@@ -245,8 +245,8 @@
 				var purTaxList = [];
 			//	purTaxList = data[rowCount]["purTaxList"];
 				
-				purTaxList.push("VAT_SALE");
-				purTaxList.push("CST_SALE");
+				purTaxList.push("VAT_PUR");
+				purTaxList.push("CST_PUR");
 				purTaxList.push("VAT_SURCHARGE");
 				purTaxList.push("CST_SURCHARGE");
 				
@@ -257,8 +257,21 @@
 				if(purTaxList != undefined){
 					for(var i=0;i<purTaxList.length;i++){
 						var taxType = purTaxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
+						var taxPercentage = 0;
+						var taxValue = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE")
+						{
+						  taxPercentage = data[rowCount][taxType];
+						  taxValue = data[rowCount][taxType + "_AMT"];
+						}else{
+						   taxPercentage = data[rowCount][taxType+"_PUR"];
+					       taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						}
+						
+						
+						
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
 						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
 						jQuery(formId).append(jQuery(purInputTaxTypePerc));
@@ -276,8 +289,8 @@
 				if(orderAdjustmentsList != undefined){
 					for(var i=0;i<orderAdjustmentsList.length;i++){
 						var orderAdjType = orderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var adjPercentage = data[rowCount][orderAdjType+ "_PUR"];
+						var adjValue = data[rowCount][orderAdjType + "_PUR_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
@@ -299,8 +312,8 @@
 				if(discOrderAdjustmentsList != undefined){
 					for(var i=0;i<discOrderAdjustmentsList.length;i++){
 						var orderAdjType = discOrderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var adjPercentage = data[rowCount][orderAdjType+ "_PUR"];
+						var adjValue = data[rowCount][orderAdjType + "_PUR_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);

@@ -27,7 +27,7 @@
 	populateHOTree(company, hoNode);
 	//populateROTree(company, strNode);
 	mainNodesList.add(hoNode);
-	Debug.log("===="+mainNodesList);
+	//Debug.log("*******===="+mainNodesList);
 	if (parameters.ajaxLookup == "Y") {
 		request.setAttribute("treeNodeJSON", mainNodesList[0].getJSONArray("children").toString());
 	}
