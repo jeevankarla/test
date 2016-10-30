@@ -5,7 +5,20 @@
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
-
+<style>
+.button1 {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+</style>
 <script type="application/javascript">
 
 	var transactionTypeTaxMap = ${StringUtil.wrapString(transactionTypeTaxMap)!'[]'};
@@ -402,8 +415,8 @@
 				
 				if(dataRow){
 			
-			message += "<hr class='style18'>Adjustments And Taxes</hr>";
-			message += "<table cellspacing=10 cellpadding=10 width='800'  id='indentAdjustmentTable' class='myTable'>" ;
+			message += "<h1 align='center'><font color='red'>**Adjustments And Taxes**</font></h1>";
+			message += "<table cellspacing=10 cellpadding=10 width='800' style='border: 2px solid lightblue;'  id='indentAdjustmentTable' class='myTable'>" ;
 			
 			for(var i=0;i<allAdjustments.length;i++){
 						var orderAdjustment = allAdjustments[i];
@@ -431,7 +444,7 @@
 						  // alert("totalAmt=======loop======"+totalAmt);
 						
 							message += "<tr>"+
-										"<td align='left'>"+orderAdjustment.orderAdjustmentTypeId+": </td>"+
+										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>"+
@@ -464,7 +477,7 @@
 			message += "<table cellspacing=10 cellpadding=10 id='addButtonForAdjustmentsList' >" ;
 						message += "<tr>";
 						message += "<td><select id='addAdjList'  class='h4' onchange='javascript:storeIncludeList();'>"+adjDropdown+"</select></td><td><div style='width: 200px; height: 100px;  border-style: solid; border-color: grey; overflow-y: scroll;'><ul id='addAdjGivenList'></ul></div></td>";
-						message += "<tr class='h3'><td align='left'><input type='button' max='100' name='vamsi' id='vamsi' value='Add Adjustment' onclick='javascript:MakeAdjTable("+totalAmt+");' /></tr>";
+						message += "<tr class='h3'><td align='left'><input type='button' class='button1' style='solid blue'; max='30' name='vamsi' id='vamsi' value='Add Adjustment' onclick='javascript:MakeAdjTable("+totalAmt+");' /></tr>";
 			message += "</table>";
 				
 			
@@ -525,8 +538,8 @@
 	
 	var adjIdAmt=addAdjType+"_PUR_AMT";
 	
-	
-	 $(".myTable").append('<tr class="item"><td>'+addAdjType+'</td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	 if(addAdjType != "")
+	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
 	
 	
 	
@@ -613,16 +626,16 @@
   	    
   	     $.each(allAdjustments, function(key, item){
   	          if(resultMap[item['orderAdjustmentTypeId']] == "Y")
-			  $('#addAdjGivenList').append($('<li>').html( "<font color='green'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked>"+item['orderAdjustmentTypeId']+"/>"));
+			  $('#addAdjGivenList').append($('<li>').html( "<font color='green'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
   		      else
-  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'>"+item['orderAdjustmentTypeId']+"/>"));
+  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
   	     });
   	    
 	 
 	 }else{
 	 
 	  $.each(allAdjustments, function(key, item){
-	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'>"+item['orderAdjustmentTypeId']+"</option>"));
+	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
 	  });
 	 }
 	}
@@ -806,7 +819,7 @@
 	
 	var saleValue = totaladjValueTaxForEntry+parseFloat(basicAmount);
 	
-		alert("saleValue============="+saleValue);
+		//alert("saleValue============="+saleValue);
 	
 	
 	 $("#saleAmount").val(saleValue);
