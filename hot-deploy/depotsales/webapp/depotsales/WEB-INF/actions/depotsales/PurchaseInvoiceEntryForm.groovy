@@ -212,10 +212,13 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			context.purchaseTaxType = purchaseTaxType;
 			context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
 			
+			//Debug.log("purchaseTitleTransferEnumId=============="+purchaseTitleTransferEnumId);
+			
 			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 			context.purTaxListReady = purTaxList;
 			
 			
+			//Debug.log("purTaxList=============="+purTaxList);
 			
 			
 			
@@ -533,12 +536,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							
 							
 						}
-						//Debug.log("taxValue ============="+taxValue);
-						newObj.put(taxItem+"_PUR", taxPercent);
-						newObj.put(taxItem+"_PUR_AMT" , taxValue);
-						
-						newObj.put(taxItem, taxPercent);
-						newObj.put(taxItem+"_AMT" , taxValue);
+						//Debug.log("taxItem ============="+taxItem);
+						newObj.put(purTaxItem, taxPercent);
+						newObj.put(purTaxItem+"_AMT" , taxValue);
 						
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
@@ -560,8 +560,6 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							newObj.put(surchargeItem+"_PUR", surTaxPercent);
 							newObj.put(surchargeItem+"_PUR_AMT" , surTaxValue);
 							
-							newObj.put(surchargeItem, surTaxPercent);
-							newObj.put(surchargeItem+"_AMT" , surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							
@@ -621,8 +619,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							
 							// Update adjustments for item
 							
-							newObj.put(invItemTypeId, adjItem.sourcePercentage);
-							newObj.put(invItemTypeId + "_AMT", itemValue);
+							newObj.put(invItemTypeId + "_PUR", adjItem.sourcePercentage);
+						    newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 							
 							totalItemAdjAmt = totalItemAdjAmt + itemValue;
 						}
@@ -682,15 +680,16 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							
 							// Update adjustments for item
 							
-							newObj.put(invItemTypeId, adjItem.sourcePercentage);
-							newObj.put(invItemTypeId + "_AMT", itemValue);
+					    newObj.put(invItemTypeId + "_PUR", adjItem.sourcePercentage);
+						newObj.put(invItemTypeId + "_PUR_AMT", itemValue*(-1));
 							
 							totalDiscAmt = totalDiscAmt + itemValue;
 						}
 						
 					}
 					
-					newObj.put("totPayable", amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
+					newObj.put("saleAmount",amount + totalTaxAmt + totalItemAdjAmt + totalDiscAmt);
+			        newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt  + totalDiscAmt);
 					
 					discItemAdjustmentJSON.add(newItemAdjObj);
 					
@@ -712,6 +711,18 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				newObj.put("OTH_CHARGES_AMT",totalItemAdjAmt);
 				newObj.put("DISCOUNT_AMT",totalDiscAmt);
 				newObj.put("incBaseAmt",incBaseAmt);
+				
+				
+				taxList1 = [];
+				taxList1.add("VAT");
+				taxList1.add("CST");
+				taxList1.add("VAT_SURCHARGE");
+				taxList1.add("CST_SURCHARGE");
+				//taxList1.add("SERVICE_CHARGE");
+				//taxList1.add("TEN_PERCENT_SUBSIDY");
+				
+					newObj.put("taxList1", taxList1);
+				
 				
 				/*newObj.put("VatPercent", vatPercent);
 				newObj.put("VAT", vatAmt);
