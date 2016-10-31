@@ -147,7 +147,7 @@ under the License.emplpunch
 		<attribute name="customTimePeriodId" type="String" mode="IN"
 			optional="true" />
         <attribute name="orgPartyId" mode="IN" type="String"></attribute>
-        <attribute name="state" mode="IN" type="String"></attribute>
+       <!--  <attribute name="state" mode="IN" type="String"></attribute> -->
 		<attribute name="holidayDate" mode="IN" type="String"
 			optional="false"></attribute>
 		<attribute name="description" type="String" mode="IN"
@@ -1921,9 +1921,12 @@ under the License.emplpunch
         <attribute name="motherName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="birthDate" mode="IN" type="Date" optional="true"></attribute> 
         <attribute name="birthPlace" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="birthState" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="birthDistrict" mode="IN" type="String" optional="true"></attribute>
         <attribute name="bloodGroup" mode="IN" type="String" optional="true"></attribute>
         <attribute name="gender" mode="IN" type="String" optional="false"></attribute>  
         <attribute name="maritalStatus" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="spouseName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emergencyContactName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emergencyContactNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emergencyContactRelationship" mode="IN" type="String" optional="true"></attribute>
@@ -1936,6 +1939,12 @@ under the License.emplpunch
         <attribute name="state" mode="IN" type="String" optional="false"></attribute>
         <attribute name="postalCode" mode="IN" type="String" optional="true"></attribute>
         <attribute name="country" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="prsAddress1" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="prsAddress2" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="prsCity" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="prsState" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="prsPostalCode" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="prsCountry" mode="IN" type="String" optional="true"></attribute>
         <attribute name="email" mode="IN" type="String" optional="true"></attribute>
         <attribute name="vehicleType" mode="IN" type="String" optional="true"></attribute>
         <attribute name="quarterType" mode="IN" type="String" optional="true"></attribute>

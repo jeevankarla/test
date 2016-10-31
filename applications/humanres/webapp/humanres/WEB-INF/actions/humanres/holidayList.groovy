@@ -14,6 +14,8 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 holidyDate = parameters.holidayDate;
 organizaionId = parameters.organizationPartyId;
 customTimePeriodId = parameters.customTimePeriodId;
+stateId = parameters.state;
+regionId = parameters.orgPartyId;
 
 dateStr = null;
 holidayDatestart = null;
@@ -34,7 +36,6 @@ if(UtilValidate.isNotEmpty(holidyDate)){
 	holidayDatestart = new java.sql.Timestamp(sdf.parse(dateStr).getTime());
 }
 
-
 weekMap=[:];
 weekMap["1"]="Sunday";
 weekMap["2"]="Monday";
@@ -53,8 +54,8 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	if(UtilValidate.isNotEmpty(customTimePeriodId)){
 		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS,customTimePeriodId ));
 	}
-	if(UtilValidate.isNotEmpty(organizaionId)){
-		conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizaionId ));
+	if(UtilValidate.isNotEmpty(regionId) && !(regionId.equals("COMPANY"))){
+		conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, regionId ));
 	}
 	if(UtilValidate.isNotEmpty(holidayDatestart)){
 		conditionList.add(EntityCondition.makeCondition("holiDayDate", EntityOperator.EQUALS,holidayDatestart));
@@ -76,6 +77,10 @@ if(UtilValidate.isNotEmpty(holidayDetails)){
 		String weekDay = weekMap[dayOfWeek];
 		if(UtilValidate.isNotEmpty(weekDay)){
 			holidayDetailsMap.put("weekDay", weekDay);
+		}
+		ro = holiday.get("RO");
+		if(UtilValidate.isNotEmpty(ro)){
+			holidayDetailsMap.put("ro", ro);
 		}
 		holidayDetailsList.addAll(holidayDetailsMap);
 	}

@@ -1516,7 +1516,9 @@
         <field name="motherName" title="Mother's Name"><text></text></field>
         <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
     	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field>
-    	<!-- <field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field> -->
+    	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
+    	<field name="birthState" title="Birth State" required-field="false"><text size="20"/></field>
+    	<field name="birthDistrict" title="Birth District" required-field="false"><text size="20"/></field>
     	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
 			<drop-down allow-empty="true">
 			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -1531,8 +1533,9 @@
 			<option key="M" />
 		</drop-down>		
 		</field>
-		<field name="maritalStatus" title="${uiLabelMap.MaritalStatus}">
-		<drop-down allow-empty="false" no-current-selected-key="S">
+		<field name="maritalStatus" title="${uiLabelMap.MaritalStatus}" id-name="maritalStatus" event="onchange" action="javascript:addSpouseName();">
+		<drop-down allow-empty="flase" no-current-selected-key="">
+			<option key="" description="" />
 			<option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}" />
 			<option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}" />
 			<option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}" />
@@ -1540,6 +1543,7 @@
 			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
 		</drop-down>
 		</field>
+		<field name="spouseName" id-name="spouseName" title="${uiLabelMap.SpouseName}"><text /></field> 
 	    <!-- <field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field> -->
 		<field name="mobileNumber" title="${uiLabelMap.PartyPhoneNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="15" maxlength="15"/></field>
 	    <field name="alternatemobileNumber" title="Alternate Phone Number"><text size="15" maxlength="15"/></field>
@@ -1552,8 +1556,8 @@
                 </entity-options>
              </drop-down>
 		</field>
-		<field name="address1" title="Permanent Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="address2" title="Present Address"><text size="30" maxlength="60"/></field>
+		<field name="address1" title="Present Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="address2" title="Present Address Line2"><text size="30" maxlength="60"/></field>
         <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
         <field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -1566,6 +1570,27 @@
         </field>
         <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
         <field name="country" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="false" no-current-selected-key="IND">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}: ${geoId}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="prsAddress1" title="Permanent Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="prsAddress2" title="Permanent Address Line2"><text size="30" maxlength="60"/></field>
+        <field name="prsCity" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="prsState" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="INDSTATE"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="prsPostalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <field name="prsCountry" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="IND">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}: ${geoId}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>

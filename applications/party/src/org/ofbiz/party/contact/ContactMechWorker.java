@@ -106,7 +106,7 @@ public class ContactMechWorker {
                 }
 
                 try {
-                    if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+                    if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) || "POSTAL_ADDRES2".equals(contactMech.getString("contactMechTypeId"))) {
                         partyContactMechValueMap.put("postalAddress", contactMech.getRelatedOne("PostalAddress"));
                     } else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
                         partyContactMechValueMap.put("telecomNumber", contactMech.getRelatedOne("TelecomNumber"));
