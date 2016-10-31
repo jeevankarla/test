@@ -564,17 +564,11 @@
             });
 	
 	
-	  $('#indentAdjustmentTable tr').click(function () {
-	  
-           var rowIndex = $('#indentAdjustmentTable tr').index(this); 
-             if(rowIndex != -1)
-             document.getElementById("indentAdjustmentTable").deleteRow(rowIndex);  
-             
-             adjustBasePriceNew();
-              
-          });
-          
-          
+	     $('#indentAdjustmentTable tr').click(function () {
+             $(".delete").live('click', function(event) {
+	          $(this).parent().parent().remove();
+	        adjustBasePriceNew();
+           });
 	
 	}
 	
@@ -838,7 +832,6 @@
 	 var totalAmt = parseFloat(totalAmt);
 	 
 	
-	   // alert("totalAmt=============="+totalAmt);
 	 
 	    
 	 var adjType = $("#addAdjList").val();
@@ -865,7 +858,6 @@
 		    
 		    id = id+"_PUR_AMT";
 		    
-		   // alert("id==================="+id);
 		    
 		    if(id == "CST_PUR_AMT" || id == "VAT_PUR_AMT" || id == "ENTRY_TAX_PUR_AMT" || id == "CST_SURCHARGE_PUR_AMT" || id == "VAT_SURCHARGE_PUR_AMT" || id == "SERVICE_CHARGE_PUR_AMT")  {
 		    
@@ -880,7 +872,7 @@
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
-		     totalAmt = totalAmt + parseFloat(adjValue);
+		    
 		    
 		   }//end
 		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
