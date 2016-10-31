@@ -303,8 +303,8 @@ if(invoiceId){
 						/*newObj.put(taxItem+"_PUR", taxPercent);
 						newObj.put(taxItem+"_PUR_AMT" , taxValue);*/
 						
-						newObj.put(taxItem, taxPercent);
-						newObj.put(taxItem+"_AMT", taxValue);
+						newObj.put(purTaxItem, taxPercent);
+						newObj.put(purTaxItem+"_AMT", taxValue);
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
 						//Debug.log("totalTaxAmt ============="+totalTaxAmt);
@@ -326,8 +326,8 @@ if(invoiceId){
 							/*newObj.put(surchargeItem+"_PUR", surTaxPercent);
 							newObj.put(surchargeItem+"_PUR_AMT" , surTaxValue);*/
 							
-							newObj.put(surchargeItem, surTaxPercent);
-							newObj.put(surchargeItem+"_AMT", surTaxValue);
+							newObj.put(surchargeItem+"_PUR", surTaxPercent);
+							newObj.put(surchargeItem+"_PUR_AMT", surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							
@@ -406,8 +406,8 @@ if(invoiceId){
 						
 						// Update adjustments for item
 						
-						newObj.put(invItemTypeId, adjItem.sourcePercentage);
-						newObj.put(invItemTypeId + "_AMT", itemValue);
+						newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
+						newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 						
 						totalItemAdjAmt = totalItemAdjAmt + itemValue;
 					}
@@ -452,11 +452,11 @@ if(invoiceId){
 					if(UtilValidate.isNotEmpty(itemOrdAdj)){
 						adjItem = EntityUtil.getFirst(itemOrdAdj);
 						
-						itemValue = adjItem.amount //(adjItem.amount/origQty)*qty;
+						itemValue = adjItem.itemValue //(adjItem.amount/origQty)*qty;
 						
 						newItemAdjObj.put("adjValue", itemValue*(-1));
 						if(adjItem.sourcePercentage){
-							newItemAdjObj.put("percentage", adjItem.sourcePercentage);
+							newItemAdjObj.put("percentage", eachItem.sourcePercentage);
 						}
 						else{
 							newItemAdjObj.put("percentage", 0);
@@ -473,8 +473,10 @@ if(invoiceId){
 						
 						// Update adjustments for item
 						
-						newObj.put(invItemTypeId, adjItem.sourcePercentage);
-						newObj.put(invItemTypeId + "_AMT", itemValue*(-1));
+						Debug.log("invItemTypeId=========="+invItemTypeId);
+						
+						newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
+						newObj.put(invItemTypeId + "_PUR_AMT", itemValue*(-1));
 						
 						totalDiscAmt = totalDiscAmt + itemValue;
 					}
@@ -503,6 +505,17 @@ if(invoiceId){
 				tenPercent = (amount * -10)/100;
 			}*/
 			
+			taxList1 = [];
+			taxList1.add("VAT");
+			taxList1.add("CST");
+			taxList1.add("VAT_SURCHARGE");
+			taxList1.add("CST_SURCHARGE");
+			//taxList1.add("SERVICE_CHARGE");
+			//taxList1.add("TEN_PERCENT_SUBSIDY");
+			
+				newObj.put("taxList1", taxList1);
+			
+			
 			resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
 			
 			defaultTaxMap = resultCtx.defaultTaxMap;
@@ -524,7 +537,8 @@ if(invoiceId){
 			newObj.put("VAT", 0.00);
 			newObj.put("CSTPercent", 0.00);
 			newObj.put("CST", 0.00);
-			newObj.put("totPayable", ((eachItem.amount)*(eachItem.quantity)) + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
+			newObj.put("saleAmount",eachItem.itemValue + totalTaxAmt + totalItemAdjAmt + totalDiscAmt);
+			newObj.put("totPayable",eachItem.itemValue + totalTaxAmt + totalItemAdjAmt  + totalDiscAmt);
 			
 			invoiceItemsJSON.add(newObj);
 

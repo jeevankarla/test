@@ -539,8 +539,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							taxValue = (actualTaxValue/origQty)*qty;
 						}
 						Debug.log("taxValue ============="+taxValue);
-						newObj.put(taxItem+"_PUR", taxPercent);
-						newObj.put(taxItem+"_PUR_AMT" , taxValue);
+						newObj.put(purTaxItem, taxPercent);
+						newObj.put(purTaxItem+"_AMT" , taxValue);
 						
 						totalTaxAmt = totalTaxAmt + taxValue;
 						Debug.log("totalTaxAmt ============="+totalTaxAmt);
@@ -577,7 +577,6 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						
 					}
 				}
-				
 				
 				newObj.put("taxAmt", totalTaxAmt);
 				
@@ -630,8 +629,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							
 							// Update adjustments for item
 							
-							newObj.put(invItemTypeId, adjItem.sourcePercentage);
-							newObj.put(invItemTypeId + "_AMT", itemValue);
+							newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
+							newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 							
 							totalItemAdjAmt = totalItemAdjAmt + itemValue;
 						}
@@ -691,8 +690,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 							
 							// Update adjustments for item
 							
-							newObj.put(invItemTypeId, adjItem.sourcePercentage);
-							newObj.put(invItemTypeId + "_AMT", itemValue);
+							newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
+							newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 							
 							totalDiscAmt = totalDiscAmt + itemValue;
 						}
@@ -737,7 +736,15 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				/*vatAmt = ((unitPrice*vatPercent)/100)*qty;
 				cstAmt = ((unitPrice*cstPercent)/100)*qty;*/
 				
+				taxList1 = [];
+				taxList1.add("VAT");
+				taxList1.add("CST");
+				taxList1.add("VAT_SURCHARGE");
+				taxList1.add("CST_SURCHARGE");
+				//taxList1.add("SERVICE_CHARGE");
+				//taxList1.add("TEN_PERCENT_SUBSIDY");
 				
+					newObj.put("taxList1", taxList1);
 				
 				newObj.put("additionalChgTypeIdsList", additionalChgTypeIdsList);
 				newObj.put("discountTypeIdsList", discountTypeIdsList);
@@ -748,7 +755,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				newObj.put("DISCOUNT_AMT",totalDiscAmt);
 				newObj.put("incBaseAmt",incBaseAmt);
 				
-				newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt - totalDiscAmt);
+				newObj.put("saleAmount",amount + totalTaxAmt + totalItemAdjAmt + totalDiscAmt);
+			    newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt  + totalDiscAmt);
 				
 				
 
