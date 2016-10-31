@@ -41,7 +41,7 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 	context.invoiceId = invoiceId;
 }
 
-
+int cFormAgnst=0;
 
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 
@@ -263,6 +263,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 					  totTaxAmount2=totTaxAmount2+(eachItem.amount);
 				  }
 			  }
+			  if(eachItem.invoiceItemTypeId=="CST_SALE"){
+			  	cFormAgnst=cFormAgnst+1;
+	 		  }
 		}
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
@@ -1062,8 +1065,15 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		context.finaOnbehalflDetails = finaOnbehalflDetails;
 		
 	//}
-	
-		
+		invoiceAttribute = delegator.findOne("InvoiceAttribute",[invoiceId : invoiceId, attrName :"saleTitleTransferEnumId"] , false);
+		if(invoiceAttribute){
+			attrValue=invoiceAttribute.attrValue;
+			if("CST_CFORM".equals(attrValue)){
+				cFormAgnst=cFormAgnst+1;
+			}
+			
+		}
+		context.cFormAgnst=cFormAgnst;
 }else{
 
 tallySalesNo = invoiceList.get("referenceNumber");
@@ -1269,6 +1279,9 @@ for (eachList in invoiceItemList) {
 		  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 		  mgpsAmt = mgpsAmt+eachItem.itemValue;
 		  }
+		  if(eachItem.invoiceItemTypeId=="CST_SALE"){
+			  cFormAgnst=cFormAgnst+1;
+		   }
 	}
 	 }
 	 
@@ -2065,6 +2078,14 @@ context.finalAddresList = finalAddresList;
 		
 	}
 	context.finaOnbehalflDetails = finaOnbehalflDetails;
+	invoiceAttribute = delegator.findOne("InvoiceAttribute",[invoiceId : invoiceId, attrName :"saleTitleTransferEnumId"] , false);
+	if(invoiceAttribute){
+		attrValue=invoiceAttribute.attrValue;
+		if("CST_CFORM".equals(attrValue)){
+			cFormAgnst=cFormAgnst+1;
+		}
+	}
+	context.cFormAgnst=cFormAgnst;
 	
 //}
 
