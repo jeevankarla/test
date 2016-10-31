@@ -3663,6 +3663,7 @@ under the License.
       <field name="poQuantity" type="fixed-point"></field>
       <field name="poAmount" type="currency-amount"></field>
       <field name="shippedQty" type="fixed-point"></field>
+      <field name="shippedAmount" type="currency-amount"></field>
       <field name="quotaQty" type="fixed-point"></field>
       <field name="saleQuantity" type="fixed-point"></field>
       <field name="saleAmount" type="currency-amount"></field>

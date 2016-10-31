@@ -2286,14 +2286,21 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    BigDecimal shippedQuantity=(BigDecimal)ShipresultCtx.get("shippedQuantity");
 	                    BigDecimal poQuantity=(BigDecimal)ShipresultCtx.get("quantity");
 	                    BigDecimal poAmount=(BigDecimal)ShipresultCtx.get("poAmount");
+	                    BigDecimal shippedAmount=(BigDecimal)ShipresultCtx.get("shippedAmount");
 	                    Map saleBillresultCtx = dispatcher.runSync("getOrderSaleBillQty", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
 	                    if (ServiceUtil.isError(saleBillresultCtx)) {
 	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(saleBillresultCtx);
 	    	  		  		Debug.logError(errMsg , module);
 	    	  		  		return ServiceUtil.returnError(errMsg);
 	    	  		  	}
-	                    BigDecimal saleBillQty=(BigDecimal)saleBillresultCtx.get("saleBillQty");
-	                    BigDecimal saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
+	                    BigDecimal saleBillQty = BigDecimal.ZERO;
+	                    BigDecimal saleBillAmt = BigDecimal.ZERO;
+	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillQty"))){
+	                       saleBillQty=(BigDecimal)saleBillresultCtx.get("saleBillQty");
+	                    }  
+	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
+	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
+	                    }   
 	                    GenericValue indentSummaryDetails = delegator.makeValue("IndentSummaryDetails");
 	                    indentSummaryDetails.set("orderId", indentId);
 	                    indentSummaryDetails.set("orderDate", indentDate);
@@ -2307,6 +2314,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("poAmount", poAmount);
 	                    indentSummaryDetails.set("quotaQty", quotaQty);
 	                    indentSummaryDetails.set("shippedQty", shippedQuantity);
+	                    indentSummaryDetails.set("shippedAmount", shippedAmount);
 	                    indentSummaryDetails.set("totalAmount", totalAmount);
 	                    indentSummaryDetails.set("salesChannel", salesChannelEnumId);
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
@@ -2323,6 +2331,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
+        result = ServiceUtil.returnSuccess("Successfully Populated Data In IndentSummaryDetails : ");
         return result;	
 	}
 	public static Map<String,Object> getOrderSummary(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -2379,6 +2388,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         BigDecimal quantity =BigDecimal.ZERO;
         BigDecimal poQuantity =BigDecimal.ZERO;
         BigDecimal poAmount =BigDecimal.ZERO;
+        BigDecimal shippedAmount =BigDecimal.ZERO;
         List condList = FastList.newInstance();
         condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
         condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -2409,8 +2419,24 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                }
 			                ItemItr.close();
 			            }
-					
-			            eli = delegator.find("ShipmentReceipt", cond, null, null, null, null);
+						condList.clear();
+				        condList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, extPOId));
+				        condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+				        cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+						EntityListIterator shipmentItr = delegator.find("Shipment", cond, null, null, null, null);
+						GenericValue shipment = null;
+						 while ((shipment = shipmentItr.next()) != null) {
+							  String shipmentId = shipment.getString("shipmentId");
+							  if(UtilValidate.isNotEmpty(shipment.getBigDecimal("grandTotal"))){
+							      BigDecimal grandTotal = shipment.getBigDecimal("grandTotal");
+							      shippedAmount = shippedAmount.add(grandTotal);
+							  }
+							  List shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+							  GenericValue shipmentReceipt = EntityUtil.getFirst(shipmentReceipts);
+							  quantity = quantity.add(shipmentReceipt.getBigDecimal("quantityAccepted"));
+						 }
+						 shipmentItr.close();
+			          /*  eli = delegator.find("ShipmentReceipt", cond, null, null, null, null);
 			            if (eli != null) {
 			                // reset each order
 			                GenericValue shipmentReceipt = null;
@@ -2418,7 +2444,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                	 quantity = quantity.add(shipmentReceipt.getBigDecimal("quantityAccepted"));
 			                }
 			                eli.close();
-			            }
+			            }*/
 				}
 	        } catch (GenericEntityException e) {
 	            Debug.logError(e, module);
@@ -2428,6 +2454,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         result.put("quantity",poQuantity.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("poAmount",poAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("shippedQuantity",quantity.setScale(2, BigDecimal.ROUND_HALF_UP));
+        result.put("shippedAmount",shippedAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
 	   return result;
 	}
   	

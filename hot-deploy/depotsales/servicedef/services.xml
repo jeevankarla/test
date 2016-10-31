@@ -627,6 +627,7 @@
         <attribute name="shippedQuantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="quantity" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="poAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="shippedAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>
