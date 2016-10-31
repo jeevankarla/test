@@ -316,6 +316,11 @@
 	}
 	context.stateListJSON = stateListJSON;
 	
+	parameters.isDepot = "NO";
+	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , userPartyId), null, null, null, false);
+	if(UtilValidate.isNotEmpty(facilityList)){
+		parameters.isDepot = "YES";
+	}
 	
 /*	JSONArray supplierFacilityListJSON = new JSONArray();
 	
