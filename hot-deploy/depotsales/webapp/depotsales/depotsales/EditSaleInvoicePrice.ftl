@@ -586,11 +586,9 @@
 	
 	function removeAdjustment(){
 	
-	  var refId;
 	  $("#indentAdjustmentTable tr :input:visible").each(function () {
 		    var id = this.id;
 
-			refId = id;
 			//alert(id);
 			
 			if(id != 'undefined' && id != null && id.length){
@@ -933,7 +931,20 @@
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
+		    
+		     if(id == "SERVICE_CHARGE_PUR_AMT"){
+		    
+		    var serviceChargeAmt = $("#serviceChargeAmt").val();
+		    
+		    totalAmt = totalAmt + parseFloat(serviceChargeAmt);
+		    
+		    }else{
+		    
 		     totalAmt = totalAmt + parseFloat(adjValue);
+		     
+		     }
+		    
+		    
 		    
 		   }//end
 		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
@@ -970,7 +981,21 @@
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
+		    
+		    
+		     if(id == "TEN_PERCENT_SUBSIDY_PUR_AMT"){
+		    
+		    var tenPercentSubsidy = $("#tenPercentSubsidy").val();
+		    
+		    totalAmt = totalAmt - parseFloat(tenPercentSubsidy);
+		    
+		    }else{
+		    
 		     totalAmt = totalAmt - parseFloat(adjValue);
+		     
+		     }
+		    
+		     
 		    
 		    
 		    }  
