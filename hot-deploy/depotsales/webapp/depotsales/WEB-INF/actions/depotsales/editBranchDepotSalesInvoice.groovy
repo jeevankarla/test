@@ -71,17 +71,14 @@ if(invoiceId){
 		tallyRefNo = OrderHeaderList.get("tallyRefNo");
 	}
 
-	
-	shipmentListForPOInvoiceId = [];
-	
-	/*List conditionList = [];
+	List conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, null, false);
-*/
+
 	
 	titleTransferEnumIdsList = [];
 	taxAuthorityTypeTitleTransferList = delegator.findList("TaxAuthorityTypeTitleTransfer", null, null, null, null, false);
@@ -242,7 +239,6 @@ if(invoiceId){
 				
 				taxValueMap = resultCtx.taxValueMap;
 				
-				
 			
 			
 			JSONObject newObj = new JSONObject();
@@ -251,9 +247,7 @@ if(invoiceId){
 			
 			
 			newObj.put("taxValueMap",taxValueMap);
-			
 			newObj.put("defaultTaxMap",defaultTaxMap);
-			
 			
 			productName = ""
 			prod=delegator.findOne("Product",[productId:eachItem.productId],false);
@@ -290,16 +284,25 @@ if(invoiceId){
 						taxPercent = (taxValue*100)/(eachItem.amount*eachItem.quantity);
 						//taxValue = (actualTaxValue/origQty)*qty;
 					}
+					
+					taxItem = taxItem.replace("SALE", "PUR");
+					
+					Debug.log("taxItem ============="+taxItem);
+					
+					
 					newObj.put(taxItem, taxPercent);
 					newObj.put(taxItem+"_AMT", taxValue);
 					
 					totalTaxAmt = totalTaxAmt + taxValue;
 					
+					
+					
+					
 					if(taxValue > 0){
 						//Debug.log("totalTaxAmt ============="+totalTaxAmt);
 						for(int j=0; j<surChargeList.size(); j++){
 							surchargeItem = (surChargeList.get(j)).get("taxAuthorityRateTypeId");
-							//Debug.log("surchargeItem ============="+surchargeItem);
+							Debug.log("surchargeItem ============="+surchargeItem);
 							condExpr = [];
 							condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 							condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, surchargeItem));
@@ -312,8 +315,8 @@ if(invoiceId){
 								surTaxValue = (EntityUtil.getFirst(surItemList)).get("amount");
 								surTaxPercent = (surTaxValue*100)/(taxValue);
 							}
-							newObj.put(surchargeItem, surTaxPercent);
-							newObj.put(surchargeItem+"_AMT", surTaxValue);
+							newObj.put(surchargeItem+"_PUR", surTaxPercent);
+							newObj.put(surchargeItem+"_PUR_AMT", surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							
@@ -398,8 +401,8 @@ if(invoiceId){
 						
 						// Update adjustments for item
 						
-						newObj.put(invItemTypeId, adjItem.sourcePercentage);
-						newObj.put(invItemTypeId + "_AMT", itemValue);
+						newObj.put(invItemTypeId + "_PUR", adjItem.sourcePercentage);
+						newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 						
 						totalItemAdjAmt = totalItemAdjAmt + itemValue;
 					}
@@ -465,8 +468,8 @@ if(invoiceId){
 						
 						// Update adjustments for item
 						
-						newObj.put(invItemTypeId, adjItem.sourcePercentage);
-						newObj.put(invItemTypeId + "_AMT", itemValue*(-1));
+						newObj.put(invItemTypeId + "_PUR", adjItem.sourcePercentage);
+						newObj.put(invItemTypeId + "_PUR_AMT", itemValue*(-1));
 						
 						totalDiscAmt = totalDiscAmt + itemValue;
 					}
@@ -475,7 +478,8 @@ if(invoiceId){
 				
 				discItemAdjustmentJSON.add(newItemAdjObj);
 				
-			}
+				
+	
 			//Debug.log("discItemAdjustmentJSON ========================= "+discItemAdjustmentJSON);
 			
 			newObj.put("additionalChgTypeIdsList", additionalChgTypeIdsList);
@@ -526,7 +530,74 @@ if(invoiceId){
 			newObj.put("VAT", 0.00);
 			newObj.put("CSTPercent", 0.00);
 			newObj.put("CST", 0.00);
-			newObj.put("totPayable", ((eachItem.amount)*(eachItem.quantity)) + totalTaxAmt + totalItemAdjAmt - totalDiscAmt + tenPercent);
+			
+			
+			condExpr = [];
+			//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+			condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
+			condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
+			//Debug.log("condExpr ============="+condExpr);
+			serviceChrAmt = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
+
+			serviceChgValue = 0;
+			serviceChgPercent = 0;
+			if(UtilValidate.isNotEmpty(serviceChrAmt)){
+				
+				serviceTot = (eachItem.itemValue + totalTaxAmt  + totalItemAdjAmt+totalDiscAmt+tenPercent);
+				
+				
+				serviceChgValue = (EntityUtil.getFirst(serviceChrAmt)).get("amount");
+				serviceChgPercent = (serviceChgValue)/(serviceTot);
+				
+				serviceChgPercent = serviceChgPercent*100;
+				
+				//taxValue = (actualTaxValue/origQty)*qty;
+			}
+			newObj.put("SERVICE_CHARGE_AMT", serviceChgValue);
+			newObj.put("SERVICE_CHARGE", Math.round(serviceChgPercent));
+			
+			
+			
+		}
+			
+			
+		//	totPayable = (eachItem.itemValue + totalTaxAmt + serviceChgValue + totalItemAdjAmt+totalDiscAmt+tenPercent);
+			
+		//	newObj.put("totPayable", totPayable);
+			/*totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+tenPercent);
+			
+			newObj.put("totPayable", totPayable);*/
+			
+			newObj.put("saleAmount",eachItem.itemValue + totalTaxAmt + totalItemAdjAmt + totalDiscAmt);
+			
+			
+			//Debug.log("amount=============="+amount);
+			
+			//Debug.log("totalTaxAmt=============="+totalTaxAmt);
+			
+			//Debug.log("totalItemAdjAmt=============="+totalItemAdjAmt);
+			
+			//Debug.log("tenPercent=============="+tenPercent);
+			
+			//Debug.log("totalDiscAmt=============="+totalDiscAmt);
+			
+			
+			newObj.put("totPayable",eachItem.itemValue + totalTaxAmt + totalItemAdjAmt + tenPercent + totalDiscAmt + serviceChgValue);
+			
+			
+			taxList1 = [];
+			taxList1.add("VAT");
+			taxList1.add("CST");
+			taxList1.add("VAT_SURCHARGE");
+			taxList1.add("CST_SURCHARGE");
+			if(scheme == "General")
+			taxList1.add("SERVICE_CHARGE");
+			if(scheme == "MGPS_10Pecent" && tenPercent != 0)
+			taxList1.add("TEN_PERCENT_SUBSIDY");
+			
+				newObj.put("taxList1", taxList1);
+		
+			
 			
 			invoiceItemsJSON.add(newObj);
 

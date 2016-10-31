@@ -36,7 +36,7 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "DepotSalesInvoiceDepotInc.ftl"/>
-<#include "editDepotSalesInvoiceModulePrice.ftl"/>
+<#include "EditSaleInvoicePrice.ftl"/>
 
 <div class="full">
 	
