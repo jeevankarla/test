@@ -799,8 +799,8 @@ if(shipments){
 								surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
 								surTaxValue = (surTaxPercent/100)*taxValue;
 							}
-							newObj.put(surchargeItem, surTaxPercent);
-							newObj.put(surchargeItem+"_AMT", surTaxValue);
+							newObj.put(surchargeItem+"_PUR", surTaxPercent);
+							newObj.put(surchargeItem+"_PUR_AMT", surTaxValue);
 							
 							totalTaxAmt = totalTaxAmt + surTaxValue;
 							

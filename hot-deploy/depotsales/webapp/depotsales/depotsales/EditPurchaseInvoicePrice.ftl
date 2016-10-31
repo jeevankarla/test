@@ -7,14 +7,14 @@
 
 <style>
 .button1 {
-    background-color: red;
+    background-color: green;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 10px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 10px;
     margin: 4px 2px;
     cursor: pointer;
 }
@@ -384,17 +384,28 @@
 														"<tr>"+
 															"<td align='left'>Basic Amount: </td>"+
 															"<td><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
-														"</tr>"+
-														<#--
-														"<tr>"+
-															"<td align='left'>Adjustments: </td>"+
-															"<td><input type='text' style='width: 100px;' name='adjIncBasicAmt' id='adjIncBasicAmt' value='"+adjustmentIncBasic+"' readOnly/></td>"+
-														"</tr>"+
-														-->
-														"<tr>"+
-															"<td align='left'>Base Amount: </td>"+
-															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+purchaseBasicAmount+"' readOnly/></td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Purchase Value: </td>"+
+															"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
+														
 														"</tr>";
+														
+														message += 	"<tr>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Total Payable Value: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
+														"</tr>"; 
+														
 										message += "</table>"+
 									"</td>"+
 								"</tr>";
@@ -475,14 +486,14 @@
 				
 		
 			message += "<hr class='style18'></hr>";
-			
+			<#--
 			message += "<table cellspacing=10 cellpadding=10 id='salesDiscountsAndChgs' >" ;
 				message += "<tr>"+
 							"<td align='left'>Purchase Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
 						"</tr>";
 			
-			<#--
+			
 				message += "<tr>"+
 							"<td align='left'>Service Charge <span id='serviceCharge'>"+serviceCharge+"%</span>: </td>"+
 							"<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
@@ -492,7 +503,7 @@
 							"<td align='left'>10% Subsidy Amount: </td>"+
 							"<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
 						"</tr>";
-						-->
+						
 				message += "<tr>"+
 							"<td align='left'>Total Payable Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
@@ -502,8 +513,9 @@
 			
 			
 				message += "<hr class='style18'></hr>";
+				-->
 			
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><#--<td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td>--></tr>";
+			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price</button></td></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
