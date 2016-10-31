@@ -63,8 +63,6 @@
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	
 	var availableAdjTags = ${StringUtil.wrapString(invoiceAdjItemsJSON)!'[]'};
-	
-	
 	var invoiceAdjLabelJSON = ${StringUtil.wrapString(invoiceAdjLabelJSON)!'{}'};
 	var invoiceAdjLabelIdMap = ${StringUtil.wrapString(invoiceAdjLabelIdJSON)!'{}'};
 	
@@ -76,8 +74,11 @@
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	//var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var data = ${StringUtil.wrapString(invoiceItemsJSON)!'[]'};
+	
 	var data3 = ${StringUtil.wrapString(invoiceDiscountJSON)!'[]'};
+	
 	var data2 = ${StringUtil.wrapString(invoiceAdditionalJSON)!'[]'};
+	
 	
 	
 	//var data2 = ${StringUtil.wrapString(adjustmentJSON)!'[]'};
@@ -124,8 +125,12 @@
 			var Excise = data[rowCount]["Excise"];
 			var bedCess = data[rowCount]["bedCessAmount"];
 			var bedSecCess = data[rowCount]["bedSecCessAmount"];
-			
-			var SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
+			var SERVICE_CHARGE_AMT = 0;
+
+	        if(data[rowCount]["SERVICE_CHARGE_PUR_AMT"])		
+			 SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
+			else
+			 SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
 			
 			var VATPer = data[rowCount]["VatPercent"];
 			var CSTPer = data[rowCount]["CSTPercent"];
@@ -208,8 +213,26 @@
 				if(taxList != undefined){
 					for(var i=0;i<taxList.length;i++){
 						var taxType = taxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
+						
+						
+						//alert(taxType);
+						
+						var taxPercentage = 0;
+						var taxValue = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE")
+						{
+						  givenType = taxType.replace("_SALE","_PUR");
+						  taxPercentage = data[rowCount][givenType];
+						  taxValue = data[rowCount][givenType + "_AMT"];
+						}else{
+						   taxPercentage = data[rowCount][taxType+"_PUR"];
+					       taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						}
+						
+						
+						
 						
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
 						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
@@ -245,15 +268,16 @@
 				
 				// Sale order Adjustments
 				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"];
+				orderAdjustmentsList = data[rowCount]["additionalChgTypeIdsList"];
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
 				if(orderAdjustmentsList != undefined){
 					for(var i=0;i<orderAdjustmentsList.length;i++){
 						var orderAdjType = orderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						
+						var adjPercentage = data[rowCount][orderAdjType+ "_PUR"];
+						var adjValue = data[rowCount][orderAdjType + "_PUR_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
@@ -275,8 +299,8 @@
 				if(discOrderAdjustmentsList != undefined){
 					for(var i=0;i<discOrderAdjustmentsList.length;i++){
 						var orderAdjType = discOrderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var adjPercentage = data[rowCount][orderAdjType+ "_PUR"];
+						var adjValue = data[rowCount][orderAdjType + "_PUR_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
@@ -1611,7 +1635,7 @@
 			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
-	   	  	//updateTotalIndentAmount();
+	   	  //	updateTotalIndentAmount();
 	   	  	
 	   	  	
 	    }			

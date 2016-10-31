@@ -257,7 +257,7 @@ if(shipments){
 			}
 		   }
 		
-		////Debug.log("scheme============="+scheme);
+		//Debug.log("scheme============="+scheme);
 		
 		context.scheme = scheme;
 		
@@ -1071,7 +1071,9 @@ if(shipments){
 				taxList1.add("CST");
 				taxList1.add("VAT_SURCHARGE");
 				taxList1.add("CST_SURCHARGE");
+				if(scheme == "General")
 				taxList1.add("SERVICE_CHARGE");
+				if(scheme == "MGPS_10Pecent" && tenPercent != 0)
 				taxList1.add("TEN_PERCENT_SUBSIDY");
 				
 					newObj.put("taxList1", taxList1);
