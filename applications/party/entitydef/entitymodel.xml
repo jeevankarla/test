@@ -1164,6 +1164,8 @@ under the License.
       <field name="address2" type="long-varchar"></field>
       <field name="directions" type="long-varchar"></field>
       <field name="city" type="name"></field>
+      <field name="birthState" type="long-varchar"></field>
+      <field name="birthDistrict" type="long-varchar"></field>
       <field name="postalCode" type="short-varchar"></field>
       <field name="postalCodeExt" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
@@ -3107,6 +3109,7 @@ under the License.
       <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
       <field name="fatherOccupation" type="long-varchar" encrypt="true"></field>
       <field name="maritalStatus" type="indicator"></field>
+      <field name="spouseName" type="long-varchar" encrypt="true"></field>
       <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportExpireDate" type="date"></field>

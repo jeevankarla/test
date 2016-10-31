@@ -1396,8 +1396,11 @@ public class HumanresService {
 			String motherName = (String) context.get("motherName");
 			Date birthDate =  (Date)context.get("birthDate");
 			String birthPlace = (String) context.get("birthPlace");
+			String birthState = (String) context.get("birthState");
+			String birthDistrict = (String) context.get("birthDistrict");
 			String bloodGroup =(String)context.get("bloodGroup");
 			String gender =(String)context.get("gender");
+			String spouseName =(String)context.get("spouseName");
 			String maritalStatus =(String)context.get("maritalStatus");
 			String alternatemobileNumber =(String)context.get("alternatemobileNumber");
 			String emergencyContactName =(String)context.get("emergencyContactName");
@@ -1411,6 +1414,12 @@ public class HumanresService {
 			String state =(String)context.get("state");
 			String postalCode =(String)context.get("postalCode");
 			String country =(String)context.get("country");
+			String prsAddress1 =(String)context.get("prsAddress1");
+			String prsAddress2 =(String)context.get("prsAddress2");
+			String prsCity =(String)context.get("prsCity");
+			String prsState =(String)context.get("prsState");
+			String prsPostalCode =(String)context.get("prsPostalCode");
+			String prsCountry =(String)context.get("prsCountry");
 			String email =(String)context.get("email");
 			String userName =(String)context.get("userName");
 			String pasword =(String)context.get("pasword");
@@ -1441,6 +1450,7 @@ public class HumanresService {
 			String locationGeoId = (String) context.get("locationGeoId");
 			
 			Map<String, Object> resultMap = FastMap.newInstance();
+			Map<String, Object> resultMap1 = FastMap.newInstance();
 			Map<String, Object> input = FastMap.newInstance();
 			Map<String, Object> outMap = FastMap.newInstance();
 			Timestamp openedDate = null;
@@ -1468,14 +1478,14 @@ public class HumanresService {
 		        	return ServiceUtil.returnError("Error while creating  Party, PartyId already exists" +partyId); 
 		        }
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "spouseName",spouseName, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
 	                return resultMap;
 	            }
 				ownerPartyId = (String) resultMap.get("partyId");
-			
+				
 				//create partyrole
 				Object tempInputId = "EMPLOYEE";
 				input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "roleTypeId", tempInputId);
@@ -1519,16 +1529,24 @@ public class HumanresService {
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
 				}
-			
 				// create PostalAddress
 				if (UtilValidate.isNotEmpty(address1)){
-					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "birthState",birthState,  "birthDistrict",birthDistrict, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
 					resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
 					if (ServiceUtil.isError(resultMap)) {
 						Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
 		                return resultMap;
 		            }
-				}	
+				}
+				//input.clear();
+				if (UtilValidate.isNotEmpty(prsAddress1)){
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",prsAddress1, "address2", prsAddress2, "city", (String)context.get("prsCity"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("prsPostalCode"), "contactMechTypeId","POSTAL_ADDRES2", "contactMechId", contactMechId);
+					resultMap1 =  dispatcher.runSync("createPartyPostalAddress", input);
+					if (ServiceUtil.isError(resultMap1)) {
+						Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+		                return resultMap;
+		            }
+				}
 				
 				// Create Party Email
 				if (UtilValidate.isNotEmpty(email)){
@@ -1673,18 +1691,24 @@ public class HumanresService {
 	        String organizationPartyId = (String)context.get("orgPartyId");
 	        String holiDayDateStr = (String)context.get("holidayDate");
 	        String stateName = (String)context.get("state");
-	        Debug.log("stateName====================="+stateName);
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
 	        String stateNamee=null;    
-	        
-	        
+	        String groupName = null;
+	        List RosHoListNames = FastList.newInstance();
 	        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			try {
 				holiDayDate = UtilDateTime.toTimestamp(formatter.parse(holiDayDateStr));
 			} catch (ParseException e) {
 			}
+			
 			try{
+				RosHoListNames = delegator.findList("PartyRoleAndPartyDetail", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,organizationPartyId) , null, null, null, false );
+				if(UtilValidate.isNotEmpty(RosHoListNames)){
+					GenericValue RosHoListName = EntityUtil.getFirst(RosHoListNames);
+					groupName = RosHoListName.getString("groupName");
+				}
+				
 				GenericValue holList = delegator.findOne("HolidayCalendar", UtilMisc.toMap("customTimePeriodId", customTimePeriodId, "organizationPartyId",organizationPartyId, "holiDayDate", UtilDateTime.toTimestamp(holiDayDate)), true);
 				GenericValue stateList = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateName), true);
 				if(UtilValidate.isNotEmpty(stateList)){
@@ -1704,8 +1728,8 @@ public class HumanresService {
 			        if(UtilValidate.isNotEmpty(description)){
 			        	newEntity.set("description", description);
 			        }
-			        if(UtilValidate.isNotEmpty(stateNamee)){
-			        	newEntity.set("stateName", stateNamee);
+			        if(UtilValidate.isNotEmpty(groupName)){
+			        	newEntity.set("RO", groupName);
 			        }
 			        try {
 			        	if(UtilValidate.isNotEmpty(holiDayDate)){

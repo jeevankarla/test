@@ -763,6 +763,7 @@
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
         <field name="gender" title="${uiLabelMap.FormFieldTitle_gender}"><display-entity entity-name="Person" key-field-name="partyId" description="${gender}" ></display-entity></field>
        <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
+       <field name="spouseName" title="${uiLabelMap.SpouseName}"><display-entity entity-name="Person" key-field-name="partyId" description="${spouseName}" ></display-entity></field>
      <!--   <field name="height" title="${uiLabelMap.Height}"><display/></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><display/></field>-->
         <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>

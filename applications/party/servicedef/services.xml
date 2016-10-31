@@ -422,6 +422,7 @@ under the License.
         <description>Create a Postal Address</description>
         <auto-attributes entity-name="PostalAddress" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+         <attribute name="contactMechTypeId" type="String" mode="IN" optional="true"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
         <override name="postalCode" optional="false"/>
@@ -461,6 +462,7 @@ under the License.
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
         <override name="address1" optional="false"/>

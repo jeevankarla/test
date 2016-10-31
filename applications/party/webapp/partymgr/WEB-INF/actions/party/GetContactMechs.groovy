@@ -38,8 +38,8 @@ if(UtilValidate.isEmpty(partyId)){
 }
 
 showOld = "true".equals(parameters.SHOW_OLD);
+contactMeches = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, showOld);
 context.contactMeches = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, showOld);
-
 
 
 

@@ -42,8 +42,51 @@ under the License.
           <#list contactMeches as contactMechMap>
             <#assign contactMech = contactMechMap.contactMech>
             <#assign partyContactMech = contactMechMap.partyContactMech>
+            
+    
 <#if "EMAIL_ADDRESS" = contactMech.contactMechTypeId && !contactMech.infoString?has_content>
 <#-- skip  -->          
+<#elseif "POSTAL_ADDRES2" = contactMech.contactMechTypeId>
+	<tr><td colspan="4"><hr /></td></tr>
+	<tr>
+		<td class="label align-top">permanent address</td>
+		<td>
+			<#if contactMechMap.postalAddress?has_content>
+			<#assign postalAddress1 = contactMechMap.postalAddress>
+			 <#if postalAddress1?has_content>
+				<div>
+			 		<#if postalAddress1.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress1.toName}<br /></#if>
+                    <#if postalAddress1.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress1.attnName}<br /></#if>
+                     ${postalAddress1.address1?if_exists}<br />
+                    <#if postalAddress1.address2?has_content>${postalAddress1.address2}<br /></#if>
+                    ${postalAddress1.city?if_exists},
+                    <#if postalAddress1.stateProvinceGeoId?has_content>
+                      <#assign stateProvince = postalAddress1.getRelatedOneCache("StateProvinceGeo")>
+                      ${stateProvince.abbreviation?default(stateProvince.geoId)}
+                    </#if>
+                     ${postalAddress1.postalCode?if_exists}
+                    <#if postalAddress1.countryGeoId?has_content><br />
+                      <#assign country = postalAddress1.getRelatedOneCache("CountryGeo")>
+                      ${country.geoName?default(country.geoId)}
+                    </#if>
+			 	</div>
+			 </#if>
+			</#if>  
+		</td>
+		 <td valign="top"><b>(${partyContactMech.allowSolicitation?if_exists})</b></td>
+              <td class="button-col">
+                <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId || security.hasEntityPermission("", "PARTYMGR_CNTMEC_EDIT", session)>
+                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                </#if>
+                <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>
+                  <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
+                    <input name="partyId" value="${partyId}" type="hidden"/>
+                    <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>
+                    <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonExpire}"/>
+                  </form>
+                </#if>
+              </td>
+	</tr>
 <#else>
             <tr><td colspan="4"><hr /></td></tr>
             <tr>
