@@ -339,12 +339,9 @@
 			  });
 			  
 			
-			
-			  
 			  
 			  
 			  var taxList1 = dataRow["taxList1"];
-			  
 			  
 			  
 			   $.each(taxList1, function(key, item){
@@ -569,6 +566,8 @@
 	          $(this).parent().parent().remove();
 	        adjustBasePriceNew();
            });
+           
+            });
 	
 	}
 	
