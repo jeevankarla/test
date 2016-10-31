@@ -44,9 +44,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 				  	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOEmail?if_exists}</fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;              -----------------------------------------------------------------------------------------------  </fo:block> 
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                               MATERIAL RECEIPT REPORT 	    </fo:block> 
-				              	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block>
+				              	<#-- <fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block> -->
 				    
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;       M R R NO:${shipmentMap.get("shipmentId")}                           DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                              	    </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;      ShipmentId:${shipmentMap.get("shipmentId")}                           DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                              	    </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;__________________________________________________________________________________________________________________________________________________________________ </fo:block> 
 				 <#--   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")?if_exists}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt"> &#160;  </fo:block> 
@@ -114,9 +114,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${shipmentMap.get("partyId")}      </fo:block>  
                        			</fo:table-cell>
-	                    		<fo:table-cell >
+	                    		<#-- <fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" > STORE: ${shipmentMap.get("store")?if_exists}</fo:block>  
-                       			</fo:table-cell>
+                       			</fo:table-cell>   -->
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" > &#160; </fo:block>  
                        			</fo:table-cell>	                    		
@@ -189,7 +189,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;DESTINATION  </fo:block>  
                        		   </fo:table-cell> 
                                <fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;:${shipmentMap.get("destination")?if_exists}  </fo:block>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;:${destination?if_exists}  </fo:block>
                        			</fo:table-cell>	        
                 	   		</fo:table-row>
                     </fo:table-body>
@@ -201,8 +201,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 
             	<fo:block>
                  	<fo:table border-style="solid">
-	                    <fo:table-column column-width="35pt"/>
+	                    <fo:table-column column-width="10pt"/>
 	                    <fo:table-column column-width="90pt"/>
+	                    <fo:table-column column-width="140pt"/>
 	                    <fo:table-column column-width="140pt"/>  
 	               	    <fo:table-column column-width="70pt"/>
 	               	    <fo:table-column column-width="80pt"/>
@@ -211,7 +212,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="70pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	                    <fo:table-body>
 	                   
@@ -224,6 +224,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">MATERIAL Name</fo:block> 
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">MATERIAL SPEC</fo:block> 
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT</fo:block>  
@@ -247,9 +250,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                         		<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT RATE (Rs) </fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BOOK FOLIO NO </fo:block>  
-                       			</fo:table-cell>
+                       			
                         		<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">AMOUNT</fo:block>  
                             		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">(Rs) </fo:block>   
@@ -272,11 +273,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
                                   	<fo:block text-align="center"  font-size="12pt" >
-                                   ${grnListItem.get("internalName")?if_exists} </fo:block>                 			  
+                                   ${grnListItem.get("productId")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
                                   	<fo:block text-align="center"  font-size="12pt" >
                                    ${grnListItem.get("description")?if_exists} </fo:block>                 			  
+	                                </fo:table-cell>
+	                                <fo:table-cell border-style="solid">
+                                  	<fo:block text-align="center"  font-size="12pt" >
+                                   ${grnListItem.get("longDescription")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
                                      <fo:block text-align="center" font-size="12pt" >
@@ -316,12 +321,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                                     ${(grnListItem.get("unitPrice"))?if_exists?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="12pt">
-	                                      ${grnListItem.get("folioNo")?if_exists}
-
-	                                    </fo:block>
-	                                </fo:table-cell>
+	                             
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
 	                                  ${grnListItem.get("amount")?if_exists?string("##0.00")}

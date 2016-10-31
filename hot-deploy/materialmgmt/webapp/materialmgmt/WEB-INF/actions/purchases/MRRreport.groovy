@@ -85,6 +85,12 @@ if((refNumberDet) && (refNumberDet.attrValue)){
 	 refNumber = refNumberDet.attrValue;
 	 context.refNumber=refNumber;
 }
+destinationDetails = EntityUtil.filterByCondition(orderAttributeList, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "DST_ADDR"));
+destinationDetail=EntityUtil.getFirst(destinationDetails);
+if((destinationDetail) && (destinationDetail.attrValue)){
+	 destination = destinationDetail.attrValue;
+	 context.destination=destination;
+}
 shipmentMap=[:];
 shipmentList=[];
 

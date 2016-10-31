@@ -260,7 +260,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){ 
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 				  if(eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"){
-					  totTaxAmount2=totTaxAmount2+(eachItem.amount);
+					  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 				  }
 			  }
 			  if(eachItem.invoiceItemTypeId=="CST_SALE"){
