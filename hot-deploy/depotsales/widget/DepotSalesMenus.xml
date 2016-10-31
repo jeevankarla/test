@@ -721,6 +721,9 @@
 				   </link>
 				</menu-item>
         	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	   <condition>
+	        		<if-compare operator="not-equals" value="NO" field="parameters.isDepot"/>
+	           </condition>
         	<link target="SilkMultiIndentorSalesOrder">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
@@ -747,6 +750,9 @@
 				   </link>
 				</menu-item>
         	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	   <condition>
+	        		<if-compare operator="not-equals" value="NO" field="parameters.isDepot"/>
+	           </condition>
         	<link target="CottonMultiIndentorSalesOrder">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
@@ -774,6 +780,9 @@
 				   </link>
 				</menu-item>
         	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	   <condition>
+	        		<if-compare operator="not-equals" value="NO" field="parameters.isDepot"/>
+	           </condition>
         	<link target="OtherMultiIndentorSalesOrder">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
