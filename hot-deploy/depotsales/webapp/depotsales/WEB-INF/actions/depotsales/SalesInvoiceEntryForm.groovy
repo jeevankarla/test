@@ -719,7 +719,7 @@ if(shipments){
 					newObj.put("SERVICE_CHARGE", (OrderAdjustmentForServiceCha[0].sourcePercentage));
 					serviceChrg = ((qty*unitPrice)*2)/100;
 				}else{
-				newObj.put("SERVICE_CHARGE_PUR_AMT", 0);
+				newObj.put("SERVICE_CHARGE_AMT", 0);
 				}
 				
 				
