@@ -396,7 +396,7 @@
 														-->
 														"<tr>"+
 															"<td align='left'>Base Amount: </td>"+
-															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+baseAmt+"' readOnly/></td>"+
+															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+purchaseBasicAmount+"' readOnly/></td>"+
 														"</tr>";
 										message += "</table>"+
 									"</td>"+
@@ -409,7 +409,7 @@
 				if(dataRow){
 			
 			message += "<h1 align='center'><font color='red'>**Adjustments And Taxes**</font></h1>";
-			message += "<table cellspacing=10 cellpadding=10 width='800' style='border: 2px solid lightblue;' id='indentAdjustmentTable' class='myTable'>" ;
+			message += "<table cellspacing=10 cellpadding=10 width='800'  id='indentAdjustmentTable' class='myTable'>" ;
 
            
 			
@@ -753,7 +753,7 @@
 		     totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
 		    
 		   }//end
-		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT") {
+		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -776,7 +776,7 @@
 		    }//end
 		   
 		     
-		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" ) {
+		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT") {
 		    
 		    
 		       if(id != 'undefined' && id != null && id.length){
@@ -883,7 +883,7 @@
 		     totalAmt = totalAmt + parseFloat(adjValue);
 		    
 		   }//end
-		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT") {
+		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -903,7 +903,7 @@
 		    }//end
 		   
 		     
-		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "TEN_PERCENT_SUBSIDY_PUR_AMT") {
+		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "TEN_PERCENT_SUBSIDY_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT") {
 		    
 		    
 		       if(id != 'undefined' && id != null && id.length){

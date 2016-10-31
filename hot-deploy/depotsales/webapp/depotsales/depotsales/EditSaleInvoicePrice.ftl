@@ -7,14 +7,14 @@
 
 <style>
 .button1 {
-    background-color: red;
+    background-color: green;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 10px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 10px;
     margin: 4px 2px;
     cursor: pointer;
 }
@@ -380,7 +380,10 @@
   				
   				 });
 			
-			
+			   if(dataRow['SERVICE_CHARGE_PUR_AMT'])
+				serviceChargeAmt = dataRow['SERVICE_CHARGE_PUR_AMT'];
+				if(dataRow['SERVICE_CHARGE_PUR'])
+				serviceCharge = dataRow['SERVICE_CHARGE_PUR'];
 			
 			var message = "";
 			var title = "";
@@ -394,17 +397,54 @@
 														"<tr>"+
 															"<td align='left'>Basic Amount: </td>"+
 															"<td><input type='text' style='width: 100px;' name='basicAmount' id='basicAmount' value='"+purchaseBasicAmount+"' readOnly/></td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Sale Value: </td>"+
+															"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
+							 								
 														"</tr>"+
-														<#--
-														"<tr>"+
-															"<td align='left'>Adjustments: </td>"+
-															"<td><input type='text' style='width: 100px;' name='adjIncBasicAmt' id='adjIncBasicAmt' value='"+adjustmentIncBasic+"' readOnly/></td>"+
-														"</tr>"+
-														-->
+														
 														"<tr>"+
 															"<td align='left'>Base Amount: </td>"+
-															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+baseAmt+"' readOnly/></td>"+
+															"<td><input type='text' style='width: 100px;' name='saleBaseAmt' id='saleBaseAmt' value='"+purchaseBasicAmount+"' readOnly/></td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Service Charge<input type='hidden' id = 'serviceChargeIN' value='"+serviceCharge+"'> <span id='serviceCharge'>"+serviceCharge+"%</span>: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
 														"</tr>";
+														
+													message += 	"<tr>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>10% Subsidy Amount: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
+														"</tr>";
+														
+												  message += 	"<tr>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Total Payable Value: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
+														"</tr>";   
+														
+														
+														
 										message += "</table>"+
 									"</td>"+
 								"</tr>";
@@ -416,7 +456,7 @@
 				if(dataRow){
 			
 			message += "<h1 align='center'><font color='red'>**Adjustments And Taxes**</font></h1>";
-			message += "<table cellspacing=10 cellpadding=10 width='800' style='border: 2px solid lightblue;'  id='indentAdjustmentTable' class='myTable'>" ;
+			message += "<table cellspacing=10 cellpadding=10 width='800'   id='indentAdjustmentTable' class='myTable'>" ;
 			
 			for(var i=0;i<allAdjustments.length;i++){
 						var orderAdjustment = allAdjustments[i];
@@ -441,27 +481,24 @@
 						
 						if(orderAdjAmt != 0){
 		
-						  // alert("totalAmt=======loop======"+totalAmt);
-						
+						  if(orderAdjustment.orderAdjustmentTypeId != "SERVICE_CHARGE" && orderAdjustment.orderAdjustmentTypeId != "TEN_PERCENT_SUBSIDY"){
 							message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>"+
-										"<td align='left'> Remove: </td>"+
-										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove'  onclick='javascript:removeAdjustment();'></td>";
-										
-										
-										/*
-										if(incBasic == "TRUE"){
-											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();' checked/>Inc BasicPrice</td>";
-										}
-										else{
-											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();'/>Inc BasicPrice</td>";
-										}
-										*/
-										
+									 	"<td align='left'> Remove: </td>"+
+										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustment();'></td>";
 									"</tr>";
+						    }else{
+						      message += "<tr>"+
+										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>";
+									"</tr>";
+						    
+						    }			
 						
 						}
 						
@@ -481,15 +518,12 @@
 			message += "</table>";
 				
 			
-				if(dataRow['SERVICE_CHARGE_PUR_AMT'])
-				serviceChargeAmt = dataRow['SERVICE_CHARGE_PUR_AMT'];
-				if(dataRow['SERVICE_CHARGE_PUR'])
-				serviceCharge = dataRow['SERVICE_CHARGE_PUR'];
+				
 		
-			message += "<hr class='style18'></hr>";
+			<#--message += "<hr class='style18'></hr>";
 			
 			message += "<table cellspacing=10 cellpadding=10 id='salesDiscountsAndChgs' >" ;
-				message += "<tr>"+
+			<#--	message += "<tr>"+
 							"<td align='left'>Sale Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
 						"</tr>";
@@ -507,12 +541,12 @@
 							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
 						"</tr>";
 			
-			message += "</table>";				
+			message += "</table>";		-->		
 			
 			
 				message += "<hr class='style18'></hr>";
 			
-			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGridTest();' class='smallSubmit'>Add Price</button></span></td><#--<td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td>--></tr>";
+			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price</button></td></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
@@ -538,20 +572,25 @@
 	
 	var adjIdAmt=addAdjType+"_PUR_AMT";
 	
-	 if(addAdjType != "")
-	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
-	
-	
+	 if(addAdjType != ""){
+	 
+	    if(addAdjType != "SERVICE_CHARGE" && addAdjType != "TEN_PERCENT_SUBSIDY")
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	    else
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td></tr>');
+	    
+	 
+	}
 	
 	}
 	
 	function removeAdjustment(){
 	
-	
-	
+	  var refId;
 	  $("#indentAdjustmentTable tr :input:visible").each(function () {
 		    var id = this.id;
 
+			refId = id;
 			//alert(id);
 			
 			if(id != 'undefined' && id != null && id.length){
@@ -571,17 +610,12 @@
 	
 	
 	  $('#indentAdjustmentTable tr').click(function () {
-	  
-           var rowIndex = $('#indentAdjustmentTable tr').index(this); 
-             if(rowIndex != -1)
-             document.getElementById("indentAdjustmentTable").deleteRow(rowIndex);  
-             
-             adjustBasePriceNew();
+             $(".delete").live('click', function(event) {
+	          $(this).parent().parent().remove();
+	        adjustBasePriceNew();
+           });
               
           });
-          
-          
-	
 	}
 	
 	
@@ -764,7 +798,7 @@
 		     totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
 		    
 		   }//end
-		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT") {
+		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -787,7 +821,7 @@
 		    }//end
 		   
 		     
-		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" ) {
+		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT" ) {
 		    
 		    
 		       if(id != 'undefined' && id != null && id.length){
@@ -902,7 +936,7 @@
 		     totalAmt = totalAmt + parseFloat(adjValue);
 		    
 		   }//end
-		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT") {
+		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -922,7 +956,7 @@
 		    }//end
 		   
 		     
-		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "TEN_PERCENT_SUBSIDY_PUR_AMT") {
+		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "TEN_PERCENT_SUBSIDY_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT") {
 		    
 		    
 		       if(id != 'undefined' && id != null && id.length){
@@ -1006,9 +1040,9 @@
 		    
 		  if(id == "CST_PUR_AMT" || id == "VAT_PUR_AMT" || id == "ENTRY_TAX_PUR_AMT" || id == "CST_SURCHARGE_PUR_AMT" || id == "VAT_SURCHARGE_PUR_AMT")  
 		    totTax = totTax + parseFloat(adjValueAmt);
-		  if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT")    
+		  if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT")    
 		    totAdj = totAdj + parseFloat(adjValueAmt);
-		  if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT")     
+		  if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT")     
 		    totDis = totDis + parseFloat(adjValueAmt);
 		    
 		    
