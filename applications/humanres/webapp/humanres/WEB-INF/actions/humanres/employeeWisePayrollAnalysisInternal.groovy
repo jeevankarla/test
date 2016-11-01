@@ -36,7 +36,7 @@ dedTypeIds.each{ dedTypeId->
 		payheadTypeNames.add(dedDescMap.get(dedTypeId));
 	}
 }
-
+payheadTypeNames.add("Net Amount")
 JSONArray benefitsTableJSON = new JSONArray();
 employeeDeptMap = [:];
 employments = [];
@@ -49,6 +49,7 @@ employments.each { employment ->
 JSONArray employeesPayrollTableJSON = new JSONArray();
 if (payRollEmployeeMap != null) {
 	payRollEmployeeMap.each { employeePayroll ->
+		netAmount = 0.0;
 		partyId = employeePayroll.getKey();
 		partyName = PartyHelper.getPartyName(delegator, partyId, false);		
 		JSONArray employeePayrollJSON = new JSONArray();
@@ -60,9 +61,11 @@ if (payRollEmployeeMap != null) {
 			amount = 0;
 			if (employeePayrollItems.containsKey(payheadTypeId)) {
 				amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+				netAmount = netAmount + amount;
 			}
 			employeePayrollJSON.add(amount);
 		}
+		employeePayrollJSON.add(netAmount);
 		employeesPayrollTableJSON.add(employeePayrollJSON);
 	}
 }
