@@ -2615,6 +2615,16 @@ public class DepotPurchaseServices{
 		            createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
 		            createInvoiceItemContext.put("userLogin", userLogin);
+		            
+		            if (paramMap.containsKey(taxType + thisSuffix)) {
+		            	String taxAmt = (String) paramMap.get(taxType + thisSuffix);
+			            	if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+								if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
+									createInvoiceItemContext.put("sourcePercentage",new BigDecimal(taxAmt));
+							}
+						}
+		            }
+		            
 		            if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 						String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
 						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
@@ -3539,6 +3549,16 @@ public class DepotPurchaseServices{
 		            createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
 		            createInvoiceItemContext.put("userLogin", userLogin);
+		            
+		            if (paramMap.containsKey(taxType + thisSuffix)) {
+		            	String taxAmt = (String) paramMap.get(taxType + thisSuffix);
+			            	if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+								if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
+									createInvoiceItemContext.put("sourcePercentage",new BigDecimal(taxAmt));
+							}
+						}
+		            }
+		            
 		            if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 						String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
 						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
