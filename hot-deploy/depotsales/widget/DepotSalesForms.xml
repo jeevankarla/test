@@ -933,7 +933,7 @@
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
         <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
-        <field name="cancelOrder" widget-style="buttontext" use-when="shipmentDone.equals(&quot;N&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
+        <field name="cancelOrder" widget-style="buttontext" use-when="shipmentDone.equals(&quot;N&quot;) &amp;&amp; statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
