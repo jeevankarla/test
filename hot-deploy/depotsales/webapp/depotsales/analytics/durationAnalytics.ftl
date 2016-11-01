@@ -39,12 +39,10 @@ $(document).ready(function () {
                     { name: 'ReportsTo', type: 'string' },                                    
                     { name: 'ro', type: 'string' },
                     { name: 'avgTAT', type: 'string' }, 
-                    { name: 'totalIndents', type: 'string' },
-                    { name: 'indentQty', type: 'string' },
-                    { name: 'totalRevenue', type: 'string' }, 
-                    { name: 'totPurchases', type: 'string' },
-                    { name: 'totalPoQty', type: 'string' },                                      
-                    { name: 'totalPoAmt', type: 'string' },
+                    { name: 'avgDuration', type: 'string' },                                       
+                    { name: 'slaeAvgDuration', type: 'string' },
+                    //{ name: 'inProcess', type: 'string' },
+                    //{ name: 'completed', type: 'string' },                    
                 ],
                 hierarchy:
                 {
@@ -93,19 +91,16 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
-                  { text: 'Total Indents', width:'10%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Amt (Rs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Issued', width:'12%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
+                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
+                  { text: 'PO Avg. Duration (Minutes)', width:'12%', align: 'center', dataField: 'avgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Sale Invoice Avg. Duration(Minutes)', width:'12%', align: 'center', dataField: 'slaeAvgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  //{ text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                 // { text: 'Shipped Qty', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                
             });
-            $("#treeGrid").jqxTreeGrid('scrollOffset', 4, 4);
         });
     </script>
 	
