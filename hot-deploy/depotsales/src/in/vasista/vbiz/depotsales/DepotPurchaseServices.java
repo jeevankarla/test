@@ -2399,7 +2399,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("assessableValueDisc" + thisSuffix)) {
 				discAssessableValue = (String) paramMap.get("assessableValueDisc" + thisSuffix);
 			}
-			Debug.log("discAssessableValue ============="+discAssessableValue);
+			//Debug.log("discAssessableValue ============="+discAssessableValue);
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
 					adjDiscAmt = new BigDecimal(adjAmtDiscStr);
@@ -2558,7 +2558,7 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("invoiceItemSeqId" + thisSuffix)) {
 					invoiceItemSeqId = (String) paramMap.get("invoiceItemSeqId" + thisSuffix);
 				}
-				Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
+				//Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
 				
 				
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
@@ -2599,12 +2599,12 @@ public class DepotPurchaseServices{
 				String taxListStr = (String) paramMap.get("taxList"
 						+ thisSuffix);
 				
-				Debug.log("taxListStr =============="+taxListStr);
+				//Debug.log("taxListStr =============="+taxListStr);
 				
 				String[] taxList = taxListStr.split(",");
 				for (int j = 0; j < taxList.length; j++) {
 					String taxType = taxList[j];
-					Debug.log("taxType =============="+taxType);
+					//Debug.log("taxType =============="+taxType);
 					
 					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 
@@ -2756,7 +2756,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("discOrderAdjustmentsList" + thisSuffix)) {
 				String discOrderAdjustmentsListStr = (String) paramMap.get("discOrderAdjustmentsList"+ thisSuffix);
 				
-				Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
+				//Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
 				
 				String[] orderAdjustmentsList = discOrderAdjustmentsListStr.split(",");
 				for (int j = 0; j < orderAdjustmentsList.length; j++) {
@@ -2807,23 +2807,23 @@ public class DepotPurchaseServices{
 					
 				}
 				
-				Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
+				//Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
 
 				//====now population===============
 				
 				for(int j=0; j<discOrderAdjustmentList.size(); j++){
 					Map adjMap = (Map) discOrderAdjustmentList.get(j);
 					
-					Debug.log("adjMap====================="+adjMap);
+					//Debug.log("adjMap====================="+adjMap);
 
 					if(  ((BigDecimal) adjMap.get("amount")).compareTo(BigDecimal.ZERO)<0){
 						Map adjItemCtx = FastMap.newInstance();
 						
-						Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
+						//Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
 
 						adjItemCtx.put("invoiceItemTypeId", adjMap.get("orderAdjustmentTypeId"));
 						
-						Debug.log("amount====================="+adjMap.get("amount"));
+						//Debug.log("amount====================="+adjMap.get("amount"));
 						
 						adjItemCtx.put("amount", (BigDecimal) adjMap.get("amount"));
 						adjItemCtx.put("quantity", BigDecimal.ONE);
@@ -2832,7 +2832,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 						
-						Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
+						//Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
@@ -2840,7 +2840,7 @@ public class DepotPurchaseServices{
 						}
 						
 						
-						Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
+						//Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("isAssessableValue")) && ( (adjMap.get("isAssessableValue")).equals("Y"))  ){
@@ -2849,15 +2849,15 @@ public class DepotPurchaseServices{
 							
 						}
 						
-						Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
+						//Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
 
-						Debug.log("adjItemCtx====================="+adjItemCtx);
+						//Debug.log("adjItemCtx====================="+adjItemCtx);
 
 						
 						try{
 			            	Map<String, Object> createInvoiceItemResult1 = dispatcher.runSync("createInvoiceItem", adjItemCtx);
 			            	
-							Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
+							//Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
 			            	
 			            } catch (Exception e) {
 			            	 Debug.logError(e, "Error in fetching InvoiceItem ", module);
@@ -2874,7 +2874,7 @@ public class DepotPurchaseServices{
 			
 		}//=============loopEnd===============
 		
-		Debug.log("purposeTypeId====================="+purposeTypeId);
+		//Debug.log("purposeTypeId====================="+purposeTypeId);
 
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
@@ -3350,7 +3350,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("assessableValueDisc" + thisSuffix)) {
 				discAssessableValue = (String) paramMap.get("assessableValueDisc" + thisSuffix);
 			}
-			Debug.log("discAssessableValue ============="+discAssessableValue);
+			//Debug.log("discAssessableValue ============="+discAssessableValue);
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
 					adjDiscAmt = new BigDecimal(adjAmtDiscStr);
@@ -3492,7 +3492,7 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("invoiceItemSeqId" + thisSuffix)) {
 					invoiceItemSeqId = (String) paramMap.get("invoiceItemSeqId" + thisSuffix);
 				}
-				Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
+				//Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
 				
 				
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
@@ -3533,12 +3533,12 @@ public class DepotPurchaseServices{
 				String taxListStr = (String) paramMap.get("taxList"
 						+ thisSuffix);
 				
-				Debug.log("taxListStr =============="+taxListStr);
+				//Debug.log("taxListStr =============="+taxListStr);
 				
 				String[] taxList = taxListStr.split(",");
 				for (int j = 0; j < taxList.length; j++) {
 					String taxType = taxList[j];
-					Debug.log("taxType =============="+taxType);
+					//Debug.log("taxType =============="+taxType);
 					
 					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 
@@ -3690,7 +3690,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("discOrderAdjustmentsList" + thisSuffix)) {
 				String discOrderAdjustmentsListStr = (String) paramMap.get("discOrderAdjustmentsList"+ thisSuffix);
 				
-				Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
+				//Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
 				
 				String[] orderAdjustmentsList = discOrderAdjustmentsListStr.split(",");
 				for (int j = 0; j < orderAdjustmentsList.length; j++) {
@@ -3741,23 +3741,23 @@ public class DepotPurchaseServices{
 					
 				}
 				
-				Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
+				//Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
 
 				//====now population===============
 				
 				for(int j=0; j<discOrderAdjustmentList.size(); j++){
 					Map adjMap = (Map) discOrderAdjustmentList.get(j);
 					
-					Debug.log("adjMap====================="+adjMap);
+					//Debug.log("adjMap====================="+adjMap);
 
 					if(  ((BigDecimal) adjMap.get("amount")).compareTo(BigDecimal.ZERO)<0){
 						Map adjItemCtx = FastMap.newInstance();
 						
-						Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
+						//Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
 
 						adjItemCtx.put("invoiceItemTypeId", adjMap.get("orderAdjustmentTypeId"));
 						
-						Debug.log("amount====================="+adjMap.get("amount"));
+						//Debug.log("amount====================="+adjMap.get("amount"));
 						
 						adjItemCtx.put("amount", (BigDecimal) adjMap.get("amount"));
 						adjItemCtx.put("quantity", BigDecimal.ONE);
@@ -3766,7 +3766,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 						
-						Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
+						//Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
@@ -3774,7 +3774,7 @@ public class DepotPurchaseServices{
 						}
 						
 						
-						Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
+						//Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("isAssessableValue")) && ( (adjMap.get("isAssessableValue")).equals("Y"))  ){
@@ -3783,15 +3783,15 @@ public class DepotPurchaseServices{
 							
 						}
 						
-						Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
+						//Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
 
-						Debug.log("adjItemCtx====================="+adjItemCtx);
+						//Debug.log("adjItemCtx====================="+adjItemCtx);
 
 						
 						try{
 			            	Map<String, Object> createInvoiceItemResult1 = dispatcher.runSync("createInvoiceItem", adjItemCtx);
 			            	
-							Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
+							//Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
 			            	
 			            } catch (Exception e) {
 			            	 Debug.logError(e, "Error in fetching InvoiceItem ", module);
@@ -3808,7 +3808,7 @@ public class DepotPurchaseServices{
 			
 		}//=============loopEnd===============
 		
-		Debug.log("purposeTypeId====================="+purposeTypeId);
+		//Debug.log("purposeTypeId====================="+purposeTypeId);
 
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
@@ -4206,7 +4206,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("assessableValueDisc" + thisSuffix)) {
 				discAssessableValue = (String) paramMap.get("assessableValueDisc" + thisSuffix);
 			}
-			Debug.log("discAssessableValue ============="+discAssessableValue);
+			////Debug.log("discAssessableValue ============="+discAssessableValue);
 			if(UtilValidate.isNotEmpty(adjAmtDiscStr)){
 				try {
 					adjDiscAmt = new BigDecimal(adjAmtDiscStr);
@@ -4348,7 +4348,7 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("invoiceItemSeqId" + thisSuffix)) {
 					invoiceItemSeqId = (String) paramMap.get("invoiceItemSeqId" + thisSuffix);
 				}
-				Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
+				////Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
 				
 				
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
@@ -4389,12 +4389,12 @@ public class DepotPurchaseServices{
 				String taxListStr = (String) paramMap.get("taxList"
 						+ thisSuffix);
 				
-				Debug.log("taxListStr =============="+taxListStr);
+				////Debug.log("taxListStr =============="+taxListStr);
 				
 				String[] taxList = taxListStr.split(",");
 				for (int j = 0; j < taxList.length; j++) {
 					String taxType = taxList[j];
-					Debug.log("taxType =============="+taxType);
+					////Debug.log("taxType =============="+taxType);
 					
 					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 
@@ -4592,7 +4592,7 @@ public class DepotPurchaseServices{
 			if (paramMap.containsKey("discOrderAdjustmentsList" + thisSuffix)) {
 				String discOrderAdjustmentsListStr = (String) paramMap.get("discOrderAdjustmentsList"+ thisSuffix);
 				
-				Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
+				////Debug.log("discOrderAdjustmentsListStr====================="+discOrderAdjustmentsListStr);
 				
 				String[] orderAdjustmentsList = discOrderAdjustmentsListStr.split(",");
 				for (int j = 0; j < orderAdjustmentsList.length; j++) {
@@ -4643,23 +4643,23 @@ public class DepotPurchaseServices{
 					
 				}
 				
-				Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
+				////Debug.log("discOrderAdjustmentList====================="+discOrderAdjustmentList);
 
 				//====now population===============
 				
 				for(int j=0; j<discOrderAdjustmentList.size(); j++){
 					Map adjMap = (Map) discOrderAdjustmentList.get(j);
 					
-					Debug.log("adjMap====================="+adjMap);
+					////Debug.log("adjMap====================="+adjMap);
 
 					if(  ((BigDecimal) adjMap.get("amount")).compareTo(BigDecimal.ZERO)<0){
 						Map adjItemCtx = FastMap.newInstance();
 						
-						Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
+						////Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
 
 						adjItemCtx.put("invoiceItemTypeId", adjMap.get("orderAdjustmentTypeId"));
 						
-						Debug.log("amount====================="+adjMap.get("amount"));
+						////Debug.log("amount====================="+adjMap.get("amount"));
 						
 						adjItemCtx.put("amount", (BigDecimal) adjMap.get("amount"));
 						adjItemCtx.put("quantity", BigDecimal.ONE);
@@ -4668,7 +4668,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 						
-						Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
+						////Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
@@ -4676,7 +4676,7 @@ public class DepotPurchaseServices{
 						}
 						
 						
-						Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
+						////Debug.log("isAssessableValue====================="+adjMap.get("isAssessableValue"));
 
 						
 						if(UtilValidate.isNotEmpty(adjMap.get("isAssessableValue")) && ( (adjMap.get("isAssessableValue")).equals("Y"))  ){
@@ -4685,15 +4685,15 @@ public class DepotPurchaseServices{
 							
 						}
 						
-						Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
+						////Debug.log("isAssessableValue===========3232=========="+adjMap.get("isAssessableValue"));
 
-						Debug.log("adjItemCtx====================="+adjItemCtx);
+						////Debug.log("adjItemCtx====================="+adjItemCtx);
 
 						
 						try{
 			            	Map<String, Object> createInvoiceItemResult1 = dispatcher.runSync("createInvoiceItem", adjItemCtx);
 			            	
-							Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
+							////Debug.log("createInvoiceItemResult1====================="+createInvoiceItemResult1);
 			            	
 			            } catch (Exception e) {
 			            	 Debug.logError(e, "Error in fetching InvoiceItem ", module);
@@ -4710,7 +4710,7 @@ public class DepotPurchaseServices{
 			
 		}//=============loopEnd===============
 		
-		Debug.log("purposeTypeId====================="+purposeTypeId);
+		////Debug.log("purposeTypeId====================="+purposeTypeId);
 
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
