@@ -1472,7 +1472,7 @@ if(shipments){
 					 }
 					 
 					 newObj.put("discItemAdjustments", discItemAdjustmentJSON);
-				     newObj.put("orderAdjustmentTypeList", additionalChgTypeIdsList);
+				     newObj.put("additionalChgTypeIdsList", additionalChgTypeIdsList);
 				     newObj.put("discountTypeIdsList", discountTypeIdsList);
 					 
 					 
