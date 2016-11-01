@@ -726,7 +726,7 @@ under the License.
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResCurrentEmploymentData}" navigation-menu-name="EmploymentUpdate" id="CurrentEmploymentData">
-                    <include-menu name="EmploymentUpdate" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="EmploymentUpdate" location="component://humanres/widget/HumanresMenus.xml"/> -->
                     <include-form name="CurrentEmploymentData" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                 </screenlet>
             </widgets>
