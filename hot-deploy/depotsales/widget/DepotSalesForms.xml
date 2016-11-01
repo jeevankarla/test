@@ -859,6 +859,11 @@
       		</entity-condition>
       		<set field="customerId" value="${orderRoleList[0].partyId}"/>
       		<set field="supplierId" value="${orderRoleSuppList[0].partyId}"/>
+      		<entity-condition entity-name="Shipment" list="ShipmentList" >
+      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+      		</entity-condition>
+      		<set field="shipmentDone" value="${groovy: return (ShipmentList.size() > 0)? 'Y' : 'N';}"/>
+      		
       		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
@@ -876,7 +881,7 @@
       			</condition-list>
       		</entity-condition>
       		<set field="vehicleId" value="${ShipmentList[0].vehicleId}"/> -->
-      	</row-actions>
+      	</row-actions>   
       	<field name="orderId" widget-style="buttontext">
       	<hyperlink target="POoverview" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
       			<parameter param-name="orderId"/>
@@ -928,7 +933,7 @@
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
         <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
-        <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
+        <field name="cancelOrder" widget-style="buttontext" use-when="shipmentDone.equals(&quot;N&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
