@@ -452,17 +452,10 @@
 										"<td align='left'> Amt: </td>"+
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>"+
 										"<td align='left'> Remove: </td>"+
-										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove'  onclick='javascript:removeAdjustment();'></td>";
+										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete' onclick='javascript:removeAdjustment();'></td>";
 										
 										
-										/*
-										if(incBasic == "TRUE"){
-											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();' checked/>Inc BasicPrice</td>";
-										}
-										else{
-											message += "<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:adjustBasePrice();'/>Inc BasicPrice</td>";
-										}
-										*/
+										
 										
 									"</tr>";
 						
@@ -542,7 +535,7 @@
 	var adjIdAmt=addAdjType+"_PUR_AMT";
 	
 	if(addAdjType != "")
-	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
 	
 	
 	
