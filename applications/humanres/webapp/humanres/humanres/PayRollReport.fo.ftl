@@ -97,7 +97,7 @@ under the License.
             				</fo:table-cell>
             				<fo:table-cell>
             					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-                                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+                                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","reportHeaderLable" : "reportSubHeaderLable"}, true)>
             					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="left">  ${reportHeader.description?if_exists}              PaySlip No: ${paySlipNo?if_exists}</fo:block>
             					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="center">${reportSubHeader.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
             				</fo:table-cell>
@@ -148,7 +148,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Organization               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : ${emplDetails.panId?if_exists}</fo:block>
