@@ -892,8 +892,17 @@
             <call-service service-name="createPreviousEmployment" in-map-name="parameters">	
 			</call-service>
         <else>
-            <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-            <store-value value-field="lookedUpValue" />
+        	<set field="presentEpf" from-field="lookedUpValue.presentEpf"/>
+        	<if-not-empty field="presentEpf">
+	           <if-compare-field field="presentEpf" to-field="parameters.presentEpf" operator="not-equals">
+		          	<add-error>
+	                   	<fail-message message="PF Number is already allotted, cant Be modified."/>
+	             	</add-error>
+	                 <check-errors/>
+	           </if-compare-field>
+        	</if-not-empty>
+       		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+           	<store-value value-field="lookedUpValue" />
         </else>
 		</if-empty>
 	</simple-method>
