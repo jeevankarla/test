@@ -35,18 +35,18 @@ under the License.
     </eca> -->
 
     <!-- create an accounting transactions every time an issuance to sales shipment is canceled -->
-    <eca service="cancelOrderItemIssuanceFromSalesShipment" event="commit">
+  <!--   <eca service="cancelOrderItemIssuanceFromSalesShipment" event="commit">
         <condition field-name="canceledQuantity" operator="greater" value="0" type="BigDecimal"/>
         <action service="createAcctgTransForCanceledSalesShipmentIssuance" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- create the accounting transactions for a shipment receipt every time the inventory is received -->
-    <eca service="createShipmentReceipt" event="commit">
+  <!--   <eca service="createShipmentReceipt" event="commit">
         <action service="createAcctgTransForShipmentReceipt" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- work effort related transactions -->
-    <eca service="assignInventoryToWorkEffort" event="commit">
+    <!-- <eca service="assignInventoryToWorkEffort" event="commit">
         <action service="createAcctgTransForWorkEffortIssuance" mode="sync"/>
     </eca>
     <eca service="createWorkEffortInventoryProduced" event="commit">
@@ -63,13 +63,13 @@ under the License.
         <condition-field field-name="ownerPartyId" operator="not-equals" to-field-name="oldOwnerPartyId"/>
         <action service="createAcctgTransForInventoryItemOwnerChange" mode="sync"/>
     </eca>
-
+ -->
     <!-- creating inventory item detail when unitCost is not empty and receiptId is empty -->
-    <eca service="createInventoryItemDetail" event="commit">
+  <!--   <eca service="createInventoryItemDetail" event="commit">
         <condition field-name="unitCost" operator="is-not-empty"/>
         <condition field-name="receiptId" operator="is-empty"/>
         <action service="createAcctgTransForInventoryItemCostChange" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- attempt to create AcctgTrans Physical Inventory Variance when Physical InventoryAndVariance is created-->
     <eca service="createPhysicalInventoryAndVariance" event="commit">
