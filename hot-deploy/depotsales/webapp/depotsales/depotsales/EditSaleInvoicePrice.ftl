@@ -355,13 +355,28 @@
 			  var taxList1 = dataRow["taxList1"];
 			  
 			  
-			  
 			   $.each(taxList1, function(key, item){
-			        var tempMap = {};
-			        
+					
+					if(saleTaxList == item+"_SALE"){
+					var tempMap = {};			        
 			        tempMap['orderAdjustmentTypeId'] = item;
-			  
-			    allAdjustments.push(tempMap);
+			        allAdjustments.push(tempMap);
+			        }
+			        if(saleTaxList == item+"_SALE"){
+					var tempMap = {};			        
+			        tempMap['orderAdjustmentTypeId'] = item+"_SURCHARGE";
+			        allAdjustments.push(tempMap);
+			        }
+			        if(item == 'TEN_PERCENT_SUBSIDY'){
+					var tempMap = {};			        
+			        tempMap['orderAdjustmentTypeId'] = item;
+			        allAdjustments.push(tempMap);
+			        }
+			        if(item == 'SERVICE_CHARGE'){
+					var tempMap = {};			        
+			        tempMap['orderAdjustmentTypeId'] = item;
+			        allAdjustments.push(tempMap);
+			        }
 			  
 			  });
 			  
@@ -379,6 +394,7 @@
   				    adjDropdown +="<option value='"+item['orderAdjustmentTypeId']+"'>"+item['orderAdjustmentTypeId']+"</option>";
   				
   				 });
+			
 			
 			   if(dataRow['SERVICE_CHARGE_PUR_AMT'])
 				serviceChargeAmt = dataRow['SERVICE_CHARGE_PUR_AMT'];
@@ -495,7 +511,7 @@
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
-										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>";
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' readonly/></td>";
 									"</tr>";
 						    
 						    }			
@@ -562,10 +578,23 @@
 	
 	var addAdjType = $("#addAdjList").val();
 	
+	var addFlag = "Y";
+	
+	$("#indentAdjustmentTable tr :input:visible").each(function () {
+		    var id = this.id;
+		    if(id == addAdjType+"_PUR")
+		    addFlag = "N";
+	 });
+	
+	
+	if(addFlag == "Y"){
 	var removeRow = "javascript:removeAdjustment()";
 	
 	var totalAmtparam = '\'' + totalAmt + '\'';
     var updateAmountByPercentage = "javascript:updateAmountByPercentage(this,"+ totalAmtparam +")";
+    
+    var updatePercentageByAmount = "javascript:updatePercentageByAmount(this,"+ totalAmtparam +")";
+	
 	
 	
 	var adjIdPer=addAdjType+"_PUR";
@@ -575,11 +604,16 @@
 	 if(addAdjType != ""){
 	 
 	    if(addAdjType != "SERVICE_CHARGE" && addAdjType != "TEN_PERCENT_SUBSIDY")
-	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
 	    else
-	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td></tr>');
-	    
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'" readonly/></td></tr>');
 	 
+	}
+	
+	
+	}else{
+	
+	   alert("Sorry Already "+addAdjType+" Added");
 	}
 	
 	}
@@ -700,6 +734,17 @@
 	 	var taxPercItemId = taxPercentItem.id;
 	 	
 	 	
+	 	if(taxPercentItem.id == "TEN_PERCENT_SUBSIDY_PUR"){
+	 	  var tenPer =  $("#TEN_PERCENT_SUBSIDY_PUR").val();
+	 	  if(tenPer != 10){
+	 	  $("#TEN_PERCENT_SUBSIDY_PUR").val(10);
+	 	   percentage = 10;
+	 	  }
+	 	}
+	 	  
+	 	
+	 	
+	 	
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
 	 	if(percentage != 'undefined' && percentage != null && percentage.length){
 	 	
@@ -719,6 +764,26 @@
 	 	
 	 	adjustBasePriceNew();
 	}	
+	
+	
+	
+	
+	function updatePercentageByAmount(taxAmountItem, totalAmt){
+	 	var taxAmount = taxAmountItem.value;
+	 	var taxAmtItemId = taxAmountItem.id;
+	 	var taxPercItemId = (taxAmountItem.id).replace("_AMT", ""); 
+	 	if(taxAmount != 'undefined' && taxAmount != null && taxAmount.length){
+	 		var percentage = (taxAmount) * (100/totalAmt) ;
+	 		$('#'+taxPercItemId).val(percentage);
+	 	}
+	 	updateAmountByPercentage(taxAmountItem,totalAmt);
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
