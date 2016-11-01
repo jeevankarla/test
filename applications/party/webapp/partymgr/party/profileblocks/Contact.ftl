@@ -207,7 +207,7 @@ under the License.
              </#if>           
           </#list>
           <tr>
-            <td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId=${partyId}&amp;</@ofbizUrl>" target="_blank"/>AddOtherAddressOfSupplier</td>
+            <#-- <td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId=${partyId}&amp;</@ofbizUrl>" target="_blank"/>AddOtherAddressOfSupplier</td> -->
              
           </tr>
         </table>
