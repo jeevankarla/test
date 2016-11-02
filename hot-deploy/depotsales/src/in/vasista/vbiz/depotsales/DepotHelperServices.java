@@ -2221,6 +2221,9 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         EntityCondition cond1 = null;
         List condList = FastList.newInstance();
 		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIdsList));
+		condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_SALES"));
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
             //List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdList));
             cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
             List condRoleList = FastList.newInstance();
@@ -2517,6 +2520,8 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
        }
+		condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_SALES"));
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
         //List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("orderId", EntityOperator.IN,orderIdList));
             cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -2566,6 +2571,7 @@ public static Map<String, Object> periodPopulateShipmentTotals(DispatchContext d
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
         }
+		condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
 		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
 		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
         cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
