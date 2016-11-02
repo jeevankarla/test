@@ -116,10 +116,12 @@ if(UtilValidate.isNotEmpty(thruDate)){
 						invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], true);
 						invoiceDate=invoice.createdStamp;
 						shipmentId = invoice.shipmentId;
-						shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], true);
-						if(shipment){
-							shipDate = shipment.createdDate;
-							long saleTimeDiff = invoiceDate.getTime() - shipDate.getTime();
+						//shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], true);
+						orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
+						if(orderHeader){
+							//shipDate = shipment.createdDate;
+							indentDate = orderHeader.orderDate;
+							long saleTimeDiff = invoiceDate.getTime() - indentDate.getTime();
 							BigDecimal saleDiffHours = saleTimeDiff / (60 * 60 * 1000);
 							BigDecimal modOfSaleDiffHours = saleTimeDiff % (60 * 60 * 1000);
 							saleDiffMinutes = modOfSaleDiffHours/ (60 * 1000);
@@ -196,8 +198,12 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
-				newObj.put("avgDuration", (entryValue.get("diffMinutes")/entryValue.get("totalPos")).setScale(2, 0));
-				newObj.put("slaeAvgDuration", (entryValue.get("saleTotalTime")/entryValue.get("totalShipments")).setScale(2, 0));
+				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
+				BigDecimal durationhrs=durationMinits / (1440);
+				newObj.put("avgDuration", (durationhrs).setScale(2, 0));
+				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
+				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(2, 0));
 			 }
 			 else if (partyId == ROOT_ID) {
 				newObj.put("partyId", ROOT_ID );
@@ -205,8 +211,12 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ReportsTo", "");
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
-				newObj.put("avgDuration", (entryValue.get("diffMinutes")/entryValue.get("totalPos")).setScale(2, 0));
-				newObj.put("slaeAvgDuration", (entryValue.get("saleTotalTime")/entryValue.get("totalShipments")).setScale(2, 0));
+				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
+				BigDecimal durationhrs=durationMinits / (1440);
+				newObj.put("avgDuration", (durationhrs).setScale(2, 0));
+				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
+				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(2, 0));
 			 }
 			 else {
 				newObj.put("partyId", partyId );
@@ -214,8 +224,12 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
-				newObj.put("avgDuration", (entryValue.get("diffMinutes")/entryValue.get("totalPos")).setScale(2, 0));
-				newObj.put("slaeAvgDuration", (entryValue.get("saleTotalTime")/entryValue.get("totalShipments")).setScale(2, 0));
+				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
+				BigDecimal durationhrs=durationMinits / (1440);
+				newObj.put("avgDuration", (durationhrs).setScale(2, 0));
+				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
+				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(2, 0));
 			 }
 			 dataList.add(newObj);
 	 }
