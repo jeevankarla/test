@@ -128,7 +128,8 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		branchDetails = DataMap.get(partyId);
 		 		totIndents = branchDetails.get("totIndents");
 		 		branchDetails.putAt("totIndents", ++totIndents);
-				if(totalPoQty>0){
+		 		BigDecimal totPurchases = branchDetails.get("totPurchases");				 
+				if(totalPoQty>0){					
 					branchDetails.putAt("totPurchases", ++totPurchases);
 				}
 				branchDetails.putAt("poQty", totalPoQty+ branchDetails.get("poQty"));
@@ -143,6 +144,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		branchDetails.putAt("totIndents", 1);
 				if(totalPoQty>0){
 					 branchDetails.putAt("totPurchases", 1);
+				}else{
+				branchDetails.putAt("totPurchases", 0);
+				
 				}
 				branchDetails.putAt("poQty", totalPoQty);
 				branchDetails.putAt("poAmt", totalPoAmt);
@@ -172,6 +176,8 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		roDetails.putAt("totIndents", 1);
 				if(totalPoQty>0){
 					 roDetails.putAt("totPurchases", 1);
+				}else{
+					roDetails.putAt("totPurchases", 0);
 				}
 				roDetails.putAt("totQty", totalQty);
 				roDetails.putAt("poQty", totalPoQty);
@@ -220,11 +226,15 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	 		JSONObject newObj = new JSONObject();
 	 		partyId = entry.getKey();
 	 		entryValue = entry.getValue();
+			 pendingPOs = 0;
 	 		if (branchROMap.containsKey(partyId)) {
 	 			roId = branchROMap.get(partyId);
 				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
+				if(entryValue.get("totPurchases") !=null){
+					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+				}
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", partyIdNameMap.get(partyId));
 				newObj.put("ReportsTo", roId);
@@ -242,12 +252,15 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalIndents", entryValue.get("totIndents"));				
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
 				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
-				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
+				newObj.put("pendingPOs",pendingPOs);
 	 		}
 	 		else if (partyId == ROOT_ID) {
 				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
+				if(entryValue.get("totPurchases") !=null){
+					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+				}
 				newObj.put("partyId", ROOT_ID );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", "");
@@ -265,12 +278,15 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalIndents", entryValue.get("totIndents"));
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
 				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
-				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
+				newObj.put("pendingPOs",pendingPOs);
 	 		}	 		
 	 		else {
 				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
+				if(entryValue.get("totPurchases") !=null){
+					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+				}
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", ROOT_ID);
@@ -288,7 +304,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
 				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
-				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
+				newObj.put("pendingPOs",pendingPOs);
 	 		}
 	 		dataList.add(newObj);			
 	 }		
