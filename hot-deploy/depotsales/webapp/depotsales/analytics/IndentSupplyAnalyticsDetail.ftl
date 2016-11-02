@@ -42,7 +42,7 @@ $(document).ready(function () {
                     { name: 'totalRevenue', type: 'string' },                                       
                     { name: 'totalIndents', type: 'string' },
                     { name: 'inProcess', type: 'string' },
-                    { name: 'completed', type: 'string' },                    
+                    { name: 'saleAmt', type: 'string' },                    
                 ],
                 hierarchy:
                 {
@@ -96,7 +96,7 @@ $(document).ready(function () {
                   { text: 'Total Indenter Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Total SupplyBilled Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Pending Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                 // { text: 'Shipped Qty', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Sale Amount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                

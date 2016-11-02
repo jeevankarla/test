@@ -113,17 +113,23 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(2, 0);
 			 totalSaleQty=0;
 			 if(eachItem.getAt("saleQuantity")){
-			 totalSaleQty = new BigDecimal(eachItem.getAt("saleQuantity")).setScale(2, 0);
+			    totalSaleQty = new BigDecimal(eachItem.getAt("saleQuantity")).setScale(2, 0);
+			 }
+			 totalSaleAmount =0;
+			 if(eachItem.getAt("saleQuantity")){
+				 totalSaleAmount = new BigDecimal(eachItem.getAt("saleAmount")).setScale(2, 0);
 			 }
 			 if (DataMap.containsKey(partyId)) {
 				 branchDetails = DataMap.get(partyId);
 				 branchDetails.putAt("saleQty", totalSaleQty+ branchDetails.get("saleQty"));
+				 branchDetails.putAt("saleAmt", totalSaleAmount+ branchDetails.get("saleAmt"));
 				 branchDetails.putAt("completed", completed + branchDetails.get("completed"));
 				 branchDetails.putAt("totQty", totalQty + branchDetails.get("totQty"));
 			 }
 			 else {
 				 branchDetails = [:];
 				 branchDetails.putAt("saleQty", totalSaleQty);
+				 branchDetails.putAt("saleAmt",totalSaleAmount);
 				 branchDetails.putAt("totQty", totalQty);
 				 branchDetails.putAt("completed", completed);
 				 DataMap.putAt(partyId, branchDetails);
@@ -131,12 +137,14 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 if (DataMap.containsKey(roId)) {
 				 roDetails = DataMap.get(roId);
 				 roDetails.putAt("saleQty", totalSaleQty+roDetails.get("saleQty"));
+				 roDetails.putAt("saleAmt", totalSaleAmount+ roDetails.get("saleAmt"));
 				 roDetails.putAt("completed", completed + roDetails.get("completed"));
 				 roDetails.putAt("totQty", totalQty + roDetails.get("totQty"));
 			 }
 			 else {
 				 roDetails = [:];
 				 roDetails.putAt("saleQty", totalSaleQty);
+				 roDetails.putAt("saleAmt",totalSaleAmount);
 				 roDetails.putAt("totQty", totalQty);
 				 roDetails.putAt("completed", completed);
 				 DataMap.putAt(roId, roDetails);
@@ -145,12 +153,14 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 totDetails = DataMap.get(ROOT_ID);
 				 saleQty = totDetails.get("saleQty");
 				 totDetails.putAt("saleQty", totalSaleQty+saleQty);
+				 totDetails.putAt("saleAmt", totalSaleAmount+ totDetails.get("saleAmt"));
 				 totDetails.putAt("completed", completed + totDetails.get("completed"));
 				 totDetails.putAt("totQty", totalQty + totDetails.get("totQty"));
 			 }
 			 else {
 				 totDetails = [:];
 				 totDetails.putAt("saleQty", totalSaleQty);
+				 totDetails.putAt("saleAmt",totalSaleAmount);
 				 totDetails.putAt("totQty", totalQty);
 				 totDetails.putAt("completed", completed);
 				 DataMap.putAt(ROOT_ID, totDetails);
@@ -175,6 +185,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
 				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
 				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
@@ -186,6 +197,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
 				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
 				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
@@ -197,6 +209,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
 				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
+				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
 				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
