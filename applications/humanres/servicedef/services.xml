@@ -790,7 +790,14 @@ under the License.emplpunch
 		<attribute name="weeklyOffDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="partyId" mode="IN" type="String"></attribute>
     </service>
-
+    <service name="createLanguage" engine="java" auth="true" invoke="createLanguage" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>create New Language</description>
+       <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>  
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="language" mode="IN" type="String" optional="false"></attribute>
+        <!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
+    </service>
 	<service name="updatePreviousEmployment" engine="simple"
 		default-entity-name="EmployeeDetail"
 		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"

@@ -2630,4 +2630,11 @@
     <property key="SpouseName">       
         <value xml:lang="en">Spouse Name</value>        
     </property>
+    <property key="PageTitleAddNewLanguage">       
+        <value xml:lang="en">Add New Language</value>        
+    </property>
+     <property key="addLanguage">       
+        <value xml:lang="en">create Language</value>        
+    </property>
+    
 </resource>
