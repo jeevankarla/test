@@ -1677,6 +1677,29 @@ public class HumanresService {
 		      return result;
 	    }
 	    
+	    public static Map<String, Object> createLanguage(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Map result = ServiceUtil.returnSuccess();
+	    	Delegator delegator = ctx.getDelegator();
+	    	Locale locale = (Locale) context.get("locale");
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String language = (String)context.get("language");
+	        language = language.toUpperCase();
+	        if(UtilValidate.isNotEmpty(language)){
+	        	try{
+	        		GenericValue newEntity = delegator.makeValue("SkillType");
+	        		newEntity.set("skillTypeId",language);
+	        		newEntity.set("parentTypeId","LANGUAGE");
+	        		newEntity.set("description",language);
+	        		delegator.create(newEntity);
+	        	}catch (GenericEntityException e) {
+		            Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+		        }
+	        }
+	        result = ServiceUtil.returnSuccess("New Laguage has been successfully created");
+	        return result;
+	    }
 	    public static Map<String, Object> createHoliday(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	 
 	    	Map result = ServiceUtil.returnSuccess();

@@ -123,6 +123,7 @@ under the License.
                 <set field="tabButtonItem" value="viewprofile"/>               
                 <set field="labelTitleProperty" value="PageTitleEditEmployeeInformation"/>               
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="EmployeeProfile"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/getAllEmployees.js" global="true"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyPersonAndEmployeeDetail" value-field="personInfo"/>
             </actions>
@@ -133,6 +134,31 @@ under the License.
                     <widgets> 
                         <screenlet title="${uiLabelMap.PageTitleEditEmployeeInformation}">
                             <include-form name="EditEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        </screenlet>
+                     </widgets>
+                     </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="addNewLanguage">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="PageTitleAddNewLanguage"/>
+                <set field="tabButtonItem" value="viewprofile"/>               
+                <set field="labelTitleProperty" value="PageTitleAddNewLanguage"/>               
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="EmployeeProfile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyPersonAndEmployeeDetail" value-field="personInfo"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <section>
+                    <widgets> 
+                        <screenlet title="${uiLabelMap.PageTitleAddNewLanguage}">
+                            <include-form name="addNewLanguage" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
                      </widgets>
                      </section>
@@ -384,11 +410,19 @@ under the License.
 	<screen name="LanguagesKnown">
 		<section>
 			<actions>
+				 <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
 			</actions>
 			<widgets>
 				<section>
+					<condition>
+                         <or>
+                         	<if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+                         	<if-has-permission permission="HR_PROFILE" action="_ADMIN"/>
+                         </or>
+                    </condition>
 					<widgets>
-						<screenlet id="language" title="Languages Known" collapsible="true">
+						<screenlet id="language" title="Languages Known" navigation-menu-name="addNewLanguage" collapsible="true">
+									<include-menu name="addNewLanguage" location="component://humanres/widget/HumanresMenus.xml"/>
 		                            <include-form name="AddLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
                             	<screenlet>                   
 		                        	<include-form name="ListLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />

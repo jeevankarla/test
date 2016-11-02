@@ -1238,6 +1238,17 @@ under the License.
         <response name="success" type="view" value="EditEmployee"/>
         <response name="error" type="view" value="EditEmployee"/>
     </request-map>
+     <request-map uri="addNewLanguage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="addNewLanguage"/>
+        <response name="error" type="view" value="addNewLanguage"/>
+    </request-map>
+     <request-map uri="createLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createLanguage"/>
+        <response name="success" type="view-last"/>
+        <response name="error" type="view" value="addNewLanguage"/>
+    </request-map>
     <request-map uri="createPartyRelationshipDependent">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyRelationshipDependent"/>
@@ -2716,6 +2727,7 @@ under the License.
     <view-map name="EmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
    
 	<view-map name="EditEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployee" />   
+	<view-map name="addNewLanguage" type="screen" page="component://humanres/widget/EmployeeScreens.xml#addNewLanguage" />
     <view-map name="PreviousEmployementProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PreviousEmployementProfile"/>
     <view-map name="ShiftCalender" type="screen" page="component://humanres/widget/EmployeeScreens.xml#ShiftCalender"/>
     <view-map name="EditEmployeeSkills" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeSkills"/>

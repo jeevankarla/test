@@ -882,6 +882,13 @@
             </link>
         </menu-item>
     </menu>
+    <menu name="addNewLanguage">
+    <menu-item name="addNewLanguage" title="${uiLabelMap.addLanguage}">
+            <link target="addNewLanguage">
+            	<parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
     <menu name="EmploymentUpdate">
     <menu-item name="editJoiningDate" title="${uiLabelMap.CommonUpdate}">
         <link target="editJoiningDate">
