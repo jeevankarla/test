@@ -360,7 +360,8 @@ public class SupplierApiServices {
 				custCondList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				List<GenericValue> shipmentDetails = EntityUtil.filterByCondition(shipReceiptList, EntityCondition.makeCondition(custCondList, EntityOperator.AND));
 				
-				List shipmentDetailList = FastList.newInstance();
+				List shipmentItemList = FastList.newInstance();
+				Map shipmentDetailMap = FastMap.newInstance();
 				for(GenericValue eachDetail:shipmentDetails){
 					Map detailMap = FastMap.newInstance();
 					GenericValue orderItemDetail = null;
@@ -405,9 +406,12 @@ public class SupplierApiServices {
 						Debug.logError(e, module);
 					}
 					detailMap.put("itemAmount",(quantity.multiply(unitPrice)).setScale(decimals, rounding));
-					shipmentDetailList.add(detailMap);
+					shipmentItemList.add(detailMap);
 				}
-				shipmentHistory.put(shipmentId,shipmentDetailList);
+				shipmentDetailMap.put("shipmentItems",shipmentItemList);
+				shipmentDetailMap.put("customer","");
+				shipmentDetailMap.put("destination","");
+				shipmentHistory.put(shipmentId,shipmentDetailMap);
 			}
 			tempData.put("shipmentHistory",shipmentHistory);
         	ordersMap.put(eachOrderId,tempData);
