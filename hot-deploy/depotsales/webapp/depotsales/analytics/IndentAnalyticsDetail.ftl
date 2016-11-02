@@ -45,6 +45,7 @@ $(document).ready(function () {
                     { name: 'totPurchases', type: 'string' },
                     { name: 'totalPoQty', type: 'string' },                                      
                     { name: 'totalPoAmt', type: 'string' },
+                    { name: 'pendingPOs', type: 'string' },
                 ],
                 hierarchy:
                 {
@@ -101,6 +102,7 @@ $(document).ready(function () {
                   { text: 'PO Issued', width:'12%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Pending POs', width:'12%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                
