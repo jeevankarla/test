@@ -2246,7 +2246,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
                     String indentId = orderHeader.getString("orderId");
                     String statusId = orderHeader.getString("statusId");
                     String scheme="";
-                    Timestamp indentDate=orderHeader.getTimestamp("entryDate");
+                    Timestamp indentDate=orderHeader.getTimestamp("orderDate");
                     String salesChannelEnumId=orderHeader.getString("salesChannelEnumId");
                     BigDecimal totalAmount=orderHeader.getBigDecimal("grandTotal");
                     GenericValue orderAttrInsComp = delegator.findOne("OrderAttribute", UtilMisc.toMap("orderId", indentId, "attrName","SCHEME_CAT"), false);
@@ -2515,10 +2515,23 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         LocalDispatcher dispatcher = dctx.getDispatcher();   
         Map<String, Object> result = new HashMap<String, Object>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Timestamp fromDate = (Timestamp) context.get("fromDate");
-        Timestamp thruDate = (Timestamp) context.get("thruDate");
-
+        String fromDateStr = (String) context.get("fromDate");
+        String thruDateStr = (String) context.get("thruDate");
+    	Timestamp fromDate=null;
+    	Timestamp thruDate = null;
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	  	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+	  		try {
+	  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+	  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+		  	}
+	  	}
         EntityCondition cond = null;
         List condList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){

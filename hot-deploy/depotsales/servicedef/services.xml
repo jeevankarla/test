@@ -613,8 +613,8 @@
     </service>
      <service name="runPeriodPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
-         <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
-         <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
+         <attribute mode="IN" name="fromDate" optional="false" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="false" type="String"/>
     </service>
      <service name="getOrderSummary" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSummary">
         <description>Populate Order Details </description>
