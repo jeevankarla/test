@@ -180,7 +180,7 @@
         <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
         <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
-        <field name="cancelOrder" widget-style="buttontext" use-when="shipmentDone.equals(&quot;N&quot;) &amp;&amp; statusId.equals(&quot;ORDER_CREATED&quot;) || (statusId.equals(&quot;APPROVE_LEVEL1&quot;)) || (statusId.equals(&quot;APPROVE_LEVEL2&quot;)) || (statusId.equals(&quot;APPROVE_LEVEL3&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
+        <field name="cancelOrder" widget-style="buttontext" use-when="(shipmentDone.equals(&quot;N&quot;) &amp;&amp; statusId.equals(&quot;ORDER_APPROVED&quot;)) || statusId.equals(&quot;ORDER_CREATED&quot;) || (statusId.equals(&quot;APPROVE_LEVEL1&quot;)) || (statusId.equals(&quot;APPROVE_LEVEL2&quot;)) || (statusId.equals(&quot;APPROVE_LEVEL3&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelDepotTransPOOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
@@ -188,6 +188,8 @@
                 <parameter param-name="roleTypeId"/>
             </hyperlink>
         </field> 
+        <field name="shipmentDone"><display/></field>
+        <field name="statusId"><display/></field>
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
        <!--  <field use-when="(&quot;${newSize}&quot;!=&quot;${size}&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseDepotTransGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
