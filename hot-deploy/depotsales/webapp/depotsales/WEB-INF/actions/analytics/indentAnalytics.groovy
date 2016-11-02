@@ -241,7 +241,8 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("totalIndents", entryValue.get("totIndents"));				
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
+				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
 	 		}
 	 		else if (partyId == ROOT_ID) {
 				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
@@ -263,7 +264,8 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("totalIndents", entryValue.get("totIndents"));
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");	 		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
+				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
 	 		}	 		
 	 		else {
 				pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
@@ -285,7 +287,8 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("totalIndents", entryValue.get("totIndents"));
 				newObj.put("totalShippedAmt", shippedAmt);
 				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");	 		
+				newObj.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
+				newObj.put("pendingPOs",entryValue.get("totPurchases") - entryValue.get("completed"));
 	 		}
 	 		dataList.add(newObj);			
 	 }		

@@ -79,6 +79,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
  conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
  conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+ conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  salesOrderList = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","entryDate","externalId","partyId"), null, null, false);  
  ROOT_ID = "NHDC"; //::TODO::
@@ -151,7 +152,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 	if (DataMap.containsKey(roId)) {
 		 		roDetails = DataMap.get(roId);
 		 		totalPos = roDetails.get("totalPos");
-				roDetails.putAt("totIndents", ++totalPos);
+				roDetails.putAt("totalPos", ++totalPos);
 				roDetails.putAt("totalShipments", ++totalShipments);
 			    roDetails.putAt("diffMinutes", diffMinutes+roDetails.get("diffMinutes"));
 				roDetails.putAt("saleTotalTime", saleTotalTime+ branchDetails.get("saleTotalTime"));
