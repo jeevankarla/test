@@ -86,9 +86,14 @@ under the License.
             <fo:block text-align="center" border-style="solid" font-weight="bold">
             	<fo:table>
             		<fo:table-column column-width="0.9in"/>
-            		<fo:table-column column-width="4.9in"/>
+            		<fo:table-column column-width="6in"/>
             		
             		<fo:table-body>
+            			<fo:table-row>
+            				<fo:table-cell number-columns-spanned="2">
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "8pt" text-align="right">PaySlip No: ${paySlipNo?if_exists}</fo:block>
+            				</fo:table-cell>
+            			</fo:table-row>
             			<fo:table-row>
             				<fo:table-cell>
             					<fo:block font-size="8pt" text-align="left">             
@@ -98,8 +103,12 @@ under the License.
             				<fo:table-cell>
             					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                                 <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-            					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="left">  ${reportHeader.description?if_exists}              PaySlip No: ${paySlipNo?if_exists}</fo:block>
-            					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="center">${reportSubHeader.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+                                <#assign reportSubHeader00 = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable_00"}, true)>
+                                <#assign reportSubHeader01 = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable_01"}, true)>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="center">  ${reportHeader.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "8pt" text-align="center">${reportSubHeader.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "8pt" text-align="center">${reportSubHeader00.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "8pt" text-align="center">${reportSubHeader01.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
             				</fo:table-cell>
             			</fo:table-row>
             		</fo:table-body>
@@ -148,7 +157,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Organization               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : ${emplDetails.panId?if_exists}</fo:block>
