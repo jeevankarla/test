@@ -92,9 +92,9 @@ $(document).ready(function () {
                 },           
                 columns: [
                   { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'20%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
+                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
                   { text: 'PO Avg. Duration (Days)', width:'15%', align: 'center', dataField: 'avgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Sale Invoice Avg. Duration(Days)', width:'15%', align: 'center', dataField: 'slaeAvgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Sale Invoice Avg. Duration(Days)', width:'20%', align: 'center', dataField: 'slaeAvgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   //{ text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
                  // { text: 'Shipped Qty', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
