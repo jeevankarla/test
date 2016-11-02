@@ -233,7 +233,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				if(entryValue.get("totPurchases") !=null){
-					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+					pendingPOs = entryValue.get("totIndents") - entryValue.get("totPurchases");
 				}
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", partyIdNameMap.get(partyId));
@@ -259,7 +259,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				if(entryValue.get("totPurchases") !=null){
-					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+					pendingPOs = entryValue.get("totIndents") - entryValue.get("totPurchases");
 				}
 				newObj.put("partyId", ROOT_ID );						
 				newObj.put("branch", "");
@@ -285,7 +285,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
 				pendingAmt = entryValue.get("poAmt") - shippedAmt;
 				if(entryValue.get("totPurchases") !=null){
-					pendingPOs = entryValue.get("totPurchases") - entryValue.get("completed");
+					pendingPOs = entryValue.get("totIndents") - entryValue.get("totPurchases");
 				}
 				newObj.put("partyId", partyId );						
 				newObj.put("branch", "");
