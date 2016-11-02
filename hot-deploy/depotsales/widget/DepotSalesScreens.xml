@@ -8698,7 +8698,7 @@
 		<screen name="IndentSupplyAnalytics">
         <section>
             <actions>
-               	<set field="titleProperty" value="Indent  Supply Analytics"/>
+               	<set field="titleProperty" value="Supply Analytics"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="IndentSupplyAnalytics" />
 				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>                      
