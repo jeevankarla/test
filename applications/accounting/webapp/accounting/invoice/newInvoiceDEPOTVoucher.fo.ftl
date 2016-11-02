@@ -318,8 +318,9 @@ under the License.
 	<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${tempTotAmount?if_exists}</fo:block>
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
-	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}                                                                        OTHER CHARGES :</fo:block>
-	
+	<#if !kanAndKalRo?has_content>
+	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}                                                         OTHER CHARGES :</fo:block>
+	</#if>
 	 <fo:block>
 	      
     <fo:table width="100%"   align="right" table-layout="fixed"  font-size="10pt"> 

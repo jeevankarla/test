@@ -43,7 +43,6 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 partyIdFrom=invoiceList.get("partyIdFrom");
-
 branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdFrom)  , UtilMisc.toSet("partyIdFrom"), null, null, false );
 roID = EntityUtil.getFirst(branchRo);
 
