@@ -216,7 +216,7 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("avgDuration", (durationhrs).setScale(2, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
 				BigDecimal saledurationhrs=saledurationMinits / (1440);
-				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(2, 0));
+				newObj.put("slaeAvgDuration", (saledurationhrs/9).setScale(2, 0));
 			 }
 			 else {
 				newObj.put("partyId", partyId );
