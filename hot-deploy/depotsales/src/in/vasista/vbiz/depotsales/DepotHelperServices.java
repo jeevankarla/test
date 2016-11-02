@@ -2303,7 +2303,11 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    }  
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
 	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
-	                    }   
+	                    } 
+			            GenericValue indentSummaryDetailsValue = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", indentId), false);
+                        if(UtilValidate.isNotEmpty(indentSummaryDetailsValue)){
+                        	indentSummaryDetailsValue.remove();
+                        }
 	                    GenericValue indentSummaryDetails = delegator.makeValue("IndentSummaryDetails");
 	                    indentSummaryDetails.set("orderId", indentId);
 	                    indentSummaryDetails.set("orderDate", indentDate);
@@ -2323,6 +2327,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
 	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
 						delegator.createOrStore(indentSummaryDetails);
+                    
                     } catch (GenericServiceException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
