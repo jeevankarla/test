@@ -42,7 +42,8 @@ $(document).ready(function () {
                     { name: 'totalRevenue', type: 'string' },                                       
                     { name: 'totalIndents', type: 'string' },
                     { name: 'inProcess', type: 'string' },
-                    { name: 'saleAmt', type: 'string' },                    
+                    { name: 'saleAmt', type: 'string' },
+                   // { name: 'totalPoAmt', type: 'string' },                    
                 ],
                 hierarchy:
                 {
@@ -92,11 +93,12 @@ $(document).ready(function () {
                 },           
                 columns: [
                   { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
-                  { text: 'Total Indenter Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
+                  { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
+                  { text: 'Total Indented Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Total SupplyBilled Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Pending Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Sale Amount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Sale Amt after 10% Discount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                 // { text: 'Total PO Amt(Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                
