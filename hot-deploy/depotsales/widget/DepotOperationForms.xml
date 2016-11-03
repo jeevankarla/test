@@ -41,7 +41,6 @@
      <form name="listDepotTransPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-           
         </actions>
       	<row-actions>
       		<entity-condition entity-name="OrderItem" list="orderItemList" >
