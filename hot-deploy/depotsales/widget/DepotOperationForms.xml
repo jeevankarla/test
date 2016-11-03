@@ -41,7 +41,6 @@
      <form name="listDepotTransPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-           
         </actions>
       	<row-actions>
       		<entity-condition entity-name="OrderItem" list="orderItemList" >
@@ -51,7 +50,10 @@
       		<set field="newSize" value="${orderItemsSize}" />
       		<set field="size" value="${groovy: return(orderItemList.size())}"/>
       		<entity-condition entity-name="OrderAttribute" list="orderAttributes" >
-      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-list combine="and" >
+	      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      				<condition-expr field-name="attrName" operator="equals" value="REF_NUMBER" />
+      			</condition-list>
       		</entity-condition>
       		<set field="poRefNum" value="${groovy: return(orderAttributes[0].attrValue)}"/>
       		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
