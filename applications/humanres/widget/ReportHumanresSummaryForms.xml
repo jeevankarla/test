@@ -1556,11 +1556,10 @@
                 </entity-options>
              </drop-down>
 		</field>
-		<field name="address1" title="Present Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="address2" title="Present Address Line2"><text size="30" maxlength="60"/></field>
-        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        
-        <field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+		<field name="address1" id-name="address1" title="Present Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="address2" id-name="address2" title="Present Address Line2"><text size="30" maxlength="60"/></field>
+        <field name="city" id-name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="state" id-name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="INDSTATE"/>
@@ -1568,8 +1567,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
-        <field name="country" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="postalCode" id-name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <field name="country" id-name="country" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="IND">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}: ${geoId}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -1577,11 +1576,14 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="prsAddress1" title="Permanent Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="prsAddress2" title="Permanent Address Line2"><text size="30" maxlength="60"/></field>
-        <field name="prsCity" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="checkBox" title="${uiLabelMap.SameAsAbove}" event="onclick" action="javascript:copyAddress();">
+            <check />
+        </field>
+        <field name="prsAddress1" id-name="prsAddress1" title="Permanent Address Line1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="prsAddress2" id-name="prsAddress2" title="Permanent Address Line2"><text size="30" maxlength="60"/></field>
+        <field name="prsCity" id-name="prsCity" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
-        <field name="prsState" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="prsState" id-name="prsState" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="INDSTATE"/>
@@ -1589,8 +1591,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="prsPostalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
-        <field name="prsCountry" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="prsPostalCode" id-name="prsPostalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <field name="prsCountry" id-name="prsCountry" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="IND">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}: ${geoId}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>

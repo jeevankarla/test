@@ -1638,6 +1638,12 @@ public class HumanresService {
 				}
 				// Create Employee Detail
 				try{
+					if(UtilValidate.isNotEmpty(pfNumber)){
+						List employeeDetailsList = delegator.findList("EmployeeDetail", EntityCondition.makeCondition("presentEpf",EntityOperator.EQUALS,pfNumber), null, null, null, false);
+						if(UtilValidate.isNotEmpty(employeeDetailsList)){
+							return ServiceUtil.returnError("PF Number is Already existing, Please Give Your Unique PF Number");
+						}
+					}
 					GenericValue newEntity = delegator.makeValue("EmployeeDetail");
 					newEntity.set("partyId", ownerPartyId);
 					newEntity.set("employeeId", ownerPartyId);
