@@ -1098,15 +1098,15 @@ public class SupplierApiServices {
 				Debug.logError(e, "Could not get date from OrderRole", module);
 			}
 		}
-		String shipmentMessageToWeaver = UtilProperties.getMessage("ProductUiLabels", "ShipmentMessageToWeaver", locale);
+		/*String shipmentMessageToWeaver = UtilProperties.getMessage("ProductUiLabels", "ShipmentMessageToWeaver", locale);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("orderId", rlatedId);
 		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("material", smsContent);
-		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("transporter", carrierName);
+		shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("transporter", carrierName);*/
 		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrNo", lrNumber);
 		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("lrDate", deliveryChallanDateStr);
 		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("expectedDeliveryDate", estimatedDateStr);
 		//shipmentMessageToWeaver = shipmentMessageToWeaver.replaceAll("estimatedReadyDate", lrDateStr);
-		if(UtilValidate.isNotEmpty(customerId)){
+		/*if(UtilValidate.isNotEmpty(customerId)){
 			String customerName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,supplierId, false);
 			Map<String, Object> getTelParams = FastMap.newInstance();
 			if(UtilValidate.isEmpty(customerName)){
@@ -1145,7 +1145,7 @@ public class SupplierApiServices {
             }catch(GenericServiceException e1){
 	         	Debug.log("Problem in sending sms to user agency");
 			}
-		}
+		}*/
 		String Scheam = "";
  		try{
      		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
