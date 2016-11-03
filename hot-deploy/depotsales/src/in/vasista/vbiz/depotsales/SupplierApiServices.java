@@ -411,7 +411,7 @@ public class SupplierApiServices {
 				shipmentDetailMap.put("shipmentItems",shipmentItemList);
 				shipmentDetailMap.put("customer","");
 				shipmentDetailMap.put("destination","");
-				shipmentHistory.put(shipmentId,shipmentDetailMap);
+				shipmentHistory.put(shipmentId,shipmentItemList);
 			}
 			tempData.put("shipmentHistory",shipmentHistory);
         	ordersMap.put(eachOrderId,tempData);
