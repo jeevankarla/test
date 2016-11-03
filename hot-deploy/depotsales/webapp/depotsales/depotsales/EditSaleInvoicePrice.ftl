@@ -247,6 +247,10 @@
 			
 			}
 			
+			$(document).keydown(function(e) {
+            if (e.keyCode == 27) return false;
+            });
+			
 			
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
@@ -497,8 +501,18 @@
 						
 						if(orderAdjAmt != 0){
 		
-						  if(orderAdjustment.orderAdjustmentTypeId != "SERVICE_CHARGE" && orderAdjustment.orderAdjustmentTypeId != "TEN_PERCENT_SUBSIDY"){
+						  if(orderAdjustment.orderAdjustmentTypeId != "SERVICE_CHARGE" && orderAdjustment.orderAdjustmentTypeId != "TEN_PERCENT_SUBSIDY" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_CHARGES" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_OFF"){
 							message += "<tr>"+
+										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' ></td>"+
+									 	"<td align='left'> Remove: </td>"+
+										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustment();'></td>";
+									"</tr>";
+						    }
+						    else if(orderAdjustment.orderAdjustmentTypeId == "ROUNDING_CHARGES" || orderAdjustment.orderAdjustmentTypeId == "ROUNDING_OFF" ){
+						        message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
@@ -506,7 +520,8 @@
 									 	"<td align='left'> Remove: </td>"+
 										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustment();'></td>";
 									"</tr>";
-						    }else{
+						    }
+						    else{
 						      message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
@@ -603,7 +618,9 @@
 	
 	 if(addAdjType != ""){
 	 
-	    if(addAdjType != "SERVICE_CHARGE" && addAdjType != "TEN_PERCENT_SUBSIDY")
+	    if(addAdjType != "SERVICE_CHARGE" && addAdjType != "TEN_PERCENT_SUBSIDY" && addAdjType != "ROUNDING_CHARGES" && addAdjType != "ROUNDING_OFF")
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	    else if(addAdjType == "ROUNDING_CHARGES" || addAdjType == "ROUNDING_OFF" )
 	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
 	    else
 	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'" readonly/></td></tr>');
