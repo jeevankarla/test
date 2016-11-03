@@ -466,13 +466,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , actualOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	if(UtilValidate.isNotEmpty(indentOrderSequences)){
 		indentOrderSeqDetails = EntityUtil.getFirst(indentOrderSequences);
@@ -527,19 +520,14 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 				if(eachAttr.attrName == "SCHEME_CAT"){
 					scheme =  eachAttr.attrValue;
 				}
-				
 			}
 		   }
-		
-		
-		
-		
+	
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		OrderItemAttributeList = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
 		C2E2Form = "";
-		
 		
 		if(OrderItemAttributeList){
 			for (eachAttr in OrderItemAttributeList) {
@@ -1071,7 +1059,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			if("CST_CFORM".equals(attrValue)){
 				cFormAgnst=cFormAgnst+1;
 			}
-			
 		}
 		context.cFormAgnst=cFormAgnst;
 }else{
