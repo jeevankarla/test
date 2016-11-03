@@ -18,6 +18,7 @@ import java.util.Set;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.ofbiz.service.ServiceUtil;
+import java.text.DecimalFormat;
 
 dctx = dispatcher.getDispatchContext();
 JSONArray dataList = new JSONArray();
@@ -221,7 +222,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 
 
 //Debug.log("===DataMap=="+DataMap);
- 
+	DecimalFormat df = new DecimalFormat("0.00");
 	 for(Map.Entry entry : DataMap.entrySet()){
 	 		JSONObject newObj = new JSONObject();
 	 		partyId = entry.getKey();
@@ -240,11 +241,11 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
-				newObj.put("indentQty",(entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalRevenue", (entryValue.get("totRevenue")/100000).setScale(2, 0));
+				newObj.put("indentQty",df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalRevenue", df.format((entryValue.get("totRevenue")/100000).setScale(2, 0)));
 				newObj.put("totPurchases", entryValue.get("totPurchases"));
-				newObj.put("totalPoQty", (entryValue.get("poQty")/100000).setScale(2, 0));
-				newObj.put("totalPoAmt", (entryValue.get("poAmt")/100000).setScale(2, 0));
+				newObj.put("totalPoQty",df.format((entryValue.get("poQty")/100000).setScale(2, 0)));
+				newObj.put("totalPoAmt", df.format((entryValue.get("poAmt")/100000).setScale(2, 0)));
 				newObj.put("pendingQty", pendingQty);
 				newObj.put("pendingAmt", pendingAmt);
 				newObj.put("totalShippedQty",entryValue.get("shipQty"));
@@ -266,11 +267,11 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", "");
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
-				newObj.put("indentQty",(entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalRevenue", (entryValue.get("totRevenue")/100000).setScale(2, 0));
+				newObj.put("indentQty",df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalRevenue", df.format((entryValue.get("totRevenue")/100000).setScale(2, 0)));
 				newObj.put("totPurchases", entryValue.get("totPurchases"));
-				newObj.put("totalPoQty", (entryValue.get("poQty")/100000).setScale(2, 0));
-				newObj.put("totalPoAmt", (entryValue.get("poAmt")/100000).setScale(2, 0));
+				newObj.put("totalPoQty", df.format((entryValue.get("poQty")/100000).setScale(2, 0)));
+				newObj.put("totalPoAmt", df.format((entryValue.get("poAmt")/100000).setScale(2, 0)));
 				newObj.put("pendingQty", pendingQty);
 				newObj.put("pendingAmt", pendingAmt);
 				newObj.put("totalShippedQty",entryValue.get("shipQty"));
@@ -292,11 +293,11 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
-				newObj.put("indentQty",(entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalRevenue", (entryValue.get("totRevenue")/100000).setScale(2, 0));
+				newObj.put("indentQty",df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalRevenue", df.format((entryValue.get("totRevenue")/100000).setScale(2, 0)));
 				newObj.put("totPurchases", entryValue.get("totPurchases"));
-				newObj.put("totalPoQty", (entryValue.get("poQty")/100000).setScale(2, 0));
-				newObj.put("totalPoAmt", (entryValue.get("poAmt")/100000).setScale(2, 0));
+				newObj.put("totalPoQty", df.format((entryValue.get("poQty")/100000).setScale(2, 0)));
+				newObj.put("totalPoAmt", df.format((entryValue.get("poAmt")/100000).setScale(2, 0)));
 				newObj.put("pendingQty", pendingQty);
 				newObj.put("pendingAmt", pendingAmt);
 				newObj.put("totalShippedQty",entryValue.get("shipQty"));

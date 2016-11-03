@@ -89,7 +89,7 @@
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
             </actions>
             <widgets>
@@ -107,9 +107,6 @@
 	<screen name="IndentAnalyticsInternal">
         <section>      
     		<actions>
-    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
     			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
     		</actions>          
             <widgets>
@@ -8661,7 +8658,7 @@
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
             	<set field="parameters.screenflag" value="indentQtyAnalytics"/>
             </actions>
@@ -8680,9 +8677,6 @@
 	<screen name="IndentQtyAnalyticsInternal">
         <section>      
     		<actions>
-    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
     			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentQtyAnalytics.groovy" />
     		</actions>          
             <widgets>
@@ -8705,7 +8699,7 @@
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
                  <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
            
@@ -8725,9 +8719,6 @@
 	<screen name="IndentSupplyAnalyticsInternal">
         <section>      
     		<actions>
-    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
     			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentSupplyAnalytics.groovy" />
     		</actions>          
             <widgets>
@@ -8749,7 +8740,7 @@
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
                  <set field="parameters.screenflag" value="indentPurchaseAnalytics"/>
             </actions>
@@ -8768,10 +8759,7 @@
 	<screen name="IndentPurchaseAnalyticsInternal">
         <section>      
     		<actions>
-    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-    			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentPurchaseAnalytics.groovy" />
+    			    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentPurchaseAnalytics.groovy" />
     		</actions>          
             <widgets>
             	<platform-specific> 
@@ -9034,7 +9022,7 @@
 				<set field="ajaxUrl" value="durationAnalyticsInternal" type="String" global="true"/>                      
 <!-- 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" /> -->
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" /> 
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
                  <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
            
@@ -9054,9 +9042,6 @@
     <screen name="durationAnalyticsInternal">
         <section>      
     		<actions>
-    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
     			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/durationAnalytics.groovy" />
     		</actions>          
             <widgets>

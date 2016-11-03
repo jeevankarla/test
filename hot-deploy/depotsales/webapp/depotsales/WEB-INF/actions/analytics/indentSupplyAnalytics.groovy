@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.text.DecimalFormat;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.ofbiz.service.ServiceUtil;
@@ -97,7 +97,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
  salesOrderList = delegator.findList("IndentSummaryDetails", condition,null, null, null, false);
  
  //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
-	  
+ DecimalFormat df = new DecimalFormat("0.00");
  ROOT_ID = "NHDC"; //::TODO::
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
@@ -183,10 +183,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", roId);
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
-				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
-				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
+				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
+				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 else if (partyId == ROOT_ID) {
@@ -195,10 +195,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", "");
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
-				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
-				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
+				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
+				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 else {
@@ -207,10 +207,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("ReportsTo", ROOT_ID);
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", (entryValue.get("totQty")/100000).setScale(2, 0));
-				newObj.put("totalIndents", (entryValue.get("saleQty")/100000).setScale(2, 0));
-				newObj.put("saleAmt", (entryValue.get("saleAmt")/100000).setScale(2, 0));
-				newObj.put("inProcess",((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0));
+				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
+				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
+				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
 			 }
 			 dataList.add(newObj);
