@@ -76,12 +76,12 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	 conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	 conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
  }
- conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+ conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER")); 
  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
  conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
  conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- salesOrderList = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","entryDate","externalId","partyId"), null, null, false);  
+ salesOrderList = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","entryDate","orderDate","externalId","partyId"), null, null, false);  
  ROOT_ID = "NHDC"; //::TODO::
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
@@ -89,17 +89,18 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	
 			 partyId = eachItem.getAt("partyId");
 			 orderId = eachItem.getAt("orderId");
-			 poentryDate = eachItem.getAt("entryDate");
-			 BigDecimal diffMinutes= BigDecimal.ZERO;
+			 poentryDate = eachItem.getAt("orderDate");
+			 
+			 BigDecimal diffHours= BigDecimal.ZERO;
 			 String toOrderId=null;
 			 orderAssocs = delegator.findList("OrderAssoc", (EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId)),UtilMisc.toSet("toOrderId"), null, null, false);
 			 if(UtilValidate.isNotEmpty(orderAssocs)){
 			 	 orderAssoc =EntityUtil.getFirst(orderAssocs);
 				 toOrderId=orderAssoc.toOrderId;
 				 orderHeader = delegator.findOne("OrderHeader", [orderId : toOrderId], false);
-				 indentDate = orderHeader.entryDate;
+				 indentDate = orderHeader.orderDate;
 				 long timeDiff = poentryDate.getTime() - indentDate.getTime();
-				 BigDecimal diffHours = timeDiff / (60 * 60 * 1000);
+				 diffHours = timeDiff / (60 * 60 * 1000);
 				 BigDecimal modOfDiffHours = timeDiff % (60 * 60 * 1000);
 				 diffMinutes = modOfDiffHours/ (60 * 1000);
 				 String totalTime = diffHours.toString() + ":"+ diffMinutes.toString() + " Hrs";
@@ -114,18 +115,19 @@ if(UtilValidate.isNotEmpty(thruDate)){
 					for(i=0; i<invoiceIds.size();i++){
 						invoiceId = invoiceIds.get(i);
 						invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], true);
-						invoiceDate=invoice.createdStamp;
+						invoiceDate=invoice.invoiceDate;
 						shipmentId = invoice.shipmentId;
 						shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], true);
 						//orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
 						if(shipment){
-							shipDate = shipment.createdDate;
+							shipDate = shipment.estimatedShipDate;
+							
 							//indentDate = orderHeader.orderDate;
 							long saleTimeDiff = invoiceDate.getTime() - shipDate.getTime();
 							BigDecimal saleDiffHours = saleTimeDiff / (60 * 60 * 1000);
 							BigDecimal modOfSaleDiffHours = saleTimeDiff % (60 * 60 * 1000);
 							saleDiffMinutes = modOfSaleDiffHours/ (60 * 1000);
-							saleTotalTime  = saleTotalTime+saleDiffMinutes;
+							saleTotalTime  = saleTotalTime+saleDiffHours;
 						}
 					}
 				}
@@ -140,14 +142,14 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		totalPos = branchDetails.get("totalPos");
 		 		branchDetails.putAt("totalPos", ++totalPos);
 				branchDetails.putAt("totalShipments", ++totalShipments);
-				branchDetails.putAt("diffMinutes", diffMinutes+ branchDetails.get("diffMinutes"));
+				branchDetails.putAt("diffMinutes", diffHours+ branchDetails.get("diffMinutes"));
 				branchDetails.putAt("saleTotalTime", saleTotalTime+ branchDetails.get("saleTotalTime"));
 		 	}
 		 	else {
 		 		branchDetails = [:];
 		 		branchDetails.putAt("totalPos", 1);
 				branchDetails.putAt("totalShipments", 1);
-				branchDetails.putAt("diffMinutes", diffMinutes);
+				branchDetails.putAt("diffMinutes", diffHours);
 				branchDetails.putAt("saleTotalTime", saleTotalTime);
 		 		DataMap.putAt(partyId, branchDetails);		 	
 		 	}
@@ -156,7 +158,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		totalPos = roDetails.get("totalPos");
 				roDetails.putAt("totalPos", ++totalPos);
 				roDetails.putAt("totalShipments", ++totalShipments);
-			    roDetails.putAt("diffMinutes", diffMinutes+roDetails.get("diffMinutes"));
+			    roDetails.putAt("diffMinutes", diffHours+roDetails.get("diffMinutes"));
 				roDetails.putAt("saleTotalTime", saleTotalTime+ branchDetails.get("saleTotalTime"));
 				
 		 	}
@@ -164,7 +166,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		roDetails = [:];
 		 		roDetails.putAt("totalPos", 1);
 				roDetails.putAt("totalShipments", 1);
-				roDetails.putAt("diffMinutes", diffMinutes);
+				roDetails.putAt("diffMinutes", diffHours);
 				roDetails.putAt("saleTotalTime", saleTotalTime);
 		 		DataMap.putAt(roId, roDetails);	 	
 		 	}	
@@ -173,14 +175,14 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 		totalPos = totDetails.get("totalPos");
 		 		totDetails.putAt("totalPos", ++totalPos);
 				totDetails.putAt("totalShipments", ++totalShipments);
-				totDetails.putAt("diffMinutes", diffMinutes+totDetails.get("diffMinutes"));
+				totDetails.putAt("diffMinutes", diffHours+totDetails.get("diffMinutes"));
 				totDetails.putAt("saleTotalTime", saleTotalTime+totDetails.get("saleTotalTime"));
 		 	}
 		 	else {
 		 		totDetails = [:];
 		 		totDetails.putAt("totalPos", 1);
 				totDetails.putAt("totalShipments", 1);
-				totDetails.putAt("diffMinutes", diffMinutes);
+				totDetails.putAt("diffMinutes", diffHours);
 				totDetails.putAt("saleTotalTime", saleTotalTime);
 		 		DataMap.putAt(ROOT_ID, totDetails);	 	
 		 	}	
@@ -199,10 +201,10 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ro","");
 				newObj.put("avgTAT","");
 				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
-				BigDecimal durationhrs=durationMinits / (1440);
+				BigDecimal durationhrs=durationMinits / (24);
 				newObj.put("avgDuration", (durationhrs).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
-				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				BigDecimal saledurationhrs=saledurationMinits / (24);
 				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(0, 0));
 			 }
 			 else if (partyId == ROOT_ID) {
@@ -212,10 +214,10 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ro", ROOT_ID);
 				newObj.put("avgTAT","");
 				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
-				BigDecimal durationhrs=durationMinits / (1440);
-				newObj.put("avgDuration", (durationhrs).setScale(0, 0));
+				BigDecimal durationhrs=durationMinits / (24);
+				newObj.put("avgDuration", (durationhrs/9).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
-				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				BigDecimal saledurationhrs=saledurationMinits / (24);
 				newObj.put("slaeAvgDuration", (saledurationhrs/9).setScale(0, 0));
 			 }
 			 else {
@@ -225,10 +227,10 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("ro", partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
 				long durationMinits=entryValue.get("diffMinutes")/entryValue.get("totalPos");
-				BigDecimal durationhrs=durationMinits / (1440);
+				BigDecimal durationhrs=durationMinits / (24);
 				newObj.put("avgDuration", (durationhrs).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
-				BigDecimal saledurationhrs=saledurationMinits / (1440);
+				BigDecimal saledurationhrs=saledurationMinits / (24);
 				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(0, 0));
 			 }
 			 dataList.add(newObj);
