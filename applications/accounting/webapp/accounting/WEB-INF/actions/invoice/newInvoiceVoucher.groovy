@@ -663,6 +663,10 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 		
 			 
+			 remarks = "";
+			 if(OrderItemDetail)
+			 remarks = OrderItemDetail[0].get("remarks");
+			 
 		/*	 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
@@ -691,6 +695,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			 double baleQty = 0;
 			 double unit = 0;
 			 double quotaQuantity = 0;
+			 
+			 
 		  
 			 for (eachOrderItemDetail in OrderItemDetail) {
 			
@@ -708,6 +714,10 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			}
 			 
 			 tempMap.put("unit", unit);
+			 
+			 tempMap.put("remarks", remarks);
+			 
+			 
 			 
 			 
 				if(baleQty)
@@ -1675,6 +1685,10 @@ context.onbehalf = onbehalf;
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 	
 		 
+		 remarks = "";
+		 if(OrderItemDetail)
+		 remarks = OrderItemDetail[0].get("remarks");
+		 
 	/*	 conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
@@ -1720,6 +1734,8 @@ context.onbehalf = onbehalf;
 		}
 		 
 		 tempMap.put("unit", unit);
+		 tempMap.put("remarks", remarks);
+		 
 		 
 		 
 			if(baleQty)
