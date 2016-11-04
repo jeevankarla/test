@@ -302,9 +302,12 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
+				<#assign finalGrndToal=0>
 				<#if !kanAndKalRo?has_content>
-		   			 <fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block> 
+					<#assign finalGrndToal=grandTotal+totTaxAmount>
+		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 				<#else>
+					<#assign finalGrndToal=grandTotal+totTaxAmount2>
 					<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
 	            </#if>
 				</fo:table-cell>

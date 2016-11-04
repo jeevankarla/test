@@ -84,7 +84,7 @@ under the License.
 		<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedShipDate, "dd-MMM-yyyy")}  </fo:block>
         <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          <fo:block>     
-    <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed" font-size="10pt"> 
+    <fo:table width="100%" align="right" table-layout="fixed" font-size="10pt"> 
 	<fo:table-column column-width="5%"/>
 	<fo:table-column column-width="17%"/>
 	<fo:table-column column-width="10%"/>
@@ -183,9 +183,7 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				 <#if cFormAgnst?has_content && cFormAgnst == 2> 
-					 <fo:block text-align="left" font-weight="bold"  font-size="10pt" >against c form</fo:block>
-				</#if>
+				
 				</fo:table-cell>
 				
 				<#--><fo:table-cell border-style="solid">
@@ -315,10 +313,15 @@ under the License.
 				</fo:table-cell>
 								
 				</fo:table-row>
+				
 		</fo:table-body>
 				
 	</fo:table>
+	
 	</fo:block>
+	 <#if cFormAgnst?has_content && cFormAgnst == 2> 
+		<fo:block text-align="left" font-weight="bold"  font-size="10pt" >AGAINST C FORM</fo:block>
+	</#if>
 	<#if scheme == "MGPS_10Pecent">
 	<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${finalGrndToal?if_exists?string("#0.00")}</fo:block>
 	</#if>
