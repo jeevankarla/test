@@ -352,6 +352,7 @@ public class SupplierApiServices {
 			}
         	tempData.put("orderItemsList", orderItems);
         	
+        	Map shipmentItemHistory = FastMap.newInstance();
         	Map shipmentHistory = FastMap.newInstance();
 			List<String> shipmentIdList = (List) EntityUtil.getFieldListFromEntityList(shipReceiptList, "shipmentId", true);
 			for(String shipmentId:shipmentIdList){
@@ -409,10 +410,37 @@ public class SupplierApiServices {
 					shipmentItemList.add(detailMap);
 				}
 				shipmentDetailMap.put("shipmentItems",shipmentItemList);
-				shipmentDetailMap.put("customer","");
-				shipmentDetailMap.put("destination","");
+				
+				String customer = "";
+				String destination = "";
+				
+				try{
+					GenericValue poOrderAttr = delegator.findOne("OrderAttribute", UtilMisc.toMap("orderId", eachOrderId,"attrName","DST_ADDR"), false);
+					if(UtilValidate.isNotEmpty(poOrderAttr)){
+						destination = poOrderAttr.getString("attrValue");
+					}
+				}catch(GenericEntityException e){
+					Debug.logError(e, module);
+				}
+				try{
+					List<GenericValue> poOrderRole = delegator.findList("OrderRole", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId) , null ,null, null, false );
+					if(UtilValidate.isNotEmpty(poOrderRole)){
+						List<GenericValue> filteredOrderRole = EntityUtil.filterByCondition(poOrderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+						if(UtilValidate.isNotEmpty(filteredOrderRole)){
+							customer = (EntityUtil.getFirst(filteredOrderRole)).getString("partyId"); 
+							customer = org.ofbiz.party.party.PartyHelper.getPartyName(delegator,customer, false);
+						}
+					}
+				}catch(GenericEntityException e){
+					Debug.logError(e, module);
+				}
+				
+				shipmentDetailMap.put("customer",customer);
+				shipmentDetailMap.put("destination",destination);
+				shipmentItemHistory.put(shipmentId,shipmentDetailMap);
 				shipmentHistory.put(shipmentId,shipmentItemList);
 			}
+			tempData.put("shipmentItemHistory",shipmentItemHistory);
 			tempData.put("shipmentHistory",shipmentHistory);
         	ordersMap.put(eachOrderId,tempData);
         }
