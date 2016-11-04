@@ -635,9 +635,13 @@
         <attribute name="saleBillQty" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="saleBillAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
-    
-    
-    
+    <service name="getPurchaseBillDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getPurchaseBillDetails">
+        <description>Populate Purchase Invoice Details </description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="totalPurQty" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="totalPurAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
+    </service>
+       
      <service name="createPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createPartyLooms" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>

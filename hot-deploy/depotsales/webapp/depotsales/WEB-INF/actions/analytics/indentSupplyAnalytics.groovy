@@ -116,13 +116,18 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			    totalSaleQty = new BigDecimal(eachItem.getAt("saleQuantity")).setScale(2, 0);
 			 }
 			 totalSaleAmount =0;
-			 if(eachItem.getAt("saleQuantity")){
+			 if(eachItem.getAt("saleAmount")){
 				 totalSaleAmount = new BigDecimal(eachItem.getAt("saleAmount")).setScale(2, 0);
+			 }
+			 totalPurAmount=0;
+			 if(eachItem.getAt("purAmout")){
+				 totalPurAmount = new BigDecimal(eachItem.getAt("purAmout")).setScale(2, 0);
 			 }
 			 if (DataMap.containsKey(partyId)) {
 				 branchDetails = DataMap.get(partyId);
 				 branchDetails.putAt("saleQty", totalSaleQty+ branchDetails.get("saleQty"));
 				 branchDetails.putAt("saleAmt", totalSaleAmount+ branchDetails.get("saleAmt"));
+				 branchDetails.putAt("purAmout", totalPurAmount+ branchDetails.get("purAmout"));
 				 branchDetails.putAt("completed", completed + branchDetails.get("completed"));
 				 branchDetails.putAt("totQty", totalQty + branchDetails.get("totQty"));
 			 }
@@ -130,6 +135,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 branchDetails = [:];
 				 branchDetails.putAt("saleQty", totalSaleQty);
 				 branchDetails.putAt("saleAmt",totalSaleAmount);
+				 branchDetails.putAt("purAmout", totalPurAmount);
 				 branchDetails.putAt("totQty", totalQty);
 				 branchDetails.putAt("completed", completed);
 				 DataMap.putAt(partyId, branchDetails);
@@ -138,6 +144,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 roDetails = DataMap.get(roId);
 				 roDetails.putAt("saleQty", totalSaleQty+roDetails.get("saleQty"));
 				 roDetails.putAt("saleAmt", totalSaleAmount+ roDetails.get("saleAmt"));
+				 roDetails.putAt("purAmout", totalPurAmount+ roDetails.get("purAmout"));
 				 roDetails.putAt("completed", completed + roDetails.get("completed"));
 				 roDetails.putAt("totQty", totalQty + roDetails.get("totQty"));
 			 }
@@ -145,6 +152,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 roDetails = [:];
 				 roDetails.putAt("saleQty", totalSaleQty);
 				 roDetails.putAt("saleAmt",totalSaleAmount);
+				 roDetails.putAt("purAmout", totalPurAmount);
 				 roDetails.putAt("totQty", totalQty);
 				 roDetails.putAt("completed", completed);
 				 DataMap.putAt(roId, roDetails);
@@ -154,6 +162,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 saleQty = totDetails.get("saleQty");
 				 totDetails.putAt("saleQty", totalSaleQty+saleQty);
 				 totDetails.putAt("saleAmt", totalSaleAmount+ totDetails.get("saleAmt"));
+				 totDetails.putAt("purAmout", totalPurAmount+ totDetails.get("purAmout"));
 				 totDetails.putAt("completed", completed + totDetails.get("completed"));
 				 totDetails.putAt("totQty", totalQty + totDetails.get("totQty"));
 			 }
@@ -161,6 +170,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 totDetails = [:];
 				 totDetails.putAt("saleQty", totalSaleQty);
 				 totDetails.putAt("saleAmt",totalSaleAmount);
+				 totDetails.putAt("purAmout",totalPurAmount);
 				 totDetails.putAt("totQty", totalQty);
 				 totDetails.putAt("completed", completed);
 				 DataMap.putAt(ROOT_ID, totDetails);
@@ -185,6 +195,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
 				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000).setScale(2, 0)));
 				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
 				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
@@ -197,6 +208,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
 				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000).setScale(2, 0)));
 				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
 				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
@@ -209,6 +221,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000).setScale(2, 0)));
 				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000).setScale(2, 0)));
+				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000).setScale(2, 0)));
 				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000).setScale(2, 0)));
 				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000).setScale(2, 0)));
 				newObj.put("completed", entryValue.get("completed"));
