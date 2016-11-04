@@ -43,7 +43,7 @@ $(document).ready(function () {
                     { name: 'totalIndents', type: 'string' },
                     { name: 'inProcess', type: 'string' },
                     { name: 'saleAmt', type: 'string' },
-                   // { name: 'totalPoAmt', type: 'string' },                    
+                    { name: 'purAmout', type: 'string' },                    
                 ],
                 hierarchy:
                 {
@@ -98,7 +98,7 @@ $(document).ready(function () {
                   { text: 'Total SupplyBilled Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Pending Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
                   { text: 'Sale Amt after 10% Discount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
-                 // { text: 'Total PO Amt(Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'Total Purchase Amt(Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'purAmout', cellsalign: 'right', cellsRenderer: cellsRenderer  },
                 ],
               
                

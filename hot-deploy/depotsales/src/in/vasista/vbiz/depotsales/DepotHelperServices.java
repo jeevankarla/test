@@ -2304,6 +2304,20 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
 	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
 	                    } 
+	                    Map purBillresultCtx = dispatcher.runSync("getPurchaseBillDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
+                        if (ServiceUtil.isError(purBillresultCtx)) {
+	    	  		  		String errMsg =  ServiceUtil.getErrorMessage(purBillresultCtx);
+	    	  		  		Debug.logError(errMsg , module);
+	    	  		  		return ServiceUtil.returnError(errMsg);
+	    	  		  	}
+                        BigDecimal purQunatity = BigDecimal.ZERO;
+                        BigDecimal purAmout = BigDecimal.ZERO;
+                        if(UtilValidate.isNotEmpty(purBillresultCtx.get("totalPurQty"))){
+                        	purQunatity =(BigDecimal)purBillresultCtx.get("totalPurQty");
+                        }
+                        if(UtilValidate.isNotEmpty(purBillresultCtx.get("totalPurQty"))){
+                        	purAmout =(BigDecimal)purBillresultCtx.get("totalPurAmt");
+                        }
 			            GenericValue indentSummaryDetailsValue = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", indentId), false);
                         if(UtilValidate.isNotEmpty(indentSummaryDetailsValue)){
                         	indentSummaryDetailsValue.remove();
@@ -2324,6 +2338,8 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("shippedAmount", shippedAmount);
 	                    indentSummaryDetails.set("totalAmount", totalAmount);
 	                    indentSummaryDetails.set("salesChannel", salesChannelEnumId);
+	                    indentSummaryDetails.set("purQunatity", purQunatity);
+	                    indentSummaryDetails.set("purAmout", purAmout);
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
 	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
 						delegator.createOrStore(indentSummaryDetails);
@@ -2665,7 +2681,64 @@ public static Map<String, Object> periodPopulateShipmentTotals(DispatchContext d
 
         return result;	
 	}
-	
+public static Map<String,Object> getPurchaseBillDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    String toOrderId = (String) context.get("orderId");
+    BigDecimal totalPurAmt =BigDecimal.ZERO;
+    BigDecimal totalPurQty =BigDecimal.ZERO;
+    List condList = FastList.newInstance();
+        EntityListIterator eli = null;
+    try {
+    	    List shipmentIds = FastList.newInstance();
+		    List<GenericValue> orderAssocs = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, toOrderId), null, null, null, false);
+		    if(UtilValidate.isNotEmpty(orderAssocs)){
+				String orderId = (EntityUtil.getFirst(orderAssocs)).getString("orderId");
+	            condList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId));
+	            condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+	            EntityCondition condition =EntityCondition.makeCondition(condList,EntityOperator.AND);
+	            EntityListIterator shipmentItr = delegator.find("Shipment", condition, null, null, null, null);
+	        	shipmentIds=EntityUtil.getFieldListFromEntityListIterator(shipmentItr, "shipmentId", true);
+		    }
+            if(UtilValidate.isNotEmpty(shipmentIds)){
+	        	condList.clear();
+	        	condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	            condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+	            condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	            EntityCondition cond =EntityCondition.makeCondition(condList,EntityOperator.AND);
+	            EntityListIterator invoiceItr = delegator.find("Invoice", cond, null, null, null, null);
+	            if (invoiceItr != null) {
+	                GenericValue invoice = null;
+			        while ((invoice = invoiceItr.next()) != null) {
+			        	String invoiceId = invoice.getString("invoiceId");
+			            condList.clear();
+			            condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			            condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+			            List<GenericValue> invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("productId","quantity","amount"), null, null, true);
+		            	for (GenericValue invoiceItem : invoiceItemList) {
+		    	            BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
+		    	            totalPurQty = totalPurQty.add(quantity);
+		    	            BigDecimal unitpPce = invoiceItem.getBigDecimal("amount");
+		    	            BigDecimal amount = quantity.multiply(unitpPce);
+		    	            amount = (amount.setScale(0, rounding));
+		    	            totalPurAmt=totalPurAmt.add(amount);
+		            	}
+			        }
+			        invoiceItr.close();
+	            }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }	
+    result.put("totalPurQty",totalPurQty.setScale(2, BigDecimal.ROUND_HALF_UP));
+    result.put("totalPurAmt",totalPurAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
+    return result;
+}
+
 	
 	
 	
