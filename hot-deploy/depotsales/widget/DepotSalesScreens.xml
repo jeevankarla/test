@@ -6900,12 +6900,12 @@
 				<set field="changeFlag" value="PurchaseOrder" />
 				<set field="parameters.POId" from-field="orderId" />
 				<set field="parameters.changeFlag" value="PurchaseOrder" />
-				<script
+				 <script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
 				<script
-					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" /> 
 				<script
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditBranchPOEntryForm.groovy" />
 				<set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag" />

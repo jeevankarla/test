@@ -23,7 +23,26 @@
   
   
   
+  .myTable1 { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable1 th { 
+  background-color: green;
+  color: white; 
+  }
+.myTable1 td, 
+.myTable1 th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+  
 </style>
+
+
 
 
 <input type="hidden" name="totQuantity" id="totQuantity" value="${totQuantity}">
