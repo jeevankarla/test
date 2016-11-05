@@ -499,16 +499,7 @@
         </field>
        
         <field name="periodTypeId"><display description="${periodType.description}"/></field>    
-        <field name="cost"  id-name="Deductioncost" title="Flat Amount"><text size="20" maxlength="30"/>
-        	<drop-down allow-empty="true">
-        		<option key="200"/>
-        		<option key="250"/>
-        		<option key="300"/>
-        		<option key="350"/>
-        		<option key="400"/>
-        		<option key="500"/>
-        	</drop-down>
-        </field>                
+        <field name="cost"  id-name="Deductioncost" title="Flat Amount"><text size="20" maxlength="30"/> </field>                
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPerformanceNotes" type="list" target="updatePerformanceNote" title="" paginate-target="findPerformanceNotes"
