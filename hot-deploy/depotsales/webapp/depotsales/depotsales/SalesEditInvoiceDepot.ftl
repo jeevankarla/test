@@ -33,6 +33,43 @@ $(document).ready(function(){
     	//setupGrid2();
 	});
 </script>
+
+<style type="text/css">
+.myTable { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable th { 
+  background-color: green;
+  color: white; 
+  }
+.myTable td, 
+.myTable th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+</style>
+
+<style type="text/css">
+input[type=button] {
+	color: white;
+    padding: .5x 7px;
+    background:#008CBA;
+    border: .8px solid green;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}
+input[type=button]:hover {
+    background-color: #3e8e41;
+}
+
+</style>
+
 <#assign changeRowTitle = "Changes">                
 
 <#include "SalesEditInvoiceDepotInc.ftl"/>

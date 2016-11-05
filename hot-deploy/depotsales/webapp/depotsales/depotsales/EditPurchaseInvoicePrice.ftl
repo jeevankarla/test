@@ -7,7 +7,7 @@
 
 <style>
 .button1 {
-    background-color: green;
+    background-color: grey;
     border: none;
     color: white;
     padding: 10px 5px;
@@ -426,7 +426,7 @@
 				
 				if(dataRow){
 			
-			message += "<h1 align='center'><font color='red'>**Adjustments And Taxes**</font></h1>";
+			message += "<h1 align='center'><font color='blue'>Adjustments And Taxes</font></h1>";
 			message += "<table cellspacing=10 cellpadding=10 width='800'  id='indentAdjustmentTable' class='myTable'>" ;
 
            
