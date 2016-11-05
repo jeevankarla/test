@@ -655,6 +655,21 @@
 			newObj.put("taxAmt", totalTaxAmt);
 			newObj.put("amount", amount);
 			
+			taxList1 = [];
+			taxList1.add("VAT");
+			taxList1.add("CST");
+			taxList1.add("VAT_SURCHARGE");
+			taxList1.add("CST_SURCHARGE");
+			//taxList1.add("SERVICE_CHARGE");
+			//taxList1.add("TEN_PERCENT_SUBSIDY");
+			
+				newObj.put("taxList1", taxList1);
+				
+				newObj.put("orderAdjustmentTypeIdsList", orderAdjustmentTypeIdsList);
+				
+				
+				
+			
 			/*if(eachItem.bedPercent){
 				newObj.put("bedPercent", bedTaxPercent);
 			}
