@@ -2499,6 +2499,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 
         List condList = FastList.newInstance();
         condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+        condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
             EntityListIterator eli = null;
         try {
         	    EntityListIterator orderItemBillingItr = delegator.find("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
