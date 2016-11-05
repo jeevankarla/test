@@ -113,10 +113,18 @@ if(UtilValidate.isEmpty(parameters.productId)){
 else{
 productId = parameters.productId;
 if(UtilValidate.isNotEmpty(result.listIt)){
-	list=result.listIt;
+	list1=result.listIt;
 	poListNew=[];
-	GenericValue poEntry = null;
-	while (list.hasNext() && (poEntry=list.next()) != null) {
+	list=[];
+	ordList=[];
+	while (list1.hasNext() && (lst=list1.next()) != null) {
+	
+		if(!(ordList.contains(lst.orderId))){
+			list.add(lst);
+			ordList.add(lst.orderId);
+		}
+	}
+	for (poEntry in list) {
 		if(UtilValidate.isNotEmpty(supplierFilteredOrderIds)){
 			if(!supplierFilteredOrderIds.contains(poEntry.orderId)){
 				continue;

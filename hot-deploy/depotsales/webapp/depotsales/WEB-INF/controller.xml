@@ -1448,8 +1448,8 @@
      <request-map uri="CancelDepotTransGrnShipment">
        <security https="true" auth="true"/>
         <event type="service" path="" invoke="processCancelGrnShipment"></event>
-       <response name="success" type="request-redirect-noparam" value="FindDepotTransGRNShipments"/>
-       <response name="error" type="view" value="FindDepotTransGRNShipments"/>
+       <response name="success" type="view" value="DepotTransGRNShipments"/>
+       <response name="error" type="view" value="DepotTransGRNShipments"/>
      </request-map>
      <request-map uri="DepotTransMaterialInvoiceInit">
        <security https="true" auth="true"/>
