@@ -7,7 +7,7 @@
 
 <style>
 .button1 {
-    background-color: green;
+    background-color: grey;
     border: none;
     color: white;
     padding: 10px 5px;
@@ -475,7 +475,7 @@
 				
 				if(dataRow){
 			
-			message += "<h1 align='center'><font color='red'>**Adjustments And Taxes**</font></h1>";
+			message += "<h1 align='center'><font color='blue'>Adjustments And Taxes</font></h1>";
 			message += "<table cellspacing=10 cellpadding=10 width='800'   id='indentAdjustmentTable' class='myTable'>" ;
 			
 			for(var i=0;i<allAdjustments.length;i++){
@@ -577,7 +577,7 @@
 			
 				message += "<hr class='style18'></hr>";
 			
-			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price</button></td></tr>";
+			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button  value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price </button></td></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
@@ -709,16 +709,16 @@
   	    
   	     $.each(allAdjustments, function(key, item){
   	          if(resultMap[item['orderAdjustmentTypeId']] == "Y")
-			  $('#addAdjGivenList').append($('<li>').html( "<font color='green'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
+			  $('#addAdjGivenList').append($('<li>').html( "<font color='black'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   		      else
-  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
+  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   	     });
   	    
 	 
 	 }else{
 	 
 	  $.each(allAdjustments, function(key, item){
-	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
+	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
 	  });
 	 }
 	}
