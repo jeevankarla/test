@@ -90,8 +90,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 partyId = eachItem.getAt("partyId");
 			 orderId = eachItem.getAt("orderId");
 			 poentryDate = eachItem.getAt("orderDate");
-			 
-			 BigDecimal diffHours= BigDecimal.ZERO;
+ 			 BigDecimal diffHours= BigDecimal.ZERO;
 			 String toOrderId=null;
 			 orderAssocs = delegator.findList("OrderAssoc", (EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId)),UtilMisc.toSet("toOrderId"), null, null, false);
 			 if(UtilValidate.isNotEmpty(orderAssocs)){
@@ -115,20 +114,24 @@ if(UtilValidate.isNotEmpty(thruDate)){
 					for(i=0; i<invoiceIds.size();i++){
 						invoiceId = invoiceIds.get(i);
 						invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], true);
-						invoiceDate=invoice.invoiceDate;
-						shipmentId = invoice.shipmentId;
-						shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], true);
-						//orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
-						if(shipment){
-							shipDate = shipment.estimatedShipDate;
+						if(UtilValidate.isNotEmpty(invoice) && !(invoice.statusId.equals("INVOICE_CANCELLED"))){
+							invoiceDate=invoice.invoiceDate;
+							shipmentId = invoice.shipmentId;
+							shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], true);
 							
-							//indentDate = orderHeader.orderDate;
-							long saleTimeDiff = invoiceDate.getTime() - shipDate.getTime();
-							BigDecimal saleDiffHours = saleTimeDiff / (60 * 60 * 1000);
-							BigDecimal modOfSaleDiffHours = saleTimeDiff % (60 * 60 * 1000);
-							saleDiffMinutes = modOfSaleDiffHours/ (60 * 1000);
-							saleTotalTime  = saleTotalTime+saleDiffHours;
-						}
+							//orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
+							if(shipment && !(shipment.statusId.equals("SHIPMENT_CANCELLED"))){
+								shipDate = shipment.estimatedShipDate;
+								//indentDate = orderHeader.orderDate;
+								if(invoiceDate !=null){
+									long saleTimeDiff = invoiceDate.getTime() - shipDate.getTime();
+									BigDecimal saleDiffHours = saleTimeDiff / (60 * 60 * 1000);
+									BigDecimal modOfSaleDiffHours = saleTimeDiff % (60 * 60 * 1000);
+									saleDiffMinutes = modOfSaleDiffHours/ (60 * 1000);
+									saleTotalTime  = saleTotalTime+saleDiffHours;
+								}	
+							}
+						}	
 					}
 				}
 		    }
