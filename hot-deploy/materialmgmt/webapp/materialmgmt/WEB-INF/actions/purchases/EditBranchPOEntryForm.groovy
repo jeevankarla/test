@@ -587,8 +587,8 @@
 						
 						// Update adjustments for item
 						
-						newObj.put(orderAdjustmentTypeId, adjItem.sourcePercentage);
-						newObj.put(orderAdjustmentTypeId + "_AMT", adjItem.amount);
+						newObj.put(orderAdjustmentTypeId+"_PUR", adjItem.sourcePercentage);
+						newObj.put(orderAdjustmentTypeId + "_PUR_AMT", adjItem.amount);
 						
 						totalItemAdjAmt = totalItemAdjAmt + adjItem.amount;
 					}
@@ -645,7 +645,7 @@
 				purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 				for(int i=0; i<purTaxList.size(); i++){
 					taxItem = purTaxList.get(i);
-					newObj.put(taxItem, taxValueMap.get(taxItem));
+					newObj.put(purTaxItem, taxValueMap.get(taxItem));
 					//newObj.put("vatPercent", vatPercent);
 					if(taxValueMap.get(taxItem)){
 						totalTaxAmt = totalTaxAmt + taxValueMap.get(taxItem);
@@ -654,6 +654,8 @@
 			}
 			newObj.put("taxAmt", totalTaxAmt);
 			newObj.put("amount", amount);
+			
+			newObj.put("totPayable",amount + totalTaxAmt + totalItemAdjAmt);
 			
 			taxList1 = [];
 			taxList1.add("VAT");

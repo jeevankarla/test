@@ -285,15 +285,34 @@
                 // Purchase taxes
 				
 				var purTaxList = [];
-				purTaxList = data[rowCount]["purTaxList"]
+			//	purTaxList = data[rowCount]["purTaxList"];
+				
+				purTaxList.push("VAT_PUR");
+				purTaxList.push("CST_PUR");
+				purTaxList.push("VAT_SURCHARGE");
+				purTaxList.push("CST_SURCHARGE");
+				
+				//alert("purTaxList============"+JSON.stringify(purTaxList));
 				
 				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
 				jQuery(formId).append(jQuery(purTaxListItem));	
 				if(purTaxList != undefined){
 					for(var i=0;i<purTaxList.length;i++){
 						var taxType = purTaxList[i];
-						var taxPercentage = data[rowCount][taxType + "_PUR"];
-						var taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						var taxPercentage = 0;
+						var taxValue = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE")
+						{
+						  taxPercentage = data[rowCount][taxType];
+						  taxValue = data[rowCount][taxType + "_AMT"];
+						}else{
+						   taxPercentage = data[rowCount][taxType+"_PUR"];
+					       taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						}
+						
+						
 						
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
 						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
@@ -302,17 +321,18 @@
 					}
 				}
                 
+                
                 // Sale order Adjustments
 				var orderAdjustmentsList = [];
-				orderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeIdsList"];
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
 				if(orderAdjustmentsList != undefined){
 					for(var i=0;i<orderAdjustmentsList.length;i++){
 						var orderAdjType = orderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var adjPercentage = data[rowCount][orderAdjType+ "_PUR"];
+						var adjValue = data[rowCount][orderAdjType + "_PUR_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
@@ -670,6 +690,7 @@
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", editor:FloatCellEditor},
 			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, cssClass:"FloatCellEditor", sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", editor:FloatCellEditor},
 			-->
+			{id:"totPayable", name:"Total Payable", field:"totPayable", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
 			{id:"button", name:"Edit Tax", field:"button", width:60, minWidth:60, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
