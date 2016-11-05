@@ -33,7 +33,7 @@ under the License.
 <#assign displayApps = Static["org.ofbiz.base.component.ComponentConfig"].getAppBarWebInfos(ofbizServerName, "secondary")>
 <!--
 <#if userLogin?has_content>
-<center>
+<center> 
   <div id="secondary-navigation">
     <#list displayApps as display>
       <#assign thisApp = display.getContextRoot()>
@@ -61,15 +61,13 @@ under the License.
 </center>
 </#if>
 -->
-<div id="footer">
-  <!--<a href="http://www.vasista.in" id="footerLink"></a>-->
-  <!--<p>${nowTimestamp?datetime?string("dd/MM/yyyy HH:mm")} -->
-  <!--<a href="<@ofbizUrl>ListTimezones</@ofbizUrl>">${timeZone.getDisplayName(timeZone.useDaylightTime(), Static["java.util.TimeZone"].LONG, locale)}</a>-->
-  <!--</p>-->
+ <#--  <div id="footer">
+ <a href="http://www.vasista.in" id="footerLink"></a>
+  <p>${nowTimestamp?datetime?string("dd/MM/yyyy HH:mm")}  
+  <a href="<@ofbizUrl>ListTimezones</@ofbizUrl>">${timeZone.getDisplayName(timeZone.useDaylightTime(), Static["java.util.TimeZone"].LONG, locale)}</a>
+  </p>       
 
-
-
-</div>
+</div> -->
 </body>
 </html>
 
