@@ -18,6 +18,12 @@
 			opacity: .7;
 			filter: alpha(opacity=70);
 		}
+		.fontSizeChange {
+			  color:#C70039;
+			  background:#5499C7;
+              font-size: 11px;
+              font-weight:bold;
+       }
 </style>
 <style type="text/css">
 	.smallfont 
@@ -61,10 +67,10 @@ $(document).ready(function () {
             {
                 if (rowData.records !== undefined)
                 {
-                    return '<span style="font-weight: bold;">' + value + '</span>';
+                    return '<span style="font-weight: bold; color:#0B5345">' + value + '</span>';
                 } else
                 {
-                    return '<span>' + value + '</span>';
+                    return '<span style="color:#0E6655">' + value + '</span>';
                 }
             };            
             
@@ -94,15 +100,33 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
-                  { text: 'Total Indents', width:'10%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Indent Amt (Rs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Issued', width:'12%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
-                  { text: 'Pending POs', width:'12%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer, className:'fontSizeChange'},
+                  { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'Total Indents', width:'8%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+		                  cellsRenderer: function (rowKey, dataField, value, data) {
+							 return '<a href="FindIndents?partyIdFrom='+rowKey+'" target="_blank" >'+value+'</a>'; 
+		 				  }
+		 		  },
+                  { text: 'Indent Qty (Kgs in Lakhs)', width:'10%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                 renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Qty </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+		    				return checkBox;
+					  }
+					},
+                  { text: 'Indent Amt (Rs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                 renderer: function (text, align, height) {
+			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			    				return checkBox;
+						  }
+					},
+                  { text: 'PO Issued', width:'8%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer, className:'fontSizeChange',
+                          cellsRenderer: function (rowKey, dataField, value, data) {
+							return '<a href="FindPO?partyId='+rowKey+'" target="_blank" >'+value+'</a>'; 
+		 				  }
+		 		  },
+                  { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange'  },
+                  { text: 'Pending POs', width:'10%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange'  },
                 ],
               
                

@@ -18,6 +18,12 @@
 			opacity: .7;
 			filter: alpha(opacity=70);
 		}
+		.fontSizeChange {
+			  color:#C70039;
+			  background:#5499C7;
+              font-size: 11px;
+              font-weight:bold;
+       }
 </style>
 <style type="text/css">
 	.smallfont 
@@ -58,10 +64,10 @@ $(document).ready(function () {
             {
                 if (rowData.records !== undefined)
                 {
-                    return '<span style="font-weight: bold;">' + value + '</span>';
+                    return '<span style="font-weight: bold; color:#0B5345">' + value + '</span>';
                 } else
                 {
-                    return '<span>' + value + '</span>';
+                    return '<span style="color:#0E6655">' + value + '</span>';
                 }
             };            
             
@@ -91,12 +97,22 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
-                  { text: 'Indent to PO Avg. Duration (Days)', width:'15%', align: 'center', dataField: 'avgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Shipment to Sale Invoice Avg. Duration(Days)', width:'20%', align: 'center', dataField: 'slaeAvgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  //{ text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                 // { text: 'Shipped Qty', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'R.O.',  width:'20%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'Indent to PO Avg. Duration (Days)', width:'12%', align: 'center', dataField: 'avgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                   renderer: function (text, align, height) {
+			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent to PO</td></tr><tr><td style='text-align:center'>Avg. Duration(Days)</td></tr> </table>";
+			    				return checkBox;
+							}
+                   },
+                  { text: 'Shipment to Sale Invoice Avg. Duration(Days)', width:'13%', align: 'center', dataField: 'slaeAvgDuration', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' ,
+	                  renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'>Shipment to Sale Invoice </td></tr><tr><td style='text-align:center'>Avg. Duration(Days)</td></tr> </table>";
+		    				return checkBox;
+						}
+                  },
+                  //{ text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                 // { text: 'Shipped Qty', width:'15%', align: 'center',  dataField: 'completed', cellsalign: 'right', cellsRenderer: cellsRenderer ,className:'fontSizeChange' },
                 ],
               
                

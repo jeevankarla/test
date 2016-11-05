@@ -18,6 +18,12 @@
 			opacity: .7;
 			filter: alpha(opacity=70);
 		}
+		.fontSizeChange {
+			  color:#C70039;
+			  background:#5499C7;
+              font-size: 11px;
+              font-weight:bold;
+       }
 </style>
 <style type="text/css">
 	.smallfont 
@@ -59,10 +65,10 @@ $(document).ready(function () {
             {
                 if (rowData.records !== undefined)
                 {
-                    return '<span style="font-weight: bold;">' + value + '</span>';
+                    return '<span style="font-weight: bold; color:#0B5345">' + value + '</span>';
                 } else
                 {
-                    return '<span>' + value + '</span>';
+                    return '<span style="color:#0E6655">' + value + '</span>';
                 }
             };            
             
@@ -92,13 +98,40 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer },
-                  { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer },
-                  { text: 'Total Indented Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Total SupplyBilled Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Pending Qty (Kgs in Lakhs)', width:'15%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer },
-                  { text: 'Sale Amt after 10% Discount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer  },
-                  { text: 'Total Purchase Amt(Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'purAmout', cellsalign: 'right', cellsRenderer: cellsRenderer  },
+                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'Total Indented Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+                  	 renderer: function (text, align, height) {
+	   					 var checkBox = "<table><tr><td style='text-align:center'>Total Indented Qty </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+	    				return checkBox;
+					}
+                   },
+                  { text: 'Total SupplyBilled Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+                  
+                  renderer: function (text, align, height) {
+	   					 var checkBox = "<table><tr><td style='text-align:center'>Total SupplyBilled Qty</td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+	    				return checkBox;
+					}
+                  
+                   },
+                  { text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' ,
+                  		renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'><b>Pending Qty</b></td></tr><tr><td style='text-align:center'><b>(Rs in Lakhs)</b></td></tr> </table>";
+		    				return checkBox;
+						}
+                 },
+                  { text: 'Sale Amt after 10% Discount (Rs in Lakhs)', width:'15%', align: 'center',  dataField: 'saleAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                  renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'><b>Sale Amt after 10% Discount</b></td></tr><tr><td style='text-align:center'><b>(Rs in Lakhs)</b></td></tr> </table>";
+		    				return checkBox;
+						}
+                  },
+                  { text: 'Total Purchase Amt(Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'purAmout', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                    renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'>Total Purchase Amt</td></tr><tr><td style='text-align:center'>(Rs in Lakhs)</td></tr> </table>";
+		    				return checkBox;
+						}
+                    },
                 ],
               
                
