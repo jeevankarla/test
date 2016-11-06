@@ -645,7 +645,7 @@
 				purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 				for(int i=0; i<purTaxList.size(); i++){
 					taxItem = purTaxList.get(i);
-					newObj.put(purTaxItem, taxValueMap.get(taxItem));
+					newObj.put(taxItem, taxValueMap.get(taxItem));
 					//newObj.put("vatPercent", vatPercent);
 					if(taxValueMap.get(taxItem)){
 						totalTaxAmt = totalTaxAmt + taxValueMap.get(taxItem);

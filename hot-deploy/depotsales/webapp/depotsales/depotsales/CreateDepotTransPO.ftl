@@ -7,9 +7,63 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
-<script type="application/javascript">
 
-	
+<style type="text/css">
+.myTable { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable th { 
+  background-color: green;
+  color: white; 
+  }
+.myTable td, 
+.myTable th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+  
+  
+  .myTable1 { 
+  width: 100%;
+  text-align: left;
+  background-color: lemonchiffon;
+  border-collapse: collapse; 
+  }
+.myTable1 th { 
+  background-color: green;
+  color: white; 
+  }
+.myTable1 td, 
+.myTable1 th { 
+  padding: 10px;
+  border: 1px solid goldenrod; 
+  }
+  
+  
+</style>
+
+<style type="text/css">
+input[type=button] {
+	color: white;
+    padding: .5x 7px;
+    background:#008CBA;
+    border: .8px solid green;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}
+input[type=button]:hover {
+    background-color: #3e8e41;
+}
+
+</style>
+
+<script type="application/javascript">
 	
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
