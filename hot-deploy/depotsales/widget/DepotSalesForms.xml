@@ -3377,6 +3377,47 @@
        <field name="completed" title="completed"><display/></field>
      </form> 
     
-     
+     <form name="FindStockDetails" title="" type="single" target="StockDetails" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
+        <!-- <field name="productCategory" title="Product Category">
+            <drop-down allow-empty="true">
+                <option key="COTTON" description="Cotton"/>
+                <option key="SILK" description="Silk"/>
+                <option key="OTHER" description="Other"/>
+            </drop-down>
+        </field> -->
+        <!-- <field name="depot" title="Depot"><lookup target-form-name="LookupDepot" size="15" /></field> -->
+        <field name="depto" title="Depot">
+            <drop-down allow-empty="true">
+            </drop-down>
+        </field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="GOODS_RECEIVED"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListStockDetails" type="list" list-name="physicalInventory" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+		   </entity-one>
+		<set field="productName" from-field="product.description"/> 
+		<set field="balancedQty" value="${quantityOnHandTotal-(bookedQuantity)}"/>
+		</row-actions>
+        <field name="productId" widget-style="buttontext" title="Product Name">
+        	<display-entity entity-name="Product" description="${description}"></display-entity>
+        </field>
+        <field name="facilityName" title="Depot"><display></display></field>
+        <field name="specification"><display/></field>
+        <field name="availbleQuantity" title="Available Quantity"><display/></field>
+        <field name="unitCost"><display/></field>
+    </form>
         
 </forms>

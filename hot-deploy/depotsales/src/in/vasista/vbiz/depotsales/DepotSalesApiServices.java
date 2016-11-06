@@ -564,7 +564,7 @@ public class DepotSalesApiServices{
 	    	tempData.put("totDiscountAmt", totDiscountAmt.setScale(decimals, rounding));
 	    	tempData.put("orderItemsList", orderItems);
 
-    		if(POorder != "NA" && !("ORDER_COMPLETED").equals(eachHeader.get("statusId"))){
+    		if(POorder != "NA"){
 	    		List<GenericValue> shipReceiptList = null;
 	    		try{
 	        		shipReceiptList = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, POorder), null, null, null, false);
@@ -574,7 +574,18 @@ public class DepotSalesApiServices{
 	    		if(UtilValidate.isNotEmpty(shipReceiptList)){
 	    			tempData.put("statusId", "Partially Shipped");
 	    			if(totalOrderQty.equals(totalShippedQty)){
-	    				tempData.put("statusId", "Shipped");
+	    				tempData.put("statusId",filteredOrderStatus.getString("description"));
+	    				try{
+	    					List<GenericValue> shipmentList = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, POorder), UtilMisc.toSet("statusId"), null, null, false);
+	    					for(GenericValue eachShipmentStatus:shipmentList){
+		    					if((eachShipmentStatus.getString("statusId"))!="DOCUMENTS_ENDORSED"){
+		    						tempData.put("statusId", "Shipped");
+		    						break;
+		    					}
+		    				}
+	    				}catch (GenericEntityException e) {
+	    					Debug.logError(e, module);
+	    				}
 	    			}
 	    		}
 	    	}
@@ -1006,7 +1017,8 @@ public class DepotSalesApiServices{
 			productStoreId = cfcId;
 		}
 		if(UtilValidate.isEmpty(productStoreId)){
-			return ServiceUtil.returnError("Branch can not be empty");
+			productStoreId = "PANIPAT";
+			//return ServiceUtil.returnError("Branch can not be empty");
 		}
 		String orderTaxType = (String) context.get("orderTaxType");
 		String schemeCategory = (String) context.get("schemeCategory");
