@@ -104,6 +104,9 @@ $(document).ready(function () {
                   { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
                   { text: 'Total Indents', width:'8%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 		                  cellsRenderer: function (rowKey, dataField, value, data) {
+									if(rowKey=='NHDC'){
+										rowKey='';
+									}                  
 							 return '<a href="FindIndents?partyIdFrom='+rowKey+'" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
