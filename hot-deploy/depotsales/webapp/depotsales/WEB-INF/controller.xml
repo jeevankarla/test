@@ -1412,6 +1412,11 @@
         <response name="success" type="view" value="DepotSalesInventorySales"/>
         <response name="error" type="view" value="DepotSalesInventorySales"/>
     </request-map>
+    <request-map uri="StockDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="StockDetails"/>
+        <response name="error" type="view" value="StockDetails"/>
+    </request-map>
     <request-map uri="processInventorySalesOrder">
     	<security https="true" auth="true"/>  
     	<event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processInventorySalesOrder"/>  	   	 	
@@ -2558,6 +2563,7 @@
     
     <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
     <view-map name="DepotSalesInventorySales" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventorySales"/>
+    <view-map name="StockDetails" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockDetails"/>
     <view-map name="DepotTransReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransReceipts"/>
     <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>
     <view-map name="DepotTransGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransGRNShipments"/>

@@ -164,6 +164,36 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="StockDetails">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Stock Details" />
+				<!-- <set field="headerItem" value="facility" /> -->
+				<set field="tabButtonItem" value="StockDetails" />
+				<!-- <set field="parameters.facilityId" from-field="parameters.facilityId"></set> -->
+				<set field="isInventorySales" value="Y"/>
+				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/StockDetails.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Find Stock Details">
+							<include-form name="FindStockDetails"	location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<screenlet title="List Of Stock">
+							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/stockXferForm.ftl"/></html></platform-specific>
+							<include-form name="ListStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<platform-specific>
+							<html>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/MakeSaleOrder.ftl" />
+							</html>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="FindDepotTransPO">
 		<section>
 			<actions>
