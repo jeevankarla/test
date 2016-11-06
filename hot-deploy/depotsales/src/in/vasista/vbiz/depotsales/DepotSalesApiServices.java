@@ -308,17 +308,17 @@ public class DepotSalesApiServices{
     		exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, eachOrderId));
     		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
     		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
-    		GenericValue orderAss = null; 
+    		GenericValue orderAssoc = null; 
     		try{
-    			orderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+    			orderAssoc = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
     		} catch (GenericEntityException e) {
     			Debug.logError(e, module);
     		}
     	
     		String POorder="NA";
     		String isgeneratedPO="N";
-    		if(UtilValidate.isNotEmpty(orderAss)){
-    			POorder=(String)orderAss.get("orderId");
+    		if(UtilValidate.isNotEmpty(orderAssoc)){
+    			POorder=(String)orderAssoc.get("orderId");
     			isgeneratedPO = "Y";
     		}
     		
@@ -366,7 +366,7 @@ public class DepotSalesApiServices{
 	    	tempData.put("orderDate", String.valueOf(eachHeader.get("estimatedDeliveryDate")).substring(0,10));
 	    	GenericValue filteredOrderStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(statusItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, eachHeader.get("statusId"))));
 	    	tempData.put("statusId", filteredOrderStatus.getString("description"));
-    	
+
 	    	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 	    		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	    	}
@@ -437,6 +437,10 @@ public class DepotSalesApiServices{
 	    	conditonList.add(EntityCondition.makeCondition("orderItemTypeId" , EntityOperator.EQUALS, "PRODUCT_ORDER_ITEM"));
 	    	conditonList.add(EntityCondition.makeCondition("productId" , EntityOperator.NOT_EQUAL, null));
 	    	List orderItems = FastList.newInstance();
+	    	
+	    	BigDecimal totalOrderQty = BigDecimal.ZERO;
+	    	BigDecimal totalShippedQty = BigDecimal.ZERO;
+	    	
 	    	try{
 	    		List<GenericValue> orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(conditonList, EntityOperator.AND), null, null, null ,false);
 	    		if(UtilValidate.isNotEmpty(orderItemList)){
@@ -511,6 +515,9 @@ public class DepotSalesApiServices{
 		    			itemDetailMap.put("specification",specification);
 		    			itemDetailMap.put("uom",uom);
 		    			itemDetailMap.put("quantity",quantity.setScale(decimals, rounding));
+		    			
+		    			totalOrderQty = totalOrderQty.add(quantity);
+		    			
 		    			itemDetailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
 		    			itemDetailMap.put("totalAmount",totalAmount.setScale(decimals, rounding));
 		    			itemDetailMap.put("baleQty",baleQty.setScale(decimals, rounding));
@@ -543,6 +550,7 @@ public class DepotSalesApiServices{
 			    			}
 		    			}
 		    			itemDetailMap.put("shippedQty",shippedQty.setScale(decimals, rounding));
+		    			totalShippedQty = totalShippedQty.add(shippedQty);
 		    			orderItems.add(itemDetailMap);
 		    		}
 	    		}
@@ -551,6 +559,22 @@ public class DepotSalesApiServices{
     		}
 	    	tempData.put("totDiscountAmt", totDiscountAmt.setScale(decimals, rounding));
 	    	tempData.put("orderItemsList", orderItems);
+
+    		if(POorder != "NA" && eachHeader.get("statusId")!="ORDER_COMPLETED"){
+	    		List<GenericValue> shipReceiptList = null;
+	    		try{
+	        		shipReceiptList = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, POorder), null, null, null, false);
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
+				}
+	    		if(UtilValidate.isNotEmpty(shipReceiptList)){
+	    			tempData.put("statusId", "Partially Shipped");
+	    			if(totalOrderQty.equals(totalShippedQty)){
+	    				tempData.put("statusId", "Shipped");
+	    			}
+	    		}
+	    	}
+	    	
 	    	String transporterName = "";
 	    	String transporterId = "";
 	    	String scheme = "";
