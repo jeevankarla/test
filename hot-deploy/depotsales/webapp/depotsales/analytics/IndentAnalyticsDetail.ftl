@@ -19,7 +19,7 @@
 			filter: alpha(opacity=70);
 		}
 		.fontSizeChange {
-			  color:#C70039;
+			  //color:#C70039;
 			  background:#5499C7;
               font-size: 11px;
               font-weight:bold;
@@ -124,8 +124,19 @@ $(document).ready(function () {
 							return '<a href="FindPO?partyId='+rowKey+'" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
-                  { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
-                  { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange'  },
+                  { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+                   		 renderer: function (text, align, height) {
+		   					 var checkBox = "<table><tr><td style='text-align:center'>PO Qty  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+		    				return checkBox;
+					  }
+                  },
+                  
+                  { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+	                   renderer: function (text, align, height) {
+			   					 var checkBox = "<table><tr><td style='text-align:center'>PO Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			    				return checkBox;
+						  }
+                    },
                   { text: 'Pending POs', width:'10%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange'  },
                 ],
               

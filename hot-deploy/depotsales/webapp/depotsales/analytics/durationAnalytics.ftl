@@ -19,7 +19,7 @@
 			filter: alpha(opacity=70);
 		}
 		.fontSizeChange {
-			  color:#C70039;
+			 // color:#C70039;
 			  background:#5499C7;
               font-size: 11px;
               font-weight:bold;
