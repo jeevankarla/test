@@ -19,7 +19,7 @@
 <script type="application/javascript">
 	$(document).ready(function() {
 	  $("select[name='partyIdFrom']").change(function() {
-	     populateBranchDepots()
+	     //populateBranchDepots()
 	  });
 	});
 	function populateBranchDepots() {

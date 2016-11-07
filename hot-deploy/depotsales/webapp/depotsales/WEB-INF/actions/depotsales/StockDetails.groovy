@@ -208,11 +208,11 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	
 	condList = [];
 	
-	if(UtilValidate.isNotEmpty(parameters.depot)){
+	/*if(UtilValidate.isNotEmpty(parameters.depot)){
 		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, parameters.depot ));
-	}else{
+	}else{*/
 		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(physicalInventory, "facilityId", true)));
-	}
+	//}
 	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
 	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
@@ -358,7 +358,10 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		}else{
 			row.putAt("shipmentId", "");
 		}
-		physicalInventoryCombined.add(row);
+		if(row["availbleQuantity"] > 0){
+			physicalInventoryCombined.add(row);
+		}
+		
 	}
 	context.physicalInventory = physicalInventoryCombined;
 }
