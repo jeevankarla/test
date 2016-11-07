@@ -178,10 +178,10 @@
 				<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<screenlet title="Find Stock Details">
-							<include-form name="FindStockDetails"	location="component://depotsales/widget/DepotSalesForms.xml" />
+							<include-form name="FindStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
 						</screenlet>
 						<screenlet title="List Of Stock">
-							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/stockXferForm.ftl"/></html></platform-specific>
+							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/StockDetails.ftl"/></html></platform-specific>
 							<include-form name="ListStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
 						</screenlet>
 						<platform-specific>

@@ -207,7 +207,12 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	}
 	
 	condList = [];
-	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(physicalInventory, "facilityId", true)));
+	
+	if(UtilValidate.isNotEmpty(parameters.depot)){
+		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, parameters.depot ));
+	}else{
+		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(physicalInventory, "facilityId", true)));
+	}
 	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
 	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
@@ -308,6 +313,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			//Debug.log("shipmentId=============================="+shipmentReceiptEach.shipmentId+"==iter.inventoryItemId="+iter.inventoryItemId);
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
+			
+			Debug.log("inventoryItem.facilityId================="+inventoryItem.facilityId);
+			
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
