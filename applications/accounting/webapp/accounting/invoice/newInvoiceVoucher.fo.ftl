@@ -156,7 +156,7 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${sr}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid" number-columns-spanned="3">
-				<fo:block text-align="left"  font-size="10pt" >${invoiceDetail.get("prodDescription")}&#160;<#if invoiceItemLevelAdjustments?has_content>(${invoiceDetail.get("remarks")})</#if></fo:block>
+				<fo:block text-align="left"  font-size="10pt" >${invoiceDetail.get("prodDescription")}&#160;<#if invoiceDetail.get("remarks")?has_content>(${invoiceDetail.get("remarks")})</#if></fo:block>
 				
 				<#assign tempTotAmount = tempTotAmount+(invoiceDetail.get("schemeQty")*invoiceDetail.get("amount"))>
 				
