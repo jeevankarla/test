@@ -572,14 +572,15 @@ public class DepotSalesApiServices{
 					Debug.logError(e, module);
 				}
 	    		if(UtilValidate.isNotEmpty(shipReceiptList)){
-	    			tempData.put("statusId", "Partially Shipped");
+	    			tempData.put("statusId", "Partially Dispatched");
 	    			if(totalOrderQty.equals(totalShippedQty)){
 	    				tempData.put("statusId",filteredOrderStatus.getString("description"));
 	    				try{
 	    					List<GenericValue> shipmentList = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, POorder), UtilMisc.toSet("statusId"), null, null, false);
 	    					for(GenericValue eachShipmentStatus:shipmentList){
-		    					if((eachShipmentStatus.getString("statusId"))!="DOCUMENTS_ENDORSED"){
-		    						tempData.put("statusId", "Shipped");
+	    						String tempStatus = eachShipmentStatus.getString("statusId");
+		    					if(!(tempStatus.equals("DOCUMENTS_ENDORSED"))){
+		    						tempData.put("statusId", "Dispatched");
 		    						break;
 		    					}
 		    				}
@@ -590,6 +591,17 @@ public class DepotSalesApiServices{
 	    		}
 	    	}
 	    	
+    		if("Created".equals(tempData.get("statusId"))){
+    			tempData.put("statusId", "Indent Received");
+    		}
+    		if("Draft Proposal".equals(tempData.get("statusId"))){
+    			tempData.put("statusId", "Indent In Process");
+    		}
+    		if("Approved".equals(tempData.get("statusId"))){
+    			tempData.put("statusId", "PO Issued");
+    		}
+    		
+    		
 	    	String transporterName = "";
 	    	String transporterId = "";
 	    	String scheme = "";
