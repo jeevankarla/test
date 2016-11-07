@@ -121,7 +121,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 							
 							//orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
 							if(shipment && !(shipment.statusId.equals("SHIPMENT_CANCELLED"))){
-								shipDate = shipment.estimatedShipDate;
+								shipDate = shipment.deliveryChallanDate;
 								//indentDate = orderHeader.orderDate;
 								if(invoiceDate !=null){
 									long saleTimeDiff = invoiceDate.getTime() - shipDate.getTime();
