@@ -39,7 +39,6 @@
 					$.each(depotJSON, function(key, item){
 					  optionList.push('<option value="'+item.value+'">'+item.label+'</option>');
 					});
-					alert("optionList============"+optionList);
 					$("select[name='depot']").html(optionList.join(''));
 				}								 
 			},

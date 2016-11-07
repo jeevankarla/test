@@ -21,7 +21,7 @@ JSONArray depotJSON = new JSONArray();
 if(UtilValidate.isNotEmpty(ownerPartyId)){
    condList = [];
    condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId));
-   condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.IN, ["CFC","DEPOT"]));
+   condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.IN, ["CFC","DEPOT","WAREHOUSE"]));
    depotsList = delegator.findList("Facility", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
    
    Debug.log("depotsList===="+depotsList);
