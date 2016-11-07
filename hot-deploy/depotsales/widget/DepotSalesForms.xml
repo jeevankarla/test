@@ -3382,6 +3382,7 @@
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
             <drop-down allow-empty="true">
+               
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
@@ -3393,10 +3394,10 @@
             </drop-down>
         </field> -->
         <!-- <field name="depot" title="Depot"><lookup target-form-name="LookupDepot" size="15" /></field> -->
-        <field name="depot" title="Depot">
+        <!-- <field name="depot" title="Depot">
             <drop-down allow-empty="true">
             </drop-down>
-        </field>
+        </field> -->
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="GOODS_RECEIVED"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
