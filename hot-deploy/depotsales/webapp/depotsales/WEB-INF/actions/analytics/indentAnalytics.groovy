@@ -112,18 +112,18 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				 
 		 	roId = branchROMap.get(partyId);	
 		 	grandTotal = (new BigDecimal(eachItem.getAt("totalAmount"))).setScale(0, RoundingMode.HALF_UP);	 
-			totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(0, 0);
+			totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(2, 0);
 			totalPoQty=0;
 			totalshipQty = 0;
 			totalPoAmt = 0;
 			if(UtilValidate.isNotEmpty(eachItem.getAt("poQuantity"))){
-			    totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(0, 0);
+			    totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(2, 0);
 		    } 
 			if(UtilValidate.isNotEmpty(eachItem.getAt("shippedQty"))){
-		        totalshipQty = new BigDecimal(eachItem.getAt("shippedQty")).setScale(0, 0);
+		        totalshipQty = new BigDecimal(eachItem.getAt("shippedQty")).setScale(2, 0);
 		    }
 			if(UtilValidate.isNotEmpty(eachItem.getAt("poAmount"))){
-			   totalPoAmt =  new BigDecimal(eachItem.getAt("poAmount")).setScale(0, 0);
+			   totalPoAmt =  new BigDecimal(eachItem.getAt("poAmount")).setScale(2, 0);
 			}
 		 	if (DataMap.containsKey(partyId)) {
 		 		branchDetails = DataMap.get(partyId);

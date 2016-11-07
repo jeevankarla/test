@@ -82,6 +82,11 @@ if(UtilValidate.isEmpty(parameters.productId)){
 			}
 			
 //			if(validOrderIds.contains(poEntry.orderId)){
+			if(UtilValidate.isNotEmpty(parameters.analyticsPending)){
+				if(("ORDER_COMPLETED".equals(poEntry.statusId))){
+					continue;
+				}
+			}
 				if(parameters.findPoFlag=="Y"){
 					if(parameters.orderTypeId=="PURCHASE_ORDER"){    // For branch sales purchase order
 						if((poEntry.roleTypeId).equals("BILL_TO_CUSTOMER")){

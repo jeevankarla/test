@@ -11,6 +11,7 @@
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxtooltip.js</@ofbizContentUrl>"></script>
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxdatetimeinput.js</@ofbizContentUrl>"></script>
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxcalendar.js</@ofbizContentUrl>"></script>
+    <meta name="description" content="Column Formatting - JavaScript Tree Grid Demo | jQWidgets"> 
 <style type="text/css">
 	#treeGrid 
 		{
@@ -76,7 +77,7 @@ $(document).ready(function () {
             $("#treeGrid").jqxTreeGrid(
             {
                 width: '98%',
-                height: '1200px',
+                height: '600px',
                 source: dataAdapter,
                 sortable: true,
                 ready: function()
