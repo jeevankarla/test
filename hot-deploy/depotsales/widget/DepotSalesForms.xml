@@ -3393,7 +3393,7 @@
             </drop-down>
         </field> -->
         <!-- <field name="depot" title="Depot"><lookup target-form-name="LookupDepot" size="15" /></field> -->
-        <field name="depto" title="Depot">
+        <field name="depot" title="Depot">
             <drop-down allow-empty="true">
             </drop-down>
         </field>
