@@ -2621,4 +2621,31 @@
 			</widgets>
 		</section>
 	</screen> -->
+	<screen name="IndentorPortalStockDetails">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Stock Details" />
+				<!-- <set field="headerItem" value="facility" /> -->
+				<set field="tabButtonItem" value="IndentorBranchSalesOrder" />
+				<set field="tabButtonItem2" value="StockDetails" />
+				<!-- <set field="parameters.facilityId" from-field="parameters.facilityId"></set> -->
+				<set field="isInventorySales" value="Y"/>
+				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/StockDetails.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="IndentMyPortalCommonDecorator" location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="IndentPortalMainTab" location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<screenlet title="Find Stock Details">
+							<include-form name="IndentorPortalFindStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<screenlet title="List Of Stock">
+							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/StockDetails.ftl"/></html></platform-specific>
+							<include-form name="IndentorPortalListStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 </screens>
