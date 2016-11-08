@@ -18,8 +18,14 @@
 
 <script type="application/javascript">
 	$(document).ready(function() {
+	
+	  var partyIdFrom = $("#FindStockDetails_partyIdFrom").val();
+	  if(partyIdFrom != ""){
+	  	populateBranchDepots();
+	  }
+		
 	  $("select[name='partyIdFrom']").change(function() {
-	     //populateBranchDepots()
+	    populateBranchDepots()
 	  });
 	});
 	function populateBranchDepots() {
@@ -36,6 +42,7 @@
 				}else{
 					var optionList = [];
 					var depotJSON = result["depotJSON"];
+					optionList.push('<option value=""></option>');
 					$.each(depotJSON, function(key, item){
 					  optionList.push('<option value="'+item.value+'">'+item.label+'</option>');
 					});
@@ -43,7 +50,7 @@
 				}								 
 			},
 			error: function(){
-				alert("record not found");
+				//alert("record not found");
 			}							
 		});
 		

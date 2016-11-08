@@ -3382,8 +3382,22 @@
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
 		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
             <drop-down allow-empty="true">
+            	<option key="INT55" description="BALARAMPURAM"/>
+               <option key="INT50" description="BHUBANESWAR"/>
+               <option key="INT10" description="COIMBATORE"/>
+               <option key="INT51" description="GUWAHATI"/>
+               <option key="INT11" description="HYDERABAD"/>
+               <option key="INT36" description="KANCHEEPURAM"/>
+               <option key="INT12" description="KANNUR"/>
                
-               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+               <option key="INT9" description="KOLKATA"/>
+               <option key="INT15" description="LUCKNOW"/>
+               <option key="INT17" description="MORADABAD"/>
+               <option key="INT8" description="PANIPAT"/>
+               <option key="INT7" description="VARANASI"/>
+               
+               <option key="INT52" description="VIJAYAWADA"/>
+               
             </drop-down>
         </field>
         <!-- <field name="productCategory" title="Product Category">
@@ -3394,10 +3408,10 @@
             </drop-down>
         </field> -->
         <!-- <field name="depot" title="Depot"><lookup target-form-name="LookupDepot" size="15" /></field> -->
-        <!-- <field name="depot" title="Depot">
+        <field name="depot" title="Depot">
             <drop-down allow-empty="true">
             </drop-down>
-        </field> -->
+        </field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="GOODS_RECEIVED"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>

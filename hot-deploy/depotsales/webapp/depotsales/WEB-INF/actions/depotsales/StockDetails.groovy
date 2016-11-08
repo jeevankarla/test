@@ -359,7 +359,14 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			row.putAt("shipmentId", "");
 		}
 		if(row["availbleQuantity"] > 0){
-			physicalInventoryCombined.add(row);
+			if(UtilValidate.isNotEmpty(parameters.depot)){
+				if((inventoryItem.facilityId).equals(parameters.depot)){
+					physicalInventoryCombined.add(row);
+				}
+			}
+			else{
+				physicalInventoryCombined.add(row);
+			}
 		}
 		
 	}
