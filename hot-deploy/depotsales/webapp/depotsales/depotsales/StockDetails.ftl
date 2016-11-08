@@ -19,7 +19,7 @@
 <script type="application/javascript">
 	$(document).ready(function() {
 	
-	  var partyIdFrom = $("#FindStockDetails_partyIdFrom").val();
+	  var partyIdFrom = $("select[name='partyIdFrom']").val();
 	  if(partyIdFrom != ""){
 	  	populateBranchDepots();
 	  }
@@ -29,7 +29,7 @@
 	  });
 	});
 	function populateBranchDepots() {
-		var ownerPartyId = $("#FindStockDetails_partyIdFrom").val();
+		var ownerPartyId = $("select[name='partyIdFrom']").val();
 		$.ajax({
 			 type: "POST",
              url: 'populateDepot',
