@@ -2639,7 +2639,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String schemeCategory = (String) context.get("schemeCategory");
-	    Debug.log("schemeCategory ============="+schemeCategory);
+	    //Debug.log("schemeCategory ============="+schemeCategory);
 	    List<Map> productQtyList = (List) context.get("productQtyList");
 	    List<Map> indentItemProductList = (List) context.get("indentItemProductList");
 	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
@@ -2666,16 +2666,16 @@ Debug.log("taxRateList =============="+taxRateList);
 	  	String disableAcctgFlag = (String) context.get("disableAcctgFlag");
 	  	
 	  	String purchaseTitleTransferEnumId = (String) context.get("purchaseTitleTransferEnumId");
-		Debug.log("purchaseTitleTransferEnumId ============="+purchaseTitleTransferEnumId);
+		//Debug.log("purchaseTitleTransferEnumId ============="+purchaseTitleTransferEnumId);
 		String saleTitleTransferEnumId = (String) context.get("saleTitleTransferEnumId");
-		Debug.log("saleTitleTransferEnumId ============="+saleTitleTransferEnumId);
+		//Debug.log("saleTitleTransferEnumId ============="+saleTitleTransferEnumId);
 		String saleTaxType = (String) context.get("saleTaxType");
-		Debug.log("saleTaxType ============="+saleTaxType);
+		//Debug.log("saleTaxType ============="+saleTaxType);
 		String purchaseTaxType = (String) context.get("purchaseTaxType");
-		Debug.log("purchaseTaxType ============="+purchaseTaxType);
+		//Debug.log("purchaseTaxType ============="+purchaseTaxType);
 		
 		String supplierPartyId = (String) context.get("supplierPartyId");
-		Debug.log("supplierPartyId ============="+supplierPartyId);
+		//Debug.log("supplierPartyId ============="+supplierPartyId);
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
 	  	BigDecimal manualQuota= (BigDecimal)context.get("manualQuota");
 	  	String currencyUomId = "INR";
@@ -2697,7 +2697,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			Map orderDetails = (Map)resultCtx.get("orderDetails");
 			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
 			
-			Debug.log("extOrderItems ============="+extOrderItems);
+			//Debug.log("extOrderItems ============="+extOrderItems);
 			
 			try{
 				if(!indentNotChanged){
@@ -2731,7 +2731,7 @@ Debug.log("taxRateList =============="+taxRateList);
 						
 					}
 					
-					Debug.log("productQtyList ============="+productQtyList);
+					//Debug.log("productQtyList ============="+productQtyList);
 
 					//cancelling quota for  order 
 					if(schemeCategory.equals("MGPS_10Pecent")){
@@ -2740,7 +2740,7 @@ Debug.log("taxRateList =============="+taxRateList);
 						condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
 						try{
 						List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-						Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
+						//Debug.log("orderItemAndAdjustmentList cancel start==============="+orderItemAndAdjustmentList+"size============="+orderItemAndAdjustmentList.size());
 						GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 					    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
 						if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
@@ -2765,7 +2765,7 @@ Debug.log("taxRateList =============="+taxRateList);
 							  	try {
 									List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 
-								  	Debug.log("OrderItemDetailList ============="+OrderItemDetailList);
+								  	//Debug.log("OrderItemDetailList ============="+OrderItemDetailList);
 
 									if(UtilValidate.isNotEmpty(OrderItemDetailList)){
 										for(GenericValue OrderItemDetailValue : OrderItemDetailList){
@@ -2822,7 +2822,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
 		
-	  	Debug.log("promoAmt ============="+promoAmt);
+	  	//Debug.log("promoAmt ============="+promoAmt);
 
 		
 	  	// Get Scheme Categories
@@ -2830,7 +2830,7 @@ Debug.log("taxRateList =============="+taxRateList);
 	  	try{
 	  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
 	  		
-		  	Debug.log("productCategory =====12223========"+productCategory);
+		  	//Debug.log("productCategory =====12223========"+productCategory);
 
 	  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
 	   	}catch (GenericEntityException e) {
@@ -2838,7 +2838,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
 		}
 	  	
-	  	Debug.log("schemeCategoryIds =====12223========"+schemeCategoryIds);
+	  	//Debug.log("schemeCategoryIds =====12223========"+schemeCategoryIds);
 	  	
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		ShoppingCart purchaseShoppingCart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
@@ -2849,14 +2849,14 @@ Debug.log("taxRateList =============="+taxRateList);
 			String  payToPartyId= null;
 			GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
 			
-			Debug.log("productStore =====12223========"+productStore);
+			//Debug.log("productStore =====12223========"+productStore);
 			
 			if(UtilValidate.isNotEmpty(productStore)){
 				inventoryFacilityId=productStore.getString("inventoryFacilityId");
 				payToPartyId = productStore.getString("payToPartyId");
 			}
 			
-			Debug.log("cart =====processing====start====");
+			//Debug.log("cart =====processing====start====");
 			
 			cart.setOrderType("SALES_ORDER");
 			cart.setIsEnableAcctg("Y");
@@ -2899,9 +2899,9 @@ Debug.log("taxRateList =============="+taxRateList);
 			cart.setOrderAttribute("saleTaxType", saleTaxType);
 			cart.setOrderAttribute("purchaseTaxType", purchaseTaxType);
 			
-			Debug.log("cart =====processing====end====");
+			//Debug.log("cart =====processing====end====");
 			
-			Debug.log("purchase cart =====processing====start====");
+			//Debug.log("purchase cart =====processing====start====");
 			
 			if(schemeCategory.equals("General")){
 				
@@ -2933,7 +2933,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				purchaseShoppingCart.setOrderAttribute("purchaseTaxType", purchaseTaxType);
 			}
 			
-			Debug.log("purchase cart =====processing====end====");
+			//Debug.log("purchase cart =====processing====end====");
 			//cart.setOrderMessage(orderMessage);
 		} catch (Exception e) {
 			Debug.logError(e, "Error in setting cart parameters", module);
@@ -2957,7 +2957,7 @@ Debug.log("taxRateList =============="+taxRateList);
 		List directIndentProductList = FastList.newInstance();
 		int itemIndex=productQtyList.size();
 		
-		Debug.log("productQtyList =====12223======loop Start==");
+		//Debug.log("productQtyList =====12223======loop Start==");
 		
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			String customerId = "";
@@ -3019,7 +3019,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				customerId = (String)prodQtyMap.get("customerId");
 			}
 			
-			Debug.log("customerId =====12223========"+customerId);
+			//Debug.log("customerId =====12223========"+customerId);
 
 			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
@@ -3072,14 +3072,14 @@ Debug.log("taxRateList =============="+taxRateList);
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("purchaseBasicAmount"))){
 				purchaseBasicAmount = (BigDecimal)prodQtyMap.get("purchaseBasicAmount");
 			}
-			Debug.log("purchaseBasicAmount ======1212===="+purchaseBasicAmount);
+			//Debug.log("purchaseBasicAmount ======1212===="+purchaseBasicAmount);
 			if(purchaseBasicAmount.compareTo(BigDecimal.ZERO)<=0){
 				purchaseBasicPrice = basicPrice;
 			}
 			else{
 				purchaseBasicPrice = purchaseBasicAmount.divide(quantity);
 			}
-			Debug.log("purchaseBasicPrice ===123123======="+purchaseBasicPrice);
+			//Debug.log("purchaseBasicPrice ===123123======="+purchaseBasicPrice);
 			
 			//add percentages
 			BigDecimal vatPercent=BigDecimal.ZERO;
@@ -3095,11 +3095,11 @@ Debug.log("taxRateList =============="+taxRateList);
 			prodCatTaxCtx.put("taxAuthorityRateTypeId", orderTaxType);
 		  	try{
 		  		Map resultCtx = dispatcher.runSync("calculateTaxesByGeoId",prodCatTaxCtx);  	
-		  		Debug.log("resultCtx =========="+resultCtx);
+		  		//Debug.log("resultCtx =========="+resultCtx);
 		  		taxPercentage = (BigDecimal) resultCtx.get("taxPercentage");
-		  		Debug.log("taxPercentage =========="+taxPercentage);
+		  		//Debug.log("taxPercentage =========="+taxPercentage);
 		  		taxAuthProdCatList = (List) resultCtx.get("taxAuthProdCatList");
-		  		Debug.log("taxAuthProdCatList =========="+taxAuthProdCatList);
+		  		//Debug.log("taxAuthProdCatList =========="+taxAuthProdCatList);
 		  	}catch (GenericServiceException e) {
 		  		Debug.logError(e , module);
 		  		return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
@@ -3250,7 +3250,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				
 				// Tax Handling
 				
-				Debug.log("taxRateList =====12223========"+taxRateList);
+				//Debug.log("taxRateList =====12223========"+taxRateList);
 				
 				for(int i=0; i<taxRateList.size(); i++){
 					Map taxMap = (Map) taxRateList.get(i);
@@ -3265,7 +3265,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				
 				// Adjustment Handling
 				
-				Debug.log("orderAdjustmentList =====12223========"+orderAdjustmentList);
+				//Debug.log("orderAdjustmentList =====12223========"+orderAdjustmentList);
 				for(int i=0; i<orderAdjustmentList.size(); i++){
 					Map adjMap = (Map) orderAdjustmentList.get(i);
 					
@@ -3279,7 +3279,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				
 				// Service Charge
 				
-				Debug.log("serviceChargeAmt =====12223========"+serviceChargeAmt);
+				//Debug.log("serviceChargeAmt =====12223========"+serviceChargeAmt);
 				if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
 			                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceChargeAmt, "sourcePercentage", serviceCharge,
@@ -3292,7 +3292,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				item.setListPrice(totalPrice);
 				
 				orderGrandTotal=orderGrandTotal.add(totalPrice);
-				//Debug.log("groupSequenceId =============="+groupSequenceId);
+				////Debug.log("groupSequenceId =============="+groupSequenceId);
 				//item.setItemGroup(groupSequenceId, cart);
 				
 				//item.setTaxDetails(taxList);
@@ -3359,12 +3359,12 @@ Debug.log("taxRateList =============="+taxRateList);
 		Map<String, Object> orderCreateResult= FastMap.newInstance();
 		//if orderId empty call createOrder other wise editOrder
 		
-		Debug.log("orderId =====12223========"+orderId);
+		//Debug.log("orderId =====12223========"+orderId);
 		
 		if(UtilValidate.isEmpty(orderId)){
 			orderCreateResult = checkout.createOrder(userLogin);
 			
-			Debug.log("orderCreateResult =====12223========"+orderCreateResult);
+			//Debug.log("orderCreateResult =====12223========"+orderCreateResult);
 			
 		}else{
 			cart.setOrderId(orderId);
@@ -3424,13 +3424,13 @@ Debug.log("taxRateList =============="+taxRateList);
 			
 			if(UtilValidate.isNotEmpty(purchaseOrderCreateResult)){
 				purchaseOrderId = (String) purchaseOrderCreateResult.get("orderId");
-				Debug.log("purchaseOrderId ==== 1111 ======"+purchaseOrderId);
+				//Debug.log("purchaseOrderId ==== 1111 ======"+purchaseOrderId);
 			}
 		}
-		Debug.log("purchaseOrderId =========="+purchaseOrderId);
+		//Debug.log("purchaseOrderId =========="+purchaseOrderId);
 		
 		
-		Debug.log("orderCreateResult =====12223========"+orderCreateResult);
+		//Debug.log("orderCreateResult =====12223========"+orderCreateResult);
 
 		
 		if(UtilValidate.isNotEmpty(orderCreateResult)){
@@ -3471,9 +3471,9 @@ Debug.log("taxRateList =============="+taxRateList);
 				 for (GenericValue eachSaleItem : SaleOrderItems) {
 					 
 					 GenericValue newItemAttr = delegator.makeValue("OrderItemAssoc");    
-					 //Debug.log("orderId============1212========"+eachSaleItem.getString("orderId"));
-					 //Debug.log("orderItemSeqId=======1212============="+eachSaleItem.getString("orderItemSeqId"));
-					 //Debug.log("purchaseOrderId=======21212============="+purchaseOrderId);
+					 ////Debug.log("orderId============1212========"+eachSaleItem.getString("orderId"));
+					 ////Debug.log("orderItemSeqId=======1212============="+eachSaleItem.getString("orderItemSeqId"));
+					 ////Debug.log("purchaseOrderId=======21212============="+purchaseOrderId);
 						newItemAttr.set("orderId", eachSaleItem.getString("orderId"));
 						newItemAttr.set("orderItemSeqId", eachSaleItem.getString("orderItemSeqId"));
 						newItemAttr.set("shipGroupSeqId", "_NA_");
@@ -3495,7 +3495,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			
 		}
 		
-		Debug.log("promoAmt =====12223========"+promoAmt);
+		//Debug.log("promoAmt =====12223========"+promoAmt);
 		
 		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
 			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
@@ -3514,7 +3514,7 @@ Debug.log("taxRateList =============="+taxRateList);
 		}
 		
 		//creating adjustments by list
-		Debug.log("orderAdjChargesList =====12223========"+orderAdjChargesList);
+		//Debug.log("orderAdjChargesList =====12223========"+orderAdjChargesList);
 		if(UtilValidate.isNotEmpty(orderAdjChargesList)){
 			Map inputAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 			inputAdjCtx.put("orderId", orderId);
@@ -3531,7 +3531,7 @@ Debug.log("taxRateList =============="+taxRateList);
 		try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
-			Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
+			//Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
 			
 			orderHeader.set("purposeTypeId", "BRANCH_SALES");
 			orderHeader.store();
@@ -3545,7 +3545,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			if(UtilValidate.isNotEmpty(orderId)){
 				orderItemValue = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 				
-				Debug.log("orderItemValue =====2223222========"+orderItemValue);
+				//Debug.log("orderItemValue =====2223222========"+orderItemValue);
 			}
 		 }catch (Exception e) {
 			  Debug.logError(e, "Error While Fetching OrderItem ", module);
@@ -3564,7 +3564,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			}
 			 
 			Map onBehalfItemSeqQuotaMap = FastMap.newInstance();
-			Debug.log("indentItemProductList =====2223222========"+indentItemProductList);
+			//Debug.log("indentItemProductList =====2223222========"+indentItemProductList);
 			 BigDecimal totalDiscount=BigDecimal.ZERO;
 			 Map onBehalfPrdQuotaMap = FastMap.newInstance();
 			 for (Map<String, Object> prodItemMap : indentItemProductList) {
@@ -3583,7 +3583,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				String Uom="";
 				String specification="";
 	
-				Debug.log("indentItemProductList =====productId========"+productId);
+				//Debug.log("indentItemProductList =====productId========"+productId);
 				if(UtilValidate.isNotEmpty(prodItemMap.get("productId"))){
 					prodId = (String)prodItemMap.get("productId");
 				}
@@ -3620,7 +3620,7 @@ Debug.log("taxRateList =============="+taxRateList);
 					quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
 				}
 				
-				Debug.log("quotaAvbl ==================="+quotaAvbl);
+				//Debug.log("quotaAvbl ==================="+quotaAvbl);
 				
 				BigDecimal assessableAmount = prdPrice.add(assessableAmtPerUnit);
 				
@@ -3631,16 +3631,16 @@ Debug.log("taxRateList =============="+taxRateList);
 				if("Y".equals(onBeHalfOf)){
 		        	GenericValue filteredOrderItem = EntityUtil.getFirst(EntityUtil.filterByCondition(orderItemValue, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
 					
-		        	Debug.log("filteredOrderItem ==================="+filteredOrderItem);
+		        	//Debug.log("filteredOrderItem ==================="+filteredOrderItem);
 		        	
 		        	orderItemSeqId=(String)filteredOrderItem.get("orderItemSeqId");
 				}
 				
 				// Scheme Calculation
 				
-				     Debug.log("prodId ==================="+prodId);
+				     //Debug.log("prodId ==================="+prodId);
 				     
-				     Debug.log("schemeCategoryIds ==================="+schemeCategoryIds);
+				     //Debug.log("schemeCategoryIds ==================="+schemeCategoryIds);
 				
 							List productCategoriesList = FastList.newInstance();
 							List condsList = FastList.newInstance();
@@ -3652,7 +3652,7 @@ Debug.log("taxRateList =============="+taxRateList);
 							try {
 								List<GenericValue> prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null, true);
 								
-								Debug.log("prodCategoryMembers ==================="+prodCategoryMembers);
+								//Debug.log("prodCategoryMembers ==================="+prodCategoryMembers);
 								
 								productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
 							} catch (GenericEntityException e) {
@@ -3680,12 +3680,12 @@ Debug.log("taxRateList =============="+taxRateList);
 									if(UtilValidate.isNotEmpty(productCategoriesList)){
 										String productCategoryId=(String)productCategoriesList.get(0);
 										
-										Debug.log("productCategoryId ==================="+productCategoryId);
+										//Debug.log("productCategoryId ==================="+productCategoryId);
 										
 										Map partyBalanceHistoryContext = FastMap.newInstance();
 										partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",Kgquantity,"userLogin", userLogin);
 										
-										Debug.log("partyBalanceHistoryContext ==================="+partyBalanceHistoryContext);
+										//Debug.log("partyBalanceHistoryContext ==================="+partyBalanceHistoryContext);
 										
 										if(UtilValidate.isNotEmpty(customerId)){
 											partyBalanceHistoryContext.put("partyId",customerId);
@@ -3704,7 +3704,7 @@ Debug.log("taxRateList =============="+taxRateList);
 							}	
 							
 							
-							Debug.log("quota ==================="+quota);
+							//Debug.log("quota ==================="+quota);
 							
 							BigDecimal discountAmount = BigDecimal.ZERO;
 							if(quota.compareTo(BigDecimal.ZERO)>0){
@@ -3759,9 +3759,9 @@ Debug.log("taxRateList =============="+taxRateList);
 							}
 							
 							
-							Debug.log("discountAmount ==================="+discountAmount);
+							//Debug.log("discountAmount ==================="+discountAmount);
 									
-				//Debug.log("quotaQuantity====================="+quotaQuantity);
+				////Debug.log("quotaQuantity====================="+quotaQuantity);
 				
 				//orderItemDetail.put("",);
 				orderItemDetail.put("orderId",orderId);
@@ -3783,7 +3783,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				try{
 					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
 			        
-					Debug.log("resultMap ==================="+resultMap);
+					//Debug.log("resultMap ==================="+resultMap);
 					
 			        if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
@@ -3800,14 +3800,14 @@ Debug.log("taxRateList =============="+taxRateList);
 			}
 			 
 			 
-			 Debug.log("onBehalfPrdQuotaMap====================="+onBehalfPrdQuotaMap);
+			 //Debug.log("onBehalfPrdQuotaMap====================="+onBehalfPrdQuotaMap);
 			 
-			 Debug.log("orderItemValue====================="+orderItemValue);
+			 //Debug.log("orderItemValue====================="+orderItemValue);
 			 if("Y".equals(onBeHalfOf)){
 				 for(GenericValue eachItem : orderItemValue){
 					 if(UtilValidate.isNotEmpty(onBehalfPrdQuotaMap.get(eachItem.get("productId")))){
 				    	BigDecimal totDisQty = (BigDecimal) onBehalfPrdQuotaMap.get(eachItem.get("productId")); 
-				    	Debug.log("totDisQty====================="+totDisQty);
+				    	//Debug.log("totDisQty====================="+totDisQty);
 				    	String orderAdjustmentId = (String) delegator.getNextSeqId("OrderAdjustment");
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
 						UtilMisc.toMap("orderAdjustmentId",orderAdjustmentId,"orderId",orderId,"orderItemSeqId",eachItem.get("orderItemSeqId"),"orderAdjustmentTypeId", "TEN_PERCENT_SUBSIDY", "amount", totDisQty,
@@ -3859,7 +3859,7 @@ Debug.log("taxRateList =============="+taxRateList);
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
 		  	 	}
-				Debug.log("orderHeaderDetail====================="+orderHeaderDetail);
+				//Debug.log("orderHeaderDetail====================="+orderHeaderDetail);
 				
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
@@ -3874,7 +3874,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
 				
-				Debug.log("orderItems========OrderItemAttribute============="+orderItems);
+				//Debug.log("orderItems========OrderItemAttribute============="+orderItems);
 				
 				for(GenericValue orderItem : orderItems){
 					if(UtilValidate.isNotEmpty(productQtyList)){
@@ -3904,9 +3904,9 @@ Debug.log("taxRateList =============="+taxRateList);
 		}
 		//store OrderMessage
 		
-		Debug.log("orderId====================="+orderId);
+		//Debug.log("orderId====================="+orderId);
 		
-		Debug.log("orderMessage====================="+orderMessage);
+		//Debug.log("orderMessage====================="+orderMessage);
 		
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
 			try{
@@ -3920,7 +3920,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			
 		}
 		
-		Debug.log("orderId=========Final============"+orderId);
+		//Debug.log("orderId=========Final============"+orderId);
 		
 		result.put("orderId", orderId);
 		return result;
@@ -7741,9 +7741,9 @@ Debug.log("taxRateList =============="+taxRateList);
 			}
 		  schemeTimePeriodIdList=(List<GenericValue>)resultMap.get("schemeTimePeriodIdList");
 		
-		  Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList);
+		  //Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList);
 		  
-		  Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList.size());
+		  //Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList.size());
 		  
 		//schemeTime period List ends 
 
@@ -7764,7 +7764,7 @@ Debug.log("taxRateList =============="+taxRateList);
 			return ServiceUtil.returnError("Failed to retrive SchemeProduct " + e);
 		}
 		
-		Debug.log("productCategoryApplicableSchemes=============="+productCategoryApplicableSchemes);
+		//Debug.log("productCategoryApplicableSchemes=============="+productCategoryApplicableSchemes);
 		
 		if(UtilValidate.isNotEmpty(schemeTimePeriodIdList)){
 			BigDecimal partyLooms = BigDecimal.ZERO;
@@ -7793,15 +7793,15 @@ Debug.log("taxRateList =============="+taxRateList);
 				}
 				//get PartyLoom ends 
 				
-				Debug.log("productCategoryId=============="+productCategoryId);
+				//Debug.log("productCategoryId=============="+productCategoryId);
 				
-				Debug.log("partyLooms=============="+partyLooms);
+				//Debug.log("partyLooms=============="+partyLooms);
 				
 				BigDecimal availableQuata=((BigDecimal)schemeProductCategory.get("maxQty")).multiply(partyLooms);
 				
-				Debug.log("availableQuata=============="+availableQuata);
+				//Debug.log("availableQuata=============="+availableQuata);
 				
-				Debug.log("periodTime=============="+periodTime);
+				//Debug.log("periodTime=============="+periodTime);
 				
 				if(UtilValidate.isNotEmpty(periodTime)){
 					
@@ -7813,11 +7813,11 @@ Debug.log("taxRateList =============="+taxRateList);
 					BigDecimal periodTimeFinal=BigDecimal.ZERO;
 				  for(int i=0;i< periodTime.intValueExact();i++){
 					  
-					  Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList);
+					  //Debug.log("schemeTimePeriodIdList=============="+schemeTimePeriodIdList);
 					if(schemeTimePeriodIdList.size()>i){
 						periodTimeFinal=periodTimeFinal.add(BigDecimal.ONE);
 						
-						Debug.log("periodTimeFinal=============="+periodTimeFinal);
+						//Debug.log("periodTimeFinal=============="+periodTimeFinal);
 
 						
 						String schemeTimePeriodId=(String)((GenericValue)schemeTimePeriodIdList.get(i)).get("schemeTimePeriodId");
@@ -7825,7 +7825,7 @@ Debug.log("taxRateList =============="+taxRateList);
 						GenericValue partyQuotaBalanceHistory=(GenericValue)resultPartyQuotaBalanceHistoryMap.get("partyQuotaBalanceHistory");
 						//if partyQuotaBalanceHistory is exist
 						
-						Debug.log("partyQuotaBalanceHistory=============="+partyQuotaBalanceHistory);
+						//Debug.log("partyQuotaBalanceHistory=============="+partyQuotaBalanceHistory);
 						
 						if(UtilValidate.isNotEmpty(partyQuotaBalanceHistory)){
 							//getting balancequota
@@ -7838,9 +7838,9 @@ Debug.log("taxRateList =============="+taxRateList);
 					
 				  }
 				  
-				  Debug.log("usedQuata=============="+usedQuata);
+				  //Debug.log("usedQuata=============="+usedQuata);
 				  
-				  Debug.log("periodTimeFinal=============="+periodTimeFinal);
+				  //Debug.log("periodTimeFinal=============="+periodTimeFinal);
 				  
 				  availableQuata=availableQuata.multiply(periodTimeFinal);
 	//				usedQuata=getUsedQuataFromQuotaBalanceHistory(dctx,UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",effectiveDate,"thruDate",effectiveDate,"userLogin", userLogin));
@@ -7856,8 +7856,8 @@ Debug.log("taxRateList =============="+taxRateList);
 				}
 				
 				
-				 Debug.log("availableQuata====fi=========="+availableQuata);
-				  Debug.log("usedQuata=======fi======="+usedQuata);
+				 //Debug.log("availableQuata====fi=========="+availableQuata);
+				  //Debug.log("usedQuata=======fi======="+usedQuata);
 
 				eligibleQuotaMap.put(productCategoryId,availableQuata);
 				availableQuata=availableQuata.subtract(usedQuata);

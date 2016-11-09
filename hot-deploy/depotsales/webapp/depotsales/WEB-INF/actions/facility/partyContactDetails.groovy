@@ -60,18 +60,18 @@ if(parameters.partyId){
 		}
 	}
 contactMechesDetails = ContactMechWorker.getPartyContactMechValueMaps(delegator, parameters.partyId, false,"POSTAL_ADDRESS");
-//Debug.log("contactMechesDetails======================="+contactMechesDetails);
+////Debug.log("contactMechesDetails======================="+contactMechesDetails);
 if(contactMechesDetails){
 	contactMec=contactMechesDetails.getLast();
 	if(contactMec){
 		partyPostalAddress=contactMec.get("postalAddress");
-		//Debug.log("partyPostalAddress=========================="+partyPostalAddress);
+		////Debug.log("partyPostalAddress=========================="+partyPostalAddress);
 	//	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:invoicePartyId, userLogin: userLogin]);
 		if(partyPostalAddress){
 			
 			if(partyPostalAddress.get("address1")){
 			address1=partyPostalAddress.get("address1");
-			//Debug.log("address1=========================="+address1);
+			////Debug.log("address1=========================="+address1);
 			}
 			if(partyPostalAddress.get("address2")){
 				address2=partyPostalAddress.get("address2");
@@ -91,7 +91,7 @@ if(contactMechesDetails){
 			
 		
 			
-			//Debug.log("shipingAdd========================="+shipingAdd);
+			////Debug.log("shipingAdd========================="+shipingAdd);
 			
 		}
 	}
@@ -131,7 +131,7 @@ AllLoomDetails.each{ eachloom ->
 	desc="";
 	loomType="";
 	loomType=eachloom.loomTypeId;
-		//Debug.log("loomType==========111============"+loomType);
+		////Debug.log("loomType==========111============"+loomType);
 		if(eachloom.description){
 			desc=eachloom.description;
 		}
@@ -190,7 +190,7 @@ if(PartyLoomDetails){
 	conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,null,null,null,false));
-	//Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+	////Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
 	if(LoomTypeDetails){
 		type=LoomTypeDetails.loomTypeId;
 		/*if(LoomTypeDetails.description){
@@ -245,7 +245,7 @@ partyJSON.put("LoomList",AllLoomArrayJSON);
 
 }
 context.partyJSON=partyJSON;
-Debug.log("partyJSON====================="+partyJSON);
+////Debug.log("partyJSON====================="+partyJSON);
 request.setAttribute("partyJSON", partyJSON);
 return "success";
 
