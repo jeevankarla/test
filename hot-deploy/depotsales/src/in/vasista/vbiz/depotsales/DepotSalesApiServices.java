@@ -783,7 +783,7 @@ public class DepotSalesApiServices{
         				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
         			}
         		}
-        		
+        		tempMap.put("paymentMethodTypeId",menthodType);
         		tempMap.put("menthodTypeDescription",menthodType);
         		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
         		tempMap.put("partyIdFrom",eachPaymentList.get("partyIdFrom"));
