@@ -60,4 +60,22 @@ under the License.
 <FinAccountType  description="Inter Unit Account" finAccountTypeId="INTERUNIT_ACCOUNT" hasTable="N" isRefundable="Y" parentTypeId="DEPOSIT_ACCOUNT" replenishEnumId="FARP_MANUAL"/>
 
 <TenantConfiguration propertyName="turnOnCreditOrDebitNote" propertyValue="N" propertyTypeEnumId="ACCOUNT_INVOICE" description="Turn On Credit Note Or DebitNote For Invoice"/>
+
+<PaymentMethodType createdStamp="2016-11-09 19:09:53.0" createdTxStamp="2016-11-09 19:09:53.0" description="MOBILE PAYMENT" lastUpdatedStamp="2016-11-09 19:09:53.0" lastUpdatedTxStamp="2016-11-09 19:09:53.0" parentTypeId="MONEY" paymentMethodTypeId="MOBILE_PAYIN"/>
+
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="Company" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="HO" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT1" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT2" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT3" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT4" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT5" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT6" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT7" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT8" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT9" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT10" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT11" paymentMethodTypeId="MOBILE_PAYIN"/>
+<PaymentMethodTypeGlAccount createdStamp="2016-11-09 19:12:40.0" createdTxStamp="2016-11-09 19:12:40.0" glAccountId="112000" lastUpdatedStamp="2016-11-09 19:12:40.0" lastUpdatedTxStamp="2016-11-09 19:12:40.0" organizationPartyId="INT12" paymentMethodTypeId="MOBILE_PAYIN"/>
+
 </entity-engine-xml>
