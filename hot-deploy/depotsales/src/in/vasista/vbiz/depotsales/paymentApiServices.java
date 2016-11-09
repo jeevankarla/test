@@ -157,6 +157,102 @@ public class paymentApiServices {
 		}
 		return result;
 	}
+    
+    
+    
+    
+    public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+    
+		 String paymentDate = (String) context.get("paymentDate");
+		 String partyIdFrom = (String) context.get("partyId");
+		 String partyIdTo = "";
+		 String amount = (String) context.get("amount");
+		 String paymentRefNum = (String) context.get("transactionId");
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		 Timestamp eventDate = null;
+		 Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+		  	
+	      if (UtilValidate.isNotEmpty(paymentDate)) {
+		      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+				try {
+					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				}
+			}
+	      
+	      
+	      
+	      if (UtilValidate.isEmpty(paymentDate)) {
+	    	  eventDate = UtilDateTime.nowTimestamp();
+	      }
+	      GenericValue partyList = null;
+	        if(UtilValidate.isNotEmpty(partyIdFrom)){
+	        	List condList =FastList.newInstance();
+	   	    	condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdFrom));
+	   	    	
+	   	    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+	   	    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+	   	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimeStamp)));
+	   	    	EntityCondition prodStrFacCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	   	    	try{
+	   	    		partyList =EntityUtil.getFirst( delegator.findList("PartyRelationship", prodStrFacCondition, null, null, null, false));
+	   	    	}catch (GenericEntityException e) {
+	   				// TODO: handle exception
+	   	    		Debug.logError(e, module);
+	   			}
+	   	    }
+	        if(UtilValidate.isNotEmpty(partyIdFrom)){
+	        partyIdTo= partyList.getString("partyIdFrom");
+	        }
+		    Map<String, Object> paymentParams = new HashMap<String, Object>();
+		    paymentParams.put("paymentTypeId", "ONACCOUNT_PAYIN");
+//		    paymentParams.put("paymentMethodTypeId", paymentMethodTypeId);
+//		    if(UtilValidate.isNotEmpty(paymentPurposeType)){
+//		  	  paymentParams.put("paymentPurposeType", paymentPurposeType);
+//		    }
+		   // paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+		    paymentParams.put("amount", new BigDecimal(amount));
+		    paymentParams.put("statusId", "PMNT_RECEIVED");
+		    paymentParams.put("paymentDate", eventDate);
+		    paymentParams.put("instrumentDate", eventDate);
+		    paymentParams.put("partyIdFrom", partyIdFrom);
+		 //   paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
+		    paymentParams.put("partyIdTo", partyIdTo);
+		
+		if (paymentRefNum != null) {
+		    paymentParams.put("paymentRefNum", paymentRefNum);
+		}
+	/*	if (issuingAuthority != null) {
+		    paymentParams.put("issuingAuthority", issuingAuthority);
+		}
+		if (comments != null) {
+		    paymentParams.put("comments", comments);
+		}
+*/		paymentParams.put("userLogin", userLogin);
+		Map<String, Object> resultResult = FastMap.newInstance();
+		try{
+			resultResult = dispatcher.runSync("createPayment", paymentParams);
+		   if (ServiceUtil.isError(resultResult)) {
+				Debug.logWarning("There was an error making Payment: "
+						+ ServiceUtil.getErrorMessage(resultResult), module);
+				return ServiceUtil
+						.returnError("There was an error making Payment:"
+								+ ServiceUtil.getErrorMessage(resultResult));
+			}
+		   result=resultResult;
+		}catch (Exception e) {
+			 Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Error While Creating Payment");	
+	  	   }
+    
+       return result;
+	}
 	
 	
 }

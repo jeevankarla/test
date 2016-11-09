@@ -697,5 +697,13 @@
        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
        <attribute name="inFavour" type="String" mode="IN" optional="true"/>
     </service>
-    
+     <service name="makeWeaverPayment" engine="java"
+           location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="makeWeaverPayment">
+       <description>Creates a payment using the order payment preference</description>
+       <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="false"/>
+       <attribute name="amount" type="String" mode="IN" optional="false"/>
+       <attribute name="transactionId" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+    </service>
 </services>
