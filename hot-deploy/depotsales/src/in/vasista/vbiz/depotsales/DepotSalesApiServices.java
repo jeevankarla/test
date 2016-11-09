@@ -690,7 +690,7 @@ public class DepotSalesApiServices{
 		if(UtilValidate.isNotEmpty(paramPaymentId))
 		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paramPaymentId));
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
-		
+		condList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.EQUALS, "ONACCOUNT_PAYIN"));		
 		List<GenericValue> paymentList = null;
 		try {
 			paymentList = delegator.findList("Payment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
@@ -766,21 +766,23 @@ public class DepotSalesApiServices{
 	        	tempMap.put("paymentId",paymentId);
         		tempMap.put("paidAmount",eachPaymentList.get("amount"));
         		tempMap.put("balanceAmount",paymentAmt.subtract(appliedAmt));
-        		tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
         		
-        		
+        		tempMap.put("paymentMethodTypeId","");
         		String menthodType = "";
-        		try {
-        			condList.clear();
-        			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
-        			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
-        			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
-        			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
-        		
-        		} catch (GenericEntityException e) {
+        		if(UtilValidate.isNotEmpty(eachPaymentList.get("paymentMethodTypeId"))){
+        			tempMap.put("paymentMethodTypeId",eachPaymentList.get("paymentMethodTypeId"));
+            		try {
+            			condList.clear();
+            			condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS,eachPaymentList.get("paymentMethodTypeId")));
+            			//condList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS,"MONEY"));
+            			List PaymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null ,false);
+            			 menthodType = (String) (EntityUtil.getFirst(PaymentMethodType)).get("description");
+            		
+            		} catch (GenericEntityException e) {
         				Debug.logError(e, "Failed to retrive PaymentApplication ", module);
         				return ServiceUtil.returnError("Failed to retrive PaymentApplication " + e);
         			}
+        		}
         		
         		tempMap.put("menthodTypeDescription",menthodType);
         		tempMap.put("paymentDate",eachPaymentList.get("paymentDate"));
