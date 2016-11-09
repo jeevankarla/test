@@ -212,7 +212,7 @@ public class paymentApiServices {
 	        }
 		    Map<String, Object> paymentParams = new HashMap<String, Object>();
 		    paymentParams.put("paymentTypeId", "ONACCOUNT_PAYIN");
-//		    paymentParams.put("paymentMethodTypeId", paymentMethodTypeId);
+		    paymentParams.put("paymentMethodTypeId", "MOBILE_PAYIN");
 //		    if(UtilValidate.isNotEmpty(paymentPurposeType)){
 //		  	  paymentParams.put("paymentPurposeType", paymentPurposeType);
 //		    }
