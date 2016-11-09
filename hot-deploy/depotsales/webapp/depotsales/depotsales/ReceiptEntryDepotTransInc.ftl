@@ -97,6 +97,7 @@
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		
 		var rowCountIndex=0;
+		var grandQty = 0; 
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
@@ -107,10 +108,7 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
-			
-			if( (qty==0) || (isNaN(qty))) {
-				alert("please enter received quantity");
-			 }
+			grandQty = grandQty+qty;
 			 
 	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
@@ -140,7 +138,10 @@
    			
    			  
 		}
-		
+		if( (grandQty==0) || (isNaN(grandQty))) {
+			alert("please give atleast one product Qty greater than Zero..");
+			return false;
+		}
 		var dataString = $("#indententryinit").serializeArray();
 		var orderId = $("#orderId").val();
 		var vehicleId = $("#vehicleId").val();
@@ -432,6 +433,7 @@
     	});
     	    	
     	var grandTOT = 0;
+    	
     	 for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{
 				var balanceQty = data[rowCount]["balanceQty"];
@@ -453,6 +455,7 @@
 			var quantity = data[rowCount]["quantity"];
 			var unitPrice = data[rowCount]["unitPrice"];
 			grandTOT = grandTOT+quantity*unitPrice;
+			
 		}
         
         $("#grandTot").html("<font color=green>Dispatch Items Entry   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Order Value:</font> &#160;&#160;<font color=blue>"+grandTOT+"</font>");

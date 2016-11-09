@@ -278,6 +278,19 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		i++;
 		
 	}
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "SERVICE_CHARGE"));
+	cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderAdjustments2 = delegator.findList("OrderAdjustment", cond1, null, null, null, false);
+	orderAdjustments2 = EntityUtil.getFirst(orderAdjustments2);
+	if(orderAdjustments2){
+		serchar=orderAdjustments2.amount;
+		serviceChargePer=orderAdjustments2.sourcePercentage;
+		context.serchar=serchar;
+		context.serviceChargePer=serviceChargePer;
+	}
+	
 	context.invoiceItemLevelUnitListPrice=invoiceItemLevelUnitListPrice;
 	
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
