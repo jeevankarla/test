@@ -898,6 +898,28 @@
 	      		$(grid.getCellNode(args.row+1, 1)).click();
 			}
 			
+
+            if (args.cell){
+
+			 var row = args.row;
+		         
+		        var taxAmt = data[row]["taxAmt"];
+				if(taxAmt != undefined && taxAmt != 0){
+					updateTax(row);
+				}else{
+				  data[row]["taxAmt"] = 0;
+				} 
+		        
+		        addServiceCharge(row);        
+		        updateOtherCharges(row);
+				updateSaleBaseAmount(row);
+				updateSubsidyAmt(row);
+				updatePayableAmount(row);
+				updateTotalIndentAmount();			
+				
+				}
+			
+			
 		});
 		
 		grid.onValidationError.subscribe(function(e, args) {
@@ -1184,8 +1206,13 @@
 		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
 	 		serviceChargeAmt = (serviceChargePercent/100) * data[row]["amount"];
 	 	}
+	 	
 		data[row]["SERVICE_CHARGE"] = serviceChargePercent;
+		
+	 	if(typeof(serviceChargeAmt)!= "undefined")
 		data[row]["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+		else
+		data[row]["SERVICE_CHARGE_AMT"] = 0;
 		
 		//data[row]["totPayable"] = data[row]["totPayable"] + serviceChargeAmt;
 	}

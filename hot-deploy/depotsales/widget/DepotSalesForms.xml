@@ -1946,8 +1946,8 @@
         </field>
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
         <field name="bookedQuantity" title="Booked Quantity"><display/></field>
-        <field name="availbleQuantity" title="Available Quantity"><display/></field>
-        <field name="unitCost"><display/></field>
+        <field name="availbleQuantity" title="Available Quantity(Kgs)"><display/></field>
+        <field name="unitCost" title="unintCost(Kgs)"><display/></field>
 <!--         <field name="Sale" title="Sale Indent" widget-style="buttontext">
               <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${productName}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}','${balancedQty}');"></hyperlink>
         </field>
@@ -3432,8 +3432,8 @@
         <field name="facilityName" title="Depot"><display></display></field>
         <field name="partyName" title="Supplier"><display></display></field>
         <field name="specification"><display/></field>
-        <field name="availbleQuantity" title="Available Quantity"><display/></field>
-        <field name="unitCost"><display/></field>
+        <field name="availbleQuantity" title="Available Quantity(Kgs)"><display/></field>
+        <field name="unitCost" title="unitCost(Kgs)"><display/></field>
     </form>
     <form name="IndentorPortalFindStockDetails" title="" type="single" target="IndentorPortalStockDetails" header-row-style="header-row" default-table-style="basic-table">
         
