@@ -290,7 +290,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		context.serchar=serchar;
 		context.serviceChargePer=serviceChargePer;
 	}
-	
 	context.invoiceItemLevelUnitListPrice=invoiceItemLevelUnitListPrice;
 	
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;

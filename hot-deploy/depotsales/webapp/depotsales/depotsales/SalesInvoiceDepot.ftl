@@ -3,7 +3,6 @@
 <script type="text/javascript">
 	
 $(document).ready(function(){
-		
 
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',

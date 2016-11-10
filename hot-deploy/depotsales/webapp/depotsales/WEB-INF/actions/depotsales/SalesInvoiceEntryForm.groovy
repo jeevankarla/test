@@ -449,8 +449,7 @@ if(shipments){
 		milliseconds=(shipment.estimatedShipDate).getTime();
 		context.shipmentDate = shipment.estimatedShipDate;
 		context.milliseconds=milliseconds;
-		context.vehicleId = shipment.vehicleId;
-		
+		context.vehicleId = shipment.vehicleId;		
 		products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 		
 		condExpr = [];

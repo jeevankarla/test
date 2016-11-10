@@ -387,7 +387,6 @@ under the License.
 	               	 	<fo:block text-align="left"    font-size="10pt" >Service Charge( ${serviceChargePer?if_exists} %): ${serchar?string("#0.00")}</fo:block>
 	                </#if>
 	   			<#--	</#if>-->
-	       
 	        </fo:table-cell>
 			</fo:table-row>
 			<#if scheme == "MGPS_10Pecent">

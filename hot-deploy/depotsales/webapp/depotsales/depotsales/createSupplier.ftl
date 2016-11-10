@@ -127,14 +127,21 @@
             });
 	}); 
 	
+	var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};
+    
+    var brachesGeoLIst = ${StringUtil.wrapString(brachesGeoLIst)!'[]'};
+    
+    var stateList = ${StringUtil.wrapString(stateDistJSONLIST)!'[]'};
+	var stateWiseDistMap = ${StringUtil.wrapString(stateDistJSONMAP)!'[]'};
 	
-	
+	var DistNamesJSON = ${StringUtil.wrapString(DistNamesJSON)!'[]'};
+	var stateNamesJSON = ${StringUtil.wrapString(stateNamesJSON)!'[]'};
 	
 	 $(document).ready(function(){
     
-    var BankListJSON = ${StringUtil.wrapString(BankListJSON)!'[]'};
+   
     
-    var brachesGeoLIst = ${StringUtil.wrapString(brachesGeoLIst)!'[]'};
+    $("#state").autocomplete({ source: stateList }).keydown(function(e){});
     
 		$("#bankName").autocomplete({					
 			source:  BankListJSON,
@@ -175,10 +182,20 @@
 		});
 		
   });
-  
+   
+	function getStateCities(selection){ 
+	   value = $("#state").val();
+	   var distList = stateWiseDistMap[value];
+	   var statename= stateNamesJSON[value];
+	   $("#distic").autocomplete({ source: distList }).keydown(function(e){});
+	   $("#stateLabel").html("<h6>"+statename+"</h6>");
+	} 	
 	
-	
-	
+	function showDistName(){ 
+		var value = $("#distic").val();
+		var distName = DistNamesJSON[value];
+		$("#disticLabel").html("<h6>"+distName+"</h6>");
+	}
 	
 </script>
 	<form id="EditPartyGroup"  action="<@ofbizUrl>createSupplier</@ofbizUrl>" name="EditPartyGroup" method="post">
@@ -275,6 +292,17 @@
 									    <td>
 									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
 									    </td>
+									</tr>
+									<tr>
+										<td class="label">State:</td>
+									 	<td><input type="text" name="state" id="state" size="30" maxlength="60" onblur='javascript:getStateCities(this);'/>
+									 	<div id="stateLabel">  </div>
+									 	</td>
+									</tr>
+									<tr>
+										<td class="label">Distic:</td>
+									 	<td><input type="text" name="distic" id="distic" size="30" maxlength="60" onblur='javascript:showDistName();'/>
+									 	<div id="disticLabel">  </div>
 									</tr>
 									<tr>
 									    <td class="label"><b> Postal Code</b></td>
