@@ -268,9 +268,9 @@
         <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
         	<link target="IndentSupplyAnalytics"/>
         </menu-item>
-        <menu-item name="durationAnalytics" title="Duration Analytics">
+        <!-- <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>
-        </menu-item>
+        </menu-item> -->
        <!--  <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
         	<link target="IndentPurchaseAnalytics"/>
         </menu-item>  -->
@@ -1346,7 +1346,16 @@
 			<link target="DepotSalesOrder">
 				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
 			</link>
-		</menu-item> 
+		</menu-item>
+		<menu-item name="StockDetails" title="Stock Details">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="StockDetails"></link>
+		</menu-item>  
 		
         <menu-item name="invoiceOverView" title="Invoice OverView">
 	        <condition>
@@ -1481,6 +1490,9 @@
 <!--     	         <menu-item name="IndentorBranchSalesOrder" title="${uiLabelMap.IndentEntry}"> -->
 <!--             		<link target="IndentorBranchSalesOrder"/> -->
 <!--             	 </menu-item> -->
+			<menu-item name="StockDetails" title="Stock Details">
+				<link target="IndentorPortalStockDetails"></link>
+			</menu-item>
     			 
     </menu> 
  
