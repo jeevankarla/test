@@ -119,7 +119,7 @@ $(document).ready(function () {
 					},
                   { text: 'Indent Amt (Rs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 	                 renderer: function (text, align, height) {
-			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Amt  </td></tr><tr><td style='text-align:center'>(Rs in Lakhs)</td></tr> </table>";
 			    				return checkBox;
 						  }
 					},
@@ -137,7 +137,7 @@ $(document).ready(function () {
                   
                   { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 	                   renderer: function (text, align, height) {
-			   					 var checkBox = "<table><tr><td style='text-align:center'>PO Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			   					 var checkBox = "<table><tr><td style='text-align:center'>PO Amt  </td></tr><tr><td style='text-align:center'>(Rs in Lakhs)</td></tr> </table>";
 			    				return checkBox;
 						  }
                     },
