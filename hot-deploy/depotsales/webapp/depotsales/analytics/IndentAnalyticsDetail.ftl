@@ -11,6 +11,7 @@
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxtooltip.js</@ofbizContentUrl>"></script>
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxdatetimeinput.js</@ofbizContentUrl>"></script>
     <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/jqwidgets/jqwidgets/jqxcalendar.js</@ofbizContentUrl>"></script>
+    <meta name="description" content="Column Formatting - JavaScript Tree Grid Demo | jQWidgets"> 
 <style type="text/css">
 	#treeGrid 
 		{
@@ -78,7 +79,7 @@ $(document).ready(function () {
             $("#treeGrid").jqxTreeGrid(
             {
                 width: '98%',
-                height: '1200px',
+                height: '600px',
                 source: dataAdapter,
                 sortable: true,
                 ready: function()
@@ -118,7 +119,7 @@ $(document).ready(function () {
 					},
                   { text: 'Indent Amt (Rs in Lakhs)', width:'12%', align: 'center', dataField: 'totalRevenue', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 	                 renderer: function (text, align, height) {
-			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			   					 var checkBox = "<table><tr><td style='text-align:center'>Indent Amt  </td></tr><tr><td style='text-align:center'>(Rs in Lakhs)</td></tr> </table>";
 			    				return checkBox;
 						  }
 					},
@@ -136,11 +137,19 @@ $(document).ready(function () {
                   
                   { text: 'PO Amt (Rs in Lakhs)', width:'12%', align: 'center',  dataField: 'totalPoAmt', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 	                   renderer: function (text, align, height) {
-			   					 var checkBox = "<table><tr><td style='text-align:center'>PO Amt  </td></tr><tr><td style='text-align:center'>(Kgs in Lakhs)</td></tr> </table>";
+			   					 var checkBox = "<table><tr><td style='text-align:center'>PO Amt  </td></tr><tr><td style='text-align:center'>(Rs in Lakhs)</td></tr> </table>";
 			    				return checkBox;
 						  }
                     },
-                  { text: 'Pending POs', width:'10%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange'  },
+                  { text: 'Pending POs', width:'10%', align: 'center',  dataField: 'pendingPOs', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+			                cellsRenderer: function (rowKey, dataField, value, data) {
+					                if(rowKey=='NHDC'){
+												rowKey='';
+									}
+								return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_CREATED&noConditionFind=Y" target="_blank" >'+value+'</a>'; 
+					 		}
+              	 },
+               
                 ],
               
                
