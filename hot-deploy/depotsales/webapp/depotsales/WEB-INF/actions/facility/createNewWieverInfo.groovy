@@ -102,9 +102,70 @@ if(GeoList){
 
 context.brachesGeoLIst=brachesGeoLIst;
 
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN%"));
+conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+cond1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+indianStateList = delegator.findList("Geo", cond1, null, null, null, false);
+stateIds = EntityUtil.getFieldListFromEntityList(indianStateList, "geoId", true);
 
-Debug.log("BankListJSON=============================="+BankListJSON);
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.IN,stateIds));
+conditionList.add(EntityCondition.makeCondition("geoAssocTypeId", EntityOperator.EQUALS,"DISTRICT"));
+cond2=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+indianStateDistList = delegator.findList("GeoAssoc", cond2, null, null, null, false);
+disticIds = EntityUtil.getFieldListFromEntityList(indianStateDistList, "geoIdTo", true);
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.IN,disticIds));
+conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"DISTRICT"));
+cond3=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+indianStateWiseDistList = delegator.findList("Geo", cond3, null, null, null, false);
+
+
+JSONObject stateDistJSONMAP= new JSONObject();
+JSONObject stateNamesJSON= new JSONObject();
+JSONObject DistNamesJSON= new JSONObject();
+JSONArray stateDistJSONLIST= new JSONArray();
+
+for(indianState in indianStateList)
+{
+	JSONArray stateDistJSON= new JSONArray();
+	JSONObject obj1 = new JSONObject();
+	obj1.put("value",indianState.geoId);
+	obj1.put("label",indianState.geoName);
+	stateDistJSONLIST.add(obj1);
+	stateNamesJSON.put(indianState.geoId, indianState.geoName);
+	stateDistLst = EntityUtil.filterByCondition(indianStateDistList, EntityCondition.makeCondition("geoId", EntityOperator.EQUALS, indianState.geoId));
+	stateDisticIds = EntityUtil.getFieldListFromEntityList(stateDistLst, "geoIdTo", true);
+	
+	stateDistList = EntityUtil.filterByCondition(indianStateWiseDistList, EntityCondition.makeCondition("geoId", EntityOperator.IN, stateDisticIds));
+	
+	for(stateDist in stateDistList)
+	{
+		JSONObject obj2 = new JSONObject();
+		obj2.put("value",stateDist.geoId);
+		obj2.put("label",stateDist.geoName);
+		stateDistJSON.add(obj2);
+		DistNamesJSON.put(stateDist.geoId, stateDist.geoName);
+	}
+	stateDistJSONMAP.put(indianState.geoId , stateDistJSON);
+}
+
+
+context.stateDistJSONMAP=stateDistJSONMAP;
+context.stateDistJSONLIST=stateDistJSONLIST;
+context.DistNamesJSON=DistNamesJSON;
+context.stateNamesJSON=stateNamesJSON;
 
 
 context.BankListJSON=BankListJSON;
+
+
+
+
+
+
+
+
+
 

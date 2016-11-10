@@ -5678,6 +5678,8 @@ public class MaterialPurchaseServices {
         String address1 = (String) context.get("address1");
         String address2 = (String) context.get("address2");
         String city = (String) context.get("city");
+        String stateProvinceGeoId = (String) context.get("state");
+        String districtGeoId = (String) context.get("distic");
         String postalCode = (String) context.get("postalCode");
 		String email = (String) context.get("emailAddress");
 		String AltemailAddress = (String) context.get("AltemailAddress");
@@ -5726,6 +5728,8 @@ public class MaterialPurchaseServices {
      			if (UtilValidate.isNotEmpty(address1)){
      				input.clear();
     				input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", postalCode);
+    				input.put("stateProvinceGeoId",stateProvinceGeoId);
+    				input.put("districtGeoId",districtGeoId);
     				resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
     				if (ServiceUtil.isError(resultMap)) {
     					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);

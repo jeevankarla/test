@@ -3,12 +3,12 @@
 <script type="text/javascript">
 	
 $(document).ready(function(){
-		
 
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			minDate: new Date(${milliseconds?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
