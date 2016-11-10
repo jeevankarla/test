@@ -735,6 +735,7 @@
 			var availableQuantity = parseFloat(data[args.row]["availableQuantity"]);
 			var roundedAmount =calculateBundlePrice(balQuty,uom,price);
 			
+			/*
 			if(args.cell != 7){
 		  		if(uom!="KGs"){
 		   			kgUnitPrice=price/bundleWeight;
@@ -743,6 +744,7 @@
 				    kgUnitPrice=price;
 				}
 		 	}
+		 	*/
 
 			if (args.cell == 2) {
 			  	if(isNaN(roundedAmount)){
@@ -883,6 +885,16 @@
 	      		grid.render();
 	      		$(grid.getCellNode(args.row, 2)).click();
 			}
+			
+			     if(args.row){
+			    updateOtherCharges(args.row);
+				updateSaleBaseAmount(args.row);
+				updateSubsidyAmt(args.row);	
+				updatePayableAmount(args.row);
+				updateTotalIndentAmount();
+				updateCurrentQuota(args.row);
+				
+				}
 			
 		});
 		
