@@ -8,6 +8,7 @@
     	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     	return re.test(email);
 	} 
+	
     $(document).ready(function(){
       	      $("#wizard-2").steps({
                 headerTag: "h3",
@@ -19,6 +20,13 @@
                 		var groupName = $("#groupName").val();
                 		var roleTypeId = $("#roleTypeId").val();
 				    	 if( (groupName).length < 1 ) {
+					    	$('#groupName').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					        $('#groupName').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
+				    	if( (groupName).length < 1 ) {
 					    	$('#groupName').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					        $('#groupName').css('background', 'white').focus(); 
@@ -69,14 +77,11 @@
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
                 	
-                	
                 	 var address1 = $("#address1").val();
 	                	 var city = $("#city").val();
 	                	 var email = $("#emailAddress").val();
 	                	 var Altemail = $("#AltemailAddress").val();
-	                	 
-	                	 
-	                	 
+	                	
 	                	  if( (address1).length < 1 ) {
 						    	$('#address1').css('background', 'yellow'); 
 						       	setTimeout(function () {
@@ -107,21 +112,35 @@
 						       	}, 800);
 						    	return false;
 						    }
-                	
-                	
+                		
                 	return true;
                 	}
+                	
                 },
                 onFinishing: function (event, currentIndex)
                 {	
-	                	
-						    
+                	var tin = $("#USER_TINNUM").val();
+	                var pan = $("#USER_PANID").val();
+                	
+            		 if( (tin).length < 1 ) {
+						    	$('#USER_TINNUM').css('background', 'yellow'); 
+						       	setTimeout(function () {
+						           	$('#USER_TINNUM').css('background', 'white').focus(); 
+						       	}, 800);
+						    	return false;
+					      }
+					if( (pan).length < 1 || !ValidatePAN()){
+						    	$('#USER_PANID').css('background', 'yellow'); 
+						       	setTimeout(function () {
+						           	$('#USER_PANID').css('background', 'white').focus(); 
+						       	}, 800);
+						    	return false;
+					      }
                     return true;
                 },
                 onFinished: function (event, currentIndex)
                 {
 					var form = ($(this)).parent();
-					
                 	form.submit();
                 }
             });
@@ -197,6 +216,20 @@
 		$("#disticLabel").html("<h6>"+distName+"</h6>");
 	}
 	
+	
+	function ValidatePAN() {
+		var nPANNo = $("#USER_PANID").val();
+		var pancardPattern = /^([a-zA-Z]{5})(\d{4})([a-zA-Z]{1})$/;
+		var patternCheck=pancardPattern.test(nPANNo);
+		if(!patternCheck){
+			$("#dispMesg").html("<h6>Invalid PAN Number..</h6>");
+			$("#dispMesg").show();
+			return false;
+		}else{
+			$("#dispMesg").hide();
+		}
+		return true;
+	}
 </script>
 	<form id="EditPartyGroup"  action="<@ofbizUrl>createSupplier</@ofbizUrl>" name="EditPartyGroup" method="post">
 	    <div id="wizard-2">
@@ -240,12 +273,12 @@
 				            </select>
 				            <td>
 						</tr>
-						<tr>
+					<#-- 	<tr>
 				        <td class="label"><b>Pan Number</b></td>
 				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
+        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:ValidatePAN();" />
           				</td>
-				        </tr>
+				        </tr>  -->
 				        <tr>
 				         <td class="label"><b>Tin Number</b></td>
 				        <td>
@@ -392,33 +425,26 @@
 									      	<input type="text" name="accName" id="accName" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
+									 <tr>
+							         	<td class="label"><FONT COLOR="red">*</font><b>Tin Number :</b></td>
+							        	<td> 
+							        		<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUM" id="USER_TINNUM" onblur="javascript:partyIdentificationVal();" />
+						        		</td>
+							         </tr>
 									<tr>
-							        <td class="label"><b>Pan Number :</b></td>
+							        <td class="label"><FONT COLOR="red">*</font><b>Pan Number :</b></td>
 							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:partyIdentificationVal();" />
-			          				</td>
-							        </tr>
-							        <tr>
-							         <td class="label"><b>Tin Number :</b></td>
-							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_TINNUMBER" id="USER_TINNUMBER" onblur="javascript:partyIdentificationVal();" />
-			          				</td>
-							        </tr>
-							        <tr>
-							         
-			                        <td class="label"><b>Cst Number :</b></td>
-							        <td>
-			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_CSTNUMBER" id="USER_CSTNUMBER"  />
+			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_PANID" id="USER_PANID" onblur="javascript:ValidatePAN();"/>
+			        		 			<FONT COLOR="red"> <div id="dispMesg"> </div> </font>
 			          				</td>
 							        </tr>
 							         <tr>
-							         
 			                        <td class="label" id="ADHLABEL"><FONT COLOR="red">*</font><b>Aadhar Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
 			          				</td>
 							        </tr>
-									
+							        
 					        </tr>
 		                 </table>
                     </fieldset>  
