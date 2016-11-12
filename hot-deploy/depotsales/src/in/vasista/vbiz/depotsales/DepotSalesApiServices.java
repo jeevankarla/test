@@ -1374,6 +1374,16 @@ public class DepotSalesApiServices{
 		}
 		indentResults.put("numIndentItems", indentProductList.size());
 		indentResults.put("orderId", orderId);
+		
+		GenericValue OrderHeader = null;
+		try{
+			OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId",orderId),false);
+		} catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching order " +orderId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching Order " + orderId);	   
+  		}
+		BigDecimal amountToPay = OrderHeader.getBigDecimal("grandTotal");
+		indentResults.put("amount",amountToPay);
 		result.put("indentResults", indentResults);		
   		return result;  
 		
