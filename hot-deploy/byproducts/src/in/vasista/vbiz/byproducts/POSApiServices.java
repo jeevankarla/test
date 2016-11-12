@@ -81,13 +81,17 @@ public class POSApiServices {
         if (security.hasEntityPermission("MOB_SUPLR_DB", "_VIEW", userLogin)) {
         	permissionList.add("MOB_SUPLR_DB_VIEW");
         }
+        String userLoginParty = null;
+        if (userLogin != null && userLogin.get("partyId") != null) {
+    		userLoginParty = (String)userLogin.get("partyId");
+        }
         
 		Map result = FastMap.newInstance();  	
 		Map permissions = FastMap.newInstance();
 		permissions.put("permissionList", permissionList);
+		permissions.put("userLoginParty",userLoginParty);
 		result.put("permissionResults", permissions);
-		
-Debug.logInfo("result:" + result, module);
+		Debug.logInfo("result:" + result, module);
     	return result;
     }
     

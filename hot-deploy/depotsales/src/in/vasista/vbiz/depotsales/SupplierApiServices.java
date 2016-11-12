@@ -437,6 +437,15 @@ public class SupplierApiServices {
 				
 				shipmentDetailMap.put("customer",customer);
 				shipmentDetailMap.put("destination",destination);
+				
+				GenericValue shipDetails = null;
+				try{
+					shipDetails = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+				}catch(GenericEntityException e){
+					Debug.logError(e, module);
+				}
+				
+				
 				shipmentItemHistory.put(shipmentId,shipmentDetailMap);
 				shipmentHistory.put(shipmentId,shipmentItemList);
 			}
@@ -700,6 +709,10 @@ public class SupplierApiServices {
 				
 				Map shipmentItem = shipmentItems.get(i);
 				
+				String shipQtyStr = (String) shipmentItem.get("quantity");
+				BigDecimal shipQty = new BigDecimal(shipQtyStr); 
+				if (shipQty.compareTo(BigDecimal.ZERO) > 0){
+				
 				String productId = "";
 		        String quantityStr = "";
 		        String deliveryChallanQtyStr = "";
@@ -941,7 +954,7 @@ public class SupplierApiServices {
 					delegator.createSetNextSeqId(shipmentReceiptStatus);
 				}
            }
-              
+			}
            }
 			
 			if(UtilValidate.isNotEmpty(orderId) && landingCharges.compareTo(BigDecimal.ZERO)>0){
