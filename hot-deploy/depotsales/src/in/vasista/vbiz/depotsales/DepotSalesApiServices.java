@@ -1673,28 +1673,24 @@ public class DepotSalesApiServices{
 		return result;
     }
     
-    public static Map<String, Object> getShipments(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getWeaverShipments(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();    	
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Map result = ServiceUtil.returnSuccess();
-        
         String orderId = (String)context.get("orderId");
-        
         String poOrderId = null;
-       
 		List conditionList = FastList.newInstance();
-		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 		conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		try{
 			List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 			if(UtilValidate.isNotEmpty(orderAssoc)){
-				poOrderId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+				poOrderId = (EntityUtil.getFirst(orderAssoc)).getString("orderId");
 			}
 		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to get Order Assoc", module);
 		}
-		
 		List<GenericValue> shipments = null;
 		Map shipmentHistory = FastMap.newInstance();
 		try{
@@ -1703,7 +1699,6 @@ public class DepotSalesApiServices{
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SHIPMENT_CANCELLED"));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			shipments = delegator.findList("Shipment",condition,null,null,null,false);
-			
 			if(UtilValidate.isNotEmpty(shipments)){
 				List<GenericValue> shipReceiptList = null;
 	        	try{
@@ -1713,38 +1708,33 @@ public class DepotSalesApiServices{
 				}
 				for(GenericValue eachShipment:shipments){
 					String shipmentId = eachShipment.getString("shipmentId");
-
 					List custCondList = FastList.newInstance();
 					custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 					custCondList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 					List<GenericValue> shipmentDetails = EntityUtil.filterByCondition(shipReceiptList, EntityCondition.makeCondition(custCondList, EntityOperator.AND));
-					
 					List shipmentItemList = FastList.newInstance();
 					Map shipmentDetailMap = FastMap.newInstance();
 					for(GenericValue eachDetail:shipmentDetails){
 						Map detailMap = FastMap.newInstance();
 						GenericValue orderItemDetail = null;
 						try{
-							orderItemDetail = delegator.findOne("OrderItem", UtilMisc.toMap("orderId", orderId,"orderItemSeqId",eachDetail.get("orderItemSeqId")), false);
+							orderItemDetail = delegator.findOne("OrderItem", UtilMisc.toMap("orderId", poOrderId,"orderItemSeqId",eachDetail.get("orderItemSeqId")), false);
 						}catch(GenericEntityException e){
 							Debug.logError(e, module);
 						}
 						BigDecimal quantity = eachDetail.getBigDecimal("quantityAccepted");
 						BigDecimal unitPrice = orderItemDetail.getBigDecimal("unitPrice");
-						
 						detailMap.put("itemName",orderItemDetail.get("itemDescription"));
 						detailMap.put("productId",eachDetail.get("productId"));
 						detailMap.put("orderItemSeqId",eachDetail.get("orderItemSeqId"));
 						detailMap.put("quantity",quantity.setScale(decimals, rounding));
 						detailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
-						
 						List conditionlist = FastList.newInstance();
-						conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 						conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachDetail.get("orderItemSeqId")));
 						conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
 						conditionlist.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.LESS_THAN_EQUAL_TO, eachShipment.get("createdDate")));
 						EntityCondition conditionMain1=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-						
 						try{
 							FastList<GenericValue> OrderItemChangeDetails = FastList.newInstance();
 							OrderItemChangeDetails = (FastList)delegator.findList("OrderItemChange", conditionMain1 , null ,UtilMisc.toList("changeDatetime"), null, false );
@@ -1753,7 +1743,6 @@ public class DepotSalesApiServices{
 								unitPrice = lastItemChange.getBigDecimal("unitPrice");
 								detailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
 							}
-							
 						}catch(GenericEntityException e){
 							Debug.logError(e, module);
 						}
@@ -1761,7 +1750,6 @@ public class DepotSalesApiServices{
 						shipmentItemList.add(detailMap);
 					}
 					shipmentDetailMap.put("shipmentItems",shipmentItemList);
-					
 					String destination = "";
 					try{
 						GenericValue poOrderAttr = delegator.findOne("OrderAttribute", UtilMisc.toMap("orderId", poOrderId,"attrName","DST_ADDR"), false);
@@ -1772,12 +1760,9 @@ public class DepotSalesApiServices{
 						Debug.logError(e, module);
 					}
 					shipmentDetailMap.put("destination",destination);
-					
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
-				
 				}
 			}
-			
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
