@@ -363,6 +363,12 @@ public class SupplierApiServices {
 				
 				List shipmentItemList = FastList.newInstance();
 				Map shipmentDetailMap = FastMap.newInstance();
+				GenericValue Shipment = null;
+				try{
+					Shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+				}catch(GenericEntityException e){
+					Debug.logError(e, module);
+				}
 				for(GenericValue eachDetail:shipmentDetails){
 					Map detailMap = FastMap.newInstance();
 					GenericValue orderItemDetail = null;
@@ -379,13 +385,6 @@ public class SupplierApiServices {
 					detailMap.put("orderItemSeqId",eachDetail.get("orderItemSeqId"));
 					detailMap.put("quantity",quantity.setScale(decimals, rounding));
 					detailMap.put("unitPrice",unitPrice.setScale(decimals, rounding));
-					
-					GenericValue Shipment = null;
-					try{
-						Shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
-					}catch(GenericEntityException e){
-						Debug.logError(e, module);
-					}
 					
 					List conditionlist = FastList.newInstance();
 					conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
@@ -438,16 +437,21 @@ public class SupplierApiServices {
 				shipmentDetailMap.put("customer",customer);
 				shipmentDetailMap.put("destination",destination);
 				
-				GenericValue shipDetails = null;
-				try{
-					shipDetails = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
-				}catch(GenericEntityException e){
-					Debug.logError(e, module);
-				}
+				shipmentDetailMap.put("supplierInvoiceDate",Shipment.getDate("supplierInvoiceDate"));
+				shipmentDetailMap.put("supplierInvoiceId",Shipment.getString("supplierInvoiceId"));
+				shipmentDetailMap.put("lrDate",Shipment.getDate("supplierInvoiceDate"));
+				shipmentDetailMap.put("lrNumber",Shipment.getString("lrNumber"));
+				shipmentDetailMap.put("carrierName",Shipment.getString("carrierName"));
+				shipmentDetailMap.put("vehicleId",Shipment.getString("vehicleId"));
+				shipmentDetailMap.put("freightCharges","0");
+				shipmentDetailMap.put("remarks","");
+				
 				
 				
 				shipmentItemHistory.put(shipmentId,shipmentDetailMap);
 				shipmentHistory.put(shipmentId,shipmentItemList);
+				
+				
 			}
 			tempData.put("shipmentItemHistory",shipmentItemHistory);
 			tempData.put("shipmentHistory",shipmentHistory);
