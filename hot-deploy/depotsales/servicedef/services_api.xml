@@ -196,8 +196,8 @@
        <attribute name="paymentMethodTypeId" type="String" mode="OUT" optional="true"/>
        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
-    <service name="getWeaverShipments" engine="java"  auth="true" export="true" 
-           location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getWeaverShipments">
+    <service name="getIndentShipments" engine="java"  auth="true" export="true" 
+           location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getIndentShipments">
        <description>Fetch Shipments for the order</description>
        <attribute name="orderId" type="String" mode="IN" optional="false"/>
        <attribute type="Map" mode="OUT" name="shipments" optional="true"/>
