@@ -1760,7 +1760,14 @@ public class DepotSalesApiServices{
 						Debug.logError(e, module);
 					}
 					shipmentDetailMap.put("destination",destination);
-					
+					shipmentDetailMap.put("supplierInvoiceDate",eachShipment.getDate("supplierInvoiceDate"));
+					shipmentDetailMap.put("supplierInvoiceId",eachShipment.getString("supplierInvoiceId"));
+					shipmentDetailMap.put("lrDate",eachShipment.getDate("supplierInvoiceDate"));
+					shipmentDetailMap.put("lrNumber",eachShipment.getString("lrNumber"));
+					shipmentDetailMap.put("carrierName",eachShipment.getString("carrierName"));
+					shipmentDetailMap.put("vehicleId",eachShipment.getString("vehicleId"));
+					shipmentDetailMap.put("freightCharges","0");
+					shipmentDetailMap.put("remarks","");
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
 				}
 			}
