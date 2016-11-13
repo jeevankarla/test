@@ -437,9 +437,9 @@ public class SupplierApiServices {
 				shipmentDetailMap.put("customer",customer);
 				shipmentDetailMap.put("destination",destination);
 				
-				shipmentDetailMap.put("supplierInvoiceDate",Shipment.getDate("supplierInvoiceDate"));
+				shipmentDetailMap.put("supplierInvoiceDate",Shipment.get("supplierInvoiceDate"));
 				shipmentDetailMap.put("supplierInvoiceId",Shipment.getString("supplierInvoiceId"));
-				shipmentDetailMap.put("lrDate",Shipment.getDate("supplierInvoiceDate"));
+				shipmentDetailMap.put("lrDate",Shipment.get("supplierInvoiceDate"));
 				shipmentDetailMap.put("lrNumber",Shipment.getString("lrNumber"));
 				shipmentDetailMap.put("carrierName",Shipment.getString("carrierName"));
 				shipmentDetailMap.put("vehicleId",Shipment.getString("vehicleId"));
