@@ -1673,7 +1673,7 @@ public class DepotSalesApiServices{
 		return result;
     }
     
-    public static Map<String, Object> getWeaverShipments(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getIndentShipments(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();    	
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
@@ -1760,6 +1760,7 @@ public class DepotSalesApiServices{
 						Debug.logError(e, module);
 					}
 					shipmentDetailMap.put("destination",destination);
+					
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
 				}
 			}
