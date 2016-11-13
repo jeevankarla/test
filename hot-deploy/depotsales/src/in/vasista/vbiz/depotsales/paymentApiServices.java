@@ -168,6 +168,7 @@ public class paymentApiServices {
     
 		 String paymentDate = (String) context.get("paymentDate");
 		 String partyIdFrom = (String) context.get("partyId");
+		 String orderId = (String) context.get("orderId");
 		 String partyIdTo = "";
 		 String amount = (String) context.get("amount");
 		 String paymentRefNum = (String) context.get("transactionId");
