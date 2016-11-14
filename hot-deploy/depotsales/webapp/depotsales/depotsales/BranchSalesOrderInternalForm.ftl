@@ -165,8 +165,26 @@
 			var unitPrice = data[rowCount]["KgunitPrice"];
 			var remarks = data[rowCount]["remarks"];
 			var taxAmt = data[rowCount]["taxAmt"];
-			var serviceCharge = data[rowCount]["SERVICE_CHARGE"];
-			var serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
+			
+			var serviceCharge = 0;
+			var serviceChargeAmt = 0;
+			
+			if(data[rowCount]["SERVICE_CHARGE_SALE"]){
+			 serviceCharge = data[rowCount]["SERVICE_CHARGE_SALE"];
+			 serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_SALE_AMT"];
+		    }else{
+		     serviceCharge = data[rowCount]["SERVICE_CHARGE"];
+			 serviceChargeAmt = data[rowCount]["SERVICE_CHARGE_AMT"];
+		     }	 
+		     
+		     
+		     var changeTenPercentage = 0;
+		     var changeTenPercentageAmout = 0;
+		     if(data[rowCount]["TEN_PERCENT_SUBSIDY_SALE"]){
+		      changeTenPercentage = data[rowCount]["TEN_PERCENT_SUBSIDY_SALE"];
+		      changeTenPercentageAmout = data[rowCount]["TEN_PERCENT_SUBSIDY_SALE_AMT"];
+		      }
+		     
 			
 			var checkE2Form = data[rowCount]["checkE2Form"];
 			var applicableTaxType = data[rowCount]["applicableTaxType"];
@@ -195,6 +213,10 @@
 				var inputCheckCForm = jQuery("<input>").attr("type", "hidden").attr("name", "checkCForm_o_" + rowCount).val(checkCForm);
 				var inputUsedQuota = jQuery("<input>").attr("type", "hidden").attr("name", "usedQuota_o_" + rowCount).val(usedQuota);
 				
+				var inputChangeTenPercentage = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentage_o_" + rowCount).val(changeTenPercentage);
+				var inputChangeTenPercentageAmout = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentageAmout_o_" + rowCount).val(changeTenPercentageAmout);
+			
+				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputBaleQty));
@@ -210,6 +232,8 @@
 				jQuery(formId).append(jQuery(inputApplicableTaxType));
 				jQuery(formId).append(jQuery(inputCheckCForm));
 				jQuery(formId).append(jQuery(inputUsedQuota));
+				jQuery(formId).append(jQuery(inputChangeTenPercentage));
+				jQuery(formId).append(jQuery(inputChangeTenPercentageAmout));
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -218,15 +242,29 @@
 					jQuery(formId).append(jQuery(days));
 				</#if>
 				var taxList = [];
-				taxList = data[rowCount]["taxList"]
+				//taxList = data[rowCount]["taxList"]
+				
+				taxList.push("VAT_SALE");
+				taxList.push("CST_SALE");
+				taxList.push("VAT_SURCHARGE");
+				taxList.push("CST_SURCHARGE");
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
 				if(taxList != undefined){
 					for(var i=0;i<taxList.length;i++){
 						var taxType = taxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
+						
+						var taxPercentage = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE"){
+						    taxPercentage = data[rowCount][taxType];
+						    taxValue = data[rowCount][taxType + "_AMT"];
+						}else{
+						    taxPercentage = data[rowCount][taxType+ "_SALE"];
+						    taxValue = data[rowCount][taxType + "_SALE_AMT"];
+						}
 						
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
 						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
@@ -240,10 +278,11 @@
 				//orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
 				
 				
+				
 				orderAdjustmentsList.push("CESS");
-                orderAdjustmentsList.push("INSURANCE_CHGS");
-                orderAdjustmentsList.push("OTHER_CHARGES");
-                orderAdjustmentsList.push("PACKING_FORWARDIG");
+				orderAdjustmentsList.push("INSURANCE_CHGS");
+				orderAdjustmentsList.push("OTHER_CHARGES");
+				orderAdjustmentsList.push("PACKING_FORWARDIG");
 				
 				
 				
@@ -252,8 +291,8 @@
 				if(orderAdjustmentsList != undefined){
 					for(var i=0;i<orderAdjustmentsList.length;i++){
 						var orderAdjType = orderAdjustmentsList[i];
-						var adjPercentage = data[rowCount][orderAdjType];
-						var adjValue = data[rowCount][orderAdjType + "_AMT"];
+						var adjPercentage = data[rowCount][orderAdjType+"_SALE"];
+						var adjValue = data[rowCount][orderAdjType + "_SALE_AMT"];
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
@@ -277,17 +316,42 @@
 				jQuery(formId).append(jQuery(inputPurchaseBasicAmount));		
 				
 				// Purchase taxes
-				
 				var purTaxList = [];
-				purTaxList = data[rowCount]["purTaxList"]
+				var purTaxList1= [];
 				
-				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList);
+			//	purTaxList = data[rowCount]["purTaxList"];
+				
+				purTaxList.push("VAT_PUR");
+				purTaxList.push("CST_PUR");
+				purTaxList.push("VAT_SURCHARGE");
+				purTaxList.push("CST_SURCHARGE");
+				
+				purTaxList1.push("VAT_SALE");
+				purTaxList1.push("CST_SALE");
+				purTaxList1.push("VAT_SURCHARGE");
+				purTaxList1.push("CST_SURCHARGE");
+				
+				
+				var purTaxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "purTaxList_o_" + rowCount).val(purTaxList1);
 				jQuery(formId).append(jQuery(purTaxListItem));	
 				if(purTaxList != undefined){
 					for(var i=0;i<purTaxList.length;i++){
 						var taxType = purTaxList[i];
-						var taxPercentage = data[rowCount][taxType + "_PUR"];
-						var taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						
+						var taxPercentage = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE"){
+						    taxPercentage = data[rowCount][taxType];
+						    taxValue = data[rowCount][taxType + "_AMT"];
+						}else{
+						
+						    taxPercentage = data[rowCount][taxType +"_PUR"];
+						    taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						
+						}
+						
+						taxType = taxType.replace("_PUR","_SALE");
 						
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
 						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
@@ -298,13 +362,13 @@
 				
 				// Purchase Order Adjustments list
 				var purOrderAdjustmentsList = [];
-				//purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"]
+				//purOrderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"];
+				
 				
 				purOrderAdjustmentsList.push("CESS");
 				purOrderAdjustmentsList.push("INSURANCE_CHGS");
 				purOrderAdjustmentsList.push("OTHER_CHARGES");
 				purOrderAdjustmentsList.push("PACKING_FORWARDIG");
-				
 				
 				
 				var purOrderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "purOrderAdjustmentsList_o_" + rowCount).val(purOrderAdjustmentsList);

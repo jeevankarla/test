@@ -870,13 +870,16 @@
 	    				<form method="post" name="indententryinit" action="<@ofbizUrl>${frmAction}</@ofbizUrl>" id="indententryinit">
 		
 				      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				               	
+				               	<input type="hidden" name="onbehalfOff" id="onbehalfOff" value="onbehalfOff"/>
 				               	<tr>
 						           	<td>&nbsp;</td>
 									<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
 						          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
 										<#if productStoreId?exists && productStoreId?has_content>  
 								  	  		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
+							          		
+							          		
+							          		
 							          		<td valign='middle'>
 							            		<div ><font color="green">
 							               			${productStoreId}    <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
