@@ -268,9 +268,9 @@
         <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
         	<link target="IndentSupplyAnalytics"/>
         </menu-item>
-        <!-- <menu-item name="durationAnalytics" title="Duration Analytics">
+        <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>
-        </menu-item> -->
+        </menu-item>
        <!--  <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
         	<link target="IndentPurchaseAnalytics"/>
         </menu-item>  -->
