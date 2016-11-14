@@ -252,7 +252,8 @@ public class DepotSalesApiServices{
         }
         EntityListIterator orderHeaderList = null;
         try{
-	        orderHeaderList = delegator.find("OrderHeader", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
+        	List orderBy = UtilMisc.toList("-createdStamp");
+	        orderHeaderList = delegator.find("OrderHeader", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, orderBy, null);
 	    } catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}

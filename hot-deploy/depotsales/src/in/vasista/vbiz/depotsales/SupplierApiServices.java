@@ -467,7 +467,7 @@ public class SupplierApiServices {
     	
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
-		Locale locale = (Locale) context.get("locale");
+		//Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map result = ServiceUtil.returnSuccess("Successfully made shipment");
         
