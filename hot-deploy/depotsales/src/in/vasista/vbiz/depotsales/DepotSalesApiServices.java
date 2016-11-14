@@ -1482,7 +1482,13 @@ public class DepotSalesApiServices{
         }
 		List<GenericValue> partyLoomDetails = null;
 		try {
-			partyLoomDetails = delegator.findList("PartyLoom",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId),null,null,null,false);
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate), 
+	  					EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+			
+			partyLoomDetails = delegator.findList("PartyLoom",EntityCondition.makeCondition(conditionList, EntityOperator.AND),null,null,null,false);
 		} catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -1513,8 +1519,8 @@ public class DepotSalesApiServices{
 			List<GenericValue> filteredPartyLooms = EntityUtil.filterByCondition(partyLoomDetails,EntityCondition.makeCondition("loomTypeId",EntityOperator.EQUALS,loomTypeId));
 			for(GenericValue eachPartyLoom:filteredPartyLooms){
 				loomQty = eachPartyLoom.getBigDecimal("quantity");
-				totalLooms = totalLooms.add(loomQty);
 			}
+			totalLooms = totalLooms.add(loomQty);
 			loomQuota = (BigDecimal) eligibleQuota.get(loomTypeId);
 			avlQuota = (BigDecimal) productCategoryQuotasMap.get(loomTypeId);
 			usedQuota = (BigDecimal) usedQuotaMap.get(loomTypeId);
