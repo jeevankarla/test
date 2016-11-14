@@ -964,7 +964,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			   }
 				  
 			   tempMap.put("unitPriceIncTax", invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)+tempMap.get("amount"));
-			  tempMap.put("ToTamount", tempMap.get("quantity")*tempMap.get("unitPriceIncTax") );
+			  tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
 			  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 			  
 			 /* double mgpsQty = 0;
@@ -2073,7 +2073,7 @@ context.externalOrderId = externalOrderId;
 		   }
 			  
 		  
-		  tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
+		  tempMap.put("ToTamount", Math.round((quantity*amount)+serviceAmt));
 		  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 		  
 		 /* double mgpsQty = 0;

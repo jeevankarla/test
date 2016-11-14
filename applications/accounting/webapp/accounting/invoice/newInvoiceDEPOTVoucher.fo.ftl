@@ -318,7 +318,12 @@ under the License.
 	</fo:table>
 	
 	</fo:block>
-	<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsidy allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${tempTotAmount?if_exists}</fo:block>
+	   <#if !kanAndKalRo?has_content>
+		<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsid allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
+	  <#else>
+		<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsid allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
+	   </#if>
+	
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
 	<#if !kanAndKalRo?has_content>

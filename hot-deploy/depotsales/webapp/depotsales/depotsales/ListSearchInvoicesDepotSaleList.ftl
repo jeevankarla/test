@@ -643,10 +643,11 @@ function roundingInvoiceItems(invoiceId){
               <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)/>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)} [${(invoice.partyId)?if_exists}]</a></td>
-              <#assign purchaseInvoice = delegator.findByAnd("Invoice", {"shipmentId" : invoice.shipmentId, "invoiceTypeId" : "PURCHASE_INVOICE" })?if_exists />
- 		     
+             <#assign purchaseInvoice = delegator.findByAnd("Invoice", {"shipmentId" : invoice.shipmentId, "invoiceTypeId" : "PURCHASE_INVOICE" })?if_exists />
+
+ 		      <#if invoice?has_content>
  		      <#assign purchaseInvoice = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceFromShipment(delegator, invoice.invoiceId)?if_exists/>
- 		     
+ 		     </#if>  
  		     <#--
  		      <#if purchaseInvoice?has_content && purchaseInvoice[0].invoiceId?has_content>
  		         <#assign purInvoiceId = purchaseInvoice[0].invoiceId>
@@ -656,13 +657,14 @@ function roundingInvoiceItems(invoiceId){
  		   	       <td></td>
  			  </#if>
  			  -->
- 			  
+ 			  <#if purchaseInvoice?has_content>
  			    <#assign purchaseBasAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, purchaseInvoice)?if_exists/>
+			  </#if>
  			    
  		   	     <td><@ofbizCurrency amount=purchaseBasAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
- 			  
-              <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
-              
+ 			   <#if invoice?has_content>
+             	 <#assign saleBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
+               </#if>
  			  <#--<td>${saleBasicAmt}</td> -->
  			   <#--<#assign outStandingAmt = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)> -- >
               <#--<td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>-->
