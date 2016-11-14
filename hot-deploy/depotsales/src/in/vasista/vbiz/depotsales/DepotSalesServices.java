@@ -2554,6 +2554,65 @@ Debug.log("taxRateList =============="+taxRateList);
 		}
 		
 		
+		//=================change Ten percentage from UI==========================
+		
+				if(schemeCategory.equals("MGPS_10Pecent")){
+				for (int i = 0; i < rowCount; i++) {
+					Map orderAdjMap = FastMap.newInstance();
+					String changeTenPercentageStr = "";
+					String changeTenPercentageAmoutStr = "";
+					
+					
+					BigDecimal changeTenPercentage = BigDecimal.ZERO;
+					BigDecimal changeTenPercentageAmount = BigDecimal.ZERO;
+					
+					String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+					if (paramMap.containsKey("changeTenPercentage" + thisSuffix)) {
+						changeTenPercentageStr = (String) paramMap.get("changeTenPercentage" + thisSuffix);
+					}
+					if (paramMap.containsKey("changeTenPercentageAmout" + thisSuffix)) {
+						changeTenPercentageAmoutStr = (String) paramMap.get("changeTenPercentageAmout" + thisSuffix);
+					}
+					
+					//Debug.log("changeTenPercentageStr=========="+paramMap.get("changeTenPercentage" + thisSuffix));
+					//Debug.log("changeTenPercentageAmoutStr=========="+paramMap.get("changeTenPercentageAmout" + thisSuffix));
+					
+					changeTenPercentage = new  BigDecimal(changeTenPercentageStr);
+					changeTenPercentageAmount = new  BigDecimal(changeTenPercentageAmoutStr);
+
+					//Debug.log("changeTenPercentage=============="+changeTenPercentage);
+					//Debug.log("changeTenPercentageAmount=============="+changeTenPercentageAmount);
+					
+					
+					if((changeTenPercentageAmount).compareTo(BigDecimal.ZERO)>0){
+				     String orderItemSeqId = String.format("%05d", i+1);
+					List condsList1 = FastList.newInstance();
+					condsList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+					condsList1.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+					condsList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,orderItemSeqId));
+					try{
+					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList1,EntityOperator.AND),null, null, null, true);   
+					GenericValue orderItemAndAdjustment = EntityUtil.getFirst(orderItemAndAdjustmentList);
+					
+					//Debug.log("orderItemAndAdjustment=============="+orderItemAndAdjustment);
+					
+					orderItemAndAdjustment.set("amount", changeTenPercentageAmount.negate());
+					orderItemAndAdjustment.store();
+					
+					}catch (GenericEntityException e) {
+						 request.setAttribute("_ERROR_MESSAGE_"," Could not get OrderAdjustment for change TEN_PERCENT_SUBSIDY ");
+							Debug.logError(e, "Could not get OrderAdjustment for change TEN_PERCENT_SUBSIDY " + orderId, module);
+							return "error";
+					 }
+					}
+					
+				}
+				
+				}
+				
+				//===============================================================	
+		
+		
 		if(UtilValidate.isNotEmpty(depotSalesFlagObj) && depotSalesFlagObj.equals("DepotSaleOrder")){
 		
 			if (inventoryItemId == "" || UtilValidate.isEmpty(inventoryItemId)) {
