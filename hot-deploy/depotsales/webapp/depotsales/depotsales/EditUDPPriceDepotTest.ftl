@@ -389,7 +389,8 @@ input[type=button]:hover {
 			  });
 			  
 			 var schemeCategory = $("#schemeCategory").val();
-			  
+			 
+			  var onbehalfOff = $("#onbehalfOff").val();
 			  
 			  var taxList1 = [];
 			  taxList1.push("VAT");
@@ -402,9 +403,9 @@ input[type=button]:hover {
 			  taxList2.push("CST");
 			  taxList2.push("VAT_SURCHARGE");
 			  taxList2.push("CST_SURCHARGE");
-			  if(schemeCategory == "General")
+			  if(schemeCategory == "General" && onbehalfOff != "onbehalfOff")
 			  taxList2.push("SERVICE_CHARGE");
-			  if(schemeCategory == "MGPS_10Pecent")
+			  if(schemeCategory == "MGPS_10Pecent" && onbehalfOff != "onbehalfOff" && tenPercentSubsidy != 0)
 		      taxList2.push("TEN_PERCENT_SUBSIDY");
 			  
 			  
