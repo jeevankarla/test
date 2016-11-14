@@ -279,16 +279,17 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		
 	}
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "SERVICE_CHARGE"));
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
+	conditionList.add(EntityCondition.makeCondition("description", EntityOperator.LIKE, "Service%"));
 	cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	orderAdjustments2 = delegator.findList("OrderAdjustment", cond1, null, null, null, false);
-	orderAdjustments2 = EntityUtil.getFirst(orderAdjustments2);
-	if(orderAdjustments2){
-		serchar=orderAdjustments2.amount;
-		serviceChargePer=orderAdjustments2.sourcePercentage;
+	invoiceAdjustments2 = delegator.findList("InvoiceItem", cond1, null, null, null, false);
+	invoiceAdjustments2 = EntityUtil.getFirst(invoiceAdjustments2);
+	if(invoiceAdjustments2){
+		serchar=invoiceAdjustments2.amount;
+		//serviceChargePer=orderAdjustments2.sourcePercentage;
 		context.serchar=serchar;
-		context.serviceChargePer=serviceChargePer;
+		context.serviceChargePer="2";
 	}
 	context.invoiceItemLevelUnitListPrice=invoiceItemLevelUnitListPrice;
 	
