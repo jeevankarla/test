@@ -117,7 +117,7 @@ $(document).ready(function () {
                    },
                   { text: 'Pending Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'inProcess', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' ,
                   		renderer: function (text, align, height) {
-		   					 var checkBox = "<table><tr><td style='text-align:center'><b>Pending Qty</b></td></tr><tr><td style='text-align:center'><b>(Rs in Lakhs)</b></td></tr> </table>";
+		   					 var checkBox = "<table><tr><td style='text-align:center'><b>Pending Qty</b></td></tr><tr><td style='text-align:center'><b>(Kgs in Lakhs)</b></td></tr> </table>";
 		    				return checkBox;
 						}
                  },
