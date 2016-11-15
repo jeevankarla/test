@@ -2215,6 +2215,8 @@ public class DepotPurchaseServices{
 	
 	
 	public static String processEditSalesInvoice(HttpServletRequest request, HttpServletResponse response) {
+		
+		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -2583,22 +2585,28 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("invoiceItemSeqId" + thisSuffix)) {
 					invoiceItemSeqId = (String) paramMap.get("invoiceItemSeqId" + thisSuffix);
 				}
-				//Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
+				Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
 				
+				String istemSeq=String.format("%05d", i+1);
 				
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
 					String tenPercentStr = (String) paramMap.get("tenPercent" + thisSuffix);
 					if(UtilValidate.isNotEmpty(tenPercentStr)){
 						List tenPercCondList = FastList.newInstance();
 						tenPercCondList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+						tenPercCondList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqId));
 						tenPercCondList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 						try {
 							BigDecimal tenPercentSubsidy = new BigDecimal(tenPercentStr);
+							tenPercentSubsidy = tenPercentSubsidy.abs();
 							if(tenPercentSubsidy.compareTo(BigDecimal.ZERO)>0){
 								tenPercentSubsidy = tenPercentSubsidy.negate();
 							}
 							
 							List<GenericValue> tenPercItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(tenPercCondList, EntityOperator.AND), null, null, null, false);
+							
+							Debug.log("tenPercItemList =============="+tenPercItemList);
+							
 							GenericValue tenPercItem = EntityUtil.getFirst(tenPercItemList);
 							if(UtilValidate.isNotEmpty(tenPercItem)){
 								tenPercItem.set("amount", tenPercentSubsidy);
@@ -3517,22 +3525,28 @@ public class DepotPurchaseServices{
 				if (paramMap.containsKey("invoiceItemSeqId" + thisSuffix)) {
 					invoiceItemSeqId = (String) paramMap.get("invoiceItemSeqId" + thisSuffix);
 				}
-				//Debug.log("invoiceItemSeqId =============="+invoiceItemSeqId);
-				
-				
+				String istemSeq=String.format("%05d", i+1);
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
 					String tenPercentStr = (String) paramMap.get("tenPercent" + thisSuffix);
 					if(UtilValidate.isNotEmpty(tenPercentStr)){
 						List tenPercCondList = FastList.newInstance();
 						tenPercCondList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+						tenPercCondList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqId));
 						tenPercCondList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 						try {
 							BigDecimal tenPercentSubsidy = new BigDecimal(tenPercentStr);
+							tenPercentSubsidy = tenPercentSubsidy.abs();
 							if(tenPercentSubsidy.compareTo(BigDecimal.ZERO)>0){
 								tenPercentSubsidy = tenPercentSubsidy.negate();
 							}
 							
+							//Debug.log("tenPercentSubsidy =============="+tenPercentSubsidy);
+
+							
 							List<GenericValue> tenPercItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(tenPercCondList, EntityOperator.AND), null, null, null, false);
+							
+							//Debug.log("tenPercItemList =============="+tenPercItemList);
+							
 							GenericValue tenPercItem = EntityUtil.getFirst(tenPercItemList);
 							if(UtilValidate.isNotEmpty(tenPercItem)){
 								tenPercItem.set("amount", tenPercentSubsidy);
@@ -3547,7 +3561,6 @@ public class DepotPurchaseServices{
 					}
 				}//subsidy
 			}
-			
 			
 			
 			
