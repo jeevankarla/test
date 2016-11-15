@@ -39,7 +39,6 @@ if(UtilValidate.isNotEmpty(parameters.schemeCategory)){
 		}
 	}
 }
-
 if(parameters.invoiceTypeId == "SALES_INVOICE"){
 	if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 		parameters.tempPartyIdFrom = parameters.partyIdFrom
@@ -60,7 +59,7 @@ if(parameters.invoiceTypeId == "SALES_INVOICE"){
 			
 		}
 	}
-	else{
+	/*else{
 		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 		List branchIds = [];
 		for (eachList in resultCtx.get("productStoreList")) {
@@ -69,7 +68,7 @@ if(parameters.invoiceTypeId == "SALES_INVOICE"){
 		parameters.partyIdFrom = branchIds;
 		parameters.partyIdFrom_op = "in";
 		parameters.tempPartyIdFrom = "";
-	}
+	}*/
 }
 
 
@@ -95,7 +94,7 @@ if(parameters.invoiceTypeId == "PURCHASE_INVOICE"){
 			
 		}
 	}
-	else{
+	/*else{
 		resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 		List branchIds = [];
 		for (eachList in resultCtx.get("productStoreList")) {
@@ -104,7 +103,7 @@ if(parameters.invoiceTypeId == "PURCHASE_INVOICE"){
 		parameters.partyId = branchIds;
 		parameters.partyId_op = "in";
 		parameters.tempPartyId = "";
-	}
+	}*/
 }
 
 

@@ -3,7 +3,6 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
         
 <form name="FindShipmentDepot" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        
         <field title="shipment Date" name="estimatedShipDate"><date-find/></field>
         <field name="shipmentId"><text-find/></field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
@@ -1392,8 +1391,8 @@
       		<field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
       		<field name="partyId"><hidden /></field>
       		<field name="idValue" title="Number"><text size="22"></text></field>
-      		<!-- <field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
-      		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
+      	    <field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
+      		<!-- <field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field> -->
       		<field name="submitButton" title="Update" separate-column="true">
                   <submit button-type="button"/></field>
               <field name="deleteLink" title="Delete" widget-style="buttontext">

@@ -31,7 +31,6 @@ import org.ofbiz.service.ServiceUtil;
 
 invoiceId = parameters.invoiceId;
 
-
 billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
 if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
@@ -267,6 +266,17 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  	cFormAgnst=cFormAgnst+1;
 	 		  }
 		}
+		 }
+		 
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachList.invoiceId));
+		 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INVOICE_ITM_ADJ"));
+		 cond11 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 invoiceInnerAdjItemList2 = EntityUtil.filterByCondition(invoiceAdjItemList, cond11);
+		 invoiceInnerAdjItem2 = EntityUtil.getFirst(invoiceInnerAdjItemList2);
+		 if(UtilValidate.isNotEmpty(invoiceInnerAdjItem2)){
+			 unitPriceIncTax=unitPriceIncTax+(invoiceInnerAdjItem2.amount/eachList.quantity);
+			 totTaxAmount2=totTaxAmount2+(invoiceInnerAdjItem2.amount);
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
 		 

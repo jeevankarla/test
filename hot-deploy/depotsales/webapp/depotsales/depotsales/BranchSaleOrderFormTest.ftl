@@ -1,7 +1,6 @@
 	<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 	<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 	
-	
 	<style type="text/css">
 	
 	 	.labelFontCSS {
@@ -572,8 +571,8 @@
 		       	  				  
 		       	  				  tableElement += '<tr class="partyLoom"><td width="20%" class="label"><font color="green">Loom Type</font></td>';
 		       	  				  tableElement += '<td width="20%" class="label"><font color="green">No.Looms</font></td>';
-		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Elg.Quota(Monthly)</font></td>';
-		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Bal.Quota(Inc Adv)</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Elg.Quota</font></td>';
+		       	  				  tableElement += '<td width="20%" class="label"><font color="green">Bal.Quota</font></td>';
 		       	  				  tableElement += '<td width="20%" class="label"><font color="green">UsedQuota</font></td></tr>';
 		       	  				   
 		       	  				  $.each(LoomList, function(key, item){
