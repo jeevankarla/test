@@ -149,6 +149,7 @@
 	        		<option key="ORDER_APPROVED" description="Approved"/>
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
 	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        		<option key="ORDER_COMPLETED" description="Completed"/>
 	        	</drop-down>
         </field>
         <field name="findPoFlag"><hidden value="Y"/></field>  

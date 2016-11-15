@@ -40,9 +40,11 @@ try {
 	   return;
 }
 if(UtilValidate.isNotEmpty(fromDate)){
+	context.fromDate=fromDate;
 	context.defaultEffectiveDate=UtilDateTime.toDateString(fromDate,"MMMM dd, yyyy");
 }
 if(UtilValidate.isNotEmpty(thruDate)){
+	context.thruDate=thruDate;
 	context.defaultEffectiveThruDate=UtilDateTime.toDateString(thruDate,"MMMM dd, yyyy");
 }
  dctx = dispatcher.getDispatchContext();
