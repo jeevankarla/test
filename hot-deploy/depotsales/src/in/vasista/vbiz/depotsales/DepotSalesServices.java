@@ -3230,8 +3230,11 @@ Debug.log("taxRateList =============="+taxRateList);
 			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 				
+				
+				//===================changed to purchaseBasicPrice to basicPrice===================
+				
 				if(schemeCategory.equals("General")){
-					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, purchaseBasicPrice,
+					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, basicPrice,
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 				            purchaseShoppingCart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 					
