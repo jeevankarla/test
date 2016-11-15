@@ -647,6 +647,31 @@ public class DepotPurchaseServices{
 		}
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		if(UtilValidate.isNotEmpty(invoiceId)){
+			GenericValue Shipment = null;
+			GenericValue invoice = null;
+	        try{
+	        	 Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+	             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
+	 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
+	 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
+	             invoice.set("referenceNumber", supplierInvoiceId);
+	             invoice.set("referenceDate",supplierInvoiceDate);
+	             try {
+	                 delegator.createOrStore(invoice);
+	             } catch (GenericEntityException e) {
+	                 Debug.logError(e, module);
+	                 request.setAttribute("_ERROR_MESSAGE_", "Error while storing referenceNumber and referenceDate in Invoice");
+	                 return "error";
+	             }
+	         }catch(Exception e){
+	             Debug.logError("failed to store storing referenceNumber and referenceDate::"+invoiceId, module);
+	              request.setAttribute("_ERROR_MESSAGE_", "failed to store referenceNumber and referenceDate::"+invoiceId);
+	              return "error";
+	         }
+		}
+		
+		
 		
 		//============================================Rounding Off===============================
 		  List<GenericValue> InvoiceItem = null;
@@ -9593,7 +9618,30 @@ public class DepotPurchaseServices{
   			}
   			
   			String invoiceId =  (String)result.get("invoiceId");
-  			
+  			if(UtilValidate.isNotEmpty(invoiceId)){
+  				GenericValue Shipment = null;
+  				GenericValue invoice = null;
+  		        try{
+  		        	 Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+  		             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
+  		 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
+  		 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
+  		             invoice.set("referenceNumber", supplierInvoiceId);
+  		             invoice.set("referenceDate",supplierInvoiceDate);
+  		             try {
+  		                 delegator.createOrStore(invoice);
+  		             } catch (GenericEntityException e) {
+  		                 Debug.logError(e, module);
+  		                 request.setAttribute("_ERROR_MESSAGE_", "Error while storing referenceNumber and referenceDate in Invoice");
+  		                 return "error";
+  		             }
+  		         }catch(Exception e){
+  		             Debug.logError("failed to store storing referenceNumber and referenceDate::"+invoiceId, module);
+  		              request.setAttribute("_ERROR_MESSAGE_", "failed to store referenceNumber and referenceDate::"+invoiceId);
+  		              return "error";
+  		         }
+  			}
+
   			//============================================Rounding Off===============================
   			  List<GenericValue> InvoiceItem = null;
   		    	
