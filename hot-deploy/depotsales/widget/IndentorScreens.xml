@@ -533,7 +533,7 @@
 	<screen name="IndentorEditBranchIndent">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Branch Sales Entry" />
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 <!-- 				<set field="tabButtonItem2" value="BranchSalesOrder" /> -->
 				<set field="changeFlag" value="EditDepotSales" />
