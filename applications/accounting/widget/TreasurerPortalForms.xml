@@ -2113,7 +2113,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>  -->   
-        <field position="1" name="description" title="Narration---" encode-output="false" required-field="true"><text size="100"/></field>        
+        <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
         <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->  
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
             <submit button-type="button"/>
