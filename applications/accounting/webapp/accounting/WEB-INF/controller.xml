@@ -2113,6 +2113,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindEmployeeAdv"/>
     </request-map>
+    <request-map uri="EmployeeAdvance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeAdvance"/>
+    </request-map>
      <request-map uri="FindFinAccountTransAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
@@ -2683,10 +2687,19 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewOutgoingAdvancePaid"/>
     </request-map>
+    <request-map uri="NewEmployeeAdvance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewEmployeeAdvance"/>
+    </request-map>
 	<request-map uri="createNewOutgoingAdvancePayments">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    <request-map uri="createEmployeeAdvance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="EmployeeAdvance"/>
     </request-map>
     
     
@@ -2694,11 +2707,20 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OutgoingAdvancesRefund"/>
     </request-map>
+    <request-map uri="EmployeeAdvanceRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeAdvanceRefund"/>
+    </request-map>
+    
     <request-map uri="NewOutgoingAdvancesRefund">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewOutgoingAdvancesRefund"/>
     </request-map>
-	<request-map uri="createNewOutgoingAdvanceRefund">
+    <request-map uri="NewEmployeeAdvanceRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewEmployeeAdvanceRefund"/>
+    </request-map>
+    <request-map uri="createNewOutgoingAdvanceRefund">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="PortalPaymentOverview"/>
@@ -4273,6 +4295,7 @@ under the License.
         <view-map name="FindDepositReceivedAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositReceivedAccount"/>
         <view-map name="FindDepositPaidAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositPaidAccount"/>
         <view-map name="FindEmployeeAdv" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmployeeAdv"/>
+        <view-map name="EmployeeAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvance"/>
         <view-map name="DepositTransfer" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositTransfer"/>
     
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
@@ -4628,8 +4651,11 @@ under the License.
    <view-map name="OutgoingAdvancesPaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingAdvancesPaid"/>
    <view-map name="NewOutgoingAdvancePaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingAdvancePaid"/>
    
+   <view-map name="NewEmployeeAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewEmployeeAdvance"/>
    <view-map name="OutgoingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingAdvancesRefund"/>
+   <view-map name="EmployeeAdvanceRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvanceRefund"/>
    <view-map name="NewOutgoingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingAdvancesRefund"/>
+   <view-map name="NewEmployeeAdvanceRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewEmployeeAdvanceRefund"/>
    
    <view-map name="PortalPaymentOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentOverview"/>
    

@@ -2147,7 +2147,7 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
-		 <menu-item name="FindEmployeeAdv" title="Employee Advance">
+		 <!-- <menu-item name="FindEmployeeAdv" title="Employee Advance">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2155,7 +2155,18 @@
             </condition>
 			<link target="FindEmployeeAdv">
 			</link>
+		 </menu-item> -->
+		 
+		 <menu-item name="EmployeeAdvance" title="Employee Advance">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="EmployeeAdvance">
+			</link>
 		 </menu-item>
+		 
 		   <!-- <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
 				<or>
@@ -2498,7 +2509,15 @@
              <link target="OutgoingAdvancesRefund"></link>
           </menu-item>
     </menu>
-    
+    <menu name="EmployeeAdvanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="EmployeeAdvance" title="Payments">
+             <link target="EmployeeAdvance"></link>
+          </menu-item>
+          <menu-item name="EmployeeAdvanceRefund" title="Refunds">
+             <link target="EmployeeAdvanceRefund"></link>
+          </menu-item>
+    </menu>
     <menu name="IncomingDepositsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
           <menu-item name="IncomingDepositsReceived" title="Receipts">

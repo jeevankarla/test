@@ -309,7 +309,7 @@
             </widgets>
         </section>
     </screen>
-     <screen name="FindEmployeeAdv">
+    <screen name="FindEmployeeAdv">
         <section>
             <actions>
                 <set field="titleProperty" value="Find Employee Advances"/>
@@ -375,6 +375,90 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="EmployeeAdvance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Employee Advances"/>
+                <set field="tabButtonItem" value="EmployeeAdvance"/>
+                <set field="tabButtonItem4" value="EmployeeAdvance"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="screenflag" value="OutgoingAdvancesPaid"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+	            <set field="screenFlag" value="depositPaid"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                    	<include-menu name="EmployeeAdvanceTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <!-- <link target="NewOutgoingAdvancePaid" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> -->
+                                            <link target="NewEmployeeAdvance" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindEmployeeAdvanceNew" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    <container>
+                                    		<link target="OutgoingAdvancesPaid.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
      <screen name="DepositTransfer">
         <section>
@@ -1977,6 +2061,85 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="EmployeeAdvanceRefund">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Employee Advance Refund"/>
+                <set field="tabButtonItem" value="EmployeeAdvance"/>
+                <set field="tabButtonItem4" value="EmployeeAdvanceRefund"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+	            
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="EmployeeAdvanceTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="NewEmployeeAdvanceRefund" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindEmployeeAdvanceRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<container>
+                                    		<link target="OutgoingAdvancesRefund.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
+                                       	</platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="NewOutgoingAdvancesRefund">
        <section>
             <actions>
@@ -2019,6 +2182,55 @@
                                 <!-- <screenlet title="New Incoming Advance">
                                     <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet> -->
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="NewEmployeeAdvanceRefund">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Employee Advance Refund"/>
+                <set field="tabButtonItem" value="EmployeeAdvance"/>
+                <set field="tabButtonItem4" value="EmployeeAdvanceRefund"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set field="searchParentType" value="ADVANCES_PAYOUT"/>
+                <set field="refundParentType" value="REFUND_PAYIN"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/GetPaymentsForParty.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                	
+                	<decorator-section name="body">
+                    	<include-menu name="EmployeeAdvanceTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="NewEmployeeAdvanceRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/PaymentRefunds.ftl"/></html>
+                                       	</platform-specific>
+                                    	<screenlet title="Possible Payments To Refund">
+                                            <include-form name="listAPPaymentsNotApplied" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
                             </widgets>
                             <fail-widgets>
                             	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
@@ -2133,6 +2345,47 @@
                             <widgets>
                                 <screenlet title="New Incoming Advance">
                                     <include-form name="NewOutgoingAdvancesPaid" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                             <platform-specific>
+                                   <html><html-template location="component://accounting/webapp/accounting/reports/onAccountPaymentType.ftl"/></html>
+                            </platform-specific>
+                            </widgets>
+                             
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="NewEmployeeAdvance">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Employee Advance"/>
+                <set field="tabButtonItem" value="EmployeeAdvance"/>
+                <set field="tabButtonItem4" value="EmployeeAdvance"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="defaultOrganizationPartyId" value="INT5"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                    	<include-menu name="EmployeeAdvanceTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Employee Advance">
+                                    <include-form name="NewEmployeeAdvance" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
                              <platform-specific>
                                    <html><html-template location="component://accounting/webapp/accounting/reports/onAccountPaymentType.ftl"/></html>
