@@ -3274,7 +3274,7 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-          <menu-item name="SalesAndDistribution" title="Sales And Distribution">
+          <!-- <menu-item name="SalesAndDistribution" title="Sales And Distribution">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="SALES_DIS_OUT" />
              	<parameter param-name="subTabButtonValue" value="SalesAndDistribution" />
@@ -3294,7 +3294,7 @@
              	<parameter param-name="subTabButtonValue" value="Finance" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
-          </menu-item>
+          </menu-item> -->
           <!-- <menu-item name="Hyderabad" title="Hyderabad Expenses">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="HYD_OUT" />
@@ -3734,7 +3734,7 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-          <menu-item name="Finance" title="Finance Income">
+          <!-- <menu-item name="Finance" title="Finance Income">
              <link target="ArInvoices">
              	<parameter param-name="invoiceTypeId" value="FINANCE_IN" />
              	<parameter param-name="subTabButtonValue" value="Finance" />
@@ -3747,7 +3747,7 @@
              	<parameter param-name="subTabButtonValue" value="OpeningBalance" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
-          </menu-item>
+          </menu-item> -->
     </menu>
 	<menu name="ARInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<actions>
