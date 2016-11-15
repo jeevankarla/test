@@ -2039,7 +2039,9 @@ under the License.
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
-        </field>                            
+        </field>
+        <field position="1" name="referenceNumber" title="Refrence No." encode-output="false" required-field="true"><text size="50"/></field> 
+        <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
         <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
         <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->        
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
@@ -2110,7 +2112,7 @@ under the License.
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>  -->                   
+        </field>  -->   
         <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
         <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->  
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">

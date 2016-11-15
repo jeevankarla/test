@@ -1386,6 +1386,7 @@
 		<field name="invoiceGrandTotal" type="fixed-point"></field>
 		<field name="invoiceMessage" type="long-varchar"></field>
 		<field name="referenceNumber" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
+		<field name="referenceDate" type="date-time"></field><!-- used to record things like the vendor's invoice number Date -->
 		<field name="description" type="description"></field>
 		<field name="cancelComments" type="long-varchar"></field>
 		<field name="currencyUomId" type="id"></field>
