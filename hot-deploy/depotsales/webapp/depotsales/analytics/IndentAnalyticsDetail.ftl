@@ -108,7 +108,7 @@ $(document).ready(function () {
 									if(rowKey=='NHDC'){
 										rowKey='';
 									}                  
-							 return '<a href="FindIndents?partyIdFrom='+rowKey+'" target="_blank" >'+value+'</a>'; 
+							 return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_COMPLETED&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
                   { text: 'Indent Qty (Kgs in Lakhs)', width:'10%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
