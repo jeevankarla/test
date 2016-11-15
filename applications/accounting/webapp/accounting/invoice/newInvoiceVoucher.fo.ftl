@@ -388,13 +388,16 @@ under the License.
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
 	        <fo:table-cell  >
-         			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
-	   	         <#--   <#if scheme != "General">  -->
-	               <fo:block text-align="left"    font-size="10pt" >Sale Value (RS):${((grandTotal+remainingAdjustMents)-entryTax)?string("#0.00")}</fo:block>
-	                <#if kanAndKalRo?has_content && serviceChargePer?has_content>
-	               	 	<fo:block text-align="left"    font-size="10pt" >Service Charge( ${serviceChargePer?if_exists} %): ${serchar?string("#0.00")}</fo:block>
-	                </#if>
-	   			<#--	</#if>-->
+				<#if !kanAndKalRo?has_content>
+						<fo:block text-align="left" font-size="10pt">Sale Value(RS):${((grandTotal+totTaxAmount+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
+					<#else>
+						<fo:block text-align="left"    font-size="10pt" >Sale Value(RS):${((grandTotal+totTaxAmount2+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
+				</#if>		
+                
+                <#if !kanAndKalRo?has_content>
+               	 	<fo:block text-align="left"    font-size="10pt" >Service Charge( ${serviceChargePer?if_exists} %): ${serchar?string("#0.00")?if_exists}</fo:block>
+                </#if>
+
 	        </fo:table-cell>
 			</fo:table-row>
 			<#if scheme == "MGPS_10Pecent">
