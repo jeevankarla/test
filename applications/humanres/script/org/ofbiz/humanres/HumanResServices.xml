@@ -25,11 +25,10 @@
     <simple-method method-name="createPartyQual" short-description="Create a Party Qualification">
         <make-value entity-name="PartyQual" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <if-empty field="newEntity.fromDate">
-            <now-timestamp field="nowTimeStamp"/>
-            <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
-        </if-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+         <if-not-empty field="parameters.designation">
+            <set field="newEntity.title" from-field="parameters.designation"/>
+         </if-not-empty>
         <field-to-result field="newEntity.partyId" result-name="partyId"/>
         <field-to-result field="newEntity.partyQualTypeId" result-name="partyQualTypeId"/>
         <field-to-result field="newEntity.fromDate" result-name="fromDate"/>

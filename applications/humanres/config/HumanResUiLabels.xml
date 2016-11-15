@@ -1986,7 +1986,7 @@
     </property>
     <property key="HumanResPartyQualification">
         <value xml:lang="de">Qualifikationen</value>
-        <value xml:lang="en">Qualifications</value>
+        <value xml:lang="en">Qualifications/Experience</value>
         <value xml:lang="fr">Qualifications</value>
         <value xml:lang="it">Qualifiche</value>
         <value xml:lang="pt_BR">Qualificações</value>
@@ -2636,5 +2636,31 @@
      <property key="addLanguage">       
         <value xml:lang="en">create Language</value>        
     </property>
-    
+    <property key="HumanResAddPartyExp">       
+        <value xml:lang="en">Add Party Experience</value>        
+    </property>
+    <property key="DateOfJoining">       
+        <value xml:lang="en">Date of Joining</value>        
+    </property>
+    <property key="DateOfReliving">       
+        <value xml:lang="en">Date of Reliving</value>        
+    </property>
+    <property key="OrganizationName">       
+        <value xml:lang="en">Organization Name</value>        
+    </property>
+    <property key="Designation">       
+        <value xml:lang="en">Designation</value>        
+    </property>
+     <property key="Department">       
+        <value xml:lang="en">Department</value>        
+    </property>
+    <property key="CourseDuration">       
+        <value xml:lang="en">Course Duration</value>        
+    </property>
+    <property key="DateOfPassing">       
+        <value xml:lang="en">Date Of Passing</value>        
+    </property>
+    <property key="PassingGrade">       
+        <value xml:lang="en">Passing Grade</value>        
+    </property>
 </resource>

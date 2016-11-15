@@ -614,7 +614,7 @@
             <sort-field name="cancelLink"/>
       	</sort-order>
     </form>
-    <form name="addNewLanguage" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createLanguage"
+    <form name="addNewLanguage" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createNewLanguage"
     	  default-table-style="basic-table hover-bar" separate-columns="true" >
     	  <actions>
 		</actions>
@@ -976,13 +976,25 @@
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <auto-fields-service service-name="createPartyQual"/>
         <field name="partyId"><hidden/></field>
-       
-        <field name="partyQualTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
+                	  <entity-constraint name="partyQualTypeId" operator="not-equals" value="EXPERIENCE"/> 
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
+        </field>
+        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}"><text></text></field>
+        <field name="courseDuration" id-name="courseDuration" title="${uiLabelMap.CourseDuration}"><text></text></field>
+        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}">
+        	 <drop-down allow-empty="true">
+        	 	<option key="A"/>
+        	 	<option key="B"/>
+        	 	<option key="C"/>
+        	 	<option key="D"/>
+        	 	<option key="E"/>
+        	 	<option key="F"/>
+        	 </drop-down>
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
@@ -1000,14 +1012,107 @@
                 </entity-options>
             </drop-down>
         </field>
-         <field name="thruDate" title="${uiLabelMap.toDate}"></field>
+       <field name="fromDate" id-name="fromDate" title=""><date-time type="date"/> </field> 
+       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfPassing}"><date-time type="date"/></field>
+       <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}"><text></text><hidden/></field>
+       <field name="designation" id-name="designation" title="${uiLabelMap.Designation}"><text></text><hidden/></field>
+       <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}"><text></text><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="verifStatusId"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
+        
+        <sort-order>
+        	<sort-field name="type"/>
+			<sort-field name="partyId"/>
+			<sort-field name="partyQualTypeId"/>
+			<sort-field name="title"/>
+			<sort-field name="qualificationDesc"/>
+			<sort-field name="specialization"/>
+			<sort-field name="universityBoard"/>
+			<sort-field name="courseDuration"/>
+			<sort-field name="fromDate"/>		 	
+           	<sort-field name="thruDate"/>
+           	<sort-field name="passingGrade"/>
+            <sort-field name="percentageOfMarks"/>
+            <sort-field name="joiningDate"/>
+     </sort-order>
     </form>
+     <form name="AddEmployeeExperience" type="single" target="createEmployeeExperience">
+        <auto-fields-service service-name="createPartyQual"/>
+        <field name="partyId"><hidden/></field>
+        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
+                	  <entity-constraint name="partyQualTypeId" operator="equals" value="EXPERIENCE"/> 
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}"><text></text><hidden/></field>
+        <field name="courseDuration" id-name="courseDuration" title="${uiLabelMap.CourseDuration}"><text></text><hidden/></field>
+        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}">
+        	 <drop-down allow-empty="true">
+        	 	<option key="A"/>
+        	 	<option key="B"/>
+        	 	<option key="C"/>
+        	 	<option key="D"/>
+        	 	<option key="E"/>
+        	 	<option key="F"/>
+        	 </drop-down> <hidden/>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="verifStatusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       <field name="fromDate" id-name="fromDate" title="${uiLabelMap.DateOfJoining}"><date-time type="date"/> </field> 
+       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfReliving}"><date-time type="date"/></field>
+         
+         <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}"><text></text></field>
+         <field name="designation" id-name="designation" title="${uiLabelMap.Designation}"><text></text></field>
+         <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}"><text></text></field>
+         <field name="qualificationDesc"><hidden/></field>
+         <field name="universityBoard"><hidden/></field>
+         <field name="percentageOfMarks"><hidden/></field>
+         <field name="title"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="verifStatusId"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
+        
+        <sort-order>
+        	<sort-field name="type"/>
+			<sort-field name="partyId"/>
+			<sort-field name="partyQualTypeId"/>
+			<sort-field name="title"/>
+			<sort-field name="fromDate"/>		
+			 <sort-field name="organizationName"/>
+            <sort-field name="designation"/>
+            <sort-field name="deparmentName"/> 
+           	<sort-field name="thruDate"/>
+     </sort-order>
+    </form>
+    
     <form name="ListEmployeeQualification" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeQualification" paginate-target="FindPartyQuals"
             odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PartyQual">
+            <condition-list combine="and">
                 <condition-expr field-name="partyId" from-field="partyId"/>
+                <condition-expr field-name="partyQualTypeId" operator="not-equals" value="EXPERIENCE"/>
+            </condition-list>
                 <order-by field-name="fromDate"/>
             </entity-condition>
         </actions>
@@ -1023,7 +1128,7 @@
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-            </drop-down>
+            </drop-down><hidden/>
         </field>
         <field name="verifStatusId">
             <drop-down allow-empty="true">
@@ -1031,9 +1136,64 @@
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-            </drop-down>
+            </drop-down><hidden/>
         </field>
+        <field name="tenantId"><hidden/></field>
        <field name="thruDate" title="${uiLabelMap.toDate}"> <display/></field>
+       <field name="organizationName"><hidden/></field>
+       <field name="deparmentName"><hidden/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="partyId"/>
+                <parameter param-name="partyQualTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+    </form>
+    <form name="ListEmployeeExperience" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeQualification" paginate-target="FindPartyQuals"
+            odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyQual">
+            <condition-list combine="and">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <condition-expr field-name="partyQualTypeId" operator="equals" value="EXPERIENCE"/>
+            </condition-list>
+                <order-by field-name="fromDate"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updatePartyQual"/>
+        <field name="partyId"><hidden/></field>
+        <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
+        <field name="fromDate"><display/></field>
+        <field name="qualificationDesc"><text/><hidden/></field>
+        <field name="title"><text/></field>
+        <field name="specialization"><hidden/></field>
+        <field name="universityBoard"><hidden/></field>
+        <field name="courseDuration"><hidden/></field>
+        <field name="percentageOfMarks"><hidden/></field>
+       <field name="grade"><hidden/></field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down> <hidden/>
+        </field>
+        <field name="verifStatusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down><hidden/>
+        </field>
+        <field name="tenantId"><hidden/></field>
+       <field name="thruDate" title="${uiLabelMap.toDate}"> <display/></field>
+       <field name="organizationName"></field>
+       <field name="deparmentName"></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
@@ -1056,7 +1216,7 @@
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
         <field name="fromDate"><display/></field>
-        <field name="qualificationDesc"><display/></field>
+        <field name="qualificationDesc" use-when="partyQualTypeId != 'EXPERIENCE'"><display/></field>
         <field name="title"><display/></field>
         <field name="statusId"><display/></field>
         <field name="verifStatusId"><display/></field>
