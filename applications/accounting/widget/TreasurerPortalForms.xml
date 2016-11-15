@@ -1986,8 +1986,6 @@ under the License.
     </form>
     
     
-    <!--  AAAAAAAAAAAAAA-->
-    
     <form name="NewEmployeeAdvanceRefund" type="single" target="NewEmployeeAdvanceRefund" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table" >
         <field name="statusId"><hidden value="PMNT_SENT"/></field>
@@ -2005,11 +2003,8 @@ under the License.
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="searchButton" title="AAAA ${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
-    <!--  BBBBBBBBBBBBBB-->
-    
     
     
     <form name="listAPPaymentsNotApplied" type="list" list-name="refundAvblPaymentList"  title=""
