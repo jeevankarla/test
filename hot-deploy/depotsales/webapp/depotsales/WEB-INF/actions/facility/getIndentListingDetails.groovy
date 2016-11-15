@@ -170,7 +170,7 @@ if(UtilValidate.isNotEmpty(uniqueOrderIdsList)){
 	//condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.NOT_IN, uniqueOrderIdsList));
 }
 if(UtilValidate.isNotEmpty(tallyRefNO)){
-	condList.add(EntityCondition.makeCondition("tallyRefNo" ,EntityOperator.LIKE, "%"+tallyRefNO + "%"));
+	condList.add(EntityCondition.makeCondition("tallyRefNo" ,EntityOperator.EQUALS, tallyRefNO));
 }
 
 if(UtilValidate.isNotEmpty(facilityStatusId)){

@@ -1331,7 +1331,7 @@ input[type=button]:hover {
 	
 	function storeIncludeList(){
 	
-	 var allAdjustments = dataRow["allAdjustments"];
+	 var allAdjustments = dataRow["allAdjustmentsSale"];
 	 
 	 var adjType = $("#addAdjListSale").val();
 	 
@@ -1345,7 +1345,7 @@ input[type=button]:hover {
 	  }
 	 
 	 
-	 $('#addAdjGivenList').html('');
+	 $('#addAdjGivenListSale').html('');
 	
 	  if(checkedListPerent != 'undefined' && checkedListPerent != null){
 	  
@@ -1371,14 +1371,14 @@ input[type=button]:hover {
   	          if(resultMap[item['orderAdjustmentTypeId']] == "Y")
 			  $('#addAdjGivenListSale').append($('<li>').html( "<font color='black'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   		      else
-  		      $('#addAdjGivenListSale').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
+  		      $('#addAdjGivenListSale').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedListSale' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   	     });
   	    
 	 
 	 }else{
 	 
 	  $.each(allAdjustments, function(key, item){
-	   $('#addAdjGivenListSale').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
+	   $('#addAdjGivenListSale').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedListSale' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
 	  });
 	 }
 	}
@@ -1389,9 +1389,9 @@ input[type=button]:hover {
 	
 	   var adjCheckedMap = {};
 	
-	   var adjType = $("#addAdjList").val();
+	   var adjType = $("#addAdjListSale").val();
 	   
-	   var checkedList = $('input:checkbox:checked.checkedList').map(function () {
+	   var checkedList = $('input:checkbox:checked.checkedListSale').map(function () {
 								  	return this.id;
 								  }).get();
 											
@@ -1636,7 +1636,7 @@ input[type=button]:hover {
 	   // alert("totalAmt=============="+totalAmt);
 	 
 	    
-	 var adjType = $("#addAdjList").val();
+	 var adjType = $("#addAdjListSale").val();
 	 
 	 var checkedListPerent;
 	 
