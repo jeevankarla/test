@@ -131,13 +131,18 @@ under the License.
         <field name="partyId" type="id-ne"></field>
         <field name="partyQualTypeId" type="id-ne"></field>
         <field name="qualificationDesc" type="id-long"></field>
+        <field name="specialization" type="id-long"></field>
         <field name="title" type="id-long"><description>Title of degree or job</description></field>
         <field name="statusId" type="id"><description>Status e.g. completed, part-time etc.</description></field>
         <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
         <field name="universityBoard" type="id-long"></field>
-		<field name="percentageOfMarks" type="fixed-point"></field>
+        <field name="courseDuration" type="id-long"></field>
+        <field name="percentageOfMarks" type="fixed-point"></field>
+        <field name="grade" type="id-long"></field>
+        <field name="organizationName" type="id-long"></field>
+        <field name="deparmentName" type="id-long"></field>
         <prim-key field="partyId"/>
         <prim-key field="partyQualTypeId"/>
         <prim-key field="fromDate"/>

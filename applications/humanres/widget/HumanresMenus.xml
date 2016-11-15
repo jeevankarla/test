@@ -768,9 +768,9 @@
 	                <if-has-permission permission="HR"  action="_EMPLQUALVIEW"/>
 	               </or> 
             </condition>
-            <link target="EditEmployeeQuals">
+          	<link target="EditEmployeeQuals">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
-            </link>
+           </link>
         </menu-item>
         <!--<menu-item name="EditEmployeeTrainings" title="${uiLabelMap.HumanResTraining}">
             <link target="EditEmployeeTrainings">
@@ -833,6 +833,20 @@
         		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item> -->
+    </menu>
+	
+	  <menu name="EditEmployeeQualsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		default-menu-item-name="EditEmployeeQuals" selected-menuitem-context-field-name="tabButtonItem3">
+        <menu-item name="EditEmployeeQuals" title="Qualification"> 
+        	<link target="EditEmployeeQuals">
+        		 <parameter param-name="partyId" from-field="parameters.partyId"/>
+        	</link>
+        </menu-item>
+         <menu-item name="EditEmployeeExp" title="Experience"> 
+         	<link target="EditEmployeeExp">
+         		<parameter param-name="partyId" from-field="parameters.partyId"/>
+         	</link>
+         </menu-item>
     </menu>
 	
 	<menu name="PayrollItemsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 

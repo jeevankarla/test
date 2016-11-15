@@ -34,6 +34,17 @@ under the License.emplpunch
         <override name="partyQualTypeId" optional="false"/>
         <override name="fromDate" optional="true"/>
     </service>
+    <service name="createPartyExp" engine="simple" default-entity-name="PartyQual"
+            location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyQual" auth="true">
+        <description>Create a Party Qualification entry</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="designation" mode="IN" optional="true" type="String"/>
+        <override name="partyId" optional="false"/>
+        <override name="partyQualTypeId" optional="false"/>
+        <override name="fromDate" optional="true"/>
+    </service>
 
     <service name="updatePartyQual" engine="simple" default-entity-name="PartyQual"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartyQual" auth="true">
