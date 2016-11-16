@@ -59,7 +59,7 @@ for (eachItem in orderItems) {
 	otherCharges = 0;
 	quotaAvbl = 0;
 	if(UtilValidate.isNotEmpty(orderAdjustments)){
-			//adjustmentAmount =eachItem.discountAmount;
+			adjustmentAmount =eachItem.discountAmount;
 		conditionList = [];
 		if("direct".equals(orderType)){
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -72,11 +72,15 @@ for (eachItem in orderItems) {
 		if("direct".equals(orderType)){
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		}
+		
+		/*if(orderType == "onbehalfof"){
 			conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 		otherChargesListTen = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		 
 		if(otherChargesListTen)
 		adjustmentAmount =otherChargesListTen[0].amount;
+		
+	}*/
 		
 		
 		
