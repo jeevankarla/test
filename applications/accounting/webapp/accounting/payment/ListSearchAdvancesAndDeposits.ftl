@@ -149,7 +149,7 @@ function setVoidPaymentParameters(currentPayment){
         <tr class="header-row-2">
           <td>paymentId</td>
           <td>Payment Date</td>    
-          <td>Facility</td>                          
+          <#--<td>Facility</td>-->                          
           <td>${uiLabelMap.AccountingPaymentType}</td>
           <td>Payment Method</td>
           <td>${uiLabelMap.CommonStatus}</td>
@@ -157,7 +157,7 @@ function setVoidPaymentParameters(currentPayment){
           <td>${uiLabelMap.AccountingToParty}</td>
           <td>Effective Date</td>
           <td>Amount</td> 
-          <td>Amt To Apply</td> 
+          <td>Outstanding Advance</td> 
          <#if hasPaymentCancelPermission?has_content && nowDate?has_content>
           <td>Cancel</td> 
            </#if>
@@ -176,7 +176,7 @@ function setVoidPaymentParameters(currentPayment){
               <input type="hidden" name="paymentId" id="paymentId" value="${payment.paymentId?if_exists}">
               </td>
               <td><#if payment.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</#if></td>              
-              <td>${(payment.facilityId)?if_exists}</td>
+              <#--<td>${(payment.facilityId)?if_exists}</td>-->
               <td>
                 <#assign paymentType = delegator.findOne("PaymentType", {"paymentTypeId" : payment.paymentTypeId}, true) />
                 ${paymentType.description?default(payment.paymentTypeId)}
