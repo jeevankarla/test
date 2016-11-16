@@ -125,7 +125,7 @@ $(document).ready(function () {
 					},
                   { text: 'PO Issued', width:'8%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer, className:'fontSizeChange',
                           cellsRenderer: function (rowKey, dataField, value, data) {
-							return '<a href="FindPO?partyId='+rowKey+'" target="_blank" >'+value+'</a>'; 
+							return '<a href="FindPO?partyId='+rowKey+'&statusId=ORDER_CREATED&estimatedDeliveryDate_fld0_value=${fromDate?if_exists}&estimatedDeliveryDate_fld0_op=greaterThanFromDayStart&estimatedDeliveryDate_fld1_value=${thruDate?if_exists}&estimatedDeliveryDate_fld1_op=opLessThan" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
                   { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
@@ -146,7 +146,7 @@ $(document).ready(function () {
 					                if(rowKey=='NHDC'){
 												rowKey='';
 									}
-								return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_CREATED&noConditionFind=Y" target="_blank" >'+value+'</a>'; 
+								return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_CREATED&noConditionFind=Y&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
 					 		}
               	 },
                
