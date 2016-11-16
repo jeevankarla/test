@@ -420,7 +420,7 @@
                                     		<widgets>
                                              <container style="button-bar">
                                             <!-- <link target="NewOutgoingAdvancePaid" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> -->
-                                            <link target="NewEmployeeAdvance" text="AAA ${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                            <link target="NewEmployeeAdvance" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
                                         </container>
                                         </widgets>
                                     </section>
