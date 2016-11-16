@@ -386,6 +386,8 @@ under the License.
                <#assign action="OGAPCreatePaymentAppForInvoice">
               <#elseif screenflag?has_content && screenflag="IncomingAdvancesReceived">
                <#assign action="OGARCreatePaymentAppForInvoice">
+               <#elseif screenflag?has_content && screenflag="EmpOutgoingAdvancesPaid">
+               <#assign action="EmpOGAPCreatePaymentAppForInvoice">
               </#if>
 	<div class="screenlet">
 		 <div class="screenlet-title-bar">
