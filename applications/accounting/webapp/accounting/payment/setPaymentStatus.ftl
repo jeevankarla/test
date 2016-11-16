@@ -115,7 +115,7 @@
 						}
 						message += "</select></td></tr>";	              			             
 		      		}
-		if(paymentMethodType == 'FUND_TRANSFER' || paymentMethodType == 'CHEQUE_PAYIN'|| paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6'){      		
+		if(paymentMethodType == 'FUND_TRANSFER' || paymentMethodType == 'CHEQUE_PAYIN' || paymentMethodType == 'CHEQUE' || paymentMethodType == 'FT_PAYIN' || paymentMethodType == 'CHEQUE_PAYOUT'|| paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6'){      		
 			message +=  "<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Number:</td><td align='left' width='60%'><input class='h4' type='text' class='required' id='paymentRefNum' name='paymentRefNum'/></td></tr>";
 			message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick1()' required /></td></tr>";
 			if(paymentMethod == 'PAYMENTMETHOD4' || paymentMethodType == 'CHEQUE_PAYIN'){

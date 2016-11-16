@@ -1583,7 +1583,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" position="2"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="paymentTypeId"><hidden value="EMP_ADVANCE"/></field> 
         <field name="paymentMethodId" id-name="paymentMethodId" position="1" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
             <drop-down allow-empty="false">
@@ -1997,7 +1997,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyIdTo" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" position="2" required-field="true"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="true">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
