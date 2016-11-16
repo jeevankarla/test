@@ -424,4 +424,11 @@ under the License.
         <attribute name="appliedPaymentIdList" type="List" mode="OUT" optional="true"/>
        <!--  <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> -->
     </service>
+    
+    <service name="autoPaymentApplicationInLIFO" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="autoPaymentApplicationInLIFO" transaction-timeout="2000">
+        <description> Auto PaymentApplication In LIFO for Created Payment </description>
+        <attribute name="paymentId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
+    </service>
 </services>
