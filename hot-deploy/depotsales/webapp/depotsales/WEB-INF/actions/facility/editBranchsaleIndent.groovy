@@ -142,7 +142,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	effectiveDate = parameters.effectiveDate;
 	changeFlag=parameters.changeFlag;
 	
-	Debug.log("changeFlag====1454121545============"+changeFlag);
+	//Debug.log("changeFlag====1454121545============"+changeFlag);
 	
 	
 	subscriptionProdList = [];
@@ -155,7 +155,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 	tallyRefNumber = orderHeader.get("tallyRefNo");
 	
-	Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
 	
 	context.tallyRefNumber=tallyRefNumber;
 	
@@ -193,7 +193,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		}
 	}
 	
-	Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
 	context.suplierPartyId=suplierPartyId;
 	context.suplierPartyName=suppPartyName;
 	parameters.suplierPartyId=suplierPartyId;
@@ -316,6 +316,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 		orderItemDtl.each{ eachItem ->
 			
+			
+			
 			productDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 			prodDetail = null;
 			if(productDetails){
@@ -384,6 +386,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("quantity",eachItem.quantity);
 			newObj.put("quota",quota);
 			newObj.put("usedQuota",usedQuota);
+			newObj.put("SUBSIDY", Math.abs(eachItem.discountAmount));
 			amount=0;
 			if("onbehalfof".equals(orderType)){
 				if(eachItem.bundleUnitPrice){
@@ -427,6 +430,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				
 				newObj.put("quota",weaverQuota);
 				
+				orderUsedQuota = 0;
 				if(UtilValidate.isNotEmpty(schemeCategoryId)){
 					
 					JSONObject tempPartyObj = new JSONObject();
@@ -535,7 +539,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						
 				newObj.put("orderAdjustmentsList", orderAdjustmentsList);
 				
-			Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
+			//Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
 			
 			
 			*/
@@ -594,7 +598,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
 			
-			Debug.log("taxList============="+taxList);
+			//Debug.log("taxList============="+taxList);
 			
 			
 			for(i=0; i<taxList.size(); i++){
@@ -604,7 +608,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			}
 
 			
-			Debug.log("adjustmentTotal============="+adjustmentTotal);
+			Debug.log("adjustmentTotal========4444====="+adjustmentTotal);
 			
 			newObj.put("OTH_CHARGES_AMT", adjustmentTotal);
 			
@@ -624,7 +628,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				}
 			}
 
-			newObj.put("SUBSIDY", subsidyAmt);
+			
 			
 			Debug.log("amount==============="+amount);
 			
@@ -634,9 +638,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			
 			Debug.log("adjustmentTotal==============="+adjustmentTotal);
 			
-			Debug.log("subsidyAmt==============="+subsidyAmt);
+			Debug.log("subsidyAmt==============="+eachItem.discountAmount);
 			
-			totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+subsidyAmt);
+			totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+eachItem.discountAmount);
 			
 			newObj.put("totPayable", totPayable);
 			
@@ -645,7 +649,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("taxValueMap", taxValueMap);
 			
 			
-			//Debug.log("resultCtx=============="+resultCtx);
+			////Debug.log("resultCtx=============="+resultCtx);
 			
 			
 			List orderAdjustmentsList = [];
@@ -701,7 +705,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 	}
 	
-	Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
 	context.dataJSON = orderItemsJSON;
 	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
 	context.partyUsedQuotaJSON = partyUsedQuotaJSON;

@@ -1758,6 +1758,8 @@ public class DepotSalesServices{
 		String transporterId = (String) request.getParameter("transporterId");
 		String manualQuotaStr = (String) request.getParameter("manualQuota");
 		String depotSalesFlagObj = (String) request.getParameter("depotSalesFlag");
+		String onbehalfOff = (String) request.getParameter("onbehalfOff");
+		
 		
 		String inventoryItemId = (String) request.getParameter("inventoryItemId");
 
@@ -2035,7 +2037,7 @@ public class DepotSalesServices{
 						taxRateList.add(tempTaxMap);
 					}
 				}
-Debug.log("taxRateList =============="+taxRateList);
+                  Debug.log("taxRateList =============="+taxRateList);
 				
 				if (paramMap.containsKey("orderAdjustmentsList" + thisSuffix)) {
 					orderAdjustmentsListStr = (String) paramMap.get("orderAdjustmentsList"+ thisSuffix);
@@ -2556,7 +2558,9 @@ Debug.log("taxRateList =============="+taxRateList);
 		
 		//=================change Ten percentage from UI==========================
 		
-				if(schemeCategory.equals("MGPS_10Pecent")){
+				Debug.log("onbehalfOff=================="+onbehalfOff);
+		
+				if(schemeCategory.equals("MGPS_10Pecent") && !onbehalfOff.equals("onbehalfOff")){
 				for (int i = 0; i < rowCount; i++) {
 					Map orderAdjMap = FastMap.newInstance();
 					String changeTenPercentageStr = "";
@@ -3234,7 +3238,7 @@ Debug.log("taxRateList =============="+taxRateList);
 				//===================changed to purchaseBasicPrice to basicPrice===================
 				
 				if(schemeCategory.equals("General")){
-					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, purchaseBasicPrice,
+					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, basicPrice,
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 				            purchaseShoppingCart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 					

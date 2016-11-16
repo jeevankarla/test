@@ -473,6 +473,7 @@
 			var transporterId = $("#transporterId").val();
 			var tallyReferenceNo = $("#tallyReferenceNo").val();
 			var ediTallyRefNo = $("#ediTallyRefNo").val();
+			var onbehalfOff = $("#onbehalfOff").val();
 			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
@@ -493,6 +494,10 @@
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
+			var onbehalfOfff = jQuery("<input>").attr("type", "hidden").attr("name", "onbehalfOff").val(onbehalfOff);
+			
+			
+			
 			
 			if(savedOrderId &&  savedOrderId!=undefined){
 			   var savedorder = savedOrderId; 
@@ -528,6 +533,9 @@
 			jQuery(formId).append(jQuery(transporterId));
 			jQuery(formId).append(jQuery(tallyReferenceNo));
 			jQuery(formId).append(jQuery(ediTallyRefNo));
+			jQuery(formId).append(jQuery(onbehalfOfff));
+			
+			
 			
 			jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
 			jQuery(formId).append(jQuery(saleTitleTransferEnum));
