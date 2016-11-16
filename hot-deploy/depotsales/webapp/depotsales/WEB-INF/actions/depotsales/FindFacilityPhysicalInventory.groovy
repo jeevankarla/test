@@ -223,7 +223,6 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
         row = iter.getAllFields();
 		
 		unitCost=row.get("unitCost");
-		Debug.log("unitCost=============="+ unitCost);
 		row.putAt("unitCost", unitCost.setScale(2, rounding));
 		row.productATP = atpMap.get(row.productId);
 		row.productQOH = qohMap.get(row.productId);
