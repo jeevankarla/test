@@ -269,6 +269,7 @@ under the License.
         <description>Simple finAccntTrans reconsilation Process </description>
         <attribute name="finAccountTransIds" type="List"  mode="IN" optional="true"/>
          <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+         <attribute name="realisationDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
     </service>
 	
