@@ -299,7 +299,6 @@ input[type=button]:hover {
 			if(typeof(dataRow["orderAdjustmentsList"]) != 'undefined' || dataRow["orderAdjustmentsList"] != null){
 				orderAdjustmentsList = dataRow["orderAdjustmentsList"];	
 			}   
-			
 			*/
 			
 			productName = dataRow["cProductName"];
@@ -557,7 +556,7 @@ input[type=button]:hover {
 		
 						  // alert("totalAmt=======loop======"+totalAmt);
 						  
-						  if(orderAdjustment.orderAdjustmentTypeId != "ROUNDING_CHARGES" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_OFF"){
+						  if(orderAdjustment.orderAdjustmentTypeId != "ROUNDING_CHARGES" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_OFF" && orderAdjustment.orderAdjustmentTypeId != "VAT"){
 						
 							message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
@@ -568,7 +567,22 @@ input[type=button]:hover {
 										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete' onclick='javascript:removeAdjustmentPur();'></td>";
 									"</tr>";
 									
-							}else{
+							}else if(orderAdjustment.orderAdjustmentTypeId == "VAT"){
+									
+								 message += "<tr>"+
+										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentagePur(this,"+totalAmt+");'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmountPur(this,"+totalAmt+");'></td>"+
+									 	"<td align='left'> Input Credit: </td>"+
+									 	"<td><input type='checkbox' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_INC_BASIC' class='basePriceComponent' value='Y' onclick='javascript:inputCredit();'/>Inc BasicPrice</td>"+
+									 	"<td align='left'> Remove: </td>"+
+										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustmentPur();'></td>";
+									    
+									"</tr>";	
+									
+							}
+							else{
 							
 							    message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
@@ -577,6 +591,7 @@ input[type=button]:hover {
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmountPur(this,"+totalAmt+");'></td>"+
 									 	"<td align='left'> Remove: </td>"+
 										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustmentPur();'></td>";
+									    
 									"</tr>";
 							
 							
@@ -603,8 +618,6 @@ input[type=button]:hover {
 			message += "<hr class='style18'></hr>";
 				
 			}
-			
-		
 			
 			if(dataRow['SERVICE_CHARGE_SALE_AMT'])
 				serviceChargeAmt = dataRow['SERVICE_CHARGE_SALE_AMT'];
@@ -687,6 +700,7 @@ input[type=button]:hover {
 			        message += "<h1 align='center'><font color='blue'>Adjustments And Taxes For Sale</font></h1>";
 			message += "<table cellspacing=10 cellpadding=10 width='800'   id='indentAdjustmentTable' class='myTable1'>" ;
 			
+			
 			for(var i=0;i<allAdjustmentsSale.length;i++){
 						var orderAdjustment = allAdjustmentsSale[i];
 						
@@ -699,7 +713,6 @@ input[type=button]:hover {
 						if(dataRow[orderAdjustment.orderAdjustmentTypeId+"_SALE_AMT"]){
 							orderAdjAmt = dataRow[orderAdjustment.orderAdjustmentTypeId+"_SALE_AMT"];
 						}
-						
 						
 						if(orderAdjAmt != 0){
 		
@@ -761,8 +774,73 @@ input[type=button]:hover {
 	//=======================purchase Tax   API=========================================
 	
 	
+	
+	function inputCredit(){
+	
+	
+	
+	$("#indentAdjustmentTablePur tr :input:visible").each(function () {
+		    var id = this.id;
+			
+			var incBasic = "";
+			
+			
+			if(id != 'undefined' && id != null && id.length && id == "VAT_PUR_AMT"){
+		    	if (id.indexOf("_AMT") >= 0){
+			    	var adjValue = $('#'+id).val();
+			    	var incBasic = $("#VAT_PUR_INC_BASIC").is(":checked");
+			    	
+			    	 
+			    	
+			    	if(incBasic == true){
+			    	
+			    	  var basicAmount = $("#basicAmount").val();
+			    	  
+			    	  basicAmount = parseFloat(basicAmount)-parseFloat(adjValue);
+					
+					  dataRow[VAT_PUR_INC_BASIC] = "true";
+								    	  
+			    	  
+			    	  $("#basicAmount").val(basicAmount);
+			    	   $("#saleAmount").val(basicAmount);
+			    	   
+			    	   adjustBasePriceNew();
+			    	
+			    	}else{
+			    	
+			    	var basicAmount = $("#basicAmount").val();
+			    	  
+			    	  basicAmount = parseFloat(basicAmount)+parseFloat(adjValue);
+			    	  
+			    	   dataRow[VAT_PUR_INC_BASIC] = "false";
+			    	  $("#basicAmount").val(basicAmount);
+			    	   $("#saleAmount").val(basicAmount);
+			    	
+			    	    adjustBasePriceNew();
+			    	}
+			    	
+			    	
+			    }
+			    
+			    
+			    
+		    }
+            });
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	function MakeAdjTablePur(totalAmt){
 	
+	totalAmt = $("#basicAmount").val();
 	
 	//alert(totalAmt)
 	
@@ -786,20 +864,25 @@ input[type=button]:hover {
     var updateAmountByPercentage = "javascript:updateAmountByPercentagePur(this,"+ totalAmtparam +")";
 	
 	  var updatePercentageByAmount = "javascript:updatePercentageByAmountPur(this,"+ totalAmtparam +")";
+	  
+	  var inputCredit = "javascript:inputCredit(this,"+ totalAmtparam +")";
 	
 	var adjIdPer=addAdjType+"_PUR";
 	
 	var adjIdAmt=addAdjType+"_PUR_AMT";
 	
+	var adjIdAmtCheck=addAdjType+"_PUR_INC_BASIC";
+	
 	//alert(addAdjType);
 	
 	if(addAdjType != "")
 	
-	 if(addAdjType != "ROUNDING_CHARGES" && addAdjType != "ROUNDING_OFF")
+	 if(addAdjType != "ROUNDING_CHARGES" && addAdjType != "ROUNDING_OFF" && addAdjType != "VAT")
 	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"   /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+     else if(addAdjType == "VAT")
+     $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td>  <td>Input Credit:</td><td><input type="checkbox" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmtCheck+'" onclick="'+inputCredit+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
      else
      $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="4" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="4" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
-	
 	}else{
 	
 	   alert("Sorry Already "+addAdjType+" Added");
@@ -1777,7 +1860,7 @@ input[type=button]:hover {
 		var totalAmt = dataRow["amount"];
 		var quantity = parseFloat(dataRow["quantity"]);
 		
-		//var purchaseBasicAmount = $("#basicAmount").val();
+		var purchaseBasicAmount = $("#basicAmount").val();
 		//var saleBasicAmount = $("#purchaseAmount").val();
 		var tenPercentSubsidy = $("#tenPercentSubsidy").val();
 		var serviceChargeAmt = $("#serviceChargeAmt").val();
@@ -1785,6 +1868,15 @@ input[type=button]:hover {
 		var baseAmount = $("#baseAmount").val();
 		var saleBaseAmt = $("#saleBaseAmt").val();
 		var saleAmount = $("#saleAmount").val();
+		
+		
+		var scheme = $("#schemeCategory").val();
+		
+		if(scheme == "General"){
+		 var salebasePrice = purchaseBasicAmount/quantity;
+		 dataRow["unitPrice"] = salebasePrice;
+		 dataRow["amount"] = salebasePrice*quantity;
+		}
 		
 		var serviceChargePer = $("#serviceChargeIN").val();
 				

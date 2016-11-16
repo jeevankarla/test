@@ -1816,6 +1816,9 @@ public class DepotSalesServices{
 		String yarnUOMStr = null;
 		String bundleWeightStr = null;
 		String basicPriceStr = null;
+		String basicPricePurStr = null;
+		
+		
 		String bundleUnitPriceStr=null;
 		/*String vatPriceStr = null;
 		String bedPriceStr = null;
@@ -1838,6 +1841,7 @@ public class DepotSalesServices{
 		BigDecimal bundleWeight = BigDecimal.ZERO;
 		String yarnUOM="";
 		BigDecimal basicPrice = BigDecimal.ZERO;
+		BigDecimal basicPricePur = BigDecimal.ZERO;
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 		BigDecimal quotaAvbl = BigDecimal.ZERO;
@@ -2186,6 +2190,12 @@ public class DepotSalesServices{
 					basicPriceStr = (String) paramMap.get("unitPrice"
 							+ thisSuffix);
 				}
+				
+				if (paramMap.containsKey("unitPricePur" + thisSuffix)) {
+					basicPricePurStr = (String) paramMap.get("unitPricePur"
+							+ thisSuffix);
+				}
+				
 				if (paramMap.containsKey("bundleUnitPrice" + thisSuffix)) {
 					bundleUnitPriceStr = (String) paramMap.get("bundleUnitPrice"
 							+ thisSuffix);
@@ -2250,6 +2260,9 @@ public class DepotSalesServices{
 					}
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
 						basicPrice = new BigDecimal(basicPriceStr);
+					}
+					if (UtilValidate.isNotEmpty(basicPricePurStr)) {
+						basicPricePur = new BigDecimal(basicPricePurStr);
 					}
 					if (UtilValidate.isNotEmpty(serviceChgStr)) {
 						serviceCharge = new BigDecimal(serviceChgStr);
@@ -2337,6 +2350,7 @@ public class DepotSalesServices{
 						tempconsolMap.put("batchNo", batchNo);
 						tempconsolMap.put("daysToStore", daysToStore);
 						tempconsolMap.put("basicPrice", basicPrice);
+						tempconsolMap.put("basicPricePur", basicPricePur);
 						tempconsolMap.put("taxRateList", taxRateList);
 						tempconsolMap.put("purTaxRateList", purTaxRateList);
 						tempconsolMap.put("purchaseBasicAmount", purchaseBasicAmount);
@@ -2366,6 +2380,7 @@ public class DepotSalesServices{
 				productQtyMap.put("batchNo", batchNo);
 				productQtyMap.put("daysToStore", daysToStore);
 				productQtyMap.put("basicPrice", basicPrice);
+				productQtyMap.put("basicPricePur", basicPricePur);
 				productQtyMap.put("taxRateList", taxRateList);
 				productQtyMap.put("purTaxRateList", purTaxRateList);
 				productQtyMap.put("purchaseBasicAmount", purchaseBasicAmount);
@@ -3028,6 +3043,7 @@ public class DepotSalesServices{
 			//BigDecimal purchaseBasicAmount = BigDecimal.ZERO;
 			
 			BigDecimal basicPrice = BigDecimal.ZERO;
+			BigDecimal basicPricePur = BigDecimal.ZERO;
 			BigDecimal taxPercent = BigDecimal.ZERO;
 			BigDecimal serviceCharge = BigDecimal.ZERO;
 			BigDecimal quotaAvbl = BigDecimal.ZERO;
@@ -3122,6 +3138,9 @@ public class DepotSalesServices{
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
 				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPricePur"))){
+				basicPricePur = (BigDecimal)prodQtyMap.get("basicPricePur");
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("taxPercent"))){
 				taxPercent = (BigDecimal)prodQtyMap.get("taxPercent");
@@ -3238,7 +3257,7 @@ public class DepotSalesServices{
 				//===================changed to purchaseBasicPrice to basicPrice===================
 				
 				if(schemeCategory.equals("General")){
-					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, basicPrice,
+					purchaseItem = ShoppingCartItem.makeItem(count, productId, null, quantity, basicPricePur,
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 				            purchaseShoppingCart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
 					
