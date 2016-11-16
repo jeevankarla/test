@@ -1416,7 +1416,22 @@ under the License.
         </else>
         </if-compare>
     </simple-method>
-
+	
+	<simple-method method-name="updateFinAccountReconsilationDate" short-description="">
+        <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+        <if-not-empty field="parameters.finAccountTransId">
+            <set field="finAccountTrans.realisationDate" from-field="parameters.realisationDate"/>
+            <store-value value-field="finAccountTrans"/>
+        <else>
+            <add-error><fail-property resource="AccountingUiLabels" property="AccountingFinAccountTransInvalidStatusError"/></add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
+        <!--  <set field="successMessageList[]" value="Reconciled Date ${parameters.realisationDate} Saved Sucessfully for  ${parameters.finAccountTransId}"/>
+		<field-to-result field="error_list" result-name="successMessageList"/>
+		<return response-code="success"/> -->
+    </simple-method>
+    
     <simple-method method-name="removeFinAccountTransFromReconciliation" short-description="Remove finAccountTrans from reconciliation">
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
         <if-compare field="finAccountTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">

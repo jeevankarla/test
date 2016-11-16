@@ -2494,6 +2494,13 @@ under the License.
         <response name="success" type="view"  value="FinAccountTransForReconsile"/>
         <response name="error" type="view" value="FinAccountTransForReconsile"/>
     </request-map>
+    
+    <request-map uri="updateFinAccountReconsilationDate">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFinAccountReconsilationDate"/>
+        <response name="success" type="view"  value="FinAccountTransForReconsile"/>
+        <response name="error" type="view" value="FinAccountTransForReconsile"/>
+    </request-map>
    
     <request-map uri="FinancialAccountReconciliation">
         <security https="true" auth="true"/>

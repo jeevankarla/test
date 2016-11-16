@@ -117,6 +117,11 @@ function toggleFinAccntTransId(master) {
         }
        
         }
+        
+        $(document).ready(function(){
+        		$("#realisationDate_i18n").attr("required","required")
+        	}
+        ); 
 </script>
 
 <div class="screenlet screenlet-body">
@@ -138,6 +143,8 @@ function toggleFinAccntTransId(master) {
      
    <form name="newFinTransReconsile" id="newFinTransReconsileId"  method="post" action="createReconsileToFinAccountTrans">
       <div align="right">
+      <b>Bank Realisation Date*<@htmlTemplate.renderDateTimeField name="realisationDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="realisationDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
        <input type="submit" value="Create Reconcile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
         <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>

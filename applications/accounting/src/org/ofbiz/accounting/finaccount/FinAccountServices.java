@@ -1037,6 +1037,7 @@ public class FinAccountServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String  statusId=(String)context.get("statusId");
         String  finAccountId=(String)context.get("finAccountId");
+        Timestamp  realisationDate=(Timestamp)context.get("realisationDate");
         String glBatchId="";
         
       String dateGlReconciliStr= UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "-dd/MM/yyyy HH:mm:ss");
@@ -1066,6 +1067,7 @@ public class FinAccountServices {
         glReconciliationId=(String)createGlReconcilMapResult.get("glReconciliationId");
         glBatchId=glReconciliationId;
         Map finAccountTransMap = UtilMisc.toMap("statusId",statusId);
+        	finAccountTransMap.put("realisationDate", realisationDate);
             finAccountTransMap.put("userLogin", userLogin);
             //assigning ReconcilationId to FinAccountTrans batch
             for(int i = 0; i < finAccountTransIdsList.size(); i++){
@@ -1083,7 +1085,26 @@ public class FinAccountServices {
                    Debug.logError(e, "Problem for Reconcilation of TransactionId:" + finAccountTransId, module);
                    return ServiceUtil.returnError(e.getMessage());
                }
-             }  
+             } 
+            
+            //reconciled date creation
+            
+            for(int i = 0; i < finAccountTransIdsList.size(); i++){
+              	 String finAccountTransId = (String) finAccountTransIdsList.get(i);
+              	 finAccountTransMap.put("finAccountTransId", finAccountTransId);
+              	try {
+                  	Map assignDtRecToFinAccTransRes=dispatcher.runSync("updateFinAccountReconsilationDate",  UtilMisc.toMap("finAccountTransId",finAccountTransId,"realisationDate",realisationDate,"userLogin",userLogin));
+                  	   if (ServiceUtil.isError(assignDtRecToFinAccTransRes)){
+            		  		String errMsg =  ServiceUtil.getErrorMessage(assignDtRecToFinAccTransRes);
+            		  		Debug.logError(errMsg , module);
+            		  	    return ServiceUtil.returnError("Problem for Assigning of Reconciliation Date:" + finAccountTransId+" To ReconcilationId ");    
+            		  	}
+                  } catch (GenericServiceException e) {
+                      Debug.logError(e, "Problem for Reconcilation of Reconciliation Date:" + finAccountTransId, module);
+                      return ServiceUtil.returnError(e.getMessage());
+                  }
+             }
+            
             //Reconsilation starts here
             for(int i = 0; i < finAccountTransIdsList.size(); i++){
               	 String finAccountTransId = (String) finAccountTransIdsList.get(i);
