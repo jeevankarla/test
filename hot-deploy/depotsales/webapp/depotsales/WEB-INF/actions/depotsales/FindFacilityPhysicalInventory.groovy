@@ -22,10 +22,12 @@ import org.ofbiz.entity.condition.*
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.EntityUtil;
 
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import java.math.RoundingMode;
 
 import org.ofbiz.party.party.PartyHelper;
 
@@ -38,6 +40,7 @@ dctx = dispatcher.getDispatchContext();
 Map boothsPaymentsDetail = [:];
 
 partyId = userLogin.get("partyId");
+rounding = RoundingMode.HALF_UP;
 
 //debug.log("partyId=============="+partyId);
 
@@ -218,6 +221,10 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
     physicalInventoryCombined = [];
     physicalInventory.each { iter ->
         row = iter.getAllFields();
+		
+		unitCost=row.get("unitCost");
+		Debug.log("unitCost=============="+ unitCost);
+		row.putAt("unitCost", unitCost.setScale(2, rounding));
 		row.productATP = atpMap.get(row.productId);
 		row.productQOH = qohMap.get(row.productId);
 		inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.inventoryItemId));

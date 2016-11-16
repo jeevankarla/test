@@ -449,19 +449,19 @@ under the License.
 						</fo:table-cell>
 						
 					</fo:table-row>
-					<fo:table-row white-space-collapse="false" >
+				<#-- <fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left"  font-size="10pt" >Destination       :${destination?if_exists}</fo:block>
 						</fo:table-cell>
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left" keep-together="always"    font-size="10pt" >&#160;&#160;</fo:block>
-						</fo:table-cell>
+						</fo:table-cell>  
 						
-					</fo:table-row>	
+					</fo:table-row>	-->    
 					<fo:table-row white-space-collapse="false" >
-						<fo:table-cell  border-style-right="hidden">
+						<#--  <fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left" keep-together="always"    font-size="10pt" >Freight (RS.)     :<#if estimatedShipCost?has_content>${estimatedShipCost?if_exists?string("#0.00")}</#if>   </fo:block>
-						</fo:table-cell>
+						</fo:table-cell> -->
 						
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left" keep-together="always"   font-size="10pt" >Due Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
