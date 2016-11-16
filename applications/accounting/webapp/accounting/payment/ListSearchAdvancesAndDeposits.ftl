@@ -212,6 +212,8 @@ function setVoidPaymentParameters(currentPayment){
               	 <#assign action="OGAPCreateInvoiceForPayment">
               	<#elseif screenflag?has_content && screenflag="IncomingAdvancesReceived">
                	<#assign action="OGARCreateInvoiceForPayment">
+               	<#elseif screenflag?has_content && screenflag="EmpOutgoingAdvancesPaid">
+               	<#assign action="EmpOGAPCreateInvoiceForPayment">
              	</#if>
               	<a target="_blank" class="buttontext" href="<@ofbizUrl>${action}?paymentId=${payment.paymentId}&amp;partyIdTo=${payment.partyIdTo}&amp;partyIdFrom=${payment.partyIdFrom}</@ofbizUrl>" >
               		Create Invoice
@@ -223,7 +225,7 @@ function setVoidPaymentParameters(currentPayment){
              
               <td>
               	<a target="_blank" class="buttontext" href="<@ofbizUrl>printAdvAndDepositReceipt.pdf?paymentIds=${payment.paymentId}</@ofbizUrl>" >
-              		PrintReceipt
+              		 PrintReceipt
               	</a>
               </td>
               <td>

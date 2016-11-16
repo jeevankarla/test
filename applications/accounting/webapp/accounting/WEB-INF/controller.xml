@@ -4158,6 +4158,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OGAPCreateInvoiceForPayment"/>
     </request-map>
+    <request-map uri="EmpOGAPCreateInvoiceForPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmpOGAPCreateInvoiceForPayment"/>
+    </request-map>
     <request-map uri="OGAPCreatePaymentAppForInvoice">
        <security https="true" auth="false"/>
        <event type="service"  invoke="autoPaymentApplicationInLIFO"/>        
@@ -4165,6 +4169,14 @@ under the License.
             <redirect-parameter name="paymentId"/>
         </response>
         <response name="error" type="view" value="OutgoingAdvancesPaid"/>    
+    </request-map>
+    <request-map uri="EmpOGAPCreatePaymentAppForInvoice">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="autoPaymentApplicationInLIFO"/>        
+       <response name="success" type="request-redirect" value="EmployeeAdvance">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="view" value="EmployeeAdvance"/>    
     </request-map>
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
@@ -4747,6 +4759,8 @@ under the License.
    <view-map name="FindAPGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPGroupPayment"/>
    <view-map name="PartyPrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyPrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="OGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OGAPCreateInvoiceForPayment"/>
+   <view-map name="EmpOGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmpOGAPCreateInvoiceForPayment"/>
+   
    
    <!-- end of view mappings -->
 </site-conf>

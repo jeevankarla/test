@@ -5394,11 +5394,11 @@
         </section>
     </screen>
     
-    <screen name="OGAPCreateInvoiceForPayment">
+    <screen name="EmpOGAPCreateInvoiceForPayment">
         <section>
             <actions>
-            <set field="titleProperty" value="Outgoing Advance Receipts"/>
-                <set field="tabButtonItem" value="OutgoingAdvances"/>
+            <set field="titleProperty" value="Employee Outgoing Advance Receipts"/>
+                <set field="tabButtonItem" value="EmployeeAdvance"/>
                 <set field="tabButtonItem5" value="Admin"/>
                 <set field="tabButtonItem4" value="createInvoice"/>
             	<!-- <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" default-value="createInvoice"/> -->
