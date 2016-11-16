@@ -402,7 +402,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	context.orderAdjLabelIdJSON = orderAdjLabelIdJSON;
 	
 	
-	
+	context.scheme = parameters.schemeCategory;
 	//Quotas handling
 	
 	productCategoryQuotasMap = [:];

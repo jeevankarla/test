@@ -162,6 +162,7 @@
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var unitPrice = data[rowCount]["unitPrice"];
+			var unitPricePur = data[rowCount]["unitPricePur"];
 			var remarks = data[rowCount]["remarks"];
 			var taxAmt = data[rowCount]["taxAmt"];
 			var serviceCharge = 0;
@@ -201,6 +202,9 @@
 				var inputYarnUOM = jQuery("<input>").attr("type", "hidden").attr("name", "yarnUOM_o_" + rowCount).val(yarnUOM);
 				var inputBundleWeight = jQuery("<input>").attr("type", "hidden").attr("name", "bundleWeight_o_" + rowCount).val(bundleWeight);
 				var inputUnitPrice = jQuery("<input>").attr("type", "hidden").attr("name", "unitPrice_o_" + rowCount).val(unitPrice);
+				var inputUnitPricePur = jQuery("<input>").attr("type", "hidden").attr("name", "unitPricePur_o_" + rowCount).val(unitPricePur);
+				
+				
 				var inputRemarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				var inputServChgAmt = jQuery("<input>").attr("type", "hidden").attr("name", "serviceChargeAmt_o_" + rowCount).val(serviceChargeAmt);
 				var inputServChg = jQuery("<input>").attr("type", "hidden").attr("name", "serviceCharge_o_" + rowCount).val(serviceCharge);
@@ -220,6 +224,7 @@
 				jQuery(formId).append(jQuery(inputBundleWeight));
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(inputUnitPrice));
+				jQuery(formId).append(jQuery(inputUnitPricePur));
 				
 				jQuery(formId).append(jQuery(inputServChgAmt));
 				jQuery(formId).append(jQuery(inputServChg));
@@ -627,6 +632,9 @@
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice}", field:"unitPrice", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			<#if scheme == "General">
+			{id:"unitPricePur", name:"UnitPrice(PUR)", field:"unitPricePur", width:100, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			</#if>
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt.(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -866,6 +874,9 @@
 	      		$(grid.getCellNode(args.row, 2)).click();
 			}
 			
+			
+			 
+			  
 			
 			 if (args.cell){
 			 var row = args.row;
