@@ -31,10 +31,41 @@ context.branchList = formatList;
 	 
 	context.partyId = userPartyId;
  }
- 
  // To filter based on suppliers
  
  supplierFilteredOrderIds = [];
+ 
+ if(UtilValidate.isNotEmpty(parameters.poRefNo)){
+	 if(UtilValidate.isNotEmpty(result.listIt)){
+		 list3=result.listIt;
+		 list2=[];
+		 list1=[];
+		 templist=[];
+		 conditionList=[];
+		 conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REF_NUMBER"));
+		 conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, parameters.poRefNo));
+		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		 orderList = delegator.findList("OrderAttribute", condition, null, null, null, false);
+		 if(UtilValidate.isNotEmpty(orderList)){
+			 orderIds = EntityUtil.getFieldListFromEntityList(orderList, "orderId", true);
+			 while (list3.hasNext() && (lst=list3.next()) != null) {
+				 if(orderIds.contains(lst.orderId)){
+					 list2.add(lst);
+				 }
+			 }
+		 }
+		 for(lt in list2)
+		 {
+			 if(!templist.contains(lt.orderId))
+			 {
+				 list1.add(lt);
+				 templist.add(lt.orderId)
+			 }
+		 }
+		 context.listIt=list1;
+	 }
+ }
+ 
  if(parameters.supplierId){
 	 suppCondList = [];
 	 suppCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
@@ -58,7 +89,7 @@ context.branchList = formatList;
 		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
 	 }
  }
-if(UtilValidate.isEmpty(parameters.productId)){
+if(UtilValidate.isEmpty(parameters.productId) && UtilValidate.isEmpty(parameters.poRefNo)){
 	
 	
 	if(UtilValidate.isNotEmpty(result.listIt)){
@@ -110,10 +141,11 @@ if(UtilValidate.isEmpty(parameters.productId)){
 		//context.listIt=resultList;
 	}
 }
-else{
+else if(UtilValidate.isEmpty(parameters.poRefNo)) {
 productId = parameters.productId;
 if(UtilValidate.isNotEmpty(result.listIt)){
 	list1=result.listIt;
+	
 	poListNew=[];
 	list=[];
 	ordList=[];
@@ -166,7 +198,13 @@ if(UtilValidate.isNotEmpty(context.orderId)){
 		orderItemsSize=0;
 	}
 	context.orderItemsSize=orderItemsSize;
-	
-	
+
 }
+
+
+
+
+
+
+
 
