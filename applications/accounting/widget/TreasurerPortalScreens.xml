@@ -5394,7 +5394,7 @@
         </section>
     </screen>
     
-    <screen name="EmpOGAPCreateInvoiceForPayment">
+    <screen name="OGAPCreateInvoiceForPayment">
         <section>
             <actions>
             <set field="titleProperty" value="Employee Outgoing Advance Receipts"/>
