@@ -394,8 +394,8 @@ under the License.
 						<fo:block text-align="left"    font-size="10pt" >Sale Value(RS):${((grandTotal+totTaxAmount2+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
 				</#if>		
                 
-                <#if !kanAndKalRo?has_content>
-               	 	<fo:block text-align="left"    font-size="10pt" >Service Charge( ${serviceChargePer?if_exists} %): ${serchar?string("#0.00")?if_exists}</fo:block>
+                <#if !kanAndKalRo?has_content && serchar?has_content>
+               	 	<fo:block text-align="left"    font-size="10pt" >Service Charge: ${serchar?if_exists}</fo:block>
                 </#if>
 
 	        </fo:table-cell>

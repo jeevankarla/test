@@ -303,6 +303,11 @@
       		<entity-one value-field="orderHeader" entity-name="OrderHeader">
 				<field-map field-name="orderId" from-field="toOrderId"/>
 			</entity-one>
+			<entity-one value-field="orderAttribute" entity-name="OrderAttribute">
+				<field-map field-name="orderId"  from-field="orderId"/>
+				<field-map field-name="attrName" value="REF_NUMBER"/>
+			</entity-one>
+			<set field="poRefNo" from-field="orderAttribute.attrValue"/>
 			<set field="tallyRefNo" from-field="orderHeader.tallyRefNo"/>
       		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/supplierPOSearchFilter.groovy"/>
       		<set field="newSize" value="${orderItemsSize}" />
@@ -354,6 +359,7 @@
             </hyperlink>
         </field>  -->        
         <field name="tallyRefNo" title="TallyRefNo"><display/></field>
+        <field name="poRefNo" title="PoRefNo"><display/></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" title="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>

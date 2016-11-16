@@ -19,6 +19,7 @@
         <field name="orderId"><text-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
        <field name="tallyRefNo" title="TallyRefNo"><text-find default-option="contains"/></field>
+       <field name="poRefNo" title="PoRefNo"><text-find default-option="contains"/></field>
        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
