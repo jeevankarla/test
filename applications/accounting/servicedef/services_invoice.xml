@@ -58,7 +58,8 @@ under the License.
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
         <attribute name="allowMultipleInvForPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
-        <attribute name="billOfSaleTypeId" type="String" mode="INOUT" optional="true"/>                 
+        <attribute name="billOfSaleTypeId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="costCenterId" type="String" mode="IN" optional="true"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>

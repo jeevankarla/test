@@ -120,6 +120,9 @@ if ("SALES_INVOICE".equals(invoice.invoiceTypeId)) {
 	invoiceItemTypes = EntityUtil.getRelated("InvoiceItemType", map);
 	invoiceItemTypes = EntityUtil.orderBy(invoiceItemTypes, UtilMisc.toList("description"));
 }
+
+partyAcPrefGrpList =  delegator.findList("PartyAcctgPrefAndGroup", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),null,null,null,false);
+context.partyAcPrefGrpList=partyAcPrefGrpList;
 context.invoiceItemTypes = invoiceItemTypes;
 
 context.glAccountOrganizationAndClassList = glAccountOrganizationAndClassList;

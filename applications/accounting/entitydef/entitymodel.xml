@@ -1371,6 +1371,7 @@
 		<field name="invoiceTypeId" type="id"></field>
 		<field name="partyIdFrom" type="id"></field>
 		<field name="partyId" type="id"></field>
+		<field name="costCenterId" type="id"></field>
 		<field name="roleTypeId" type="id"></field>
 		<field name="statusId" type="id"></field>
 		<field name="billingAccountId" type="id"></field>
@@ -1551,6 +1552,7 @@
 		<field name="overrideOrgPartyId" type="id">
 			<description>Used to specify the organization override rather than using the payToPartyId</description>
 		</field>
+		<field name="costCenterId" type="id"></field>
 		<field name="inventoryItemId" type="id"></field>
 		<field name="productId" type="id"></field>
 		<field name="productFeatureId" type="id"></field>
