@@ -1751,6 +1751,9 @@ public class DepotSalesServices{
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String referenceNo = (String) request.getParameter("referenceNo");
+		
+		String districtGeoId = (String) request.getParameter("editDestination");
+		
 		String tallyReferenceNo = (String) request.getParameter("tallyReferenceNo");
 		String ediTallyRefNo = (String) request.getParameter("ediTallyRefNo");
 		String contactMechId = (String) request.getParameter("contactMechId");
@@ -2487,6 +2490,7 @@ public class DepotSalesServices{
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("referenceNo", referenceNo);
 		processOrderContext.put("tallyRefNo", tallyReferenceNo);
+		processOrderContext.put("districtGeoId", districtGeoId);
 		processOrderContext.put("ediTallyRefNo", ediTallyRefNo);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
@@ -2730,6 +2734,8 @@ public class DepotSalesServices{
 	  	String partyId = (String) context.get("partyId");
 	  	String tallyReferenceNo = (String) context.get("tallyRefNo");
 	  	String ediTallyRefNo = (String) context.get("ediTallyRefNo");
+	  	String districtGeoId = (String) context.get("districtGeoId");
+	  	
 	  	
 	  	String contactMechId = (String) context.get("contactMechId");
 	  	String belowContactMechId = (String) context.get("belowContactMechId");
@@ -3009,6 +3015,9 @@ public class DepotSalesServices{
 				purchaseShoppingCart.setOrderAttribute("saleTitleTransferEnumId", saleTitleTransferEnumId);
 				purchaseShoppingCart.setOrderAttribute("saleTaxType", saleTaxType);
 				purchaseShoppingCart.setOrderAttribute("purchaseTaxType", purchaseTaxType);
+				if(UtilValidate.isNotEmpty(districtGeoId))		
+				purchaseShoppingCart.setOrderAttribute("DST_ADDR", districtGeoId);
+				
 			}
 			
 			//Debug.log("purchase cart =====processing====end====");

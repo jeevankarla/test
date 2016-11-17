@@ -538,6 +538,9 @@
 		       	  				   address1 +=contactDetails["address2"];
 		       	  				   address1 +=contactDetails["city"];
 		       	  				   
+		       	  				   
+		       	  				   $("#editDestination").val(contactDetails["city"]);
+		       	  				   
 		       	  				   var custName=contactDetails["custPartyName"];
 		       	  				  var LoomDetails=contactDetails["LoomDetails"];
 		       	  				  var LoomList=contactDetails["LoomList"];
@@ -1008,6 +1011,10 @@ function fillPartyQuota(partyId){
 				      		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				               	
 				               	<input type="hidden" name="onbehalfOff" id="onbehalfOff" value="NOonbehalfOff"/>
+				               	
+				               	<input type="hidden" name="editDestination" id="editDestination" />
+				               	<input type="hidden" name="changeDesti" id="changeDesti" />
+				               	
 				               	<tr>
 						           	<td>&nbsp;</td>
 									<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>

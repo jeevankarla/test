@@ -168,6 +168,8 @@
 		      unitPricePur = data[rowCount]["unitPricePur"];
 			
 			
+			
+			
 			var remarks = data[rowCount]["remarks"];
 			var taxAmt = data[rowCount]["taxAmt"];
 			var serviceCharge = 0;
@@ -478,6 +480,11 @@
 			
 			var onbehalfOff = $("#onbehalfOff").val();
 			
+			var editDestination = $("#editDestination").val();
+			if($("#changeDesti").val())
+			 editDestination = $("#changeDesti").val();
+			
+			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
@@ -500,6 +507,7 @@
 			
 			var onbehalfOfff = jQuery("<input>").attr("type", "hidden").attr("name", "onbehalfOff").val(onbehalfOff);
 
+			var editDestinatioN = jQuery("<input>").attr("type", "hidden").attr("name", "editDestination").val(editDestination);
 			
 			var purchaseTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val($("#purchaseTitleTransferEnumId").val());
 			var saleTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "saleTitleTransferEnumId").val($("#saleTitleTransferEnumId").val());
@@ -530,6 +538,7 @@
 			jQuery(formId).append(jQuery(tallyReferenceNo));
 			jQuery(formId).append(jQuery(ediTallyRefNo));
 			jQuery(formId).append(jQuery(onbehalfOfff));
+			jQuery(formId).append(jQuery(editDestinatioN));
 			
 			
 			jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
