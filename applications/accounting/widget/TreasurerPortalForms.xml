@@ -2227,10 +2227,17 @@ under the License.
             </drop-down>
         </field>  -->    
 <!--         <field name="partyIdFrom"><hidden value="Company"/></field>          -->
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+        <!-- <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
         </field>
