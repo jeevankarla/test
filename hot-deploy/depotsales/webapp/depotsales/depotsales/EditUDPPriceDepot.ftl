@@ -611,6 +611,12 @@
 	function changeServiceChargePercent() {
 		
 		var serviceChargePercent = $('#serviceChargePercent').val();
+		
+		var editDestination = $("#editDestination").val();
+		
+		if($("#changeDesti").val())
+	     editDestination = $("#changeDesti").val();
+		
 		var message = "";
 		var title = "";
 		message += "<table cellspacing=20 cellpadding=20 id='serviceChgUpdationTable' >" ;
@@ -618,6 +624,9 @@
 		message += "<tr class='h3'><th>Service Charge </th></tr>";
 		message += "<tr class='h3'><td align='left'>Service Charge %: </td><td><input type='text' name='serviceChgPercent' id='serviceChgPercent' value='"+serviceChargePercent+"'/></td></tr>";
 			
+			message += "<tr class='h3'><th>Edit Destination </th></tr>";
+		message += "<tr class='h3'><td align='left'>Edit Destination: </td><td><input type='text' name='editDestina' id='editDestina' value='"+editDestination+"' onblur='changedesti();'/></td></tr>";
+		
 		message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return updateServiceChargeAndGrid();' class='smallSubmit'>Add</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		
 		message += "</table>";
@@ -626,6 +635,14 @@
 		Alert(message, title);
 		
 	};
+	
+	
+	function changedesti(){
+	
+	  $("#changeDesti").val( $("#editDestina").val());
+	
+	}
+	
 	
 	function updateServiceChargeAndGrid(){
 		 $('#serviceChargePercent').val($('#serviceChgPercent').val());

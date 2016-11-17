@@ -142,7 +142,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	effectiveDate = parameters.effectiveDate;
 	changeFlag=parameters.changeFlag;
 	
-	//Debug.log("changeFlag====1454121545============"+changeFlag);
+	////Debug.log("changeFlag====1454121545============"+changeFlag);
 	
 	
 	subscriptionProdList = [];
@@ -155,7 +155,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 	tallyRefNumber = orderHeader.get("tallyRefNo");
 	
-	//Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
+	////Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
 	
 	context.tallyRefNumber=tallyRefNumber;
 	
@@ -193,7 +193,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		}
 	}
 	
-	//Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
+	////Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
 	context.suplierPartyId=suplierPartyId;
 	context.suplierPartyName=suppPartyName;
 	parameters.suplierPartyId=suplierPartyId;
@@ -539,7 +539,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						
 				newObj.put("orderAdjustmentsList", orderAdjustmentsList);
 				
-			//Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
+			////Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
 			
 			
 			*/
@@ -566,8 +566,20 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
 			for(i=0; i<taxList.size(); i++){
 				totalTaxAmt += (taxList.get(i)).get("amount");
+				
+				
+				if((taxList.get(i)).get("orderAdjustmentTypeId") == "VAT_SURCHARGE" || (taxList.get(i)).get("orderAdjustmentTypeId") == "CST_SURCHARGE"){
+					
+					newObj.put((taxList.get(i)).get("orderAdjustmentTypeId")+"_SALE" , (taxList.get(i)).get("sourcePercentage"));
+					newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_SALE_AMT", (taxList.get(i)).get("amount"));
+				
+				}else{
+				  
 				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
 				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_AMT", (taxList.get(i)).get("amount"));
+				
+				}
+				
 			}
 			
 			
@@ -598,17 +610,17 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
 			
-			//Debug.log("taxList============="+taxList);
+			////Debug.log("taxList============="+taxList);
 			
 			
 			for(i=0; i<taxList.size(); i++){
 				adjustmentTotal += (taxList.get(i)).get("amount");
-				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId"), (taxList.get(i)).get("sourcePercentage"));
-				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_AMT", (taxList.get(i)).get("amount"));
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId")+"_SALE", (taxList.get(i)).get("sourcePercentage"));
+				newObj.put((taxList.get(i)).get("orderAdjustmentTypeId") + "_SALE_AMT", (taxList.get(i)).get("amount"));
 			}
 
 			
-			Debug.log("adjustmentTotal========4444====="+adjustmentTotal);
+			//Debug.log("adjustmentTotal========4444====="+adjustmentTotal);
 			
 			newObj.put("OTH_CHARGES_AMT", adjustmentTotal);
 			
@@ -630,17 +642,19 @@ import org.ofbiz.party.contact.ContactMechWorker;
 
 			
 			
-			Debug.log("amount==============="+amount);
+			//Debug.log("amount==============="+amount);
 			
-			Debug.log("totalTaxAmt==============="+totalTaxAmt);
+			//Debug.log("totalTaxAmt==============="+totalTaxAmt);
 			
-			Debug.log("serviceChg==============="+serviceChg);
+			//Debug.log("serviceChg==============="+serviceChg);
 			
-			Debug.log("adjustmentTotal==============="+adjustmentTotal);
+			//Debug.log("adjustmentTotal==============="+adjustmentTotal);
 			
-			Debug.log("subsidyAmt==============="+eachItem.discountAmount);
+			//Debug.log("subsidyAmt==============="+eachItem.discountAmount);
 			
 			totPayable = (amount + totalTaxAmt + serviceChg + adjustmentTotal+eachItem.discountAmount);
+			
+			newObj.put("saleAmount",amount + totalTaxAmt + serviceChg + adjustmentTotal);
 			
 			newObj.put("totPayable", totPayable);
 			
@@ -649,7 +663,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("taxValueMap", taxValueMap);
 			
 			
-			////Debug.log("resultCtx=============="+resultCtx);
+			//////Debug.log("resultCtx=============="+resultCtx);
 			
 			
 			List orderAdjustmentsList = [];
@@ -705,7 +719,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 	}
 	
-	//Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
+	////Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
 	context.dataJSON = orderItemsJSON;
 	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
 	context.partyUsedQuotaJSON = partyUsedQuotaJSON;
