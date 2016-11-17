@@ -39,6 +39,7 @@ $(document).ready(function(){
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker3("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker3("depotReimburcentReportFRO","depotReimburcentReportTHRU");
+	    makeDatePicker3("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");
@@ -401,6 +402,38 @@ function makeDatePicker3(fromDateId ,thruDateId){
            </form>
         </tr> -->
         
+          <tr class="alternate-row">
+      	   <form id="stateWiseBranchWiseSaleReport" name="stateWiseBranchWiseSaleReport" method="post" action="<@ofbizUrl>stateWiseBranchWiseSaleReport.csv</@ofbizUrl>" target="_blank">        
+             <td width="10%">State agency wise sales</td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="stateWiseBranchWiseSaleReportFro" readonly  name="partyfromDate" required /></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="stateWiseBranchWiseSaleReportTHRU" readonly  name="partythruDate" required /></td>
+                      <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId" required>
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			   <td width="15%"><span class='h3'>State 
+				 <select name="state" id="state">
+				     <option value=''></option>
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			  <td width="15%"><span class='h3'>Category 
+				 <select name="productCategory" id="productCategory">
+				     <option value=''></option>
+				     <option value='SILK'>SILK</option>
+				     <option value='JUTE_YARN'>JUTE</option>
+				     <option value='OTHER'>OTHERS</option>
+				  </select>    								
+			  </span></td>
+				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="stateWiseBranchWiseSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+           </form>
+        </tr> 
         
 	</table>
 </div>

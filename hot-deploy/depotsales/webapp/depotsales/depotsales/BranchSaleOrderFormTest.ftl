@@ -1730,7 +1730,7 @@ function fillPartyQuota(partyId){
 				<div class="grid-header" style="margin-left:auto; margin-right:0;">
 					<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
 					<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
-					<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+					<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge/Edit Destination" onclick="javascript:changeServiceChargePercent();" />
 					<label style="float:left" id="itemsSelected" class="labelItemHeader"></label>
 					<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
 					<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>
