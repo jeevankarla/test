@@ -277,6 +277,7 @@ function drawRow(rowData) {
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
     row.append($("<td>" + indentDate + "</td>"));
     
+    
    if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
    row.append($("<td>" +  editOrder  +"</td>"));  
@@ -284,6 +285,8 @@ function drawRow(rowData) {
    
     row.append($("<td></td>"));
    }
+    
+   
    if(rowData.statusId != "ORDER_CANCELLED"){
       var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
       row.append($("<td>" +  minutesReport  +"</td>"));  
@@ -615,7 +618,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>Weaver Name</td>
           <td>Supplier Name</td>
           <td>Indent Date</td>
-          <td>Edit</td>
+         <#-- <td>Edit</td> -->
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>P&S Approvals</td>
