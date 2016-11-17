@@ -107,7 +107,7 @@
 		testFlag = checkFlag;
 		
 		message += "<form action='setPaymentStatus' method='post' onsubmit='return disableButton();'><table cellspacing=10 cellpadding=10>" ; 		
-		            if(testFlag == true && (paymentMethodType == 'FUND_TRANSFER' || paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6')){
+		            if(testFlag == true && (paymentMethodType == 'FT_PAYIN' || paymentMethodType == 'FUND_TRANSFER' || paymentMethod == 'CHEQUE_PAYIN' || paymentMethodType == 'CHEQUE')){
 		            	message += "<tr class='h3'><td align='left' class='h3' width='40%'>Financial Account:</td><td align='right' width='60%'><select name='finAccountId' id='finAccountId'>";
 		            	for(var i=0 ; i<finAccountIdsList.length ; i++){
 							var innerList=finAccountIdsList[i];
