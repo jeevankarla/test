@@ -2714,7 +2714,7 @@
     	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
           <field name="createdByUserLogin" title="Entry by"><display/></field>	  
     </form>
-<form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
+   <form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
 	<!-- 	 <field name="timePeriodId" title="Scheme Time Period">
               <drop-down >
                   <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
@@ -2723,14 +2723,11 @@
         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> 
          <field name="statusId"><hidden value="GOODS_RECEIVED"/></field>  
        <!--  <field name="estimatedShipDate" title="Shipment Date"><date-find default-option-from="sameDay"  /></field> -->
-       
-       
          <field name="branchId" title="${uiLabelMap.Branch}">
             <drop-down allow-empty="true">
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
-        
         <field name="state" title="State">
             <drop-down allow-empty="true">
                <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
@@ -3250,6 +3247,17 @@
          <field name="lrDate" title="LR Date"><display/></field>
      </form> 
      
+      <form name="stateWiseBranchWiseSaleReportCSV" type="list" list-name="finalList" view-size="99999">
+         <field name="billno" title="Sale Invo.No"><display/></field>
+         <field name="invoiceDate" title="Invoice Date"><display/></field>
+         <field name="invoiceQTY" title="Quantity"><display/></field>
+         <field name="invoiceAmount" title="Amount"><display/></field>
+         <field name="supplierName" title="Name Of Supplier"><display/></field>
+         <field name="destAddr" title="Destination"><display/></field>
+         <field name="transporter" title="Transporter"><display/></field>
+         <field name="lrNumber" title="Lr Number"><display/></field>
+         <field name="lrDate" title="LR Date"><display/></field>
+     </form>
      
      <form name="depotReimburcentReportCSV" type="list" list-name="finalList" view-size="99999">
          <field name="billno" title="Sale Invo.No"><display/></field>

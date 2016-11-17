@@ -1009,6 +1009,15 @@
            <security https="true" auth="true"/>                        
            <response name="success" type="view" value="subsidyDetailsCSV"/>        
         </request-map>
+        
+        <request-map uri="stateWiseBranchWiseSaleReport.csv">
+           <security https="true" auth="true"/>                        
+           <response name="success" type="view" value="stateWiseBranchWiseSaleReportCSV"/>        
+        </request-map>
+        
+        
+        
+        
     <!-- BRANCH SALES -->
     
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
@@ -2634,6 +2643,7 @@
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
 	<view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>
+	<view-map name="stateWiseBranchWiseSaleReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#stateWiseBranchWiseSaleReportCSV" content-type="text/csv"/>
 	<view-map name="CustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CustomerAssoc"/>
 	<view-map name="NewCustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewCustomerAssoc"/>
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
