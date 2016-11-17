@@ -1149,7 +1149,7 @@ public class FinAccountServices {
 					paymentMethodId = (String) paymentDetails.get("paymentMethodId");
 					if(UtilValidate.isEmpty(paymentMethodId)){
 						List condList = FastList.newInstance();
-						condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
+						//condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
 						condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 				    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
@@ -1165,7 +1165,7 @@ public class FinAccountServices {
 							finAccountId = (String) paymentMethodDetails.get("finAccountId");
 							if(UtilValidate.isEmpty(finAccountId)){
 								List condList = FastList.newInstance();
-								condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
+								//condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
 								condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 								condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 						    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
