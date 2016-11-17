@@ -73,7 +73,8 @@ under the License.
   		var amount;
   		var invoiceId = "${invoiceId}";
 		var saveRow = $('#save').parent().parent();
-		var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();  
+		var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();
+		var costCenterId = $('#costCenterId :selected').val();  
 		saveRow.find('td').each (function() {
 		    var eachTd = $(this);
 		    eachTd.find('input').each (function() {
@@ -90,7 +91,9 @@ under the License.
 		var data= {invoiceItemTypeId : invoiceItemTypeId,
              		description : description,
              		amount : amount,
-                    invoiceId: invoiceId};
+                    invoiceId: invoiceId,
+                    costCenterId: costCenterId};
+                    
 		$.ajax({
 			 type: "POST",
              url: 'quickCreateInvoiceItemAndTaxAjax',
@@ -136,6 +139,7 @@ under the License.
 				          <#--<td>Quantity</td>-->
 				          <td>Invoice Item Type</td>
 				          <#--<td>ProductId</td>-->
+				          <td>Cost Center Id</td>
 				          <td>Description</td>
 				          <td>Amount</td>
 				          <td>Action</td>
@@ -148,6 +152,7 @@ under the License.
 				              <td><input class="input-medium" name="taxAuthPartyId" type="hidden" size="4"/>${invoice.invoiceItemSeqId}</td>
 				              <#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoice.invoiceItemTypeId}, true) />	
 				              <td>${invoiceItemType.description}</td>
+				              <td>${invoice.costCenterId?if_exists}</td>
 				              <td>${invoice.description?if_exists}</td>
 				              <td>${invoice.amount?if_exists}</td>
 				              <td><a name="remove" href="" onClick="return removeInvoiceItem('${invoice.invoiceItemSeqId}', '${invoice.taxAuthPartyId?if_exists}', '${invoice.invoiceId}');">Remove</a></td>
@@ -165,6 +170,15 @@ under the License.
 						            </option>
 						         </#list>
 							  </select>          
+				          </td>
+				          <td>
+				          	<select name="costCenterId" id="costCenterId">
+						         <#list partyAcPrefGrpList as partyAcPrefGrp>
+						            <option value='${partyAcPrefGrp.partyId}'>
+						        	    ${partyAcPrefGrp.groupName?if_exists}
+						            </option>
+						         </#list>
+							  </select>  
 				          </td>
 				          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/></td>
