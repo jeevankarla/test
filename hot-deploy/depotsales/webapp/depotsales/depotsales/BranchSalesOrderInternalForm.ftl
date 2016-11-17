@@ -273,7 +273,7 @@
 						}
 						
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(Math.round(taxValue));
 						jQuery(formId).append(jQuery(inputTaxTypePerc));
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
@@ -302,7 +302,7 @@
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
-						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(Math.round(adjValue));
 						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
 						
 						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
@@ -360,7 +360,7 @@
 						taxType = taxType.replace("_PUR","_SALE");
 						
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
-						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
+						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(Math.round(taxValue));
 						jQuery(formId).append(jQuery(purInputTaxTypePerc));
 						jQuery(formId).append(jQuery(purInputTaxTypeValue));
 					}
@@ -387,7 +387,7 @@
 						var isAssessableValue = data[rowCount][orderAdjType + "_PUR_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_o_" + rowCount).val(adjPercentage);
-						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_AMT_o_"+ rowCount).val(Math.round(adjValue));
 						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
 						
 						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));

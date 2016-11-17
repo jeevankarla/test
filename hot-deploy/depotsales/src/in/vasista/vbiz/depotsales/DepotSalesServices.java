@@ -3151,7 +3151,7 @@ public class DepotSalesServices{
 			
 			BigDecimal purchaseBasicPrice = BigDecimal.ZERO;
 			BigDecimal purchaseBasicAmount = BigDecimal.ZERO;
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("purchaseBasicAmount"))){
+			/*if(UtilValidate.isNotEmpty(prodQtyMap.get("purchaseBasicAmount"))){
 				purchaseBasicAmount = (BigDecimal)prodQtyMap.get("purchaseBasicAmount");
 			}
 			//Debug.log("purchaseBasicAmount ======1212===="+purchaseBasicAmount);
@@ -3160,7 +3160,7 @@ public class DepotSalesServices{
 			}
 			else{
 				purchaseBasicPrice = purchaseBasicAmount.divide(quantity);
-			}
+			}*/
 			//Debug.log("purchaseBasicPrice ===123123======="+purchaseBasicPrice);
 			
 			//add percentages
@@ -4004,7 +4004,7 @@ public class DepotSalesServices{
 			}
 			
 		}
-		
+		 
 		//Debug.log("orderId=========Final============"+orderId);
 		
 		result.put("orderId", orderId);

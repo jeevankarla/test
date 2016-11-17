@@ -1686,7 +1686,7 @@ input[type=button]:hover {
 	  var tenPercentSubsidy = $("#tenPercentSubsidy").val();
 	  
 	  
-	  var totalPayableValue = saleValue + parseFloat(tenPercentSubsidy) + parseFloat(serviceChargeAmt1);
+	  var totalPayableValue = saleValue - parseFloat(tenPercentSubsidy) + parseFloat(serviceChargeAmt1);
 	
 	  $("#totalPayableValue").val(totalPayableValue);
 	
