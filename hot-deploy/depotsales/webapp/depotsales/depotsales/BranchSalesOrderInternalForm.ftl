@@ -163,7 +163,10 @@
 			var days = data[rowCount]["daysToStore"];
 			var bundleUnitPrice = data[rowCount]["unitPrice"];
 			var unitPrice = data[rowCount]["KgunitPrice"];
-			var unitPricePur = data[rowCount]["unitPricePur"];
+			var unitPricePur = 0;
+			if(data[rowCount]["unitPricePur"])
+		      unitPricePur = data[rowCount]["unitPricePur"];
+			
 			var remarks = data[rowCount]["remarks"];
 			var taxAmt = data[rowCount]["taxAmt"];
 			
@@ -442,6 +445,8 @@
 			var tallyReferenceNo = $("#tallyReferenceNo").val();
 			var ediTallyRefNo = $("#ediTallyRefNo").val();
 			
+			var onbehalfOff = $("#onbehalfOff").val();
+			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var suplierParty = jQuery("<input>").attr("type", "hidden").attr("name", "suplierPartyId").val(suplierPartyId);
@@ -461,6 +466,8 @@
 			var transporterId = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
+			var onbehalfOfff = jQuery("<input>").attr("type", "hidden").attr("name", "onbehalfOff").val(onbehalfOff);
+			
 			
 			var purchaseTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val($("#purchaseTitleTransferEnumId").val());
 			var saleTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "saleTitleTransferEnumId").val($("#saleTitleTransferEnumId").val());
@@ -490,6 +497,7 @@
 			jQuery(formId).append(jQuery(transporterId));
 			jQuery(formId).append(jQuery(tallyReferenceNo));
 			jQuery(formId).append(jQuery(ediTallyRefNo));
+			jQuery(formId).append(jQuery(onbehalfOfff));
 			
 			jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
 			jQuery(formId).append(jQuery(saleTitleTransferEnum));
@@ -811,11 +819,15 @@
 			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
 			  	data[args.row]["amount"] = roundedAmount;
 			  	data[args.row]["totPayable"] = roundedAmount;
+			    data[args.row]["unitPricePur"] = kgUnitPrice;
+			  	
+			  	
 			}
 			else if(args.cell == 3){
 				quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 				
 				data[args.row]["KgunitPrice"] = kgUnitPrice;
+				data[args.row]["unitPricePur"] = kgUnitPrice;
 				data[args.row]["quantity"] = quantity;
 				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
@@ -829,8 +841,10 @@
 			}
 			else if(args.cell == 5){
 			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
+			  	data[args.row]["unitPricePur"] = kgUnitPrice;
 			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			  	data[args.row]["unitPricePur"] = kgUnitPrice;
 			}
 			else if(args.cell == 6){
 			  	baleQty=calculateKgs(quantity,uom,bundleWeight);
@@ -849,6 +863,7 @@
 			  	var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
 			  	data[args.row]["amount"] = roundedAmount;
 			  	data[args.row]["unitPrice"] = upb;
+			  	
 			}
 			else if(args.cell == 8){
 		    	var upb=0;
@@ -866,6 +881,7 @@
 				kgprice=amt/quantity;
 				data[args.row]["KgunitPrice"] = kgprice;
 				data[args.row]["unitPrice"] = upb;
+				data[args.row]["unitPricePur"] = kgprice;
 			}
 			if(args.cell != 1){
 				addServiceCharge(args.row);
@@ -909,7 +925,6 @@
 	      		grid.render();
 	      		$(grid.getCellNode(args.row, 2)).click();
 			}
-			
 		});
 		
 		grid.onValidationError.subscribe(function(e, args) {
