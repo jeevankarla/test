@@ -81,9 +81,10 @@ if(parameters.multifinAccount == "Y"){
 }else{
 //	Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
 	finAccountIdList= EntityUtil.getFieldListFromEntityList(finAccountTransList,"finAccountId", true);
-getmultipleFinAccountList("",finAccountTransList);
+	finAccountIdList.each{finAccountId->
+		getmultipleFinAccountList(finAccountId,finAccountTransList);
+	}
 }
-
 	def getmultipleFinAccountList(finAccountId, finAccountTransList){
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
 			partyDayWiseFinHistryMap=[:];
@@ -100,7 +101,9 @@ getmultipleFinAccountList("",finAccountTransList);
 			finAccTransMap=[:];
 		if(UtilValidate.isEmpty(parameters.reconsilationCsvReport)){
 			finAccountopeningBal= delegator.findOne("FinAccount", ["finAccountId" :finAccountId], false);
-			fromDateTime = null;
+			//fromDateTime = null;
+			fromDateTime=UtilDateTime.nowTimestamp();
+			
 			if(UtilValidate.isNotEmpty(parameters.partyfromDate)&& UtilValidate.isNotEmpty(parameters.partythruDate)){
 				def sdf = new SimpleDateFormat("yyyy, MMM dd");
 				try {
