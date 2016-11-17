@@ -107,7 +107,7 @@ under the License.
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
+					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Purchase Price/Kg</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(Rs)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
@@ -117,7 +117,7 @@ under the License.
 					            	<fo:block  text-align="center" font-size="11pt" white-space-collapse="false">Handling Charges @ 0.00%</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Sale Price/Unit</fo:block>
+					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">Sale Price/Bale</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(Rs)</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>

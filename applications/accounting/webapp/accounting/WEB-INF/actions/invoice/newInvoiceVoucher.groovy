@@ -1218,13 +1218,18 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
 invoiceItemLevelAdjustments = [:];
-
+adjmntsTot=0;
+for(invoiceRemainigAdjItem in invoiceRemainigAdjItemList)
+{
+	adjmntsTot=adjmntsTot+invoiceRemainigAdjItem.itemValue;
+}
 
 double totTaxAmount = 0;
 double mgpsAmt = 0;
 
 
 int i=0;
+
 for (eachList in invoiceItemList) {
 	
 	 
@@ -1238,7 +1243,7 @@ for (eachList in invoiceItemList) {
 	
 	
 	 itemAdjustList = [];
-	  
+	 
 	 if(invoiceInnerAdjItemList){
 	 for (eachItem in invoiceInnerAdjItemList) {
 		
@@ -1278,8 +1283,6 @@ for (eachList in invoiceItemList) {
 			  percentage = 0;
 			  }
 			  
-			  
-			  
 			  tempMap.put("percentage", 0);
 			  }
 			  
@@ -1291,7 +1294,6 @@ for (eachList in invoiceItemList) {
 		  tempMap.put("quantity", eachItem.quantity);
 		  tempMap.put("amount", eachItem.amount);
 		  tempMap.put("itemValue", eachItem.itemValue);
-		  
 		  totTaxAmount = totTaxAmount+(eachItem.itemValue);
 		  
 		  itemAdjustList.add(tempMap);
@@ -1313,12 +1315,19 @@ for (eachList in invoiceItemList) {
 	}
 	i++;
 	
+	
+}
+if(roID && roID.partyIdFrom=="INT26"){
+	bhuneshwarRo="Yes";
+	context.bhuneshwarRo=bhuneshwarRo;
+	context.adjmntsTot=adjmntsTot;
 }
 context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
 
 context.totTaxAmount = totTaxAmount;
+
 
 context.mgpsAmt = mgpsAmt;
 

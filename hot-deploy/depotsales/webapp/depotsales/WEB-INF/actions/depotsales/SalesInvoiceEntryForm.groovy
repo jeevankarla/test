@@ -262,22 +262,22 @@ if(shipments){
 		context.scheme = scheme;
 		
 		
-		
 		condExpr = [];
 		condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		condExpr.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		condExpr.add(EntityCondition.makeCondition("amount", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 		cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 		orderAdjustForTen = delegator.findList("OrderAdjustment", cond, UtilMisc.toSet("orderId","amount"), null, null, false);
 		
 		
 		
-		/* tenperValue = 0;
+		tenperValue = 0;
 		if(orderAdjustForTen){
 			amount=(EntityUtil.getFirst(orderAdjustForTen)).getString("amount");
 			tenperValue = Double.valueOf(amount);
 		}
 		
-		context.tenperValue = tenperValue;*/
+		context.tenperValue = tenperValue;
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));

@@ -21,7 +21,8 @@ import in.vasista.vbiz.purchase.PurchaseStoreServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 changeFlag=parameters.changeFlag;
-
+customerName=parameters.partyName;
+context.customerName=customerName;
 productCatageoryId=parameters.productCatageoryId;
 
 if(changeFlag=="PurchaseOrder"){
