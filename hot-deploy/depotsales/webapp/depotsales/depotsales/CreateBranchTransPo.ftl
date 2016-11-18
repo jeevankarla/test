@@ -630,20 +630,20 @@ function populateData(){
 					</tr>
 					<tr>
 					    <td class="label">Bill To Party :</td>
-					    <td>
+					   <#-- <td>
 					    	<b>${customerName?if_exists}</b>
-					    </td>
-					   <#--  <td>
+					    </td>-->
+					     <td>
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
 					    		<#assign billToPartyId=orderInfo.get("billToPartyId")>
 					    		    <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : billToPartyId}, true)>
-					    		<b>${partyGroup.groupName?if_exists}</b>
+					    		<b>${customerName?if_exists}</b>
 					    		<input type="hidden" name="billToPartyId" id="billToPartyId" size="18" maxlength="60" autocomplete="off" value="${billToPartyId?if_exists}"/>
 					    	<#else>
 					    		<input type="text" name="billToPartyId" id="billToPartyId" size="18" maxlength="60" autocomplete="off" />
       		                </#if>
       		                <#--<span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>-->
-					    </td>  -->
+					    </td>  
 					 </tr>
 					 <tr>
 					    <td class="label"><b>Ref No. :</b></td>
