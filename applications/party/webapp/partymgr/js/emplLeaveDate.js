@@ -45,6 +45,11 @@ function picker(){
 			jQuery("#punchTypeFromDate").datepicker('setDate', selectedDate);
 		}
 	});
+	jQuery("#birthDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		numberOfMonths: 1,
+});
 }
 function hideHalfDayLeave(){
 	var leaveTypeId = $('select[name=leaveTypeId]').val();
