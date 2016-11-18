@@ -1,7 +1,11 @@
 
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <script type= "text/javascript">
-	
+	function appendParams(formName, action) {
+	var formId = "#" + formName;
+	jQuery(formId).attr("action", action);	
+	jQuery(formId).submit();	
+    }
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
@@ -299,7 +303,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
           </tr>
-       <tr class="alternate-row">
+      <#--> <tr class="alternate-row">
     	<form id="subsidyDetails" name="subsidyDetails" method="post"  target="_blank" action="<@ofbizUrl>subsidyDetails.csv</@ofbizUrl>">	
   			<td width="30%" nowrap>10% Subsidy Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="subsidyFromDate" readonly  name="subsidyFromDate"/></td>
@@ -308,9 +312,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="15%"></td>
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 		</form>	
-      </tr>
+      </tr>-->
       <tr class="alternate-row">
-    	<form id="claimReportDetails" name="claimReportDetails" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetails.csv</@ofbizUrl>">	
+    	<form id="claimReportDetails" name="claimReportDetails" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetails.pdf</@ofbizUrl>">	
   			<td width="30%" nowrap>State Of claim For Reimbursement Of 10% Subsidy Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="claimFromDate" readonly  name="claimFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="claimThruDate" readonly  name="claimThruDate"/></td>
@@ -330,6 +334,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					</#list> 
 				</select>    								
 			</span></td>
+			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 		</form>	
       </tr>
