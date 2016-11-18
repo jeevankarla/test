@@ -2312,6 +2312,10 @@
         <event type="java" global-transaction="true" invoke="saveBranchSaleOrderEvent" path="in.vasista.vbiz.depotsales.DepotSalesServices"/>
         <response value="json" type="request" name="success"/>
     </request-map>
+    <request-map uri="claimReportDetails.pdf">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="claimReportDetailsPDF"/>
+    </request-map>
     <request-map uri="claimReportDetails.csv">
          <security https="true" auth="true"/>                        
          <response name="success" type="view" value="claimReportDetailsCSV"/>        
@@ -2647,4 +2651,5 @@
 	<view-map name="CustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CustomerAssoc"/>
 	<view-map name="NewCustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewCustomerAssoc"/>
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
+	<view-map name="claimReportDetailsPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsPDF" content-type="application/pdf"/>
 </site-conf>
