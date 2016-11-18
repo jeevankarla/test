@@ -5,7 +5,6 @@ import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
-
 flag = parameters.allEmployees;
 dctx = dispatcher.getDispatchContext();
 def populateChildren(org, employeeList) {
@@ -82,6 +81,28 @@ def populateChildren(org, employeeList) {
 			}
 		}
 		employee.put("bloodGroup",bloodGroup);
+		email = "";
+		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: employment.partyId, contactMechPurposeTypeId:"PRIMARY_EMAIL", userLogin: userLogin]);
+		if(UtilValidate.isNotEmpty(partyEmail)){
+			email = partyEmail.emailAddress;
+		}
+		employee.put("email",email);
+		 exprList = [];
+		deptName = "";
+		exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
+		exprList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		exprList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employment.partyId));
+		exprList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		EntityCondition exprCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		partyRelationshipList = delegator.findList("PartyRelationship", exprCond, null, null, null, false);
+		if(UtilValidate.isNotEmpty(partyRelationshipList)){
+			deptId = (EntityUtil.getFirst(partyRelationshipList)).get("partyIdFrom");
+			partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+			if(UtilValidate.isNotEmpty(partyGroupDetails)){
+				deptName = 	partyGroupDetails.groupName;
+			}
+		}
+		employee.put("deptName",deptName);
 		employeeList.add(employee);
 		
 		
@@ -99,12 +120,16 @@ employeeList.each {employee ->
 	JSONArray employeeJSON = new JSONArray();
 	employeeJSON.add(employee.name);
 	employeeJSON.add(employee.employeeId);
-	employeeJSON.add(employee.position);
-	employeeJSON.add(employee.department);
-    employeeJSON.add(employee.joinDate);
-	employeeJSON.add(employee.phoneNumber);
 	employeeJSON.add(employee.gender);
-	employeeJSON.add(employee.birthDate);	
+	employeeJSON.add(employee.position);
+	employeeJSON.add(employee.deptName);
+	employeeJSON.add(employee.department);
+	employeeJSON.add(employee.bloodGroup);
+	employeeJSON.add(employee.phoneNumber);
+	employeeJSON.add(employee.email);
+	employeeJSON.add(employee.joinDate);
+	
+	//employeeJSON.add(employee.birthDate);	
 	employeesJSON.add(employeeJSON);
 }
 context.employeesJSON = employeesJSON;

@@ -1988,6 +1988,7 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String" optional="false"></attribute>
         <attribute name="partyId" mode="OUT" type="String" optional="false"></attribute>
         <attribute name="emplPositionTypeId" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="deprtName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="locationGeoId" mode="IN" type="String" optional="true"></attribute>
     </service>
     <!--  <service name="getNextEmployeeSeqID" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="getNextEmployeeSeqID" auth="true">

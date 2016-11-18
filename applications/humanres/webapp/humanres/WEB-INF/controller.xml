@@ -2603,6 +2603,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editJoiningDate"/>
     </request-map>
+    <request-map uri="createOrChangeDepartment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createOrChangeDepartment"/>
+    </request-map>
     <request-map uri="editAppointmentDate">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editAppointmentDate"/>
@@ -3031,6 +3035,7 @@ under the License.
    	<view-map name="MakePaymentForPaymentStopEmpl" type="screen" page="component://humanres/widget/HumanresScreens.xml#MakePaymentForPaymentStopEmpl"></view-map>
 	<view-map name="SalaryDisbursementReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#SalaryDisbursementReportPdf" content-type="application/pdf" encoding="none"/>
 	<view-map name="editJoiningDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditJoiningDate"/>
+	<view-map name="createOrChangeDepartment" type="screen" page="component://humanres/widget/EmployeeScreens.xml#createOrChangeDepartment"/>
 	<view-map name="editAppointmentDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditAppointmentDate"/> 
 	 
 </site-conf>

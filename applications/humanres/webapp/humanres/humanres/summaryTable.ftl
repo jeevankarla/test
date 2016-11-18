@@ -28,14 +28,17 @@ $(document).ready(function() {
 
 		"data": dataSet,
 		"columns": [
-			{ "title": "Employee" },
+			{ "title": "Employee Name" },
 			{ "title": "Employee Id" },
-			{ "title": "Designation" },	
-			{ "title": "Place of Posting" },		
-			{ "title": "Join Date" },			
-			{ "title": "Phone" },
 			{ "title": "Gender"},
-			{ "title": "DOB"}],
+			{ "title": "Designation" },	
+			{ "title": "Department" },	
+			{ "title": "Place of Posting" },
+			{ "title": "Blood Group" },		
+			{ "title": "Mobile" },	
+			{ "title": "Email Id" },
+			
+			],
 			
 			"columnDefs": [
 				{ type: 'date-eu', targets: 4 }
@@ -113,29 +116,33 @@ $(document).ready(function() {
 		<table id="example" class="display" cellspacing="0" width="100%" >
         <thead>
             <tr>
-                <th style='width: 20%;'>Employee</th>
+            	<th style='width: 20%;'>Employee</th>
                 <th style='width: 10%;'>Employee Id</th>
+                <th style='width: 5%; '>Gender</th>
                 <th style='width: 20%;'>Designation</th>
-                <th style='width: 20%;'>Place of Posting</th>
-                <th style='width: 10%;'>Join Date date</th>
-                <th style='width: 10%;'>Phone</th>
-                <th style='width: 5%; text-align: center'>Gender</th>
-                 <th style='width: 10%;'>Date of Birth</th>
+                <th style='width: 15%;'>Deparment</th>
+                <th style='width: 10%;'>Place of Posting</th>
+                <th style='width: 5%;'>Blood Group</th>
+                <th style='width: 10%;'>Mobile</th>
+                <th style='width: 10%;'>Email Id</th>
+                 
                        
             </tr>
         </thead>
  		<tbody></tbody>
         <tfoot>
             <tr>
-                <th><input type="text" placeholder="<Name>" /></th>
-                <th><input type="text" style="width: 65px;" placeholder="<Id>" /></th>
+            	<th><input type="text" placeholder="<Name>" /></th>
+            	<th><input type="text" style="width: 65px;" placeholder="<Id>" /></th>
+               	<th><input type="text" style="width: 65px;" placeholder="<Gender>" /></th>
+               	<th><input type="text" placeholder="<Position>" /></th>
+               	<th><input type="text" style="width: 110px;" placeholder="<Department>" /></th>
+                <th><input type="text" style="width: 100px;" placeholder="<Place of posting>" /></th>
+                 <th><input type="text" style="width: 65px;" placeholder="<Blood Group>" /></th>
+                <th><input type="text" style="width: 80px;" placeholder="<Mobile>" /></th>
+                <th><input type="text" style="width: 110px;" placeholder="<Email>" /></th>
                 
-                <th><input type="text" placeholder="<Department>" /></th>
-                <th><input type="text" placeholder="<Position>" /></th>
-                <th><input type="text" style="width: 80px;" placeholder="<Date>" /></th>
-                <th><input type="text" style="width: 80px;" placeholder="<Phone>" /></th>
-                <th><input type="text" style="width: 75px;" placeholder="<Gender>" /></th>
-                <th><input type="text" style="width: 75px;" placeholder="<birthDate>" /></th>
+               
                           
             </tr>
         </tfoot>

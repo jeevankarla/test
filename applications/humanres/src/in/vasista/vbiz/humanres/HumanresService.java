@@ -1454,7 +1454,7 @@ public class HumanresService {
 			String backgroundVerification =(String)context.get("backgroundVerification");
 			String emplPositionTypeId = (String) context.get("emplPositionTypeId");
 			String locationGeoId = (String) context.get("locationGeoId");
-			
+			String deprtName = (String) context.get("deprtName");
 			Map<String, Object> resultMap = FastMap.newInstance();
 			Map<String, Object> resultMap1 = FastMap.newInstance();
 			Map<String, Object> input = FastMap.newInstance();
@@ -1641,6 +1641,23 @@ public class HumanresService {
 		           	 	Debug.logError("faild service create Employee:"+ServiceUtil.getErrorMessage(outMap), module);
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
+				}
+				
+				
+				//create Department
+				if(UtilValidate.isNotEmpty(deprtName)){
+					try{
+						GenericValue newEntity1 = delegator.makeValue("PartyRelationship");
+						newEntity1.set("partyIdFrom",deprtName);
+						newEntity1.set("partyIdTo",partyId);
+						newEntity1.set("fromDate",employmentDateStart);
+						newEntity1.set("roleTypeIdFrom","DEPATMENT_NAME");
+						newEntity1.set("roleTypeIdTo","EMPLOYEE");
+					    delegator.create(newEntity1);
+					}catch (Exception e) {
+						Debug.logError(e, module);
+						return ServiceUtil.returnError("Error while creating  UnitDetails" + e);	
+					}
 				}
 				
 
