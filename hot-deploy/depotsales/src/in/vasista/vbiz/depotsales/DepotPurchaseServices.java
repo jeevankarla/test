@@ -9050,7 +9050,7 @@ public class DepotPurchaseServices{
 			List<GenericValue> tenantConfigCheck = FastList.newInstance();
 			try{
 				List condList=FastList.newInstance();
-				condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.LIKE,"%"+branchId+"%"));
+				condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.LIKE,"%"+branchId+"_HEADER%"));
 				condList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS, "COMPANY_HEADER"));
 				condList.add(EntityCondition.makeCondition("propertyValue", EntityOperator.EQUALS, "Y"));
 				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
