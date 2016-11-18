@@ -224,7 +224,6 @@ BranchList=[];
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 		}
 		ordQty=0;
-		
 		poId="";
 		salValue=0;
 		poQty=0;
@@ -242,12 +241,16 @@ BranchList=[];
 			orderItemList = delegator.findList("OrderItem", custCond2, null, null, null, false);
 			if(UtilValidate.isNotEmpty(orderItemList)){
 				orderItemList1 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				for(orderItem in orderItemList1){
-					ordQty=ordQty+orderItem.quantity;
+				if(UtilValidate.isNotEmpty(orderItemList)){
+					for(orderItem in orderItemList1){
+						ordQty=ordQty+orderItem.quantity;
+					}
 				}
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
-				for(orderItem in orderItemList2){
-					poQty=poQty+orderItem.quantity;
+				if(UtilValidate.isNotEmpty(orderItemList)){
+					for(orderItem in orderItemList2){
+						poQty=poQty+orderItem.quantity;
+					}
 				}
 			}
 			tempData.put("poNo", poId);
@@ -270,13 +273,14 @@ BranchList=[];
 			OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond3, UtilMisc.toSet("quantity","invoiceId"), null, null, false);
 			if(OrderItemBillingList){
 				for(OrderItemBilling in OrderItemBillingList){
-					
 					conditionList.clear();
 					conditionList.add(EntityCondition.makeCondition("invoiceId",  EntityOperator.EQUALS, OrderItemBilling.invoiceId));
 					cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					invoiceItemList = delegator.findList("InvoiceItem", cond1, null, null, null, false);
 					for(invoiceItem in invoiceItemList){
-						salValue=salValue+invoiceItem.itemValue;
+						if(UtilValidate.isNotEmpty(invoiceItem.itemValue)){
+							salValue=salValue+invoiceItem.itemValue;
+						}
 					}
 				}
 			}
@@ -293,7 +297,7 @@ BranchList=[];
 			
 		}
 		
-		
+		Debug.log("========Line=====296=====");
 		productStoreId=eachHeader.productStoreId;
 		
 		conditonList = [];
@@ -348,5 +352,5 @@ BranchList=[];
 			Debug.logWarning(e, module);
 		}
 	}
-	
+	Debug.log("========Line===End ==351=====");
 	context.orderList=orderList;

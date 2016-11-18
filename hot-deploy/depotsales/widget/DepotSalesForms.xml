@@ -3295,7 +3295,6 @@
         <field name="value" title="Value"><display/></field>
         <field name="paymentReceipt" title="Payment Receipt"><display/></field>
         <field name="amount" title="Amount"><display/></field>
-        
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
