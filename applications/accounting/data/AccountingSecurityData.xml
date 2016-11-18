@@ -129,5 +129,11 @@ under the License.
     <SecurityGroupPermission groupId="ACCTG_FUNCTNL_ADMIN" permissionId="ACCOUNTING_DELETE"/>
     <SecurityGroupPermission groupId="ACCTG_FUNCTNL_ADMIN" permissionId="ACCOUNTING_UPDATE"/>
     <SecurityGroupPermission groupId="ACCTG_FUNCTNL_ADMIN" permissionId="ACCOUNTING_VIEW"/>
+    
+    <SecurityGroup description="Additional Final Accounts Reports Permission Group." groupId="ACCTG_ADDNL_GROUP"/>
+    <SecurityPermission description="Additional final accounts reports permission." permissionId="ACCTG_ADDNL_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCTG_ADDNL_VIEW"/>
+    <SecurityGroupPermission groupId="ACCTG_ADDNL_GROUP" permissionId="ACCTG_ADDNL_VIEW"/>
+    
 
 </entity-engine-xml>

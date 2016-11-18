@@ -1225,16 +1225,25 @@
 			</link>
 		</menu-item>
 		<menu-item name="TrialBalanceDrillDown" title="${uiLabelMap.AccountingTrialBalanceDrillDown}">
+			<condition>
+				<if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+			</condition>
 			<link target="TrialBalanceDrillDown">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>		
 		<menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
+			<condition>
+				<if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+			</condition>
 			<link target="TransactionTotals">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="SubLedgers" title="Sub Ledgers">
+			<condition>
+				<if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+			</condition>
 			<link target="SubLedgers">
 				<parameter param-name="organizationPartyId" />
 			</link>
@@ -1249,7 +1258,10 @@
 		</menu-item>
 		<menu-item name="CashFlowStatement" title="${uiLabelMap.AccountingCashFlowStatement}">
 		    <condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+		    <and>
+		    <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>
+		    <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+		    </and>
 			</condition>
 			<link target="CashFlowStatement">
 				<parameter param-name="organizationPartyId" />
@@ -1265,8 +1277,11 @@
 		</menu-item>
 	  <menu-item name="BalanceSheetForIndian" title="Indian Format Balance Sheet">
 	       <condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
-			</condition>
+	       <and>
+	       <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+		   <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>
+	       </and>
+		   </condition>
 			<link target="BalanceSheetForIndian">
 				<parameter param-name="organizationPartyId" />
 			</link>
@@ -1274,7 +1289,10 @@
 		<menu-item name="ComparativeIncomeStatement"
 			title="${uiLabelMap.AccountingComparativeIncomeStatement}">
 			 <condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			 <and>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>
+			 </and>
 			</condition>
 			<link target="ComparativeIncomeStatement">
 				<parameter param-name="organizationPartyId" />
@@ -1283,7 +1301,10 @@
 		<menu-item name="ComparativeCashFlowStatement"
 			title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
 			<condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			<and>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>	
+			</and>
 			</condition>
 			<link target="ComparativeCashFlowStatement">
 				<parameter param-name="organizationPartyId" />
@@ -1292,7 +1313,10 @@
 		<menu-item name="ComparativeBalanceSheet"
 			title="${uiLabelMap.AccountingComparativeBalanceSheet}">
 			<condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			<and>
+				<if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>	
+			</and>
 			</condition>
 			<link target="ComparativeBalanceSheet">
 				<parameter param-name="organizationPartyId" />
@@ -1301,7 +1325,10 @@
 		<menu-item name="GlAccountTrialBalance"
 			title="${uiLabelMap.AccountingGlAccountTrialBalance}">
 			 <condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			 <and>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>	
+			 </and>
 			</condition>
 			<link target="GlAccountTrialBalance">
 				<parameter param-name="organizationPartyId" />
@@ -1312,7 +1339,10 @@
 			</link> </menu-item> -->
 		<menu-item name="GlAccountBalanceByCostCenter" title="${uiLabelMap.FormFieldTitle_costCenters}">
 		     <condition>
-			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+		     <and>
+		      <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>	
+		     </and>
 			</condition>
 			<link target="GlAccountBalanceByCostCenter">
 				<parameter param-name="organizationPartyId" />
@@ -1320,7 +1350,10 @@
 		</menu-item>
 		<menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
 			<condition>
-	                <if-has-permission permission="ACCOUNTING"  action="_ADMIN"/>
+			<and>
+			  <if-has-permission permission="ACCOUNTING"  action="_ADMIN"/>	
+			  <if-has-permission permission="ACCTG_ADDNL"  action="_VIEW"/>	
+			</and>
 			</condition>		    
 			<link target="AgingAnalysis">
 				<parameter param-name="organizationPartyId" />
