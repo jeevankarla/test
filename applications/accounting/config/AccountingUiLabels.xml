@@ -4872,7 +4872,7 @@
     <property key="AccountingIncomeStatement">
         <value xml:lang="ar">تصربح الدخل</value>
         <value xml:lang="de">Ertragsrechnung</value>
-        <value xml:lang="en">Income Statement</value>
+        <value xml:lang="en">Profit/Loss Statement</value>
         <value xml:lang="es">Declaración de ingresos</value>
         <value xml:lang="fr">Déclaration de revenus</value>
         <value xml:lang="hi_IN">आय विवरण</value>
