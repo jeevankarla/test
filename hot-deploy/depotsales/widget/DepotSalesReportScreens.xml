@@ -79,8 +79,8 @@
 			<widgets>
 				<section>
 					<widgets>
-					<include-form name="IndentCSVHeading" location="component://depotsales/widget/DepotSalesForms.xml" />
-					<include-form name="IndentCSVDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+					<!-- <include-form name="IndentCSVHeading" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+					<!-- <include-form name="IndentCSVDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
 						<include-form name="IndentCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
