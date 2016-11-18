@@ -220,7 +220,6 @@ BranchList=[];
 		tempData.put("orderId", eachHeader.orderId);
 		tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 		tempData.put("statusId", eachHeader.statusId);
-		Debug.log("End===================++End===========223=======");
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 		}
@@ -294,7 +293,6 @@ BranchList=[];
 			
 		}
 		
-		Debug.log("End===================++End===========293=======");
 		
 		productStoreId=eachHeader.productStoreId;
 		
@@ -352,4 +350,3 @@ BranchList=[];
 	}
 	
 	context.orderList=orderList;
-	Debug.log("End===================++End================End=======");
