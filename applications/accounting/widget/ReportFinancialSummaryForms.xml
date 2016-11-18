@@ -474,12 +474,12 @@ under the License.
             <set field="closingD" value="${openingD + D}" type="BigDecimal"/>
             <set field="closingC" value="${openingC + C}" type="BigDecimal"/>
         </row-actions>
-        <field name="accountCode">
+        <!-- <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="openingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
@@ -755,12 +755,12 @@ under the License.
         <!-- <row-actions>
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
-        <field name="accountCode">
+       <!--  <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
          <field name="openingD" widget-style="tabletextright"><display/></field>
         <field name="openingC" widget-style="tabletextright"><display/></field>
