@@ -158,9 +158,10 @@ BranchList=[];
 		}
 		
 		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		billFromVendor = PartyHelper.getPartyName(delegator, billFromVendorPartyId, false);
 		JSONObject tempData = new JSONObject();
 		tempData.put("partyId", partyId);
-		tempData.put("billFromVendorPartyId", billFromVendorPartyId);
+		tempData.put("billFromVendorPartyId", billFromVendor);
 		tempData.put("partyName", partyName);
 		
 		if(eachHeader.tallyRefNo)
@@ -219,10 +220,80 @@ BranchList=[];
 		tempData.put("orderId", eachHeader.orderId);
 		tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 		tempData.put("statusId", eachHeader.statusId);
-		
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 		}
+		ordQty=0;
+		
+		poId="";
+		salValue=0;
+		poQty=0;
+		custCondList.clear();
+		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
+		custCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		custCond1 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
+		orderAssocList = delegator.findList("OrderAssoc", custCond1, null, null, null, false);
+		if(UtilValidate.isNotEmpty(orderAssocList)){
+			orderAssoc = EntityUtil.getFirst(orderAssocList);
+			poId=orderAssoc.get("orderId");
+			custCondList.clear();
+			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.IN, UtilMisc.toList(orderId,poId)));
+			custCond2 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
+			orderItemList = delegator.findList("OrderItem", custCond2, null, null, null, false);
+			if(UtilValidate.isNotEmpty(orderItemList)){
+				orderItemList1 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				for(orderItem in orderItemList1){
+					ordQty=ordQty+orderItem.quantity;
+				}
+				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
+				for(orderItem in orderItemList2){
+					poQty=poQty+orderItem.quantity;
+				}
+			}
+			tempData.put("poNo", poId);
+			tempData.put("poQty",poQty);
+			tempData.put("Qty", ordQty);
+			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
+			if(orderHeader){
+				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MMMM/dd/yyyy"));
+			}
+			shipments = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId",  EntityOperator.EQUALS, poId), null, null, null, false);
+			if(shipments){
+				shipment = EntityUtil.getFirst(shipments);
+				tempData.put("milInv", shipment.supplierInvoiceId);
+				tempData.put("transporter", shipment.carrierName);
+			}
+			conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, orderId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			cond3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond3, UtilMisc.toSet("quantity","invoiceId"), null, null, false);
+			if(OrderItemBillingList){
+				for(OrderItemBilling in OrderItemBillingList){
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("invoiceId",  EntityOperator.EQUALS, OrderItemBilling.invoiceId));
+					cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					invoiceItemList = delegator.findList("InvoiceItem", cond1, null, null, null, false);
+					for(invoiceItem in invoiceItemList){
+						salValue=salValue+invoiceItem.itemValue;
+					}
+				}
+			}
+			
+			tempData.put("salVal", salValue);
+			tempData.put("value", "-");
+			tempData.put("paymentReceipt", "-");
+			tempData.put("amount", "-");
+			tempData.put("salDate", "-");
+			tempData.put("salInv", "-");
+			tempData.put("unit", "-");
+			
+			
+			
+		}
+		
+		
 		productStoreId=eachHeader.productStoreId;
 		
 		conditonList = [];
@@ -279,4 +350,3 @@ BranchList=[];
 	}
 	
 	context.orderList=orderList;
-	

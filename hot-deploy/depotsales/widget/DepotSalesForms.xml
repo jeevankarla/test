@@ -2714,7 +2714,7 @@
     	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
           <field name="createdByUserLogin" title="Entry by"><display/></field>	  
     </form>
-   <form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
+<form name="FindShippingReimbursement" title="" type="single" target="ShippingReimbursement" header-row-style="header-row" default-table-style="basic-table">
 	<!-- 	 <field name="timePeriodId" title="Scheme Time Period">
               <drop-down >
                   <list-options key-name="schemeTimePeriodId" list-name="reimbPeriodList" description="${value}"/>
@@ -2723,11 +2723,14 @@
         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field> 
          <field name="statusId"><hidden value="GOODS_RECEIVED"/></field>  
        <!--  <field name="estimatedShipDate" title="Shipment Date"><date-find default-option-from="sameDay"  /></field> -->
+       
+       
          <field name="branchId" title="${uiLabelMap.Branch}">
             <drop-down allow-empty="true">
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
+        
         <field name="state" title="State">
             <drop-down allow-empty="true">
                <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
@@ -3274,18 +3277,30 @@
          <field name="lrDate" title="LR Date"><display/></field>
      </form> 
        <form name="IndentCSV" type="list" list-name="orderList" view-size="99999">
-        <field name="orderId" title="Indent Id"><display/></field>
+        <field name="orderDate" title="Indent Date"><display/></field>
+        <field name="orderId" title="Cust Order" ><display /></field>
         <field name="orderNo" title="Sequence Id"><display/></field> -->
-        <field name="tallyRefNo" title="Tally Ref NO"><display/></field>
+        <field name="Qty" title="Qty"><display/></field>
+        <field name="unit" title="Unit"><display/></field>
         <field name="weaverName" title="Weaver Name"><display description="${partyName} [${partyId}]"/></field>
+        <field name="poNo" title="Po No"><display/></field>
+        <field name="poDate" title="Po Date"><display/></field>
         <field name="supplierName" title="Supplier Name"><display description="${supplierPartyName} [${supplierPartyId}]"/></field>
-        <field name="orderDate" title="Indent Date"><display/></field> 
-        <field name="billFromVendorPartyId" title="billFromVendorPartyId"><display/></field>
-        <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
+        <field name="poQty" title="PO Qty"><display/></field>
+        <field name="salInv" title="Sal Invoice"><display/></field>
+        <field name="salDate" title="Sal Date"><display/></field>
+        <field name="salVal" title="Sal Value"><display/></field>
+        <field name="transporter" title="Transporter"><display/></field>
+        <field name="milInv" title="Mil Invoice"><display/></field>
+        <field name="value" title="Value"><display/></field>
+        <field name="paymentReceipt" title="Payment Receipt"><display/></field>
+        <field name="amount" title="Amount"><display/></field>
+        
+        <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
         <field name="statusId" title="Status Id"><display/></field>
-        <field name="orderTotal" title="Order Total"><display/></field>
+        <field name="orderTotal" title="Order Total"><display/></field> -->
     </form>
         
         <form name="IndentCSVDetails" type="list"  view-size="99999" list-name="BranchList">

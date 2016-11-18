@@ -283,9 +283,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
       </tr>
       <tr class="alternate-row">
 			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentCSV.csv</@ofbizUrl>" target="_blank">	
-				<td width="30%">Indent Listing Report</td>
+				<td width="30%">Indent Register Report</td>
 				<td width="15%"></td>
-			    <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentListing" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentListing" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 			    <td width="15%"><span class='h3'>Branch
 							    <select name="branchId" id="branchId">
 							        <option value=""></option>
