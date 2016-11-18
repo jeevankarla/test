@@ -239,23 +239,38 @@
 					jQuery(formId).append(jQuery(days));
 				</#if>
 				var taxList = [];
-				taxList = data[rowCount]["taxList"]
+				//taxList = data[rowCount]["taxList"]
+				
+				taxList.push("VAT_SALE");
+				taxList.push("CST_SALE");
+				taxList.push("VAT_SURCHARGE");
+				taxList.push("CST_SURCHARGE");
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
 				if(taxList != undefined){
 					for(var i=0;i<taxList.length;i++){
 						var taxType = taxList[i];
-						var taxPercentage = data[rowCount][taxType];
-						var taxValue = data[rowCount][taxType + "_AMT"];
+						
+						var taxPercentage = 0;
+						var taxValue = 0;
+						
+						if(taxType != "VAT_SURCHARGE" && taxType != "CST_SURCHARGE"){
+						    taxPercentage = data[rowCount][taxType];
+						    taxValue = data[rowCount][taxType + "_AMT"];
+						}else{
+						    taxPercentage = data[rowCount][taxType+ "_SALE"];
+						    taxValue = data[rowCount][taxType + "_SALE_AMT"];
+						}
 						
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(Math.round(taxValue));
 						jQuery(formId).append(jQuery(inputTaxTypePerc));
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
 				}
 				
+				// Sale order Adjustments
 				var orderAdjustmentsList = [];
 				//orderAdjustmentsList = data[rowCount]["orderAdjustmentTypeList"]
 				
@@ -278,7 +293,7 @@
 						var isAssessableValue = data[rowCount][orderAdjType + "_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_o_" + rowCount).val(adjPercentage);
-						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_AMT_o_"+ rowCount).val(Math.round(adjValue));
 						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
 						
 						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
@@ -286,6 +301,7 @@
 						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
 					}
 				}
+				
 				
 				// For General Scheme, capturing purchase order details
 				
@@ -335,11 +351,12 @@
 						taxType = taxType.replace("_PUR","_SALE");
 						
 						var purInputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_o_" + rowCount).val(taxPercentage);
-						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(taxValue);
+						var purInputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_PUR_AMT_o_"+ rowCount).val(Math.round(taxValue));
 						jQuery(formId).append(jQuery(purInputTaxTypePerc));
 						jQuery(formId).append(jQuery(purInputTaxTypeValue));
 					}
 				}
+				
 				
 				// Purchase Order Adjustments list
 				var purOrderAdjustmentsList = [];
@@ -362,7 +379,7 @@
 						var isAssessableValue = data[rowCount][orderAdjType + "_PUR_INC_BASIC"];
 						
 						var inputOrderAdjTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_o_" + rowCount).val(adjPercentage);
-						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_AMT_o_"+ rowCount).val(adjValue);
+						var inputOrderAdjTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_AMT_o_"+ rowCount).val(Math.round(adjValue));
 						var inputOrderAdjTypeAssessable = jQuery("<input>").attr("type", "hidden").attr("name", orderAdjType + "_PUR_INC_BASIC_o_"+ rowCount).val(isAssessableValue);
 						
 						jQuery(formId).append(jQuery(inputOrderAdjTypePerc));
@@ -370,7 +387,6 @@
 						jQuery(formId).append(jQuery(inputOrderAdjTypeAssessable));
 					}
 				}
-				
 				
    			}
 			
@@ -422,6 +438,13 @@
 			
 			var depotSalesFlag = "DepotSaleOrder";
 			
+			var onbehalfOff = $("#onbehalfOff").val();
+			
+			var editDestination = $("#editDestination").val();
+			if($("#changeDesti").val())
+			 editDestination = $("#changeDesti").val();
+			
+			
 			
 			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
@@ -445,6 +468,8 @@
 			var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
 			var ediTallyRefNo = jQuery("<input>").attr("type", "hidden").attr("name", "ediTallyRefNo").val(ediTallyRefNo);
 			var inventoryItemId = jQuery("<input>").attr("type", "hidden").attr("name", "inventoryItemId").val(inventoryItemId);
+			var onbehalfOfff = jQuery("<input>").attr("type", "hidden").attr("name", "onbehalfOff").val(onbehalfOff);
+			var editDestinatioN = jQuery("<input>").attr("type", "hidden").attr("name", "editDestination").val(editDestination);
 			
 			var purchaseTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val($("#purchaseTitleTransferEnumId").val());
 			var saleTitleTransferEnum = jQuery("<input>").attr("type", "hidden").attr("name", "saleTitleTransferEnumId").val($("#saleTitleTransferEnumId").val());
@@ -476,7 +501,8 @@
 			jQuery(formId).append(jQuery(ediTallyRefNo));
 			jQuery(formId).append(jQuery(inventoryItemId));
 			jQuery(formId).append(jQuery(depotSalesFlagObj));
-			
+			jQuery(formId).append(jQuery(onbehalfOfff));
+			 jQuery(formId).append(jQuery(editDestinatioN));
 			
 			
 			jQuery(formId).append(jQuery(purchaseTitleTransferEnum));
