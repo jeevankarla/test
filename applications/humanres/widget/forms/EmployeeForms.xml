@@ -1041,7 +1041,7 @@
      <form name="AddEmployeeExperience" type="single" target="createEmployeeExperience">
         <auto-fields-service service-name="createPartyQual"/>
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.Type}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                 	  <entity-constraint name="partyQualTypeId" operator="equals" value="EXPERIENCE"/> 
