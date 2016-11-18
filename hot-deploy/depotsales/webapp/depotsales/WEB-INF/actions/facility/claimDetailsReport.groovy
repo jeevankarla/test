@@ -1,6 +1,7 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import java.util.*;
 import java.lang.*;
@@ -19,9 +20,14 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-
+import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.order.order.*;
+import org.ofbiz.party.contact.ContactMechWorker;
+import java.util.Map.Entry;
 claimFromDate=parameters.claimFromDate;
 claimThruDate=parameters.claimThruDate;
 dctx = dispatcher.getDispatchContext();
@@ -43,7 +49,47 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
 branchId = parameters.branchId;
+branchContext=[:];
+if(UtilValidate.isNotEmpty(branchId)){
+   branchContext.put("branchId",branchId);
+}
 geoId = parameters.geoId;
+if(UtilValidate.isNotEmpty(geoId)){
+	roPartIds=["INT1","INT2","INT3","INT4","INT5","INT6","INT26","INT28","INT47"];
+	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition("partyId", EntityOperator.IN , roPartIds)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(partyAndPostalAddress)){
+		stateProvinceGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"stateProvinceGeoId", true);
+		if(stateProvinceGeoIds.contains(geoId)){
+			  partyAndPostalAddress = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS,geoId));
+			  branchId=EntityUtil.getFirst(partyAndPostalAddress).partyId;
+			  branchContext.put("branchId",branchId);
+		} 
+	}
+}
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+	
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 partyIdToList = [];
 resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
 if(resultCtx && resultCtx.get("partyList")){
@@ -73,6 +119,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,in
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, false );
+DecimalFormat df = new DecimalFormat("0.00");
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	for(i=0; i<InvoiceItem.size(); i++){
@@ -81,7 +128,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 		 temMap = [:];
 		 invoiceDate = "";
 		 productName = "";
-		 subsidyAmt = 0;
+		 BigDecimal subsidyAmt= BigDecimal.ZERO;
 		 categoryname= "";
 		 eachInvoiceItem = InvoiceItem[i];
 		 invoiceItemTypeId=eachInvoiceItem.get("invoiceItemTypeId");
@@ -133,7 +180,8 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("quantity", quantity);
 			 amount = eachInvoiceItem.get("amount");
 			 value= quantity*amount;
-			 temMap.put("value", value);
+			 temMap.put("value", df.format(value.setScale(0, 0)));
+			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
@@ -144,11 +192,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
 				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
 			 }
-			 temMap.put("subsidyAmt", subsidyAmt);
-			 serviceCharg= subsidyAmt*0.05;
-			 temMap.put("serviceCharg", serviceCharg);
-			 claimTotal = subsidyAmt +serviceCharg;
-			 temMap.put("claimTotal", claimTotal);
+			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
+			 serviceCharg= (subsidyAmt*0.05);
+			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
+			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
+			 temMap.put("claimTotal", df.format(claimTotal));
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
 				temMap.put("sNo", sNo);
 				sNo = sNo+1;

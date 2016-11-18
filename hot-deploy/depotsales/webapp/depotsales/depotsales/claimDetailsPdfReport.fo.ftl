@@ -22,7 +22,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-bottom=".1in" margin-left="0.1in" margin-right=".3in">
-		        <fo:region-body margin-top="1.6in"/>
+		        <fo:region-body margin-top="1.3in"/>
 		        <fo:region-before extent="1in"/>
 		        <fo:region-after extent="1in"/>        
 		    </fo:simple-page-master>   
@@ -40,14 +40,18 @@ under the License.
        <#if finalList?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Arial">
-	        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportHeaderLable"}, true)>
-	        		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportSubHeaderLable"}, true)>
-        			<fo:block keep-together="always" white-space-collapse="false" font-weight="bold" font-size = "12pt">${reportHeader.description?if_exists}</fo:block>
-        			<fo:block keep-together="always" text-align="center" white-space-collapse="false" font-weight="bold" font-size = "12pt">${reportSubHeader.description?if_exists}</fo:block>				
+                    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+ 			        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+ 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+        			<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOAddress?if_exists}</fo:block>
+			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOEmail?if_exists}</fo:block>			
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt">State Of claim For Reimbursement Of 10% Subsidy Report</fo:block>
           			<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-size = "10pt"> From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
-          			<fo:table>
-	                    <fo:table-column column-width="4%"/>
+            	</fo:static-content>	        	
+	        	<fo:flow flow-name="xsl-region-body" font-family="Arial">	
+	        	   <fo:block text-align="left">
+		        	<fo:table>
+		               <fo:table-column column-width="4%"/>
 	                    <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="12%"/>
 	                    <fo:table-column column-width="6%"/>
@@ -59,7 +63,7 @@ under the License.
 	                    <fo:table-column column-width="10%"/>
 	                    <fo:table-column column-width="10%"/>
 		                    <fo:table-body>
-		                        <fo:table-row>
+		                       <fo:table-row>
 				                    <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SI. No.</fo:block>  
 						            </fo:table-cell>
@@ -94,24 +98,6 @@ under the License.
 						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Claim For Yarn Subsidy And Claim Charges(in Rs)</fo:block>  
 						            </fo:table-cell>
 							  </fo:table-row>
-						 </fo:table-body>
-					 </fo:table>
-            	</fo:static-content>	        	
-	        	<fo:flow flow-name="xsl-region-body" font-family="Arial">	
-	        	   <fo:block text-align="left">
-		        	<fo:table>
-		               <fo:table-column column-width="4%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="12%"/>
-	                    <fo:table-column column-width="6%"/>
-	                    <fo:table-column column-width="11%"/>
-	                    <fo:table-column column-width="8%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-		                    <fo:table-body>
 		                       <#list finalList as eachEntry>
 		                        <fo:table-row>
 				                    <fo:table-cell border-style="solid">
