@@ -633,7 +633,7 @@ function populateData(){
 					   <#-- <td>
 					    	<b>${customerName?if_exists}</b>
 					    </td>-->
-					     <td>
+					     <td> 
 					    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
 					    		<#assign billToPartyId=orderInfo.get("billToPartyId")>
 					    		    <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : billToPartyId}, true)>
