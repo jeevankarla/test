@@ -937,7 +937,7 @@
         	<drop-down allow-empty="true">
         		<option key="EL" description="EL"/>
         		<option key="CL" description="CL"/>
-        		<option key="RM" description="RM"/>
+        		<option key="RH" description="RH"/>
         		<option key="ML" description="ML"/>
         		<option key="TL" description="TL"/>
         		<option key="CO" description="CO"/>

@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.PayrollService;
+import in.vasista.vbiz.humanres.HumanresService;
 
 dctx = dispatcher.getDispatchContext();
 tenantId = delegator.getDelegatorTenantId();
@@ -61,4 +62,18 @@ JSONArray deptJSON = new JSONArray();
 			partyId=departmentDetails[0].partyIdFrom;
 		}
 		request.setAttribute("partyId",partyId);
+}
+
+emplInputMap = [:];
+emplInputMap.put("userLogin", userLogin);
+emplInputMap.put("orgPartyId", "Company");
+emplInputMap.put("fromDate", nowTimeStamp);
+//emplInputMap.put("thruDate", nowTimeStamp);
+Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+employments=EmploymentsMap.get("employementList");
+employments = UtilMisc.sortMaps(employments, UtilMisc.toList("-partyId"));
+
+if(employments){
+	partyIdTo=(EntityUtil.getFirst(employments)).get("partyId");
+	context.put("LastEmplCode", partyIdTo);
 }

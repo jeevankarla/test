@@ -1964,6 +1964,7 @@ under the License.emplpunch
         <attribute name="prsPostalCode" mode="IN" type="String" optional="true"></attribute>
         <attribute name="prsCountry" mode="IN" type="String" optional="true"></attribute>
         <attribute name="email" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="secondaryEmail" mode="IN" type="String" optional="true"></attribute>
         <attribute name="vehicleType" mode="IN" type="String" optional="true"></attribute>
         <attribute name="quarterType" mode="IN" type="String" optional="true"></attribute>
         <attribute name="punchType" mode="IN" type="String" optional="true"></attribute>
@@ -1977,6 +1978,8 @@ under the License.emplpunch
         <attribute name="shiftType" mode="IN" type="String" optional="true"></attribute> 
         <attribute name="passportNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="pfNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="aadharNumber" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="panNumber" mode="IN" type="String" optional="false"></attribute>
         <attribute name="dateOfJoining" mode="IN" type="Date" optional="true"></attribute>
         <attribute name="employmentDate" mode="IN" type="Date" optional="true"></attribute>
         <attribute name="passportExpireDate" mode="IN" type="Date" optional="true"></attribute> 

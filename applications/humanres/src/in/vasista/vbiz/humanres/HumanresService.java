@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.ofbiz.base.util.StringUtil;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import org.ofbiz.accounting.util.formula.Evaluator;
 
 
@@ -1389,6 +1391,7 @@ public class HumanresService {
 			String address2 = null;
 			String contactMechId = null;
 			String partyId = (String) context.get("employeeId");
+			//String partyId = null;
 			String firstName = (String) context.get("firstName");
 			String lastName = (String) context.get("lastName");
 			String middleName = (String) context.get("middleName");
@@ -1421,6 +1424,7 @@ public class HumanresService {
 			String prsPostalCode =(String)context.get("prsPostalCode");
 			String prsCountry =(String)context.get("prsCountry");
 			String email =(String)context.get("email");
+			String secondaryEmail =(String)context.get("secondaryEmail");
 			String userName =(String)context.get("userName");
 			String pasword =(String)context.get("pasword");
 			String confirmPassword =(String)context.get("confirmPassword");
@@ -1441,6 +1445,8 @@ public class HumanresService {
 			String shiftType =(String)context.get("shiftType");
 			String passportNumber =(String)context.get("passportNumber");
 			String pfNumber =(String)context.get("pfNumber");
+			String aadharNumber =(String)context.get("aadharNumber");
+			String panNumber =(String)context.get("panNumber");
 			String partyIdFrom =(String)context.get("partyIdFrom");
 			Date dateOfJoining =  (Date)context.get("dateOfJoining");
 			Date employmentDate = (Date)context.get("employmentDate");
@@ -1459,18 +1465,20 @@ public class HumanresService {
 			GenericValue person = null;
 			try{
 				// create Person / Party 
-//				String employeeId = null;
-//				Map<String, Object> seqResult = dispatcher.runSync("getNextEmployeeSeqID", UtilMisc.toMap("userLogin", userLogin));
-//				if (ServiceUtil.isError(seqResult)) {
-//					return ServiceUtil.returnError("Error while creating new party Sequence"); 
-//				}
-//				if(UtilValidate.isNotEmpty(seqResult)){
-//					employeeId = (String)seqResult.get("employeeId");
-//				}
-//				partyId = employeeId;
-//				
+				/*String employeeId = null;
+				Map<String, Object> seqResult = dispatcher.runSync("getNextEmployeeSeqID", UtilMisc.toMap("userLogin", userLogin));
+				Debug.log("seqResult========="+seqResult);
+				if (ServiceUtil.isError(seqResult)) {
+					return ServiceUtil.returnError("Error while creating new party Sequence"); 
+				}
+				if(UtilValidate.isNotEmpty(seqResult)){
+					employeeId = (String)seqResult.get("employeeId");
+				}
+				Debug.log("employeeId========="+employeeId);
+				partyId = employeeId;*/
 				try {
 			        person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+			        
 		        } catch (GenericEntityException e) {
 		            Debug.logWarning(e.getMessage(), module);
 		        }
@@ -1485,7 +1493,6 @@ public class HumanresService {
 	                return resultMap;
 	            }
 				ownerPartyId = (String) resultMap.get("partyId");
-				
 				//create partyrole
 				Object tempInputId = "EMPLOYEE";
 				input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "roleTypeId", tempInputId);
@@ -1495,6 +1502,15 @@ public class HumanresService {
 	                return resultMap;
 	            }
 				
+				//create panNumber and aadharNumber
+				
+				if(UtilValidate.isNotEmpty(panNumber)){
+	            	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panNumber,"partyId",ownerPartyId,"userLogin", userLogin));
+	       	    }
+	       	    if(UtilValidate.isNotEmpty(aadharNumber)){
+	       	    	dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","ADR_NUMBER","idValue",aadharNumber,"partyId",ownerPartyId,"userLogin", userLogin));
+	       	    }
+	       	    
 				// create phone number
 				if (UtilValidate.isNotEmpty(mobileNumber)){
 					if (UtilValidate.isEmpty(countryCode)){
@@ -1563,6 +1579,24 @@ public class HumanresService {
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
 				}
+				
+				
+				// Create party secondary Email
+				if (UtilValidate.isNotEmpty(secondaryEmail)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactMechPurposeTypeId", "SECONDARY_EMAIL");
+		            input.put("emailAddress", secondaryEmail);
+		            input.put("partyId", ownerPartyId);
+		            input.put("verified", "Y");
+		            input.put("fromDate", UtilDateTime.nowTimestamp());
+		            outMap = dispatcher.runSync("createPartyEmailAddress", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create party Alternate Email:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
 				
 				// create Partyclassification
 				try{
