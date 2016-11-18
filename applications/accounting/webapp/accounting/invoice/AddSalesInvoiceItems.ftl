@@ -172,9 +172,10 @@ under the License.
 				          </td>
 				          <td>
 				          	<select name="costCenterId" id="costCenterId">
-						         <#list partyAcPrefGrpList as partyAcPrefGrp>
-						            <option value='${partyAcPrefGrp.partyId}'>
-						        	    ${partyAcPrefGrp.groupName?if_exists}
+						         <#list partyClsGrpList as partyClsGrp>
+						         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
+						            <option value='${partyClsGrp.partyId}'>
+						        	    ${partyName?if_exists}
 						            </option>
 						         </#list>
 							  </select>  
