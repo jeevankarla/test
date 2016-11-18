@@ -1775,6 +1775,7 @@ public class DepotSalesApiServices{
 					shipmentDetailMap.put("vehicleId",eachShipment.getString("vehicleId"));
 					shipmentDetailMap.put("freightCharges","0");
 					shipmentDetailMap.put("remarks","");
+					shipmentDetailMap.put("shipmentDate",eachShipment.get("estimatedShipDate"));
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
 				}
 			}
