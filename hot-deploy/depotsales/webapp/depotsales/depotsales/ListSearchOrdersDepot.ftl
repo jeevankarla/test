@@ -618,7 +618,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>Weaver Name</td>
           <td>Supplier Name</td>
           <td>Indent Date</td>
-         <#-- <td>Edit</td> -->
+          <td>Edit</td>
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>P&S Approvals</td>
