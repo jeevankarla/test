@@ -56,11 +56,16 @@ under the License.
     <form name="ListCompaniesAccountingReports" type="list" title="Internal Organizations" list-name="parties"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="partyId" title="${uiLabelMap.AccountingCompanies}"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>       
-        <field name="accounting" title="${uiLabelMap.CommonEmptyHeader}" use-when="hasBasicPermission" widget-style="buttontext">
+        <!-- <field name="accounting" title="${uiLabelMap.CommonEmptyHeader}" use-when="hasBasicPermission" widget-style="buttontext">
+            <hyperlink target="TransactionTotals" description="${uiLabelMap.AccountingReports}">
+                <parameter param-name="organizationPartyId" from-field="partyId"/>
+            </hyperlink>
+        </field> -->
+		<field name="accounting" title="${uiLabelMap.CommonEmptyHeader}" use-when="hasBasicPermission" widget-style="buttontext">
             <hyperlink target="TrialBalance" description="${uiLabelMap.AccountingReports}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
-        </field>
+        </field>        
     </form>
     <form name="ListCompaniesAccountingChecks" type="list" title="Internal Organizations" list-name="parties"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
