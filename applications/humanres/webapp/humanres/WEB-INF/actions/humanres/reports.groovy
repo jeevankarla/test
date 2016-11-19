@@ -77,3 +77,16 @@ if(employments){
 	partyIdTo=(EntityUtil.getFirst(employments)).get("partyId");
 	context.put("LastEmplCode", partyIdTo);
 }
+deptIdDescList = [];
+DeptIdDetailsList = delegator.findList("PartyRole", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"DEPATMENT_NAME"), null ,null, null, false);
+if(UtilValidate.isNotEmpty(DeptIdDetailsList)){
+	for(int i=0;i<DeptIdDetailsList.size();i++){
+		DeptIdDetails = DeptIdDetailsList.get(i);
+		deptId = DeptIdDetails.partyId;
+		partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+		if(UtilValidate.isNotEmpty(partyGroupDetails)){
+			deptIdDescList.addAll(partyGroupDetails);
+		}
+	}
+}
+context.deptIdDescList = deptIdDescList;

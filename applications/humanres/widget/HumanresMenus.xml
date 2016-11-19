@@ -904,11 +904,16 @@
         </menu-item>
     </menu>
     <menu name="EmploymentUpdate">
-    <menu-item name="editJoiningDate" title="${uiLabelMap.CommonUpdate}">
+    	<menu-item name="createOrChangeDepart" title="${uiLabelMap.DeparmentChange}">
+	        <link target="createOrChangeDepartment">
+	            <parameter param-name="partyId" from-field="parameters.partyId"/>
+	        </link>
+   	   </menu-item>
+    <!-- <menu-item name="editJoiningDate" title="${uiLabelMap.CommonUpdate}">
         <link target="editJoiningDate">
             <parameter param-name="partyId" from-field="parameters.partyId"/>
         </link>
-    </menu-item>
+    </menu-item> -->
     </menu>
     <menu name="EmplPositionTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="tabButtonItem2">

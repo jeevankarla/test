@@ -56,6 +56,22 @@ empJoinDate = null;
 joiningDate = null;
 partyId=parameters.partyId;
 
+List exprList = FastList.newInstance();
+exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
+exprList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+exprList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+exprList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+EntityCondition exprCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+partyRelationshipList = delegator.findList("PartyRelationship", exprCond, null, null, null, false);
+if(UtilValidate.isNotEmpty(partyRelationshipList)){
+	deptId = (EntityUtil.getFirst(partyRelationshipList)).get("partyIdFrom");
+	partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+	if(UtilValidate.isNotEmpty(partyGroupDetails)){
+		deptName = 	partyGroupDetails.groupName;
+		context.deptName = deptName;
+	}
+}
+
 basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
 salary=basicSalAndGradeMap.get("amount");
 grade=basicSalAndGradeMap.get("payGradeId");

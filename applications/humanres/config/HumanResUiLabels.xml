@@ -2672,5 +2672,11 @@
     <property key="AlternateEmail">       
         <value xml:lang="en">Alternate Email</value>        
     </property>
+    <property key="DeparmentChange">       
+        <value xml:lang="en">Deparment Change</value>        
+    </property>
+     <property key="Type">       
+        <value xml:lang="en">Type</value>        
+    </property>
     
 </resource>

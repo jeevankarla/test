@@ -1041,7 +1041,7 @@
      <form name="AddEmployeeExperience" type="single" target="createEmployeeExperience">
         <auto-fields-service service-name="createPartyQual"/>
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.Type}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                 	  <entity-constraint name="partyQualTypeId" operator="equals" value="EXPERIENCE"/> 
@@ -1295,6 +1295,18 @@
         <field name="comment"><display/></field>                                        
     </form>    
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single" target="updateLocationGeo">
+    	<actions>
+    		 <entity-condition list="EditDpartDetailsList" entity-name="PartyRelationship">
+					<condition-list combine="and">
+						<condition-expr field-name="roleTypeIdFrom"  operator="equals" value="DEPATMENT_NAME"/>
+						<condition-expr field-name="roleTypeIdTo"  operator="equals" value="EMPLOYEE"/>
+						<condition-expr field-name="partyIdTo"  operator="equals" from-field="parameters.partyId" />
+					</condition-list>
+				<order-by field-name="-createdStamp"/>
+				</entity-condition>
+				<set field="partyIdFrom" value="${EditDpartDetailsList[0].partyIdFrom}"/>
+				<set field="fromDate" value="${EditDpartDetailsList[0].fromDate}"/> 
+    	</actions>
     	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
         <field name="company" title ="Place of posting" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
@@ -1303,6 +1315,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+        <field name="deptName" title="Department"><display description="${deptName}"/>	</field>
         <field name="position" entry-name="emplPositionType.emplPositionTypeId" title = "Designation">
             <hyperlink target="emplPositionView" description="${employmentData.emplPositionType.description} [${employmentData.emplPosition.emplPositionId}]">
                 <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
