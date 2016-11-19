@@ -278,7 +278,6 @@ finalMap = [:];
 partyWiseTotalsMap = [:];
 
 
-dupliInvoices = []as Set;
 for (eachPartyId in partyIds) {
 	
 	
@@ -477,7 +476,7 @@ for (eachPartyId in partyIds) {
 				 
 				 tempMap1 = [:];
 				 
-				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
+				// reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
 				 
 				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
 				 if(eachReimbursement.claimId)
@@ -542,6 +541,8 @@ for (eachPartyId in partyIds) {
 		 
 		 double claimAmt = 0;
 		 estimatedShipCost = shipmentList.get("estimatedShipCost");
+		 
+		 reimbursentAMT = shipmentList.get("estimatedShipCost");
 					 
 		 if(reimbursentAMT){
 		 claimAmt = Double.valueOf(reimbursentAMT);
