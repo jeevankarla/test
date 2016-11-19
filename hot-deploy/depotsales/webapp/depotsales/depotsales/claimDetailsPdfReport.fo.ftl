@@ -44,8 +44,7 @@ under the License.
  			        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
  			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
         			<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOAddress?if_exists}</fo:block>
-			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOEmail?if_exists}</fo:block>			
-                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt">State Of claim For Reimbursement Of 10% Subsidy Detail Report</fo:block>
+                	<fo:block text-align="center"  keep-together="always" white-space-collapse="false" font-weight="bold" font-size = "12pt">Statement for Claiming Reimbursement against Yarn Subsidy allowed to the Handloom Weavers towards the Supply of Indian Silk and Cotton Hank Yarn</fo:block>
           			<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-size = "10pt"> From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body" font-family="Arial">	
@@ -131,7 +130,7 @@ under the License.
 						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.serviceCharg}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.claimTotal}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.claimTotal?if_exists?string("##0.00")}</fo:block>  
 						            </fo:table-cell>
 							     </fo:table-row>
 							   </#list>
