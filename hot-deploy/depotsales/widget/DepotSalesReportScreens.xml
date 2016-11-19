@@ -645,7 +645,10 @@
 						<if-compare operator="equals" value="Summary" field="flag"/>
 					</condition>
 					<widgets>
+					    <include-form name="headerList" location="component://depotsales/widget/DepotSalesForms.xml" />
 						<include-form name="claimSummaryList" location="component://depotsales/widget/DepotSalesForms.xml" />
+						<include-form name="headingFormList" location="component://depotsales/widget/DepotSalesForms.xml" />
+						<include-form name="grandSummaryList" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
 				<section>
