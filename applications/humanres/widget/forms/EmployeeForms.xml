@@ -976,7 +976,7 @@
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <auto-fields-service service-name="createPartyQual"/>
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyQualTypeId" id-name="partyQualTypeId" title="${uiLabelMap.QualificationType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                 	  <entity-constraint name="partyQualTypeId" operator="not-equals" value="EXPERIENCE"/> 
@@ -984,9 +984,13 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}"><text></text></field>
-        <field name="courseDuration" id-name="courseDuration" title="${uiLabelMap.CourseDuration}"><text></text></field>
-        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}">
+        <field name="title" id-name="title" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="qualificationDesc" id-name="qualificationDesc" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="universityBoard" id-name="universityBoard" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="courseDuration" id-name="courseDuration" title="Standard Course Duration" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="percentageOfMarks" id-name="percentageOfMarks" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	 <drop-down allow-empty="true">
         	 	<option key="A"/>
         	 	<option key="B"/>
@@ -996,7 +1000,7 @@
         	 	<option key="F"/>
         	 </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
@@ -1004,7 +1008,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="verifStatusId">
+        <field name="verifStatusId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
@@ -1012,11 +1016,11 @@
                 </entity-options>
             </drop-down>
         </field>
-       <field name="fromDate" id-name="fromDate" title=""><date-time type="date"/> </field> 
-       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfPassing}"><date-time type="date"/></field>
-       <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}"><text></text><hidden/></field>
-       <field name="designation" id-name="designation" title="${uiLabelMap.Designation}"><text></text><hidden/></field>
-       <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}"><text></text><hidden/></field>
+       <field name="fromDate" id-name="fromDate" title="" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/> </field> 
+       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfPassing}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/></field>
+       <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
+       <field name="designation" id-name="designation" title="${uiLabelMap.Designation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
+       <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="statusId"><hidden/></field>
         <field name="verifStatusId"><hidden/></field>

@@ -1088,7 +1088,7 @@
         <menu-item name="EmployeeWisePaySheet" title="Employee Wise Pay Sheet">
             <link target="EmployeeWisePaySheet"/>
         </menu-item>
-       <menu-item name="EditRateAmoutVariables" title="Edit RateAmount Variables">
+       <menu-item name="EditRateAmoutVariables" title="Edit DA">
        		<condition>
             	<if-has-permission permission="HUMANRES" action="_RATEAMT_VAR_CREATE"/>
             </condition>
