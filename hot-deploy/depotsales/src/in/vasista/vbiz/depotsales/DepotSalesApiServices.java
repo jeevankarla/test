@@ -637,7 +637,7 @@ public class DepotSalesApiServices{
 	  			Debug.logWarning("Error fetching OrderAttribute with order Id" +eachOrderId + " " +  e.getMessage(), module);
 	  		}
 	    	tempData.put("transporterName",transporterName);
-	    	tempData.put("transporterId",transporterId);
+	    	tempData.put("transporterId",transporterName);
 	    	tempData.put("scheme",scheme);
 	    	orderList.add(tempData);
 	    }
@@ -1774,8 +1774,8 @@ public class DepotSalesApiServices{
 					shipmentDetailMap.put("carrierName",eachShipment.getString("carrierName"));
 					shipmentDetailMap.put("vehicleId",eachShipment.getString("vehicleId"));
 					shipmentDetailMap.put("freightCharges","0");
-					shipmentDetailMap.put("remarks","");
-					shipmentDetailMap.put("shipmentDate",eachShipment.get("estimatedShipDate"));
+					shipmentDetailMap.put("remarks","");				
+					shipmentDetailMap.put("shipmentDate",UtilDateTime.toDateString(eachShipment.getTimestamp("estimatedShipDate"),"dd MM yyyy"));
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
 				}
 			}

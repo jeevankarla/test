@@ -445,6 +445,7 @@ public class SupplierApiServices {
 				shipmentDetailMap.put("vehicleId",Shipment.getString("vehicleId"));
 				shipmentDetailMap.put("freightCharges","0");
 				shipmentDetailMap.put("remarks","");
+				shipmentDetailMap.put("shipmentDate",UtilDateTime.toDateString(Shipment.getTimestamp("estimatedShipDate"),"dd MM yyyy"));
 				
 				
 				
