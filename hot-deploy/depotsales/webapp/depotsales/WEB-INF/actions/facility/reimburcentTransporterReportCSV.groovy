@@ -421,7 +421,7 @@ for (eachInvoiceList in Invoice) {
 				 
 				 tempMap1 = [:];
 				 
-				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
+				// reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
 				 
 				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
 				 if(eachReimbursement.claimId)
@@ -486,7 +486,9 @@ for (eachInvoiceList in Invoice) {
 		 
 		 double claimAmt = 0;
 	     estimatedShipCost = shipmentList.get("estimatedShipCost");
-					 
+		
+		 reimbursentAMT = shipmentList.get("estimatedShipCost");
+		 			 
 		 if(estimatedShipCost){
 		 claimAmt = Double.valueOf(reimbursentAMT);
 		 tempMap.put("claim", claimAmt);

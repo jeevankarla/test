@@ -1089,7 +1089,7 @@ function fillPartyQuota(partyId){
 							          		</td>
 							          	</#if>
 						        	</#if>
-					       	  		<td><span class="tooltip" id="branchName"  >${parameters.branchName}</span></td>
+					       	  		<td><span class="tooltip" id="branchName"  >${branchName}</span></td>
 				               	</tr>
 				               	
 				               	<tr>
