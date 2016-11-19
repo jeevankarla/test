@@ -315,12 +315,13 @@ function makeDatePicker3(fromDateId ,thruDateId){
       </tr>-->
       <tr class="alternate-row">
     	<form id="claimReportDetails" name="claimReportDetails" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetails.pdf</@ofbizUrl>">	
-  			<td width="30%" nowrap>State Of claim For Reimbursement Of 10% Subsidy Report</td>
+  			<td width="20%" nowrap>State Of claim For Reimbursement Of 10% Subsidy Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="claimFromDate" readonly  name="claimFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="claimThruDate" readonly  name="claimThruDate"/></td>
   			 <td width="15%"><span class='h3'>Branch
 				<select name="branchId" id="branchId">
 					<option value=""></option>
+					<option value="HO">Head Office</option>
 					<#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					</#list> 
@@ -334,9 +335,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					</#list> 
 				</select>    								
 			</span></td>
+			<td width="10%">
+			    <span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag">
+					<option value="Detailed">Detailed</option>
+					<option value="Summary">Summary</option>
+				</select></span>
+			</td>
 			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 		</form>	
       </tr>
      

@@ -28,6 +28,8 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.ContactMechWorker;
 import java.util.Map.Entry;
+reportTypeFlag=parameters.reportTypeFlag;
+context.reportTypeFlag=reportTypeFlag;
 claimFromDate=parameters.claimFromDate;
 claimThruDate=parameters.claimThruDate;
 dctx = dispatcher.getDispatchContext();
@@ -54,8 +56,8 @@ if(UtilValidate.isNotEmpty(branchId)){
    branchContext.put("branchId",branchId);
 }
 geoId = parameters.geoId;
+roPartIds=["INT1","INT2","INT3","INT4","INT5","INT6","INT26","INT28","INT47"];
 if(UtilValidate.isNotEmpty(geoId)){
-	roPartIds=["INT1","INT2","INT3","INT4","INT5","INT6","INT26","INT28","INT47"];
 	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition("partyId", EntityOperator.IN , roPartIds)  , null, null, null, false );
 	if(UtilValidate.isNotEmpty(partyAndPostalAddress)){
 		stateProvinceGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"stateProvinceGeoId", true);
@@ -91,12 +93,28 @@ try{
 context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
 partyIdToList = [];
-resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
-if(resultCtx && resultCtx.get("partyList")){
-	partyList=resultCtx.get("partyList");
-	partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
-}	
-partyIdToList.add(branchId);
+
+roIds=[];
+if(branchId.equals("HO")){
+	roPartIds.each{ eachRo ->
+			resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",eachRo));
+			if(resultCtx && resultCtx.get("partyList")){
+				partyList=resultCtx.get("partyList");
+				partyList.each{eachparty ->
+				partyIdToList.add(eachparty.partyIdTo);
+				}
+			}
+			partyIdToList.add(eachRo);
+	}
+}
+else{
+	resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",branchId));
+	if(resultCtx && resultCtx.get("partyList")){
+		partyList=resultCtx.get("partyList");
+		partyIdToList= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
+	}	
+	partyIdToList.add(branchId);
+}
 stateFilterParties = delegator.findList("PartyContactDetailByPurpose",EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS , geoId)  , UtilMisc.toSet("partyId"), null, null, false );
 partyIds = EntityUtil.getFieldListFromEntityList(stateFilterParties, "partyId", true);
 finalList = [];
@@ -120,8 +138,10 @@ conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperat
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, false );
 DecimalFormat df = new DecimalFormat("0.00");
+DistrictWiseMap=[:];
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
+	summarySNo=0;
 	for(i=0; i<InvoiceItem.size(); i++){
 		
 		 quantity =0;
@@ -177,7 +197,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 }
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
-			 temMap.put("quantity", quantity);
+			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
 			 amount = eachInvoiceItem.get("amount");
 			 value= quantity*amount;
 			 temMap.put("value", df.format(value.setScale(0, 0)));
@@ -201,11 +221,49 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				temMap.put("sNo", sNo);
 				sNo = sNo+1;
 			    finalList.add(temMap);
+				if(DistrictWiseMap.get(districtName)){
+					existingMap=(Map)DistrictWiseMap.get(districtName);
+					existingMap["sNo"]=existingMap.get("sNo");
+					existingMap["districtName"]=existingMap.get("districtName");
+					existingMap["invoiceDate"]=existingMap.get("invoiceDate");
+					existingMap["userAgency"]=existingMap.get("userAgency");
+					existingMap["productName"]=existingMap.get("productName");
+					existingMap["categoryname"]=existingMap.get("categoryname");
+					existingMap["quantity"]=df.format(quantity.add(new BigDecimal(existingMap.get("quantity"))).setScale(0, 0));
+					existingMap["value"]=df.format(value.add(new BigDecimal(existingMap.get("value"))).setScale(0, 0));
+					existingMap["subsidyAmt"]=df.format(subsidyAmt.add(new BigDecimal(existingMap.get("subsidyAmt"))).setScale(0, 0));
+					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, 0));
+					existingMap["claimTotal"]=df.format(claimTotal.add(new BigDecimal(existingMap.get("claimTotal"))));
+					DistrictWiseMap.put(districtName,existingMap);
+					
+				}else{
+				  fieldMap=[:];
+				  summarySNo=summarySNo+1;				  
+				  fieldMap["sNo"]=summarySNo;
+				  fieldMap["districtName"]=temMap.get("districtName");
+				  fieldMap["invoiceDate"]=temMap.get("invoiceDate");
+				  fieldMap["userAgency"]=temMap.get("userAgency");
+				  fieldMap["productName"]=temMap.get("productName");
+				  fieldMap["categoryname"]=temMap.get("categoryname");
+				  fieldMap["quantity"]=temMap.get("quantity");
+				  fieldMap["value"]=temMap.get("value");
+				  fieldMap["subsidyAmt"]=temMap.get("subsidyAmt");
+				  fieldMap["serviceCharg"]=temMap.get("serviceCharg");
+				  fieldMap["claimTotal"]=temMap.get("claimTotal");
+				  DistrictWiseMap.put(districtName,fieldMap);
+				}
+				
 			 } 
 			 
 		 }
 		
 	}
 }
+context.DistrictWiseMap=DistrictWiseMap;
+DistrictWiseList=[];
+for(Map DistrictMap : DistrictWiseMap){
+	DistrictWiseList.add(DistrictMap.getValue());
+}
+context.DistrictWiseList = DistrictWiseList;
 context.finalList = finalList;
 
