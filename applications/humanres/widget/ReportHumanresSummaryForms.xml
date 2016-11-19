@@ -1646,7 +1646,7 @@
 			</drop-down>
 		</field> -->
 		<field name="secondaryEmail" title="${uiLabelMap.AlternateEmail}"><text size="60" maxlength="250"/></field>
-		<field name="religion" title="${uiLabelMap.Religion}" widget-style="required" required-field="true">
+		<field name="religion" title="${uiLabelMap.Religion}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
@@ -1774,7 +1774,7 @@
 				<option key="Y" />
 			</drop-down>
 		</field>  --> 
-		<field name="deprtName" id-name="deprtName" title="Department" widget-style="required" required-field="true">
+		<field name="deprtName" id-name="deprtName" title="Department" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 			<drop-down allow-empty="true">
 				<!-- <entity-options entity-name="PartyRole" description="${partyId}"
 					key-field-name="partyId">

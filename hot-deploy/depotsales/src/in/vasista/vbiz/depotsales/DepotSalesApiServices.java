@@ -1775,7 +1775,7 @@ public class DepotSalesApiServices{
 					shipmentDetailMap.put("vehicleId",eachShipment.getString("vehicleId"));
 					shipmentDetailMap.put("freightCharges","0");
 					shipmentDetailMap.put("remarks","");				
-					shipmentDetailMap.put("shipmentDate",UtilDateTime.toDateString(eachShipment.getTimestamp("estimatedShipDate"),"dd MM yyyy"));
+					shipmentDetailMap.put("shipmentDate",UtilDateTime.toDateString(eachShipment.getTimestamp("estimatedShipDate"),"dd MMM yyyy"));
 					shipmentHistory.put(shipmentId,shipmentDetailMap);
 				}
 			}
