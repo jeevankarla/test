@@ -216,7 +216,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 serviceCharg= (subsidyAmt*0.05);
 			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
 			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
-			 temMap.put("claimTotal", df.format(claimTotal));
+			 temMap.put("claimTotal", claimTotal);
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
 				temMap.put("sNo", sNo);
 				sNo = sNo+1;
@@ -233,7 +233,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 					existingMap["value"]=df.format(value.add(new BigDecimal(existingMap.get("value"))).setScale(0, 0));
 					existingMap["subsidyAmt"]=df.format(subsidyAmt.add(new BigDecimal(existingMap.get("subsidyAmt"))).setScale(0, 0));
 					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, 0));
-					existingMap["claimTotal"]=df.format(claimTotal.add(new BigDecimal(existingMap.get("claimTotal"))));
+					existingMap["claimTotal"]=claimTotal.add(new BigDecimal(existingMap.get("claimTotal")));
 					DistrictWiseMap.put(districtName,existingMap);
 					
 				}else{
