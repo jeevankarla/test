@@ -47,7 +47,7 @@ if(invoiceId){
 	branchPartyId = invoiceList.get("partyIdFrom");
 	context.branchPartyId = branchPartyId;
 	
-	//////Debug.log("invoDate================"+invoDate);
+	////Debug.log("invoDate================"+invoDate);
 	invoDate = "";
 	if(invoiceList.get("invoiceDate")){
 		invoDate = invoiceList.get("invoiceDate");
@@ -156,7 +156,7 @@ if(invoiceId){
 			
 	
 	invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
-	////Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
+	//Debug.log("invoiceItemTypes =========="+invoiceItemTypes);
 	additionalChgs = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
 	dicounts = EntityUtil.filterByCondition(invoiceItemTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DISCOUNTS"));
 	
@@ -195,7 +195,7 @@ if(invoiceId){
 
 		orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
-		////Debug.log("orderAttr==================="+orderAttr);
+		//Debug.log("orderAttr==================="+orderAttr);
 		scheme = "";
 		if(UtilValidate.isNotEmpty(orderAttr)){
 			orderAttr.each{ eachAttr ->
@@ -224,7 +224,7 @@ if(invoiceId){
 		condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
 		cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
 		taxDetails = delegator.findList("InvoiceItem", cond, null, null, null, false);
-		Debug.log("taxDetails=================="+taxDetails);
+		//Debug.log("taxDetails=================="+taxDetails);
 	
 
 		for (eachItem in invoiceItemList) {
@@ -267,10 +267,10 @@ if(invoiceId){
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 					for(int i=0; i<purTaxList.size(); i++){
 						taxItem = purTaxList.get(i);
-						Debug.log("taxItem =======3333333======"+taxItem);
+						//Debug.log("taxItem =======3333333======"+taxItem);
 						purTaxItem = taxItem.replace("_SALE", "_PUR");
 						
-						Debug.log("purTaxItem ============="+purTaxItem);
+						//Debug.log("purTaxItem ============="+purTaxItem);
 						
 						
 						surChargeList = [];
@@ -279,9 +279,9 @@ if(invoiceId){
 						surChargeList = taxInfo.get("surchargeList");
 						}
 						
-						Debug.log("invoiceId ============="+invoiceId);
+						//Debug.log("invoiceId ============="+invoiceId);
 						
-						Debug.log("invoiceItemSeqId ============="+eachItem.invoiceItemSeqId);
+						//Debug.log("invoiceItemSeqId ============="+eachItem.invoiceItemSeqId);
 						
 						
 						condExpr = [];
@@ -289,7 +289,7 @@ if(invoiceId){
 						condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 						condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, purTaxItem.trim()));
 						taxItemList = EntityUtil.filterByCondition(taxDetails, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
-						Debug.log("taxItemList ============="+taxItemList);
+						//Debug.log("taxItemList ============="+taxItemList);
 						
 						
 						taxPercent = 0;
@@ -371,7 +371,7 @@ if(invoiceId){
 					itemAdditionalChgs = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 				}
 				
-			//	//Debug.log("itemAdditionalChgs ============="+itemAdditionalChgs.size());
+				//Debug.log("itemAdditionalChgs ============="+itemAdditionalChgs.size());
 				
 				
 				
@@ -385,7 +385,7 @@ if(invoiceId){
 					if(UtilValidate.isNotEmpty(itemOrdAdj)){
 						adjItem = EntityUtil.getFirst(itemOrdAdj);
 						
-						itemValue = adjItem.amount //(adjItem.amount/origQty)*qty;
+						itemValue = adjItem.itemValue; //(adjItem.amount/origQty)*qty;
 						
 						newItemAdjObj.put("adjValue", itemValue);
 						if(adjItem.sourcePercentage){
@@ -405,6 +405,9 @@ if(invoiceId){
 						}
 						
 						// Update adjustments for item
+						
+						//Debug.log("invItemTypeId ========================= "+invItemTypeId);
+						
 						
 						newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
 						newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
@@ -473,7 +476,7 @@ if(invoiceId){
 						
 						// Update adjustments for item
 						
-						Debug.log("invItemTypeId=========="+invItemTypeId);
+						//Debug.log("invItemTypeId=========="+invItemTypeId);
 						
 						newObj.put(invItemTypeId+"_PUR", adjItem.sourcePercentage);
 						newObj.put(invItemTypeId + "_PUR_AMT", itemValue*(-1));
@@ -518,6 +521,8 @@ if(invoiceId){
 			
 			resultCtx = dispatcher.runSync("calculateTaxesByGeoIdTest",UtilMisc.toMap("userLogin",userLogin, "taxAuthGeoId", "IN-UP","taxAuthorityRateTypeId","CST_SALE","productId",eachItem.productId));
 			
+			
+			
 			defaultTaxMap = resultCtx.defaultTaxMap;
 			
 			taxValueMap = resultCtx.taxValueMap;
@@ -525,12 +530,11 @@ if(invoiceId){
 			newObj.put("taxValueMap",taxValueMap);
 			
 			newObj.put("defaultTaxMap",defaultTaxMap);
-			
 			newObj.put("cProductName",productName);
 			newObj.put("quantity",eachItem.quantity);
 			newObj.put("invoiceItemSeqId",eachItem.invoiceItemSeqId);
 			newObj.put("UPrice", eachItem.amount);
-			newObj.put("amount", (eachItem.amount)*(eachItem.quantity));
+			newObj.put("amount", (eachItem.itemValue));
 			newObj.put("tenPercent", tenPercent);
 			newObj.put("usedQuota", usedQuota);
 			newObj.put("VatPercent", 0.00);
@@ -620,8 +624,8 @@ if(invoiceId){
  
 		context.disCountFlag = disCountFlag;
 	
-	   ////Debug.log("invoiceDiscountJSON================="+invoiceDiscountJSON);
-	   ////Debug.log("invoiceAdditionalJSON================="+invoiceAdditionalJSON);
+	   //Debug.log("invoiceDiscountJSON================="+invoiceDiscountJSON);
+	   //Debug.log("invoiceAdditionalJSON================="+invoiceAdditionalJSON);
 	   context.invoiceDiscountJSON = invoiceDiscountJSON;
 	   context.invoiceAdditionalJSON = invoiceAdditionalJSON;*/
 

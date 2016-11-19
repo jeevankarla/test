@@ -14804,7 +14804,7 @@ public class DepotSalesServices{
  			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
- 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+ 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "DEPOT_YARN_SALE"));
  			 
  		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
 				
@@ -14928,7 +14928,7 @@ public class DepotSalesServices{
 			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
- 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+ 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "DEPOT_YARN_SALE"));
  			 
  		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
 				
