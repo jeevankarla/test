@@ -113,6 +113,42 @@ if(!partyId){
 	
 	}
 	
+	branchContext=[:];
+	branchContext.put("branchId",branchId);
+	
+	BOAddress="";
+	BOEmail="";
+	
+	try{
+		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem in BO Header ", module);
+			return ServiceUtil.returnError("Problem in fetching financial year ");
+		}
+		if(resultCtx.get("boHeaderMap")){
+			boHeaderMap=resultCtx.get("boHeaderMap");
+			
+			if(boHeaderMap.get("header0")){
+				BOAddress=boHeaderMap.get("header0");
+				
+			}
+			if(boHeaderMap.get("header1")){
+				BOEmail=boHeaderMap.get("header1");
+			}
+			
+			
+		}
+		
+		
+	}catch(GenericServiceException e){
+		Debug.logError(e, module);
+		return ServiceUtil.returnError(e.getMessage());
+	}
+	
+	context.BOAddress=BOAddress;
+	context.BOEmail=BOEmail;
+	
+	
 	condListCat.clear();
 	condListCat.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
 	condList1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
@@ -276,6 +312,9 @@ partyPassMap= [:];
 finalMap = [:];
 
 partyWiseTotalsMap = [:];
+
+totClaimAmt=0;
+totElgibleAmt=0;
 
 
 dupliInvoices = []as Set;
@@ -545,16 +584,20 @@ for (eachPartyId in partyIds) {
 					 
 		 if(reimbursentAMT){
 		 claimAmt = Double.valueOf(reimbursentAMT);
-		 tempMap.put("claim", claimAmt);
+		 tempMap.put("claim", 10);
 		 } else{
-		 tempMap.put("claim", "");
+		 tempMap.put("claim", 10);
 		 }
+		 totClaimAmt=totClaimAmt+claimAmt;
 		 
-		 if(maxAmt > reimbursentAMT)
-		 tempMap.put("eligibleAMT", reimbursentAMT);
-		 else
-		 tempMap.put("eligibleAMT", maxAmt);
-	 
+		 if(maxAmt > reimbursentAMT){
+			 totElgibleAmt=totElgibleAmt+reimbursentAMT;
+			 tempMap.put("eligibleAMT", reimbursentAMT);
+		 } else{
+		 	totElgibleAmt=totElgibleAmt+maxAmt;
+		 	tempMap.put("eligibleAMT", maxAmt);	
+		 }
+
 		 estimatedShipDate = shipmentList.get("estimatedShipDate");
 		 
 		 if(estimatedShipDate)
@@ -739,6 +782,8 @@ for (eachPartyId in partyIds) {
 	
 }
 
+context.totClaimAmt=totClaimAmt
+context.totElgibleAmt=totElgibleAmt;
 context.finalMap = finalMap;
 
 context.partyWiseTotalsMap = partyWiseTotalsMap;

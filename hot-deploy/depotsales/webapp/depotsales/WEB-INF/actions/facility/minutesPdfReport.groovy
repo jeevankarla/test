@@ -60,10 +60,9 @@ branchContext=[:];
 
 if(branchId == "INT12" || branchId == "INT49" || branchId == "INT55"){
 	branchId = "INT12";
-}else if(branchId == "INT8" || branchId == "INT16" || branchId == "INT20" || branchId == "INT21" || branchId == "INT22" || branchId == "INT44"){
+}else if(branchId == "INT8" || branchId == "INT16" || branchId == "INT20" || branchId == "INT21" ||  branchId == "INT44"){
    branchId = "INT8";
 }
-
 branchContext.put("branchId",branchId);
 
 BOAddress="";
