@@ -429,7 +429,7 @@ under the License.
     <request-map uri="createEmployment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmployment"/>
-        <response name="success" type="view" value="EditEmployment"/>
+        <response name="success" type="view" value="EditEmployeeQuals"/>
     </request-map>
     <request-map uri="updateEmployment">
         <security https="true" auth="true"/>

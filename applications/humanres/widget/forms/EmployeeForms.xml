@@ -1053,9 +1053,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}"><text></text><hidden/></field>
-        <field name="courseDuration" id-name="courseDuration" title="${uiLabelMap.CourseDuration}"><text></text><hidden/></field>
-        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}">
+        <field name="specialization" id-name="specialization" title="${uiLabelMap.Specialization}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
+        <field name="courseDuration" id-name="courseDuration" title="${uiLabelMap.CourseDuration}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
+        <field name="grade" id-name="passingGrade" title="${uiLabelMap.PassingGrade}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	 <drop-down allow-empty="true">
         	 	<option key="A"/>
         	 	<option key="B"/>
@@ -1065,7 +1065,7 @@
         	 	<option key="F"/>
         	 </drop-down> <hidden/>
         </field>
-        <field name="statusId">
+        <field name="statusId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
@@ -1073,7 +1073,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="verifStatusId">
+        <field name="verifStatusId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
@@ -1081,12 +1081,12 @@
                 </entity-options>
             </drop-down>
         </field>
-       <field name="fromDate" id-name="fromDate" title="${uiLabelMap.DateOfJoining}"><date-time type="date"/> </field> 
-       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfReliving}"><date-time type="date"/></field>
+       <field name="fromDate" id-name="fromDate" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/> </field> 
+       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfReliving}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/></field>
          
-         <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}"><text></text></field>
-         <field name="designation" id-name="designation" title="${uiLabelMap.Designation}"><text></text></field>
-         <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}"><text></text></field>
+         <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+         <field name="designation" id-name="designation" title="${uiLabelMap.Designation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+         <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
          <field name="qualificationDesc"><hidden/></field>
          <field name="universityBoard"><hidden/></field>
          <field name="percentageOfMarks"><hidden/></field>
@@ -1354,9 +1354,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="From Date"><date-time/></field>
-         <field name="resignationDate" title="Date Of Leaving" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
-    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="fromDate" title="From Date" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><date-time/></field>
+         <field name="resignationDate" title="Date Of Leaving" entry-name="employment.resignationDate" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><submit button-type="button"/></field>
     	
     </form>
    
