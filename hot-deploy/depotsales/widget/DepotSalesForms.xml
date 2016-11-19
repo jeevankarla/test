@@ -3199,6 +3199,10 @@
         <field name="serviceCharg" title="Service Charges @0.5% Of yarn value Before Subsidy(in Rs)"><display/></field>
         <field name="claimTotal" title="Total Claim For Yarn Subsidy And Claim Charges(in Rs)"><display/></field>
     </form>
+    <form name="headerList" type="list" list-name="headinglist" view-size="99999">
+        <field name="headerName" title="."><display description="${headerName}"/></field>
+<!--         <field name="reportSubName" title="NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD."><display description="NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD"/></field> -->
+    </form>
     <form name="claimSummaryList" type="list" list-name="DistrictWiseList" view-size="99999">
         <field name="sNo" title="SI. No."><display/></field>
         <field name="districtName" title="Name Of State"><display/></field>
@@ -3207,6 +3211,14 @@
         <field name="subsidyAmt" title="Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)"><display/></field>
         <field name="serviceCharg" title="Service Charges @0.5% Of yarn value Before Subsidy(in Rs)"><display/></field>
         <field name="claimTotal" title="Total Claim For Yarn Subsidy And Claim Charges(in Rs)"><display/></field>
+    </form>
+    <form name="headingFormList" type="list" list-name="hederlist" view-size="99999">
+        <field name="heading" title="FUNDS POSITION WITH THE IMPLEMENTING AGENCY:-"><display description="               FUNDS POSITION WITH THE IMPLEMENTING AGENCY"/></field>
+    </form>
+    <form name="grandSummaryList" type="list" list-name="totalList" view-size="99999">
+        <field name="sno" title="SI. No."><display/></field>
+        <field name="amtString" title="Particulars"><display/></field>
+        <field name="grandTotal" title="Amount (in Rs.)"><display/></field>
     </form>
       <form name="FindApInvoicesForDepot" type="single" target="DepotPurchaseInvoiceView" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>

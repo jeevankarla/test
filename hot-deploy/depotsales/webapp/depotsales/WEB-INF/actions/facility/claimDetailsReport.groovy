@@ -68,6 +68,8 @@ if(UtilValidate.isNotEmpty(geoId)){
 		} 
 	}
 }
+branchName =  PartyHelper.getPartyName(delegator, branchId, false);
+context.branchName=branchName;
 BOAddress="";
 BOEmail="";
 try{
@@ -261,9 +263,45 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 }
 context.DistrictWiseMap=DistrictWiseMap;
 DistrictWiseList=[];
+granTotal=0;
+totalList=[];
 for(Map DistrictMap : DistrictWiseMap){
+	claimTotal= DistrictMap.getValue().get("claimTotal");
+	granTotal +=claimTotal;
 	DistrictWiseList.add(DistrictMap.getValue());
 }
+desList=["Amount of Reimbursement claimed","Less:- Advance amount already claimed","Balance amount (i-ii)"];
+int i=1;
+desList.each{ eachdesc ->
+	temMap=[:];
+	temMap.put("sno", i);
+	temMap.put("amtString", eachdesc);
+	if(i==1){
+	   temMap.put("grandTotal", granTotal);
+	}
+	else{
+	   temMap.put("grandTotal", "");
+	}
+	totalList.add(temMap);
+	i=i+1;
+}
+context.totalList = totalList;
 context.DistrictWiseList = DistrictWiseList;
 context.finalList = finalList;
+headinglist=[];
+headingFrom = UtilDateTime.toDateString(dayBegin,"dd/MM/yyyy");
+headingThru = UtilDateTime.toDateString(dayEnd,"dd/MM/yyyy");
+
+headList=["                                  NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.",
+	"                    "+BOAddress,
+	"                    Statement for Claiming Reimbursement against Yarn Subsidy allowed to the",
+	"                    Handloom Weavers towards the Supply of Indian Silk and Cotton Hank Yarn",
+	"                                                           "+headingFrom+"-"+headingThru," "];
+headList.each{ eachHead ->
+	headMap=[:];
+	headMap.put("headerName",eachHead);
+	headinglist.add(headMap);
+}
+context.headinglist = headinglist;
+
 

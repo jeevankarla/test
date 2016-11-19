@@ -129,7 +129,7 @@ under the License.
 						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Particulars</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Amount in (Rs.)</fo:block>  
+						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Amount (in Rs.)</fo:block>  
 						            </fo:table-cell>
 							    </fo:table-row>
 		                        <fo:table-row>
@@ -167,6 +167,10 @@ under the License.
 							     </fo:table-row>
 							 </fo:table-body>
 						</fo:table>
+						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
+						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+						<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Place: ${branchName}</fo:block>
+						<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Date: </fo:block>  
 						</fo:block>
         		</fo:flow>
         	</fo:page-sequence>
