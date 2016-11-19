@@ -229,11 +229,6 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 					existingMap["userAgency"]=existingMap.get("userAgency");
 					existingMap["productName"]=existingMap.get("productName");
 					existingMap["categoryname"]=existingMap.get("categoryname");
-					/*quantity=df.format(quantity.setScale(0, 0));
-					value=df.format(value.setScale(0, 0));
-					subsidyAmt=df.format(subsidyAmt.setScale(0, 0));
-					serviceCharg=df.format(serviceCharg.setScale(0, 0));
-					claimTotal=df.format(claimTotal);*/
 					existingMap["quantity"]=df.format(quantity.add(new BigDecimal(existingMap.get("quantity"))).setScale(0, 0));
 					existingMap["value"]=df.format(value.add(new BigDecimal(existingMap.get("value"))).setScale(0, 0));
 					existingMap["subsidyAmt"]=df.format(subsidyAmt.add(new BigDecimal(existingMap.get("subsidyAmt"))).setScale(0, 0));
@@ -255,8 +250,6 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				  fieldMap["subsidyAmt"]=temMap.get("subsidyAmt");
 				  fieldMap["serviceCharg"]=temMap.get("serviceCharg");
 				  fieldMap["claimTotal"]=temMap.get("claimTotal");
-				  Debug.log("fieldMap============================="+fieldMap);
-				  
 				  DistrictWiseMap.put(districtName,fieldMap);
 				}
 				
