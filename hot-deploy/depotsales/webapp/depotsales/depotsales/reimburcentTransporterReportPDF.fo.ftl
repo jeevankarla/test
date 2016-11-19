@@ -22,8 +22,8 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
-                <fo:region-body margin-top=".1"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".1in">
+                <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
             </fo:simple-page-master>
@@ -42,7 +42,7 @@ under the License.
                 <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 				<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
-				<fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${eachParty?if_exists} </fo:block>
+				<#-- <fo:block  keep-together="always" text-align="center"  font-weight="bold"  font-size="10pt" white-space-collapse="false"> ${eachParty?if_exists} </fo:block> -->
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                   
                  <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
@@ -85,9 +85,9 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
 				</fo:table-cell>-->
-				<fo:table-cell >
+				<#-- <fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >District :</fo:block>
-				</fo:table-cell>
+				</fo:table-cell> -->
 			</fo:table-row>
 		</fo:table-body>
 	</fo:table>
@@ -233,10 +233,10 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${totClaimAmt?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${totElgibleAmt?if_exists}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							
