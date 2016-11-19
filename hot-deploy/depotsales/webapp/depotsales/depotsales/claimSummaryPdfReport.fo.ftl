@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-bottom=".1in" margin-left="0.1in" margin-right=".3in">
+			<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-bottom=".1in" margin-left="0.1in" margin-right=".3in">
 		        <fo:region-body margin-top="1.3in"/>
 		        <fo:region-before extent="1in"/>
 		        <fo:region-after extent="1in"/>        
@@ -37,7 +37,7 @@ under the License.
 	</fo:flow>
 	</fo:page-sequence>	
 	<#else>
-       <#if finalList?has_content>
+       <#if DistrictWiseList?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Arial">
                     <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
@@ -45,23 +45,19 @@ under the License.
  			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
         			<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOAddress?if_exists}</fo:block>
 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${BOEmail?if_exists}</fo:block>			
-                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt">State Of claim For Reimbursement Of 10% Subsidy Detail Report</fo:block>
+                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt">State Of claim For Reimbursement Of 10% Subsidy Summary Report</fo:block>
           			<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-size = "10pt"> From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body" font-family="Arial">	
 	        	   <fo:block text-align="left">
 		        	<fo:table>
-		               <fo:table-column column-width="4%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="12%"/>
-	                    <fo:table-column column-width="6%"/>
-	                    <fo:table-column column-width="11%"/>
-	                    <fo:table-column column-width="8%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
-	                    <fo:table-column column-width="10%"/>
+		               <fo:table-column column-width="6%"/>
+	                    <fo:table-column column-width="15%"/>
+	                    <fo:table-column column-width="15%"/>
+	                    <fo:table-column column-width="16%"/>
+	                    <fo:table-column column-width="16%"/>
+	                    <fo:table-column column-width="16%"/>
+	                    <fo:table-column column-width="16%"/>
 		                    <fo:table-body>
 		                       <fo:table-row>
 				                    <fo:table-cell border-style="solid">
@@ -69,18 +65,6 @@ under the License.
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Name of State</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Name of User Agency</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Date of Supply</fo:block>  
-						            </fo:table-cell>
-						            <fo:table-cell border-style="solid">
-						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Count of Yarn</fo:block>  
-						            </fo:table-cell>
-						            <fo:table-cell border-style="solid">
-						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Varity of Yarn</fo:block>  
 						            </fo:table-cell>
 						            <fo:table-cell border-style="solid">
 						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Yarn Supplied during the quarter(in Kgs)</fo:block>  
@@ -98,25 +82,13 @@ under the License.
 						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Claim For Yarn Subsidy And Claim Charges(in Rs)</fo:block>  
 						            </fo:table-cell>
 							  </fo:table-row>
-		                       <#list finalList as eachEntry>
+		                       <#list DistrictWiseList as eachEntry>
 		                        <fo:table-row>
 				                    <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.sNo}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.districtName}</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.userAgency}</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${eachEntry.invoiceDate}</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.productName}</fo:block>  
-						            </fo:table-cell>
-						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.categoryname}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.quantity}</fo:block>  
