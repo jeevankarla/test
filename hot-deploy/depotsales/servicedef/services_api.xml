@@ -202,5 +202,11 @@
        <attribute name="orderId" type="String" mode="IN" optional="false"/>
        <attribute type="Map" mode="OUT" name="shipments" optional="true"/>
     </service>
+    <service name="getDepotStock" engine="java"  auth="true" export="true" 
+           location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getDepotStock">
+       <description>Fetch the Depot stock for the party</description>
+       <attribute name="partyId" type="String" mode="IN" optional="false"/>
+       <attribute type="Map" mode="OUT" name="stockMap" optional="true"/>
+    </service>
 </services>
 

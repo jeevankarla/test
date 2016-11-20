@@ -1786,4 +1786,273 @@ public class DepotSalesApiServices{
 		return result;
     }
     
+    public static Map<String, Object> getDepotStock(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Map result = ServiceUtil.returnSuccess();
+        String partyId = (String)context.get("partyId");
+        
+        Map resultCtx = FastMap.newInstance();
+        List productStoreList = FastList.newInstance();
+        try{
+        	resultCtx  = dispatcher.runSync("getCustomerBranch", UtilMisc.toMap("userLogin",userLogin));
+        	productStoreList = (List) resultCtx.get("productStoreList");
+		} catch(Exception e){
+			Debug.logError("Not a valid party", module);
+		}
+        List branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
+        List purorderIds = FastList.newInstance();
+        List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
+        conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER")));
+        List<GenericValue> OrderRoleList = null;
+        try{
+        	OrderRoleList = (FastList)delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND) , null ,null, null, false );
+        	purorderIds = EntityUtil.getFieldListFromEntityList(OrderRoleList, "orderId", true);
+        } catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        conditionList.clear();
+        conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "DEPOT_SHIPMENT"));
+        if(UtilValidate.isNotEmpty(purorderIds)){
+        	conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, purorderIds));
+        }
+        conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"GOODS_RECEIVED"));
+        
+        List<GenericValue> shipmentList = null;
+        List shipmentIds = FastList.newInstance();
+        try{
+        	shipmentList = delegator.findList("Shipment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("shipmentId"), null, false);
+        } catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+        List shipmentIdsList = FastList.newInstance();
+        
+        List<GenericValue> shipmentListForPOInvoiceId = null;
+        for (GenericValue eachShipment:shipmentList) {
+      	  conditionList.clear();
+      	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachShipment.getString("shipmentId")));
+      	  conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+      	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+      	  try{
+      		shipmentListForPOInvoiceId = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+      	  } catch (GenericEntityException e) {
+  			Debug.logError(e, module);
+      	  }
+      	  if(UtilValidate.isNotEmpty(shipmentListForPOInvoiceId)){shipmentIdsList.add(eachShipment.getString("shipmentId"));}
+      	  
+        }
+        conditionList.clear();
+    	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"SR_ACCEPTED"));
+    	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
+    	List<GenericValue> shipmentReceiptList = null;
+    	try{
+        	shipmentReceiptList = delegator.findList("ShipmentReceiptAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("receiptId"), null, false);
+    	} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+    	List<GenericValue> inventoryItemIdsList = null;
+    	inventoryItemIdsList= EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "inventoryItemId", true);
+    	
+    	conditionList.clear();
+    	conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+    	conditionList.add(EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"));
+    	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIdsList));
+    	List<GenericValue> physicalInventory = null;
+    	try{
+    		physicalInventory = delegator.findList("InventoryItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("productId"), null, false);
+    	} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+    	
+    	conditionList.clear();
+    	conditionList.add(EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"));
+    	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIdsList));
+    	
+    	Map atpMap = FastMap.newInstance();
+    	Map qohMap = FastMap.newInstance();
+    	List productIds = FastList.newInstance();
+    	for(GenericValue eachInv:physicalInventory){
+    		productIds.add(eachInv.getString("productId"));
+    	}
+    	conditionList.clear();
+    	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(physicalInventory, "facilityId", true)));
+    	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+    	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
+    	try{
+        	productStoreList = delegator.findList("FacilityAndProductStoreFacility", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    	} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+    	
+    	Map stockMap = FastMap.newInstance();
+    	for(GenericValue iter:physicalInventory){
+    		Map invMap = FastMap.newInstance();
+    		List<GenericValue> inventoryShipmentList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, iter.getString("inventoryItemId")));
+    		GenericValue inventoryItem = null;		
+    		try{		
+    			inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", iter.getString("inventoryItemId")), false);
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , iter.getString("inventoryItemId")));
+    		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
+    		List<GenericValue> inventoryItemDetails = null;
+    		try{
+        		inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false );
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		BigDecimal bookedQuantity = BigDecimal.ZERO;
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , iter.getString("inventoryItemId")));
+    		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_EQUAL, null));
+    		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.NOT_EQUAL, null));
+    		List<GenericValue> tempInvDetail = null;
+    		try{
+    			tempInvDetail = delegator.findList("InventoryItemDetail",  EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false );
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		
+    		String specification = "";
+    		if(UtilValidate.isNotEmpty(tempInvDetail)){
+    			GenericValue tempDetail = EntityUtil.getFirst(tempInvDetail);
+    			try{
+    				GenericValue tempOrderDetail = delegator.findOne("OrderItemAttribute", UtilMisc.toMap("orderId", tempDetail.get("orderId"),"orderItemSeqId",tempDetail.get("orderItemSeqId"),"attrName","REMARKS"), false);
+    				if(UtilValidate.isNotEmpty(tempOrderDetail)){
+        				specification = tempOrderDetail.getString("attrValue");
+        			}
+    			} catch (GenericEntityException e) {
+        			Debug.logError(e, module);
+        		}
+    			
+    		}
+    		invMap.put("specification", specification);
+    		
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+    		conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, iter.getString("inventoryItemId")));
+    		List<GenericValue>  OrderItemAttribute = null;
+    		try {
+    			OrderItemAttribute = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false );
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		List relaventOrderIds = FastList.newInstance();
+    		if(UtilValidate.isNotEmpty(OrderItemAttribute)){
+    			relaventOrderIds = EntityUtil.getFieldListFromEntityList(OrderItemAttribute, "orderId", true);
+    		}
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , relaventOrderIds));
+    		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
+    		List<GenericValue> orderIdsWithOutCancelledList = null; 
+    		try {
+    			orderIdsWithOutCancelledList = delegator.findList("OrderHeader", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false );
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		List activeOrderIds = EntityUtil.getFieldListFromEntityList(orderIdsWithOutCancelledList, "orderId", true);
+    		List bookedOrdersList = EntityUtil.filterByCondition(orderIdsWithOutCancelledList, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, null));
+    		List bookedOrderIds = EntityUtil.getFieldListFromEntityList(bookedOrdersList, "orderId", true);
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , bookedOrderIds));
+    		List<GenericValue> OrderItemDetailList = null;
+    		try {
+    			OrderItemDetailList = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false );
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    		}
+    		 
+    		
+    		for (GenericValue eachOrderItem:OrderItemDetailList) {
+    			bookedQuantity = bookedQuantity.add(eachOrderItem.getBigDecimal("quantity"));
+    		}
+    		
+    		invMap.put("bookedQuantity", bookedQuantity.setScale(decimals, rounding));
+    		
+    		BigDecimal avalQty = (iter.getBigDecimal("quantityOnHandTotal")).subtract(bookedQuantity);
+    		invMap.put("qty", avalQty.setScale(decimals, rounding));	
+    		
+    		String uom ="";
+    		BigDecimal bundleWeight = BigDecimal.ZERO;
+    		BigDecimal bundleUnitPrice = BigDecimal.ZERO;
+    		
+    		if(UtilValidate.isNotEmpty(inventoryItemDetails)){
+    		   GenericValue inventoryItemDet = EntityUtil.getFirst(inventoryItemDetails);
+    		   uom =inventoryItemDet.getString("uom");
+    		   bundleWeight = inventoryItemDet.getBigDecimal("bundleWeight");
+    		   bundleUnitPrice = inventoryItemDet.getBigDecimal("bundleUnitPrice");
+    		}
+    		invMap.put("uom", uom);
+    		invMap.put("bundleWeight", bundleWeight.setScale(decimals, rounding));
+    		invMap.put("bundleUnitPrice", bundleUnitPrice.setScale(decimals, rounding));
+    		List<GenericValue> inventoryProdStore = EntityUtil.filterByCondition(productStoreList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, inventoryItem.getString("facilityId")));
+    		GenericValue shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
+    		String shipmentId = "";
+    		if(UtilValidate.isNotEmpty(shipmentReceiptEach)) {
+    			invMap.put("shipmentId", shipmentReceiptEach.getString("shipmentId"));
+    			shipmentId = shipmentReceiptEach.getString("shipmentId");
+    			try {
+	    			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.getString("shipmentId")), false);
+	    			GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.getString("facilityId")), false);
+	    			
+	    			
+	    			GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", iter.getString("productId")), false);
+	    			String partyName=PartyHelper.getPartyName(delegator, shipment.getString("partyIdFrom"), false);
+	    			invMap.put("shipmentTypeId", shipment.getString("shipmentTypeId"));
+	    			invMap.put("fromPartyId", shipment.getString("partyIdFrom"));
+	    			String poRefNum = "";
+	    			GenericValue orderAttributes = delegator.findOne("OrderAttribute", UtilMisc.toMap("orderId",shipment.getString("primaryOrderId"),"attrName","REF_NUMBER"), false);
+	    			
+	    			if(UtilValidate.isNotEmpty(orderAttributes)){
+	    				poRefNum = orderAttributes.getString("attrValue");
+	    			}
+	    			
+	    			conditionList.clear();
+	    			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.getString("primaryOrderId")));
+	    			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_TO_CUSTOMER"));
+	    			List<GenericValue> OrderRole= delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	    			GenericValue OrderRoleValue = EntityUtil.getFirst(OrderRole);
+	    			String branchId = OrderRoleValue.getString("partyId");
+	    			invMap.put("productStoreId", branchId);
+	    			
+	    			GenericValue PartyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", branchId), false);
+	    			
+	    			String branchName = PartyGroup.getString("groupName");
+	    			
+	    			invMap.put("branchName", branchName);
+	    			
+	    			invMap.put("poRefNum", poRefNum);
+	    			invMap.put("facilityId", inventoryItem.getString("facilityId"));
+	    			
+	    			if(UtilValidate.isNotEmpty(inventoryProdStore)){
+	    				GenericValue inventoryProdStoreRecord =  EntityUtil.getFirst(inventoryProdStore);
+	    				invMap.put("branchId", inventoryProdStoreRecord.getString("productStoreId"));
+	    			}
+	    			
+	    			invMap.put("Depot", facility.getString("facilityName"));
+	    			invMap.put("supplier", partyName);
+	    			invMap.put("productName", product.getString("productName"));
+	    			invMap.put("estimatedShipDate", shipment.getString("estimatedShipDate"));
+	    			BigDecimal price = iter.getBigDecimal("unitCost");
+	    			invMap.put("price",price.setScale(decimals, rounding));
+				} catch (GenericEntityException e) {
+        			Debug.logError(e, module);
+        		}
+    		}else{
+    			invMap.put("shipmentId", "");
+    		}
+    		if (avalQty.compareTo(BigDecimal.ZERO) > 0){
+    			stockMap.put(shipmentId,invMap);
+    		}
+    	}
+    	result.put("stockMap",stockMap);
+        return result;
+    }
 }
