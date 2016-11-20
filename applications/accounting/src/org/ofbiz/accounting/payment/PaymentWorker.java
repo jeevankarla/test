@@ -797,6 +797,7 @@ public class PaymentWorker {
         String paymentId = (String) context.get("paymentId");
         String finAccountId = (String) context.get("finAccountId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String depositReceiptFlag = (String) context.get("depositReceiptFlag");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
@@ -824,11 +825,14 @@ public class PaymentWorker {
 				depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
 			}
 			depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
-		/*	Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
-			if (ServiceUtil.isError(depositResult)) {
-				Debug.logError(depositResult.toString(), module);
-				return ServiceUtil.returnError(null, null, null, depositResult);
-			}*/
+			if(UtilValidate.isNotEmpty(depositReceiptFlag) && "Y".equals(depositReceiptFlag)){
+				Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
+				if (ServiceUtil.isError(depositResult)) {
+					Debug.logError(depositResult.toString(), module);
+					return ServiceUtil.returnError(null, null, null, depositResult);
+				}
+			}
+			
         }catch(Exception e){
         	 Debug.logError(e, e.toString(), module);
              return ServiceUtil.returnError(e.toString());

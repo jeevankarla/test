@@ -82,6 +82,7 @@ under the License.
         <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
         <attribute name="instrumentDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
+        <attribute name="depositReceiptFlag" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="depositReceiptPayment" engine="java"
@@ -89,6 +90,7 @@ under the License.
         <description>Checks PaymentMethodType if it is cash then deposit directly into cash Account</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="depositReceiptFlag" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="checkPaymentInvoices" engine="java"

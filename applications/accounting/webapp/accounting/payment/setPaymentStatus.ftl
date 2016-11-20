@@ -105,9 +105,8 @@
 	function paymentStatusToolTip(checkFlag){
 		var message = "";
 		testFlag = checkFlag;
-		
 		message += "<form action='setPaymentStatus' method='post' onsubmit='return disableButton();'><table cellspacing=10 cellpadding=10>" ; 		
-		            if(testFlag == true && (paymentMethodType == 'FT_PAYIN' || paymentMethodType == 'FUND_TRANSFER' || paymentMethod == 'CHEQUE_PAYIN' || paymentMethodType == 'CHEQUE')){
+		            if(testFlag == true && (paymentMethodType == 'FT_PAYIN' || paymentMethodType == 'FUND_TRANSFER' || paymentMethod == 'CHEQUE_PAYIN' || paymentMethodType == 'CHEQUE' || paymentMethodType == 'CHEQUE_PAYOUT'	|| paymentMethodType == 'FT_PAYOUT')){
 		            	message += "<tr class='h3'><td align='left' class='h3' width='40%'>Financial Account:</td><td align='right' width='60%'><select name='finAccountId' id='finAccountId'>";
 		            	for(var i=0 ; i<finAccountIdsList.length ; i++){
 							var innerList=finAccountIdsList[i];
@@ -121,6 +120,9 @@
 			if(paymentMethod == 'PAYMENTMETHOD4' || paymentMethodType == 'CHEQUE_PAYIN'){
 					message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Cheque In favour of:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'value='${chequeInFavour?if_exists}'/></td></tr>";
 			}
+		}
+		if(testFlag == true){
+		message +=	"<input type='text' name='depositReceiptFlag' id='depositReceiptFlag' value='Y'/>";
 		}
 		message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
 		message += "<input type='hidden' name='paymentId' id='paymentId' value='${payment.paymentId?if_exists}'/> <input type='hidden' name='statusId' id='statusId' value='${statusId?if_exists}'/>"+
