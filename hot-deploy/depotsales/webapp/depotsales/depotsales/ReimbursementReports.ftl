@@ -48,6 +48,7 @@ $(document).ready(function(){
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker3("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker3("depotReimburcentReportFRO","depotReimburcentReportTHRU");
+	    makeDatePicker3("depotReimburcentSummaryReportFRO","depotReimburcentSummaryReportTHRU");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");
@@ -151,6 +152,49 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+           </form>
+        </tr> 
+        
+         <tr class="alternate-row">
+      	   <form id="depotReimburcentSummaryReport" name="depotReimburcentSummaryReport" method="post" action="<@ofbizUrl>depotReimburcentSummaryReport.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">Depot Reimbursment Summary Report</td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="depotReimburcentSummaryReportFRO" readonly  name="partyfromDate" required /></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="depotReimburcentSummaryReportTHRU" readonly  name="partythruDate" required /></td>
+              <#-- <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId" required>
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>  -->
+			   <td width="15%"><span class='h3'>State 
+				 <select name="state" id="state">
+				     <option value="ALL"></option>
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			  <td width="15%"><span class='h3'>Category 
+				 <select name="productCategory" id="productCategory">
+				     <option value='SILK'>SILK</option>
+				     <option value='JUTE_YARN'>JUTE</option>
+				     <option value='OTHER'>OTHERS</option>
+				  </select>    								
+			  </span></td>
+				 <td width="15%"><span class='h3'>Report Type 
+				 <select name="reportType" id="reportType">
+				     <option value='DEPOT'>Depot</option>
+				     <option value='WITHOUT_DEPOT'>Without Depot</option>
+				  </select>    								
+			  </span></td>
+			  <td> </td>
+			<#-- 	<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentSummaryReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> -->
+			<td width="10%">
+				<input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.csv</@ofbizUrl>');" class="buttontext"/>
+			</td>	
            </form>
         </tr> 
         

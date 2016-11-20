@@ -292,4 +292,29 @@
             </widgets>
         </section>
     </screen>
+    <screen name="depotReimburcentSummaryReportPDF">
+        <section>
+            <actions>
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/depotReimburcentSummaryReportPDF.groovy"/>
+            </actions>
+            <widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/depotReimburcentSummaryReportPDF.fo.ftl"/>
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+           
+        </section>
+    </screen>
 </screens>
+
+
+
+
+
+
