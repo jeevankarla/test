@@ -655,8 +655,8 @@ public class DepotPurchaseServices{
 	             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
 	 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
 	 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
-	             invoice.set("referenceNumber", supplierInvoiceId);
-	             invoice.set("referenceDate",supplierInvoiceDate);
+	             invoice.set("millInvoiceNo", supplierInvoiceId);
+	             invoice.set("millInvoiceDate",supplierInvoiceDate);
 	             try {
 	                 delegator.createOrStore(invoice);
 	             } catch (GenericEntityException e) {
@@ -9639,8 +9639,8 @@ public class DepotPurchaseServices{
   		             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
   		 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
   		 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
-  		             invoice.set("referenceNumber", supplierInvoiceId);
-  		             invoice.set("referenceDate",supplierInvoiceDate);
+  		             invoice.set("millInvoiceNo", supplierInvoiceId);
+  		             invoice.set("millInvoiceDate",supplierInvoiceDate);
   		             try {
   		                 delegator.createOrStore(invoice);
   		             } catch (GenericEntityException e) {
