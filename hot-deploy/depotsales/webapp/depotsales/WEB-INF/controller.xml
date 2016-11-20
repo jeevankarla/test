@@ -2276,11 +2276,20 @@
          <response name="success" type="view" value="reimburcentTransporterReportCSV"/>
 	     <response name="error" type="view" value="reimburcentTransporterReportCSV"/>
     </request-map> 
+     <request-map uri="depotReimburcentSummaryReport.csv">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="depotReimburcentSummaryReportCSV"/>
+	     <response name="error" type="view" value="depotReimburcentSummaryReportCSV"/>
+    </request-map>
     
     <request-map uri="depotReimburcentReport.csv">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentReportCSV"/>
 	     <response name="error" type="view" value="depotReimburcentReportCSV"/>
+    </request-map> 
+     <request-map uri="depotReimburcentSummaryReport.pdf">
+         <security auth="true" https="true"/>
+         <response name="success" type="view" value="depotReimburcentSummaryReportPDF"/>
     </request-map> 
         
     <request-map uri="cancelPurchaseInvoice">
@@ -2366,10 +2375,11 @@
 	
 	<view-map name="indentHeadReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentHeadReportCSV" content-type="text/csv"/>
 	 <view-map name="reimburcentTransporterReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportCSV" content-type="text/csv"/>
+	 <view-map name="depotReimburcentSummaryReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentSummaryReportCSV" content-type="text/csv"/>
 	 
 	 <view-map name="depotReimburcentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentReportCSV" content-type="text/csv"/>
 	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
-
+	<view-map name="depotReimburcentSummaryReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentSummaryReportPDF" content-type="application/pdf"/>
 	
 	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>

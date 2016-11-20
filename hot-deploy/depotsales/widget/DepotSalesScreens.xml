@@ -8563,6 +8563,29 @@
 			</widgets>
 		</section>
 	</screen>
+	 <screen name="depotReimburcentSummaryReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/depotReimburcentSummaryReportPDF.groovy"/>  
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="depotReimburcentSummaryReportCSV"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	   
 	
 	 <screen name="depotReimburcentReportCSV">
