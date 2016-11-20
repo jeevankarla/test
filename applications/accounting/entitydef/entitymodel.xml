@@ -1391,8 +1391,8 @@
 		<field name="referenceDate" type="date-time"></field><!-- used to record things like the vendor's invoice number Date -->
 		<field name="description" type="description"></field>
 		<field name="cancelComments" type="long-varchar"></field>
-		<field name="millInvoiceNo" type="long-varchar"></field>
-		<field name="millInvoiceDate" type="date-time"></field>
+		<!-- <field name="partyInvoiceNo" type="long-varchar"></field>
+		<field name="partyInvoiceDate" type="date-time"></field> -->
 		<field name="currencyUomId" type="id"></field>
 		<field name="recurrenceInfoId" type="id"></field>
 		<field name="createdByUserLogin" type="id-vlong"></field>

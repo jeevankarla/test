@@ -646,7 +646,7 @@ public class DepotPurchaseServices{
 			return "error";
 		}
 		
-		String invoiceId =  (String)result.get("invoiceId");
+		/*String invoiceId =  (String)result.get("invoiceId");
 		if(UtilValidate.isNotEmpty(invoiceId)){
 			GenericValue Shipment = null;
 			GenericValue invoice = null;
@@ -669,7 +669,7 @@ public class DepotPurchaseServices{
 	              request.setAttribute("_ERROR_MESSAGE_", "failed to store referenceNumber and referenceDate::"+invoiceId);
 	              return "error";
 	         }
-		}
+		}*/
 		
 		
 		
@@ -9630,7 +9630,7 @@ public class DepotPurchaseServices{
   				return "error";
   			}
   			
-  			String invoiceId =  (String)result.get("invoiceId");
+  			/*String invoiceId =  (String)result.get("invoiceId");
   			if(UtilValidate.isNotEmpty(invoiceId)){
   				GenericValue Shipment = null;
   				GenericValue invoice = null;
@@ -9653,7 +9653,7 @@ public class DepotPurchaseServices{
   		              request.setAttribute("_ERROR_MESSAGE_", "failed to store referenceNumber and referenceDate::"+invoiceId);
   		              return "error";
   		         }
-  			}
+  			}*/
 
   			//============================================Rounding Off===============================
   			  List<GenericValue> InvoiceItem = null;
