@@ -1795,12 +1795,14 @@ public class DepotSalesApiServices{
         
         Map resultCtx = FastMap.newInstance();
         List productStoreList = FastList.newInstance();
+        Debug.log("111111111111111111111111111111111111111111111111");
         try{
         	resultCtx  = dispatcher.runSync("getCustomerBranch", UtilMisc.toMap("userLogin",userLogin));
         	productStoreList = (List) resultCtx.get("productStoreList");
 		} catch(Exception e){
 			Debug.logError("Not a valid party", module);
 		}
+        Debug.log("222222222222222222222222222222222222222222222");
         List branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
         List purorderIds = FastList.newInstance();
         List conditionList = FastList.newInstance();
@@ -1829,7 +1831,7 @@ public class DepotSalesApiServices{
 		}
         shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
         List shipmentIdsList = FastList.newInstance();
-        
+        Debug.log("33333333333333333333333333333333333333333");
         List<GenericValue> shipmentListForPOInvoiceId = null;
         for (GenericValue eachShipment:shipmentList) {
       	  conditionList.clear();
@@ -1866,7 +1868,7 @@ public class DepotSalesApiServices{
     	} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
-    	
+    	Debug.log("44444444444444444444444444444444444444444");
     	conditionList.clear();
     	conditionList.add(EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"));
     	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIdsList));
