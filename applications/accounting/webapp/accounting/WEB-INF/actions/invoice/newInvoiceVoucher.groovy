@@ -1299,7 +1299,10 @@ for (eachList in invoiceItemList) {
 		  itemAdjustList.add(tempMap);
 		  }
 		  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
+			  
+		  if(eachItem.itemValue){
 		  mgpsAmt = mgpsAmt+eachItem.itemValue;
+		  }
 		  }
 		  if(eachItem.invoiceItemTypeId=="CST_SALE"){
 			  cFormAgnst=cFormAgnst+1;
