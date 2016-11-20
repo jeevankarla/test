@@ -304,6 +304,7 @@ input[type=button]:hover {
 			productName = dataRow["cProductName"];
 			var totalAmt = dataRow["amount"];
 			
+			
 			//var saleAmount = dataRow["amount"];
 			
 			
@@ -388,6 +389,10 @@ input[type=button]:hover {
 			  });
 			  
 			 var schemeCategory = $("#schemeCategory").val();
+			 
+			 if(schemeCategory == "General"){
+			    totalAmt = dataRow["unitPricePur"]*dataRow["quantity"];
+			 }
 			 
 			  var onbehalfOff = $("#onbehalfOff").val();
 			  
@@ -1035,6 +1040,8 @@ input[type=button]:hover {
 	
 	//alert(basicAmount);
 	
+	
+	
 	var totaladjValueTaxForEntry = 0;
 	
 	
@@ -1058,9 +1065,10 @@ input[type=button]:hover {
 		    }
 		    
 		    
-		      
-		    
-		     totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
+		      var incBasic = $("#VAT_PUR_INC_BASIC").is(":checked");
+			    	
+		      if(id == "VAT_PUR_AMT" && incBasic == false)
+		      totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
 		    
 		   }//end
 		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
