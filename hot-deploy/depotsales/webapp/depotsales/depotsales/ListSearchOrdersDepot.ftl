@@ -240,6 +240,7 @@ function drawRow(rowData) {
     $("#coreTable tr:even").css("background-color", "#F4F4F8");
     
     
+    
     //For Indent OverView
     
      if(rowData.orderNo != "NA"){
@@ -252,7 +253,6 @@ function drawRow(rowData) {
      }
 
     //Branch Name
-    
      row.append($("<td>" + rowData.storeName + "</td>"));
      
     // TallyRef No 
