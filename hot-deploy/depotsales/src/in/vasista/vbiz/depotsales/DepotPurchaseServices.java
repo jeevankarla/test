@@ -655,7 +655,7 @@ public class DepotPurchaseServices{
 	             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
 	 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
 	 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
-	             invoice.set("referenceNumber", supplierInvoiceId);
+	             //invoice.set("referenceNumber", supplierInvoiceId);
 	             invoice.set("referenceDate",supplierInvoiceDate);
 	             try {
 	                 delegator.createOrStore(invoice);
@@ -9639,7 +9639,7 @@ public class DepotPurchaseServices{
   		             String supplierInvoiceId = Shipment.getString("supplierInvoiceId");
   		 			 Timestamp supplierInvoiceDate = (Timestamp)Shipment.get("supplierInvoiceDate");
   		 			 invoice = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), false); 
-  		             invoice.set("referenceNumber", supplierInvoiceId);
+  		             //invoice.set("referenceNumber", supplierInvoiceId);
   		             invoice.set("referenceDate",supplierInvoiceDate);
   		             try {
   		                 delegator.createOrStore(invoice);
