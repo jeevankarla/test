@@ -491,6 +491,7 @@ reportType:byAccount -->
 						from-field="parameters.editAcctgTransEntrySeqId" />
 				</entity-one>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
 					<field-map field-name="acctgTransId" />
 					<order-by field-name="acctgTransEntrySeqId" />
@@ -550,11 +551,16 @@ reportType:byAccount -->
 														<screenlet title="${uiLabelMap.PageTitleEditTransaction}">
 															<include-form name="EditAcctgTransNew" location="component://accounting/widget/GlForms.xml" />
 														</screenlet>
-														<screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
+														<!--  <screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
 															<include-form name="ListAcctgTransEntriesNew" location="component://accounting/widget/GlForms.xml" />
-														</screenlet>
+														</screenlet>-->
 														<screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
-															<include-form name="EditAcctgTransEntryNew"	location="component://accounting/widget/GlForms.xml" />
+ 														<!--	<include-form name="EditAcctgTransEntryNew"	location="component://accounting/widget/GlForms.xml" /> -->
+															<platform-specific>
+															<html>
+																<html-template location="component://accounting/webapp/accounting/reports/EditAcctgTransEntryNew.ftl" />
+															</html>
+														</platform-specific>	
 														</screenlet>
 														<platform-specific>
 															<html>
@@ -630,6 +636,8 @@ reportType:byAccount -->
 					<field-map field-name="mainAction" value="VIEW" />
 				</service>
 				<set field="hasAcctgAtxViewPermission" from-field="permResult.hasPermission" />
+			    <script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonPartyAccountingTransactionDecorator"
@@ -675,13 +683,18 @@ reportType:byAccount -->
 													<include-form name="EditAcctgTrans"
 														location="component://accounting/widget/GlForms.xml" />
 												</screenlet>
-												<screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
-													<include-form name="ListAcctgTransEntries"
-														location="component://accounting/widget/GlForms.xml" />
-												</screenlet>
+<!-- 												<screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}"> -->
+<!-- 													<include-form name="ListAcctgTransEntries" -->
+<!-- 														location="component://accounting/widget/GlForms.xml" /> -->
+<!-- 												</screenlet> -->
 												<screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
-													<include-form name="EditAcctgTransEntry"
-														location="component://accounting/widget/GlForms.xml" />
+<!-- 													<include-form name="EditAcctgTransEntry" -->
+<!-- 														location="component://accounting/widget/GlForms.xml" /> -->
+														<platform-specific>
+															<html>
+																<html-template location="component://accounting/webapp/accounting/reports/EditAcctgTransEntryNew.ftl" />
+															</html>
+														</platform-specific>
 												</screenlet>
 											</fail-widgets>
 										</section>
