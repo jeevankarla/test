@@ -4179,6 +4179,22 @@ under the License.
         </response>
         <response name="error" type="view" value="EmployeeAdvance"/>    
     </request-map>
+    <request-map uri="createAcctgTransEntrySer">
+       <event type="service"  invoke="createAcctgTransEntry"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="updateAcctgTransEntrySer">
+       <event type="service"  invoke="updateAcctgTransEntry"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="deleteAcctgTransEntrySer">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAcctgTransEntry"/>
+        <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>   
+    </request-map>
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
