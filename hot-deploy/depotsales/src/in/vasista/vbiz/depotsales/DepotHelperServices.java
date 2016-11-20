@@ -1968,7 +1968,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 						  return ServiceUtil.returnError("Error While Updating grandTotal for Order : "+orderId);
 					}
 	        	List<GenericValue> OrderItemDetailList = EntityUtil.filterByCondition(OrderItemDetailsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
-	         
+		     
 	        	BigDecimal quotaQty =BigDecimal.ZERO;
 					//List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 					if(UtilValidate.isNotEmpty(OrderItemDetailList)){
@@ -2071,6 +2071,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	  		       if(UtilValidate.isNotEmpty(POOrderId)){
 	  		    	 condList.clear();
 		  		      condList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, POOrderId));
+		  		      condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
 		  			   EntityCondition condExpress1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		  		        List<String> orderBy = UtilMisc.toList("-createdDate");
 
@@ -2122,6 +2123,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 													discAmount = ((quotaQuantity.multiply(utPrice)).multiply(percentModifier)).negate();
 										        	createInvItem.put("amount",discAmount);
 											}
+								        	createInvItem.put("itemValue",discAmount.setScale(0, rounding));
 									        try{
 										          Map<String, Object> createInvItemResult = dispatcher.runSync("createInvoiceItem", createInvItem);
 									         }catch (GenericServiceException e) {
