@@ -456,7 +456,7 @@
 		
 						  // alert("totalAmt=======loop======"+totalAmt);
 						  
-						  if(orderAdjustment.orderAdjustmentTypeId != "ROUNDING_CHARGES" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_OFF" && orderAdjustment.orderAdjustmentTypeId != "PRICE_DISCOUNT"){
+						  if(orderAdjustment.orderAdjustmentTypeId != "ROUNDING_CHARGES" && orderAdjustment.orderAdjustmentTypeId != "ROUNDING_OFF" && orderAdjustment.orderAdjustmentTypeId != "PRICE_DISCOUNT" && orderAdjustment.orderAdjustmentTypeId != "INSURANCE_CHGS"){
 						
 							message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
@@ -468,7 +468,7 @@
 									"</tr>";
 									
 							}
-							else if(orderAdjustment.orderAdjustmentTypeId == "PRICE_DISCOUNT"){
+							else if(orderAdjustment.orderAdjustmentTypeId == "PRICE_DISCOUNT" || orderAdjustment.orderAdjustmentTypeId == "INSURANCE_CHGS"){
 						       message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='10' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
@@ -479,7 +479,6 @@
 									"</tr>";
 						    }
 							else{
-							
 							    message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
 										"<td><input type='number' max='100' step='.5' maxlength='10' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
@@ -582,9 +581,11 @@
 	
 	if(addAdjType != "")
 	
-	 if(addAdjType != "ROUNDING_CHARGES" && addAdjType != "ROUNDING_OFF" && addAdjType != "PRICE_DISCOUNT")
+	 if(addAdjType != "ROUNDING_CHARGES" && addAdjType != "ROUNDING_OFF" && addAdjType != "PRICE_DISCOUNT" && addAdjType != "INSURANCE_CHGS")
 	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"   /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
      else if(addAdjType == "PRICE_DISCOUNT" )
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+     else if(addAdjType == "INSURANCE_CHGS" )
 	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
      else
      $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
@@ -1060,9 +1061,9 @@
 		    
 		  if(id == "CST_PUR_AMT" || id == "VAT_PUR_AMT" || id == "ENTRY_TAX_PUR_AMT" || id == "CST_SURCHARGE_PUR_AMT" || id == "VAT_SURCHARGE_PUR_AMT")  
 		    totTax = totTax + parseFloat(adjValueAmt);
-		  if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT")    
+		  if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT")    
 		    totAdj = totAdj + parseFloat(adjValueAmt);
-		  if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT")     
+		  if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT")     
 		    totDis = totDis + parseFloat(adjValueAmt);
 		    
 		    
