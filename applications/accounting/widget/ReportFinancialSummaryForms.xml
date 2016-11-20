@@ -99,34 +99,34 @@ under the License.
 
     <form name="IncomeStatementRevenues" type="list" list-name="revenueAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="accountCode">
+        <!-- <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="IncomeStatementExpenses" type="list" list-name="expenseAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="accountCode">
+        <!-- <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="IncomeStatementIncome" type="list" list-name="incomeAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="accountCode">
+        <!-- <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>

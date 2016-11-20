@@ -241,8 +241,8 @@ under the License.
         <field name="transTypeDescription" title="Trans Type Description"><display/></field>       
         <field name="paymentId" title="Payment Id"><display/></field>       
         <field name="fixedAssetId" title="Fixed Asset Id"><display/></field>       
-        <field name="finAccountTransId" title="Fin Account Trans Id"><display/></field>       
-        <field name="glAccountId" title="Gl Account Id"><display/></field>       
+        <field name="finAccountTransId" title="`Fin Account Trans Id"><display/></field>       
+        <!-- <field name="glAccountId" title="Gl Account Id"><display/></field> -->       
         <field name="productId" title="Product Id"><display/></field>       
         <field name="debitCreditFlag" title="debitCredit Flag"><display/></field>
         <field name="amount" title="Amount"><display/></field>       
