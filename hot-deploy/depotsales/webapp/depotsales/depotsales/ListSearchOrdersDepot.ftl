@@ -278,13 +278,13 @@ function drawRow(rowData) {
     row.append($("<td>" + indentDate + "</td>"));
     
     
-  <#-- > if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
+   if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
    row.append($("<td>" +  editOrder  +"</td>"));  
    }else{
    
     row.append($("<td></td>"));
-   }  -->
+   }  
     
    
    if(rowData.statusId != "ORDER_CANCELLED"){
@@ -481,7 +481,7 @@ function drawRow(rowData) {
     
     }
     
-    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED"){
+    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId == "ORDER_APPROVED"){
       var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';
       row.append($("<td>" +  amendButton  +"</td>"));  
    }else{
