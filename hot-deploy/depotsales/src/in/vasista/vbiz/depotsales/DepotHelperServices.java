@@ -2031,6 +2031,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 												BigDecimal percentModifier = schemePercent.movePointLeft(2);
 												BigDecimal discAmount = ((quotaQty.multiply(utPrice)).multiply(percentModifier)).negate();
 												eachinvoiceItem.set("amount",discAmount);
+												eachinvoiceItem.put("itemValue",discAmount.setScale(0, rounding));
 												eachinvoiceItem.store();
 												eachAdjBill.set("quantity",quotaQty);
 												eachAdjBill.set("amount",discAmount);
