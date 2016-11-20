@@ -646,8 +646,8 @@ public class DepotPurchaseServices{
 			return "error";
 		}
 		
-		/*String invoiceId =  (String)result.get("invoiceId");
-		if(UtilValidate.isNotEmpty(invoiceId)){
+		String invoiceId =  (String)result.get("invoiceId");
+		/*if(UtilValidate.isNotEmpty(invoiceId)){
 			GenericValue Shipment = null;
 			GenericValue invoice = null;
 	        try{
@@ -9630,8 +9630,8 @@ public class DepotPurchaseServices{
   				return "error";
   			}
   			
-  			/*String invoiceId =  (String)result.get("invoiceId");
-  			if(UtilValidate.isNotEmpty(invoiceId)){
+  			String invoiceId =  (String)result.get("invoiceId");
+  			/*if(UtilValidate.isNotEmpty(invoiceId)){
   				GenericValue Shipment = null;
   				GenericValue invoice = null;
   		        try{
