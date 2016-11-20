@@ -324,7 +324,8 @@ under the License.
 				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>
 				<fo:block>b) Total Sale Value     (Rs): ${toTunitPrice?string("#0.00")} </fo:block>
 				<fo:block>c) Difference of the Sale</fo:block>
-				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: Nil</fo:block>
+				<#assign paymentBill=purchaeTot-toTunitPrice>
+				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: ${paymentBill?string("#0.00")}</fo:block>
 				<fo:block>d) 0 days interest on the credit:</fo:block>
 				<#assign orderAdj = delegator.findByAnd("OrderAdjustment", {"orderId" : indentId, "orderAdjustmentTypeId" : "SERVICE_CHARGE" })?if_exists />
 				<fo:block>e) Percentage of Trading Contribution: <#if orderAdj?has_content><#if orderAdj[0].sourcePercentage?has_content>${orderAdj[0].sourcePercentage}<#else>0</#if><#else>0</#if>% Amount:<#if orderAdj?has_content><#if orderAdj[0].sourcePercentage?has_content>${orderAdj[0].amount}<#else>0</#if><#else>0</#if> </fo:block>
@@ -346,8 +347,12 @@ under the License.
 									<fo:block>1. Goods will be despatched on Freight To-Pay basis to M/S: <fo:inline font-weight="bold">${partyName}</fo:inline> </fo:block>
 				                    <fo:block white-space-collapse="false">2. Payment will be made by user agency within BACK TO BACK/ ON CREDIT days / immediately failing which interest @    per annum will be charged for the total number of days payment delayed.</fo:block>
 	                                <fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>
-	                                <fo:block>4. Total outstanding of M/S ${partyName} is Rs <fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline></fo:block>
-	                                <fo:block>5. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
+	                                <#assign outSandAmt=0>
+	                                <#if paymentAmt<toTunitPrice>
+	                                    <#assign outSandAmt=toTunitPrice-paymentAmt>
+	                                </#if>
+	                                <fo:block>4. Total outstanding of M/S ${partyName} is Rs <fo:inline font-weight="bold">${outSandAmt?string("#0.00")} </fo:inline></fo:block>
+	                                <fo:block>5. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${outSandAmt?string("#0.00")} </fo:block>
 	                                <fo:block>6. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
 	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
 	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
@@ -374,7 +379,8 @@ under the License.
 		  </fo:block>
 	<fo:block>.</fo:block>
     <#assign size = paymentRefNumList.size()>
-	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting (Rs) ${totAmt?string("#0.00")}  received from user agency M/S:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
+    <#assign amtSize = advacneAmtList.size()>
+	<fo:block>Advance Details: Cheque/DD No : <#assign count = 0><#list paymentRefNumList as paymentRefNum><#assign count = count+1> ${paymentRefNum?if_exists} <#if count ==size><#else>,</#if> </#list> Cr on Account amounting (Rs) <#assign count = 0><#list advacneAmtList as eachAdv><#assign count = count+1> ${eachAdv?if_exists} <#if count ==amtSize><#else>,</#if> </#list>${totAmt?string("#0.00")}  received from user agency M/S:<fo:inline font-weight="bold">${partyName}</fo:inline></fo:block>
 	<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
     <fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block> 
     <fo:block white-space-collapse="false" keep-together="always" text-align="left"><fo:inline text-decoration="underline">Sr.Officer(C)/AM(C)/DM(C)      Sr.Officer(F&amp;A)/A.M(F&amp;A)/Dy.M(F&amp;A)/Manager(F&amp;A)   Mgr(C)/Sr.Mgr(C)/Ch.Mgr(C)/D.G.M(C)</fo:inline></fo:block>  			

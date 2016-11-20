@@ -143,13 +143,19 @@ conditionList2.add(EntityCondition.makeCondition("paymentId" ,EntityOperator.IN,
 cond2 = EntityCondition.makeCondition(conditionList2, EntityOperator.AND);
 paymentDetailList = delegator.findList("Payment", cond2, null, null, null ,false);
 paymentRefNumList =[];
+advacneAmtList=[];
+paymentAmt=0;
 paymentDetailList.each{eachPayment->
+	BigDecimal amount=eachPayment.amount;
+	paymentAmt=paymentAmt+amount;
 	if((eachPayment) && (eachPayment.paymentRefNum)){
 		paymentRefNum = eachPayment.paymentRefNum;
 		paymentRefNumList.add(paymentRefNum);
 	}
-	
+	advacneAmtList.add(amount);
 }
+context.paymentAmt=paymentAmt;
+context.advacneAmtList=advacneAmtList;
 context.paymentRefNumList = paymentRefNumList;
 totAmt = 0;
 
