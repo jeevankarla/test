@@ -33,8 +33,10 @@
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	ProductStore =  EntityUtil.getFirst(delegator.findList("ProductStore",condition,null,null,null,false));
 	
+	if(ProductStore)
 	context.branchName = ProductStore.productStoreId;
-	
+	else
+	context.branchName = "";
 	
 	// To check if logged in user is Customer
 	partyRoles = delegator.findList("PartyRole", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId), null,null,null, false);
