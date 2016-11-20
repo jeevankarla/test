@@ -122,7 +122,7 @@
 			}
 		}
 		if(testFlag == true){
-		message +=	"<input type='text' name='depositReceiptFlag' id='depositReceiptFlag' value='Y'/>";
+		message +=	"<input type='hidden' name='depositReceiptFlag' id='depositReceiptFlag' value='Y'/>";
 		}
 		message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
 		message += "<input type='hidden' name='paymentId' id='paymentId' value='${payment.paymentId?if_exists}'/> <input type='hidden' name='statusId' id='statusId' value='${statusId?if_exists}'/>"+
