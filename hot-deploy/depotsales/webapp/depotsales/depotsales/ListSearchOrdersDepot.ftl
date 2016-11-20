@@ -239,6 +239,8 @@ function drawRow(rowData) {
     $("#coreTable").append(row); 
     $("#coreTable tr:even").css("background-color", "#F4F4F8");
     
+    
+    
     //For Indent OverView
     
      if(rowData.orderNo != "NA"){
