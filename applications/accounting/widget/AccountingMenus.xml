@@ -681,6 +681,18 @@
 			</condition>
 			<link target="newPayment" />
 		</menu-item> -->
+		<menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="payment.paymentId" />
+					</not>
+				</and>
+			</condition>
+			<link target="paymentAccountingTrans.pdf" target-window="_BLANK">
+				<parameter param-name="paymentId" from-field="payment.paymentId" />
+			</link>
+		</menu-item>
 		<menu-item name="statusToSend"
 			title="${uiLabelMap.AccountingPaymentTabStatusToSent}">
 			<condition>
