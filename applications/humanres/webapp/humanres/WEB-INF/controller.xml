@@ -1160,7 +1160,7 @@ under the License.
      <request-map uri="createEmployeeMaster">
         <security https="true" auth="true"/>
         <event type="service" invoke="createNewEmployeeMasters"/>     
-        <response name="success" type="request" value="EmployeeProfile"/>
+        <response name="success" type="request" value="EditEmployeeQuals"/>
         <response name="error" type="view" value="EmployeeProfile"/>
     </request-map>
     <request-map uri="updatePreviousEmployment">
