@@ -22,17 +22,19 @@ import org.ofbiz.entity.condition.*
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.EntityUtil;
 
-
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
 import java.math.RoundingMode;
+
+import javolution.util.FastList;
 
 import org.ofbiz.party.party.PartyHelper;
 
 facilityId = parameters.facilityId;
-
+supplierInvId=parameters.supplierInvId;
 //find shipmentIds by filter criteria
 
 
@@ -219,9 +221,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	
     // associate the quantities to each row and store the combined data as our list
     physicalInventoryCombined = [];
+	physicalInventoryCombined2 = [];
     physicalInventory.each { iter ->
         row = iter.getAllFields();
-		
 		unitCost=row.get("unitCost");
 		row.putAt("unitCost", unitCost.setScale(2, rounding));
 		row.productATP = atpMap.get(row.productId);
@@ -295,6 +297,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
 			row.putAt("shipmentTypeId", shipment.shipmentTypeId);
+			row.putAt("supplierInvoiceId", shipment.supplierInvoiceId); 
 			row.putAt("fromPartyId", shipment.partyIdFrom);
 			poRefNum = "";
 			orderAttributes = delegator.findOne("OrderAttribute", [orderId : shipment.primaryOrderId,attrName:"REF_NUMBER"], false);
@@ -336,6 +339,14 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		}
         physicalInventoryCombined.add(row);
     }
+    if(UtilValidate.isNotEmpty(supplierInvId)){
+        for(eachList in physicalInventoryCombined){
+			if(eachList.supplierInvoiceId==supplierInvId){
+				physicalInventoryCombined2.add(eachList)
+			}
+		}
+		physicalInventoryCombined=physicalInventoryCombined2;
+	}
     context.physicalInventory = physicalInventoryCombined;
 }
 
