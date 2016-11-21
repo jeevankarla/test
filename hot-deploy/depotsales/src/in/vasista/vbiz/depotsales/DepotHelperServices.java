@@ -2013,6 +2013,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 								condList.clear();
 								condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 								condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+					            condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 								List<GenericValue> invoiceItemDetails = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 								BigDecimal shippedQuantity=BigDecimal.ZERO;
 								BigDecimal utPrice=BigDecimal.ZERO;
