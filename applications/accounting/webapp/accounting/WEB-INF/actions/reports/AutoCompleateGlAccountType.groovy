@@ -28,7 +28,7 @@ glAccount=delegator.findList("GlAccount",null,UtilMisc.toSet("glAccountId","glAc
 glAccount.each{glAccountTypeId->
 	JSONObject newPartyObj = new JSONObject();
 	newPartyObj.put("value",glAccountTypeId.glAccountId);
-	newPartyObj.put("label",glAccountTypeId.accountName);
+	newPartyObj.put("label",glAccountTypeId.glAccountId+"["+glAccountTypeId.accountName+"]");
 	glAccountTypeJSON.add(newPartyObj);
 	glAccountName.put(glAccountTypeId.glAccountId, glAccountTypeId.accountName);
 }
