@@ -276,6 +276,12 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
+        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+            <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
     </form>
      <form name="ListDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -300,6 +306,12 @@ under the License.
             <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
              	<parameter param-name="finAccountId"/>
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+            <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
     </form>
