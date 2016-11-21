@@ -1801,9 +1801,34 @@ public class DepotSalesApiServices{
 		} catch(Exception e){
 			Debug.logError("Not a valid party", module);
 		}
+        
         List branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
-        List purorderIds = FastList.newInstance();
         List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, branchList));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+        conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "BRANCH_CUSTOMER"));
+        List<GenericValue> partyRelationList = null;
+        try {
+        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("shipmentId"), null, false);
+        } catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        List roList = EntityUtil.getFieldListFromEntityList(partyRelationList, "partyIdFrom", true);
+        conditionList.clear();
+        conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, roList));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+        conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "BRANCH_CUSTOMER"));
+        try{
+        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("shipmentId"), null, false);
+        } catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        branchList = EntityUtil.getFieldListFromEntityList(partyRelationList, "partyIdTo", true);
+        
+        List purorderIds = FastList.newInstance();
+        conditionList.clear();
         conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
         conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER")));
         List<GenericValue> OrderRoleList = null;
