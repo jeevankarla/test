@@ -135,5 +135,9 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCTG_ADDNL_VIEW"/>
     <SecurityGroupPermission groupId="ACCTG_ADDNL_GROUP" permissionId="ACCTG_ADDNL_VIEW"/>
     
+    <SecurityPermission description="Accounting Balance Sheet View." permissionId="ACCOUNTINGR_BLS_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTINGR_BLS_VIEW"/>
+    <SecurityGroupPermission groupId="MYPORTAL_BS_ADMIN" permissionId="ACCOUNTINGR_BLS_VIEW"/>
+    
 
 </entity-engine-xml>
