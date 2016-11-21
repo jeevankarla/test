@@ -669,7 +669,7 @@
     </service>
     <service name="finYearPopulationIndentSummaryDetails" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">
-        <description>Approve Depot Orders</description>
+        <description>run populate Indent summary Orders</description>
     </service>
 
 </services>
