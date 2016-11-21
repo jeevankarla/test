@@ -293,6 +293,13 @@
 	
 	function quantityValidator(value ,item) {
 		var quarterVal = value*4;
+		var qty = item['orderedQty'];
+		var oldQty = item['oldRecvdQty'];  
+		var disQty=oldQty+value;
+		if(disQty>qty){
+			alert("Required quantity Should not be greater than indent Qty")
+			return {valid: false, msg: null};
+		}
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
@@ -462,7 +469,7 @@
         
         grandTOT = 0;
         
-        
+           
 			if (args.cell == 1 || args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];
