@@ -837,6 +837,15 @@
     		</entity-options>
     	</drop-down>
     </field>
+    <field name="readType" title="Read">
+      <check/>
+    </field>
+    <field name="writeType" title="Write" position="2">
+      <check/>
+    </field>
+    <field name="spokeType" title="Speak" position="3">
+       <check/>
+    </field>
    <field use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
    </form>
    
@@ -907,11 +916,17 @@
 	</form>
 	<form name="ListLanguage" type="list" list-name="languageList" default-table-style="basic-table">
 	
-	<actions><entity-condition entity-name="PartySkillAndType">
-	 <condition-expr field-name="partyId" from-field="partyId"/>
-	</entity-condition></actions>
+	<actions>
+		
+		<entity-condition entity-name="PartySkillItem">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
+	</actions>
 	<field name="partyId"><hidden value="${partyId}"/></field>
 		<field name="skillTypeId" title="Languages known"><display default-value="${description}"></display></field>
+		<field name="readType" title="Read"><display></display></field>
+		<field name="writeType" title="Write"><display></display></field>
+		<field name="spokeType" title="Speak"><display></display></field>
 		 <field name="deleteLink" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLanguage" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
@@ -923,15 +938,17 @@
     <form name="AddEmployeeSkills" type="single" target="createEmployeeSkill" default-map-name="partySkill">
         <field name="partyId"><hidden/></field>
         <field name="skillTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down>
-                <entity-options description="${description}" entity-name="SkillType">
+            <drop-down allow-empty="true">
+            	
+                 <entity-options description="${description}" entity-name="SkillType"  key-field-name="skillTypeId">
+                 	<entity-constraint name="parentTypeId" operator="equals" value="SKILLS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="yearsExperience"><text/></field>
-        <field name="rating"><text/></field>
-        <field name="skillLevel"><text/></field>
+        <field name="yearsExperience" id-name="yearsExperience"><text/></field> 
+    	<!-- <field name="rating"><text/></field> 
+        <field name="skillLevel"><text/></field> -->
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeSkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeSkill" paginate-target="findPartySkills"
@@ -947,8 +964,10 @@
             <display-entity entity-name="SkillType" description="${description}"/>
         </field>
         <field name="yearsExperience"><text/></field>
-        <field name="rating"><text/></field>
-        <field name="skillLevel"><text/></field>
+        <field name="rating"><text/> <hidden></hidden></field>
+        <field name="skillLevel"><text/><hidden></hidden></field>
+        <field name="startedUsingDate"><text/><hidden></hidden></field>
+        <field name="tenantId"><text/><hidden></hidden></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeSkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
@@ -1241,7 +1260,8 @@
     </form>
     <form name="AddEmplLeave" type="single" target="createEmplLeave">
         <auto-fields-service service-name="updateEmplLeave" map-name="leaveApp"/>
-        <field name="partyId"><hidden/></field>
+         <field name="partyId"><hidden/></field>
+        <field name="emplLeaveApplId"><hidden/></field>
         <field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
@@ -1256,6 +1276,11 @@
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" title="${uiLabelMap.toDate}"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="comment"><hidden/></field>
+        <field name="chDate"><hidden/></field>
+        <field name="levelApproverPartyId"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
@@ -1274,6 +1299,10 @@
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
         <field name="fromDate"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+         <field name="comment"><hidden/></field>
+        <field name="chDate"><hidden/></field>
+        <field name="levelApproverPartyId"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
     </form>
     <form name="ListEmplLeavesReadOnly" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -1312,26 +1341,6 @@
 				<set field="fromDate" value="${EditDpartDetailsList[0].fromDate}"/> 
     	</actions>
     	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
-        <field name="company" title ="Place of posting" entry-name="employment.partyIdFrom">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app">
-                    <parameter param-name="partyId" from-field="employmentData.employment.partyIdFrom"/>
-                </sub-hyperlink>
-            </display-entity>
-        </field>
-        <field name="deptName" title="Department"><display description="${deptName}"/>	</field>
-        <field name="position" entry-name="emplPositionType.emplPositionTypeId" title = "Designation">
-            <hyperlink target="emplPositionView" description="${employmentData.emplPositionType.description} [${employmentData.emplPosition.emplPositionId}]">
-                <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
-            </hyperlink>
-        </field>
-        <field name="grade" title="Pay Grade"><display description="${grade}"/></field>	
-        <field name="salary" title="Basic Salary"><display description="${salary}"/></field>
-         <!-- <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
-            <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
-        </field> -->
-<!--         <field name="appointmentDate" entry-name="employment.appointmentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
- -->        
          <field name="appointmentDate" title="Date of joining at NHDC" entry-name="employment.appointmentDate">
             <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
@@ -1339,7 +1348,32 @@
                 <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
             </hyperlink>
         </field>
+        <field name="deptName" title="Department"><display description="${deptName}"/>	</field>
+         <field name="position" entry-name="emplPositionType.emplPositionTypeId" title = "Designation">
+            <hyperlink target="emplPositionView" description="${employmentData.emplPositionType.description} [${employmentData.emplPosition.emplPositionId}]">
+                <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
+            </hyperlink>
+        </field>
+         <field name="grade" title="Pay Grade"><display description="${grade}"/></field>	
+          <field name="salary" title="Basic Salary"><display description="${salary}"/></field>
+        <field name="company" title ="Place of posting" entry-name="employment.partyIdFrom">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="employmentData.employment.partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
         <field name="location" title="Current Location"><display description="${location}"/></field>
+       
+       
+       
+         <!-- <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
+            <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
+        </field> -->
+<!--         <field name="appointmentDate" entry-name="employment.appointmentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+ -->        
+        
+        
         <field name="joiningDate" title="Date of joining this Unit">
             <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(joiningDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="${parameters.partyId}"/>
@@ -1355,7 +1389,7 @@
             </drop-down>
         </field>
         <field name="fromDate" title="From Date" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><date-time/></field>
-         <field name="resignationDate" title="Date Of Leaving" entry-name="employment.resignationDate" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+         <!-- <field name="resignationDate" title="Date Of Leaving" entry-name="employment.resignationDate" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field> -->
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><submit button-type="button"/></field>
     	
     </form>

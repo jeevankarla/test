@@ -106,6 +106,7 @@
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <entity-one entity-name="PartySkill" value-field="partySkill" auto-field-map="true"/>
+        
         <if>
             <condition>
                 <and>
@@ -123,8 +124,19 @@
                 <create-value value-field="newEntity"/>
             </else>
         </if>
+         <set field="LanguagesCtx.partyId" from-field="parameters.partyId"/>
+         <set field="LanguagesCtx.skillTypeId" from-field="parameters.skillTypeId"/>
+         <set field="LanguagesCtx.readType" from-field="parameters.readType"/>
+         <set field="LanguagesCtx.writeType" from-field="parameters.writeType"/>
+         <set field="LanguagesCtx.spokeType" from-field="parameters.spokeType"/>
+         <call-service service-name="createPartySkillItem" in-map-name="LanguagesCtx"/>
     </simple-method>
-
+	 <simple-method method-name="createPartySkillItem" short-description="Create Pay skill Item">
+        <make-value entity-name="PartySkillItem" value-field="newEntity"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
     <simple-method method-name="updatePartySkill" short-description="Update Party Skills">
         <entity-one entity-name="PartySkill" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -133,6 +145,13 @@
 
     <simple-method method-name="deletePartySkill" short-description="Delete a Skill of Party">
         <entity-one entity-name="PartySkill" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <set field="LanguagesDtx.partyId" from-field="parameters.partyId"/>
+         <set field="LanguagesDtx.skillTypeId" from-field="parameters.skillTypeId"/>
+         <call-service service-name="deletePartySkillItem" in-map-name="LanguagesDtx" />
+    </simple-method>
+    <simple-method method-name="deletePartySkillItem" short-description="Delete a Skill of Party">
+        <entity-one entity-name="PartySkillItem" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

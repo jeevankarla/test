@@ -507,6 +507,7 @@ under the License.
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
                 </service>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/getAllEmployees.js" global="true"/>
                 <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                  
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
