@@ -231,7 +231,8 @@ accountBalanceList.each { accountBalance ->
 context.assetAccountBalanceList = accountBalanceList;
 context.assetAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", balanceTotal));
 context.assetBalanceTotal = balanceTotal;
-balanceAssetTotalList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", balanceTotal));
+//balanceAssetTotalList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", balanceTotal));
+
 
 
 // CURRENT ASSETS
@@ -509,7 +510,9 @@ context.equityAccountBalanceList = accountBalanceList;
 context.equityAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL EQUITIES", "balance", balanceTotal));
 context.equityBalanceTotal = balanceTotal;
 
-context.liabilityEquityBalanceTotal = -(context.liabilityBalanceTotal) + context.equityBalanceTotal
+context.liabilityEquityBalanceTotal = context.liabilityBalanceTotal + context.equityBalanceTotal;
+context.assettBalanceTotal = context.assetBalanceTotal - context.contraAssetBalanceTotal;
+balanceAssetTotalList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", context.assettBalanceTotal));
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingTotalLiabilitiesAndEquities", "balance", context.liabilityEquityBalanceTotal));
 balanceliabilityEquityTotalList.add(UtilMisc.toMap("totalName", "LIABILITIES&EQUITIES TOTAL", "balance", context.liabilityEquityBalanceTotal));
 context.balanceTotalList = balanceTotalList;
