@@ -667,5 +667,9 @@
          <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
          <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
     </service>
+    <service name="finYearPopulationIndentSummaryDetails" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">
+        <description>Approve Depot Orders</description>
+    </service>
 
 </services>

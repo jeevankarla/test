@@ -2125,17 +2125,22 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 										        	createInvItem.put("amount",discAmount);
 											}
 								        	createInvItem.put("itemValue",discAmount.setScale(0, rounding));
+								        	String BillingInvoiceItemSeqId="";
+								        	Map<String, Object> createInvItemResult=FastMap.newInstance();
 									        try{
-										          Map<String, Object> createInvItemResult = dispatcher.runSync("createInvoiceItem", createInvItem);
-									         }catch (GenericServiceException e) {
+										          createInvItemResult = dispatcher.runSync("createInvoiceItem", createInvItem);
+									        }catch (GenericServiceException e) {
 								  		            Debug.logError(e, "Problems Creating invoiceItem", module);
 								  		            return ServiceUtil.returnError("Problems Creating invoiceItem");
 								  		     }
-									        
+									        if (ServiceUtil.isError(createInvItemResult)) {
+									            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(createInvItemResult));
+									        }
+									          BillingInvoiceItemSeqId=(String)createInvItemResult.get("invoiceItemSeqId");
 									     // Create the OrderAdjustmentBilling record
 					                        createOrderAdjustmentBillingContext.put("orderAdjustmentId", orderAdjustmentId);
 					                        createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
-					                        createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
+					                        createOrderAdjustmentBillingContext.put("invoiceItemSeqId", BillingInvoiceItemSeqId);
 					                        createOrderAdjustmentBillingContext.put("amount", discAmount);
 					                        createOrderAdjustmentBillingContext.put("userLogin", userLogin);
 					                        Map<String, Object> createOrderAdjustmentBillingResult = dispatcher.runSync("createOrderAdjustmentBilling", createOrderAdjustmentBillingContext);
@@ -2743,7 +2748,71 @@ public static Map<String,Object> getPurchaseBillDetails(DispatchContext dctx, Ma
     return result;
 }
 
-	
+public static Map<String, Object> finYearPopulationIndentSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	Locale locale = (Locale) context.get("locale");
+	TimeZone timeZone = TimeZone.getDefault();// ::TODO    
+    Timestamp fromDate=null;
+    Timestamp targetDate =null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");  
+			targetDate = new java.sql.Timestamp(sdf.parse("01 APRIL, 2016").getTime());
+		} catch (Exception e) {
+			Debug.logError(e, "Failed to covert date ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		fromDate=UtilDateTime.getDayStart(targetDate);
+	 Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+	 Timestamp thruDate=UtilDateTime.getDayEnd(nowTimeStamp);
+	 int totalDays = UtilDateTime.getIntervalInDays(fromDate, thruDate);
+	 int BgMonth;
+	 int EndMonth;
+	 if(totalDays > 31){
+	 	BgMonth = UtilDateTime.getMonth(UtilDateTime.toTimestamp(fromDate), timeZone, locale) + 1;
+	 	EndMonth = UtilDateTime.getMonth(UtilDateTime.toTimestamp(thruDate), timeZone, locale) + 1;
+
+	 	SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		 for(int i=BgMonth; i<=EndMonth; i++){
+		 	int day = UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(fromDate), timeZone, locale);
+		 	int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(fromDate), timeZone, locale);
+		 	String dayFormat=String.format("%02d", day);
+		 	String monthFormat=String.format("%02d", i);
+		 	String yearFormat=String.format("%04d", year);
+		 	String Date=yearFormat+"-"+monthFormat+"-"+dayFormat;
+		 	Timestamp DateTime=null;
+		 	try {
+		 			DateTime = new java.sql.Timestamp(sdf1.parse(Date).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + Date, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + Date, module);
+		  	}
+		 	Timestamp MothDayBegin = UtilDateTime.getMonthStart(DateTime, timeZone, locale);
+		 	Timestamp MothDayEnd = UtilDateTime.getMonthEnd(DateTime, timeZone, locale);
+		 	//Debug.log("MothDayBegin============================================"+MothDayBegin);
+		 	//Debug.log("MothDayEnd============================================"+MothDayEnd);
+		      String fromDateStr= UtilDateTime.toDateString(MothDayBegin, "yyyy-MM-dd");
+		      String thruDateStr= UtilDateTime.toDateString(MothDayEnd, "yyyy-MM-dd");
+			 	Debug.log("fromDateStr============================================"+fromDateStr);
+			 	Debug.log("thruDateStr============================================"+thruDateStr);
+		 	 try{
+                 Map resultCtx = dispatcher.runSync("runPeriodPopulateIndentSummaryDetails", UtilMisc.toMap("userLogin", userLogin,"fromDate",fromDateStr,"thruDate", thruDateStr));
+                 if (ServiceUtil.isError(resultCtx)) {
+ 	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+ 	  		  		Debug.logError(errMsg , module);
+ 	  		  		return ServiceUtil.returnError(errMsg);
+ 	  		  	}
+             } catch (GenericServiceException e) {
+                 Debug.logError(e, module);
+                 return ServiceUtil.returnError(e.getMessage());
+             }	
+		 }
+	 }
+	return result;	
+} 
 	
 	
   	
