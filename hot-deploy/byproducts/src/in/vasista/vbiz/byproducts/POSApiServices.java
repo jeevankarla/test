@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -86,10 +87,27 @@ public class POSApiServices {
     		userLoginParty = (String)userLogin.get("partyId");
         }
         
+        Map customerBranch = FastMap.newInstance();
+		try {
+			customerBranch = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", userLogin.get("partyId")));
+		} catch(Exception e){
+			return ServiceUtil.returnError("Problem while getting Customer Branch details with partyId:"+userLogin.get("partyId"));
+		}
+		List<GenericValue> productStoreList = (List)customerBranch.get("productStoreList");
+		List customerBranchList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(productStoreList)){
+			for(GenericValue eachProdStore:productStoreList){
+				customerBranchList.add(eachProdStore.getString("productStoreId"));
+			}
+		}
+        
+        
+        
 		Map result = FastMap.newInstance();  	
 		Map permissions = FastMap.newInstance();
 		permissions.put("permissionList", permissionList);
 		permissions.put("userLoginParty",userLoginParty);
+		permissions.put("productStoreId",customerBranchList.get(0));
 		result.put("permissionResults", permissions);
 		Debug.logInfo("result:" + result, module);
     	return result;
