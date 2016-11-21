@@ -790,7 +790,7 @@
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field> -->
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-		<field name="caste" title="${uiLabelMap.Caste}" ><display description="${caste}"></display></field>
+		<field name="caste" title="Category" ><display description="${caste}"></display></field>
 		<field name="nationality" title="${uiLabelMap.Nationality}" ><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<!-- <field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field> -->
@@ -1016,6 +1016,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="courseCompleteDesc" title="Actual Course Completion:" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
        <field name="fromDate" id-name="fromDate" title="" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/> </field> 
        <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfPassing}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/></field>
        <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
@@ -1035,6 +1036,7 @@
 			<sort-field name="specialization"/>
 			<sort-field name="universityBoard"/>
 			<sort-field name="courseDuration"/>
+			<sort-field name="courseCompleteDesc"/>
 			<sort-field name="fromDate"/>		 	
            	<sort-field name="thruDate"/>
            	<sort-field name="passingGrade"/>
