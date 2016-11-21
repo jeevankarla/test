@@ -120,6 +120,17 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+         <attribute name="skillType"  mode="IN" type="String" optional="true"/>
+        <attribute name="readType"  mode="IN" type="String" optional="true"/>
+        <attribute name="writeType"  mode="IN" type="String" optional="true"/>
+        <attribute name="spokeType"  mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="createPartySkillItem" engine="simple" default-entity-name="PartySkillItem"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartySkillItem" auth="true">
+        <description>Create Skill for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     <service name="createDeputEmply" engine="simple" default-entity-name="PartyRole"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createDeputaionParty" auth="true">
@@ -221,7 +232,12 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-	
+	 <service name="deletePartySkillItem" engine="simple" default-entity-name="PartySkill"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartySkillItem" auth="true">
+        <description>Delete a PartySkill</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 	<service name="UpdateCreditLeaves" engine="java" 
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateCreditLeaves" auth="true">
     	<description>Credit Leaves for Probationary Staff</description>
@@ -1028,11 +1044,11 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="chDate" mode="IN" type="List" optional="true"/>
+        <!-- <attribute name="chDate" mode="IN" type="List" optional="true"/> -->
         <attribute name="emplLeaveApplId" mode="OUT" type="String" optional="false"/>
         <!--  <attribute name="partyId" mode="OUT" type="String" optional="true"/> -->
         <attribute name="leaveStatus" mode="OUT" type="String" optional="true"/>
-        <attribute name="levelApproverPartyId" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="levelApproverPartyId" mode="IN" type="String" optional="true"/> -->
         <override name="partyId" optional="false"/>
         <override name="leaveTypeId" optional="false"/>
         <override name="fromDate" optional="false" type="String"/>

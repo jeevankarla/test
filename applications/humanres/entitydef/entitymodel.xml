@@ -206,6 +206,23 @@ under the License.
         <key-map field-name="skillTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="PartySkillItem"
+            package-name="org.ofbiz.humanres.ability"
+            title="Party Skill Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="skillTypeId" type="id-ne"></field>
+      <field name="readType" type="id-ne"></field>
+      <field name="writeType" type="id-ne"></field>
+      <field name="spokeType" type="id-ne"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="skillTypeId"/>
+      <relation type="one" fk-name="PARTY_SKLL_ITM_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_SKLL_SKTP" rel-entity-name="SkillType">
+        <key-map field-name="skillTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Rating Type Entity">

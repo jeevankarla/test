@@ -1552,7 +1552,7 @@
 			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
 		</drop-down>
 		</field>
-		<field name="spouseName" id-name="spouseName" title="${uiLabelMap.SpouseName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text /></field> 
+		<field name="spouseName" id-name="spouseName" title="${uiLabelMap.SpouseName}" ><text /></field> 
 	    <!-- <field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field> -->
 		<field name="mobileNumber" title="Mobile Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="15" maxlength="15"/></field>
 	    <field name="alternatemobileNumber" title="Alternate Phone Number"><text size="15" maxlength="15"/></field>

@@ -1536,7 +1536,7 @@ public class HumanresService {
 		            input.clear();
 		            input.put("userLogin", userLogin);
 		            input.put("contactNumber",alternatemobileNumber);
-		            input.put("contactMechPurposeTypeId","SECONDARY_PHONE");
+		            input.put("contactMechPurposeTypeId","PHONE_MOBILE_OTHER");
 		            input.put("countryCode",countryCode);	
 		            input.put("partyId", ownerPartyId);
 		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
@@ -1678,7 +1678,7 @@ public class HumanresService {
 			            input.clear();
 			            input.put("userLogin", userLogin);
 			            input.put("partyId", ownerPartyId);
-			            input.put("fromDate", UtilDateTime.nowTimestamp());
+			            input.put("fromDate", employmentDateStart);
 			            input.put("emplPositionId", emplPositionId);
 			            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
 			            if(ServiceUtil.isError(outMap)){
