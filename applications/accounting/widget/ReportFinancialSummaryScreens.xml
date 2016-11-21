@@ -858,33 +858,76 @@
 					<include-form name="BalanceSheetParameters"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 				</screenlet>
-				<link text="${uiLabelMap.AccountingExportAsCsv}" style="button"
-					target="BalanceSheet.csv">
-					<parameter param-name="organizationPartyId" />
-					<parameter param-name="thruDate" from-field="parameters.thruDate" />
-					<parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId" />
-				</link>
-				<link text="${uiLabelMap.AccountingExportAsPdf}" style="button"
-					target="BalanceSheet.pdf">
-					<parameter param-name="organizationPartyId" />
-					<parameter param-name="thruDate" from-field="parameters.thruDate" />
-					<parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId" />
-				</link>
-				<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+				<container style="lefthalf">
+				<screenlet title="ASSETS">
 					<label style="h3" text="${uiLabelMap.AccountingAssets}" />
 					<include-form name="BalanceSheetAssets"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-					<label style="h3" text="${uiLabelMap.AccountingLiabilities}" />
-					<include-form name="BalanceSheetLiabilities"
-						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+					</screenlet>
+					<include-form name="balanceAssetTotal"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
+					</container>
+					<container style="righthalf">
+					<screenlet title="LIABILITIES&amp;EQUITIES">
 					<label style="h3" text="${uiLabelMap.AccountingEquities}" />
 					<include-form name="BalanceSheetEquities"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						<label style="h3" text="${uiLabelMap.AccountingLiabilities}" />
+					<include-form name="BalanceSheetLiabilities"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</screenlet>
+						<include-form name="balanceliabilityEquityTotal"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					<screenlet title="------">
+					</screenlet>
+						<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
 					<label style="h3" text="${uiLabelMap.CommonTotal}" />
 					<include-form name="BalanceTotals"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 				</screenlet>
-
+				
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="BalanceSheetInternalForIndian">
+		<section>
+			<widgets>
+			     <include-menu name="BalanceSheetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+				<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+					<include-form name="BalanceSheetParameters"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+				</screenlet>
+				<container style="lefthalf">
+				<screenlet title="ASSETS">
+					<label style="h3" text="${uiLabelMap.AccountingAssets}" />
+					<include-form name="BalanceSheetAssets"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+					</screenlet>
+					<include-form name="balanceAssetTotal"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
+					</container>
+					<container style="righthalf">
+					<screenlet title="LIABILITIES&amp;EQUITIES">
+					<label style="h3" text="${uiLabelMap.AccountingEquities}" />
+					<include-form name="BalanceSheetEquities"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						<label style="h3" text="${uiLabelMap.AccountingLiabilities}" />
+					<include-form name="BalanceSheetLiabilities"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</screenlet>
+						<include-form name="balanceliabilityEquityTotal"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					<screenlet title="------">
+					</screenlet>
+						<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+					<label style="h3" text="${uiLabelMap.CommonTotal}" />
+					<include-form name="BalanceTotals"
+						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+				</screenlet>
+				
 			</widgets>
 		</section>
 	</screen>
@@ -1058,7 +1101,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="BalanceSheetInternalForIndian">
+	<!-- <screen name="BalanceSheetInternalForIndian">
 		<section>
 			<widgets>
 				<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
@@ -1100,7 +1143,7 @@
 				</screenlet>
 			</widgets>
 		</section>
-	</screen>
+	</screen> -->
 	<screen name="BalanceSheetForIndian">
 		<section>
 			<actions>

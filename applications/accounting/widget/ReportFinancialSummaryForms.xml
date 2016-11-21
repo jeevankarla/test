@@ -285,6 +285,17 @@ under the License.
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    <form name="BalanceSheetEquities" type="list" list-name="equityAccountBalanceList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       <!--  <field name="accountCode">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field> -->
+        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+        <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
     <form name="BalanceTotals" type="list" list-name="balanceTotalList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <row-actions>
@@ -293,6 +304,22 @@ under the License.
         <field name="totalName" title="${uiLabelMap.CommonTotal}" title-area-style="tableheadhuge"><display description="${totalName}"/></field>
         <field name="balance" title="_" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+     <form name="balanceliabilityEquityTotal" type="list" list-name="balanceliabilityEquityTotalList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <set field="totalName" value="${groovy: uiLabelMap.get(totalName)}"/>
+        </row-actions>
+        <field name="totalName" title="${uiLabelMap.CommonTotal}" title-area-style="tableheadhuge"><display description="${totalName}"/></field>
+        <field name="balance" title="_" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+  <form name="balanceAssetTotal" type="list" list-name="balanceAssetTotalList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <set field="totalName" value="${groovy: uiLabelMap.get(totalName)}"/>
+        </row-actions>
+        <field name="totalName" title="${uiLabelMap.CommonTotal}" title-area-style="tableheadhuge"><display description="${totalName}"/></field>
+        <field name="balance" title="_" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form> 
         <form name="BalanceSheetParametersForIndian" type="single" target="BalanceSheetForIndian"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
