@@ -375,15 +375,16 @@ for (eachInvoiceList in Invoice) {
 	 
    
 	condList.clear();
-	
+	 
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INV_RAWPROD_ITEM"));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
-	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	
+	 
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+
 	  
 	
 	//Debug.log("InvoiceItem================="+InvoiceItem.size());
@@ -475,9 +476,6 @@ for (eachInvoiceList in Invoice) {
 		 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 		 
 		 
-		 
-		 
-		 
 		 conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 		 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -516,17 +514,11 @@ for (eachInvoiceList in Invoice) {
 				 else
 				 tempMap1.put("description", "")
 				 
-				 
 				 tempList.add(tempMap1);
 				 
 			 }
-			 
-			 
 			// shipmentReimbursementJson.put(shipmentId, tempList);
-			 
-			 
 		 }
-		 
 		 
 		 primaryOrderId = shipmentList.get("primaryOrderId");
 		 
@@ -555,8 +547,13 @@ for (eachInvoiceList in Invoice) {
 		 
 		 
 		 double claimAmt = 0;
+		 double estimatedShipCost = 0;
+		 
+		 if(shipmentList.get("estimatedShipCost")){
 		 estimatedShipCost = shipmentList.get("estimatedShipCost");
-					 
+		 reimbursentAMT = shipmentList.get("estimatedShipCost");
+		 }				 
+		 
 		 if(reimbursentAMT){
 		 claimAmt = reimbursentAMT;
 		 tempMap.put("claim", claimAmt);

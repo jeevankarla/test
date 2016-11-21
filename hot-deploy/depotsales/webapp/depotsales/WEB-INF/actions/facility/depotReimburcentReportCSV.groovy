@@ -289,15 +289,16 @@ for (eachInvoiceList in Invoice) {
 	 
    
 	condList.clear();
-	
+	 
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INV_RAWPROD_ITEM"));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	//condList.add(EntityCondition.makeCondition("isAssessableValue", EntityOperator.EQUALS, "Y"));
+	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	
+	 
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
-	  
+  
 	
 	//Debug.log("InvoiceItem================="+InvoiceItem.size());
 	 
