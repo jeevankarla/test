@@ -69,7 +69,9 @@ $(document).ready(function(){
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" name="submitButton" id="submitButton" value="Update" onClick="javascript:confirmFields();" style="buttontext"/></td>
+				<#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session))>
+					<td><input type="submit" name="submitButton" id="submitButton" value="Update" onClick="javascript:confirmFields();" style="buttontext"/></td>
+				</#if>
 			</tr>
 			
     	</table>	

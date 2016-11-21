@@ -1295,7 +1295,7 @@
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="approverPartyId"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, approverPartyId, false);} - [${approverPartyId}]"/></field>
         <field name="leaveStatus"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
@@ -1343,6 +1343,7 @@
 				<set field="fromDate" value="${EditDpartDetailsList[0].fromDate}"/> 
     	</actions>
     	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
+    	<!-- use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" -->
          <field name="appointmentDate" title="Date of joining at NHDC" entry-name="employment.appointmentDate">
             <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
@@ -1382,7 +1383,7 @@
                 <parameter param-name="joiningDate" from-field="joiningDate"/>
             </hyperlink>
         </field>
-        <field name="locationGeoId" title="New Location">
+        <field name="locationGeoId" title="New Location" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="CITY"/>

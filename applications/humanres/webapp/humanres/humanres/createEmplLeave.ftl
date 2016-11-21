@@ -286,11 +286,8 @@ function viewGHandSS(){
               <tr>
                 <td class="label">${uiLabelMap.EmployeeId} :</td>
                 <td class= "h2">
-                	<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
-                		<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
-                		<input type="hidden" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly/>
-                		${partyName}[${userLogin.partyId?if_exists}]
-                	<#else>
+                	<#-- <#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)> -->
+                	<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
                 		<#if !editFlag>
                       		<@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
                     		<span class="tooltip"></span>
@@ -298,6 +295,10 @@ function viewGHandSS(){
                     	 <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
                      		${partyId?if_exists}
                   		</#if> 
+                  	<#else>
+                  		<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
+                		<input type="hidden" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly/>
+                		${partyName}[${userLogin.partyId?if_exists}]
                 	</#if>
                 </td>
               </tr>
