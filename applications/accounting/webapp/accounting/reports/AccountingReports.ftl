@@ -38,7 +38,7 @@ var accountCodeList;
             	 	 {
             			// alert("=glAccountCodelist==="+glAccountCodelist);
             			$.each(glAccountCodelist, function(key, item){
-			    		 methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+			    		  methodOptionList.push('<option value="'+item.value+'">'+item.label+'</option>');
 			  				 });
 			  
             				 // alert("=glAccountCodelist=in loop===="+methodOptionList);
@@ -302,6 +302,13 @@ function reportTypeChangeFunc() {
 		});
  	
 	});
+	
+	var AccountName;
+	function dispglAccountName(selection){
+	   value = $("#glAccountId").val();
+	   AccountName = glAccountName[value];
+	   $("#AccountName").html("<h6>"+AccountName+"</h6>");
+	}
 </script>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -773,14 +780,14 @@ function reportTypeChangeFunc() {
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        	<tr class="alternate-row"> 
-      	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">
+      	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="30%">GL History Report<input type="hidden" name="reportType" value="byAccount"/></td>
 				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
 				<td width="25%">To<input  type="text" size="18pt" id="glLedgerThruDate" readonly  name="thruDate"/></td>-->
       		  	  <td width="50%">CustomTimePeriod
 			  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
 						<#list customtimeperiodlist as ctplist> 	
-							<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+							<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName?if_exists}: ${ctplist.fromDate?if_exists} - ${ctplist.thruDate?if_exists}</option>
           		   		</#list>
 				 	</select>
 			  	  </td>
@@ -788,12 +795,16 @@ function reportTypeChangeFunc() {
 			  	  <td width="25%"> &#160;</td>
 			  	  <td width="75%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td> 
 			</tr>
-			 <tr class="alternate-row">
-			  	 <td width="20%"> &#160;</td>
+			<tr class="alternate-row">
+			  	 <td width="25%"> &#160;</td>
 			  	 <td width="50%">AccountCode
-			  	  	<select name='AccountCode' id ="AccountCode">	
-					 	
-				 	</select>
+			  	  	<#--<select name='AccountCode' id ="AccountCode">	
+					 	<#list glAccounts as glAccount> 	
+							<option value='${glAccount.glAccountId}'>${glAccount.accountName}</option>
+          		   		</#list>
+				 	</select>-->
+				 	<input type="text" name="AccountCode" id="glAccountId" size="11" maxlength="60"  required onblur='javascript:dispglAccountName(this);'/>
+  					<span  class="tooltip" id="AccountName"></span>
 			  	 </td>
 			 	 <td width="15%">Report Type 
 					<select name='reportTypeFlag'>
@@ -802,12 +813,14 @@ function reportTypeChangeFunc() {
 					</select>
 				</td>
 				<td width="30%"><input type="submit" value="PDF" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>');" class="buttontext"/>
-							    <input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				<input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+          		<input type="submit" value="PDF" class="buttontext"/></td>
           	</tr>
       		</form>
       	</tr>
 	</table>
    </div>
+ </div>
  <#-- <div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Accounting Reconciliation Reports</h3>
