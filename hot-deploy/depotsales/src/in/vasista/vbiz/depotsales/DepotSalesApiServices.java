@@ -1810,7 +1810,7 @@ public class DepotSalesApiServices{
         conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "BRANCH_CUSTOMER"));
         List<GenericValue> partyRelationList = null;
         try {
-        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("shipmentId"), null, false);
+        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
         } catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
@@ -1821,7 +1821,7 @@ public class DepotSalesApiServices{
         conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
         conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "BRANCH_CUSTOMER"));
         try{
-        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("shipmentId"), null, false);
+        	partyRelationList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdTo"), null, false);
         } catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
