@@ -1267,14 +1267,14 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
+		<!-- <menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
 		     <condition>
 			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
 			</condition>
 			<link target="BalanceSheet">
 				<parameter param-name="organizationPartyId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 	  <menu-item name="BalanceSheetForIndian" title="Indian Format Balance Sheet">
 	       <condition>
 	       <and>
