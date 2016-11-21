@@ -1428,5 +1428,23 @@ reportType:byAccount -->
 			</widgets>
 		</section>
 	</screen>
+	<screen name="DepRctAcctgTransReportPdf">
+		<section>
+			<actions>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+					<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/accountingTransAndFinAccountTrans.groovy" />
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://accounting/webapp/accounting/reports/contraAccountingTransAndFinAccountTrans.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	
 </screens>
