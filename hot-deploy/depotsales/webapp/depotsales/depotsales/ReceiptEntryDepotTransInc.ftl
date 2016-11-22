@@ -294,9 +294,8 @@
 	function quantityValidator(value ,item) {
 		var quarterVal = value*4;
 		var qty = item['orderedQty'];
-		var oldQty = item['oldRecvdQty'];  
-		var disQty=oldQty+value;
-		if(disQty>qty){
+		var balQty = item['balanceQty'];  
+		if(value>balQty){
 			alert("Required quantity Should not be greater than indent Qty")
 			return {valid: false, msg: null};
 		}
