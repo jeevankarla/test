@@ -30,8 +30,10 @@ Timestamp thruDate;
 
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
+
 partyId=parameters.partyId;
 state=parameters.state;
+branchId = parameters.branchId2;
 productCategory=parameters.productCategory;
 reportType=parameters.reportType;
 context.reportType=reportType;
@@ -71,6 +73,29 @@ if(productCategory != "OTHER"){
 	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
 	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
 }
+// block of code for getting product category wise transportation percentage reimbursement ===============================
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN, ["SILK","JUTE_YARN","COTTON"]));
+produtCategoriesForPer = delegator.findList("ProductCategory", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productCategoryId"), null, null, false);
+allCategories = EntityUtil.getFieldListFromEntityList(produtCategoriesForPer, "productCategoryId", true);
+
+silkCategories =EntityUtil.filterByCondition(produtCategoriesForPer, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"SILK"));
+
+juteCategories =EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"JUTE_YARN"));
+
+otherAllCategories =EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN,["SILK","JUTE_YARN"]));
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, allCategories));
+produtCategorieMemberForPer = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","productCategoryId"), null, null, false);
+
+silkCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,silkCategories));
+
+juteCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,juteCategories));
+
+otherAllCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,otherAllCategories));
+
+// block end ================================
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
@@ -81,7 +106,6 @@ productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "produ
 daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
-  
 	try {
 		//daystart = UtilDateTime.toTimestamp(sdf.parse(parameters.partyfromDate));
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
@@ -89,17 +113,12 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 		 } catch (ParseException e) {
 			 //////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 		}
-   
 }
 if(UtilValidate.isNotEmpty(parameters.partythruDate)){
-   
    try {
 	 //  dayend = UtilDateTime.toTimestamp(sdf.parse(parameters.partythruDate));
-	   
 	   thruDate = new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime());
-	   
 	   dayend = UtilDateTime.getDayEnd(thruDate);
-	   
    } catch (ParseException e) {
 	   //////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
@@ -136,6 +155,7 @@ context.BOEmail=BOEmail;
 
 finalList = [];
 finalCSVList=[];
+StateTotals=[:];
 for(state in indianStates){
 	tempCSVMap1=[:];
 	tempCSVMap2=[:];
@@ -148,16 +168,9 @@ for(state in indianStates){
 	stateDetails =EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("geoId", EntityOperator.EQUALS,state));
 	stateDetail = EntityUtil.getFirst(stateDetails);
 	stateName= stateDetail.geoName;
-	tempCSVMap1.put("partyId", stateName);
-	tempCSVMap1.put("partyName", "_");
-	tempCSVMap1.put("invoiceAMT", "_");
-	tempCSVMap1.put("invoiceQTY",  "_");
-	tempCSVMap1.put("shippingCost",  "_");
-	tempCSVMap1.put("reimbursentAMT",  "_");
-	tempCSVMap1.put("depotCharges",  "_");
-	finalCSVList.add(tempCSVMap1);
+	
 	stateMap=[:];
-	totMap=[:];
+	
 	stateParties=[];
 	conditionList.clear();
 	if(UtilValidate.isNotEmpty(state)){
@@ -180,6 +193,16 @@ for(state in indianStates){
 		FacilityList = delegator.find("Facility", condition3, null, UtilMisc.toSet("ownerPartyId"), null, null);
 		stateParties = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
 	}
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, stateParties));
+	if(UtilValidate.isNotEmpty(branchId) && !"ALL".equals(branchId)){
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+	}
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	stateBranchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
+	stateBranchs = EntityUtil.getFieldListFromEntityList(stateBranchList, "partyIdFrom", true);
+	  
 	
 	conditionList.clear();
 	if(UtilValidate.isNotEmpty(daystart)){
@@ -219,96 +242,146 @@ for(state in indianStates){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
 	Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	statePartiesListData=[];
+	stateBranchWisePartiesMapData=[:];
 	sr=1;
-	for (partyId in stateParties) {
-		tempMap=[:];
-		double invoiceAMT = 0;
-		double invoiceQTY = 0;
-		double shippingCost = 0;
-		double reimbursentAMT = 0;
-		double depotCharges = 0;
-		partyInvoices =EntityUtil.filterByCondition(Invoice, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
-		if(partyInvoices){
-			for(eachInvoice in partyInvoices){
-				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
-				InvoiceItem = delegator.findList("InvoiceItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-				if(InvoiceItem){
-					for (eachInvoiceItem in InvoiceItem) {
-						invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-						invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
-						totInvoiceAMT=totInvoiceAMT+eachInvoiceItem.itemValue;
-						totInvoiceQTY=totInvoiceQTY+eachInvoiceItem.quantity;
-					}
-					double maxAmt = 0;
-					if(invoiceQTY && invoiceQTY>0){
-						maxAmt = (invoiceAMT*2.5)/100;
-					}
-					shipmentId = eachInvoice.shipmentId;
-					if(shipmentId){
-						 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
-						 if(UtilValidate.isNotEmpty(shipmentList) && UtilValidate.isNotEmpty(shipmentList.estimatedShipCost)){
-							 shippingCost=shippingCost+shipmentList.estimatedShipCost
-							 totShippingCost=totShippingCost+shipmentList.estimatedShipCost;
-							 estimatedShipCost=shipmentList.estimatedShipCost;
-							 if(estimatedShipCost && maxAmt > estimatedShipCost){
-								 reimbursentAMT=reimbursentAMT+estimatedShipCost;
-								 totReimbursentAMT=totReimbursentAMT+estimatedShipCost 
-							 }else{
-								  reimbursentAMT=reimbursentAMT+maxAmt;
-								  totReimbursentAMT=totReimbursentAMT+maxAmt
+	stateTotalMap=[:];
+	double totStateinvoiceAMT = 0;
+	double totStateinvoiceQTY = 0;
+	double totStateshippingCost = 0;
+	double totStatereimbursentAMT = 0;
+	double totStatedepotCharges = 0;
+	
+	for(eachBranch in stateBranchs){
+		
+		String branchName = PartyHelper.getPartyName(delegator,eachBranch,false);
+		
+		tempCSVMap1.put("partyId", stateName);
+		tempCSVMap1.put("partyName", "--"+branchName);
+		tempCSVMap1.put("invoiceAMT", "_");
+		tempCSVMap1.put("invoiceQTY",  "_");
+		tempCSVMap1.put("shippingCost",  "_");
+		tempCSVMap1.put("reimbursentAMT",  "_");
+		tempCSVMap1.put("depotCharges",  "_");
+		finalCSVList.add(tempCSVMap1);
+		
+		statePartiesListData=[];
+		eachBranchPartiesList =EntityUtil.filterByCondition(stateBranchList, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,eachBranch));
+		stateParties=EntityUtil.getFieldListFromEntityList(eachBranchPartiesList, "partyIdTo", true);
+		totMap=[:];
+		double totBranchinvoiceAMT = 0;
+		double totBranchinvoiceQTY = 0;
+		double totBranchshippingCost = 0;
+		double totBranchreimbursentAMT = 0;
+		double totBranchdepotCharges = 0;
+		
+		for (partyId in stateParties) {
+			tempMap=[:];
+			double invoiceAMT = 0;
+			double invoiceQTY = 0;
+			double shippingCost = 0;
+			double reimbursentAMT = 0;
+			double depotCharges = 0;
+			partyInvoices =EntityUtil.filterByCondition(Invoice, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+			if(partyInvoices){
+				for(eachInvoice in partyInvoices){
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
+					InvoiceItem = delegator.findList("InvoiceItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+					if(InvoiceItem){
+						for (eachInvoiceItem in InvoiceItem) {
+							productId =eachInvoiceItem.productId
+							invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+							invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+							totStateinvoiceAMT=totStateinvoiceAMT+eachInvoiceItem.itemValue;
+							totStateinvoiceQTY=totStateinvoiceQTY+eachInvoiceItem.quantity;
+							totBranchinvoiceAMT=totBranchinvoiceAMT+eachInvoiceItem.itemValue
+							totBranchinvoiceQTY=totBranchinvoiceQTY+eachInvoiceItem.quantity
+							
+						}
+						double maxAmt = 0;
+						if(invoiceQTY && invoiceQTY>0){
+							if(silkCategoriesProducts.contains(productId)){
+								maxAmt = (invoiceAMT*1)/100;
+							}else if (juteCategoriesProducts.contains(productId)){
+								maxAmt = (invoiceAMT*10)/100;
+							}else{
+								maxAmt = (invoiceAMT*2.5)/100;
+							}
+						}
+						shipmentId = eachInvoice.shipmentId;
+						if(shipmentId){
+							 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+							 if(UtilValidate.isNotEmpty(shipmentList) && UtilValidate.isNotEmpty(shipmentList.estimatedShipCost)){
+								 shippingCost=shippingCost+shipmentList.estimatedShipCost
+								 totStateshippingCost=totStateshippingCost+shipmentList.estimatedShipCost;
+								 totBranchshippingCost=totBranchshippingCost+shipmentList.estimatedShipCost;
+								 estimatedShipCost=shipmentList.estimatedShipCost;
+								 if(estimatedShipCost && maxAmt > estimatedShipCost){
+									 reimbursentAMT=reimbursentAMT+estimatedShipCost;
+									 totStatereimbursentAMT=totStatereimbursentAMT+estimatedShipCost
+									 totBranchreimbursentAMT=totBranchreimbursentAMT+estimatedShipCost
+								 }else{
+									  reimbursentAMT=reimbursentAMT+maxAmt;
+									  totStatereimbursentAMT=totStatereimbursentAMT+maxAmt
+									  totBranchreimbursentAMT=totBranchreimbursentAMT+maxAmt
+								 }
 							 }
 						 }
-					 }
+					}
 				}
 			}
+			
+			String partyName = PartyHelper.getPartyName(delegator,partyId,false);
+			tempMap.put("sr", sr);
+			tempMap.put("partyId", "_");
+			tempMap.put("partyName", partyName);
+			tempMap.put("invoiceAMT", invoiceAMT);
+			tempMap.put("invoiceQTY", invoiceQTY);
+			tempMap.put("shippingCost", shippingCost);
+			tempMap.put("reimbursentAMT", reimbursentAMT);
+			if("DEPOT".equals(reportType)){
+				depotCharges = (invoiceAMT*2)/100;
+				tempMap.put("depotCharges", depotCharges);
+				totStatedepotCharges=totStatedepotCharges+depotCharges;
+				totBranchdepotCharges=totBranchdepotCharges+depotCharges;
+			}
+			if(invoiceAMT>0 ||shippingCost>0 || reimbursentAMT>0){
+				statePartiesListData.add(tempMap);
+				finalCSVList.add(tempMap);
+				sr=sr+1;
+			}
 		}
-		
-		String partyName = PartyHelper.getPartyName(delegator,partyId,false);
-		tempMap.put("sr", sr);
-		tempMap.put("partyId", "_");
-		tempMap.put("partyName", partyName);
-		tempMap.put("invoiceAMT", invoiceAMT);
-		tempMap.put("invoiceQTY", invoiceQTY);
-		tempMap.put("shippingCost", shippingCost);
-		tempMap.put("reimbursentAMT", reimbursentAMT);
-		if("DEPOT".equals(reportType)){
-			depotCharges = (invoiceAMT*2)/100;
-			tempMap.put("depotCharges", depotCharges);
-			totDepotCharges=totDepotCharges+depotCharges;
-		}
-		if(invoiceAMT>0 ||shippingCost>0 || reimbursentAMT>0){
-			statePartiesListData.add(tempMap);
-			finalCSVList.add(tempMap);
-			sr=sr+1;
+		totMap.put("partyId","TOTAL");
+		totMap.put("partyName", "BRANCH SUB-TOTAL");
+		totMap.put("invoiceAMT",totBranchinvoiceAMT);
+		totMap.put("invoiceQTY",totBranchinvoiceQTY);
+		totMap.put("shippingCost",totBranchshippingCost);
+		totMap.put("reimbursentAMT",totBranchreimbursentAMT);
+		totMap.put("depotCharges",totBranchdepotCharges);
+		if(totBranchinvoiceAMT>0)
+		statePartiesListData.add(totMap);
+		finalCSVList.add(totMap);
+		if(UtilValidate.isNotEmpty(statePartiesListData)){
+			stateBranchWisePartiesMapData.put(branchName, statePartiesListData);
 		}
 	}
-	totMap.put("partyId","TOTAL");
-	totMap.put("partyName", "TOTAL");
-	totMap.put("invoiceAMT",totInvoiceAMT);
-	totMap.put("invoiceQTY",totInvoiceQTY);
-	totMap.put("shippingCost",totShippingCost);
-	totMap.put("reimbursentAMT",totReimbursentAMT);
-	totMap.put("depotCharges",totDepotCharges);
+
+	stateTotalMap.put("partyId","TOTAL");
+	stateTotalMap.put("partyName", "STATE SUB-TOTAL");
+	stateTotalMap.put("invoiceAMT",totStateinvoiceAMT);
+	stateTotalMap.put("invoiceQTY",totStateinvoiceQTY);
+	stateTotalMap.put("shippingCost",totStateshippingCost);
+	stateTotalMap.put("reimbursentAMT",totStatereimbursentAMT);
+	stateTotalMap.put("depotCharges",totStatedepotCharges);
 	
-	statePartiesListData.add(totMap);
-	
-	tempCSVMap2.put("partyId","TOTAL");
-	tempCSVMap2.put("partyName", "_");
-	tempCSVMap2.put("invoiceAMT",totInvoiceAMT);
-	tempCSVMap2.put("invoiceQTY",totInvoiceQTY);
-	tempCSVMap2.put("shippingCost",totShippingCost);
-	tempCSVMap2.put("reimbursentAMT",totReimbursentAMT);
-	tempCSVMap2.put("depotCharges",totDepotCharges);
-	finalCSVList.add(tempCSVMap2);
-	stateMap.put(stateName, statePartiesListData);
+	finalCSVList.add(stateTotalMap);
+	stateMap.put(stateName, stateBranchWisePartiesMapData);
 	finalList.add(stateMap);
+	StateTotals.put(stateName, stateTotalMap);
 }
 context.finalList = finalList;
 context.finalCSVList=finalCSVList;
-
-
+context.StateTotals=StateTotals;
 
 
 

@@ -151,13 +151,39 @@ context.roleTypeAttrList=roleTypeAttrList;
 //Debug.log("finalDepartmentList================="+finalDepartmentList);
 	
 
+stateBranchsList=[];
+stateRosList =[];
 conditionDeopoList = [];
 conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
 conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
 conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
 statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
 
+JSONObject stateJSON = new JSONObject();
 
+for(stateid in statesIdsList){
+	result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateid,"userLogin",userLogin));
+	stateBranchsList=result.get("stateBranchsList");
+	stateRosList=result.get("stateRosList");
+	
+	JSONArray stateBranchAndRoJSON = new JSONArray();
+	stateBranchsList.each{ eachState ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachState.partyId);
+			newObj.put("label",eachState.groupName);
+			stateBranchAndRoJSON.add(newObj);
+	}
+	stateRosList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.partyId);
+		newObj.put("label",eachState.groupName);
+		stateBranchAndRoJSON.add(newObj);
+	}
+	stateJSON.put(stateid, stateBranchAndRoJSON)
+}
+context.stateJSON = stateJSON;
+Debug.log("stateJSON============="+ stateJSON);
 JSONArray stateListJSON = new JSONArray();
 statesList.each{ eachState ->
 		JSONObject newObj = new JSONObject();

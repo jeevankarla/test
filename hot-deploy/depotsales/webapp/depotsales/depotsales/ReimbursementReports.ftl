@@ -1,6 +1,9 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <script type= "text/javascript">
 	
+	
+var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};
+	
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
@@ -24,7 +27,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});
 	}
 
-
+	function getbranchesByState(state){
+       	var stateId=state.value;
+       	var optionList = '';
+			var list= stateJSON[stateId];
+			if (list && list.length>0) {	
+				optionList += "<option value = " + " " + " >" +"All "+ "</option>";	       				        	
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerList=list[i];	     
+	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
+	      		}//end of main list for loop
+	      	}
+	      	jQuery("[name='"+"branchId2"+"']").html(optionList);
+       }	
+       
 	function appendParams(formName, action) {
 		var formId = "#" + formName;
 		jQuery(formId).attr("action", action);	
@@ -169,21 +185,26 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>  -->
 			   <td width="15%"><span class='h3'>State 
-				 <select name="state" id="state">
-				     <option value="ALL"></option>
+				 <select name="state" id="state" onchange="javascript:getbranchesByState(this);">
+				     <option value="ALL">ALL</option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
-				  </select>    								
+				  </select> 
 			  </span></td>
+			  <td width="15%"><span class='h3'>Branch <br>
+			  	  <select name='branchId2'>
+	      		  </select>
+			  </td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
+				 	 <option value="ALL">ALL</option>
 				     <option value='SILK'>SILK</option>
 				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
-				 <td width="15%"><span class='h3'>Report Type 
+				 <td width="10%"><span class='h3'>Report Type 
 				 <select name="reportType" id="reportType">
 				     <option value='DEPOT'>Depot</option>
 				     <option value='WITHOUT_DEPOT'>Without Depot</option>
@@ -191,7 +212,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  <td> </td>
 			<#-- 	<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentSummaryReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> -->
-			<td width="10%">
+			<td width="15%">
 				<input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.csv</@ofbizUrl>');" class="buttontext"/>
 			</td>	
