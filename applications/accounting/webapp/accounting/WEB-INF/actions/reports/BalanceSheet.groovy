@@ -184,7 +184,7 @@ Debug.logInfo("mainAndExprs=" + mainAndExprs,"");
 
 // as an optimization fetch the totals for all account classes in one shot
 transactionTotals = [];
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountClassId","glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND),null, UtilMisc.toList("glAccountId"), null, false);
 
 // ASSETS
 // account balances
@@ -229,6 +229,9 @@ accountBalanceList.each { accountBalance ->
     balanceTotal = balanceTotal + accountBalance.balance;
 }
 context.assetAccountBalanceList = accountBalanceList;
+ParentGlAccount =[];
+ParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.ParentGlAccount = ParentGlAccount;
 context.assetAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", balanceTotal));
 context.assetBalanceTotal = balanceTotal;
 //balanceAssetTotalList.add(UtilMisc.toMap("accountName", "TOTAL ASSETS", "balance", balanceTotal));

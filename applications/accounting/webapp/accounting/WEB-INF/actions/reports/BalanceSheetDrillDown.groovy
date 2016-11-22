@@ -34,30 +34,20 @@ JSONArray balanceTotalData = new JSONArray();
 JSONObject parentGlJson = new JSONObject();
 //Asset
 if (assetAccountBalanceList) {
-   i = 0;
-   List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, assetAccountBalanceList.glAccountId), null, null, null, false);
-   assetAccountBalanceList.each { accValue ->
-	   JSONObject obj = new JSONObject();
-	   id = "id_" + i++;
-	   obj.put("id", id);
-	   obj.putAll(accValue);
-	   parentGl = EntityUtil.getFirst(EntityUtil.filterByCondition(glAccountList, EntityCondition.makeCondition(UtilMisc.toMap("glAccountId",accValue.glAccountId))));
-	   obj.put("parentGlAccountId", "");
-	   if(parentGl){
-		   obj.put("parentGlAccountId", parentGl.glAccountId);
-	   }
-	   if(accValue.glAccountId){
-		   parentGlJson.put(accValue.glAccountId , accValue.accountName);
-	   }
-	   
-	   obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
-	   assetAccountBalanceData.add(obj);
-   }
-  
-  List parentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountList.parentGlAccountId), null, null, null, false);
-   parentGlAccount.each{ parentGl ->
-	   parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
-   }
+	i = 0;
+	assetAccountBalanceList.each { accValue ->
+		JSONObject obj = new JSONObject();
+		id = "id_" + i++;
+		obj.put("id", id);
+		obj.putAll(accValue);
+		obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
+		assetAccountBalanceData.add(obj);
+	}
+	
+	ParentGlAccount.each{ parentGl ->
+		parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
+	}
+	
 }
 
 context.put("assetAccountBalanceData", assetAccountBalanceData.toString());
@@ -66,90 +56,62 @@ context.put("assetAccountBalanceData", assetAccountBalanceData.toString());
 
 if (liabilityAccountBalanceList) {
 	i = 0;
-	List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, liabilityAccountBalanceList.glAccountId), null, null, null, false);
 	liabilityAccountBalanceList.each { accValue ->
 		JSONObject obj = new JSONObject();
 		id = "id_" + i++;
 		obj.put("id", id);
 		obj.putAll(accValue);
-		parentGl = EntityUtil.getFirst(EntityUtil.filterByCondition(glAccountList, EntityCondition.makeCondition(UtilMisc.toMap("glAccountId",accValue.glAccountId))));
-		obj.put("parentGlAccountId", "");
-		if(parentGl){
-			obj.put("parentGlAccountId", parentGl.glAccountId);
-		}
-		if(accValue.glAccountId){
-			parentGlJson.put(accValue.glAccountId , accValue.accountName);
-		}
-		
 		obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
 		liabilityAccountBalanceData.add(obj);
 	}
-   
-   List parentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountList.parentGlAccountId), null, null, null, false);
-	parentGlAccount.each{ parentGl ->
+	
+	ParentGlAccount.each{ parentGl ->
 		parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
 	}
- }
+	
+}
+
 context.put("liabilityAccountBalanceData", liabilityAccountBalanceData.toString());
 
 //equity
 
 if (equityAccountBalanceList) {
 	i = 0;
-	List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, equityAccountBalanceList.glAccountId), null, null, null, false);
 	equityAccountBalanceList.each { accValue ->
 		JSONObject obj = new JSONObject();
 		id = "id_" + i++;
 		obj.put("id", id);
 		obj.putAll(accValue);
-		parentGl = EntityUtil.getFirst(EntityUtil.filterByCondition(glAccountList, EntityCondition.makeCondition(UtilMisc.toMap("glAccountId",accValue.glAccountId))));
-		obj.put("parentGlAccountId", "");
-		if(parentGl){
-			obj.put("parentGlAccountId", parentGl.glAccountId);
-		}
-		if(accValue.glAccountId){
-			parentGlJson.put(accValue.glAccountId , accValue.accountName);
-		}
-		
 		obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
 		equityAccountBalanceData.add(obj);
 	}
-   
-   List parentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountList.parentGlAccountId), null, null, null, false);
-	parentGlAccount.each{ parentGl ->
+	
+	ParentGlAccount.each{ parentGl ->
 		parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
 	}
- }
+}
+
+	
 context.put("equityAccountBalanceData", equityAccountBalanceData.toString());
 //balance Totals
 
 if (balanceTotalList) {
 	i = 0;
-	List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, balanceTotalList.glAccountId), null, null, null, false);
 	balanceTotalList.each { accValue ->
 		JSONObject obj = new JSONObject();
 		id = "id_" + i++;
 		obj.put("id", id);
 		obj.putAll(accValue);
-		parentGl = EntityUtil.getFirst(EntityUtil.filterByCondition(glAccountList, EntityCondition.makeCondition(UtilMisc.toMap("glAccountId",accValue.glAccountId))));
-		obj.put("parentGlAccountId", "");
-		if(parentGl){
-			obj.put("parentGlAccountId", parentGl.glAccountId);
-		}
-		if(accValue.glAccountId){
-			parentGlJson.put(accValue.glAccountId , accValue.accountName);
-		}
-		
 		obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
 		balanceTotalData.add(obj);
 	}
-   
-   List parentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountList.parentGlAccountId), null, null, null, false);
-	parentGlAccount.each{ parentGl ->
+	
+	ParentGlAccount.each{ parentGl ->
 		parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
 	}
- }
+}
+
+	
 context.put("balanceTotalData", balanceTotalData.toString());
 
 context.put("parentGlJson", parentGlJson.toString());
-Debug.log("parentGlJson========"+parentGlJson);
