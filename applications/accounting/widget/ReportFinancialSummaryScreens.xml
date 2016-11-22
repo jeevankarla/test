@@ -858,7 +858,7 @@
 					<include-form name="BalanceSheetParameters"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 				</screenlet>
-				<container style="lefthalf">
+				<container style="righthalf">
 				<screenlet title="ASSETS">
 					<label style="h3" text="${uiLabelMap.AccountingAssets}" />
 					<include-form name="BalanceSheetAssets"
@@ -867,7 +867,7 @@
 					<include-form name="balanceAssetTotal"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
 					</container>
-					<container style="righthalf">
+					<container style="lefthalf">
 					<screenlet title="LIABILITIES&amp;EQUITIES">
 					<label style="h3" text="${uiLabelMap.AccountingEquities}" />
 					<include-form name="BalanceSheetEquities"
@@ -899,7 +899,7 @@
 					<include-form name="BalanceSheetParameters"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 				</screenlet>
-				<container style="lefthalf">
+				<container style="righthalf">
 				<screenlet title="ASSETS">
 					<label style="h3" text="${uiLabelMap.AccountingAssets}" />
 					<include-form name="BalanceSheetAssets"
@@ -908,7 +908,7 @@
 					<include-form name="balanceAssetTotal"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
 					</container>
-					<container style="righthalf">
+					<container style="lefthalf">
 					<screenlet title="LIABILITIES&amp;EQUITIES">
 					<label style="h3" text="${uiLabelMap.AccountingEquities}" />
 					<include-form name="BalanceSheetEquities"
