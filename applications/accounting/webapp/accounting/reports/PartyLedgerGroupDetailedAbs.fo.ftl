@@ -24,8 +24,8 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
         <fo:region-body margin-top="1.3in" margin-bottom=".6in"/>
-        <fo:region-before extent="1in"/>
-        <fo:region-after extent="1in"/>     
+        <fo:region-before extent="3in"/>
+        <fo:region-after extent="10in"/>     
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
@@ -37,8 +37,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="9pt" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
                 <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
 				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-			    <fo:block  keep-together="always" text-align="cnter" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
-				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}                             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${reportSubHeader.description?if_exists}              Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
 				<#if reportName == "SUBLEDGER">
                 <#assign glAccount=delegator.findOne("GlAccount",{"glAccountId",fromGlAccountId},true)>
                 <fo:block  text-align="right"  keep-together="always"  white-space-collapse="false" font-weight="bold">GL ACCOUNT :${glAccount.description?if_exists}(${fromGlAccountId})                &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -47,8 +47,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold"  font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
 				<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">${reportName} FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
                 </#if>
+                
 				<fo:block font-size="10pt">------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+                <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
             </fo:static-content>		
+            
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block font-size="11pt">
 					<fo:table>
@@ -70,18 +77,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false"></fo:block>  
 		                			</fo:table-cell>
 		                			<fo:table-cell>
+		                			   
+                                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">OPENING</fo:block>  
 		                			</fo:table-cell>
+		                			
 									<fo:table-cell>
+									<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">DURING THE PERIOD</fo:block>  
 		                			</fo:table-cell>
                                     <fo:table-cell>
+                                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">UNAPPLIED</fo:block>  
 		                			</fo:table-cell>
 		                		</fo:table-row>
 		                	</fo:table-body>
 		             </fo:table>   			
-                </fo:block>	
+                </fo:block>
+              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 	
                 <fo:block font-size="10pt">------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				<#assign partyWiseList = partyMap.entrySet()>
 				<#assign grdOpenDebit=0>
