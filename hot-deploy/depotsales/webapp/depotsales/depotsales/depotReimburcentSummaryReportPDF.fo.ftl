@@ -87,27 +87,46 @@ under the License.
 					            </fo:table-cell>
 								<#if reportType?has_content && reportType=="DEPOT">
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT CHARGES 2.50%</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT CHARGES 2%</fo:block>
 					            </fo:table-cell>
 					            </#if>
 							</fo:table-row>
 			                  <#list finalList as eachList>
 	                            <#assign eachStateDetails = eachList.entrySet()>
-								 <#list eachStateDetails as eachState>
+								<#list eachStateDetails as eachBranchDetails>
+									<#assign branch = eachBranchDetails.getKey()>
+							        <#assign branchPartiesList = eachBranchDetails.getValue()>	
+									 <fo:table-row>
+									   <#if reportType?has_content  && reportType=="WITHOUT_DEPOT">
+											 <fo:table-cell>
+											 </fo:table-cell>
+											 <fo:table-cell border-style="solid" number-columns-spanned="6">
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >${branch?if_exists}</fo:block>
+							                 </fo:table-cell>
+							            <#else> 
+    										 <fo:table-cell border-style="solid" number-columns-spanned="7">
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >${branch?if_exists}</fo:block>
+							                 </fo:table-cell>
+									   </#if>
+					                   
+						  			 </fo:table-row>
+							  	<#assign branchPartiesList2 = branchPartiesList.entrySet()>
+								 <#list branchPartiesList2 as eachState>
 								<#assign state = eachState.getKey()>
 								<#assign stateDetails = eachState.getValue()>
 							  <fo:table-row>
-							  	
-	                             <#if reportType?has_content && reportType=="WITHOUT_DEPOT">
-									<fo:table-cell>
-
-									</fo:table-cell>
-								</#if>
-			                    <fo:table-cell border-style="solid" number-columns-spanned="6">
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >${state?if_exists}</fo:block>
-					            </fo:table-cell>
+								 <#if reportType?has_content  && reportType=="WITHOUT_DEPOT">
+											 <fo:table-cell>
+											 </fo:table-cell>
+											 <fo:table-cell border-style="solid" number-columns-spanned="6">
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >${state?if_exists}</fo:block>
+							                 </fo:table-cell>
+							            <#else> 
+    										 <fo:table-cell border-style="solid" number-columns-spanned="7">
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >${state?if_exists}</fo:block>
+							                 </fo:table-cell>
+									   </#if>
 							  </fo:table-row>
-							 
 							  <#list stateDetails as eachCustomer>
 							  	 <fo:table-row>
 								<#if reportType?has_content && reportType=="WITHOUT_DEPOT">
@@ -118,28 +137,59 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${eachCustomer.get("sr")?if_exists} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block text-align="left" font-size="8pt" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if>white-space-collapse="false">${eachCustomer.get("partyName")}</fo:block>
+					            	<fo:block text-align="left"  font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if>white-space-collapse="false">${eachCustomer.get("partyName")}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="right" font-size="8pt" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("invoiceQTY")?if_exists}</fo:block>
+					            	<fo:block  text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("invoiceQTY")?if_exists}</fo:block>
 					            </fo:table-cell>  
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if> font-size="8pt" white-space-collapse="false">${eachCustomer.get("invoiceAMT")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> font-size="8pt" white-space-collapse="false">${eachCustomer.get("invoiceAMT")?if_exists}</fo:block>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if>font-size="8pt" white-space-collapse="false">${eachCustomer.get("shippingCost")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if>font-size="8pt" white-space-collapse="false">${eachCustomer.get("shippingCost")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("reimbursentAMT")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("reimbursentAMT")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <#if reportType?has_content && reportType=="DEPOT">
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyName")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("depotCharges")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("depotCharges")?if_exists}</fo:block>
+					            </fo:table-cell>
+					            </#if>
+							</fo:table-row>
+							</#list>
+							</#list> 
+							<#assign stateTotalsDetails= StateTotals.get(branch)>
+								 <fo:table-row>
+								<#if reportType?has_content && reportType=="WITHOUT_DEPOT">
+									<fo:table-cell>
+									</fo:table-cell>
+								</#if>
+			                    <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("sr")?if_exists} </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${stateTotalsDetails.get("partyName")}</fo:block>
+					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("invoiceQTY")?if_exists}</fo:block>
+					            </fo:table-cell>  
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("invoiceAMT")?if_exists}</fo:block>
+						         </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right"  font-weight="bold" font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("shippingCost")?if_exists}</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold" white-space-collapse="false">${stateTotalsDetails.get("reimbursentAMT")?if_exists}</fo:block>
+					            </fo:table-cell>
+					            <#if reportType?has_content && reportType=="DEPOT">
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("depotCharges")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            </#if>
 							</fo:table-row>
 							
-							</#list>
 							</#list>
 							</#list>
 						</fo:table-body>

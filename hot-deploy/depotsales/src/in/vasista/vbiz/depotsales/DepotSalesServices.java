@@ -14468,6 +14468,69 @@ public class DepotSalesServices{
 		return result;
     }
 
+    public static Map<String, Object> getRegionalAndBranchOfficesByState(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		String state = (String) context.get("state");
+		List<String> stateList = (List) context.get("stateList");
+        List conditions = FastList.newInstance();
+        List<GenericValue> stateWiseRosAndBranchList = null;
+        List branchIdsList=null;
+        List roIdsList=null;
+        try{
+        	if(UtilValidate.isNotEmpty(state)){
+        		conditions.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
+        	}
+        	if(UtilValidate.isNotEmpty(stateList)){
+        		conditions.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.IN, stateList));
+        	}
+			conditions.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+			conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+			stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+        }catch(GenericEntityException e){
+        	Debug.logError(e, "Failed to retrive PartyContactDetailByPurpose ", module);
+        }
+        
+        conditions.clear();
+        if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
+        	List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+        	try{
+        		conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+        		conditions.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "BRANCH_OFFICE"));
+        		List<GenericValue> partyClassicationForBranch= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+    			if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
+    				 branchIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
+    			}
+    			conditions.clear();
+    			conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+        		conditions.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+        		List<GenericValue> partyClassicationForRo= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+    			if(UtilValidate.isNotEmpty(partyClassicationForRo)){
+    				roIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForRo, "partyId", true);
+    			}
+        	}catch(GenericEntityException e){
+        		Debug.logError(e, "Failed to retrive partyClassication ", module);
+        	}
+        }
+		try{
+			List<GenericValue> partyGroupRo=null;
+			List<GenericValue> partyGroupBranch=null;
+			if(UtilValidate.isNotEmpty(roIdsList)){
+			    partyGroupRo = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				result.put("stateRosList",partyGroupRo);
+			}
+			if(UtilValidate.isNotEmpty(branchIdsList)){
+				partyGroupBranch = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				result.put("stateBranchsList",partyGroupBranch);
+			}
+			
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive RegionalOffices ", module);
+		}
+		return result;
+    }
     
     public static Map<String, Object> populateShipmentReimbursment(DispatchContext dctx, Map context) {
   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
