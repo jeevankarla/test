@@ -122,7 +122,7 @@ public class POSApiServices {
 			conditionList.clear();
 			List roList = FastList.newInstance();
 			try{
-				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true)));
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(branchList, "partyIdFrom", true)));
 		        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION" ));
 		        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
 				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
