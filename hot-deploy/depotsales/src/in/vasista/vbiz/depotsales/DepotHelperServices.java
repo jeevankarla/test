@@ -2010,9 +2010,16 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 							for(GenericValue eachAdjBill : orderAdjustmentBillings){
 								String invoiceId=eachAdjBill.getString("invoiceId");
 								BigDecimal billedQty=eachAdjBill.getBigDecimal("quantity");
+								 GenericValue invoiceValue = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+				    			String invoicestatusId="";
+								 if(UtilValidate.isNotEmpty(invoiceValue)){
+				    					invoicestatusId = (String) invoiceValue.get("statusId");
+				    				}
+							if(!(invoicestatusId.equals("INVOICE_CANCELLED"))){
 								condList.clear();
 								condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 								condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+					           // condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 								List<GenericValue> invoiceItemDetails = delegator.findList("InvoiceItem", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 								BigDecimal shippedQuantity=BigDecimal.ZERO;
 								BigDecimal utPrice=BigDecimal.ZERO;
@@ -2039,6 +2046,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 										}
 									}
 								}
+							}
 							}
 							
 					}
@@ -2087,6 +2095,12 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 					  			   GenericValue invoices= EntityUtil.getFirst(delegator.findList("Invoice", condExpress2, null, null, null, false));
 					  				 if(UtilValidate.isNotEmpty(invoices)){
 						  				 String invoiceId=invoices.getString("invoiceId");
+										 GenericValue invoiceValue = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+						  				String invoicestatusId="";
+										 if(UtilValidate.isNotEmpty(invoiceValue)){
+						    					invoicestatusId = (String) invoiceValue.get("statusId");
+						    				}
+									if(!(invoicestatusId.equals("INVOICE_CANCELLED"))){
 						  				condList.clear();
 										condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 										condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
@@ -2152,6 +2166,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 					        	  		  		return ServiceUtil.returnError(errMsg);
 					        	  		  	}  
 										}
+					  				 }
 					  			 }
 			  				 }
 			  			 }
