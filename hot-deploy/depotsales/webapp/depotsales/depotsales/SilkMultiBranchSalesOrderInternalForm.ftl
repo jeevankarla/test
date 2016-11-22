@@ -826,12 +826,13 @@
 				updateSubsidyAmt(row);
 				
 				var saleBaseAmt = amount;
-				if(data[row]["saleBaseAmt"]){
-					saleBaseAmt = data[row]["saleBaseAmt"];
-				}
+				
+				
+				
 				
 				var taxAmt = data[row]["taxAmt"];
 				
+				/*
 				if(taxAmt != undefined && taxAmt != 0){
 					updateTax(row);
 				}
@@ -839,6 +840,8 @@
 					getProductPurchaseTaxDetails($("#supplierGeoId").val(), prod, row, saleBaseAmt, $("#purchaseTaxType").val());
 					getProductTaxDetails($("#branchGeoId").val(), prod, row, saleBaseAmt, $("#saleTaxType").val());
 				}
+				 */
+				
         		updatePayableAmount(row);
 				updateTotalIndentAmount();
         	}
@@ -916,12 +919,12 @@
 						      		 	//data[args.row]["remarks"].gotoCell();
 						      		 	
 						      		 	
-						      		 	
-						      		 	
-						      		 	
 						      		 	var row = args.row;
+						      		 	
+						      		 	/*
 				   						getProductPurchaseTaxDetails($("#supplierGeoId").val(), prod, row, saleBaseAmt, $("#purchaseTaxType").val());
 										getProductTaxDetails($("#branchGeoId").val(), prod, row, saleBaseAmt, $("#saleTaxType").val());
+										*/
 						      		 	
 					               }
 					             } ,
