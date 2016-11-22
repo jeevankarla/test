@@ -23,9 +23,9 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
-        <fo:region-body margin-top="1.3in" margin-bottom=".6in"/>
-        <fo:region-before extent="3in"/>
-        <fo:region-after extent="10in"/>     
+        <fo:region-body margin-top="1.5in" margin-bottom=".6in"/>
+        <fo:region-before extent="1in"/>
+        <fo:region-after extent="1in"/>     
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
