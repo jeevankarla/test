@@ -691,7 +691,7 @@ public class DepotSalesApiServices{
 		if(UtilValidate.isNotEmpty(paramPaymentId))
 		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paramPaymentId));
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
-		condList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.EQUALS, "ONACCOUNT_PAYIN"));		
+		//condList.add(EntityCondition.makeCondition("paymentTypeId" ,EntityOperator.EQUALS, "ONACCOUNT_PAYIN"));		
 		List<GenericValue> paymentList = null;
 		try {
 			paymentList = delegator.findList("Payment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
