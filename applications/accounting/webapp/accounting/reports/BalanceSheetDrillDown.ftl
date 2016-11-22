@@ -15,7 +15,7 @@
 
 
 	</style>
-		<div style="width:960px;float:left;">
+		<div style="width:640px;float:right;">
 			<div class="grid-header" style="width:80%">
 				<label>Asset</label>
                 <span style="float:right" class="ui-icon ui-icon-search" title="Toggle search panel" onclick="toggleFilterRow()"></span>
@@ -26,7 +26,9 @@
 			
 			<div id="pager" style="width:80%;height:20px;"></div>
 			<br>
+			</div>
 			<!--liability -->
+			<div style="width:640px;float:up;">
 			<div class="grid-header" style="width:80%">
 				<label>Liability</label>
                 <span style="float:right" class="ui-icon ui-icon-search" title="Toggle search panel" onclick="toggleFilterRowExp()"></span>
@@ -36,7 +38,9 @@
 			</div>
 			<div id="pagerExp" style="width:80%;height:20px;"></div>
 			<br>
+			</div>
 			<!--Equity -->
+			<div style="width:640px;float:left;">
 			<div class="grid-header" style="width:80%">
 				<label>Equity</label>
                 <span style="float:right" class="ui-icon ui-icon-search" title="Toggle search panel" onclick="toggleFilterRowInc()"></span>
