@@ -87,27 +87,61 @@ public class POSApiServices {
     		userLoginParty = (String)userLogin.get("partyId");
         }
         
-        Map customerBranch = FastMap.newInstance();
-		try {
-			customerBranch = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", userLogin.get("partyId")));
-		} catch(Exception e){
-			return ServiceUtil.returnError("Problem while getting Customer Branch details with partyId:"+userLogin.get("partyId"));
+        Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        Map roMap = FastMap.newInstance();
+        roMap.put("INT28","ASSAM");
+        roMap.put("INT26","BHUBANESWAR");
+        roMap.put("INT4","COIMBATORE");
+        roMap.put("INT5","HYDERABAD");
+        roMap.put("INT6","KERALA");
+        
+        roMap.put("INT3","KOLKATA");
+        roMap.put("INT1","VARANASI");
+        roMap.put("INT47","VIJAYAWADA");
+        roMap.put("INT2","PANIPAT");
+        
+        Map result = FastMap.newInstance();  	
+		Map permissions = FastMap.newInstance();
+		String partyIdFrom = "";
+        List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLoginParty));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER" ));
+		conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+		List branchList = FastList.newInstance();
+		try{
+			branchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+    	}catch (GenericEntityException e) {
+			// TODO: handle exception
+    		Debug.logError(e, module);
 		}
-		List<GenericValue> productStoreList = (List)customerBranch.get("productStoreList");
-		List customerBranchList = FastList.newInstance();
-		if(UtilValidate.isNotEmpty(productStoreList)){
-			for(GenericValue eachProdStore:productStoreList){
-				customerBranchList.add(eachProdStore.getString("productStoreId"));
+		if(UtilValidate.isNotEmpty(branchList)){
+			conditionList.clear();
+			List roList = FastList.newInstance();
+			try{
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(roList, "partyIdFrom", true)));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION" ));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+				roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+				if(UtilValidate.isNotEmpty(roList)){
+					partyIdFrom = EntityUtil.getFirst(roList).getString("partyIdFrom");
+					permissions.put("productStoreId",roMap.get(partyIdFrom));
+				}
+	    	}catch (GenericEntityException e) {
+				// TODO: handle exception
+	    		Debug.logError(e, module);
 			}
 		}
-        
-        
-        
-		Map result = FastMap.newInstance();  	
-		Map permissions = FastMap.newInstance();
+		
 		permissions.put("permissionList", permissionList);
 		permissions.put("userLoginParty",userLoginParty);
-		permissions.put("productStoreId",customerBranchList.get(0));
 		result.put("permissionResults", permissions);
 		Debug.logInfo("result:" + result, module);
     	return result;
