@@ -35,8 +35,12 @@ under the License.
             </fo:static-content>	
               	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace" >	
-		        	<fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    	<fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="9pt" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+                <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
                     	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">BANK RECONCILIATION STATEMENT   AS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")} </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
@@ -75,11 +79,11 @@ under the License.
                        		<fo:table-cell border-style="solid">
                            		<fo:block  keep-together="always" font-size="10pt">${finAccountTrans.finAccountTransTypeId?if_exists}</fo:block>  
                        		</fo:table-cell>                   			
-                   			<#if finAccountTrans.paymentPartyName?has_content>
+                   			
                    			<fo:table-cell border-style="solid">
                        			<fo:block   font-size="9pt" >${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(finAccountTrans.paymentPartyName?if_exists)),20)}</fo:block>  
                    			</fo:table-cell>
-                   			</#if>
+                   			
                    			<#if finAccountTrans.transactionDate?has_content>
                    				<fo:table-cell border-style="solid">
                        			<fo:block  font-size="10pt">${finAccountTrans.transactionDate?if_exists}</fo:block>  
