@@ -134,6 +134,13 @@ under the License.
         <condition field-name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>
         <action service="postFinAccountTransToGl" mode="sync"/>
     </eca> -->
+    <eca service="createFinAccountTrans" event="commit">
+        <condition field-name="glAccountId" operator="is-not-empty"/>
+        <!-- <condition field-name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/> -->
+        <!-- <condition field-name="isHoldAccountTrans" operator="not-equals" value="Y"/> --> 
+        <action service="postFinAccountTransToGl" mode="sync"/>
+    </eca>
+    
 	<eca service="createFinAccountTrans" event="commit">
         <condition field-name="finAccountId" operator="is-not-empty"/>
         <action service="createFinAcctTransSequence" mode="sync"/>
