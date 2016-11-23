@@ -580,8 +580,8 @@ under the License.
         <field name="contraRefNum" title="Instrument Number"><display></display></field>
         <field name="transactionDate"><display></display></field>
     	<field name="amount" title="Amount(Rs)"><display/></field>
-    	<field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
-            <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+    	<field name="createTransactionDetailReportPDF" title="Accounting Entry" use-when="${isPosted=='Y'}" widget-style="buttontext">
+            <hyperlink target="contraAcctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
                 <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>

@@ -5520,7 +5520,6 @@
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             </actions>
             <widgets>
-            <label style="h1" text="======parameters.finAccountTypeId=====${parameters.finAccountTypeId}" ></label>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
                    

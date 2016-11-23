@@ -4244,6 +4244,10 @@ under the License.
             <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
             <response name="error" type="view" value="CreateAPGrantInvoice"/>
     </request-map>
+    <request-map uri="contraAcctgTransDetailReportPdf.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ContraAcctgTransDetailReportPdf"/>
+    </request-map>
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
@@ -4834,5 +4838,6 @@ under the License.
     <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
    <view-map name="FindApGrantInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApGrantInvoices"/>
    <view-map name="CreateAPGrantInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPGrantInvoice"/>
+   <view-map name="ContraAcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#ContraAcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>

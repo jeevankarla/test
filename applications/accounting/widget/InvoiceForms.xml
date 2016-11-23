@@ -231,7 +231,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
         <field name="acctgTransEntrySeqId" title="Acct Trans Entry Seq Id"><display /></field>
-        <field name="accountCode" title="account Code"><display/></field>
+        <!-- <field name="accountCode" title="account Code"><display/></field> -->
         <field name="isPosted" title="Is Posted"><display/></field>       
         <field name="glFiscalTypeId" title="Fisical GL Type Id"><display/></field>       
         <field name="acctgTransTypeId" title="acctg Trans Type Id"><display/></field>       
