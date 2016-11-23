@@ -305,13 +305,10 @@ for(state in indianStates){
 						double maxAmt = 0;
 						if(invoiceQTY && invoiceQTY>0){
 							if(productCategory.equals("SILK")){
-								Debug.log("====Silk=============");
 								maxAmt = (invoiceAMT*1)/100;
 							}else if(productCategory.equals("JUTE_YARN")){
-							Debug.log("====jute=============");
 								maxAmt = (invoiceAMT*10)/100;
 							}else{
-							Debug.log("====other=============");
 								maxAmt = (invoiceAMT*2.5)/100;
 							}
 						}
