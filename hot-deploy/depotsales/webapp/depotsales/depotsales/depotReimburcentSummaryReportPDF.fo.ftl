@@ -61,6 +61,16 @@ under the License.
 			            <fo:table-column column-width="14%"/>
 						</#if>
 			            <fo:table-body>
+			            	<fo:table-row>
+			            		<#if reportType?has_content && reportType=="WITHOUT_DEPOT">
+			            			<fo:table-cell>
+
+									</fo:table-cell>
+								</#if>
+								 <fo:table-cell  number-columns-spanned="6">
+				            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" >Product Category : ${prodCatName?if_exists}</fo:block>
+				                 </fo:table-cell>
+				  			 </fo:table-row>
 			                <fo:table-row>
 								<#if reportType?has_content && reportType=="WITHOUT_DEPOT">
 									<fo:table-cell>
@@ -172,20 +182,20 @@ under the License.
 					            	<fo:block text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${stateTotalsDetails.get("partyName")}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("invoiceQTY")?if_exists}</fo:block>
+					            	<fo:block  text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("invoiceQTY")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>  
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("invoiceAMT")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("invoiceAMT")?if_exists?string("##0.00")}</fo:block>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right"  font-weight="bold" font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("shippingCost")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right"  font-weight="bold" font-size="10pt" white-space-collapse="false">${stateTotalsDetails.get("shippingCost")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold" white-space-collapse="false">${stateTotalsDetails.get("reimbursentAMT")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold" white-space-collapse="false">${stateTotalsDetails.get("reimbursentAMT")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <#if reportType?has_content && reportType=="DEPOT">
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("depotCharges")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${stateTotalsDetails.get("depotCharges")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            </#if>
 							</fo:table-row>

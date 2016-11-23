@@ -40,6 +40,9 @@ context.reportType=reportType;
 context.partyfromDate=partyfromDate;
 context.partythruDate=partythruDate;
 
+productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategory] , false);
+prodCatName=productCategoryDetails.description
+context.prodCatName=prodCatName;
 indianStates =[];
 statesList=[];
 conditionList = [];
@@ -286,6 +289,7 @@ for(state in indianStates){
 				for(eachInvoice in partyInvoices){
 					conditionList.clear();
 					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
+					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
 					InvoiceItem = delegator.findList("InvoiceItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 					if(InvoiceItem){
 						for (eachInvoiceItem in InvoiceItem) {
@@ -300,9 +304,9 @@ for(state in indianStates){
 						}
 						double maxAmt = 0;
 						if(invoiceQTY && invoiceQTY>0){
-							if(silkCategoriesProducts.contains(productId)){
+							if(productCategory.equals("SILK")){
 								maxAmt = (invoiceAMT*1)/100;
-							}else if (juteCategoriesProducts.contains(productId)){
+							}else if(productCategory.equals("JUTE_YARN")){
 								maxAmt = (invoiceAMT*10)/100;
 							}else{
 								maxAmt = (invoiceAMT*2.5)/100;
