@@ -4203,6 +4203,47 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepRctAcctgTransReportPdf"/>
     </request-map>
+    <request-map uri="FindGrantDevelopmentalBankAccountTab">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGrantDevelopmentalBankAccountTab"/>
+    </request-map>
+    <request-map uri="FindGrantImplementationBankAccountTab">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGrantImplementationBankAccountTab"/>
+    </request-map>
+    <request-map uri="EditGrantFinAccountAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGrantFinAccountAlt"/>
+    </request-map>
+     <request-map uri="FindApGrantInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindApGrantInvoices"/>
+    </request-map>
+    <request-map uri="CreateAPGrantInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateAPGrantInvoice"/>
+    </request-map>
+     <request-map uri="NewCreateGrantAPInvoice">
+            <security https="true" auth="true"/>
+            <event type="service" invoke="createInvoice"/>
+            <response name="success" type="request-redirect" value="CreateAPGrantInvoice">
+                <redirect-parameter name="invoiceId"/>
+                <redirect-parameter name="actionSubTabButtonValue"/>
+            </response>
+            <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+            <response name="error" type="view" value="CreateAPGrantInvoice"/>
+    </request-map>
+    <request-map uri="UpdateAPGrantInvoice">
+            <security https="true" auth="true"/>
+            <event type="service" invoke="updateInvoice"/>
+            <response name="success" type="request-redirect" value="CreateAPGrantInvoice">
+                <redirect-parameter name="invoiceId"/>
+                <redirect-parameter name="actionSubTabButtonValue"/>
+                <redirect-parameter name="subTabButtonValue"/>
+            </response>
+            <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+            <response name="error" type="view" value="CreateAPGrantInvoice"/>
+    </request-map>
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
@@ -4788,7 +4829,10 @@ under the License.
    <view-map name="EmpOGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmpOGAPCreateInvoiceForPayment"/>
    <view-map name="PaymentAccountingTransPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#PaymentAccountingTransPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="DepRctAcctgTransReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#DepRctAcctgTransReportPdf" content-type="application/pdf" encoding="none"/>
-   
-   
+   <view-map name="FindGrantDevelopmentalBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantDevelopmentalBankAccountTab"/>
+   <view-map name="FindGrantImplementationBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantImplementationBankAccountTab"/>
+    <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
+   <view-map name="FindApGrantInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApGrantInvoices"/>
+   <view-map name="CreateAPGrantInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPGrantInvoice"/>
    <!-- end of view mappings -->
 </site-conf>

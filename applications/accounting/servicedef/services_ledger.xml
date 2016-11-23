@@ -423,6 +423,7 @@ under the License.
         <attribute name="glAccountTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="acctgTransTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="debitCreditFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>

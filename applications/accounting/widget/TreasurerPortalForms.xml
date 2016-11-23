@@ -2788,4 +2788,269 @@ under the License.
             <submit button-type="button"/>
         </field> -->
     </form>
+    
+    <form name="ListGrantDevelopmentalAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+         <row-actions>
+         <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>
+        </row-actions>
+        <!-- <auto-fields-entity entity-name="FinAccount" default-field-type="display"/> -->
+         <field name="finAccountId"><hidden></hidden></field>
+          <field name="finAccountTypeId"><hidden></hidden></field>
+         <field name="gbCode"><ignored></ignored></field>
+          <field name="bCode"><ignored></ignored></field>
+           <field name="bPlace"><ignored></ignored></field>
+            <field name="categoryTypeEnum"><ignored></ignored></field>
+             <field name="organizationPartyId"><ignored></ignored></field>
+              <field name="ownerPartyId"><ignored></ignored></field>
+               <field name="isRefundable"><ignored></ignored></field>
+                <field name="finAccountId"><ignored></ignored></field>
+                 <field name="replenishPaymentId"><ignored></ignored></field>
+                  <field name="replenishLevel"><ignored></ignored></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+      
+      <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
+        <field name="finAccountName" title="Grant Name">
+            <hyperlink description="${finAccountName}" target="EditGrantFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+                 <parameter param-name="finAccountTypeId"/>
+                
+            </hyperlink>
+        </field>
+        <!--  <field name="shortName" title="Short Name"><display></display></field>
+        <field name="finAccountCode" title="Bank Account Number"><display></display></field>
+        <field name="finAccountBranch" title="Branch Name"><display></display></field>
+        <field name="ifscCode" title="IFSC Code"><display></display></field>
+         <field name="currencyUomId"><ignored></ignored></field>
+        <field name="postToGlAccountId" title="GL Code"><display></display></field>
+        <field name="finAccPrefix"><ignored></ignored></field> -->
+      
+         <field use-when="&quot;${finAccountTypeId}&quot;==&quot;DEVEL_GRANTS&quot;" name="balanceDevamount " title="Grant Balance"  ><display description = "${groovy: import org.ofbiz.base.util.UtilProperties; if(balanceDevamount	!= null )if( balanceDevamount >= 0) balanceDevamount=balanceDevamount +'Dr'; else  balanceDevamount = (-1)*balanceDevamount+'Cr'; else balanceDevamount = 0; return balanceDevamount;}"></display></field>
+         <field use-when="&quot;${finAccountTypeId}&quot;==&quot;DEVEL_GRANTS&quot;" name="utilizationDevamount " title="Utilization Amount" ><display description = "${groovy: import org.ofbiz.base.util.UtilProperties; if(utilizationDevamount	!= null )if(utilizationDevamount >= 0) utilizationDevamount=utilizationDevamount +'Dr'; else  utilizationDevamount = (-1)*utilizationDevamount+'Cr'; else utilizationDevamount = 0; return utilizationDevamount;}"></display></field>
+       
+       <field name="utilizationDevamount"><hidden></hidden></field>
+       
+        <field name="Report" widget-style="buttontext">
+            <hyperlink target="devGrantReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="finAccountTypeId"/>
+             
+            </hyperlink>
+        </field>
+       <!--  <field name="reconciliation Statement" title="Reconciliation Statement"><display></display></field> --> 
+      
+      <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
+       <!--  <field name="organizationPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="ownerPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="ownerPartyId"/>
+            </hyperlink>
+        </field> -->
+       <!--  <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
+            <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+    </form>
+    
+     <form name="ListGrantImplementationAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+         <row-actions>
+         <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>
+        </row-actions>
+        <!-- <auto-fields-entity entity-name="FinAccount" default-field-type="display"/> -->
+         <field name="finAccountId"><hidden></hidden></field>
+          <field name="finAccountTypeId"><hidden></hidden></field>
+         <field name="gbCode"><ignored></ignored></field>
+          <field name="bCode"><ignored></ignored></field>
+           <field name="bPlace"><ignored></ignored></field>
+            <field name="categoryTypeEnum"><ignored></ignored></field>
+             <field name="organizationPartyId"><ignored></ignored></field>
+              <field name="ownerPartyId"><ignored></ignored></field>
+               <field name="isRefundable"><ignored></ignored></field>
+                <field name="finAccountId"><ignored></ignored></field>
+                 <field name="replenishPaymentId"><ignored></ignored></field>
+                  <field name="replenishLevel"><ignored></ignored></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+      
+      <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
+        <field name="finAccountName" title="Grant Name">
+            <hyperlink description="${finAccountName}" target="EditGrantFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+                 <parameter param-name="finAccountTypeId"/>
+                
+            </hyperlink>
+        </field>
+        <!--  <field name="shortName" title="Short Name"><display></display></field>
+        <field name="finAccountCode" title="Bank Account Number"><display></display></field>
+        <field name="finAccountBranch" title="Branch Name"><display></display></field>
+        <field name="ifscCode" title="IFSC Code"><display></display></field>
+         <field name="currencyUomId"><ignored></ignored></field>
+        <field name="postToGlAccountId" title="GL Code"><display></display></field>
+        <field name="finAccPrefix"><ignored></ignored></field> -->
+         
+ 		<field use-when="&quot;${finAccountTypeId}&quot;==&quot;IMPL_GRANTS&quot;" name="finalbalanceamount " title="Grant Balance"  ><display description = "${groovy: import org.ofbiz.base.util.UtilProperties; if(finalbalanceamount != null )if(finalbalanceamount >= 0) finalbalanceamount=finalbalanceamount +'Dr'; else  finalbalanceamount = (-1)*finalbalanceamount+'Cr'; else finalbalanceamount = 0; return finalbalanceamount;}"></display></field>
+        <field use-when="&quot;${finAccountTypeId}&quot;==&quot;IMPL_GRANTS&quot;" name="utilizationamount " title="Utilization Amount" ><display description = "${groovy: import org.ofbiz.base.util.UtilProperties; if(utilizationamount	!= null )if(utilizationamount >= 0) utilizationamount=utilizationamount +'Dr'; else  utilizationamount = (-1)*utilizationamount+'Cr'; else utilizationamount = 0; return utilizationamount;}"></display></field>
+       
+       <!--  <field name="reconciliation Statement" title="Reconciliation Statement"><display></display></field> --> 
+      
+      <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
+       <!--  <field name="organizationPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="ownerPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="ownerPartyId"/>
+            </hyperlink>
+        </field> -->
+       <!--  <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
+            <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+         <field name="Report" widget-style="buttontext">
+            <hyperlink target="implGrantReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="finAccountTypeId"/>
+             
+            </hyperlink>
+        </field>
+    </form>
+    <form name="FindGrantApInvoices" type="single" target="FindApGrantInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
+    		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+    		<!-- <field name="purposeTypeId"><hidden/></field> -->
+    		<!-- <field name="purposeTypeId" use-when="&quot;${parameters.subTabButtonValue}&quot; == &quot;TradingExpenses&quot; || &quot;${parameters.subTabButtonValue}&quot; == &quot;StoreExpenses&quot;"><hidden value="MATERIAL_PUR_CHANNEL"/></field> -->
+            <field name="invoiceTypeId" position="2">
+    			<drop-down allow-empty="false" no-current-selected-key="GRANT_OUT">
+    				<entity-options description="${description}"
+    					entity-name="InvoiceType">
+    					<entity-constraint name="invoiceTypeId" operator="in"
+    						value="GRANT_OUT,GRANT_IN" />
+    					
+    				</entity-options>
+    			</drop-down>
+    		</field>
+    		 <field name="finAccountId"><hidden value = "${parameters.finAccountId}"></hidden></field>
+    		 <field name="finAccountTransTypeId"><hidden value="GRANT_DISB"/></field>
+    		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+    			position="2">
+    			<drop-down allow-empty="true">
+    				<entity-options description="${description}"
+    					entity-name="StatusItem">
+    					<entity-constraint name="statusTypeId" operator="equals"
+    						value="INVOICE_STATUS" />
+    					<entity-constraint name="statusId" operator="not-equals"
+    						value="INVOICE_SENT" />
+    				</entity-options>
+    			</drop-down>
+    		</field>
+    		<field name="dueDate"><date-find type="timestamp"/></field>
+    			<field name="billingAccountId">
+    			<hidden />
+    		</field>
+    		<field name="billingAccountId"><hidden/></field>
+    	</form>
+    	
+    	 <form name="CreateGrantAPInvoice" type="single" target="UpdateAPGrantInvoice" title="Edit Invoice Header" default-map-name="invoice"
+	        header-row-style="header-row" default-table-style="basic-table">
+	        <actions>
+	        	<set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+	        	<set field="pettyCashVendor" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashPartyId&quot;);}"/>
+	        	<set field="pettyCashVendorRoleTypeId" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashRoleTypeId&quot;);}"/>
+	        </actions>
+	        <alt-target use-when="invoice==null" target="NewCreateGrantAPInvoice"/>
+	         <field name="prefPaymentMethodTypeId"><hidden  value="${prefPaymentMethodTypeId}"/></field>
+	        <field use-when="invoice!=null" name="invoiceId"><display/></field>
+	        <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
+	         <field name="finAccountTransTypeId"><hidden value="GRANT_DISB"/></field>
+	          <field  use-when="&quot;${parameters.finAccountTypeId}&quot;!=&quot;DEVEL_GRANTS&quot;"  name="purposeTypeId"><hidden value="GRANT_CHANNEL"/></field>
+	         <field  use-when="&quot;${parameters.finAccountTypeId}&quot;==&quot;DEVEL_GRANTS&quot;"  name="purposeTypeId"><hidden value=""/></field>
+	          <field position="1" name="organizationPartyId" parameter-name="partyId" title="Unit Name">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>      
+	        <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
+	        <field name="pettyCashVendorId"><hidden value="${pettyCashVendor}"/></field>
+	        <field name="pettyCashVendorRoleTypeId"><hidden value="${pettyCashVendorRoleTypeId}"/></field>
+	        <field name="pettyCashDueDate"><hidden value="${nowTimestamp}"/></field>
+	        <field name="invoiceTab"><hidden/></field>
+	        <field name="actionSubTabButtonValue"><hidden value="updateInvoice"/></field>
+	        <field name="subTabButtonValue" ><hidden value="${parameters.subTabButtonValue}"/></field>
+	        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+	        <field name="invoiceTypeId"><hidden/></field>
+	       
+	        <!-- <field position="1" name="invoiceTypeId" event="onchange" action="javascript:setInvoiceAction(); javascript:setRoleTypeDropdown();">
+	            <drop-down allow-empty="false" no-current-selected-key="PURCHASE_INVOICE">
+	                <entity-options description="${description}" entity-name="InvoiceType">
+	                	<entity-constraint name="invoiceTypeId" value="PURCHASE_INVOICE" operator="not-equals"/>
+	                    <entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+	                    <entity-order-by field-name="description"/>
+	                </entity-options>
+	            </drop-down>
+	        </field> -->
+	         <field position="1" name="partyIdFrom" title="Party Id" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
+	        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+	        <field name="dueDate"  ><hidden ></hidden></field>     
+	        <!-- <field position="1" name="roleTypeId" >   
+	            <drop-down allow-empty="true">
+	                <entity-options description="${description}" entity-name="RoleType">
+	                    <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
+	                    <entity-order-by field-name="description"/>
+	                </entity-options>
+	                <entity-options description="${description}" entity-name="RoleType">
+	                    <entity-order-by field-name="description"/>
+	                </entity-options>
+	            </drop-down>
+	        </field> --> 
+	        <!-- <field name="timePeriodId">
+	            <drop-down>
+	                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+	                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+	                    <entity-constraint name="isClosed" operator="equals" value="N" />                    
+	                    <entity-constraint name="thruDate" operator="less" env-name="nowDate" />                    
+	                    <entity-order-by field-name="-thruDate"/>
+	                </entity-options>
+	            </drop-down>
+	        </field> -->
+	       <!--  <field name="partyId"><hidden value="HO"/></field> -->
+	        <!-- <field position="1" name="organizationPartyId" parameter-name="partyId">
+	            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+	                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+	                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+	                    <entity-order-by field-name="groupName"/>
+	                </entity-options>
+	            </drop-down>
+	        </field> -->              
+	        <field position="1" name="referenceNumber" title="Reference No." required-field="true" ><text size="50" default-value="${parameters.finAccountId}"/></field>
+	        <field position="2" name="referenceNumberDate" title="Reference Date"><date-time/></field>      
+	        <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
+	        <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->        
+	        <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
+	            <submit button-type="button"/>
+	        </field>
+	        <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+	            <submit button-type="button"/>
+	        </field>
+    </form>  
+    
+    
 </forms>

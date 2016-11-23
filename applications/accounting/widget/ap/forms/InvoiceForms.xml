@@ -73,6 +73,8 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
+         <field name="finAccountTransTypeId"><hidden value="GRANT_DISB"/></field>
 		<field name="statusId" title="${uiLabelMap.CommonStatus}"
 			position="2">
 			<drop-down allow-empty="true">

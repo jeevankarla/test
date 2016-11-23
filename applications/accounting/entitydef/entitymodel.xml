@@ -578,6 +578,7 @@
 		<field name="finAccountTransId" type="id-ne"></field>
 		<field name="finAccountTransTypeId" type="id-ne"></field>
 		<field name="finAccountId" type="id"></field>
+		<field name="invoiceId" type="id"></field>
 		<field name="partyId" type="id"></field>
 		<field name="glReconciliationId" type="id"></field>
 		<field name="transactionDate" type="date-time"></field>

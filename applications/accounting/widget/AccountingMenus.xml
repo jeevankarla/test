@@ -2138,6 +2138,14 @@
 			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
 			</link>
 		 </menu-item>
+		 <menu-item name="Grants" title="Grants">
+			<link target="FindGrantDevelopmentalBankAccountTab" >
+			
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem" />
+				<parameter param-name="finAccountTypeId" value="GRANTS" />
+				<parameter param-name="subTabItem" value="Grants"/>
+			</link>
+		</menu-item>
 		<!--  <menu-item name="FindNonBankAccount" title="Non BankAccounts">
           <condition>
 				<or>
@@ -2406,6 +2414,26 @@
 		 </menu-item> -->
     </menu> 
     
+    
+    <menu name="NonBankAccountsSubTabBarNew" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+			selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="DevelopmentalGrant" title="Developmental Grant">
+			<link target="FindGrantDevelopmentalBankAccountTab" >
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem2" />
+			    <parameter param-name="finAccountTypeId" value="DEVEL_GRANTS" />
+				<parameter param-name="subTabItem" value="DevelopmentalGrant"/>
+			</link>
+		</menu-item>
+		<menu-item name="ImplementationGrants" title="Implementation Grants">
+			<link target="FindGrantImplementationBankAccountTab" >
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem2" />
+				<parameter param-name="finAccountTypeId" value="IMPL_GRANTS" />
+				<parameter param-name="subTabItem" value="ImplementationGrants"/>
+			</link>
+		</menu-item>
+	 </menu>
+    
+    
     <menu name="DepositAccountTabBar" extends="CommonTabBarMenu"	extends-resource="component://common/widget/CommonMenus.xml"
 		default-menu-item-name="EditFinAccount" selected-menuitem-context-field-name="tabButtonItem2">
 
@@ -2524,6 +2552,52 @@
            	</condition>
 			<link target="FindFinAccountReconciliationsNew">
 				<parameter param-name="finAccountId" />
+			</link>
+		</menu-item>
+		<menu-item name="FindFinnwithdrawal" title="Find utilisation invoices">
+			
+			<condition>
+				<and>
+					<not><if-empty field="ctxFinAccountId"/></not>
+					<or><not><if-empty field="finAccountId"/></not></or>
+					<or>
+						<if-compare field="finAccount.finAccountTypeId" operator="equals" value="DEVEL_GRANTS" />
+						<if-compare field="finAccount.finAccountTypeId" operator="equals" value="IMPL_GRANTS" /> 
+					</or>
+					
+					
+					</and>
+           	</condition>
+			<link target="FindApGrantInvoices" >
+				<parameter param-name="finAccountId" />
+				
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
+			
+			</link>
+		</menu-item>
+		
+		
+		
+		<menu-item name="Finnwithdrawal" title="Utilisation Invoice">
+			<condition>
+				<and> 
+					<not><if-empty field="ctxFinAccountId"/></not>
+					<or><not><if-empty field="finAccountId"/></not></or>
+					<or>
+						<if-compare field="finAccount.finAccountTypeId" operator="equals" value="DEVEL_GRANTS" />
+						<if-compare field="finAccount.finAccountTypeId" operator="equals" value="IMPL_GRANTS" /> 
+					</or>
+					</and>
+           	</condition>
+			<link target="CreateAPGrantInvoice">
+		<parameter param-name="finAccountTypeId" />
+		<parameter param-name="finAccountId" />
+		<parameter param-name="tabButtonItem2" value="Finnwithdrawal" />
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="showCreateButton" value="Y" />
+				<parameter param-name="invoiceTypeId" value="GRANT_OUT" />
+				<parameter param-name="purposeTypeId" from-field="invoice.purposeTypeId" />
+			
 			</link>
 		</menu-item>
 	</menu>
@@ -3531,6 +3605,9 @@
 				</and>
 			</condition>
 			<link target="SetAPInvoiceStatus">
+			<parameter param-name="purposeTypeId" value="GRANT_CHANNEL" />
+			    <parameter param-name="finAccountTransTypeId" value="GRANT_DISB" />
+			    <parameter param-name="finAccountId" from-field="parameters.finAccountId" />
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_APPROVED" />
@@ -3618,6 +3695,9 @@
 				</and>
 			</condition>
 			<link target="SetAPInvoiceStatus">
+				<parameter param-name="purposeTypeId" value="GRANT_CHANNEL" />
+			    <parameter param-name="finAccountTransTypeId" value="GRANT_DISB" />
+			    <parameter param-name="finAccountId" from-field="parameters.finAccountId" />
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_READY" />

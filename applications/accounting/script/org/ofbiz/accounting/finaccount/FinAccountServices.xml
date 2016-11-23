@@ -550,6 +550,15 @@ under the License.
                     <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="ADJUSTMENT"/></condition>
                     <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
                 </else-if>
+                 <else-if>
+                     <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="GRANT_RECEIPT"/></condition>
+                  <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                </else-if>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="GRANT_DISB"/></condition>
+                     <then><calculate field="amountForCalc"><calcop operator="negative" field="finAccountTrans.amount"/></calculate></then>
+                    
+                </else-if>
                 </if>
                 <set field="actualBalanceSum" value="${actualBalanceSum + amountForCalc}" type="BigDecimal"/>
             </then>
@@ -604,6 +613,15 @@ under the License.
                 <else-if>
                     <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="ADJUSTMENT"/></condition>
                     <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                </else-if>
+                 <else-if>
+                     <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="GRANT_RECEIPT"/></condition>
+                  <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                </else-if>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="GRANT_DISB"/></condition>
+                     <then><calculate field="amountForCalc"><calcop operator="negative" field="finAccountTrans.amount"/></calculate></then>
+                    
                 </else-if>
                 </if>
                 <set field="actualBalanceSum" value="${actualBalanceSum + amountForCalc}" type="BigDecimal"/>
@@ -1565,5 +1583,54 @@ under the License.
         	<field-map field-name="finAcntTrnsGrpTypeId" from-field="finAccountTransGroupType.finAcntTrnsGrpTypeId"/>
         </entity-one>
         <create-value value-field="newFinAccountTransGroupMember"/>
+    </simple-method>
+    
+    <simple-method method-name="createFinAccountTransIdForInvoice" short-description="Create an createFinAccountTransIdForInvoice">   
+     <entity-one value-field="invoices" entity-name="Invoice">
+ 	<field-map  field-name="invoiceId" from-field="parameters.invoiceId"/>
+ 	</entity-one>
+    <set field="invoiceStatus" from-field="invoices.statusId" />
+	<set field="invoiceDate" from-field="invoices.invoiceDate" /> 
+	<entity-one value-field="finAccountlist" entity-name="FinAccount">
+	<field-map field-name="finAccountId" from-field="parameters.finAccountId"/>
+	</entity-one>		
+	<set field="finAccountTypeId" from-field="finAccountlist.finAccountTypeId" />
+	
+	<!-- <entity-one value-field="InvoiceItemlist" entity-name="InvoiceItem">
+	<field-map field-name="amount" from-field="parameters.amount"/>
+	</entity-one>		
+	<set field="invoiceItemAmount" from-field="InvoiceItemlist.amount" />  -->
+	  <entity-one value-field="invoice" entity-name="Invoice">
+	  <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
+	  </entity-one> 
+	 <if>
+	  	<condition>
+	  		<and>
+	 			<!-- <if-compare field="invoiceStatus" operator="equals" value="INVOICE_APPROVED"/> -->
+     			<if-compare field="finAccountTypeId" operator="equals" value="IMPL_GRANTS" type="String"/>
+	  		</and>
+	  	</condition>
+	     
+	  	<then>
+	   <call-class-method class-name="org.ofbiz.accounting.invoice.InvoiceWorker" method-name="getInvoiceTotal" ret-field="invoiceTotalAmount">
+            <field field="invoice" type="org.ofbiz.entity.GenericValue"/>
+        </call-class-method>
+        <set field="createFinAccountTransMap.invoiceId" from-field="parameters.invoiceId"/>
+			<set field="createFinAccountTransMap.transactionDate" from-field="invoiceDate"/>
+			<set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
+			
+			<set field="createFinAccountTransMap.statusId" value="FINACT_TRNS_CREATED"/>
+			<set field="createFinAccountTransMap.finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>	
+			<set field="createFinAccountTransMap.amount" from-field="invoiceTotalAmount"/>		
+			<set field="finAccountTransMap" type="java.util.Map"/>
+		<call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
+	       <results-to-map map-name="finAccountTransMap"/>
+		</call-service>
+			   
+			    <set field="createFinAccounttransStatusMap.statusId" value="FINACT_TRNS_APPROVED"/>
+			    <set field="createFinAccounttransStatusMap.finAccountTransId" from-field="finAccountTransMap.finAccountTransId"/>
+			    <call-service service-name="setFinAccountTransStatus" in-map-name="createFinAccounttransStatusMap"/> 
+        </then>
+      </if>  
     </simple-method>
 </simple-methods>
