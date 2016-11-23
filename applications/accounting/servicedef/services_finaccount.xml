@@ -161,6 +161,15 @@ under the License.
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
     </service>
+     <service name="createFinAccountTransIdForInv" engine="simple" default-entity-name="FinAccountTrans"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountTransIdForInvoice">
+        <description>Create a new Financial Account Transaction.  Will use current timestamp for entryDate and trasanctionDate if none is provided.</description>
+        <attribute name="finAccountTransId" type="String" mode="INOUT" optional="true"/>
+         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+    </service>
+    
      <service name="preCreateFinAccountTrans" engine="simple" default-entity-name="FinAccountTrans"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="preCreateFinAccountTrans">
         <description>Create a new Financial Account Transaction.  Will use current timestamp for entryDate and trasanctionDate if none is provided.</description>

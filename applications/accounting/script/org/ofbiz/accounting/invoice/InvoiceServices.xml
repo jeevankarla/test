@@ -176,7 +176,7 @@ under the License.
 	            <property-to-field resource="general" property="currency.uom.id.default" field="parameters.currencyUomId"/>
 	        </else>
         </if-not-empty>
-        
+        <set field="newEntity.purposeTypeId" from-field="parameters.purposeTypeId"/>
         <if-not-empty field="parameters.roleTypeId">
         	 <entity-one value-field="invoiceType" entity-name="InvoiceType">
         	 	<field-map field-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
@@ -594,8 +594,20 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="setInvoiceStatus" short-description="Set The Invoice Status">
-    	<if-compare operator="equals" value="INVOICE_APPROVED" field="parameters.statusId">
+     <simple-method method-name="setInvoiceStatus" short-description="Set The Invoice Status">
+    <entity-one value-field="invoices" entity-name="Invoice">
+ 	<field-map  field-name="invoiceId" from-field="parameters.invoiceId"/>
+ 	</entity-one>
+ 	
+        <if-compare operator="equals" value="INVOICE_APPROVED" field="parameters.statusId">
+    	<if-compare operator="equals" value="GRANT_CHANNEL" field="invoices.purposeTypeId">
+         <set field="createFinAccountTransMap.finAccountTransTypeId" value="GRANT_DISB"/> 
+    	 <set field="createFinAccountTransMap.invoiceId" from-field="parameters.invoiceId"/>
+        <set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
+        <call-service service-name="createFinAccountTransIdForInv" in-map-name="createFinAccountTransMap"> 
+ 	   </call-service> 
+ 	   
+ 	       </if-compare>      
     		<set value="_INVOICE_APPROVE" field="securityAction"/>
         	<check-permission permission="ACCOUNTING" action="${securityAction}">            
         	<fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
@@ -756,6 +768,91 @@ under the License.
             </if-compare>
         </if-compare-field>
     </simple-method>
+    
+     <simple-method method-name="createAcctgTransForGrantInvoice">
+     <entity-one value-field="invoices" entity-name="Invoice">
+ 	<field-map  field-name="invoiceId" from-field="parameters.invoiceId"/>
+ 	</entity-one>
+                      <entity-one value-field="finAccountlist" entity-name="FinAccount">
+							<field-map field-name="finAccountId" from-field="parameters.finAccountId"/>
+					   </entity-one>		
+							<set field="finAccountTypeId" from-field="finAccountlist.finAccountTypeId" />
+                      
+                       <if-compare operator="equals" value="GRANT_CHANNEL" field="invoices.purposeTypeId">
+                        <if-compare operator="equals" value="IMPL_GRANTS" field="finAccountTypeId">
+                         
+                            <entity-condition list="finAccountTranslist" entity-name="FinAccountTrans">
+						    <condition-list>
+							<condition-expr field-name="invoiceId" value="parameters.invoiceId" />		
+							<condition-expr field-name="finAccountTransTypeId" value="GRANT_DISB" />
+						    </condition-list>				
+					        </entity-condition>
+					         <iterate list="finAccountTranslist" entry="Finacc">
+                             <set field="finAccountTransId" from-field="Finacc.finAccountTransId" />  
+                             <set field="amount" from-field="Finacc.amount" />  
+                   			 </iterate>
+					        <set field="invoiceDate" from-field="invoices.invoiceDate" />   
+						    <set field="createAcctgTransParams.invoiceId" from-field="parameters.invoiceId" />
+							<set field="createAcctgTransParams.glFiscalTypeId" value="ACTUAL" />
+							<set field="createAcctgTransParams.transactionDate" from-field="invoiceDate" />
+						    <set field="createAcctgTransParams.finAccountTransId" from-field="finAccountTransId" />
+							
+							<set field="createAcctgTransParams.acctgTransTypeId" value="GRANTS_UTI"/>
+							
+							<call-service service-name="createAcctgTrans" in-map-name="createAcctgTransParams">
+						            <result-to-field result-name="acctgTransId"/>
+						        </call-service> 
+						    <entity-condition entity-name="InvoicePurposeTypeGlAccountDefault" list="GlAccountPurposeTypeList">
+           									 <condition-expr field-name="invoicePurposeTypeId" from-field="parameters.purposeTypeId"/>
+       						 </entity-condition>
+ 							<iterate list="GlAccountPurposeTypeList" entry="GlAccountPurposeTypee">
+                              <set field="glAccountTypeId" from-field="GlAccountPurposeTypee.glAccountTypeId" />
+                             </iterate>
+                            
+                            <entity-condition entity-name="GlAccount" list="GlAccountList">
+           									 <condition-expr field-name="glAccountTypeId" from-field="glAccountTypeId"/>
+       						 </entity-condition>
+                            
+                             <iterate list="GlAccountList" entry="GlAccountt">
+                         		 <set field="glAccountId" from-field="GlAccountt.glAccountId" />  
+                   				 </iterate>
+                        
+                            <entity-condition entity-name="FinAccount" list="FinAccountListt">
+           									 <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+       						 </entity-condition>
+                            
+                             <iterate list="FinAccountListt" entry="Fins">
+                         		 <set field="postToGlAccountId" from-field="Fins.postToGlAccountId" />  
+                         		 <set field="organizationPartyId" from-field="Fins.organizationPartyId" />
+                   				 </iterate>
+   
+                               <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+                               <set field="createAcctgTransEntryParams.finAccountTransId" from-field="finAccountTransId"/> 
+                               <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId"/> 
+                               <set field="createAcctgTransEntryParams.partyId" value="Company"/>
+                               <set field="createAcctgTransEntryParams.glAccountId" from-field="glAccountId"/>
+                               <set field="createAcctgTransEntryParams.amount" from-field="amount"/>
+                               <set field="createAcctgTransEntryParams.origAmount" from-field="amount"/> 
+                               <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
+                               <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+                               <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                               <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+                               <set field="createAcctgTransEntryParams.finAccountTransId" from-field="finAccountTransId"/>
+                               <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId"/>
+                               <set field="createAcctgTransEntryParams.partyId" value="Company"/> 
+                               <set field="createAcctgTransEntryParams.glAccountId" from-field="postToGlAccountId"/>
+                               <set field="createAcctgTransEntryParams.amount" from-field="amount"/> 
+                               <set field="createAcctgTransEntryParams.origAmount" from-field="amount"/> 
+                               <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
+                               <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+                               <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                               
+                                <set field="postAcctgTransMap.acctgTransId" from-field="acctgTransId" />
+						     <call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>
+                        </if-compare>
+                       </if-compare> 
+                </simple-method>
+    
     <simple-method method-name="setPettyCashInvoiceStatus" short-description="Set The PettyCash Invoice Status">
     	<set field="setInvoiceStatusMap.invoiceId" value="${parameters.invoiceId}"/>
     	<set field="setInvoiceStatusMap.statusId" value="${parameters.statusId}"/>

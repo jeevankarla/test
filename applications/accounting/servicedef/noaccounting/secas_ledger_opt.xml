@@ -94,6 +94,14 @@ under the License.
     </eca>
     <eca service="setInvoiceStatus" event="commit">
         <condition field-name="invoiceId" operator="is-not-empty"/>
+        <condition-service service-name="checkEnableAccounting"/>
+        <condition field-name="statusId" operator="equals" value="INVOICE_READY"/>
+        <condition field-name="oldStatusId" operator="not-equals" value="INVOICE_READY"/>
+      
+        <action service="createAcctgTransForGrantInvoice" mode="sync"/>
+    </eca>
+    <eca service="setInvoiceStatus" event="commit">
+        <condition field-name="invoiceId" operator="is-not-empty"/>
         <condition field-name="statusId" operator="equals" value="INVOICE_CANCELLED"/>
         <action service="cancelInvoice" mode="sync"/>
     </eca>

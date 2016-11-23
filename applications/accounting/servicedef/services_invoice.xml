@@ -59,7 +59,10 @@ under the License.
         <attribute name="allowMultipleInvForPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
         <attribute name="billOfSaleTypeId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/> 
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="costCenterId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/> 
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>
@@ -171,7 +174,7 @@ under the License.
         <override name="description" allow-html="safe"/>
         <override name="invoiceMessage" allow-html="safe"/>
     </service>
-    <service name="setInvoiceStatus" engine="simple"
+    <service name="setInvoiceStatus" engine="simple"  transaction-timeout="7200"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
         <description>Set the Invoice  Status</description>
         <required-permissions join-type="OR">
@@ -182,6 +185,30 @@ under the License.
         	<permission-service service-name="acctgInvoicePermissionCheck" main-action="INVOICE_APPROVE"/>
         </required-permissions>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paidDate" type="Timestamp" mode="IN" optional="true"/> <!-- only relevant for changes to PAID -->
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="createAcctgTransForGrantInvoice" engine="simple"  transaction-timeout="7200"
+        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createAcctgTransForGrantInvoice">
+        <description>Create Accounting Trans For Grant Invoice</description>
+        <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="PAYMENT_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="APINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="INVOICE_APPROVE"/>
+        </required-permissions>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransId" mode="IN" type="String" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
         <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>

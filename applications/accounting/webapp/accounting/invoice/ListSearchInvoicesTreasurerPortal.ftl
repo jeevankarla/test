@@ -386,7 +386,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)?if_exists>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>APInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
+              <td><a class="buttontext" href="<@ofbizUrl>APInvoiceOverview?invoiceId=${invoice.invoiceId?if_exists}&amp;subTabButtonValue=${tabButtonItem5?if_exists}&amp;finAccountId=${parameters.finAccountId?if_exists}&amp;finAccountTransTypeId='GRANT_DISB'</@ofbizUrl>">${invoice.get("invoiceId")?if_exists}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
                 

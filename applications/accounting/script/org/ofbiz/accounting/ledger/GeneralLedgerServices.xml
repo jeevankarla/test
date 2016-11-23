@@ -676,13 +676,51 @@ under the License.
                     <field-to-result field="invoiceItemTypeGlAccount.glAccountId" result-name="glAccountId"/>
                     <return/>
                 </if-not-empty>
-                <entity-one entity-name="InvoiceItemType" value-field="invoiceItemType">
-                    <field-map field-name="invoiceItemTypeId" from-field="parameters.glAccountTypeId"/>
-                </entity-one>
-                <if-not-empty field="invoiceItemType.defaultGlAccountId">
+                
+                <entity-condition entity-name="Invoice" list="InvoiceList">
+           			<condition-expr field-name="invoiceId" from-field="parameters.invoiceId"/>
+       			 </entity-condition>
+                <iterate list="InvoiceList" entry="InvoiceListt">
+                 <set field="purposeTypeId" from-field="InvoiceListt.purposeTypeId" />
+                 </iterate>
+                 
+                 <if-compare field="purposeTypeId" operator="equals" value="GRANT_CHANNEL">
+		                
+		                  <entity-condition entity-name="InvoicePurposeTypeGlAccountDefault" list="GlAccountPurposeTypeList">
+		           			<condition-expr field-name="invoicePurposeTypeId" value="GRANT_CHANNEL"/>
+		       			 </entity-condition>
+		 				<iterate list="GlAccountPurposeTypeList" entry="GlAccountPurposeTypee">
+		                 <set field="glAccountTypeIdNew" from-field="GlAccountPurposeTypee.glAccountTypeId" />
+		                 
+		                </iterate>
+		                
+		                 <entity-condition entity-name="GlAccount" list="GlAccountList">
+		           			<condition-expr field-name="glAccountTypeId" from-field="glAccountTypeIdNew"/>
+		       			 </entity-condition>
+		       			 <iterate list="GlAccountList" entry="GlAccounts">
+		                   <set field="glAccountId" from-field="GlAccounts.glAccountId"/>
+		                 
+		                </iterate>
+		                 <set field="parameters.glAccountTypeId" from-field="glAccountTypeIdNew"/> 
+		          		
+		          		  <if-not-empty field="glAccountId">
+                   		       <field-to-result field="glAccountId" result-name="glAccountId"/>
+                  		  <return/>
+              			  </if-not-empty>
+		          		<else>
+		           		  
+		
+		                <entity-one entity-name="InvoiceItemType" value-field="invoiceItemType">
+		                    <field-map field-name="invoiceItemTypeId" from-field="parameters.glAccountTypeId"/>
+		                </entity-one>
+		                 <if-not-empty field="invoiceItemType.defaultGlAccountId">
                     <field-to-result field="invoiceItemType.defaultGlAccountId" result-name="glAccountId"/>
                     <return/>
                 </if-not-empty>
+		               </else>
+           		  </if-compare>  
+           		  
+               
                 <return/>
             </then>
         </if>

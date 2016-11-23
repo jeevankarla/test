@@ -5496,4 +5496,396 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="FindGrantDevelopmentalBankAccountTab">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Non Financial Accounts"/>
+                  <set field="tabButtonItem" value="Grants"/>
+                 <set field="tabButtonItem2" value="${parameters.subTabItem}"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                 <set field="parameters.targetRequest" value="FindNonBankAccount"/>
+                 <set field="targetRequest" value="FindNonBankAccount"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+               <!-- <set field="parameters.ownerPartyId" value="Company"/> -->
+               <set field="parameters.finAccountTypeId" value="${parameters.finAccountTypeId}"/> 
+                <set field="noConditionFind" value="Y"/>
+                <set field="screenFlag" value="NON_BANKACCOUNT" /> 
+                <set field="parameters.screenFlag" value="NON_BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+            <label style="h1" text="======parameters.finAccountTypeId=====${parameters.finAccountTypeId}" ></label>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                   
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                     <include-menu name="NonBankAccountsSubTabBarNew" location="component://accounting/widget/AccountingMenus.xml" />
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="NonBankAccount.csv" text="Export As CSV" style="buttontext create">
+										<parameter param-name="screenFlag" value="NON_BANKACCOUNT"/>	
+									</link>
+								</container>
+								<screenlet title="Grants And Loans Account List">				
+									 <include-form name="ListGrantDevelopmentalAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    
+    <screen name="FindGrantImplementationBankAccountTab">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Non Financial Accounts"/>
+                  <set field="tabButtonItem" value="Grants"/>
+                 <set field="tabButtonItem2" value="${parameters.subTabItem}"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                 <set field="parameters.targetRequest" value="FindNonBankAccount"/>
+                 <set field="targetRequest" value="FindNonBankAccount"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+               <!-- <set field="parameters.ownerPartyId" value="Company"/> -->
+              <set field="parameters.finAccountTypeId" value="${parameters.finAccountTypeId}"/> 
+                <set field="noConditionFind" value="Y"/>
+                <set field="screenFlag" value="NON_BANKACCOUNT" /> 
+                <set field="parameters.screenFlag" value="NON_BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                   
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                     <include-menu name="NonBankAccountsSubTabBarNew" location="component://accounting/widget/AccountingMenus.xml" />
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="NonBankAccount.csv" text="Export As CSV" style="buttontext create">
+										<parameter param-name="screenFlag" value="NON_BANKACCOUNT"/>	
+									</link>
+								</container>
+								<screenlet title="Grants And Loans Account List">				
+									 <include-form name="ListGrantImplementationAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditGrantFinAccountAlt">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFinAccount"/>
+              <!--   <set field="tabButtonItem" value="${parameters.tabButtonItem}" value="${tabButtonItem}" /> -->
+                	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                 <set field="tabButtonItem2" value="EditGrantFinAccountAlt"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTypeId" from-field="parameters.finAccountTypeId"/>
+                
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+             <!--    <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                    <decorator-section name="body">
+                      <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+                                <not><if-empty field="finAccountId" /></not>
+                            </condition>
+                            <widgets>
+                               <!--  <container style="button-bar">
+                                    <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="buttontext create"/>
+                                </container> -->
+                                <label style="h1" text="${uiLabelMap.GrantAccountingEditBank}" ></label>
+                                <screenlet id="EditFinAccountPanel" collapsible="true">
+                                    <include-form name="EditBankAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <screenlet id="CreateFinAccountPanel" collapsible="true">
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="FindApGrantInvoices">
+            <section>
+                <actions>
+                    <set field="titleProperty" value="AccountingFindApInvoices"/>
+                    <set field="filterByDate" value="true"/>
+                    <set field="tabButtonItem"  value="FindNonBankAccount" />
+    				
+    			<set field="tabButtonItem2" value="FindFinnwithdrawal" />
+                    <service service-name="performFind" result-map="result">
+                        <field-map field-name="inputFields" from-field="parameters"/>
+                        <field-map field-name="entityName" value="InvoiceAndType"/>
+                        <field-map field-name="orderBy" value="invoiceDate DESC"/>
+                    </service>
+                    <set field="invoices" from-field="result.listIt"/>
+                    <set field="finAccountTransTypeId"  value="GRANT_DISB"/>
+                   <set field="parameters.finAccountId"  value="${parameters.finAccountId}"/>
+                    
+                    <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+                    <set field="purposeTypeId"  value="${parameters.purposeTypeId}"/>
+               		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+                </actions>
+                <widgets>
+               <!--  <label text = "=======================${parameters.finAccountId}"></label> -->
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                        <decorator-section name="body">
+                        
+                        	<!-- <include-menu name="FinnwithdrawalTabBarNew"
+    							location="component://accounting/widget/AccountingMenus.xml" /> -->
+    						 <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/> 
+    						
+                        	<!-- <include-menu name="InvoiceTypesTabBarNew" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        	
+                        	<!-- <include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" /> -->
+                            <section>
+                                <widgets>
+                                    <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                        <decorator-section name="menu-bar">
+                                            <container style="button-bar">
+                                              <!--  <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> --> <!--  NewPurchaseInvoice-->
+                                                <!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link>
+                                                <link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"/></link>
+                                               -->
+                                                <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link>
+                                               <!--  <link target="CreateAPInvoice" text="Create Cash Voucher" style="buttontext create" > 
+                                                	<parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter>
+                                                	<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
+                                                	<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
+                                                	<parameter param-name="showCreateButton" value="Y"></parameter>
+                                                </link>
+                                            	<link target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" >
+                                            		<parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter>
+                                            		<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
+                                            		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
+                                            		<parameter param-name="showCreateButton" value="Y"></parameter>
+                                            	</link>
+                                            	<link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
+                                            </container>
+                                        </decorator-section>
+                                        <decorator-section name="search-options">
+                                            <include-form name="FindGrantApInvoices" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                        </decorator-section>
+                                        <decorator-section name="search-results">
+                							<screenlet title="Invoices List">  
+                								<section>   
+                									<condition>
+                										<not><if-empty field="invoices" /></not>
+                									</condition>
+                									<widgets>                        
+    		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
+    														target="InvoiceSearchResultsCsv.csv">
+    														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+    														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
+    														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+    														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
+    														<parameter param-name="description_op" from-field="parameters.description_op"/>
+    														<parameter param-name="description" from-field="parameters.description"/>
+    														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
+    														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
+    														<parameter param-name="statusId" from-field="parameters.statusId"/>
+    														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+    														<parameter param-name="partyId" from-field="parameters.partyId"/>
+    														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+    														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+    														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+    														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
+    														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
+    														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
+    														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
+    														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
+    													</link>	                 
+    												</widgets>
+    											</section>
+                                            	<platform-specific>
+                                            	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
+    											</platform-specific>
+    											<platform-specific>
+                                                	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchInvoicesTreasurerPortal.ftl"/></html>
+                                            	</platform-specific>
+                                            </screenlet>
+                                        </decorator-section>
+                                    </decorator-screen>
+                                </widgets>
+                            </section>
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
+        </screen>
+        
+         <screen name="CreateAPGrantInvoice">
+    		<section>
+    			<actions>
+    				
+    				<!--  <set field="titleProperty" value="FindBankAccountReconciliationsTitle"/> -->
+                   <!--   <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                    <set field="tabButtonItem2" value="FindFinAccountReconciliations"/> -->
+    				<set field="tabButtonItem"  value="FindNonBankAccount" default-value="${context.tabButtonItem}"/>
+    				
+    			<set field="tabButtonItem2" value="Finnwithdrawal" />
+    				<set field="tabButtonItem5" value="${parameters.actionSubTabButtonValue}" 
+    					default-value="createInvoice"/> 
+    				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+    				<set field="finAccountId" value="${parameters.finAccountId}" />
+    				<set field="finAccountTypeId" value="${parameters.finAccountTypeId}" />
+    				<set field="purposeTypeId" value="${parameters.purposeTypeId}" />
+    				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js"
+    					global="true" />
+    				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js"
+    					global="true" />
+    				<set field="headerItem" value="invoices" />
+    				<entity-one entity-name="Invoice" value-field="invoice" />
+    				<set field="prefPaymentMethodTypeId" from-field="parameters.prefPaymentMethodTypeId" />
+    				<script
+    					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
+    				<set field="titleProperty" value="${invoiceCreateScreenTitle}" />
+    				<set field="prefPaymentMethodTypeId" from-field="parameters.prefPaymentMethodTypeId" />
+    				<service service-name="acctgInvoicePermissionCheck"
+    					result-map="permResult">
+    					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+    				</service>
+    				<set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission" />
+    				<entity-one entity-name="Invoice" value-field="invoice" />
+    				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+    				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+    					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+    					<order-by field-name="invoiceItemSeqId" />
+    				</entity-and>
+    				<script
+    					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/DisplayInvoiceItemTypes.groovy" />
+    				<script
+    					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+    				<entity-condition entity-name="InvoiceItemType"
+    					list="PayrolGroup">
+    					<condition-expr field-name="parentTypeId" value="PAYROL" />
+    				</entity-condition>
+    				<entity-condition entity-name="InvoiceItemType"
+    					list="PayrolList"></entity-condition>
+    				<service service-name="acctgInvoicePermissionCheck"
+    					result-map="permResult">
+    					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+    				</service>
+    				<set field="invoiceId" value="${invoice.invoiceId}" />
+    				<set field="showCreateButton" value="${parameters.showCreateButton}" />
+    				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+    			</actions>
+    			<widgets>
+    				<decorator-screen name="CommonTreasurerPortalDecorator"
+    					location="component://accounting/widget/CommonScreens.xml">
+    					
+    		
+    					<decorator-section name="body">
+    						<!-- <include-menu name="Finnwithdrawal" location="component://accounting/widget/AccountingMenus.xml"/> -->
+    						<!-- <include-menu name="FinnwithdrawalTabBarNew"
+    							location="component://accounting/widget/AccountingMenus.xml" /> -->
+    						<include-menu name="CompanyFinAccountTabBar"
+    							location="component://accounting/widget/AccountingMenus.xml" />
+    							<!-- <include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" 
+    							/> -->
+    										<!-- <include-menu name="InvoiceTypesTabBarNew" location="component://accounting/widget/AccountingMenus.xml"/> -->
+    						<!-- <include-menu name="APInvoiceTabBarNew" location="component://accounting/widget/AccountingMenus.xml" 
+    							/> -->
+    						<!-- <include-menu name="CreateAPInvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml" 
+    							/> -->
+    						<section>
+    						
+    							<widgets>
+    							<label style="h2" text="${finAccountTypeId}" ></label>
+    								<screenlet title="${invoiceCreateScreenTitle}">
+    									<include-form name="CreateGrantAPInvoice"
+    										location="component://accounting/widget/TreasurerPortalForms.xml" />
+    								</screenlet>
+    							</widgets>
+    						</section>
+    						<section>
+    							<condition>
+    								<and>
+    									<not>
+    										<if-empty field="invoice" />
+    									</not>
+    									<if-compare field="invoice.statusId" operator="equals"
+    										value="INVOICE_IN_PROCESS" />
+    									<if-compare field="invoice.invoiceTypeId" operator="not-equals"
+    										value="PAYROL_INVOICE" />
+    									<or>
+    										<if-compare operator="equals" value="true"
+    											field="hasArInvoiceEditPermission" />
+    										<if-compare operator="equals" value="true"
+    											field="hasApInvoiceEditPermission" />
+    									</or>
+    								</and>
+    							</condition>
+    							<widgets>
+    								<platform-specific>
+    									<html>
+    										<html-template
+    											location="component://accounting/webapp/accounting/invoice/AddGrantPurchaseInvoiceItems.ftl" />
+    									</html>
+    								</platform-specific>
+    							</widgets>
+    						</section>
+    
+    						<section><!-- Display InvoiceItem types before creating invoice -->
+    							<condition>
+    								<and>
+    									<if-empty field="invoice" />
+    									<or>
+    										<if-compare operator="equals" value="true"
+    											field="hasArInvoiceEditPermission" />
+    										<if-compare operator="equals" value="true"
+    											field="hasApInvoiceEditPermission" />
+    									</or>
+    								</and>
+    							</condition>
+    							<widgets>
+    								<platform-specific>
+    									<html>
+    										<html-template
+    											location="component://accounting/webapp/accounting/invoice/DisplayInvoiceItemTypes.ftl" />
+    									</html>
+    								</platform-specific>
+    							</widgets>
+    						</section>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+	</screen>
+	  
 </screens>
