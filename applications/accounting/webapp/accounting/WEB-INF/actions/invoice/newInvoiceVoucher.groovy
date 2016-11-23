@@ -173,6 +173,47 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 	
 	invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
+	
+	
+	
+	invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
+	invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
+	
+	invoiceRemainigAdjItemListConsolidate = [];
+	
+	for (eachType in invoiceItemTypes) {
+		
+		invoiceRemainigAdj = EntityUtil.filterByCondition(invoiceRemainigAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, eachType.invoiceItemTypeId));
+		
+		if(invoiceRemainigAdj){
+			
+			adjType = invoiceRemainigAdj[0].invoiceItemTypeId;
+			
+			totAmt = 0;
+			tempMap = [:];
+			for (eachAdj in invoiceRemainigAdj) {
+				totAmt = totAmt+eachAdj.itemValue;
+			}
+			
+			
+			tempMap.put("invoiceItemTypeId", adjType);
+			if(eachType.description)
+			tempMap.put("description", eachType.description);
+			tempMap.put("itemValue", totAmt);
+			
+			invoiceRemainigAdjItemListConsolidate.add(tempMap);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	invoiceItemLevelAdjustments = [:];
 	invoiceItemLevelUnitListPrice = [:];
 	
@@ -305,7 +346,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	
-	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
+	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
 	
 	context.totTaxAmount = totTaxAmount;
 	context.totTaxAmount2 = totTaxAmount2;
@@ -1324,7 +1365,41 @@ if(roID && roID.partyIdFrom=="INT26"){
 }
 context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 
-context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
+
+invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
+invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
+
+invoiceRemainigAdjItemListConsolidate = [];
+
+for (eachType in invoiceItemTypes) {
+	
+	invoiceRemainigAdj = EntityUtil.filterByCondition(invoiceRemainigAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, eachType.invoiceItemTypeId));
+	
+	if(invoiceRemainigAdj){
+		
+		adjType = invoiceRemainigAdj[0].invoiceItemTypeId;
+		
+		totAmt = 0;
+		tempMap = [:];
+		for (eachAdj in invoiceRemainigAdj) {
+			totAmt = totAmt+eachAdj.itemValue;
+		}
+		
+		
+		tempMap.put("invoiceItemTypeId", adjType);
+		if(eachType.description)
+		tempMap.put("description", eachType.description);
+		tempMap.put("itemValue", totAmt);
+		
+		invoiceRemainigAdjItemListConsolidate.add(tempMap);
+	}
+	
+	
+	
+}
+
+
+context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
 
 context.totTaxAmount = totTaxAmount;
 
