@@ -252,6 +252,7 @@ if(shipments){
 			orderAttr.each{ eachAttr ->
 				if(eachAttr.attrName == "SCHEME_CAT"){
 					scheme =  eachAttr.attrValue;
+					context.scheme = scheme;
 				}
 				
 			}
@@ -259,7 +260,7 @@ if(shipments){
 		
 		//Debug.log("scheme============="+scheme);
 		
-		context.scheme = scheme;
+	
 		
 		
 		condExpr = [];
