@@ -422,6 +422,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <thead>
         <tr class="header-row-2">
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
+          <td>Tally Ref No</td>
           <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Due Date</td>
@@ -454,6 +455,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>
+              <td>${(invoice.referenceNumber)?if_exists}</td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
               <td>${(invoice.dueDate)?if_exists}</td>
               <td>
