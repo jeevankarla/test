@@ -157,6 +157,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LES
 }
 Debug.log("partyIds==========================="+partyIds);
 Debug.log("parameters.partyId==========================="+parameters.partyId);
+intOrgPartyIdList = EntityUtil.getFieldListFromEntityList(delegator.findList("PartyRole", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO") , null, null, null, false),"partyId", true);
 
 //adding for Abstract PartyLedger
 if(UtilValidate.isNotEmpty(partyIds)){
@@ -175,10 +176,10 @@ conditionList.add( EntityCondition.makeCondition([
 conditionList.add( EntityCondition.makeCondition([
             EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
-//                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "INT11")
+                EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, intOrgPartyIdList)
                 ],EntityOperator.AND),
             EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"),
+                EntityCondition.makeCondition("partyId", EntityOperator.IN, intOrgPartyIdList),
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ],EntityOperator.AND)
             ],EntityOperator.OR));
@@ -191,8 +192,8 @@ tempInvIterator=null;
 Debug.log("newInvCondition=========================="+newInvCondition);
 invIterator = delegator.find("InvoiceAndType", newInvCondition, null, null, payOrderBy, findOpts);
 //Debug.log("==invIterator===="+invIterator+"=invExprs==="+newInvCondition);
-tempInvIterator=invIterator;
-
+//tempInvIterator=invIterator;
+invoiceAndTypeList = invIterator.getCompleteList();
 /*invoiceIdsList=EntityUtil.getFieldListFromEntityListIterator(tempInvIterator, "invoiceId", true);
 
 Debug.log("==invoiceIdsList**************=="+invoiceIdsList+"====");
@@ -210,7 +211,9 @@ arInvoiceDetailsMap.put("invTotal", BigDecimal.ZERO);
 apInvoiceDetailsMap=[:];
 apInvoiceDetailsMap.put("invTotal", BigDecimal.ZERO);
 invCounter=0;
-while (invoice = invIterator.next()) {
+
+for(GenericValue invoice : invoiceAndTypeList) {
+	//invoice = invIterator.next();
 	Debug.log("invoice=========================="+invoice);
 	
 	invoiceDate=invoice.invoiceDate;
@@ -408,10 +411,10 @@ conditionList.add( EntityCondition.makeCondition([
 conditionList.add(EntityCondition.makeCondition([
                EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+                EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, intOrgPartyIdList)
                 ], EntityOperator.AND),
             EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"),
+                EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, intOrgPartyIdList),
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ], EntityOperator.AND)
             ], EntityOperator.OR));
@@ -423,7 +426,7 @@ newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 payIterator = delegator.find("PaymentAndType", newPayCondition, null, null, orderBy, findOpts);
 
 while (payment = payIterator.next()) {
-	
+		
 	paymentDate=payment.paymentDate;
 	if(payCounter==0){
 		paymentFirstDate=payment.paymentDate;
