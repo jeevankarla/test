@@ -176,7 +176,7 @@ productCategoryIds = [];
 
 condListCat = [];
 
-if(!partyId){
+//if(!partyId){
 	if(productCategory != "OTHER"){
 		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
 		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
@@ -192,7 +192,6 @@ if(!partyId){
 		productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
 	
 	}
-	
 	condListCat.clear();
 	condListCat.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
 	condList1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
@@ -200,9 +199,9 @@ if(!partyId){
 	
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	
-}
+//}
 ////////Debug.log("productIds================"+productIds.size());
-  
+Debug.log("productIds========"+ productIds);
 daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
@@ -328,7 +327,7 @@ invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, nul
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
 
 
-Debug.log("invoiceIds======2222==========="+invoiceIds.size());
+Debug.log("invoiceIds======2222==========="+invoiceIds);
 
 
 conditionList1 = [];
