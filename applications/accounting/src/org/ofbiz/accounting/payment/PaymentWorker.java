@@ -825,13 +825,13 @@ public class PaymentWorker {
 				depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
 			}
 			depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
-			//if(UtilValidate.isNotEmpty(depositReceiptFlag) && "Y".equals(depositReceiptFlag)){
+			if(UtilValidate.isNotEmpty(depositReceiptFlag) && "Y".equals(depositReceiptFlag)){
 				Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
 				if (ServiceUtil.isError(depositResult)) {
 					Debug.logError(depositResult.toString(), module);
 					return ServiceUtil.returnError(null, null, null, depositResult);
 				}
-			//}
+			}
 			
         }catch(Exception e){
         	 Debug.logError(e, e.toString(), module);
