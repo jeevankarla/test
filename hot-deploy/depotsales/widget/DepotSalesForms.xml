@@ -981,6 +981,7 @@
         <field name="invoiceSequence"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
+        <field name="referenceNumber"><text-find ignore-case="true"/></field>  
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
         <field name="actionSubTabButtonValue"><hidden/></field>

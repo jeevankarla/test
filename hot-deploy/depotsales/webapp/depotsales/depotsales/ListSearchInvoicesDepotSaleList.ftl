@@ -562,6 +562,7 @@ function roundingInvoiceItems(invoiceId){
       <thead>
         <tr class="header-row-2">
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
+          <td>Tally Ref No</td>
          <#--> <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
          <td>Rounding</td>-->
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
@@ -601,7 +602,7 @@ function roundingInvoiceItems(invoiceId){
               </td>-->
               
               <#--><td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>-->
-              
+               <td>${(invoice.referenceNumber)?if_exists}</td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
                 <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialShipmentOverview?shipmentId=${invoice.shipmentId}</@ofbizUrl>">${invoice.shipmentId}</a></td>
               <td>
