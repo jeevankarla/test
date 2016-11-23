@@ -211,6 +211,9 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("avgDuration", (durationhrs).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
 				BigDecimal saledurationhrs=saledurationMinits / (24);
+				if(saledurationhrs.compareTo(BigDecimal.ZERO) < 0 ){
+					saledurationhrs=saledurationhrs*(-1);
+				}
 				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(0, 0));
 			 }
 			 else if (partyId == ROOT_ID) {
@@ -224,6 +227,9 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("avgDuration", (durationhrs/9).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
 				BigDecimal saledurationhrs=saledurationMinits / (24);
+				if(saledurationhrs.compareTo(BigDecimal.ZERO) < 0 ){
+					saledurationhrs=saledurationhrs*(-1);
+				}
 				newObj.put("slaeAvgDuration", (saledurationhrs/9).setScale(0, 0));
 			 }
 			 else {
@@ -237,6 +243,9 @@ for(Map.Entry entry : DataMap.entrySet()){
 				newObj.put("avgDuration", (durationhrs).setScale(0, 0));
 				long saledurationMinits=entryValue.get("saleTotalTime")/entryValue.get("totalShipments");
 				BigDecimal saledurationhrs=saledurationMinits / (24);
+				if(saledurationhrs.compareTo(BigDecimal.ZERO) < 0 ){
+					saledurationhrs=saledurationhrs*(-1);
+				}
 				newObj.put("slaeAvgDuration", (saledurationhrs).setScale(0, 0));
 			 }
 			 dataList.add(newObj);
