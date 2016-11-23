@@ -196,15 +196,19 @@ public class paymentApiServices {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
 				} catch (ParseException e) {
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+					eventDate = UtilDateTime.nowTimestamp();
+					Debug.log("paymentDate============="+paymentDate);
 				} catch (NullPointerException e) {
 					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+					eventDate = UtilDateTime.nowTimestamp();
+					Debug.log("paymentDate============="+paymentDate);
 				}
 			}
 	      
 			if (UtilValidate.isEmpty(paymentDate)) {
 	    	  eventDate = UtilDateTime.nowTimestamp();
 			}
-		    
+		    Debug.log("eventDate=============="+eventDate);
 		    try {
 		    	 Map<String, Object> OrderPref = ServiceUtil.returnSuccess();
 		    	 OrderPref = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
