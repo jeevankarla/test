@@ -96,7 +96,7 @@ productCategoryIds = [];
  
 condListCat = [];
  
-if(!partyId){
+//if(!partyId){
 	if(productCategory != "OTHER"){
 		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
 		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
@@ -156,7 +156,7 @@ if(!partyId){
 	 
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	 
-}
+//}
 //Debug.log("productIds================"+productIds.size());
    
 daystart = null;

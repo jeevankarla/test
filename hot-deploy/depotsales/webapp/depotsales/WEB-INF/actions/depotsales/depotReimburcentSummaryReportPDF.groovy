@@ -41,7 +41,12 @@ context.partyfromDate=partyfromDate;
 context.partythruDate=partythruDate;
 
 productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategory] , false);
-prodCatName=productCategoryDetails.description
+if(UtilValidate.isNotEmpty(productCategoryDetails)){
+	prodCatName=productCategoryDetails.description
+}else{
+ 	prodCatName="PRODUCTS OTHER THAN SILK AND JUTE"
+}
+
 context.prodCatName=prodCatName;
 indianStates =[];
 statesList=[];
@@ -205,7 +210,6 @@ for(state in indianStates){
 	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	stateBranchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
 	stateBranchs = EntityUtil.getFieldListFromEntityList(stateBranchList, "partyIdFrom", true);
-	  
 	
 	conditionList.clear();
 	if(UtilValidate.isNotEmpty(daystart)){
@@ -292,9 +296,11 @@ for(state in indianStates){
 					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
 					InvoiceItem = delegator.findList("InvoiceItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 					if(InvoiceItem){
+						double eachInvoiceAMT = 0;
 						for (eachInvoiceItem in InvoiceItem) {
 							productId =eachInvoiceItem.productId
 							invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+							eachInvoiceAMT=eachInvoiceAMT+(eachInvoiceItem.itemValue);
 							invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
 							totStateinvoiceAMT=totStateinvoiceAMT+eachInvoiceItem.itemValue;
 							totStateinvoiceQTY=totStateinvoiceQTY+eachInvoiceItem.quantity;
@@ -305,11 +311,11 @@ for(state in indianStates){
 						double maxAmt = 0;
 						if(invoiceQTY && invoiceQTY>0){
 							if(productCategory.equals("SILK")){
-								maxAmt = (invoiceAMT*1)/100;
+								maxAmt = (eachInvoiceAMT*1)/100;
 							}else if(productCategory.equals("JUTE_YARN")){
-								maxAmt = (invoiceAMT*10)/100;
+								maxAmt = (eachInvoiceAMT*10)/100;
 							}else{
-								maxAmt = (invoiceAMT*2.5)/100;
+								maxAmt = (eachInvoiceAMT*2.5)/100;
 							}
 						}
 						shipmentId = eachInvoice.shipmentId;
