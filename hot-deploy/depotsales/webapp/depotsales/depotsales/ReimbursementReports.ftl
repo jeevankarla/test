@@ -198,7 +198,6 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				 	 <option value="ALL">ALL</option>
 				     <option value='SILK'>SILK</option>
 				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
