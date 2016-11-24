@@ -153,17 +153,17 @@ under the License.
 					            	<fo:block  text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("invoiceQTY")?if_exists}</fo:block>
 					            </fo:table-cell>  
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> font-size="8pt" white-space-collapse="false">${eachCustomer.get("invoiceAMT")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> font-size="8pt" white-space-collapse="false">${eachCustomer.get("invoiceAMT")?if_exists?string("##0.00")}</fo:block>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if>font-size="8pt" white-space-collapse="false">${eachCustomer.get("shippingCost")?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if>font-size="8pt" white-space-collapse="false">${eachCustomer.get("shippingCost")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("reimbursentAMT")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("reimbursentAMT")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <#if reportType?has_content && reportType=="DEPOT">
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("depotCharges")?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt" <#if eachCustomer.get("partyId")=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachCustomer.get("depotCharges")?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            </#if>
 							</fo:table-row>

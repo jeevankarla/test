@@ -2287,6 +2287,11 @@
          <response name="success" type="view" value="depotReimburcentReportCSV"/>
 	     <response name="error" type="view" value="depotReimburcentReportCSV"/>
     </request-map> 
+    <request-map uri="depotReimburcentReport.pdf">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="depotReimburcentReportPDF"/>
+	     <response name="error" type="view" value="depotReimburcentReportPDF"/>
+    </request-map> 
      <request-map uri="depotReimburcentSummaryReport.pdf">
          <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentSummaryReportPDF"/>
@@ -2380,6 +2385,7 @@
 	 <view-map name="depotReimburcentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentReportCSV" content-type="text/csv"/>
 	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
 	<view-map name="depotReimburcentSummaryReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentSummaryReportPDF" content-type="application/pdf"/>
+	<view-map name="depotReimburcentReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentReportPDF" content-type="application/pdf"/>
 	
 	
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>

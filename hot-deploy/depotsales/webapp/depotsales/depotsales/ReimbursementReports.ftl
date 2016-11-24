@@ -167,7 +167,11 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
-				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			 
            </form>
         </tr> 
         

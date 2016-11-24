@@ -311,6 +311,25 @@
            
         </section>
     </screen>
+     <screen name="depotReimburcentReportPDF">
+        <section>
+            <actions>
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/depotReimburcentReportCSV.groovy"/>  		
+            </actions>
+            <widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/depotReimburcentReportPDF.fo.ftl"/>
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+           
+        </section>
+    </screen>
 </screens>
 
 
