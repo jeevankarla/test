@@ -191,7 +191,7 @@ public class paymentApiServices {
 			Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
 			  	
 			if (UtilValidate.isNotEmpty(paymentDate)) {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
 				try {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
 				} catch (ParseException e) {
