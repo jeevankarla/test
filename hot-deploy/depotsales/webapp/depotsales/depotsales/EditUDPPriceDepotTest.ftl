@@ -1951,7 +1951,7 @@ input[type=button]:hover {
 		dataRow["taxAmt"] = totTax;
 		dataRow["totPayable"] = totalPayableValue;
 		
-		
+		updateTotalIndentAmount();
 		
 		grid.updateRow(rowIndex);
 		grid.render();

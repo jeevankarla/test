@@ -868,6 +868,8 @@
 					
 				var taxAmt = data[args.row]["taxAmt"];
 				
+				
+				/*
 				if(taxAmt != undefined && taxAmt != 0){
 					updateTax(args.row);
 				}
@@ -875,6 +877,9 @@
 					getProductPurchaseTaxDetails($("#supplierGeoId").val(), prod, args.row, saleBaseAmt, $("#purchaseTaxType").val());
 					getProductTaxDetails($("#branchGeoId").val(), prod, args.row, saleBaseAmt, $("#saleTaxType").val());
 				}
+				
+				*/
+				
 				updatePayableAmount(args.row);
 				updateTotalIndentAmount();
 				
@@ -951,8 +956,10 @@
 						      		 	//data[args.row]["remarks"].gotoCell();
 						      		 	
 						      		 	var row = args.row;
+						      		 	
+						      		 	/*
 										getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
-				   	
+				   	                     */
 					               }
 					             } ,
 					             error: function() {
