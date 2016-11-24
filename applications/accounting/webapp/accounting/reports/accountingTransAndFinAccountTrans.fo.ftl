@@ -384,16 +384,16 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="20pt"/>
+                    <fo:table-column column-width="140pt"/>
                     <fo:table-column column-width="170pt"/> 
                     <fo:table-body>
 							<#if accountingTransEntryList?has_content>
@@ -401,9 +401,6 @@ under the License.
 							<#assign drTotal = 0>
 							<#list accountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
-                				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.glAccountId?if_exists}</fo:block>  
-                       			</fo:table-cell>
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>

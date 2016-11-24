@@ -41,28 +41,14 @@ accountingTransEntryList = [];
 accountingTransEntries = [:];
 finAccountTransId = parameters.finAccountTransId;
 acctgTransId = parameters.acctgTransId;
-finAccountId = parameters.finAccountId;
-
-if(finAccountId && "depositCheque"==parameters.reportTypeFlag){
-	finAcTransList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId) , null, null, null, false );
-	if(UtilValidate.isNotEmpty(finAcTransList)){
-		finAcTrans = EntityUtil.getFirst(finAcTransList);
-		if(UtilValidate.isNotEmpty(finAcTrans)){
-			finAccountTransId = finAcTrans.finAccountTransId;
-			if(UtilValidate.isEmpty(parameters.finAccountTransId)){
-				parameters.finAccountTransId = finAccountTransId;
-			}
-		}
-	}
-}
 
 //getting invoice tax type
 taxType = "";
 invoice = delegator.findOne("Invoice",[invoiceId : parameters.invoiceId] , false);
 if(UtilValidate.isNotEmpty(invoice)){
-    invoiceTaxType = delegator.findOne("InvoiceAttribute",["invoiceId":parameters.invoiceId,"attrName":"ORDER_TAX_TYPE"],false);
+	invoiceTaxType = delegator.findOne("InvoiceAttribute",["invoiceId":parameters.invoiceId,"attrName":"ORDER_TAX_TYPE"],false);
 if(UtilValidate.isNotEmpty(invoiceTaxType)){
-    taxType = invoiceTaxType.attrValue;
+	taxType = invoiceTaxType.attrValue;
 }
 }
 context.taxType = taxType;
@@ -73,12 +59,12 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 	//for invoiceId
 	if(UtilValidate.isNotEmpty(parameters.invoiceId)){
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,parameters.invoiceId));
-    }
+	}
 	//for paymentId
-	if(UtilValidate.isNotEmpty(parameters.paymentId)){
+	if(UtilValidate.isNotEmpty(parameters.invoiceId)){
 		conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,parameters.paymentId));
 	}
-	//for finAccountTrans 
+	//for finAccountTrans
 	if(UtilValidate.isNotEmpty(parameters.finAccountTransId)){
 		conditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS,parameters.finAccountTransId));
 	}
@@ -92,6 +78,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 			acctgTransId = acctgTrans.acctgTransId
 		}
 	}
+	
 }
 //end of acctngTrans find
 GenericValue finAccntTransSequenceEntry;
@@ -148,7 +135,6 @@ payAccountingTransEntries = [:];
 
 payAcctgTransId = parameters.acctgTransId;
 
-
 finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
   payFinAccountTransId = finAccountTransAttributeDetails.attrValue;
@@ -161,11 +147,11 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,parameters.invoiceId));
 	}
 	//for paymentId
-	if(UtilValidate.isNotEmpty(parameters.paymentId)){
+	if(UtilValidate.isNotEmpty(parameters.invoiceId)){
 		conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,parameters.paymentId));
 	}
 	//for finAccountTrans
-	if(UtilValidate.isNotEmpty(payFinAccountTransId)){
+	if(UtilValidate.isNotEmpty(parameters.finAccountTransId)){
 		conditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS,payFinAccountTransId));
 	}
 	conditionAcctgTrans = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -182,7 +168,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 }
 
 GenericValue payFinAccntTransSequenceEntry;
-if(UtilValidate.isNotEmpty(payAcctgTransId) && (payAcctgTransId != acctgTransId)){
+if(UtilValidate.isNotEmpty(payAcctgTransId)){
 	payAccountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : payAcctgTransId] , false);
 	payFinAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, payAccountingTransEntries.finAccountTransId), null, null, null, false));
 }else{
@@ -227,13 +213,14 @@ if(UtilValidate.isNotEmpty(payAcctgTransId)){
 }
 context.put("payAccountingTransEntryList",payAccountingTransEntryList);
 
+
 if(UtilValidate.isNotEmpty(parameters.reportTypeFlag)){
 	reportTypeFlag = parameters.reportTypeFlag;
 	context.put("reportTypeFlag",reportTypeFlag);
 }
 
 
-invSequenceNum = "";
+/*invSequenceNum = "";
 
 if(parameters.invoiceId){
 	condList = [];
@@ -244,6 +231,6 @@ if(parameters.invoiceId){
 		invSequenceNum = eachItem.sequenceId;
 	}
 }
-context.invSequenceNum = invSequenceNum;
+context.invSequenceNum = invSequenceNum;*/
 
 

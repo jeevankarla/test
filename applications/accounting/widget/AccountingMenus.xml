@@ -830,7 +830,7 @@
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
 		</menu-item> -->
-		<menu-item name="paymentAccountTrans"
+		<!-- <menu-item name="paymentAccountTrans"
 			title="Payment Accounting Trans PDF">
 			<condition>
 				<and>
@@ -850,7 +850,7 @@
 			<link target="PaymentTranspdf" target-window="_BLANK">
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="paymentVoucher"
 			title="Payment Voucher">
 			<link target="printAdvAndDepositReceipt.pdf" target-window="_BLANK">
@@ -3540,7 +3540,7 @@
 					<if-empty field="invoice.invoiceId" />
 				</not>
 			</condition>
-			<link target="invoice.pdf" target-window="_BLANK">
+			<link target="acctgTransDetailReportPdf.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>
@@ -3801,7 +3801,7 @@
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
 			</link>
 		</menu-item>
-		<menu-item name="apAccountignTrans" title="Accounting Transaction PDF">
+		<!-- <menu-item name="apAccountignTrans" title="Accounting Transaction PDF">
 		<condition>
 				<not>
 					<if-empty field="invoice.invoiceId" />
@@ -3810,7 +3810,7 @@
 			<link target="account.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="makeApayment" title="${uiLabelMap.MakePayment}">			
 			<condition>
 				<and>
@@ -3859,15 +3859,15 @@
 				<parameter param-name="paymentId" value="${payment[0].paymentId}" />
 			</link>
 		</menu-item>
-		<menu-item name="DebitNote"
+		<!-- <menu-item name="DebitNote"
 			title="Debit/Credit Note">
 			<link target="DebitNote" target-window="_BLANK">
-<!-- 				<parameter param-name="paymentId" from-field="payment.paymentId"/> -->
+				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 				<parameter param-name="invoiceflag" value="Y"/>
 				<parameter param-name="reportTypeFlag" value="debitNote"/>
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 	</menu>  
 	
 	<menu name="ARInvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
@@ -3977,7 +3977,7 @@
 					<if-empty field="invoice.invoiceId" />
 				</not>
 			</condition>
-			<link target="invoice.pdf" target-window="_BLANK">
+			<link target="acctgTransDetailReportPdf.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>
@@ -4232,7 +4232,7 @@
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
 			</link>
 		</menu-item>
-		<menu-item name="arAccountignTrans" title="Accounting Transaction PDF">
+		<!-- <menu-item name="arAccountignTrans" title="Accounting Transaction PDF">
 		<condition>
 				<not>
 					<if-empty field="invoice.invoiceId" />
@@ -4241,7 +4241,7 @@
 			<link target="account.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="makeApayment" title="${uiLabelMap.MakePayment}">			
 			<condition>
 				<and>
@@ -4290,15 +4290,15 @@
 				<parameter param-name="paymentId" value="${payment[0].paymentId}" />
 			</link>
 		</menu-item>
-		<menu-item name="DebitNote"
+		<!-- <menu-item name="DebitNote"
 			title="Debit/Credit Note">
 			<link target="DebitNote" target-window="_BLANK">
-<!-- 				<parameter param-name="paymentId" from-field="payment.paymentId"/> -->
+				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 				<parameter param-name="invoiceflag" value="Y"/>
 				<parameter param-name="reportTypeFlag" value="debitNote"/>
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 	</menu>  
 	 <menu name="cpfAccuntsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="cpfAccounts" title="CPF Accounts">
