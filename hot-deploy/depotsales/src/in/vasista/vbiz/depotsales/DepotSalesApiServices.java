@@ -1443,6 +1443,8 @@ public class DepotSalesApiServices{
 			}
 			passBookNo = partyIdentification.getString("idValue");
 			issueDate = partyIdentification.getString("issueDate");
+			
+			issueDate = UtilDateTime.toDateString(UtilDateTime.toTimestamp(partyIdentification.getDate("issueDate")),"dd-MM-yyyy");
 		}catch(GenericEntityException e){
 			Debug.logError("Not a valid party", module);
 			return ServiceUtil.returnError("Not a valid party");
