@@ -47,6 +47,35 @@ branchId = parameters.branchId;
 
 branchName = "";
 
+branchContext=[:];
+branchContext.put("branchId","INT15");
+
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
+
+
 if(branchId){
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
@@ -368,7 +397,7 @@ for (eachInvoiceList in Invoice) {
 	 tempMap.put("supplierName", supplierName);
 	 
 	 tempMap.put("partyName", partyName);
-	 
+	 tempMap.put("depotCharges", maxAmt);
 	 shipmentId = eachInvoiceList.shipmentId;
 	 
 	 if(shipmentId){
@@ -421,12 +450,10 @@ for (eachInvoiceList in Invoice) {
 				 
 			 }
 			 
-			 
 			// shipmentReimbursementJson.put(shipmentId, tempList);
 			 
 			 
 		 }
-		 
 		 
 		 primaryOrderId = shipmentList.get("primaryOrderId");
 		 

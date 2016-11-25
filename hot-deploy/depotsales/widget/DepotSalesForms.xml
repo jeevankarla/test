@@ -3293,8 +3293,8 @@
          <field name="partyName" title="Name Of Supplier"><display/></field>
          <field name="destAddr" title="Destination"><display/></field>
          <field name="transporter" title="Transporter"><display/></field>
-         <field name="claim" title="Claim Amount"><display/></field>
-         <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
+         <field name="depotCharges" title="Depot Charges"><display/></field>
+         <!-- <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field> -->
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
      </form> 

@@ -205,8 +205,20 @@ for(state in indianStates){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, stateParties));
 	if(UtilValidate.isNotEmpty(branchId) && !"ALL".equals(branchId)){
-		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
-	}
+		//This block is to get Ro related branches 
+		innerConditionList=[];
+		innerConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+		innerConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		stateRoBranchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(innerConditionList, EntityOperator.AND),UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
+		if(UtilValidate.isNotEmpty(stateRoBranchList)){
+			stateRoBranchs = EntityUtil.getFieldListFromEntityList(stateRoBranchList, "partyIdTo", true);
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, stateRoBranchs));
+		}else{
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+		}	
+		
+	} 
+	
 	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	stateBranchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
 	stateBranchs = EntityUtil.getFieldListFromEntityList(stateBranchList, "partyIdFrom", true);
