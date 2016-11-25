@@ -3446,6 +3446,7 @@
                <option key="INT15" description="LUCKNOW"/>
                <option key="INT17" description="MORADABAD"/>
                <option key="INT8" description="PANIPAT"/>
+               <option key="INT30" description="RANCHI"/>
                <option key="INT7" description="VARANASI"/>
                
                <option key="INT52" description="VIJAYAWADA"/>
