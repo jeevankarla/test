@@ -1201,11 +1201,11 @@
 	   	  	
 	   	  	data[row]["purTaxList"] = purTaxList;
 	   	  	
-	   	  	updatePayableAmount(row);			
+	   	  	//updatePayableAmount(row);			
 			//addServiceCharge(row);
 	   	  	grid.updateRow(row);
 	   	  	
-	   	  	updateTotalIndentAmount();
+	   	  	//updateTotalIndentAmount();
 	   	  	
 	   	  	
 	    }			

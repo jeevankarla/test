@@ -587,12 +587,6 @@ if(contactMechesDetails){
 	}
 	
 	
-	//Debug.log("allAdjWitOutTEN================"+allAdjWitOutTEN);
-	
-	//=======================================================		
-	
-	//Debug.log("invoiceItemList================="+invoiceItemList.size());
-	
 	double invoAmt = 0;
 	
 	dontRepeat = [];
@@ -755,40 +749,16 @@ if(contactMechesDetails){
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INVOICE_ITM_ADJ"));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
+			
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 	   
 			double taxAmt = 0;
 			if(invoiceVatCstList){
-				
-				 invoiceIdAdj = invoiceVatCstList[0].invoiceId;
-				 invoiceItemSeqIdAdj = invoiceVatCstList[0].invoiceItemSeqId;
-				 
-				 
-				/* conditionList.clear();
-				 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdAdj));
-				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdAdj));
-				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				 OrderOtherTaxesAdjustment = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
-	 */
-				 
-				 conditionList.clear();
-				 conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
-			     conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				 OrderOtherTaxesAdjustment = delegator.findList("InvoiceItem", cond1, null, null, null, false);
-				 
-				 /*if(OrderOtherTaxesAdjustment[0]){
-				 taxAmt = Math.round(OrderOtherTaxesAdjustment[0].amount);
-				
-				 }*/
-				 
-				 for (eachAdj in OrderOtherTaxesAdjustment) {
+				 for (eachAdj in invoiceVatCstList) {
 					 taxAmt = taxAmt+eachAdj.itemValue;
 				}
-				 
 			}
 			
 			//Debug.log("taxAmt======================"+taxAmt);
@@ -1841,39 +1811,18 @@ if(contactMechesDetails){
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
+			//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
+			//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INVOICE_ITM_ADJ"));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
+			
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 	   
 			double taxAmt = 0;
 			if(invoiceVatCstList){
-				
-				 invoiceIdAdj = invoiceVatCstList[0].invoiceId;
-				 invoiceItemSeqIdAdj = invoiceVatCstList[0].invoiceItemSeqId;
-				 
-				 
-				/* conditionList.clear();
-				 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdAdj));
-				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdAdj));
-				 //conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
-				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				 OrderOtherTaxesAdjustment = delegator.findList("OrderAdjustmentAndBilling", cond1, null, null, null, false);
-	 
-				 if(OrderOtherTaxesAdjustment[0]){
-				 taxAmt = Math.round(OrderOtherTaxesAdjustment[0].amount);
-				
-				 }*/
-				 
-				 conditionList.clear();
-				 conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
-				 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-				 cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				 OrderOtherTaxesAdjustment = delegator.findList("InvoiceItem", cond1, null, null, null, false);
-				 
-				 for (eachAdj in OrderOtherTaxesAdjustment) {
+				 for (eachAdj in invoiceVatCstList) {
 					 taxAmt = taxAmt+eachAdj.itemValue;
 				}
-				 
 			}
 			
 			//Debug.log("taxAmt======================"+taxAmt);
