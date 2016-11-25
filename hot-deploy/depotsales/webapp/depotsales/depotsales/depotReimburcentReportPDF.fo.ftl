@@ -46,7 +46,7 @@ under the License.
         		<fo:block>
              		<fo:table >
              		    <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="7%"/>
+			            <fo:table-column column-width="8%"/>
 			            <fo:table-column column-width="6.7%"/>
 			            <fo:table-column column-width="6.7%"/>
 	                    <fo:table-column column-width="15%"/>
@@ -55,8 +55,7 @@ under the License.
 			            <fo:table-column column-width="6.7%"/>
 			            <fo:table-column column-width="6.7%"/>
 			            <fo:table-column column-width="6.7%"/>
-			            <fo:table-column column-width="6.7%"/>
-			            <fo:table-column column-width="7%"/>
+			            <fo:table-column column-width="8%"/>
 			           
 			            <fo:table-body>
 			            	
@@ -89,11 +88,10 @@ under the License.
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">porter</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Claim Amount</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Depot </fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Charges </fo:block>
 					            </fo:table-cell>
-					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Eligible Claim Amount</fo:block>
-					            </fo:table-cell>
+					            
 								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Lr Number</fo:block>
 					            </fo:table-cell>
@@ -131,11 +129,9 @@ under the License.
 					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("transporter")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("claim")?if_exists} </fo:block>
+					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("depotCharges")?if_exists} </fo:block>
 					            	</fo:table-cell>
-					            	<fo:table-cell border-style="solid">
-					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("eligibleAMT")?if_exists} </fo:block>
-					            	</fo:table-cell>
+					            	
 					            	<fo:table-cell border-style="solid">
 					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("lrNumber")?if_exists} </fo:block>
 					            	</fo:table-cell>
