@@ -1069,6 +1069,9 @@ input[type=button]:hover {
 			    	
 		      if(id == "VAT_PUR_AMT" && incBasic == false)
 		      totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
+		      else if(id != "VAT_PUR_AMT" && incBasic == false)
+		      totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
+		      
 		    
 		   }//end
 		    if(id == "CESS_PUR_AMT" || id == "INSURANCE_CHGS_PUR_AMT" || id == "OTHER_CHARGES_PUR_AMT" || id == "PACKING_FORWARDIG_PUR_AMT" || id == "ROUNDING_CHARGES_PUR_AMT") {
@@ -1883,7 +1886,9 @@ input[type=button]:hover {
 		if(scheme == "General"){
 		 var salebasePrice = purchaseBasicAmount/quantity;
 		 dataRow["unitPrice"] = salebasePrice;
+		 dataRow["KgunitPrice"] = salebasePrice;
 		 dataRow["amount"] = salebasePrice*quantity;
+		 
 		}
 		
 		var serviceChargePer = $("#serviceChargeIN").val();

@@ -378,7 +378,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
 				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
-				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.itemValue?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
 			</fo:table-row>
