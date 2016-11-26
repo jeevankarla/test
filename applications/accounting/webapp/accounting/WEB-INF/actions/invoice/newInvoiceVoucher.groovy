@@ -502,16 +502,25 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	context.grandTotal = grandTotal;
 	
-	actualOrderId = "";
-	
+	   exprCondList=[];
+	   exprCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	   exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	   EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+	   OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
 	   
+	   actualOrderId = "";
+	   if(OrderAss){
+		   
+		   actualOrderId=OrderAss.toOrderId;
+		   
+	   }
 	
 	if(UtilValidate.isNotEmpty(orderAttrForPo)){
 		
 		orderAttrForPo.each{ eachAttr ->
-			if(eachAttr.attrName == "PO_NUMBER"){
+		/*	if(eachAttr.attrName == "PO_NUMBER"){
 				actualOrderId =  eachAttr.attrValue;
-			}
+			}*/
 			if(eachAttr.attrName == "DST_ADDR"){
 				
 				if(!destination)
