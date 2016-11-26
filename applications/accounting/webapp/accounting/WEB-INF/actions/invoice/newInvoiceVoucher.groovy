@@ -1371,7 +1371,7 @@ invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes,
 
 
 invoiceRemainigAdjItemListConsolidate = [];
-
+       
 for (eachType in invoiceItemTypes) {
 	
 	invoiceRemainigAdj = EntityUtil.filterByCondition(invoiceRemainigAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, eachType.invoiceItemTypeId));

@@ -958,7 +958,7 @@
             if (args.cell == 2){
 
 			 var row = args.row;
-		         
+		               
 		        var taxAmt = data[row]["taxAmt"];
 				if(taxAmt != undefined && taxAmt != 0){
 					updateTax(row);
