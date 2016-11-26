@@ -3298,6 +3298,37 @@
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
      </form> 
+       <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
+         <field name="h1" title="____STATE" ><display/></field>
+         <field name="h2" title="____TOTAL"><display/></field>
+         <field name="h3" title="____"><display/></field>
+         <field name="h4" title="____GENERAL "><display/></field>
+         <field name="h5" title="SCHEME"><display/></field>
+         <field name="h6" title="____MGP 10% "><display/></field>
+         <field name="h7" title="Scheme(Depot)"><display/></field>
+         <field name="h8" title="____MGP 10% "><display/></field>
+         <field name="h9" title="Scheme(Non Depot)"><display/></field>
+         <field name="h10" title="____MGP Scheme"><display/></field>
+         <field name="h11" title="(Depot)"><display/></field>
+         <field name="h12" title="____MGP Scheme"><display/></field>
+         <field name="h13" title="(Non Depot)"><display/></field>
+     </form> 
+      <form name="StateWiseSchemeWiseSalesConsolidatedCSV" type="list" list-name="finalCSVList" view-size="99999">
+         <field name="partyName" title="__"><display/></field>
+         <field name="totInvoiceAMT" title="VALUE"><display/></field>
+         <field name="totInvoiceQTY" title="QTY"><display/></field>
+         <field name="generalInvoiceAMT" title="VALUE"><display/></field>
+         <field name="generalInvoiceQTY" title="QTY"><display/></field>
+         <field name="mgpsTenPerDepotInvoiceAMT" title="VALUE"><display/></field>
+         <field name="mgpsTenPerDepotInvoiceQTY" title="QTY"><display/></field>
+         <field name="mgpsTenPerInvoiceAMT" title="VALUE"><display/></field>
+         <field name="mgpsTenPerInvoiceQTY" title="QTY"><display/></field>
+         <field name="mgpsDepotInvoiceAMT" title="VALUE"><display/></field>
+         <field name="mgpsDepotInvoiceQTY" title="QTY"><display/></field>
+         <field name="mgpsInvoiceAMT" title="VALUE"><display/></field>
+         <field name="mgpsInvoiceQTY" title="QTY"><display/></field>
+         
+     </form> 
      <form name="depotReimburcentSummaryReportCSV" type="list" list-name="finalCSVList" view-size="99999">
          <field name="partyId" title="STATE"><display/></field>
          <field name="partyName" title="CUSTOMER"><display/></field>
