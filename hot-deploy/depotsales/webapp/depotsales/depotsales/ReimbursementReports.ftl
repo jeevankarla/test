@@ -27,7 +27,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});
 	}
 
-	function getbranchesByState(state){
+	function getbranchesByState(state ,branchId){
        	var stateId=state.value;
        	var optionList = '';
 			var list= stateJSON[stateId];
@@ -38,7 +38,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
 	      		}//end of main list for loop
 	      	}
-	      	jQuery("[name='"+"branchId2"+"']").html(optionList);
+	      	jQuery("[name='"+branchId+"']").html(optionList);
        }	
        
 	function appendParams(formName, action) {
@@ -65,6 +65,7 @@ $(document).ready(function(){
 	    makeDatePicker3("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker3("depotReimburcentReportFRO","depotReimburcentReportTHRU");
 	    makeDatePicker3("depotReimburcentSummaryReportFRO","depotReimburcentSummaryReportTHRU");
+	    makeDatePicker3("StateWiseSchemeWiseSalesConsolidatedFro","StateWiseSchemeWiseSalesConsolidatedThru");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");
@@ -189,7 +190,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>  -->
 			   <td width="15%"><span class='h3'>State 
-				 <select name="state" id="state" onchange="javascript:getbranchesByState(this);">
+				 <select name="state" id="state" onchange="javascript:getbranchesByState(this,'branchId2');">
 				     <option value="ALL">ALL</option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
@@ -222,6 +223,45 @@ function makeDatePicker3(fromDateId ,thruDateId){
            </form>
         </tr> 
         
+         
+         <tr class="alternate-row">
+      	   <form id="StateWiseSchemeWiseSalesConsolidated" name="StateWiseSchemeWiseSalesConsolidated" method="post" action="<@ofbizUrl>StateWiseSchemeWiseSalesConsolidated.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">State Wise Scheme Wise Sales - Consolidated Report</td>
+             <td width="10%">&nbsp;From<input  type="text" size="15pt" id="StateWiseSchemeWiseSalesConsolidatedFro" readonly  name="partyfromDate" required /></td>
+      		 <td width="10%">Thru<input  type="text" size="15pt" id="StateWiseSchemeWiseSalesConsolidatedThru" readonly  name="partythruDate" required /></td>
+			   <td width="15%"><span class='h3'>State 
+				 <select name="state" id="state" onchange="javascript:getbranchesByState(this,'SWSWSCbranchId');">
+				     <option value="ALL">ALL</option>
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select> 
+			  </span></td>
+			  <td width="15%"><span class='h3'>Branch <br>
+			  	  <select name='SWSWSCbranchId'>
+	      		  </select>
+			  </td>
+			  <td width="15%"><span class='h3'>Category 
+				 <select name="productCategory" id="productCategory">
+				     <option value='SILK'>SILK</option>
+				     <option value='JUTE_YARN'>JUTE</option>
+				     <option value='OTHER'>OTHERS</option>
+				  </select>    								
+			  </span></td>
+				 <td width="10%"><span class='h3'>Report Type 
+				 <select name="reportType" id="reportType">
+				     <option value='DETAIL'>Detail</option>
+				     <option value='ABSTRACT'>Abstract</option>
+				  </select>    								
+			  </span></td>
+			  <td> </td>
+			<#-- 	<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentSummaryReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> -->
+			<td width="15%">
+				<input type="submit" value="PDF" onClick="javascript:appendParams('StateWiseSchemeWiseSalesConsolidated', '<@ofbizUrl>StateWiseSchemeWiseSalesConsolidated.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('StateWiseSchemeWiseSalesConsolidated', '<@ofbizUrl>StateWiseSchemeWiseSalesConsolidated.csv</@ofbizUrl>');" class="buttontext"/>
+			</td>	
+           </form>
+        </tr> 
         
 	</table>
 </div>

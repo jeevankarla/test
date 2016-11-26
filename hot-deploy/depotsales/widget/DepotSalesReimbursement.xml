@@ -330,7 +330,27 @@
            
         </section>
     </screen>
+    <screen name="StateWiseSchemeWiseSalesConsolidatedPDF">
+        <section>
+            <actions>
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/StateWiseSchemeWiseSalesConsolidatedPDF.groovy"/>
+            </actions>
+            <widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/StateWiseSchemeWiseSalesConsolidatedPDF.fo.ftl"/>
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+           
+        </section>
+    </screen>
 </screens>
+
 
 
 
