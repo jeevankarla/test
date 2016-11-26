@@ -1369,6 +1369,7 @@ context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
 invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
 
+
 invoiceRemainigAdjItemListConsolidate = [];
 
 for (eachType in invoiceItemTypes) {
@@ -1397,7 +1398,27 @@ for (eachType in invoiceItemTypes) {
 	
 	
 }
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
+conditionList.add(EntityCondition.makeCondition("description", EntityOperator.LIKE, "Service%"));
+cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+invoiceAdjusService = delegator.findList("InvoiceItem", cond1, null, null, null, false);
 
+tempMapSer = [:];
+totAmtse = 0;
+
+if(invoiceAdjusService){
+	for (eachType in invoiceAdjusService) {
+			adjType = eachType.invoiceItemTypeId;
+			totAmtse = totAmtse+eachType.itemValue;
+			tempMapSer.put("invoiceItemTypeId", adjType);
+			if(eachType.description)
+			tempMapSer.put("description", eachType.description);
+			tempMapSer.put("itemValue", totAmtse);
+			invoiceRemainigAdjItemListConsolidate.add(tempMapSer);
+	}
+}
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
 

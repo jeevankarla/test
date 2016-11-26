@@ -954,8 +954,8 @@
 	      		$(grid.getCellNode(args.row+1, 1)).click();
 			}
 			
-
-            if (args.cell){
+           
+            if (args.cell == 2){
 
 			 var row = args.row;
 		         
@@ -974,6 +974,8 @@
 				updateTotalIndentAmount();			
 				
 				}
+				
+				
 			
 			
 		});
@@ -1042,9 +1044,11 @@
 	
 	$(document).ready(function(){
 	
+	/*
 		(function blink() { 
 		    $('.readOnlyColumnAndWarningClass').fadeOut(500).fadeIn(500, blink); 
 		})();
+		*/
 		$('#boothId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
