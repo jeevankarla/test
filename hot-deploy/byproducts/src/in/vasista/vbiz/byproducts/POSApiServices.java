@@ -97,7 +97,7 @@ public class POSApiServices {
         
         roMap.put("INT3","KOLKATA");
         roMap.put("INT1","VARANASI");
-        roMap.put("INT47","VIJAYAWADA");
+        roMap.put("INT47","VIJAYWADA");
         roMap.put("INT2","PANIPAT");
         
         Map result = FastMap.newInstance();  	
