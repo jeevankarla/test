@@ -32,8 +32,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 $(document).ready(function(){
 
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
-	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate"); 
 	    makeDatePicker("m1ReportDateFrom","m1ReportDateThru");
+	    makeDatePicker("FCWSReportDateFrom","FCWSReportDateThru");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("stockFromDate","stockThruDate");
@@ -204,6 +205,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  	 </td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			</form>
+          </tr>
+           <tr class="alternate-row">
+			<form id="fiberAndCountWiseSalesReport" name="fiberAndCountWiseSalesReport" method="post" action="<@ofbizUrl>fiberAndCountWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Fiber And Count Wise Sales Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="FCWSReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="FCWSReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Category
+				    <select name="categoryId" id="categoryId">
+				          <option value="ALL">ALL</option>
+				          <option value='COTTON'>COTTON</option>
+				       	  <option value='SILK'>SILK</option>
+				       	  <option value='OTHER'>OTHERS</option>
+				    </select>  </span>  								
+			  	 </td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('fiberAndCountWiseSalesReport', '<@ofbizUrl>fiberAndCountWiseSalesReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('fiberAndCountWiseSalesReport', '<@ofbizUrl>fiberAndCountWiseSalesReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				
 			</form>
           </tr>
