@@ -23,9 +23,23 @@
 
     <!-- Party Qualification -->
     <simple-method method-name="createPartyQual" short-description="Create a Party Qualification">
+    	<set field="fromDateStr" from-field="parameters.fromDateStr"/>
+    	<set field="thruDateStr" from-field="parameters.thruDateStr"/>
         <make-value entity-name="PartyQual" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.fromDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def fromDateTime = sdf.parse(fromDateStr);
+            return fromDateTime;
+        }" type="Timestamp"/>
+        <set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
          <if-not-empty field="parameters.designation">
             <set field="newEntity.title" from-field="parameters.designation"/>
          </if-not-empty>
@@ -290,7 +304,13 @@
 	<simple-method method-name="createPartyRelationshipDependent" short-description="create a dependent relationship with employee by creating roles">  
         <set field="dependentCtx.firstName" from-field="parameters.dependentFirstName"/>
         <set field="dependentCtx.lastName" from-field="parameters.dependentLastName"/>
-        <set field="dependentCtx.birthDate" from-field="parameters.dependentBirthDate"/>
+        <set field="birthDateStr" from-field="parameters.dependentBirthDate"/>
+        <set field="dependentCtx.birthDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def birthDate = sdf.parse(birthDateStr);
+            return birthDate;
+        }" type="Date"/>
         <call-service service-name="createPerson" in-map-name="dependentCtx">          
         <result-to-field result-name="partyId" field="partyId"/>            
         </call-service>   
@@ -544,6 +564,25 @@
         <make-value entity-name="PayHistory" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="fromDate" from-field="parameters.fromDate"/>
+        <set field="fromDateStr" from-field="parameters.fromDateStr"/>
+    	<set field="thruDateStr" from-field="parameters.thruDateStr"/>
+        <if-not-empty field="fromDateStr">
+	        <set field="newEntity.fromDate" value="${groovy:
+	            import java.text.SimpleDateFormat;
+	            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+	            def fromDateTime = sdf.parse(fromDateStr);
+	            return fromDateTime;
+	        }" type="Timestamp"/>
+        </if-not-empty>
+        <if-not-empty field="thruDateStr">
+        	<set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
+        </if-not-empty>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>

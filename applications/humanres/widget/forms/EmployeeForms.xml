@@ -531,7 +531,7 @@
 				<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>         
-        </field> 
+        </field>
         <field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><hidden/></field>      
         <field name="height" title="${uiLabelMap.Height}"><hidden></hidden></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><hidden></hidden></field>  
@@ -626,26 +626,26 @@
     <form name="EditEmplIdentification" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updatePartyIdentification"
     	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="partyIdentificationList">
     	  <actions>
-			<entity-condition entity-name="PartyIdentification" list="partyIdentificationList">
+			<!-- <entity-condition entity-name="PartyIdentification" list="partyIdentificationList">
 			   <condition-list combine="and">
 			       <condition-expr field-name="partyId" from-field="parameters.partyId"/>
 			   </condition-list>
-    		</entity-condition>
-    
-    
+    		</entity-condition> -->
+    		<set field="updateFlag" value="updatePartyIdentification"/>
 		</actions>
-		<field name="partyIdentificationTypeId" >
+		<!-- <field name="partyIdentificationTypeId" >
 		<drop-down allow-empty="false">             
 				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
 				          <entity-order-by field-name="partyIdentificationTypeId"/>
 				</entity-options>
 			</drop-down>  
-		</field>
+		</field> -->
 		<field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
 		<field name="partyId"><hidden /></field>
-		<field name="idValue" title="Number"><text size="13"></text></field>
-		<field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
-		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
+		<field name="updateFlag"><hidden /></field>
+		<field name="idValue" title="Number"><display></display></field>
+		<field name="issueDate" title="Issue Date"><display></display></field>
+		<field name="expiryDate" id-name="expiryDate" title="Expiry Date" event="onclick" action="javascript:datePicker2(this)"><text size="12"></text></field>
 		<field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Update" separate-column="true">
             <submit button-type="button"/></field>
         <field name="deleteLink" title="Delete" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"   widget-style="buttontext">
@@ -668,8 +668,8 @@
 		</field>
 		<field name="partyId"><hidden /></field>
 		<field name="idValue" title="Number"><text size="22"></text></field>
-		<field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
-		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
+		<field name="issueDate" title="Issue Date" id-name="issueDate" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text></field>
+		<field name="expiryDate" title="Expiry Date" id-name="expiryDate" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text></field>
 		<field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Create" separate-column="true">
             <submit button-type="button"/></field>
 	</form>
@@ -781,7 +781,7 @@
      <!--   <field name="height" title="${uiLabelMap.Height}"><display/></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><display/></field>-->
         <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>
-        <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity></field>       
+        <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display description="${emergencyContactNumber}"></display></field>       
         <field name="emergencyContactRelationship" title="${uiLabelMap.EmergencyContactRelationship}"><display-entity entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}" /></field>
        <!--  <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
         <field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${typeOfInsurance}"></display-entity></field>-->
@@ -809,7 +809,7 @@
     
    <form name="AddDependent" type="single" target="createPartyRelationshipDependent">
 		<field name="empPartyId"><hidden value="${partyId}"/></field>
-         <field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+        <field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
                 <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}">
                     <entity-constraint name="parentTypeId" value="Dependent"/>
@@ -818,7 +818,7 @@
         </field>
         <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
         <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
-        <field name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time type="date" ></date-time></field>
+        <field name="dependentBirthDate" id-name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
 		<field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
 		<field name="priorityTypeId" title="${uiLabelMap.IsNominee}" tooltip="${uiLabelMap.CommonRequired}">
 			<drop-down allow-empty="true">
@@ -1035,16 +1035,19 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="courseCompleteDesc" title="Actual Course Completion:" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
-       <field name="fromDate" id-name="fromDate" title="" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/> </field> 
-       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfPassing}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/></field>
+        <!-- <field name="courseCompleteDesc" title="Actual Course Completion:" title-area-style="group-label"><display description=" " also-hidden="false"/></field> -->
+        <field name="courseCompleteDesc" title="Actual Course Completion:" title-area-style="group-label"><display description=" " also-hidden="false"/><hidden/></field>
+       <field name="fromDateStr" id-name="fromDate" title="fromDate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text> </field> 
+       <field name="thruDateStr" id-name="thruDate" title="${uiLabelMap.DateOfPassing}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
        <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
        <field name="designation" id-name="designation" title="${uiLabelMap.Designation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
        <field name="deparmentName" id-name="department" title="${uiLabelMap.Department}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="statusId"><hidden/></field>
-        <field name="verifStatusId"><hidden/></field>
-        <field name="tenantId"><hidden/></field>
+       <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       <field name="statusId"><hidden/></field>
+       <field name="verifStatusId"><hidden/></field>
+       <field name="tenantId"><hidden/></field>
+       <field name="fromDate"><hidden/></field>
+       <field name="thruDate"><hidden/></field>
         
         <sort-order>
         	<sort-field name="type"/>
@@ -1055,9 +1058,8 @@
 			<sort-field name="specialization"/>
 			<sort-field name="universityBoard"/>
 			<sort-field name="courseDuration"/>
-			<sort-field name="courseCompleteDesc"/>
-			<sort-field name="fromDate"/>		 	
-           	<sort-field name="thruDate"/>
+			<sort-field name="fromDateStr"/>		 	
+           	<sort-field name="thruDateStr"/>
            	<sort-field name="passingGrade"/>
             <sort-field name="percentageOfMarks"/>
             <sort-field name="joiningDate"/>
@@ -1102,8 +1104,8 @@
                 </entity-options>
             </drop-down>
         </field>
-       <field name="fromDate" id-name="fromDate" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/> </field> 
-       <field name="thruDate" id-name="DateOfPassing" title="${uiLabelMap.DateOfReliving}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"/></field>
+       <field name="fromDateStr" id-name="fromDate" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text> </field> 
+       <field name="thruDateStr" id-name="thruDate" title="${uiLabelMap.DateOfReliving}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
          
          <field name="organizationName" id-name="orgName" title="${uiLabelMap.OrganizationName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
          <field name="designation" id-name="designation" title="${uiLabelMap.Designation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
@@ -1116,17 +1118,19 @@
         <field name="statusId"><hidden/></field>
         <field name="verifStatusId"><hidden/></field>
         <field name="tenantId"><hidden/></field>
-        
+        <field name="fromDate"><hidden/></field>
+       	<field name="thruDate"><hidden/></field>
+       
         <sort-order>
         	<sort-field name="type"/>
 			<sort-field name="partyId"/>
 			<sort-field name="partyQualTypeId"/>
 			<sort-field name="title"/>
-			<sort-field name="fromDate"/>		
+			<sort-field name="fromDateStr"/>		
 			 <sort-field name="organizationName"/>
             <sort-field name="designation"/>
             <sort-field name="deparmentName"/> 
-           	<sort-field name="thruDate"/>
+           	<sort-field name="thruDateStr"/>
      </sort-order>
     </form>
     
@@ -1144,7 +1148,7 @@
         <auto-fields-service service-name="updatePartyQual"/>
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="qualificationDesc"><text/></field>
         <field name="title"><text/></field>
         <field name="statusId">
@@ -1164,7 +1168,7 @@
             </drop-down><hidden/>
         </field>
         <field name="tenantId"><hidden/></field>
-       <field name="thruDate" title="${uiLabelMap.toDate}"> <display/></field>
+       <field name="thruDate" title="${uiLabelMap.toDate}"> <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"/></field>
        <field name="organizationName"><hidden/></field>
        <field name="deparmentName"><hidden/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
@@ -1191,7 +1195,7 @@
         <auto-fields-service service-name="updatePartyQual"/>
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="qualificationDesc"><text/><hidden/></field>
         <field name="title"><text/></field>
         <field name="specialization"><hidden/></field>
@@ -1216,7 +1220,7 @@
             </drop-down><hidden/>
         </field>
         <field name="tenantId"><hidden/></field>
-       <field name="thruDate" title="${uiLabelMap.toDate}"> <display/></field>
+       <field name="thruDate" title="${uiLabelMap.toDate}"> <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"/></field>
        <field name="organizationName"></field>
        <field name="deparmentName"></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
@@ -1292,14 +1296,28 @@
                 <condition-expr field-name="partyId" from-field="partyId"/>
                 <order-by field-name="fromDate"/>
             </entity-condition>
+            <set field="fromDateTime" value="${groovy:org.ofbiz.base.util.UtilDateTime.getDateTimeFormat(fromDate)}"/>
+            <set field="fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDateTime, &quot;dd/MM/yyyy&quot;);}" />
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, approverPartyId, false);} - [${approverPartyId}]"/></field>
+        
+        <field name="emplLeaveApplId"><display/></field>
+        <field name="leaveTypeId"><display/></field>
+        <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveStatus"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
-        <field name="fromDate"></field>
+        <field name="fromDate" > <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"></display></field>
+        <field name="thruDate" > <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"></display></field>
+        <field name="effectedCreditDays"><display/></field>
+        <field name="dayFractionId"><display/></field>
+        <field name="appliedBy"><display/></field>
+        <field name="lossOfPayDays"><display/></field>
+        <field name="approverPartyId"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, approverPartyId, false);} - [${approverPartyId}]"/></field>
+  		<field name="leaveStatus"><display/></field>  
+  		<field name="documentsProduced"><display/></field>  
+  		<field name="description"><display/></field>  
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
          <field name="comment"><hidden/></field>
         <field name="chDate"><hidden/></field>
@@ -1316,7 +1334,6 @@
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><display/></field>
         <field name="leaveStatus"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
@@ -1325,6 +1342,7 @@
         <field name="effectedCreditDays"><display/></field>   
         <field name="appliedBy"><display/></field>         
         <field name="lossOfPayDays"><display/></field>  
+        <field name="approverPartyId"><display/></field>
         <field name="documentsProduced"><display/></field>   
         <field name="description"><display/></field>    
         <field name="comment"><display/></field>                                        
@@ -1343,7 +1361,6 @@
 				<set field="fromDate" value="${EditDpartDetailsList[0].fromDate}"/> 
     	</actions>
     	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
-    	<!-- use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" -->
          <field name="appointmentDate" title="Date of joining at NHDC" entry-name="employment.appointmentDate">
             <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
@@ -1391,7 +1408,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="From Date" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><date-time/></field>
+        <field name="fromDate" id-name="geoFromDate" title="From Date" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>	
          <!-- <field name="resignationDate" title="Date Of Leaving" entry-name="employment.resignationDate" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field> -->
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"><submit button-type="button"/></field>
     	

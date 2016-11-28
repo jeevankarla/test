@@ -1528,7 +1528,7 @@
     	<field name="birthDistrict" title="Birth District" required-field="false"><text size="20"/></field>
     	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
         <!-- <field name="birthDate" id-name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:picker()"><text  size="12"/></field> -->
-    	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field> 
+    	<field name="birthDate" id-name="DateOfBirth" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text><!-- <date-time type="date"></date-time> --></field> 
     	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
 			<drop-down allow-empty="true">
 			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -1766,7 +1766,7 @@
 		<field name="aadharNumber" title="${uiLabelMap.aadharNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
 		<field name="panNumber" title="${uiLabelMap.panNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
 		<!-- <field name="dateOfJoining" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field> -->
-		<field name="employmentDate" title="Date of joining NHDC" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date" ></date-time></field>
+		<field name="employmentDate" id-name="employmentDate" title="Date of joining NHDC" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text></field>
 		
 		<!-- <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">

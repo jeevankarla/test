@@ -1212,17 +1212,28 @@ public class HumanresService {
 	    	String partyIdTo = (String) context.get("partyId");
 	    	String partyIdFrom = (String) context.get("company");
 	    	String locationNewGeoId = (String) context.get("locationGeoId");
-	    	Timestamp fromDate = (Timestamp) context.get("fromDate");
-	    	if(UtilValidate.isEmpty(fromDate)){
-	    		fromDate = UtilDateTime.nowTimestamp();
-	    	}
-	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
-	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+	    	String fromDateStr = (String) context.get("fromDate");
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Timestamp appointmentDate = null;
 			String locationGeoId = null;
+			Timestamp fromDate = null;
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+			
+			if(UtilValidate.isEmpty(fromDateStr)){
+	    		fromDate = UtilDateTime.nowTimestamp();
+	    	}
+	    	
+			if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+						fromDate = UtilDateTime.toTimestamp(sdf1.parse(fromDateStr));
+					} catch (ParseException e) {
+						}
+			}
+			Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+		    Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+				
 			try {
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
@@ -1379,6 +1390,82 @@ public class HumanresService {
 	      return result;
 	    }
 	    
+	    public static Map<String, Object> createPartyIdentificationTypeConv(DispatchContext dctx, Map context) {
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+			Locale locale = (Locale) context.get("locale");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String partyId = (String) context.get("partyId");
+			String partyIdentificationTypeId = (String) context.get("partyIdentificationTypeId");
+			String idValue = (String) context.get("idValue");
+			String issueDate = (String) context.get("issueDate");
+			String expiryDate = (String) context.get("expiryDate");
+			String updateFlag = (String) context.get("updateFlag");
+			Timestamp issueDateTime = null;
+			Timestamp expiryDateTime = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+			Map<String, Object> outMap = FastMap.newInstance();
+			
+			if(UtilValidate.isNotEmpty(updateFlag)){
+				if(UtilValidate.isNotEmpty(issueDate)){
+					try {
+					   		issueDateTime = UtilDateTime.toTimestamp(sdf1.parse(issueDate));
+				        	Debug.log("issueDateTime========upd============="+issueDateTime);
+						} catch (ParseException e) {
+							}
+				}
+				if(UtilValidate.isNotEmpty(expiryDate)){
+				   try {
+					   		expiryDateTime = UtilDateTime.toTimestamp(sdf.parse(expiryDate));
+						    Debug.log("expiryDateTime========upd============="+expiryDateTime);
+						} catch (ParseException e) {
+							}
+				}
+				
+				try{
+				outMap = dispatcher.runSync("updatePartyIdentification", UtilMisc.toMap("partyIdentificationTypeId",partyIdentificationTypeId,"idValue",idValue,"partyId",partyId, "issueDate", issueDateTime, "expiryDate", expiryDateTime, "userLogin", userLogin));
+				Debug.log("outMap=======upd========="+outMap);
+				if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service createPartyIdentification:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		        }
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating party Identification" + e);	
+				}
+			}else{
+				if(UtilValidate.isNotEmpty(issueDate)){
+					   try {
+						   		issueDateTime = UtilDateTime.toTimestamp(sdf.parse(issueDate));
+					        	Debug.log("issueDateTime====================="+issueDateTime);
+						} catch (ParseException e) {
+							}
+				    }
+					if(UtilValidate.isNotEmpty(expiryDate)){
+						   try {
+							   		expiryDateTime = UtilDateTime.toTimestamp(sdf.parse(expiryDate));
+						        	Debug.log("expiryDateTime====================="+expiryDateTime);
+							} catch (ParseException e) {
+								}
+					}
+				try{
+					
+					outMap = dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId",partyIdentificationTypeId,"idValue",idValue,"partyId",partyId, "issueDate", issueDateTime, "expiryDate", expiryDateTime, "userLogin", userLogin));
+					Debug.log("outMap================"+outMap);
+					if(ServiceUtil.isError(outMap)){
+			           	 	Debug.logError("failed service createPartyIdentification:"+ServiceUtil.getErrorMessage(outMap), module);
+			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			        }
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating party Identification" + e);	
+				}
+			}
+			result.put("partyId", partyId);
+		    return result;
+	    }
 	    public static Map<String, Object> createNewEmployeeMasters(DispatchContext dctx, Map context) {
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1397,7 +1484,7 @@ public class HumanresService {
 			String middleName = (String) context.get("middleName");
 			String fatherName = (String) context.get("fatherName");
 			String motherName = (String) context.get("motherName");
-			Date birthDate =  (Date)context.get("birthDate");
+			String birthDate =  (String)context.get("birthDate");
 			String birthPlace = (String) context.get("birthPlace");
 			String birthState = (String) context.get("birthState");
 			String birthDistrict = (String) context.get("birthDistrict");
@@ -1449,7 +1536,7 @@ public class HumanresService {
 			String panNumber =(String)context.get("panNumber");
 			String partyIdFrom =(String)context.get("partyIdFrom");
 			Date dateOfJoining =  (Date)context.get("dateOfJoining");
-			Date employmentDate = (Date)context.get("employmentDate");
+			String employmentDate = (String)context.get("employmentDate");
 			Date passportExpireDate =  (Date)context.get("passportExpireDate");
 			String backgroundVerification =(String)context.get("backgroundVerification");
 			String emplPositionTypeId = (String) context.get("emplPositionTypeId");
@@ -1463,6 +1550,10 @@ public class HumanresService {
 			GenericValue parentFacility=null;
 			GenericValue facility;
 			GenericValue person = null;
+			Timestamp employmentDateTime = null;
+			Timestamp birthDateTime = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			
 			try{
 				// create Person / Party 
 				/*String employeeId = null;
@@ -1476,6 +1567,7 @@ public class HumanresService {
 				}
 				Debug.log("employeeId========="+employeeId);
 				partyId = employeeId;*/
+				
 				try {
 			        person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
 			        
@@ -1485,8 +1577,14 @@ public class HumanresService {
 		        if(UtilValidate.isNotEmpty(person)){
 		        	return ServiceUtil.returnError("Error while creating  Party, PartyId already exists" +partyId); 
 		        }
+		        if(UtilValidate.isNotEmpty(birthDate)){
+			        try {
+			        	birthDateTime = UtilDateTime.toTimestamp(sdf.parse(birthDate));
+					} catch (ParseException e) {
+					}
+		        }
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "spouseName",spouseName, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",UtilDateTime.toSqlDate(birthDateTime), "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "spouseName",spouseName, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -1545,6 +1643,24 @@ public class HumanresService {
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
 				}
+				
+				if (UtilValidate.isNotEmpty(emergencyContactNumber)){
+					if (UtilValidate.isEmpty(countryCode)){
+						countryCode	="91";
+					}
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactNumber",emergencyContactNumber);
+		            input.put("contactMechPurposeTypeId","PHONE_WORK_EMRGNCY");
+		            input.put("countryCode",countryCode);	
+		            input.put("partyId", ownerPartyId);
+		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service create party emergency contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
 				// create PostalAddress
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "birthState",birthState,  "birthDistrict",birthDistrict, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
@@ -1614,7 +1730,11 @@ public class HumanresService {
 				
 				Timestamp employmentDateStart = null;
 				if (UtilValidate.isNotEmpty(employmentDate)){
-					employmentDateStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(employmentDate));
+					try {
+						employmentDateTime = UtilDateTime.toTimestamp(sdf.parse(employmentDate));
+					} catch (ParseException e) {
+					}
+					employmentDateStart = UtilDateTime.getDayStart(employmentDateTime);
 				}else{
 					employmentDateStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				}

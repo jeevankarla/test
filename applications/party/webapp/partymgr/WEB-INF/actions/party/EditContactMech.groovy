@@ -36,6 +36,8 @@ if(UtilValidate.isEmpty(partyId)){
 		partyId = facility.ownerPartyId;
 	}
 }
+flag = true;
+context.flag = flag;
 context.partyId = partyId;
 Map mechMap = new HashMap();
 ContactMechWorker.getContactMechAndRelated(request, partyId, mechMap);

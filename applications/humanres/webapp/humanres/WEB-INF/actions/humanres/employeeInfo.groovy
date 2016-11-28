@@ -9,7 +9,7 @@ import in.vasista.vbiz.humanres.EmplLeaveService;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresApiService;
 import org.ofbiz.party.party.PartyHelper;
-
+import org.ofbiz.party.contact.ContactMechWorker;
 partyId = parameters.partyId;
 
 passportExpireDate = "";
@@ -21,3 +21,20 @@ if(UtilValidate.isNotEmpty(personDetails)){
 	}
 }
 context.put("passportExpiryDate", passportExpireDate);
+emergencyContactNumber = "";
+showOld = "true".equals(parameters.SHOW_OLD);
+contactMeches = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, showOld);
+if(UtilValidate.isNotEmpty(contactMeches)){
+	for(int i=0;i<contactMeches.size();i++){
+		contactMechMap = contactMeches.get(i);
+		contactMech = contactMechMap.contactMech;
+		telecomNumber = contactMechMap.telecomNumber;
+		contactMechTypeId = contactMech.contactMechTypeId;
+		if(contactMechTypeId.equals("TELECOM_NUM_EMRGNCY")){
+			if(UtilValidate.isNotEmpty(telecomNumber)){
+				emergencyContactNumber = telecomNumber.contactNumber;
+			}
+		}
+	}
+}
+context.emergencyContactNumber = emergencyContactNumber;
