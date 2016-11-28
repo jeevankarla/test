@@ -1074,13 +1074,16 @@
         </condition> 
 			<link target="FindEmplLeaveBalance"></link>        
         </menu-item> 
-        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/HPL/CL">
+        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/CL">
         <condition>
              <and>
                 <if-has-permission permission="CREDIT_ELHPLCL_TAB"  action="_VIEW"/>
           </and> 
         </condition> 
 			<link target="creditLeavesELHPLCL"></link>        
+        </menu-item> 
+         <menu-item name="EmplLeaveBalanceStatus" title="Leave Balance">
+			<link target="EmplLeaveBalanceStatus"></link>        
         </menu-item> 
     </menu>
     

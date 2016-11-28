@@ -909,6 +909,20 @@
     	<field name="HPL" title="HalfPay Leaves"><text size="10"/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field> 
     </form>
+    <form name="ListLeaveBalance" type="list" list-name="EmplLeaveBalanceStatusList" default-table-style="basic-table hover-bar" separate-columns="true" >
+    	<actions>
+    	</actions>
+    	<field name="partyId" title="Employee Id"><display description="${partyId}(${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);})"/></field>
+    	<field name="leaveTypeId" title="Leave Type"><display/></field>
+    	<field name="customTimePeriodId" title="TimePeriod"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${customTimePeriodId}(${fromDate}-${thruDate}) ">
+            </display-entity></field>
+    	<field name="openingBalance" title="Balance"><display/></field>
+    	<field name="allotedDays" title="Alloted Days"><display/><hidden/></field>
+    	<field name="availedDays" title="Availed Days"><display/><hidden/></field>
+    	<field name="adjustedDays" title="Adjusted Days"><display/><hidden/></field>
+    	<field name="encashedDays" title="Encashed Days"><display/><hidden/></field>
+    </form>
+    
     <form name="creditLeavesELHPLCL" type="single" target="populateELCLAndHPLBalanceCredit" >
     	<field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
@@ -936,6 +950,34 @@
             </drop-down>
         </field>
         <field name="leaveTypeId" required-field="true">
+        	<drop-down allow-empty="true">
+        		<option key="EL" description="EL"/>
+        		<option key="CL" description="CL"/>
+        		<option key="RH" description="RH"/>
+        		<option key="ML" description="ML"/>
+        		<option key="TL" description="TL"/>
+        		<option key="CO" description="CO"/>
+        	</drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+      <form name="EmplLeaveBalanceStatus" type="single" target="EmplLeaveBalanceStatus">
+    	<field name="partyId" title="Employee Id" required-field="true"  use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>	
+		<field name="partyId" title="Employee Id" value="${userpartyId}" required-field="true"  use-when="!${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>	
+        <field name="customTimePeriodId">
+            <drop-down allow-empty="true" no-current-selected-key="${timecustom}">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-fromDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="leaveTypeId">
         	<drop-down allow-empty="true">
         		<option key="EL" description="EL"/>
         		<option key="CL" description="CL"/>
