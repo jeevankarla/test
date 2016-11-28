@@ -33,6 +33,7 @@ $(document).ready(function(){
 
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+	    makeDatePicker("m1ReportDateFrom","m1ReportDateThru");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("stockFromDate","stockThruDate");
@@ -184,6 +185,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
       			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			</form>
+          </tr>
+          <tr class="alternate-row">
+			<form id="m1Report" name="m1Report" method="post" action="<@ofbizUrl>m1Report.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">M1 Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="m1ReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="m1ReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Category
+				    <select name="categoryId" id="categoryId">
+				          <option value="ALL">ALL</option>
+				          <option value='COTTON'>COTTON</option>
+				       	  <option value='SILK'>SILK</option>
+				       	  <option value='OTHER'>OTHERS</option>
+				    </select>  </span>  								
+			  	 </td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				
 			</form>
           </tr>
