@@ -251,7 +251,8 @@
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYMENT_VIEW"/>
                 </service>
-                <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                    
+                <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>                    
             </actions>
             <widgets>
                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">

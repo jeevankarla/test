@@ -1160,7 +1160,7 @@ under the License.
      <request-map uri="createEmployeeMaster">
         <security https="true" auth="true"/>
         <event type="service" invoke="createNewEmployeeMasters"/>     
-        <response name="success" type="request" value="EditEmployeeQuals"/>
+        <response name="success" type="request" value="EmployeeProfile"/>
         <response name="error" type="view" value="EmployeeProfile"/>
     </request-map>
     <request-map uri="updatePreviousEmployment">
@@ -1896,6 +1896,12 @@ under the License.
         <response name="success" type="view" value="FindEmplLeaveBalance"/>
         <response name="error" type="view" value="FindEmplLeaveBalance"/>
     </request-map>
+     <request-map uri="EmplLeaveBalanceStatus">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmplLeaveBalanceStatus"/>
+        <response name="error" type="view" value="EmplLeaveBalanceStatus"/>
+    </request-map>
+    
     <request-map uri="updateEmployeeLeaveBalance">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="updateEmployeeLeaveBalance"/>
@@ -2363,7 +2369,7 @@ under the License.
     
     <request-map uri="createPartyIdentification">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createPartyIdentification"/>
+        <event type="service" path="" invoke="createPartyIdentificationTypeConv"/>
         <response name="success" type="view"  value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
@@ -2401,9 +2407,9 @@ under the License.
     </request-map>
      <request-map uri="updatePartyIdentification">
         <security https="true" auth="true"/>
-        <event type="service"  invoke="updatePartyIdentification"/>
-        <response name="success"  type="view" value="EditProcProducer"/>
-        <response name="error" type="view" value="EditProcProducer"/>
+        <event type="service"  invoke="createPartyIdentificationTypeConv"/>
+        <response name="success"  type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     <request-map uri="updateEmplFinAccount">
         <security https="true" auth="true"/>
@@ -2790,6 +2796,7 @@ under the License.
     <view-map name="CreditLeaves" type="screen" page="component://humanres/widget/EmploymentScreens.xml#CreditLeaves"/>
     <view-map name="creditLeavesELHPLCL" type="screen" page="component://humanres/widget/EmploymentScreens.xml#creditLeavesELHPLCL"/>
     <view-map name="FindEmplLeaveBalance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindEmplLeaveBalance"/>
+    <view-map name="EmplLeaveBalanceStatus" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EmplLeaveBalanceStatus"/>
     
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>

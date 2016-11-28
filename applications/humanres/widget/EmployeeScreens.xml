@@ -226,6 +226,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/prototypejs/control.progress_bar.js" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/images/prototypejs/progress_bar.css" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
                  <service service-name="humanResManagerPermission" result-map="permResult">
@@ -392,6 +393,7 @@ under the License.
 					<field-map field-name="roleTypeIdTo" value="FAMILY_MEMBER" />
 					<order-by field-name="partyIdTo" />
 				</entity-and>
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>
 			</actions>
 			<widgets>
 					<section>
@@ -569,7 +571,7 @@ under the License.
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
                 </service>
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
-                                
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>                
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -627,7 +629,7 @@ under the License.
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
                 </service>
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
-                                
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>                  
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -776,7 +778,7 @@ under the License.
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
                 </service>
-                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                      
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -820,7 +822,8 @@ under the License.
             <actions>
                 <service service-name="getCurrentPartyEmploymentData" auto-field-map="true" result-map="employmentData"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy"/>
-               
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>
+               	
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResCurrentEmploymentData}" navigation-menu-name="EmploymentUpdate" id="CurrentEmploymentData">
