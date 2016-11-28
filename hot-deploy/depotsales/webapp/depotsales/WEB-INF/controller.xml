@@ -732,10 +732,19 @@
      <request-map uri="DepotReimbursement">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotReimbursement"/>
-    </request-map>
+    </request-map> 
     <request-map uri="DepotSalesBookReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DepotSalesBookReportPDF"/>
+    </request-map>
+    <request-map uri="m1Report.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="m1ReportPDF"/>
+    </request-map>
+    
+    <request-map uri="m1Report.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="m1ReportCSV"/>
     </request-map>
     
     <request-map uri="DepotSalesBookAbstractReport.pdf">
@@ -2559,7 +2568,8 @@
     <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>
 	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
     <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
-    
+    <view-map name="m1ReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportCSV" content-type="text/csv"/>
+    <view-map name="m1ReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportPDF" content-type="application/pdf"/>
     
     
     <view-map name="FindPaymentDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPaymentNonRoute"/>
