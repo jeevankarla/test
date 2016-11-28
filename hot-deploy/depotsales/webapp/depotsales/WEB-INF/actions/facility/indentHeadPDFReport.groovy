@@ -1231,9 +1231,9 @@ if(contactMechesDetails){
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
 	
-	shipmentId = "";
+	shipmentIdDe = "";
 	if(ShipmentReceipt){
-		shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+		shipmentIdDe = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
 	}
 
 	
@@ -1247,7 +1247,7 @@ if(contactMechesDetails){
 	  //Debug.log("groupName============"+groupName);
 	  
 	
-	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdDe] , false);
 	
 	//Debug.log("shipmentList============"+shipmentList);
 	
@@ -1693,13 +1693,13 @@ if(contactMechesDetails){
 		   conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		   OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+		   OrderItemBillingDePP = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
 		  
 		   //Debug.log("OrderItemBilling======================"+OrderItemBilling);
 		   
 				  
-		 itemOrderId  = OrderItemBilling[0].orderId;
-		 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
+		 itemOrderId  = OrderItemBillingDePP[0].orderId;
+		 orderItemSeqId  = OrderItemBillingDePP[0].orderItemSeqId;
 		 
 		 //Debug.log("itemOrderId======================"+itemOrderId);
 		 
@@ -2052,7 +2052,7 @@ if(contactMechesDetails){
 			poInvoiceList = delegator.findOne("Invoice",[invoiceId : poInvoiceId] , false);
 			popartyId = poInvoiceList.get("partyId");
 			poinvoiceDate = poInvoiceList.get("invoiceDate");
-			shipmentId = poInvoiceList.get("shipmentId");
+			//shipmentId = poInvoiceList.get("shipmentId");
 			}
 			
 			//Debug.log("popartyId============="+popartyId);
@@ -2116,8 +2116,8 @@ if(contactMechesDetails){
 			tempMap.put("poorderDate", "");
 			
 			
-			if(shipmentId){
-			shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+			if(shipmentIdDe){
+			shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdDe] , false);
 			
 			lrNumber = shipmentList.get("lrNumber");
 			

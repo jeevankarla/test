@@ -171,6 +171,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					 </#list> 
 				  </select>    								
 			  </span></td>
+			  <td width="15%">InvoiceId<input  type="text" size="18pt" id="invoceId" name="invoceId"/></td>
 			  <td></td>
              <td width="5%"><input type="submit" value="CSV" class="buttontext"/></td>
            </form>
