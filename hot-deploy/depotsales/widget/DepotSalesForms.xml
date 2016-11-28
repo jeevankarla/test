@@ -3164,6 +3164,13 @@
          <field name="rate" title="Rate"><display/></field>
          <field name="orderValue" title="Value"><display/></field>
     </form>
+    <form name="fiberAndCountWiseSalesReportCSV" type="list" list-name="finalCSVList" view-size="99999">
+    	 <field name="partyName" title="Supplier Name"><display/></field>
+    	 <field name="orderQty" title="Qty"><display/></field>
+         <field name="BdlWt" title="Bdl Wt"><display/></field>
+         <field name="rate" title="Rate"><display/></field>
+         <field name="orderValue" title="Value"><display/></field>
+    </form>
     <form name="IndentCsvReportList" type="list" list-name="orderInformationDetails" view-size="99999">
     	 <field name="partyName" title="Customer Name"><display/></field>
     	 <field name="passbookNo" title="PassBook Number"><display/></field>
