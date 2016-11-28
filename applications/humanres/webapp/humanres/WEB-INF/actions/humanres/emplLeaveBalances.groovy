@@ -21,6 +21,8 @@ customTimePeriodId = parameters.customTimePeriodId;
 context.put("customTimePeriodId",customTimePeriodId);
 leaveTypeId = parameters.leaveTypeId;
 context.put("leaveTypeId",leaveTypeId);
+userpartyId = userLogin.partyId;
+context.userpartyId = userpartyId;
 closingBalance = 0;
 openingBalance = 0;
 ob = 0; 
@@ -53,6 +55,7 @@ Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestam
 leaveBalancesList = [];
 if(UtilValidate.isNotEmpty(partyId)){
 	
+	
 	emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus", [customTimePeriodId:customTimePeriodId,partyId:partyId,leaveTypeId:leaveTypeId], false);
 	if(UtilValidate.isNotEmpty(emplLeaveBalanceStatus)){
 		openingBalance = emplLeaveBalanceStatus.openingBalance;
@@ -62,7 +65,19 @@ if(UtilValidate.isNotEmpty(partyId)){
 		encashedDays = emplLeaveBalanceStatus.encashedDays;
 		lapsedDays = emplLeaveBalanceStatus.lapsedDays;
 	}
-	
+	if(UtilValidate.isNotEmpty(leaveBalanceFlag.equals("leaveBalanceStatus"))){
+		conditionList = []; leaveBalanceFlag
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId));
+		if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+		}
+		if(UtilValidate.isNotEmpty(leaveTypeId)){
+			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS ,leaveTypeId));
+		}
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		EmplLeaveBalanceStatusList = delegator.findList("EmplLeaveBalanceStatus", condition, null, null, null, false);
+		context.EmplLeaveBalanceStatusList = EmplLeaveBalanceStatusList;
+	}
 	Map getEmplLeaveBalMap = [:];
 	getEmplLeaveBalMap.put("userLogin",userLogin);
 	getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
