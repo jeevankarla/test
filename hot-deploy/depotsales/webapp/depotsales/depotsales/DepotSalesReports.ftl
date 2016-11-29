@@ -171,6 +171,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					 </#list> 
 				  </select>    								
 			  </span></td>
+			  
+			    <td width="15%"><span class='h3'>Type
+				 <select name="purposeType" id="purposeType">
+				 		<option value=''></option>
+						<option value='YARN_SALE'>Branch Sales</option>
+						<option value='DEPOT_YARN_SALE'>Depot Sales</option>
+				  </select>    								
+			  </span></td>
+			  
+			  
 			  <td width="15%">InvoiceId<input  type="text" size="18pt" id="invoceId" name="invoceId"/></td>
 			  <td></td>
              <td width="5%"><input type="submit" value="CSV" class="buttontext"/></td>
