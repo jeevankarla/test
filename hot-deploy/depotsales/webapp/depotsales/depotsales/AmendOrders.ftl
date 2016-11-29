@@ -21,12 +21,10 @@
 		
 	<#assign changeRowTitle = "Changes">   
 	<#if (catType=="Silk" || catType=="Other")>
-	
 		<#if (orderType=="direct")>
 			<#include "AmendSilkBranchSaleIndent.ftl"/>
 		<#else>
 			<#include "AmendMultiSilkBranchSalesIndent.ftl"/>
-		
 		</#if>
 	<#else>
 	<#if (orderType=="direct")>

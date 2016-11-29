@@ -400,15 +400,6 @@ orderHeader.each{ eachHeader ->
 		orderNo = orderSeqDetails.orderNo;
 	}
 
-	/*exprCondrri=[];
-	exprCondrri.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
-	exprCondrri.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "MGPS_10Pecent"));
-	EntityCondition disConditAtrri = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
-	schemeOrderIdsList = delegator.findList("OrderAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, scheme), UtilMisc.toSet("orderId"), null, null, false);
-	*/
-	
-		
-	
 	exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -429,11 +420,8 @@ orderHeader.each{ eachHeader ->
 	}
 	
 	tempData.put("POorder", POorder);
-	
 	tempData.put("poSquenceNo", poSquenceNo);
-	
 	tempData.put("isgeneratedPO", isgeneratedPO);
-
 		
 	exprList=[];
 	exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -463,121 +451,14 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 	tempData.put("statusId", eachHeader.statusId);
 	
-	
-	/*conditionList = [];
-	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachHeader.orderId));
-	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	double adjAmout = 0;
-	for (eachAdjustment in orderAdjustments) {
-		adjAmout = adjAmout+eachAdjustment.amount;
-	}
-	
-	double grandTotWithAdj = 0;
-	grandTotWithAdj = Double.valueOf(eachHeader.getBigDecimal("remainingSubTotal"))+adjAmout;
-*/
+
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	}
-	/*creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
-	creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
-	if(UtilValidate.isNotEmpty(eachHeader.productSubscriptionTypeId)&&("CREDIT"==eachHeader.productSubscriptionTypeId) || creditPartyRole) {
-		tempData.put("isCreditInstution", "Y");
-	}else{
-		tempData.put("isCreditInstution", "N");
-	}*/
-	
-	
-	// Also check if associated order is cancelled. If cancelled show generate PO button
-	/*exprCondList=[];
-	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
-	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
-	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
-	OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
-	if(OrderAss){
-		isgeneratedPO="Y";
-	}*/
-	
-	/*exprList=[];
-	exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
-	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-	supplierPartyId="";
-	productStoreId="";
-	supplierDetails = EntityUtil.getFirst(delegator.findList("OrderRole", discontinuationDateCondition, null,null,null, false));
-		
-	if(supplierDetails){
-		supplierPartyId=supplierDetails.get("partyId");
-	}
-*/	productStoreId=eachHeader.productStoreId;
-	tempMap=[:];
-//	tempMap.put("supplierPartyId", supplierPartyId);
-	//tempMap.put("isgeneratedPO", isgeneratedPO);
-	/*supplierPartyName="";
-	if(supplierPartyId){
-		supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
-	}
-	tempMap.put("supplierPartyName", supplierPartyName);
-	tempMap.put("productStoreId", productStoreId);
-*/	orderDetailsMap.put(orderId,tempMap);
-	
-		
-	conditonList = [];
-	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
-	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-	OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
-	double paidAmt = 0;
-	
-	paymentIdsOfIndentPayment = [];
-	
-	if(OrderPaymentPreference){
-	
-	orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
- 
-	conditonList.clear();
-	conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
-	conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
-	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-	PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
-	
-	paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
-	
-	
-	for (eachPayment in PaymentList) {
-		paidAmt = paidAmt+eachPayment.get("amount");
-	}
-	
-  }
-	
-	conditonList.clear();
-	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
-	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
-	
-	invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
-	
-	if(invoiceIds){
-	conditonList.clear();
-	conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
-	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
-	PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
-	
-		for (eachList in PaymentApplicationList) {
-			 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
-				paidAmt = paidAmt+eachList.amountApplied;
-		}
-	}
-	
-	tempData.put("paidAmt", paidAmt);
-	grandTOT = eachHeader.getBigDecimal("grandTotal");
-	balance = grandTOT-paidAmt;
-	//balance = balance+adjAmout;
-	
-	tempData.put("balance", balance);
+	productStoreId=eachHeader.productStoreId;
 	
 	orderList.add(tempData);
 }
-
-
 
 if (UtilValidate.isNotEmpty(resultList)) {
 	try {

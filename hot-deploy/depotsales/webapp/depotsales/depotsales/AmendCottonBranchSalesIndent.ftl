@@ -607,7 +607,27 @@
 		  		data[args.row]["amount"] = roundedAmount;
 		  		data[args.row]["totPayable"] = roundedAmount;
 			}
-		else if(args.cell == 4){
+		else if(args.cell == 4 || args.cell == 5){
+		
+		       var minqty = parseFloat(data[args.row]["minQuantity"]);
+		       
+				
+				if(quantity<minqty){
+				alert("Sorry,Please give the quantity greater than the (Shipped Quantity) : "+minqty);
+				data[args.row]["quantity"] = data[args.row]["actualQuantity"];
+				quantity = data[args.row]["quantity"];
+				}
+				
+				
+				if(minqty>0){
+				  alert("Sorry, already shipment done for this order");
+				  data[args.row]['unitPrice'] = data[args.row]['actualUnitPrice'];
+				  
+				  price = data[args.row]['unitPrice'];
+				  
+				}
+		
+		
 			data[args.row]["amount"] = Math.round(quantity*price);
 		}
 		else if(args.cell == 5){
