@@ -4651,6 +4651,94 @@ public class MaterialPurchaseServices {
 			}
 		  	
      		}
+     		
+     		//=============update Sale Grand Total =====================
+     		
+     		BigDecimal saleGrandTotal = BigDecimal.ZERO;
+     		
+     		
+            List<GenericValue> OrderItemSale1 =null;
+      			try {
+      				OrderItemSale1 = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+      			} catch (GenericEntityException e) {
+      				Debug.logError("Failed to retrive OrderItemPurchase"+primaryPurCahseOrderId, module);
+      				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+      		  		return "error";
+      				
+      			}
+           		
+      			for(GenericValue eachAdj : OrderItemSale1){
+      				
+      				BigDecimal amount = eachAdj.getBigDecimal("unitPrice");
+      				BigDecimal quantity = eachAdj.getBigDecimal("quantity");
+      				BigDecimal itemValue = amount.multiply(quantity);
+      				saleGrandTotal.add(itemValue);
+      				
+      			}
+     		
+     		List<GenericValue> orderAdjustmentsSale = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+     		
+			for(GenericValue eachAdj : orderAdjustmentsSale){
+				BigDecimal amount = eachAdj.getBigDecimal("amount");
+				saleGrandTotal.add(amount);
+			}
+			
+			GenericValue orderHeaderDetailSale = null;
+			try{
+				orderHeaderDetailSale = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
+				orderHeaderDetailSale.set("grandTotal", saleGrandTotal);
+				orderHeaderDetailSale.store();
+			}catch (Exception e) {
+				Debug.logError(e, "Error in amending order, module");
+				request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
+				return "error";
+	  	 	}
+			
+			
+		//============================END================================
+			
+			
+             BigDecimal purchaseGrandTotal = BigDecimal.ZERO;
+             
+             
+             List<GenericValue> OrderItemPurchase1 =null;
+ 			try {
+ 				OrderItemPurchase1 = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryPurCahseOrderId), null, null, null, false);
+ 			} catch (GenericEntityException e) {
+ 				Debug.logError("Failed to retrive OrderItemPurchase"+primaryPurCahseOrderId, module);
+ 				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+ 		  		return "error";
+ 				
+ 			}
+      		
+ 			for(GenericValue eachAdj : OrderItemPurchase1){
+ 				
+ 				BigDecimal amount = eachAdj.getBigDecimal("unitPrice");
+ 				BigDecimal quantity = eachAdj.getBigDecimal("quantity");
+ 				BigDecimal itemValue = amount.multiply(quantity);
+ 				purchaseGrandTotal.add(itemValue);
+ 				
+ 			}
+             
+     		
+     		List<GenericValue> orderAdjustmentsPur = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryPurCahseOrderId), null, null, null, false);
+     		
+			for(GenericValue eachAdj : orderAdjustmentsPur){
+				BigDecimal amount = eachAdj.getBigDecimal("amount");
+				purchaseGrandTotal.add(amount);
+			}
+			
+			GenericValue orderHeaderDetailPur = null;
+			try{
+				orderHeaderDetailPur = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryPurCahseOrderId), false);
+				orderHeaderDetailPur.set("grandTotal", purchaseGrandTotal);
+				orderHeaderDetailPur.store();
+			}catch (Exception e) {
+				Debug.logError(e, "Error in amending order, module");
+				request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
+				return "error";
+	  	 	}
+			
 		  	
 			 request.setAttribute("orderId",primaryOrderId);
 		  	

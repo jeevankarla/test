@@ -426,10 +426,27 @@
         grid.onCellChange.subscribe(function(e,args) {
         	
 			
-			if (args.cell == 0 || args.cell == 2) {
+			if (args.cell == 0 || args.cell == 2 || args.cell == 3) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var udp = data[args.row]['unitPrice'];
+				
+				var minqty = parseFloat(data[args.row]["minQuantity"]);
+				
+				if(qty<minqty){
+				alert("Sorry,Please give the quantity greater than the (Shipped Quantity) : "+minqty);
+				data[args.row]["quantity"] = data[args.row]["actualQuantity"];
+				qty = data[args.row]["quantity"];
+				}
+				
+				
+				if(minqty>0){
+				  alert("Sorry, already shipment done for this order");
+				  data[args.row]['unitPrice'] = data[args.row]['actualUnitPrice'];
+				}
+				
+				
+				
 				var price = 0;
 				if(udp){
 					var totalPrice = udp;

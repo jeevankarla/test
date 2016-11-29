@@ -95,6 +95,7 @@ dayend = UtilDateTime.getDayEnd(thruDate);
 
 //Debug.log("dayend==================="+dayend);
 
+purposeType = parameters.purposeType;
 
 condList = [];
 //condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "29375"));
@@ -107,7 +108,8 @@ if(UtilValidate.isNotEmpty(daystart)){
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-//condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "DEPOT_YARN_SALE"));
+if(purposeType)
+condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, purposeType));
 
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
