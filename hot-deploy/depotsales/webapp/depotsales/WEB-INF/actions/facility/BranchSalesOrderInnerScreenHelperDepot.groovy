@@ -38,11 +38,11 @@ if(UtilValidate.isNotEmpty(parameters.productStoreIdFrom)){
 	parameters.productStoreId = parameters.productStoreIdFrom;
 	productStoreId=parameters.productStoreIdFrom;
 }
-if(parameters.productStoreId){
+/*if(parameters.productStoreId){
 productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : parameters.productStoreId]);
 parameters.branchId=productStore.payToPartyId;
 }
-boothId = parameters.boothId;
+boothId = parameters.boothId;*/
 
 subscriptionTypeId = parameters.subscriptionTypeId;
 productSubscriptionTypeId = parameters.productSubscriptionTypeId;
@@ -57,6 +57,7 @@ productCatageoryId=parameters.productCatageoryId;
 if(changeFlag=="DepotSales"){
 	//productCatageoryId="DEPO_STORE";
 }
+
 
 boolean prodCatString = productCatageoryId instanceof String;
 
@@ -239,12 +240,14 @@ if(partyPostalAddress){
 
 productListCtx = dispatcher.runSync("getSchemeApplicableProducts",UtilMisc.toMap("userLogin",userLogin, "schemeCategory", parameters.schemeCategory, "productCategoryId",parameters.screenFlag));
 prodList=[];
+
+
 /*exprList.clear();
 //exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 //exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 
 
-
+asdfsdf
 
 if(parameters.schemeCategory && "MGPS_10Pecent".equals(parameters.schemeCategory)){
 	catIds=["COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE"];
@@ -381,6 +384,9 @@ context.productLabelIdJSON = productLabelIdJSON;
 if(displayGrid){
 	context.partyCode = facility;
 }
+
+
+
 //adding order adjustments
 orderAdjTypes = delegator.findList("OrderAdjustmentType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "SALE_ORDER_ADJUSTMNT"), null, null, null, false);
 
@@ -549,7 +555,7 @@ condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruD
 */
  prodCategoryMembers = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("primaryParentCategoryId"), null, null, true);
   
-  
+/*  
   prodCategoryMember = EntityUtil.getFirst(prodCategoryMembers);
   productCategoryId = (String)prodCategoryMember.get("primaryParentCategoryId");
   
@@ -568,8 +574,7 @@ if(category.contains("SILK")){
 Debug.log("catType====================="+catType);
 context.catType=catType;
 
-
-
+*/
 List orderAdjustmentsList = [];
 adjCondList = [];
 adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));

@@ -572,7 +572,7 @@ if(contactMechesDetails){
 	
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT"]));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT","ENTRY_TAX"]));
 	
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -751,7 +751,7 @@ if(contactMechesDetails){
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX")));
 			
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
@@ -1623,7 +1623,7 @@ if(contactMechesDetails){
 	
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT"]));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT","ENTRY_TAX"]));
 	
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -1815,7 +1815,7 @@ if(contactMechesDetails){
 			conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
 			//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
 			//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INVOICE_ITM_ADJ"));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX")));
 			
 			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
