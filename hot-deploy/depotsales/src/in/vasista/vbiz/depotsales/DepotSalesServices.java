@@ -2667,7 +2667,19 @@ public class DepotSalesServices{
 			
 		}
 		
-		Debug.log("orderId============="+orderId);
+		Debug.log("districtGeoId============="+districtGeoId);
+		
+		if(UtilValidate.isNotEmpty(districtGeoId)){
+			try{
+				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+				orderAttribute.set("orderId", orderId);
+				orderAttribute.set("attrName", "DST_ADDR");
+				orderAttribute.set("attrValue", districtGeoId);
+				delegator.createOrStore(orderAttribute);
+			}catch (GenericEntityException e) {
+					Debug.logError(e, "Could not add role to order for OnBeHalf  party " + orderId, module);
+			}
+		}
 		
 		
 		if(UtilValidate.isNotEmpty(orderId)){
@@ -2692,10 +2704,7 @@ public class DepotSalesServices{
 		
 		}
 		
-		
 		}
-		
-		
 		
 		Map resultCtx = FastMap.newInstance();
 		

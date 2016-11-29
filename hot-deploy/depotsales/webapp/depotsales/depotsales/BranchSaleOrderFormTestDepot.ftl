@@ -250,11 +250,8 @@
 			 	fillPartyData($('#partyId').val());
 			 	$("#editServChgButton").hide();
 			if(indententryinit.schemeCategory.value.length > 0){
-	  			if ($('#schemeCategory').val() == "General"){
+	  			if ($('#schemeCategory').val() == "MGPS_10Pecent" || $('#schemeCategory').val() == "MGPS"){
 	  				$("#editServChgButton").show();
-	  				$('#serviceChargePercent').val(2);
-	  				var scPerc = $('#serviceChargePercent').val();
-	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
 	  		}
 	  		
@@ -1045,8 +1042,6 @@ function fillPartyQuota(partyId){
 				               	<input type="hidden" name="editDestination" id="editDestination" />
 				               	<input type="hidden" name="changeDesti" id="changeDesti" />
 				               	
-				               	
-				               	
 				               	<tr>
 						           	<td>&nbsp;</td>
 									<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.Branch}:<font color="red">*</font></div></td>
@@ -1721,7 +1716,7 @@ function fillPartyQuota(partyId){
 				<div class="grid-header" style="margin-left:auto; margin-right:0;">
 					<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
 					<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
-					<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+					<input type="button" style="float:left" class="buttonText" id="editServiceCharge" value="Edit Destination" onclick="javascript:changeServiceChargePercent();" />
 					<label style="float:left" id="itemsSelected" class="labelItemHeader"></label>
 					<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
 					<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>

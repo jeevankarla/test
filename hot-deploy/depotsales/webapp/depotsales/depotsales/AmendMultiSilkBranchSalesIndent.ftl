@@ -527,6 +527,7 @@
 					bundleunitPrice = 0;
 		  		}	
 		  
+		  
 		  		quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 		  		data[args.row]["quantity"]=quantity;
 		  		data[args.row]["bundleunitPrice"] = bundleunitPrice;
@@ -535,6 +536,14 @@
 		  
 			}
 			else if(args.cell == 4){
+			
+			   var minqty = parseFloat(data[args.row]["minQuantity"]);
+				if(minqty>0){
+				  alert("Sorry, already shipment done for this order");
+				  data[args.row]['unitPrice'] = data[args.row]['actualUnitPrice'];
+				  price = parseFloat(data[args.row]["unitPrice"]);
+				}
+			
 			  baleQty=calculateKgs(quantity,uom,bundleWeight);
 			  data[args.row]["baleQuantity"]=baleQty;
 			   if( uom != "KGs" ){
