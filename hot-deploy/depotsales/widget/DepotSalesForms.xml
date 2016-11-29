@@ -1743,6 +1743,7 @@
         		</entity-options>
         	</drop-down>
         </field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="orderId" title="PO Order"><text-find/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
@@ -1768,15 +1769,18 @@
       	<field name="productId" title="Code- Name [UOM]">
       		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
       	</field>
+      	<field name="categoryName" title="Category Name"><display/></field>
         <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="shipmentId" title="GRN ShipmentId"><display/></field>
        <field name="orderId" title="PO No"><display/></field> 
-        <field name="statusId" title="Status">
+       <field name="supplier" title="Supplier"><display/></field>
+       <!--  <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
-        </field>
+        </field> -->
+        <field name="unitPrice" title="Unit Price"><display/></field>
       	<field name="quantityAccepted" title="Quantity"><display/></field>
-      	<field name="quantityRejected" title="Qty Rejected"><display/></field>
-      	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+      	<!-- <field name="quantityRejected" title="Qty Rejected"><display/></field> -->
+      	<!-- <field name="receivedByUserLoginId" title="Entry by"><display/></field> -->	
       	
         <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
          
@@ -3310,6 +3314,18 @@
          <!-- <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field> -->
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
+     </form> 
+     <form name="ShipmentsDispatchReportCSV" type="list" list-name="receiptList" view-size="99999">
+         <field name="receiptId" title=" GRN Item No "><display/></field>
+         <field name="productName" title=" product Name "><display/></field>
+         <field name="categoryName" title="Category Name"><display/></field>
+         <field name="datetimeReceived" title=" Received Date "><display/></field>
+         <field name="shipmentId" title=" GRN ShipmentId "><display/></field>
+         <field name="orderId" title=" PO No "><display/></field>
+         <field name="supplier" title="Supplier"><display/></field>
+         <field name="unitPrice" title="Unit Price"><display/></field>
+         <field name="quantityAccepted" title="Quantity"><display/></field>
+        
      </form> 
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
          <field name="h1" title="____STATE" ><display/></field>

@@ -740,8 +740,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Supplier Dispatch Items" />
-				<set field="tabButtonItem" value="FindSupplierDispatchs" />
-				<set field="tabButtonItem2" value="FindSupplierDispatchs" />
+			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
@@ -760,11 +759,11 @@
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="SupplierMyPortalCommonDecorator"
+				<decorator-screen name="DepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="SupplierReceiptTabBar"
-							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<!-- <include-menu name="SupplierReceiptTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
 						<section>
 							<widgets>
 								<decorator-screen name="FindScreenDecorator"
@@ -772,7 +771,20 @@
 									<decorator-section name="search-options">
 										<include-form name="FindShipmentReceiptDepotTrans"
 											location="component://depotsales/widget/DepotSalesForms.xml" />
+											<link text="${uiLabelMap.AccountingExportAsCsv}"
+														style="buttontext" target="ShipmentsDispatchReport.csv">
+														<parameter param-name="datetimeReceived" from-field="parameters.datetimeReceived" />
+														<parameter param-name="productId" from-field="parameters.productId" />
+														<parameter param-name="receiptId" from-field="parameters.receiptId" />
+														<parameter param-name="statusId" from-field="parameters.statusId" />
+														<parameter param-name="partyId" from-field="parameters.partyId" />
+														<parameter param-name="shipmentId" from-field="parameters.shipmentId" />
+														<parameter param-name="orderId" from-field="parameters.orderId" />
+														<parameter param-name="orderNo" from-field="parameters.orderNo" />
+														<parameter param-name="noConditionFind" from-field="parameters.noConditionFind" />
+													</link>
 									</decorator-section>
+									
 									<decorator-section name="search-results">
 										<screenlet title="">
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
