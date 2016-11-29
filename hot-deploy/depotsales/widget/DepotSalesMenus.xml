@@ -206,6 +206,9 @@
 	      	<link target="CustomerAssoc">
         	</link>
 	    </menu-item>
+	     <menu-item name="FindSupplierDispatchs" title="Shipment History">
+        	<link target="FindSupplierDispatchs"/>
+        </menu-item>
        <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>
@@ -1499,9 +1502,7 @@
  
     <menu name="SupplierReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindSupplierDispatchs" title="Find Dispatched Items">
-        	<link target="FindSupplierDispatchs"/>
-        </menu-item>
+       
         <menu-item name="SupplierDispatchEntry" title="Supplier Delivery">
         	<link target="SupplierDispatchEntry"/>
         </menu-item>
