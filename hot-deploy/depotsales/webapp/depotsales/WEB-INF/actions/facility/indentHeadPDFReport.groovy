@@ -572,7 +572,7 @@ if(contactMechesDetails){
 	
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT","ENTRY_TAX"]));
+	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM","TEN_PERCENT_SUBSIDY","VAT_PUR", "CST_PUR","CST_SALE","VAT_SALE","CESS_SALE","CESS_PUR","VAT_SURCHARGE","CST_SURCHARGE","TEN_PER_CHARGES","TEN_PER_DISCOUNT","ENTRY_TAX"]));
 	
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
@@ -582,7 +582,6 @@ if(contactMechesDetails){
 		for (eachAdjustment in InvoiceRemainItemAdjustment) {
 			
 			//Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
-			
 			
 			allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.itemValue;
 		}
