@@ -337,37 +337,37 @@ under the License.
     <form name="BalanceSheetAssetsForIndian" type="list" list-name="assetAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <!-- <field name="glAccountClassId" title-area-style="tableheadwide"><display description="${glAccountClassId}"/></field> -->
-        <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
+        <!-- <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="BalanceSheetLiabilitiesForIndian" type="list" list-name="liabilityAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
+        <!-- <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="BalanceSheetEquitiesForIndian" type="list" list-name="equityAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-       <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
+      <!--  <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
@@ -507,7 +507,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field> -->
-        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+        <field name="accountName" widget-style="tabletextleft"><display description="${accountName}"/></field>
         <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="openingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="D" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
@@ -742,7 +742,7 @@ under the License.
 
     <form name="TrialBalanceFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="TrialBalance" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="customTimePeriodId" required-field="true">
+        <field name="customTimePeriodId" title = "For the Period :" required-field="true">
             <drop-down>
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodTypeId} : ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="like" value="FISCAL_%"/>
@@ -804,12 +804,12 @@ under the License.
         <!-- <row-actions>
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
-        <field name="accountCode">
+        <!-- <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${externalId}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
          <field name="openingD" widget-style="tabletextright"><display/></field>
         <field name="openingC" widget-style="tabletextright"><display/></field>
@@ -826,15 +826,15 @@ under the License.
         <!-- <row-actions>
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
-        <field name="accountCode" widget-style="tabletextright" title="."><display description="."></display>
+        <!-- <field name="accountCode" widget-style="tabletextright" title="."><display description="."></display>
             
-        </field>
-        <field name="accountName" title-area-style="tableheadwide" title="."><display description="${accountName}"/></field>
-         <field name="openingD" widget-style="tabletextright" title="Total Opening Debit"><display/></field>
-        <field name="openingC" widget-style="tabletextright" title="Total Opening Credit"><display/></field>
-        <field name="totalPostedDebits" title="Total ${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}"/></field>
-        <field name="totalPostedCredits" title="Total ${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}"/></field>
-        <field name="totalEndingBalance" title=" Total ${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}"/></field>
+        </field> -->
+        <field name="accountName" ><display description="${accountName}"/></field>
+         <field name="openingD" ><display/></field>
+        <field name="openingC" ><display/></field>
+        <field name="totalPostedDebits" ><display description="${totalPostedDebits}"/></field>
+        <field name="totalPostedCredits" ><display description="${totalPostedCredits}"/></field>
+        <field name="totalEndingBalance"><display description="${totalEndingBalance}"/></field>
     </form>
     <form name="CashFlowStatementParameters" type="single" header-row-style="header-row" default-table-style="basic-table">
         <field name="selectedMonth" title="${uiLabelMap.CommonMonth}">
