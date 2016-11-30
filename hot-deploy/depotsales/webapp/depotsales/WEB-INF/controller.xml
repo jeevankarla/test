@@ -2406,6 +2406,11 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="billWiseSalesReport.pdf">
+        <security auth="true" https="true"/>    
+        <response name="success" type="view" value="billWiseSalesReport"/>
+        <response name="error" type="view" value="billWiseSalesReport"/>
+    </request-map>
      <!-- View Mappings -->
     
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
@@ -2708,4 +2713,5 @@
 	<view-map name="NewCustomerAssoc" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewCustomerAssoc"/>
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
 	<view-map name="claimReportDetailsPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsPDF" content-type="application/pdf"/>
+	<view-map name="billWiseSalesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWiseSalesReport" content-type="application/pdf"/>
 </site-conf>

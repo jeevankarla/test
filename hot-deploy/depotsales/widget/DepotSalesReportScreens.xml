@@ -817,6 +817,22 @@
                 </section>
 			</widgets>
 		</section>
+	</screen>
+	<screen name="billWiseSalesReport">
+		<section>
+		   <actions>
+   				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+			    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/billWiseSalesReport.groovy"/> 
+   			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://depotsales/webapp/depotsales/depotsales/billWiseSalesReport.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
 	</screen>	
 </screens>
 
