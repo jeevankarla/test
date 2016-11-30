@@ -135,7 +135,7 @@ under the License.
                      		 			<fo:table-body>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee Name       : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee Name        : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">PF Account Number   : ${emplDetails.presentEpf?if_exists}</fo:block>
@@ -149,18 +149,35 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee No.            : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ESI Number               : ${emplDetails.presentEsic?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
+                     		 					<#--<fo:table-cell>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ESI Number               : ${emplDetails.presentEsic?if_exists}</fo:block>
+                     		 					</fo:table-cell>-->
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual DA       :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("daAmt")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>-->
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Organization               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Office                         : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : ${emplDetails.panId?if_exists}</fo:block>
+                     		 						<#assign panNumber = "">
+                     		 						<#if partyId?has_content>
+                 		 								<#assign panDetails = delegator.findOne("PartyIdentification", {"partyId" : partyId,"partyIdentificationTypeId","PAN_NUMBER"}, true)>
+                 		 								<#if panDetails?has_content>
+                 		 									<#assign panNumber = panDetails.get("idValue")>
+                 		 								</#if>
+                 		 							<#elseif emplDetails.employeeId?has_content>
+                 		 								<#assign panDetails = delegator.findOne("PartyIdentification", {"partyId" : emplDetails.employeeId,"partyIdentificationTypeId","PAN_NUMBER"}, true)>
+                 		 								<#if panDetails?has_content>
+                 		 									<#assign panNumber = panDetails.get("idValue")>
+                 		 								</#if>
+                 		 							<#else>
+                 		 							</#if>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN           : ${panNumber}</fo:block>
+                     		 						
                      		 					</fo:table-cell>
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
@@ -175,24 +192,27 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                         : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                          : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 				</fo:table-row>                     		 				
                      		 				<fo:table-row>
-                     		 					<fo:table-cell>
+                     		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Location                    : ${(doj[0].locationGeoId)?if_exists}</fo:block>
-                     		 					</fo:table-cell>
+                     		 					</fo:table-cell>-->
                      		 					<fo:table-cell>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : <#if payGrade?has_content>${payGrade.get(0).payScale?if_exists}</#if></fo:block>
+                     		 					</fo:table-cell> 
+                     		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
-                     		 					<fo:table-cell/>
+                     		 					<fo:table-cell/>-->
                      		 				</fo:table-row>
-                     		 				<fo:table-row>
+                     		 				<#--<fo:table-row>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : <#if payGrade?has_content>${payGrade.get(0).payScale?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>                     		 					
-                     		 				</fo:table-row>
+                     		 				</fo:table-row>-->
                      		 			</fo:table-body>
                      		 		</fo:table>
                      		 	</fo:block>
@@ -216,7 +236,7 @@ under the License.
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                         		<#--<fo:block font-weight="bold" text-align="center">Leave Details</fo:block>-->
-                        		<fo:block font-weight="bold" text-align="center">Loss of pay and late minutes</fo:block>
+                        		<fo:block font-weight="bold" text-align="center">Loss of pay</fo:block>
                     		</fo:table-cell>
                     	</fo:table-row>
                     </fo:table-header>
@@ -238,7 +258,7 @@ under the License.
                 			<fo:table-cell  border-style="solid">
                 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Total Days                </fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrears   Days            </fo:block>
+                    			<#--<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrears   Days            </fo:block>-->
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          </fo:block>
                     		</fo:table-cell>
                     		<#assign totalDays=0>
@@ -266,14 +286,14 @@ under the License.
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${totalDays?if_exists}  days</#if></fo:block>
                         		<#--<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>-->
-                        		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
+                        		<#--<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>-->
                         		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${(netPaidDays?if_exists)}  days</#if></fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
                     				<fo:block text-indent="5pt" keep-together="always" white-space-collapse="false">Loss of Pay Days  : ${(lossOfpay-latemin)?if_exists}  days</fo:block>
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMinStr?has_content>${(lateMinStr)?if_exists}<#else>0 min</#if></fo:block>
+                    				<#--<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMinStr?has_content>${(lateMinStr)?if_exists}<#else>0 min</#if></fo:block>-->
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
@@ -418,7 +438,7 @@ under the License.
                    <fo:table-row border-style="solid">
                    		<fo:table-cell border-style="solid">
                    			
-                   			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">&#160;Total Earnings :                                         <#if totalEarnings?has_content>
+                   			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">&#160;Total Earnings :                                       <#if totalEarnings?has_content>
                    			<#assign total = totalEarnings?if_exists />
                    			<@ofbizCurrency amount=total?string("#0") /></#if>&#160;&#160;</fo:block>
                    		</fo:table-cell>
