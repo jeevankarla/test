@@ -313,6 +313,25 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <service name="createAccountingRole" engine="java" default-entity-name="InvoiceRole"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRole">
+        <attribute name="invoiceId" mode="IN" optional="true" type="String"/>
+        <attribute name="acctgTransId" mode="IN" optional="true" type="String"/>
+        <attribute name="paymentId" mode="IN" optional="true" type="String"/>
+        <attribute name="finAccountTransId" mode="IN" optional="true" type="String"/>
+    </service>
+    <service name="createAccountingRoleForInvoice" engine="java" default-entity-name="InvoiceRole"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForInvoice">
+        <attribute name="invoiceId" mode="IN" optional="true" type="String"/>
+    </service>
+    <service name="createAccountingRoleForPayment" engine="java" default-entity-name="InvoiceRole"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForPayment">
+        <attribute name="paymentId" mode="IN" optional="true" type="String"/>
+    </service>
+    <service name="createAccountingRoleForAcctgTrans" engine="java" default-entity-name="InvoiceRole"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForAcctgTrans">
+        <attribute name="acctgTransId" mode="IN" optional="true" type="String"/>
+    </service>
     <service name="removeInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceRole">
         <description>Remove an existing Invoice Role Record</description>

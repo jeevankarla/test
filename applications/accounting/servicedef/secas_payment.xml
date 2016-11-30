@@ -78,6 +78,12 @@ under the License.
          <condition field-name="statusId" operator="equals" value="FINACT_TRNS_CANCELED"/>
          <action service="setFinAccountTransStatus" mode="sync"/>
      </eca>
-     
-     
+     <eca service="createPayment" event="commit">
+         <condition field-name="paymentId" operator="is-not-empty"/>   
+         <action service="createAccountingRoleForPayment" mode="sync"/>
+    </eca>
+     <eca service="createAcctgTrans" event="commit">
+        <condition field-name="acctgTransId" operator="is-not-empty"/>
+        <action service="createAccountingRoleForAcctgTrans" mode="sync"/>
+    </eca>
 </service-eca>

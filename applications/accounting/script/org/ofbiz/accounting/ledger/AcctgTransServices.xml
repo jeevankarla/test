@@ -68,6 +68,16 @@ under the License.
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <entity-one entity-name="AcctgTrans" value-field="acctgTrans"/>
+        <entity-one value-field="acctgTransRole" entity-name="AcctgTransRole">
+        	<field-map field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        	<field-map field-name="partyId" value="Company"/>
+        	<field-map field-name="roleTypeId" value="ACCOUNTING"/>        	
+        </entity-one>       
+        <if-not-empty field="acctgTransRole">
+        	<set field="parameters.organizationPartyId" value="Company"/>
+        	<set field="newEntity.organizationPartyId" value="Company"/>
+        </if-not-empty>
+        
         <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
             <add-error><fail-property resource="AccountingUiLabels" property="AccountingTransactionHasBeenAlreadyPosted"/></add-error>
             <check-errors/>

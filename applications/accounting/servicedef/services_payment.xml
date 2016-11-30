@@ -433,4 +433,18 @@ under the License.
         <attribute name="paymentId" type="String" mode="INOUT" optional="false"/>
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
     </service>
+    <service name="createPaymentRole" engine="simple" default-entity-name="PaymentRole"
+        location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="createPaymentRole">
+        <description>Create Payment Role Record</description>        
+       <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createAcctgTransRole" engine="simple" default-entity-name="AcctgTransRole"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createAcctgTransRole">
+        <description>Create AcctgTrans Role Record</description>        
+       <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
 </services>

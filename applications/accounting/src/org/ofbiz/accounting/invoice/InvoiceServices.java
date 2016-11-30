@@ -6376,6 +6376,418 @@ public class InvoiceServices {
       result.put("paymentId", paymentId);
 	 
       return result;
+	}	
+	/*public static Map<String, Object> createAccountingRole(DispatchContext dctx, Map<String, Object> context) {
+	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();  
+		String invoiceId = (String) context.get("invoiceId");	
+		String paymentId = (String) context.get("paymentId");	
+		String acctgTransId = (String) context.get("acctgTransId");	
+		String finAccountTransId=(String) context.get("finAccountTransId");
+		Debug.log("finAccountTransId --------"+finAccountTransId);
+		 Debug.log("acctgTransId --------"+acctgTransId);
+		 Debug.log("paymentId --------"+paymentId);
+		 Debug.log("invoiceId --------"+invoiceId);
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> createRoleContext = FastMap.newInstance();
+		try{
+			createRoleContext.put("userLogin", userLogin);
+			createRoleContext.put("partyId", "Company");
+			createRoleContext.put("roleTypeId", "ACCOUNTING");
+	        String partyId=null;
+	        //Let's populate InvoiceRole
+	        if(UtilValidate.isNotEmpty(invoiceId)&& UtilValidate.isEmpty(acctgTransId)&& UtilValidate.isEmpty(finAccountTransId)){
+	        	createRoleContext.put("invoiceId", invoiceId);
+	        	 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
+	                if(UtilValidate.isNotEmpty(invoice)){
+	                   String invoicetypeId = (String) invoice.getString("invoiceTypeId");
+	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
+	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
+	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
+	                	   if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"PURCHASE_INVOICE".equals(invoiceTypeParent)){
+	                		   partyId=(String) invoice.getString("partyId");
+	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
+	                		   partyId=(String) invoice.getString("partyIdFrom");
+	                	   }
+	                   }
+	                }  
+	                Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createInvoiceRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createInvoiceRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createInvoiceRoleResult);
+	    		        }
+	    	        }
+	        }
+	        //Let's populate PaymentRole
+	        if(UtilValidate.isNotEmpty(paymentId)&&UtilValidate.isEmpty(acctgTransId)&&UtilValidate.isEmpty(finAccountTransId)){
+	        	createRoleContext.put("paymentId", paymentId);
+	        	 GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId",paymentId), true);	        	
+	                if(UtilValidate.isNotEmpty(payment)){
+	                   String paymentTypeId = (String) payment.getString("paymentTypeId");
+	                   String parentTypeId =(String) PaymentWorker.getPaymentTypeParent(delegator, paymentTypeId);
+	                   Debug.log("parentTypeId --------"+parentTypeId);
+	                   //GenericValue paymentTypeDetails = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId",paymentTypeId), true);
+	                   if(UtilValidate.isNotEmpty(parentTypeId)){
+	                	   if("RECEIPT".equals(parentTypeId)){
+	                		   partyId=(String) payment.getString("partyIdTo");
+	                	   }else if("DISBURSEMENT".equals(parentTypeId)){
+	                		   partyId=(String) payment.getString("partyIdFrom");
+	                	   }
+	                   }
+	                }  
+	                Map<String, Object> createPaymentRoleResult = dispatcher.runSync("createPaymentRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createPaymentRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	Debug.log("payment Party--------"+partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createPaymentRoleResult = dispatcher.runSync("createPaymentRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createPaymentRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createPaymentRoleResult);
+	    		        }
+	    	        }
+	        }
+Debug.log("acctgTransId========before========="+acctgTransId);
+	        //Let's populate AcctgTransRole
+	        if(UtilValidate.isNotEmpty(acctgTransId) && UtilValidate.isEmpty(finAccountTransId)&&UtilValidate.isEmpty(finAccountTransId)){
+	        	createRoleContext.put("acctgTransId", acctgTransId);
+	        	Debug.log("acctgTransId======loop======"+acctgTransId);
+	        	GenericValue AcctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId",acctgTransId), true);
+	        	Debug.log("AcctgTrans============"+AcctgTrans);
+	        	String acctgPaymentId=null;
+	        	String acctgInvoiceId=null;
+	        	if(UtilValidate.isNotEmpty(AcctgTrans)){
+	        		acctgPaymentId=(String) AcctgTrans.getString("paymentId");
+	        		acctgInvoiceId=(String) AcctgTrans.getString("invoiceId");
+	        		
+	        	}
+	        	if(UtilValidate.isNotEmpty(acctgPaymentId)){
+		        	 GenericValue paymentDetail = delegator.findOne("Payment", UtilMisc.toMap("paymentId",acctgPaymentId), true);
+		        	 Debug.log("paymentDetail --------"+paymentDetail);
+		                if(UtilValidate.isNotEmpty(paymentDetail)){
+		                   String paymentTypeId = (String) paymentDetail.getString("paymentTypeId");
+		                   String parentTypeId =(String) PaymentWorker.getPaymentTypeParent(delegator, paymentTypeId);
+		                   Debug.log("parentTypeId --------"+parentTypeId);
+		                   //GenericValue paymentTypeDetails = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId",paymentTypeId), true);
+		                   if(UtilValidate.isNotEmpty(parentTypeId)){
+		                	   if("RECEIPT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdTo");
+		                	   }else if("DISBURSEMENT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdFrom");
+		                	   }
+		                   }
+		                }  
+	        	}
+	        	if(UtilValidate.isNotEmpty(acctgInvoiceId)){
+	        		 Debug.log("acctgTransId ---invoiceId-----"+acctgInvoiceId);
+	        		 GenericValue invoiceDetails = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",acctgInvoiceId), true);
+	        	
+	                if(UtilValidate.isNotEmpty(invoiceDetails)){
+	 	                   String invoicetypeId = (String) invoiceDetails.getString("invoiceTypeId");
+	 	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
+	 	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
+	 	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
+	 	                	   if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"PURCHASE_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyId");
+	 	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyIdFrom");
+	 	                	   }
+	 	                   }
+	 	                
+	                }
+	        	}
+	        	 Debug.log("acctgTransId ---partyId-----"+partyId);
+	                Map<String, Object> createAcctgRoleResult = dispatcher.runSync("createAcctgTransRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        Debug.log("acctgTransId ---for Party-----"+partyId);
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	Debug.log(" Party is===--------"+partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createAcctgRoleResult = dispatcher.runSync("createAcctgTransRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createAcctgRoleResult);
+	    		        }
+	    	        }
+	        }
+	        
+	      //Let's populate FinAccountTransRole
+	        if(UtilValidate.isNotEmpty(finAccountTransId)){
+	        	createRoleContext.put("finAccountTransId", finAccountTransId);
+	        	Debug.log("acctgTransId======loop======"+acctgTransId);
+	        	GenericValue finAcctTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId",finAccountTransId), true);
+	        	Debug.log("AcctgTrans============"+finAcctTrans);
+	        	String finAcctPaymentId=null;
+	        	String finAcctInvoiceId=null;
+	        	if(UtilValidate.isNotEmpty(finAcctTrans)){
+	        		finAcctPaymentId=(String) finAcctTrans.getString("paymentId");
+	        		finAcctInvoiceId=(String) finAcctTrans.getString("invoiceId");
+	        		
+	        	}
+	        	if(UtilValidate.isNotEmpty(finAcctPaymentId)){
+		        	 GenericValue paymentDetail = delegator.findOne("Payment", UtilMisc.toMap("paymentId",finAcctPaymentId), true);
+		        	 Debug.log("paymentDetail ----finAccount----"+paymentDetail);
+		                if(UtilValidate.isNotEmpty(paymentDetail)){
+		                   String paymentTypeId = (String) paymentDetail.getString("paymentTypeId");
+		                   String parentTypeId =(String) PaymentWorker.getPaymentTypeParent(delegator, paymentTypeId);
+		                   Debug.log("parentTypeId --------"+parentTypeId);
+		                   //GenericValue paymentTypeDetails = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId",paymentTypeId), true);
+		                   if(UtilValidate.isNotEmpty(parentTypeId)){
+		                	   if("RECEIPT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdTo");
+		                	   }else if("DISBURSEMENT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdFrom");
+		                	   }
+		                   }
+		                }  
+	        	}
+	        	if(UtilValidate.isNotEmpty(finAcctInvoiceId)){
+	        		 Debug.log("finAccount trans ---invoiceId-----"+finAcctInvoiceId);
+	        		 GenericValue invoiceDetails = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",finAcctInvoiceId), true);
+	        	
+	                if(UtilValidate.isNotEmpty(invoiceDetails)){
+	 	                   String invoicetypeId = (String) invoiceDetails.getString("invoiceTypeId");
+	 	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
+	 	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
+	 	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
+	 	                	   if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"PURCHASE_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyId");
+	 	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyIdFrom");
+	 	                	   }
+	 	                   }
+	 	                
+	                }
+	        	}
+	        	 Debug.log("acctgTransId ---partyId-----"+partyId);
+	                Map<String, Object> createAcctgRoleResult = dispatcher.runSync("createFinAcctTransRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        Debug.log("acctgTransId ---for Party-----"+partyId);
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	Debug.log(" Party is===--------"+partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createAcctgRoleResult = dispatcher.runSync("createFinAcctTransRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createAcctgRoleResult);
+	    		        }
+	    	        }
+	        }
+	        
+		   
+		}catch (GenericServiceException e) {
+			 String errorMsg = "create Invoice Role failed"; 
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        }catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to create accounting role ", module);
+			return ServiceUtil.returnError("Failed to create accounting role" + e);
+		}       
+        
+	    return ServiceUtil.returnSuccess();	    
+	}*/
+	
+	
+	
+	public static Map<String, Object> createAccountingRoleForInvoice(DispatchContext dctx, Map<String, Object> context) {
+	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();  
+		String invoiceId = (String) context.get("invoiceId");			
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> createRoleContext = FastMap.newInstance();
+		try{
+			createRoleContext.put("userLogin", userLogin);
+			createRoleContext.put("partyId", "Company");
+			createRoleContext.put("roleTypeId", "ACCOUNTING");
+	        String partyId=null;
+	        //Let's populate InvoiceRole
+	        if(UtilValidate.isNotEmpty(invoiceId)){
+	        	createRoleContext.put("invoiceId", invoiceId);
+	        	 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
+	                if(UtilValidate.isNotEmpty(invoice)){
+	                   String invoicetypeId = (String) invoice.getString("invoiceTypeId");
+	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
+	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
+	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
+	                	   if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"PURCHASE_INVOICE".equals(invoiceTypeParent)){
+	                		   partyId=(String) invoice.getString("partyId");
+	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
+	                		   partyId=(String) invoice.getString("partyIdFrom");
+	                	   }
+	                   }
+	                }  
+	                Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createInvoiceRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createInvoiceRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createInvoiceRoleResult);
+	    		        }
+	    	        }
+	        }
+	        
+	        
+		   
+		}catch (GenericServiceException e) {
+			 String errorMsg = "create Invoice Role failed"; 
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        }catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to create accounting role ", module);
+			return ServiceUtil.returnError("Failed to create accounting role" + e);
+		}       
+        
+	    return ServiceUtil.returnSuccess();	    
+	}
+	
+	
+	public static Map<String, Object> createAccountingRoleForPayment(DispatchContext dctx, Map<String, Object> context) {
+	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();  
+		String paymentId = (String) context.get("paymentId");	
+			
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> createRoleContext = FastMap.newInstance();
+		try{
+			createRoleContext.put("userLogin", userLogin);
+			createRoleContext.put("partyId", "Company");
+			createRoleContext.put("roleTypeId", "ACCOUNTING");
+	        String partyId=null;
+	        //Let's populate PaymentRole
+	        if(UtilValidate.isNotEmpty(paymentId)){
+	        	createRoleContext.put("paymentId", paymentId);
+	        	 GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId",paymentId), true);	        	
+	                if(UtilValidate.isNotEmpty(payment)){
+	                   String paymentTypeId = (String) payment.getString("paymentTypeId");
+	                   String parentTypeId =(String) PaymentWorker.getPaymentTypeParent(delegator, paymentTypeId);
+	                   //GenericValue paymentTypeDetails = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId",paymentTypeId), true);
+	                   if(UtilValidate.isNotEmpty(parentTypeId)){
+	                	   if("RECEIPT".equals(parentTypeId)){
+	                		   partyId=(String) payment.getString("partyIdTo");
+	                	   }else if("DISBURSEMENT".equals(parentTypeId)){
+	                		   partyId=(String) payment.getString("partyIdFrom");
+	                	   }
+	                   }
+	                }  
+	                Map<String, Object> createPaymentRoleResult = dispatcher.runSync("createPaymentRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createPaymentRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);	    	        	
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createPaymentRoleResult = dispatcher.runSync("createPaymentRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createPaymentRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createPaymentRoleResult);
+	    		        }
+	    	        }
+	        }
+		   
+		}catch (GenericServiceException e) {
+			 String errorMsg = "create Invoice Role failed"; 
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        }catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to create accounting role ", module);
+			return ServiceUtil.returnError("Failed to create accounting role" + e);
+		}       
+        
+	    return ServiceUtil.returnSuccess();	    
+	}
+	
+	public static Map<String, Object> createAccountingRoleForAcctgTrans(DispatchContext dctx, Map<String, Object> context) {
+	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();  		
+		String acctgTransId = (String) context.get("acctgTransId");			
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> createRoleContext = FastMap.newInstance();
+		try{
+			createRoleContext.put("userLogin", userLogin);
+			createRoleContext.put("partyId", "Company");
+			createRoleContext.put("roleTypeId", "ACCOUNTING");
+	        String partyId=null;
+	        //Let's populate AcctgTransRole
+	        if(UtilValidate.isNotEmpty(acctgTransId)){
+	        	createRoleContext.put("acctgTransId", acctgTransId);
+	        	GenericValue AcctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId",acctgTransId), true);
+	        	String acctgPaymentId=null;
+	        	String acctgInvoiceId=null;
+	        	if(UtilValidate.isNotEmpty(AcctgTrans)){
+	        		acctgPaymentId=(String) AcctgTrans.getString("paymentId");
+	        		acctgInvoiceId=(String) AcctgTrans.getString("invoiceId");
+	        		
+	        	}
+	        	if(UtilValidate.isNotEmpty(acctgPaymentId)){
+		        	 GenericValue paymentDetail = delegator.findOne("Payment", UtilMisc.toMap("paymentId",acctgPaymentId), true);
+		                if(UtilValidate.isNotEmpty(paymentDetail)){
+		                   String paymentTypeId = (String) paymentDetail.getString("paymentTypeId");
+		                   String parentTypeId =(String) PaymentWorker.getPaymentTypeParent(delegator, paymentTypeId);
+		                   //GenericValue paymentTypeDetails = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId",paymentTypeId), true);
+		                   if(UtilValidate.isNotEmpty(parentTypeId)){
+		                	   if("RECEIPT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdTo");
+		                	   }else if("DISBURSEMENT".equals(parentTypeId)){
+		                		   partyId=(String) paymentDetail.getString("partyIdFrom");
+		                	   }
+		                   }
+		                }  
+	        	}
+	        	if(UtilValidate.isNotEmpty(acctgInvoiceId)){
+	        		 GenericValue invoiceDetails = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",acctgInvoiceId), true);
+	                if(UtilValidate.isNotEmpty(invoiceDetails)){
+	 	                   String invoicetypeId = (String) invoiceDetails.getString("invoiceTypeId");
+	 	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
+	 	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
+	 	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
+	 	                	   if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"PURCHASE_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyId");
+	 	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
+	 	                		   partyId=(String) invoiceDetails.getString("partyIdFrom");
+	 	                	   }
+	 	                   }
+	 	                
+	                }
+	        	}
+	                Map<String, Object> createAcctgRoleResult = dispatcher.runSync("createAcctgTransRole", createRoleContext);
+	    	        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        	createRoleContext.put("partyId",partyId);
+	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
+	    	        	createAcctgRoleResult = dispatcher.runSync("createAcctgTransRole", createRoleContext);
+	    		        if (ServiceUtil.isError(createAcctgRoleResult)) {
+	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createAcctgRoleResult);
+	    		        }
+	    	        }
+	        }        
+		   
+		}catch (GenericServiceException e) {
+			 String errorMsg = "create Invoice Role failed"; 
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        }catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to create accounting role ", module);
+			return ServiceUtil.returnError("Failed to create accounting role" + e);
+		}       
+        
+	    return ServiceUtil.returnSuccess();	    
 	}
 	
 }

@@ -54,7 +54,10 @@ under the License.
         <condition field-name="oldStatusId" operator="not-equals" value="INVOICE_PAID"/>
         <action service="createTaxInvoiceSequence" mode="sync"/>
     </eca>
-    
+    <eca service="createInvoice" event="commit">
+        <condition field-name="invoiceId" operator="is-not-empty"/>      
+        <action service="createAccountingRoleForInvoice" mode="sync"/>
+    </eca>
     <!-- Remove InvoiceItemAssoc on cancel commission invoice -->
     <eca service="cancelInvoice" event="commit">
         <condition field-name="invoiceTypeId" operator="equals" value="COMMISSION_INVOICE"/>

@@ -3482,6 +3482,87 @@
 			<index-field name="isFullyApplied"/>
 		</index>	
 	</entity>
+	<entity entity-name="PaymentRole" package-name="org.ofbiz.accounting.payment"
+		title="Payment Role Entity">
+		<field name="paymentId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="paymentId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="PMT_RLE_INVCE"
+			rel-entity-name="Payment">
+			<key-map field-name="paymentId" />
+		</relation>
+		<relation type="one" fk-name="PMT_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="PMT_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
+	<entity entity-name="AcctgTransRole" package-name="org.ofbiz.accounting.ledger"
+		title="AcctgTrans Role Entity">
+		<field name="acctgTransId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="acctgTransId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="ACTG_RLE_INVCE"
+			rel-entity-name="AcctgTrans">
+			<key-map field-name="acctgTransId" />
+		</relation>
+		<relation type="one" fk-name="ACTG_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="ACTG_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
+	<entity entity-name="FinAccountTransRole" package-name="org.ofbiz.accounting.finaccount"
+		title="FinAccount Trans Role Entity">
+		<field name="finAccountTransId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="finAccountTransId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="FINTRNS_RLE_INVCE"
+			rel-entity-name="FinAccountTrans">
+			<key-map field-name="finAccountTransId" />
+		</relation>
+		<relation type="one" fk-name="FINTRNS_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="FINTRNS_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
 	<view-entity entity-name="PaymentAndTypePartyNameView"
 		package-name="org.ofbiz.accounting.payment"
 		title="Payment PaymentType PaymentMethodType StatusItem and Party Name View Entity">
