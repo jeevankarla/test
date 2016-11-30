@@ -24,6 +24,7 @@ under the License.
 	
 	var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};
 	var supplierJSON=${StringUtil.wrapString(supplierJSON)!'[]'};
+	var cutomerJSON=${StringUtil.wrapString(cutomerJSON)!'[]'};
 
 	function makeDatePicker(fromDateId ,thruDateId){
 		$( "#"+fromDateId ).datepicker({
@@ -50,8 +51,10 @@ under the License.
 	
 	$(document).ready(function(){
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
-			$('#ui-datepicker-div').css('clip', 'auto');
-			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});		
+			$('#ui-datepicker-div').css('clip', 'auto'); 
+			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});
+			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});
+					
 		});
 
     function getbranchesByState(state ,branchId){
@@ -77,16 +80,17 @@ under the License.
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
       <form method="post" name="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
-        <table class="basic-table" cellspacing="0">
+        <table class="basic-table" >
           <tr>
               <#if stateName?has_content>
-			   <td >State  <select name="state" id="state" onchange="javascript:getbranchesByState(this,'branchId2');" >
+			   <td >State 
+				<select name="state" id="state"  size="8pt" onchange="javascript:getbranchesByState(this,'branchId2');" >
 				 	<option value='${state?if_exists}'>${stateName?if_exists}</option>
 				  </select> 
 				 <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
 			   </td>
 			  <#else>
-				 <td >State 
+				 <td >State
 				 <select name="state" id="state" onchange="javascript:getbranchesByState(this,'branchId2');">
 				 	
 				     <#list  stateListJSON as stateListJSON>
@@ -98,26 +102,36 @@ under the License.
 			  </#if>
 			  
 			  <#if branchIdName?has_content>
-	              <td>Branch <select name='branchId2'> <option value='${branchId}'>${branchIdName?if_exists}</option></select>  </td> 
+	              <td>Branch <br><select name='branchId2'> <option value='${branchId}'>${branchIdName?if_exists}</option></select>  </td> 
 				<#else>
-				<td>Branch <select name='branchId2'> </select>  </td>
+				<td>Branch <br> <select name='branchId2'> </select>  </td>
 				</#if>
+
 				
+
+            	
+		  </tr>
+		  <tr>
+				 <#if cutomerName?has_content>
+		         	<td>Agency <br> <input  type="text" size="14pt"    name="cutomerName" value="${cutomerName?if_exists}"/>
+		            <input  type="hidden" size="14pt" id="cutomerId"   name="cutomer" value="${cutomerId?if_exists}"/></td>
+				<#else>
+					<td>Agency <br> <input  type="text" size="14pt" id="cutomerId"   name="customer"/></td>
+				</#if>
+
 				 <#if SupplierIdName?has_content>
 					<td>Supplier <input  type="text" size="14pt"    name="SupplierName" value="${SupplierIdName?if_exists}"/>
 					<input  type="hidden" size="14pt" id="SupplierId"   name="Supplier" value="${SupplierId?if_exists}"/></td>
 				<#else>
 					<td>Supplier <input  type="text" size="14pt" id="SupplierId"   name="Supplier"/></td>
 				</#if>
-            	
-		  </tr>
-		 
+           </tr>
           <tr>
           		<#if fromDateStr?has_content>
-					<td >From Date<input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>
+					<td >From Date <br><input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>
 
 				<#else>
-					<td >From Date<input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate"/></td>
+					<td >From Date <br><input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate"/></td>
 				</#if>
 	            
 	            <#if thruDateStr?has_content>
