@@ -207,8 +207,11 @@
         	</link>
 	    </menu-item>
 	     <menu-item name="FindSupplierDispatchs" title="Shipment History">
-        	<link target="FindSupplierDispatchs"/>
+        	<link target="ShipmentHistory"/>
         </menu-item>
+         <!-- <menu-item name="ShipmentHistory" title="Shipment History2">
+        	<link target="ShipmentHistory"/>
+        </menu-item> -->
        <!--  <menu-item name="DepotTransReceipts" title="Receipts">
        		<condition>
        		 <or>
