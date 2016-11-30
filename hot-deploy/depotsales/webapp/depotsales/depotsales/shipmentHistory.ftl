@@ -82,50 +82,31 @@ under the License.
       <form method="post" name="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
           <tr>
-              <#if stateName?has_content>
-			   <td >State 
-				<select name="state" id="state"  size="8pt" onchange="javascript:getbranchesByState(this,'branchId2');" >
-				 	<option value='${state?if_exists}'>${stateName?if_exists}</option>
-				  </select> 
-				 <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
-			   </td>
-			  <#else>
-				 <td >State
-				 <select name="state" id="state" onchange="javascript:getbranchesByState(this,'branchId2');">
-				 	
-				     <#list  stateListJSON as stateListJSON>
-						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
-					 </#list> 
-				  </select> 
-				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
-			   </td>
-			  </#if>
-			  
-			  <#if branchIdName?has_content>
-	              <td>Branch <br><select name='branchId2'> <option value='${branchId}'>${branchIdName?if_exists}</option></select>  </td> 
-				<#else>
-				<td>Branch <br> <select name='branchId2'> </select>  </td>
-				</#if>
-
-				
-
-            	
-		  </tr>
+	              <td>Branch <br><select name="branchId2" id="branchId">
+	              <#if branchIdName?has_content>
+		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
+ 	              </#if>
+			      <#list  formatList as formatList>
+					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+				 </#list> 
+				  </select>  
+				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/> </td> 
+		  </tr> 
 		  <tr>
-				 <#if cutomerName?has_content>
-		         	<td>Agency <br> <input  type="text" size="14pt"    name="cutomerName" value="${cutomerName?if_exists}"/>
-		            <input  type="hidden" size="14pt" id="cutomerId"   name="cutomer" value="${cutomerId?if_exists}"/></td>
+				 <#if customerName?has_content>
+		         	<td>Agency <br> <input  type="text" size="14pt"  id="cutomerId"  name="cutomerName" value="${customerName?if_exists}"/>
+		            <input  type="hidden" size="14pt"   name="customer" value="${customerId?if_exists}"/></td>
 				<#else>
 					<td>Agency <br> <input  type="text" size="14pt" id="cutomerId"   name="customer"/></td>
-				</#if>
+				</#if> 
 
 				 <#if SupplierIdName?has_content>
-					<td>Supplier <input  type="text" size="14pt"    name="SupplierName" value="${SupplierIdName?if_exists}"/>
-					<input  type="hidden" size="14pt" id="SupplierId"   name="Supplier" value="${SupplierId?if_exists}"/></td>
+					<td>Supplier <input  type="text" size="14pt"  id="SupplierId"  name="SupplierName" value="${SupplierIdName?if_exists}"/>
+					<input  type="hidden" size="14pt"    name="Supplier" value="${SupplierId?if_exists}"/></td>
 				<#else>
 					<td>Supplier <input  type="text" size="14pt" id="SupplierId"   name="Supplier"/></td>
 				</#if>
-           </tr>
+           </tr> 
           <tr>
           		<#if fromDateStr?has_content>
 					<td >From Date <br><input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>

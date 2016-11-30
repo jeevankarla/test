@@ -22,46 +22,22 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 
 
-stateBranchsList=[];
-stateRosList =[];
-conditionDeopoList = [];
-conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
-conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
-conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
-statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
-statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
-
-JSONObject stateJSON = new JSONObject();
-
-for(stateid in statesIdsList){
-	result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateid,"userLogin",userLogin));
-	stateBranchsList=result.get("stateBranchsList");
-	stateRosList=result.get("stateRosList");
+List formatList = [];
 	
-	JSONArray stateBranchAndRoJSON = new JSONArray();
-	stateBranchsList.each{ eachState ->
-			JSONObject newObj = new JSONObject();
-			newObj.put("value",eachState.partyId);
-			newObj.put("label",eachState.groupName);
-			stateBranchAndRoJSON.add(newObj);
+	List<GenericValue> partyClassificationList = null;
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+	if(partyClassificationList){
+		for (eachList in partyClassificationList) {
+			//Debug.log("eachList========================"+eachList.get("partyId"));
+			formatMap = [:];
+			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+			formatMap.put("productStoreName",partyName);
+			formatMap.put("payToPartyId",eachList.get("partyId"));
+			formatList.addAll(formatMap);
+		}
 	}
-	stateRosList.each{ eachState ->
-		JSONObject newObj = new JSONObject();
-		newObj.put("value",eachState.partyId);
-		newObj.put("label",eachState.groupName);
-		stateBranchAndRoJSON.add(newObj);
-	}
-	stateJSON.put(stateid, stateBranchAndRoJSON)
-}
-context.stateJSON = stateJSON;
-JSONArray stateListJSON = new JSONArray();
-statesList.each{ eachState ->
-		JSONObject newObj = new JSONObject();
-		newObj.put("value",eachState.geoId);
-		newObj.put("label",eachState.geoName);
-		stateListJSON.add(newObj);
-}
-context.stateListJSON = stateListJSON;
+
+	context.formatList = formatList;
 
 JSONArray supplierJSON = new JSONArray();
 JSONObject partyNameObj = new JSONObject();
@@ -117,7 +93,6 @@ isFormSubmitted=parameters.isFormSubmitted;
 context.isFormSubmitted=isFormSubmitted;
 if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	
-	state=parameters.state;
 	branchId=parameters.branchId2;
 	customerId=parameters.customer;
 	SupplierId=parameters.Supplier;
@@ -128,18 +103,14 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	daystart = null;
 	dayend = null; 
 	String supplierName = PartyHelper.getPartyName(delegator,SupplierId,false);
-	String cutomerName = PartyHelper.getPartyName(delegator,customerId,false);
+	String customerName = PartyHelper.getPartyName(delegator,customerId,false);
 	partygroup = delegator.findOne("PartyGroup",["partyId":branchId],false);
-	geo = delegator.findOne("Geo",["geoId":state],false);
-	if(UtilValidate.isNotEmpty(fromDateStr)){
-		context.stateName=geo.geoName;
-	}
+	
 	context.branchIdName=partygroup.groupName
 	context.SupplierIdName=supplierName
-	context.cutomerName=cutomerName
+	context.customerName=customerName
 	context.fromDateStr=fromDateStr
 	context.thruDateStr=thruDateStr
-	context.state=state
 	context.branchId=branchId 
 	context.SupplierId=SupplierId
 	context.customerId=customerId
@@ -229,8 +200,8 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		shipment = delegator.findOne("Shipment",["shipmentId":shipmentDetails.shipmentId],false);
 		String supplier = PartyHelper.getPartyName(delegator,shipment.partyIdFrom,false);
 		tempMap.put("supplier", supplier);
-		String customerName = PartyHelper.getPartyName(delegator,shipment.partyIdTo,false);
-		tempMap.put("customerName", customerName);
+		String custName = PartyHelper.getPartyName(delegator,shipment.partyIdTo,false);
+		tempMap.put("customerName", custName);
 		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , shipmentDetails.orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 		ordHeadSeq=EntityUtil.getFirst(orderHeaderSequences);
 		if(UtilValidate.isNotEmpty(ordHeadSeq)){
