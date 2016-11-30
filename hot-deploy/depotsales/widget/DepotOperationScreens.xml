@@ -805,6 +805,66 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="ShipmentHistory">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Supplier Dispatch Items" />
+			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="ShipmentHistory" />
+				
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- <include-menu name="SupplierReceiptTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+						<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+										<!-- <include-form name="FindShipmentReceiptDepotTrans"
+											location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+											<platform-specific>
+											<html>
+												<html-template
+													location="component://depotsales/webapp/depotsales/depotsales/shipmentHistory.ftl" />
+											</html>
+											</platform-specific>
+										
+											<link text="${uiLabelMap.AccountingExportAsCsv}"  
+														style="buttontext" target="ShipmentsDispatchReport.csv">
+														<parameter param-name="fromDate" from-field="parameters.fromDate" />
+														<parameter param-name="thruDate" from-field="parameters.thruDate" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="Supplier" from-field="parameters.Supplier" />
+														<parameter param-name="state" from-field="parameters.state" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
+									</decorator-section>
+									
+									<decorator-section name="search-results">
+										<screenlet title="">
+											<include-form name="listMaterialShipmentReceiptDepotTrans"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="SupplierPoOverView">
 		<section>
 			<actions>

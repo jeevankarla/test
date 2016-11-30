@@ -183,7 +183,6 @@ for(stateid in statesIdsList){
 	stateJSON.put(stateid, stateBranchAndRoJSON)
 }
 context.stateJSON = stateJSON;
-Debug.log("stateJSON============="+ stateJSON);
 JSONArray stateListJSON = new JSONArray();
 statesList.each{ eachState ->
 		JSONObject newObj = new JSONObject();

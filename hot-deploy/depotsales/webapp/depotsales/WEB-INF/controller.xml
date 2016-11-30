@@ -1712,6 +1712,11 @@
 	       <response name="success" type="view" value="FindSupplierDispatchs"/>
 	       <response name="error" type="view" value="FindSupplierDispatchs"/>
 	     </request-map>
+ 		<request-map uri="ShipmentHistory">
+	       <security https="true" auth="true"/>
+	       <response name="success" type="view" value="ShipmentHistory"/>
+	       <response name="error" type="view" value="ShipmentHistory"/>
+	     </request-map>
 	     <request-map uri="SupplierPoOverView">
 	       <security https="true" auth="true"/>
 	       <response name="success" type="view" value="SupplierPoOverView"/>
@@ -2663,6 +2668,7 @@
      <view-map name="DepotpurchaseInvoiceReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotpurchaseInvoiceReportPDF" content-type="application/pdf"/>
      <view-map name="indentOverViewReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentOverViewReport" content-type="application/pdf"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
+     <view-map name="ShipmentHistory" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ShipmentHistory"/>
      <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
      <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>

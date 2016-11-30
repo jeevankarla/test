@@ -8629,7 +8629,7 @@
 					<field-map field-name="viewIndex" from-field="viewIndex" />
 					<field-map field-name="viewSize" from-field="viewSize" />
 				</service>
-				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" /> 		</actions>
+				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" /> 		</actions>
 			<widgets>
 				<section>
 					<widgets>
