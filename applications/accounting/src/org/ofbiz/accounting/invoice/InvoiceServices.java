@@ -6378,4 +6378,75 @@ public class InvoiceServices {
       return result;
 	}
 	
+	
+	//createPaymentApplicationForInvoiceEmp
+	public static Map<String, Object> createPaymentApplicationForInvoiceEmp(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        Locale locale = (Locale) context.get("locale");     
+        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+        Timestamp paymentDate = (Timestamp) context.get("paymentDate");
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String finAccountId = (String) context.get("finAccountId");
+        String invoicePartyIdFrom =(String) context.get("invoicePartyIdFrom");
+        String invoicePartyIdTo = (String) context.get("invoicePartyIdTo");
+        String invoiceId =(String) context.get("invoiceId");
+        String headerCostCenterId =(String) context.get("headerCostCenterId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Map<String, Object> invoiceResult = ServiceUtil.returnSuccess();
+        BigDecimal amount;
+        String paymentId = "";
+        try{
+        	if(UtilValidate.isNotEmpty(headerCostCenterId) && UtilValidate.isNotEmpty(invoiceId)){
+        		GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), false);
+        		if(UtilValidate.isNotEmpty(invoice)){
+        			invoice.set("costCenterId", headerCostCenterId);
+        			invoice.store();
+        		}
+        	}
+        	invoiceResult = dispatcher.runSync("getInvoiceTotal", UtilMisc.toMap("invoiceId",invoiceId ,"userLogin" ,userLogin));
+        	amount = (BigDecimal)invoiceResult.get("amountTotal");
+        	if (amount.compareTo(ZERO) > 0) {
+        		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentTypeId);
+      	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
+      	        paymentCtx.put("organizationPartyId", invoicePartyIdTo);
+                paymentCtx.put("partyId", invoicePartyIdFrom);
+      	        paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
+      	        paymentCtx.put("statusId", "PMNT_NOT_PAID");
+      	        if (UtilValidate.isNotEmpty(finAccountId) ) {
+      	            paymentCtx.put("finAccountId", finAccountId);                        	
+      	        }
+      	        paymentCtx.put("userLogin", userLogin);
+      	        paymentCtx.put("amount", amount);
+      	        paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+      	        Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+	  	        if (ServiceUtil.isError(paymentResult)) {
+	  	            Debug.logError("Problems in service createPaymentAndApplicationForInvoices", module);
+		  			//request.setAttribute("_ERROR_MESSAGE_", "Error in service createPaymentAndApplicationForInvoices");
+		  			return ServiceUtil.returnError("Problem calling 'createPaymentAndApplicationForInvoices'");
+	  	        }
+	  	        paymentId = (String)paymentResult.get("paymentId");
+        	}
+        	
+        	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+        	setPaymentStatusMap.put("paymentId", paymentId);
+        	setPaymentStatusMap.put("statusId", "PMNT_SENT");
+        	if(UtilValidate.isNotEmpty(finAccountId)){
+        		setPaymentStatusMap.put("finAccountId", finAccountId);
+        	}
+            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+        }
+        catch (GenericServiceException e) {
+            return ServiceUtil.returnError("Problem calling 'createPaymentAndApplicationForInvoices'");
+        }
+        catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Problem updating  'invoice'");
+        }
+        result.put("paymentId",paymentId);
+        return ServiceUtil.returnSuccess("Payment and Application Successful. PaymentId: "+paymentId+", InvoiceId: "+invoiceId);
+	}
+
 }
