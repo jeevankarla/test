@@ -114,7 +114,6 @@ under the License.
 				<#else>  -->
 					<td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
 					<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div></td>
-					
 				<#-- </#if> -->
            </tr> 
           <tr>

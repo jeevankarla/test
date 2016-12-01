@@ -206,7 +206,6 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		shipmentDetailsItr = delegator.find("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
 	}
 	receiptList=[];
-	
 	rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 	while(UtilValidate.isNotEmpty(shipmentDetailsItr) && shipmentDetailsItr.hasNext()){
 		GenericValue shipmentDetails=shipmentDetailsItr.next();
