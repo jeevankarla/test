@@ -18,14 +18,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 <script type= "text/javascript">
 	
 	var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};
 	var supplierJSON=${StringUtil.wrapString(supplierJSON)!'[]'};
 	var cutomerJSON=${StringUtil.wrapString(cutomerJSON)!'[]'};
-
+	var supplierNameJson=${StringUtil.wrapString(partyNameObj)!'[]'};
+	var customerNameJson=${StringUtil.wrapString(partyNameObj2)!'[]'};
 	function makeDatePicker(fromDateId ,thruDateId){
 		$( "#"+fromDateId ).datepicker({
 				dateFormat:'MM d, yy',
@@ -34,7 +33,7 @@ under the License.
 				onSelect: function(selectedDate) {
 				date = $(this).datepicker('getDate');
 				var maxDate = new Date(date.getTime());
-		        	maxDate.setDate(maxDate.getDate() + 31);
+		        	maxDate.setDate(maxDate.getDate() + 180);
 					$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
 					//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 				}
@@ -53,24 +52,29 @@ under the License.
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
 			$('#ui-datepicker-div').css('clip', 'auto'); 
 			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});
-			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});
+			
 					
 		});
 
-    function getbranchesByState(state ,branchId){
+    function getbranchesByState(state){
        	var stateId=state.value;
+       	$("#cutomerId").val("");
        	var optionList = '';
 			var list= stateJSON[stateId];
-			if (list && list.length>0) {	
-	        	for(var i=0 ; i<list.length ; i++){
-					var innerList=list[i];	     
-	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
-	      		}//end of main list for loop
-	      	}
-	      	jQuery("[name='"+branchId+"']").html(optionList);
+			$("#cutomerId").autocomplete({ source: list }).keydown(function(e){});
        }	
 	
-	
+	   function displayName(state,flag){
+       	var id=state.value;
+       	if(flag=="customer"){
+       		customerName=customerNameJson[id];
+       		 $("#customerName").html(customerName);
+       	}else{
+       		supplierName=supplierNameJson[id];
+       		 $("#SupplierName").html(supplierName);
+       	}      	
+       }	
+
 </script>
 
 
@@ -82,7 +86,7 @@ under the License.
       <form method="post" name="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
           <tr>
-	              <td>Branch <br><select name="branchId2" id="branchId">
+	              <td>Branch <br><select name="branchId2" id="branchId" onchange="javascript:getbranchesByState(this);">
 	              <#if branchIdName?has_content>
 		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
  	              </#if>
@@ -93,19 +97,22 @@ under the License.
 				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/> </td> 
 		  </tr> 
 		  <tr>
-				 <#if customerName?has_content>
-		         	<td>Agency <br> <input  type="text" size="14pt"  id="cutomerId"  name="cutomerName" value="${customerName?if_exists}"/>
+				<#--  <#if customerName?has_content>
+		         	<td>Agency <br> <input  type="text" size="25pt"  id="cutomerId"  name="cutomerName"  onblur="javascript:displayName(this,'customer');" />
 		            <input  type="hidden" size="14pt"   name="customer" value="${customerId?if_exists}"/></td>
-				<#else>
-					<td>Agency <br> <input  type="text" size="14pt" id="cutomerId"   name="customer"/></td>
-				</#if> 
+				<#else> -->
+					<td>Agency <br> <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onblur="javascript:displayName(this,'customer');" />
+					<div id="customerName"><#if customerName?has_content>  ${customerName?if_exists} </#if></div>
+					</td>
+				<#-- </#if> --> 
 
-				 <#if SupplierIdName?has_content>
-					<td>Supplier <input  type="text" size="14pt"  id="SupplierId"  name="SupplierName" value="${SupplierIdName?if_exists}"/>
+				<#-- <#if SupplierIdName?has_content>
+					<td>Supplier <input  type="text" size="25pt"  id="SupplierId"  name="SupplierName" value="${SupplierIdName?if_exists}" onblur="javascript:displayName(this,'supplier');"  />
 					<input  type="hidden" size="14pt"    name="Supplier" value="${SupplierId?if_exists}"/></td>
-				<#else>
-					<td>Supplier <input  type="text" size="14pt" id="SupplierId"   name="Supplier"/></td>
-				</#if>
+				<#else>  -->
+					<td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
+					<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div></td>
+				<#-- </#if> -->
            </tr> 
           <tr>
           		<#if fromDateStr?has_content>
