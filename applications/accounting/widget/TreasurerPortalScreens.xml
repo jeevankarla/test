@@ -5886,5 +5886,101 @@
     			</widgets>
     		</section>
 	</screen>
+	
+	<screen name="OGAPCreateInvoiceForEmployee">
+        <section>
+            <actions>
+            <set field="titleProperty" value="Employee Outgoing Advance Receipts"/>
+                <set field="tabButtonItem" value="FindEmployeeAdv"/>
+            	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+            	<set field="defaultOrganizationPartyId" value="HO"/>
+            	<set field="purposeTypeId"  value="${parameters.purposeTypeId}"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                        
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js" global="true"/>
+                <set field="headerItem" value="invoices"/>
+                <set field="screenflag" value="OutgoingAdvancesPaid"/>
+                <set field="invoiceId" value="${parameters.invoiceId}" />
+                <set field="finAccountId" value="${parameters.finAccountId}" />
+                
+               <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/createInvoice.groovy"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
+                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+                 <set field="titleProperty" value="${invoiceCreateScreenTitle}"/>
+                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
+                </service>
+                <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>
+                <entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/DisplayInvoiceItemTypes.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
+					<condition-expr field-name="parentTypeId" value="PAYROL" />
+				</entity-condition>
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolList"></entity-condition>
+				<service service-name="acctgInvoicePermissionCheck"	result-map="permResult">
+					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+				</service>
+				<set field="invoiceId" value="${invoice.invoiceId}" />
+				<set field="showCreateButton" value="${parameters.showCreateButton}" />
+				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->		
+                        <section>
+                            <widgets>
+                                <screenlet title="${invoiceCreateScreenTitle}">
+                                    <include-form name="CreateInvoiceForPayment" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+							<condition>
+								<and>
+									<not><if-empty field="invoice" /></not>
+									<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_IN_PROCESS" />
+									<if-compare field="invoice.invoiceTypeId" operator="not-equals"	value="PAYROL_INVOICE" />
+									<or>
+										<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+										<if-compare operator="equals" value="true" field="hasApInvoiceEditPermission" />
+									</or>
+								</and>
+							</condition>
+							<widgets>
+								<platform-specific>
+					                           	<html><html-template location="component://accounting/webapp/accounting/invoice/AddPurchaseInvoiceItemsDetEmp.ftl"/></html>
+					             </platform-specific>
+							</widgets>
+						</section>
+						
+						<section><!-- Display InvoiceItem types before creating invoice -->
+							<condition>
+								<and>
+									<if-empty field="invoice" />
+									<or>
+										<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+										<if-compare operator="equals" value="true" field="hasApInvoiceEditPermission" />
+									</or>
+								</and>
+							</condition>
+							<widgets>
+								 <platform-specific >
+					                           	<html><html-template location="component://accounting/webapp/accounting/invoice/DisplayInvoiceItemTypes.ftl"/></html>
+					             </platform-specific>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	  
 </screens>

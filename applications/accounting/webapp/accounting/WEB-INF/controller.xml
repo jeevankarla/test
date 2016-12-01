@@ -4159,6 +4159,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OGAPCreateInvoiceForPayment"/>
     </request-map>
+    <request-map uri="OGAPCreateInvoiceForEmployee">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OGAPCreateInvoiceForEmployee"/>
+    </request-map>  
     <request-map uri="EmpOGAPCreateInvoiceForPayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmpOGAPCreateInvoiceForPayment"/>
@@ -4170,6 +4174,14 @@ under the License.
             <redirect-parameter name="paymentId"/>
         </response>
         <response name="error" type="view" value="OutgoingAdvancesPaid"/>    
+    </request-map>
+    <request-map uri="OGAPCreatePaymentAppForInvoiceEmp">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="createPaymentApplicationForInvoiceEmp"/>        
+       <response name="success" type="request-redirect" value="FindEmployeeAdv">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="view" value="FindEmployeeAdv"/>    
     </request-map>
     <request-map uri="EmpOGAPCreatePaymentAppForInvoice">
        <security https="true" auth="false"/>
@@ -4830,6 +4842,7 @@ under the License.
    <view-map name="FindAPGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPGroupPayment"/>
    <view-map name="PartyPrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyPrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="OGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OGAPCreateInvoiceForPayment"/>
+   <view-map name="OGAPCreateInvoiceForEmployee" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OGAPCreateInvoiceForEmployee"/>
    <view-map name="EmpOGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmpOGAPCreateInvoiceForPayment"/>
    <view-map name="PaymentAccountingTransPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#PaymentAccountingTransPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="DepRctAcctgTransReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#DepRctAcctgTransReportPdf" content-type="application/pdf" encoding="none"/>

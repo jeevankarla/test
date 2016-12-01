@@ -340,6 +340,13 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
+        <field name="createInvoice" widget-style="buttontext" use-when="&quot;${actualBalance}&quot; != &quot;0&quot;">
+        	<hyperlink target="OGAPCreateInvoiceForEmployee" description="Create Invoice" target-window="_blank">
+                <parameter param-name="partyIdFrom" from-field="ownerPartyId"/>
+                <parameter param-name="partyId" value="Company"/>
+                <parameter param-name="finAccountId" from-field="finAccountId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="ListDepositTransactions" type="list" separate-columns="true"  list-name="finAccountTransList" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">

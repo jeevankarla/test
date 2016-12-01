@@ -17,8 +17,16 @@ context.paymentId=paymentId;
 partyIdFrom=parameters.partyIdTo;
 partyId=parameters.partyIdFrom;
 String invoiceId=null;
+String finAccountId="";
 if(UtilValidate.isNotEmpty(parameters.invoiceId)){
 	invoiceId=parameters.invoiceId;
+}
+if(UtilValidate.isEmpty(partyIdFrom)){
+	partyIdFrom = parameters.partyIdFrom;
+	partyId = parameters.partyId;
+}
+if(UtilValidate.isNotEmpty(parameters.finAccountId)){
+	finAccountId=parameters.finAccountId;
 }
 if((UtilValidate.isNotEmpty(actionSubTabButtonValue) && actionSubTabButtonValue!="updateInvoice") || UtilValidate.isEmpty(parameters.invoiceId)){
 	Map<String, Object> createInvoiceContext = FastMap.newInstance();
@@ -37,6 +45,8 @@ if((UtilValidate.isNotEmpty(actionSubTabButtonValue) && actionSubTabButtonValue!
 	createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
 	createInvoiceContext.put("userLogin", userLogin);
 	
+	
+	serviceResults = [:];
 	try {
 		serviceResults = dispatcher.runSync("createInvoice",createInvoiceContext);
 		if(ServiceUtil.isError(resultCtx)){
@@ -59,6 +69,5 @@ if((UtilValidate.isNotEmpty(screenflag)) && screenflag=="IncomingAdvancesReceive
 }
 
 parameters.invoiceId=invoiceId;
-
-
+parameters.finAccountId=finAccountId;
 

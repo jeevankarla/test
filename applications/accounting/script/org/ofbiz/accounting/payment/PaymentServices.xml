@@ -362,6 +362,9 @@ under the License.
         		</entity-one>
         		
         	<set field="finAccountId" from-field="paymentMethod.finAccountId"/>
+        	<if-empty field="finAccountId">
+        	<set field="finAccountId" from-field="parameters.finAccountId"/>
+        	</if-empty>
         	<if-not-empty field="finAccountId">
         	<entity-one value-field="finAccount" entity-name="FinAccount">
         	<field-map field-name="finAccountId" from-field="finAccountId"/>
