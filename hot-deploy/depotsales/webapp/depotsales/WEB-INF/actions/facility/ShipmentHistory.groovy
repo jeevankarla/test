@@ -130,7 +130,6 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	String supplierName = PartyHelper.getPartyName(delegator,SupplierId,false);
 	String customerName = PartyHelper.getPartyName(delegator,customerId,false);
 	partygroup = delegator.findOne("PartyGroup",["partyId":branchId],false);
-	
 	context.branchIdName=partygroup.groupName
 	context.SupplierIdName=supplierName
 	context.customerName=customerName

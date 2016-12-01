@@ -839,7 +839,6 @@
 													location="component://depotsales/webapp/depotsales/depotsales/shipmentHistory.ftl" />
 											</html>
 											</platform-specific>
-										
 											<link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />
