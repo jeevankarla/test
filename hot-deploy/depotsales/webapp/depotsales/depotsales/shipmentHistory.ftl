@@ -18,8 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 <script type= "text/javascript">
 	
 	var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};

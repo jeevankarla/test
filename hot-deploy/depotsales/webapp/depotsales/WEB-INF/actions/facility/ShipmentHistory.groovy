@@ -20,8 +20,6 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
-
-
 List formatList = [];
 	
 	List<GenericValue> partyClassificationList = null;
