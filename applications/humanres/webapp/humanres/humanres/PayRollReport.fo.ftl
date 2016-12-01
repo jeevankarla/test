@@ -163,21 +163,7 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Office                         : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<#assign panNumber = "">
-                     		 						<#if partyId?has_content>
-                 		 								<#assign panDetails = delegator.findOne("PartyIdentification", {"partyId" : partyId,"partyIdentificationTypeId","PAN_NUMBER"}, true)>
-                 		 								<#if panDetails?has_content>
-                 		 									<#assign panNumber = panDetails.get("idValue")>
-                 		 								</#if>
-                 		 							<#elseif emplDetails.employeeId?has_content>
-                 		 								<#assign panDetails = delegator.findOne("PartyIdentification", {"partyId" : emplDetails.employeeId,"partyIdentificationTypeId","PAN_NUMBER"}, true)>
-                 		 								<#if panDetails?has_content>
-                 		 									<#assign panNumber = panDetails.get("idValue")>
-                 		 								</#if>
-                 		 							<#else>
-                 		 							</#if>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN           : ${panNumber}</fo:block>
-                     		 						
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN           : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("panNumber")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
@@ -273,7 +259,7 @@ under the License.
                     			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
                     			<#assign lateMin=emplLeavesDetails.get("lateMin")?if_exists>
                     			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
-                    			<#assign arrearDays=emplLeavesDetails.get("noOfArrearDays")?if_exists>
+                    			<#--<#assign arrearDays=emplLeavesDetails.get("noOfArrearDays")?if_exists>-->
                     			<#assign noOfPayableDays=emplLeavesDetails.get("noOfPayableDays")?if_exists>
                     			<#assign lateMinStr=emplLeavesDetails.get("lateMinStr")?if_exists>
                     		</#if> 
@@ -281,13 +267,13 @@ under the License.
                     		<#assign latemin=0>
                     		<#if lossOfPay?has_content><#assign lossOfpay=lossOfPay></#if>
                     		<#if lateMin?has_content><#assign latemin=lateMin></#if>
-                    		<#assign netPaidDays=(noOfPayableDays-arrearDays)>                		
+                    		<#assign netPaidDays=noOfPayableDays-arrearDays>                		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${totalDays?if_exists}  days</#if></fo:block>
                         		<#--<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>-->
                         		<#--<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>-->
-                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${(netPaidDays?if_exists)}  days</#if></fo:block>                        		
+                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${netPaidDays?if_exists}  days</#if></fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
