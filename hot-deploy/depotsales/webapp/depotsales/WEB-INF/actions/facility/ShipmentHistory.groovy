@@ -20,7 +20,12 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
-List formatList = [];
+isReport=parameters.isReport;
+isFormSubmitted=parameters.isFormSubmitted;
+context.isFormSubmitted=isFormSubmitted;
+
+if(UtilValidate.isEmpty(isReport)){
+	List formatList = [];
 	
 	List<GenericValue> partyClassificationList = null;
 		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
@@ -66,52 +71,53 @@ JSONObject partyNameObj = new JSONObject();
 
 JSONObject stateJSON = new JSONObject();
 JSONObject partyNameObj2 = new JSONObject();
-
-
-for(branch in formatList){
-	JSONArray cutomerJSON = new JSONArray();
-	partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , branch.payToPartyId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
-	partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
-	partyRelationship2 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
-	if(UtilValidate.isNotEmpty(partyRelationship2)){
-		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship2, "partyIdTo", true);
-	}
-	
-	Condition1=[];
-	Condition1.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_TO_CUSTOMER"));
-	Condition1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIds));
-	customersList=delegator.findList("PartyRole", EntityCondition.makeCondition(Condition1, EntityOperator.AND),null,null,null,false);
-	partyIds2 = EntityUtil.getFieldListFromEntityList(customersList, "partyId", true);
-	customersList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds2), null, null, null, false);
-	if(customersList){
-		customersList.each{ supplier ->
-			JSONObject newObj = new JSONObject();
-			conditionList =[];
-			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , supplier.ownerPartyId));
-			/*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"));*/
-			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			partyList = delegator.findList("Party", condition, null, null, null, false);
-			partyDetails = EntityUtil.getFirst(partyList);
-			if(UtilValidate.isNotEmpty(partyDetails)){
-				newObj.put("value",partyDetails.partyId);
-				partyName=PartyHelper.getPartyName(delegator, partyDetails.partyId, false);
-				newObj.put("label",partyName+"["+partyDetails.partyId+"]");
-				cutomerJSON.add(newObj);
-				partyNameObj2.put(partyDetails.partyId,partyName);
+if(UtilValidate.isEmpty(isReport)){
+	for(branch in formatList){
+		JSONArray cutomerJSON = new JSONArray();
+		partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , branch.payToPartyId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
+		partyRelationship2 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		if(UtilValidate.isNotEmpty(partyRelationship2)){
+			partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship2, "partyIdTo", true);
+		}
+		
+		Condition1=[];
+		Condition1.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_TO_CUSTOMER"));
+		Condition1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIds));
+		customersList=delegator.findList("PartyRole", EntityCondition.makeCondition(Condition1, EntityOperator.AND),null,null,null,false);
+		partyIds2 = EntityUtil.getFieldListFromEntityList(customersList, "partyId", true);
+		customersList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds2), null, null, null, false);
+		if(customersList){
+			customersList.each{ supplier ->
+				JSONObject newObj = new JSONObject();
+				conditionList =[];
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , supplier.ownerPartyId));
+				/*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"));*/
+				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				partyList = delegator.findList("Party", condition, null, null, null, false);
+				partyDetails = EntityUtil.getFirst(partyList);
+				if(UtilValidate.isNotEmpty(partyDetails)){
+					newObj.put("value",partyDetails.partyId);
+					partyName=PartyHelper.getPartyName(delegator, partyDetails.partyId, false);
+					newObj.put("label",partyName+"["+partyDetails.partyId+"]");
+					cutomerJSON.add(newObj);
+					partyNameObj2.put(partyDetails.partyId,partyName);
+				}
 			}
 		}
+		stateJSON.put(branch.payToPartyId, cutomerJSON)
 	}
-	stateJSON.put(branch.payToPartyId, cutomerJSON)
 }
 
 context.supplierJSON=supplierJSON;
 context.stateJSON=stateJSON;
 context.partyNameObj2=partyNameObj2;
 context.partyNameObj=partyNameObj;
-isFormSubmitted=parameters.isFormSubmitted;
-context.isFormSubmitted=isFormSubmitted;
+
+}
+
 if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
-	
+	conditionList=[];
 	branchId=parameters.branchId2;
 	customerId=parameters.customer;
 	SupplierId=parameters.Supplier;
@@ -124,7 +130,6 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	String supplierName = PartyHelper.getPartyName(delegator,SupplierId,false);
 	String customerName = PartyHelper.getPartyName(delegator,customerId,false);
 	partygroup = delegator.findOne("PartyGroup",["partyId":branchId],false);
-	
 	context.branchIdName=partygroup.groupName
 	context.SupplierIdName=supplierName
 	context.customerName=customerName
@@ -233,6 +238,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		receiptList.add(tempMap);
 	}
 	context.receiptList=receiptList;
+	Debug.log("receiptList==============="+ receiptList);
 
 }
 

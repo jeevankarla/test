@@ -839,15 +839,15 @@
 													location="component://depotsales/webapp/depotsales/depotsales/shipmentHistory.ftl" />
 											</html>
 											</platform-specific>
-										
 											<link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />
 														<parameter param-name="thruDate" from-field="parameters.thruDate" />
 														<parameter param-name="branchId2" from-field="parameters.branchId2" />
 														<parameter param-name="Supplier" from-field="parameters.Supplier" />
-														<parameter param-name="state" from-field="parameters.state" />
+														<parameter param-name="customer" from-field="parameters.customer" />
 														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+														<parameter param-name="isReport" value="YES" />
 													</link>
 									</decorator-section>
 									
