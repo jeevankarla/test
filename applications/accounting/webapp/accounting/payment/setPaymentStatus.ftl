@@ -121,9 +121,7 @@
 					message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Cheque In favour of:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'value='${chequeInFavour?if_exists}'/></td></tr>";
 			}
 		}
-		if(testFlag == true){
 		message +=	"<input type='hidden' name='depositReceiptFlag' id='depositReceiptFlag' value='Y'/>";
-		}
 		message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
 		message += "<input type='hidden' name='paymentId' id='paymentId' value='${payment.paymentId?if_exists}'/> <input type='hidden' name='statusId' id='statusId' value='${statusId?if_exists}'/>"+
 					"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='setPaymentStatus' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
