@@ -31,7 +31,7 @@ orgPartyId = null;
 
 
 if(UtilValidate.isNotEmpty(parameters.OrganizationId)){
-	parameters.partyIdFrom=parameters.OrganizationId;
+	//parameters.partyIdFrom=parameters.OrganizationId;
 }
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 //context.put("customTimePeriod",customTimePeriod);
@@ -123,6 +123,27 @@ List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("emp
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
+
+OrganizationId = parameters.OrganizationId;
+if(OrganizationId != "Company"){
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+  				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+  						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS  ,"INTERNAL_ORGANIZATIO"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS  ,"EMPLOYEE"));
+	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS  ,OrganizationId));
+	employementAndPerson = delegator.findList("EmploymentAndPerson", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(employementAndPerson)){
+		employementIds = EntityUtil.getFieldListFromEntityList(employementAndPerson, "partyIdTo", true);
+	}
+}
+
+Debug.log("employementIds================"+employementIds);
+
+
+
+
 periodBillIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
 conList = [];
 conList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillIds));
@@ -157,6 +178,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	}
 	if(UtilValidate.isEmpty(parameters.employeeId)){
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+		
+		Debug.log("employementIds==============================")
+		
 	}
 	/*if(UtilValidate.isNotEmpty(deptId)){
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
@@ -170,6 +194,10 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
+	
+	
+	Debug.log("payRollHeaderList=========================="+payRollHeaderList);
+	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
 		payrollHeader = payRollHeaderList[0];
 		if(UtilValidate.isNotEmpty(payrollHeader)){
@@ -326,7 +354,14 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			bankAdviceDetailsMap.put("netAmt",netAmount);
 			if(UtilValidate.isNotEmpty(bankAdviceDetailsMap) && (netAmount !=0)){
 				BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
-			}		
+			}	
+			panDetails = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId",bankAdviceDetailsMap.get("emplNo"),"partyIdentificationTypeId","PAN_NUMBER"), false);
+			
+			panNumber = "";
+			if(UtilValidate.isNotEmpty(panDetails)){
+				panNumber = panDetails.get("idValue");
+			}
+			bankAdviceDetailsMap["panNumber"]=panNumber;
 			//getting actual Basic, DA, HRA for employee
 			/*basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, userLogin : userLogin, proportionalFlag:"Y"]);
 			Map salaryDetailsMap=FastMap.newInstance();
@@ -364,6 +399,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					  noOfArrearDays = emplAttendanceDetails.get("noOfArrearDays");
 					  noOfPayableDays = emplAttendanceDetails.get("noOfPayableDays");
 					  
+					  
+					  
+					  
 					  if(UtilValidate.isNotEmpty(lateMin)){
 						  lateMinNew = lateMin.multiply(480).setScale(2,BigDecimal.ROUND_HALF_UP);
 					  }
@@ -378,7 +416,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 							  int finalMin = minutes.multiply(0.6).setScale(0,BigDecimal.ROUND_HALF_UP);
 							  lateMinStr = hours + " hrs " + finalMin + " min ";
 						 }
-					  }					 
+					  }	
 					  emplAttndDetailsMap.putAt("noOfCalenderDays", noOfCalenderDays);
 					  emplAttndDetailsMap.putAt("lateMin", lateMin);
 					  emplAttndDetailsMap.putAt("lateMinStr", lateMinStr);
