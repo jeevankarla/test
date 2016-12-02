@@ -332,6 +332,10 @@ under the License.
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForAcctgTrans">
         <attribute name="acctgTransId" mode="IN" optional="true" type="String"/>
     </service>
+    <service name="createAccountingRoleForFinTrans" engine="java" default-entity-name="FinAccountTransRole"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForFinTrans">
+        <attribute name="finAccountTransId" mode="IN" optional="true" type="String"/>
+    </service>
     <service name="removeInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceRole">
         <description>Remove an existing Invoice Role Record</description>
