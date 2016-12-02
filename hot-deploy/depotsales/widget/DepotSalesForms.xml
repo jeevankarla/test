@@ -1768,9 +1768,7 @@
       	</field> -->
       	<field name="shipmentId" title="GRN ShipmentId"><display/></field>
       	<field name="categoryName" title="Category"><display/></field>
-      	<field name="productId" title="Product Name">
-      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
-      	</field>
+      	<field name="productName" title="Product Name"><display/></field>
       	<field name="supplier" title="Supplier"><display/></field>
         <field name="datetimeReceived" title="Received Date"><display/></field>
         <field name="quantityAccepted" title="Quantity(Kgs)"><display/></field>

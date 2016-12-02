@@ -183,11 +183,11 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	conditionList.clear();
 	shipmentIds=[];
 	shipmentDetailsItr=null;
-	if(UtilValidate.isNotEmpty(robranchIds)){
+	if(UtilValidate.isNotEmpty(robranchIds)){ 
 		/*conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, purchaseOrderIds));*/
 		if(UtilValidate.isNotEmpty(daystart)){
-			conditionList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
-			conditionList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
+			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
+			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
 		}
 		if(UtilValidate.isNotEmpty(SupplierId)){
 			shipment = delegator.findList("Shipment",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , SupplierId)  , UtilMisc.toSet("shipmentId"), null, null, false );
@@ -205,7 +205,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		shipment = delegator.findList("Shipment",EntityCondition.makeCondition(innerCondition, EntityOperator.AND)  , UtilMisc.toSet("shipmentId"), null, null, false );
 		shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-	
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_CANCELLED"));
 		shipmentDetailsItr = delegator.find("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
 	}
 	receiptList=[];
@@ -214,7 +214,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		GenericValue shipmentDetails=shipmentDetailsItr.next();
 		tempMap=[:];
 		//tempMap.put("receiptId", shipmentDetails.receiptId)
-		tempMap.put("datetimeReceived", UtilDateTime.toDateString(shipmentDetails.datetimeReceived,"dd-MM-yyyy"))
+		tempMap.put("datetimeReceived", UtilDateTime.toDateString(shipmentDetails.supplierInvoiceDate,"dd-MM-yyyy"))
 		tempMap.put("statusId", shipmentDetails.statusId);
 		tempMap.put("shipmentId", shipmentDetails.shipmentId)
 		tempMap.put("quantityAccepted", shipmentDetails.quantityAccepted);

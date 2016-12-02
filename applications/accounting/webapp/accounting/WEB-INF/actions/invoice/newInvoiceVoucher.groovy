@@ -1147,7 +1147,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 }else{
 
 tallySalesNo = invoiceList.get("referenceNumber");
-
 context.partyId = partyId;
 invoiceDate = invoiceList.get("invoiceDate");
 context.invoiceDate = invoiceDate;
@@ -1161,7 +1160,6 @@ conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator
 fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
 FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
-
 
 
 isDepot = "";
@@ -1193,7 +1191,6 @@ carrierName = "";
 estimatedShipCost = "";
 estimatedShipDate = "";
 destination = "";
-
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
@@ -1229,13 +1226,13 @@ destination = shipmentList.get("destination");
 
 estimatedShipCost = shipmentList.get("estimatedShipCost");
 
-
 if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate"))){
 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
+context.deliveryChallanDate = deliveryChallanDate;
 }
 
-context.deliveryChallanDate = deliveryChallanDate;
+
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 
 
@@ -1254,7 +1251,6 @@ context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
 context.passNo = passNo;
 context.estimatedShipDate = estimatedShipDate;
-
 
 
 conditionList = [];
@@ -1359,7 +1355,6 @@ for (eachList in invoiceItemList) {
 		   }
 	}
 	 }
-	 
 	 
 	if(itemAdjustList){
 		invoiceItemLevelAdjustments.put(i, itemAdjustList);
