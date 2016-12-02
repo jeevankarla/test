@@ -9129,8 +9129,43 @@
             </widgets>
         </section>
     </screen>
-    
-    
+    <screen name="delayedShipmentAnalytics">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="Delayed Shipment Analytics"/>
+  				<set field="tabButtonItem" value="analytics" />		            
+				<set field="tabButtonItem2" value="delayedShipmentAnalytics" />
+				<set field="ajaxUrl" value="delayedShipmentAnalyticsInternal" type="String" global="true"/>                      
+<!-- 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" /> -->
+				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+                 <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+					<decorator-section name="body">
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+                    		<platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific> 
+					</decorator-section>
+				</decorator-screen>	                    	               
+            </widgets>
+        </section>
+    </screen>
+    <screen name="delayedShipmentAnalyticsInternal">
+        <section>      
+    		<actions>
+    			<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/delayedShipmentAnalytics.groovy" />
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://depotsales/webapp/depotsales/analytics/delayedShipmentAnalytics.ftl"/></html>
+                </platform-specific>                 
+            </widgets>
+        </section>
+    </screen>
 	
 	
 </screens>
