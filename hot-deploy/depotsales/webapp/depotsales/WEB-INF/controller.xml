@@ -786,10 +786,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinancialHistoryWithDrCrDepotPDF"/>
         <response name="error" type="view" value="PartyFinancialHistoryWithDrCrDepotPDF"/>
-    </request-map>
+    </request-map>  
     <request-map uri="stockPositionReportDepot.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="stockPositionReportDepotPDF"/>
+    </request-map>  
+     <request-map uri="pendingShipmentsReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="pendingShipmentsReportPDF"/>
+    </request-map>
+     <request-map uri="pendingShipmentsReport.csv">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="pendingShipmentsReportCSV"/>
     </request-map>
     <request-map uri="CashierPaymentCheckListDepot">
         <security https="true" auth="true"/>                        
@@ -1713,7 +1721,7 @@
 	       <response name="error" type="view" value="FindSupplierDispatchs"/>
 	     </request-map>
  		<request-map uri="ShipmentHistory">
-	       <security https="true" auth="true"/>
+	        <security https="false" auth="false" />
 	       <response name="success" type="view" value="ShipmentHistory"/>
 	       <response name="error" type="view" value="ShipmentHistory"/>
 	     </request-map>
@@ -1790,6 +1798,11 @@
     <request-map uri="getCountryStateList">
           <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
+        <response name="success" type="request" value="json"/>  
+    </request-map>
+    <request-map uri="getBranchCutomers">
+        <security https="false" auth="false"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/"  invoke="ShipmentHistory.groovy"/>
         <response name="success" type="request" value="json"/>  
     </request-map>
     <request-map uri="createPOContent">
@@ -2315,7 +2328,7 @@
 	     <response name="error" type="view" value="depotReimburcentReportPDF"/>
     </request-map> 
     <request-map uri="ShipmentsDispatchReport.csv">
-        <security auth="true" https="true"/>
+        <security auth="false" https="false"/>
          <response name="success" type="view" value="ShipmentsDispatchReportCSV"/>
 	     <response name="error" type="view" value="ShipmentsDispatchReportCSV"/>
     </request-map>
@@ -2580,6 +2593,8 @@
     <view-map name="productCategoryReportPdf" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#productCategoryReportPdf" content-type="application/pdf"/>
     <view-map name="PartyFinancialHistoryWithDrCrDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PartyFinancialHistoryWithDrCrDepotPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="stockPositionReportDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockPositionReportDepotPDF" content-type="application/pdf"/>
+    <view-map name="pendingShipmentsReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#pendingShipmentsReportPDF" content-type="application/pdf"/> 
+    <view-map name="pendingShipmentsReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#pendingShipmentsReportCSV" content-type="text/csv"/>
     <view-map name="CashierPaymentCheckListDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#CashierPaymentCheckListDepot" content-type="application/pdf" encoding="none"/>
      <view-map name="partyAbsractDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#partyAbsractDetailsCSV" content-type="text/csv"/>
     <view-map name="searchProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#searchProduct"/>
