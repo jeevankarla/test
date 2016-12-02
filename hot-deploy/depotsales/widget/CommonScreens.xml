@@ -57,6 +57,24 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="NoAuthDepotSalesCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="MyPortalDepotSalesFacilityTreeNg">
         <section>
             <actions>

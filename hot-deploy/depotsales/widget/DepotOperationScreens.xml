@@ -821,7 +821,7 @@
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="NoAuthDepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <include-menu name="SupplierReceiptTabBar"

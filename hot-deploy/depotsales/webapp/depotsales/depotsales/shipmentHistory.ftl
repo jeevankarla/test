@@ -24,6 +24,7 @@ under the License.
 	var supplierJSON=${StringUtil.wrapString(supplierJSON)!'[]'};
 	var cutomerJSON=${StringUtil.wrapString(cutomerJSON)!'[]'};
 	var supplierNameJson=${StringUtil.wrapString(partyNameObj)!'[]'};
+	var customerNameJson={}
 	var customerNameJson=${StringUtil.wrapString(partyNameObj2)!'[]'};
 	function makeDatePicker(fromDateId ,thruDateId){
 		$( "#"+fromDateId ).datepicker({
@@ -52,16 +53,33 @@ under the License.
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
 			$('#ui-datepicker-div').css('clip', 'auto'); 
 			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});
-			
-					
+			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});
 		});
 
-    function getbranchesByState(state){
-       	var stateId=state.value;
-       	$("#cutomerId").val("");
-       	var optionList = '';
-			var list= stateJSON[stateId];
+    function getbrancheCustomers(state){
+       	var bId=state.value;
+       	var dataMap = {};
+      	$("#cutomerId").val("");
+      	$("#SupplierId").val("");
+      	$("#customerName").html("");
+      	$("#SupplierName").html("");
+		dataMap["bId"] = bId;
+		jQuery.ajax({
+            url: 'getBranchCutomers',
+            async: false,
+            type: 'POST',
+            data: dataMap,
+            dataType: 'json',
+            success: function(result) {
+            var list = result["stateJSON"];
+            customerNameJson=result["partyNameObj2"];
 			$("#cutomerId").autocomplete({ source: list }).keydown(function(e){});
+            },
+            error: function (xhr, textStatus, thrownError){
+				alert("record not found :: Error code:-  "+xhr.status);
+			}
+        });	
+		
        }	
 	
 	   function displayName(state,flag){
@@ -86,7 +104,7 @@ under the License.
       <form method="post" name="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
           <tr>
-	              <td>Branch <br><select name="branchId2" id="branchId" onchange="javascript:getbranchesByState(this);">
+	              <td>Branch <br><select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
 	              <#if branchIdName?has_content>
 		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
  	              </#if>
