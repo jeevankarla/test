@@ -278,7 +278,7 @@ under the License.
               <#assign i = i+1>
 		      <#assign sr = sr+1> 
 		   
-		   </#list>
+		   </#list> 
 			
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell border-style="solid">
@@ -354,7 +354,7 @@ under the License.
              <#assign entryTax = 0>
              
              
-		<#if !kanAndKalRo?has_content>
+		
             <#list invoiceRemainigAdjItemList as eachList>
             
             <#if eachList.invoiceItemTypeId == "ENTRY_TAX">
@@ -362,13 +362,12 @@ under the License.
             </#if>
             
 			<fo:table-row white-space-collapse="false">
-			 <fo:table-cell >
-				<fo:block text-align="left"    font-size="10pt" ></fo:block>
+				
+			    <fo:table-cell >
+					<fo:block text-align="left"    font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
-				<fo:block text-align="left"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
-				</#if>
+				
 				</fo:table-cell>
 				<fo:table-cell >
 				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
@@ -378,12 +377,12 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
 				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
-				<fo:block text-align="right"    font-size="10pt" ><#if eachList.itemValue?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
+				<fo:block text-align="right"    font-size="10pt" > <#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if> :<#if eachList.itemValue?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
 			</fo:table-row>
 			</#list>
-		</#if>
+		  
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell number-columns-spanned="2" >
          			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
@@ -394,9 +393,9 @@ under the License.
 	        </fo:table-cell>
 	        <fo:table-cell  >
 				<#if !kanAndKalRo?has_content>
-						<fo:block text-align="left" font-size="10pt">Sale Value(RS):${((grandTotal+totTaxAmount+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
+						<fo:block text-align="right" font-size="10pt">Sale Value(RS):${((grandTotal+totTaxAmount+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
 					<#else>
-						<fo:block text-align="left"    font-size="10pt" >Sale Value(RS):${((grandTotal+totTaxAmount2+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
+						<fo:block text-align="right"    font-size="10pt" >Sale Value(RS):${((grandTotal+totTaxAmount2+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
 				</#if>		
                 
                 <#if !kanAndKalRo?has_content && serchar?has_content>
