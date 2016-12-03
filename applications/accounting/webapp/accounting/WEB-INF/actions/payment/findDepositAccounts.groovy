@@ -73,7 +73,35 @@ if ("Y".equals(parameters.noConditionFind)) {
 	   }
 	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-fromDate");				
-	depositAccounts = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
+	finAccountList = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
+	List depositAccounts = [];
+	for(GenericValue finAccountEntry:finAccountList){
+		tempMap = [:];
+		tempMap["finAccountId"]=finAccountEntry.finAccountId;
+		tempMap["finAccountTypeId"]=finAccountEntry.finAccountTypeId;
+		tempMap["finAccountName"]=finAccountEntry.finAccountName;
+		tempMap["ownerPartyId"]=finAccountEntry.ownerPartyId;
+		tempMap["fromDate"]=finAccountEntry.fromDate;
+		tempMap["actualBalance"]=finAccountEntry.actualBalance;
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountEntry.finAccountId));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, finAccountEntry.ownerPartyId));
+		condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List finAccountTransList = delegator.findList("FinAccountTrans", condition, null, null, null, false);
+		List depositFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "DEPOSIT"));
+		List withDrawFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
+		BigDecimal depositAmt = BigDecimal.ZERO;
+		BigDecimal adjustAmt = BigDecimal.ZERO;
+		for(GenericValue depositFinAccTransEntry:depositFinAccTransList){
+			depositAmt += depositFinAccTransEntry.amount;
+		}
+		for(GenericValue withDrawFinAccTransEntry:withDrawFinAccTransList){
+			adjustAmt += withDrawFinAccTransEntry.amount;
+		}
+		tempMap["depositAmt"]=depositAmt;
+		tempMap["adjustAmt"]=adjustAmt;
+		depositAccounts.add(tempMap);
+	}
 	   context.depositAccounts=depositAccounts;
 	   parameters.AccDate=null;
-   	   }
+  }
