@@ -85,11 +85,20 @@ under the License.
 	   function displayName(state,flag){
        	var id=state.value;
        	if(flag=="customer"){
-       		customerName=customerNameJson[id];
-       		 $("#customerName").html(customerName);
+       	    if(id==""){
+       		 	$("#customerName").html("");
+       	    }else{
+       	    	customerName=customerNameJson[id];
+       		    $("#customerName").html(customerName);
+       	    }
+  
        	}else{
-       		supplierName=supplierNameJson[id];
-       		 $("#SupplierName").html(supplierName);
+       		if(id==""){
+       		 	$("#SupplierName").html("");
+       	    }else{
+       	    	supplierName=supplierNameJson[id];
+       		    $("#SupplierName").html(supplierName);
+       	    }
        	}      	
        }	
 
