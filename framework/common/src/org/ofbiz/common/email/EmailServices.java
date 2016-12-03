@@ -98,12 +98,18 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> sendMail(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	
+    	 //Debug.log("=======Enter===========");
+    	
         String communicationEventId = (String) context.get("communicationEventId");
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
         if (communicationEventId != null) {
             Debug.logInfo("SendMail Running, for communicationEventId : " + communicationEventId, module);
         }
+        
+        //Debug.log("orderId================="+orderId);
+        
         Map<String, Object> results = ServiceUtil.returnSuccess();
         String subject = (String) context.get("subject");
         subject = FlexibleStringExpander.expandString(subject, context);
@@ -113,6 +119,8 @@ public class EmailServices {
         List<Map<String, Object>> bodyParts = UtilGenerics.checkList(context.get("bodyParts"));
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
+        //Debug.log("userLogin================="+userLogin);
+        
         results.put("communicationEventId", communicationEventId);
         results.put("partyId", partyId);
         results.put("subject", subject);
@@ -124,6 +132,9 @@ public class EmailServices {
             body = FlexibleStringExpander.expandString(body, context);
             results.put("body", body);
         }
+        
+        //Debug.log("partyId================="+partyId);
+        
         if (UtilValidate.isNotEmpty(bodyParts)) {
             results.put("bodyParts", bodyParts);
         }
@@ -133,8 +144,15 @@ public class EmailServices {
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
 
+        //Debug.log("sendTo================="+sendTo);
+        //Debug.log("sendCc================="+sendCc);
+        //Debug.log("sendCc================="+sendCc);
+        
         // check to see if we should redirect all mail for testing
         String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
+        
+        //Debug.log("redirectAddress================="+redirectAddress);
+        
         if (UtilValidate.isNotEmpty(redirectAddress)) {
             String originalRecipients = " [To: " + sendTo + ", Cc: " + sendCc + ", Bcc: " + sendBcc + "]";
             subject += originalRecipients;
@@ -142,6 +160,8 @@ public class EmailServices {
             sendCc = null;
             sendBcc = null;
         }
+        
+        //Debug.log("sendTo======erer==========="+sendTo);
 
         String sendFrom = (String) context.get("sendFrom");
         String sendType = (String) context.get("sendType");
@@ -158,15 +178,29 @@ public class EmailServices {
 
         boolean useSmtpAuth = false;
 
+        sendFrom = sendFrom.replaceAll("\\{", "").replaceAll("\\}","");
+		
+		String  sendFromArray[] = sendFrom.split(",");
+		
+		sendFrom = sendFromArray[0];
+        
+        
+        //Debug.log("sendFrom================="+sendFrom);
+
         // define some default
         if (sendType == null || sendType.equals("mail.smtp.host")) {
             sendType = "mail.smtp.host";
             if (UtilValidate.isEmpty(sendVia)) {
                 sendVia = UtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost");
             }
+            
+            //Debug.log("sendVia================="+sendVia);
+            
             if (UtilValidate.isEmpty(authUser)) {
                 authUser = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.user");
             }
+            //Debug.log("authUser================="+authUser);
+            
             if (UtilValidate.isEmpty(authPass)) {
                 authPass = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.password");
             }
@@ -192,6 +226,7 @@ public class EmailServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendMissingParameterSendVia", locale));
         }
 
+        //Debug.log("sendPartial================="+sendPartial);
         if (contentType == null) {
             contentType = "text/html";
         }
@@ -200,12 +235,16 @@ public class EmailServices {
             contentType = "multipart/mixed";
         }
         results.put("contentType", contentType);
+        //Debug.log("contentType================="+contentType);
 
         Session session;
         MimeMessage mail;
         try {
             Properties props = System.getProperties();
             props.put(sendType, sendVia);
+            
+            //Debug.log("sendType================="+sendType);
+            
             if (UtilValidate.isNotEmpty(port)) {
                 props.put("mail.smtp.port", port);
             }
@@ -226,11 +265,15 @@ public class EmailServices {
                 props.put("mail.smtp.sendpartial", sendPartial ? "true" : "false");
             }
 
+            //Debug.log("sendPartial================="+sendPartial);
             session = Session.getInstance(props);
             boolean debug = UtilProperties.propertyValueEqualsIgnoreCase("general.properties", "mail.debug.on", "Y");
             session.setDebug(debug);
 
             mail = new MimeMessage(session);
+            
+            //Debug.log("mail================="+mail);
+            
             if (messageId != null) {
                 mail.setHeader("In-Reply-To", messageId);
                 mail.setHeader("References", messageId);
@@ -239,15 +282,24 @@ public class EmailServices {
             mail.setSubject(subject, "UTF-8");
             mail.setHeader("X-Mailer", "Apache OFBiz, The Apache Open For Business Project");
             mail.setSentDate(new Date());
+            //Debug.log("sendTo================="+sendTo);
             mail.addRecipients(Message.RecipientType.TO, sendTo);
 
+            //Debug.log("sendTo=======333=========="+sendTo);
+            
+            //Debug.log("sendTo=======333=========="+sendTo);
             if (UtilValidate.isNotEmpty(sendCc)) {
                 mail.addRecipients(Message.RecipientType.CC, sendCc);
             }
+            
+            //Debug.log("sendBcc=======333=========="+sendBcc);
+            
             if (UtilValidate.isNotEmpty(sendBcc)) {
                 mail.addRecipients(Message.RecipientType.BCC, sendBcc);
             }
 
+            //Debug.log("bodyParts================="+bodyParts);
+            
             if (UtilValidate.isNotEmpty(bodyParts)) {
                 // check for multipart message (with attachments)
                 // BodyParts contain a list of Maps items containing content(String) and type(String) of the attachement
@@ -279,6 +331,7 @@ public class EmailServices {
                 mail.setContent(mp);
                 mail.saveChanges();
             } else {
+            	//Debug.log("elsssssssssssssssssssssssssssseee");
                 // create the singelpart message
                 if (contentType.startsWith("text")) {
                     mail.setText(body, "UTF-8", contentType.substring(5));
@@ -299,6 +352,8 @@ public class EmailServices {
 
         // check to see if sending mail is enabled
         String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
+        //Debug.log("mailEnabled=========333333333333=============="+mailEnabled);
+
         if (!"Y".equalsIgnoreCase(mailEnabled)) {
             // no error; just return as if we already processed
             Debug.logImportant("Mail notifications disabled in general.properties; mail with subject [" + subject + "] not sent to addressee [" + sendTo + "]", module);
@@ -309,13 +364,21 @@ public class EmailServices {
 
         Transport trans = null;
         try {
+            //Debug.log("mail=========ssssssssssssssssssssssss=============="+mail);
+
             trans = session.getTransport("smtp");
             if (!useSmtpAuth) {
                 trans.connect();
             } else {
                 trans.connect(sendVia, authUser, authPass);
             }
+            
+            //Debug.log("mail=========333333333333=============="+mail);
+            
             trans.sendMessage(mail, mail.getAllRecipients());
+            
+            //Debug.log("mail==============44444444========="+mail);
+            
             results.put("messageWrapper", new MimeMessageWrapper(session, mail));
             results.put("messageId", mail.getMessageID());
             trans.close();
@@ -589,10 +652,19 @@ public class EmailServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Map<String, Object> sendMailResult;
+        
+        
         try {
             if (isMultiPart) {
                 sendMailResult = dispatcher.runSync("sendMailMultiPart", serviceContext);
+                
+                Debug.log("=====111111111111111=========");
+                
             } else {
+            	
+            	
+            	Debug.log("=====22222222222222=========");
+            	
                 sendMailResult = dispatcher.runSync("sendMail", serviceContext);
             }
         } catch (Exception e) {

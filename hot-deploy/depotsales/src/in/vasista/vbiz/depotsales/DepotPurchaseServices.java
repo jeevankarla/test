@@ -8720,13 +8720,13 @@ public class DepotPurchaseServices{
 					Debug.log("Problem in fetching orderItems");
 				}
 			
-				if(UtilValidate.isNotEmpty(senderEmail)){
+	/*			if(UtilValidate.isNotEmpty(senderEmail)){
 	
-			        /*sendMailParams.put("sendTo", "harish@vasista.in");
+			        sendMailParams.put("sendTo", "harish@vasista.in");
 			        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
 			        sendMailParams.put("subject", "Purchase Order"+orderId);
 			        sendMailParams.put("contentType", "text/html");
-			        sendMailParams.put("userLogin", userLogin);  */
+			        sendMailParams.put("userLogin", userLogin);  
 					String Msg=productDetails+" You are requested to submit the bills in quadruplicate towards the supply of said materials. Also please quote the Purchase Order No and Date in all your Letters,Delivery, Notes, and Invoices etc";
 			        String Msgbody="Dear "+org.ofbiz.party.party.PartyHelper.getPartyName(delegator,suppPartyId, false)+",  \n"+Msg;
 			        sendMailParams.put("body", Msgbody);
@@ -8735,14 +8735,14 @@ public class DepotPurchaseServices{
 			        try{ 
 			        	Map partyEmailInfo =FastMap.newInstance();
 			        	partyEmailInfo.put("orderId",orderId);
-			        	partyEmailInfo.put("sendTo", senderEmail);
+			        	partyEmailInfo.put("sendTo", "vamsikrishna@vasista.in");
 			        	partyEmailInfo.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
 			        	partyEmailInfo.put("partyId", suppPartyId);
 			        	partyEmailInfo.put("sendCc", "vikram@vasista.in");
 			        	partyEmailInfo.put("subject", "Purchase Order"+orderId);
 			        	partyEmailInfo.put("userLogin", userLogin);
 			        	partyEmailInfo.put("bodyText", Msgbody);
-			        	Map partyInfoListResult = dispatcher.runSync("sendPurchaseOrderEmailToParty", partyEmailInfo);
+			        	//Map partyInfoListResult = dispatcher.runSync("sendPurchaseOrderEmailToParty", partyEmailInfo);
 			        	if (ServiceUtil.isError(partyInfoListResult)) {
 			        		return ServiceUtil.returnError("Unable to send to  Purchase Order Email To Party "+ suppPartyId);
 						}else{
@@ -8752,16 +8752,16 @@ public class DepotPurchaseServices{
 		            	Debug.log("Problem in sending email");
 			        }
 			        
-			        /*try{
+			        try{
 		                Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
 		                if(ServiceUtil.isError(resultCtxMap)){
 		                	Debug.log("Problem in calling service sendMail");
 		                }
 		            }catch(GenericServiceException e1){
 		            	Debug.log("Problem in sending email");
-					}*/
+					}
 				 
-				} 
+				} */
 			}
 			
 			String suppName=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,suppPartyId, false);
@@ -11372,6 +11372,47 @@ public class DepotPurchaseServices{
  		return "success";
   		}
  	
+  		
+  	    
+  	    public static Map<String, Object> sendEmaiFromAnalytics(DispatchContext ctx, Map context) {
+  	    	Delegator delegator = ctx.getDelegator();
+  			LocalDispatcher dispatcher = ctx.getDispatcher();
+  			GenericValue userLogin = (GenericValue) context.get("userLogin");
+  			Map result = ServiceUtil.returnSuccess();
+  			
+  			String sendFrom = (String) context.get("sendFrom");
+  			String sendTo = (String) context.get("sendTo");
+  			String subject = (String) context.get("subject");
+  			String sendCc = (String) context.get("sendCc");
+  			String bodyText = (String) context.get("bodyText");
+  			
+  			
+  			 try{ 
+		        	Map partyEmailInfo =FastMap.newInstance();
+		        	partyEmailInfo.put("sendTo", sendTo);
+		        	partyEmailInfo.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+		        	partyEmailInfo.put("sendCc", sendCc);
+		        	partyEmailInfo.put("subject", subject);
+		        	partyEmailInfo.put("userLogin", userLogin);
+		        	partyEmailInfo.put("bodyText", bodyText);
+		        	Map partyInfoListResult = dispatcher.runSync("sendMailFromScreen", partyEmailInfo);
+		        	if (ServiceUtil.isError(partyInfoListResult)) {
+		        		return ServiceUtil.returnError("Unable to send Email To  "+ sendTo);
+					}else{
+						Debug.log("Successfully Sent Email  To" +sendTo);
+					}
+		        }catch(GenericServiceException e1){
+	            	Debug.log("Problem in sending email");
+		        }
+  			
+  			
+  			result = ServiceUtil.returnSuccess("Successfully Sent Email  To :" +sendTo);
+  	        
+  			return result;
+  	    
+  	    }    
+  	    
+  	    
   		
 	    
 }

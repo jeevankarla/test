@@ -1533,6 +1533,12 @@
     
     
     
+    <request-map uri="sendEmaiFromIndentAnalytics">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendEmaiFromAnalytics"/>
+        <response name="success" type="view" value="IndentAnalytics"/>
+        <response name="error" type="view" value="IndentAnalytics"/>
+    </request-map>
     
       <request-map uri="realizeStatus">
         <security https="true" auth="true"/>
