@@ -811,6 +811,8 @@ under the License.
       <alias-all entity-alias="SR"/>
       <alias entity-alias="SH" name="shipmentTypeId"/>
       <alias entity-alias="SH" name="supplierInvoiceDate"/>
+       <alias entity-alias="SH" name="partyIdTo"/>
+      <alias entity-alias="SH" name="partyIdFrom"/>
       <alias entity-alias="SH" name="shStatusId" field="statusId"/>
       <view-link entity-alias="SH" rel-entity-alias="SR">
         <key-map field-name="shipmentId"/>
