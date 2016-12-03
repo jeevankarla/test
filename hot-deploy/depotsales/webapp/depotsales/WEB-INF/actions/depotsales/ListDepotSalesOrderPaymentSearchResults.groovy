@@ -73,10 +73,39 @@ if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
 	indentOrderIdDetails = EntityUtil.getFirst(indentOrderIdDetails);
 	searchOrderId = indentOrderIdDetails.orderId;
 }
+
+
+searchOrderIdList=[];
+
+shipmentId = parameters.shipmentId;
+
+
+if(shipmentId){
+
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+	inventoryItemIds = EntityUtil.getFieldListFromEntityList(ShipmentReceipt, "inventoryItemId", true);
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.IN , inventoryItemIds));
+	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+	
+	searchOrderIdList = EntityUtil.getFieldListFromEntityList(OrderItemAttribute, "orderId", true);
+
+}else if(searchOrderId){
+
+   searchOrderIdList.add(searchOrderId);
+
+}
+
+
 orderList=[];
 condList = [];
-if(UtilValidate.isNotEmpty(searchOrderId)){
-	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
+if(UtilValidate.isNotEmpty(searchOrderIdList)){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, searchOrderIdList));
 }
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
@@ -281,7 +310,7 @@ orderHeader.each{ eachHeader ->
 	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
 	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
 	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
-*/	
+*/
 	conditonList.clear();
 	conditonList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	conditonList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
