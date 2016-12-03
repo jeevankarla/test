@@ -9147,7 +9147,7 @@
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                     		<platform-specific> 
-                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/findDelayedShipmentAnalytics.ftl"></html-template></html>
                        		</platform-specific> 
 					</decorator-section>
 				</decorator-screen>	                    	               

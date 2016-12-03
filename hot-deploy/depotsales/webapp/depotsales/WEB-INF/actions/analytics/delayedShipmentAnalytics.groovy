@@ -57,6 +57,7 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","entryDate","orderDate","externalId","partyId"), null, null, false);
 SortedMap DataMap = new TreeMap();
+Timestamp currentDate = UtilDateTime.nowTimestamp();
 if(orderHeaderAndRoles){
 	orderHeaderAndRoles.each{eachItem ->
 	orderId=eachItem.getAt("orderId");
@@ -64,27 +65,44 @@ if(orderHeaderAndRoles){
 	pendingShip = 0;
 	if (UtilValidate.isEmpty(shipments)) {
 		pendingShip = 1;
+		orderHeader = delegator.findOne("OrderHeader", [orderId : orderId], false);
+		indentDate = orderHeader.orderDate;
+		long timeDiff = currentDate.getTime() - indentDate.getTime();
+		diffHours = timeDiff / (60 * 60 * 1000);
 		partyId = eachItem.getAt("partyId");
 		if (DataMap.containsKey(partyId)) {
 			branchDetails = DataMap.get(partyId);
 			branchDetails.putAt("pendingShip", pendingShip + branchDetails.get("pendingShip"));
+			branchDetails.putAt("pendingShipDays", diffHours + branchDetails.get("pendingShipDays"));
+			
 		}
 		else {
 			branchDetails = [:];
 			branchDetails.putAt("pendingShip", pendingShip);
+			branchDetails.putAt("pendingShipDays", diffHours);
+			
 			DataMap.putAt(partyId, branchDetails);
 		}
 		}
 	}
 }
 for(Map.Entry entry : DataMap.entrySet()){
-	JSONObject newObj = new JSONObject();
 	partyId = entry.getKey();
 	entryValue = entry.getValue();
+	long durationMinits=entryValue.get("pendingShipDays")/entryValue.get("pendingShip");
+	BigDecimal durationhrs=(durationMinits / (24)).setScale(0, 0);
 	partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+	BigDecimal noDays=BigDecimal.ZERO;
+	if(parameters.days){
+	 noDays=new BigDecimal(parameters.days);
+	}
+	if (durationhrs.compareTo(noDays) > 0) {
+	JSONObject newObj = new JSONObject();
 	newObj.put("partyId", partyName);
 	newObj.put("pendingShip", entryValue.get("pendingShip"));
+	newObj.put("pendingShipDays", (durationhrs));
 	dataList.add(newObj);
+	}
 }
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();
