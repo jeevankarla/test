@@ -323,7 +323,10 @@ under the License.
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
-        <field name="actualBalance" title="Acc Balance"><display/></field>
+        <!-- <field name="actualBalance" title="Acc Balance"><display/></field> -->
+        <field name="depositAmt" title="Adv Paid"><display/></field>
+		<field name="adjustAmt" title="Adjusted Amt"><display/></field>
+        <field name="actualBalance" title="Adv Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','EmpAdv');" description="Refund">
             </hyperlink>
@@ -1157,6 +1160,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
         <field name="finAccountName" title="Account Name"><text size="20"/></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
