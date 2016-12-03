@@ -1079,12 +1079,12 @@ function fillPartyQuota(partyId){
 							          			<span class="tooltip" id="branchName"></span>
 							          			<label class='CFC_TD' style='display:none;'><b>CFC:</label>
 							          			<select name="cfcs" id="cfcs" style='display:none;' class='CFC_TD' >
-				          						          					
 						          				</select>
+						          				<td><span class="tooltip" id="branchName"  >${branchName}</span></td>
 							          		</td>
 							          	</#if>
 						        	</#if>
-					       	  		<td><span class="tooltip" id="branchName"  >${branchName}</span></td>
+					       	  		
 				               	</tr>
 				               	
 				               	<tr>

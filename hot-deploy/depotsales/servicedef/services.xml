@@ -200,6 +200,19 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/> 
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
+    
+    <service name="sendEmaiFromAnalytics" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="sendEmaiFromAnalytics" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="userLogin" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+    </service>
+    
+    
 	<service name="getCustomerBranch" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCustomerBranch" auth="false">
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
