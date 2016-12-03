@@ -18,7 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 <#escape x as x?xml> 
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>

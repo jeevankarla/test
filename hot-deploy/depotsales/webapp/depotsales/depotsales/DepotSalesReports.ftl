@@ -55,7 +55,6 @@ $(document).ready(function(){
 	    
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
- 
 function makeDatePicker3(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'yy, MM dd',

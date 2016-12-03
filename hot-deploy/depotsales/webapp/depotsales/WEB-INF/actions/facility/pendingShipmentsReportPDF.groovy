@@ -27,7 +27,6 @@ daystart = null;
 
 Timestamp fromDate;
 Timestamp thruDate;
-
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
 branchIds=[];

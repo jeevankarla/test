@@ -30,7 +30,6 @@
             </widgets>
         </section>
 	</screen>
-	
 	<screen name="StockPositionSubDepot">
 		<section>
 			<actions>
