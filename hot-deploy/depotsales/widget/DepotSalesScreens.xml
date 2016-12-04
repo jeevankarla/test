@@ -9155,6 +9155,9 @@
 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					   <platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/EnquiryEmailOpen.ftl"></html-template></html>
+                       		</platform-specific>
                     		<platform-specific> 
                            		<html><html-template location="component://depotsales/webapp/depotsales/analytics/findDelayedShipmentAnalytics.ftl"></html-template></html>
                        		</platform-specific> 

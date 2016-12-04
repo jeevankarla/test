@@ -107,7 +107,8 @@ $(document).ready(function () {
 		                  cellsRenderer: function (rowKey, dataField, value, data) {
 									if(rowKey=='NHDC'){
 										rowKey='';
-									}                  
+									}          
+									        
 							 return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_COMPLETED&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
