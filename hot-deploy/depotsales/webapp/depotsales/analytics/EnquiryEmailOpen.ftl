@@ -131,12 +131,14 @@
 		message += "<div style='width:100%;height:350px;overflow-x:auto;overflow-y:auto;' ><form action='sendEmaiFromIndentAnalytics' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10  width='100%' > " ; 
 			message +="<tr ><td align='right' class='h2' width='15%' >Send To: </td><td  class='h2' align='left' width='75%'>&nbsp;<input type='text' size='42'  id='sendTo' name='sendTo' required/>"+
 					"</td></tr>";
+					<#--
 					message +="<tr ><td align='right' class='h2' width='15%' >Send From: </td><td  class='h2' align='left' width='75%'>&nbsp;<input type='text' size='42'  id='sendFrom' name='sendFrom'/> <input type='hidden' id='sendFrom'  name='sendFrom'  readonly/> "+
 			"</td></tr>";
-			<#--
+			-->
+			
 			message +="<tr ><td align='right' class='h2' width='15%' >Send CC: </td><td  class='h2' align='left' width='75%'>&nbsp;<input type='text' size='42'  id='sendCc' name='sendCc'/> <input type='hidden' id='sendFrom'  name='sendFrom'  /> "+
 			"</td></tr>";
-			-->
+			
 		   message += "<tr ><td align='right' class='h2' width='15%' >Subject &nbsp;: </td><td align='left' class='h2' width='75%'  >&nbsp;<input type='text' size='63'  id='subject' name='subject' required/> </tr></tbody></table></td></tr>";
 			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='left' class='label labelFontCSS' >Content:</td><td align='left'  width='75%'  >";
               message += "<textarea name='bodyText' id='bodyText' cols='70' rows='10' required></textarea> </td></tr>";
