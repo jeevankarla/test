@@ -37,7 +37,7 @@ import org.ofbiz.service.GenericDispatcher;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#NHDC_LOCAL");
+delegator = DelegatorFactory.getDelegator("default#NHDC");
 
 
 isReport=parameters.isReport;
