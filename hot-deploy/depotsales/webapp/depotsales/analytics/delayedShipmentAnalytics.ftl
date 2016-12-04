@@ -41,6 +41,7 @@ $(document).ready(function () {
                 dataType: "json",
                 unboundmode: true,
                 dataFields: [
+                    { name: 'partyName', type: 'string' },
                     { name: 'partyId', type: 'string' },                
                    // { name: 'branch', type: 'string' },
                     { name: 'ReportsTo', type: 'string' },                                    
@@ -94,12 +95,16 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'Supplier',  width:'20%', align: 'center', dataField: 'partyId', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
-                  //{ text: 'Branch', width:'15%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
-                  { text: 'Delayed Shipments', width:'13%', align: 'center', dataField: 'pendingShip', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' 
-                  },
-                  { text: 'Pending Shipment Days', width:'13%', align: 'center', dataField: 'pendingShipDays', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange' 
-                  }
+                  { text: 'Supplier',  width:'30%', align: 'center', dataField: 'partyName', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                   { text: 'Delayed Shipments', width:'13%', align: 'center', dataField: 'pendingShip', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
+		                  cellsRenderer: function (rowKey, dataField, value, data) {
+									if(rowKey=='NHDC'){
+										rowKey='';
+									}          
+							 return '<a href="FindSupplierPO?partyId='+rowKey+'" target="_blank" >'+value+'</a>'; 
+		 				  }
+		 		  },
+                  
                 ],
               
                
