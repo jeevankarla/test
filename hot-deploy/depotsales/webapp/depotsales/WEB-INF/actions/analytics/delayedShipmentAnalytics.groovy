@@ -50,8 +50,12 @@ dctx = dispatcher.getDispatchContext();
 
 days = parameters.days;
 
-if(!days)
+if(UtilValidate.isNotEmpty(days))
+days = Integer.parseInt(days);
+else
 days = 0;
+
+
 
 partyRoles = delegator.find("PartyRoleNameDetail", (EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,["EMPANELLED_SUPPLIER","UNEMPALED_SUPPLIER"])),null,UtilMisc.toSet("partyId","groupName"), null, null);
 partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoles, "partyId", true);
@@ -121,12 +125,19 @@ for (eachParty in allParties) {
 		   
 		   statusDatetime = OrderStatus[0].get("statusDatetime");
 		  
-		  long timeDiff = statusDatetime.getTime() - supplierInvoiceDate.getTime();
+		  long timeDiff = supplierInvoiceDate.getTime() - statusDatetime.getTime();
 		  diffHours = timeDiff / (60 * 60 * 1000);
+		  
+		  Debug.log("diffHours=========="+diffHours);
 		  
 		  int diffHours = diffHours.intValue();
 		  
 		  diffDays = diffHours/24;
+		  
+		  Debug.log("diffDays=========="+diffDays);
+		  
+		  diffDays = Math.abs(diffDays);
+		  
 		  
 		  if(diffDays >= days){
 			  
