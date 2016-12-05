@@ -50,7 +50,6 @@ for(eachRO in roPartyList){
 context.formatList = formatList;
 
 
-Debug.log("formatList==================="+formatList);
 
 
 
