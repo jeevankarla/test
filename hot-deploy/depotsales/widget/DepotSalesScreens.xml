@@ -9147,9 +9147,12 @@
 				<set field="ajaxUrl" value="delayedShipmentAnalyticsInternal" type="String" global="true"/>                      
 <!-- 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" /> -->
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="october 1, 2016" /> 
+			    <set field="defaultEffectiveDate" value="October 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
                  <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
+                 
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/getBranches.groovy" />
+                 
             </actions>
             <widgets>
 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
