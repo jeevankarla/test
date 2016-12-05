@@ -50,23 +50,83 @@ dctx = dispatcher.getDispatchContext();
 
 days = parameters.days;
 
+branchId = parameters.branch;
+
+partyId = userLogin.get("partyId");
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+
+Map formatMap = [:];
+List formatList = [];
+List productStoreList = resultCtx.get("productStoreList");
+context.productStoreList = productStoreList;
+
+for (eachList in productStoreList) {
+	formatMap = [:];
+	formatMap.put("productStoreName",eachList.get("storeName"));
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+}
+context.formatList = formatList;
+
+if(!branchId)
+branchId = "INT10";
+
+branchList = [];
+
+if(branchId){
+condListb = [];
+
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchList)
+branchList.add(branchId);
+}else if(!branchId){
+
+formatList1 = [];
+for (eachList in formatList) {
+	formatList1.add(eachList.payToPartyId);
+}
+branchList = formatList1;
+}
+
+
 if(UtilValidate.isNotEmpty(days))
 days = Integer.parseInt(days);
 else
 days = 0;
 
 
-
-partyRoles = delegator.find("PartyRoleNameDetail", (EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,["EMPANELLED_SUPPLIER","UNEMPALED_SUPPLIER"])),null,UtilMisc.toSet("partyId","groupName"), null, null);
+/*partyRoles = delegator.find("PartyRoleNameDetail", (EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,["EMPANELLED_SUPPLIER","UNEMPALED_SUPPLIER"])),null,UtilMisc.toSet("partyId","groupName"), null, null);
 partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoles, "partyId", true);
-conditionList = [];
-
-
-
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"10055"));
-//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIds));
+*/conditionList = [];
+//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"10055"));
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,branchList));
 conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"ORDER_APPROVED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+if(UtilValidate.isNotEmpty(fromDate)){
+	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	
+}
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+orderHeaderAndRoles1 = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId"), null, null, false);
+
+FromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles1, "orderId", true);
+
+conditionList.clear();
+//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"10055"));
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN,FromOrders));
+conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 if(UtilValidate.isNotEmpty(fromDate)){
 	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -75,7 +135,6 @@ if(UtilValidate.isNotEmpty(fromDate)){
 }
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","partyId"), null, null, false);
-
 
 partyIdsFromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles, "partyId", true);
 
@@ -127,10 +186,17 @@ for (eachParty in allParties) {
 		   condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		   OrderStatus = delegator.findList("OrderStatus", condition,UtilMisc.toSet("orderId","statusDatetime"), null, null, false);
  
+		   statusDatetime = "";
+		   if(OrderStatus[0])
+		    statusDatetime = OrderStatus[0].get("statusDatetime");
 		   
-		   statusDatetime = OrderStatus[0].get("statusDatetime");
+		   //Debug.log("statusDatetime============="+statusDatetime);
+			long timeDiff = 0;
+		  if(statusDatetime && supplierInvoiceDate)
+		    timeDiff = supplierInvoiceDate.getTime() - statusDatetime.getTime();
 		  
-		  long timeDiff = supplierInvoiceDate.getTime() - statusDatetime.getTime();
+		 // Debug.log("timeDiff============="+timeDiff);
+		  
 		  diffHours = timeDiff / (60 * 60 * 1000);
 		  
 		  

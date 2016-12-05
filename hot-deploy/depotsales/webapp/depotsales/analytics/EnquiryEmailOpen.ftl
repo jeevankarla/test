@@ -157,7 +157,7 @@
 	  
 		 // jQuery("#sendTo").val();
 		
-		  jQuery("#sendCc").val(globalSendCcEmail);
+		 // jQuery("#sendCc").val(globalSendCcEmail);
       
 
 	};

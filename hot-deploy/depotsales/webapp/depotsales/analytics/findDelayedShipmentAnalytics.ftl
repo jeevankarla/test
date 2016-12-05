@@ -60,6 +60,8 @@ input[type=button]:hover {
 
 $(document).ready(function(){
 
+$("#branch").val("INT10");
+
 // enter event handle
 	$("input").keypress(function(e){
 		if (e.which == 13 && e.target.name =="facilityId") {
@@ -120,7 +122,7 @@ $(document).ready(function(){
   	$("#getTreeGrid").click(function(){  
         $.get(  
             "${ajaxUrl}",  
-            { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val(),days: $("#days").val()},  
+            { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val(),days: $("#days").val(),branch:$("#branch").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -135,6 +137,7 @@ $(document).ready(function(){
     	$("#getTreeGridCsv").click(function(){  
           var fromDate= $("#fromDate").val();
           var thruDate= $("#thruDate").val();
+         
           $("#fromDateCsv").val(fromDate);
           $("#thruDateCsv").val(thruDate);
          var screenFlag="${parameters.screenflag}";
@@ -153,6 +156,7 @@ $(document).ready(function(){
 		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
 		<span class='h3'>Days: </span><input  type="text" id="days" name="days" />
+		<span class='h3'>Branch: </span><select name="branch" id="branch"><#list formatList as format> <option value="${format.payToPartyId}">${format.productStoreName?if_exists}</option></#list></select>
 		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
 		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
 		<table>
