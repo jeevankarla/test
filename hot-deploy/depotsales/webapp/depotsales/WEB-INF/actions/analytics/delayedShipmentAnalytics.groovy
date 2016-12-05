@@ -60,7 +60,11 @@ days = 0;
 partyRoles = delegator.find("PartyRoleNameDetail", (EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,["EMPANELLED_SUPPLIER","UNEMPALED_SUPPLIER"])),null,UtilMisc.toSet("partyId","groupName"), null, null);
 partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoles, "partyId", true);
 conditionList = [];
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIds));
+
+
+
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"10055"));
+//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,partyIds));
 conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"ORDER_APPROVED"));
 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
@@ -71,6 +75,7 @@ if(UtilValidate.isNotEmpty(fromDate)){
 }
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","partyId"), null, null, false);
+
 
 partyIdsFromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles, "partyId", true);
 
@@ -128,13 +133,11 @@ for (eachParty in allParties) {
 		  long timeDiff = supplierInvoiceDate.getTime() - statusDatetime.getTime();
 		  diffHours = timeDiff / (60 * 60 * 1000);
 		  
-		  Debug.log("diffHours=========="+diffHours);
 		  
 		  int diffHours = diffHours.intValue();
 		  
 		  diffDays = diffHours/24;
 		  
-		  Debug.log("diffDays=========="+diffDays);
 		  
 		  diffDays = Math.abs(diffDays);
 		  
