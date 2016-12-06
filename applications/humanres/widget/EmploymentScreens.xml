@@ -719,7 +719,7 @@
                 <set field="tabButtonItem" value="EmployeeLeave"/>
                 <set field="tabButtonItem2" value="EmplLeaveBalanceStatus" />
                 <set field="leaveBalanceFlag" value="leaveBalanceStatus"/>
-                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/emplLeaveBalances.groovy"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/emplLeaveBalances.groovy"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -727,7 +727,9 @@
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplLeaveTabBar"/> 
                     	<container>
 							<screenlet title="Find Employee Leave Balance">
-								<include-form name="EmplLeaveBalanceStatus" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+								<platform-specific>
+		                       		<html><html-template location="component://humanres/webapp/humanres/humanres/findEmplLeaveBalances.ftl"></html-template></html>
+		                   		</platform-specific>
 							</screenlet>
 							<screenlet title="Search-Results">
 		                      <include-form name="ListLeaveBalance" location="component://humanres/widget/forms/EmploymentForms.xml" /> 
