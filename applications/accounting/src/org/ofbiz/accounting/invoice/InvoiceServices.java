@@ -6412,8 +6412,8 @@ public class InvoiceServices {
         	if (amount.compareTo(ZERO) > 0) {
         		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentTypeId);
       	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
-      	        paymentCtx.put("organizationPartyId", invoicePartyIdTo);
-                paymentCtx.put("partyId", invoicePartyIdFrom);
+      	        paymentCtx.put("organizationPartyId", invoicePartyIdFrom);
+                paymentCtx.put("partyId", invoicePartyIdTo);
       	        paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
       	        paymentCtx.put("statusId", "PMNT_NOT_PAID");
       	        if (UtilValidate.isNotEmpty(finAccountId) ) {
@@ -6437,6 +6437,7 @@ public class InvoiceServices {
         	if(UtilValidate.isNotEmpty(finAccountId)){
         		setPaymentStatusMap.put("finAccountId", finAccountId);
         	}
+        	setPaymentStatusMap.put("depositReceiptFlag", "Y");
             Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
         }
         catch (GenericServiceException e) {
