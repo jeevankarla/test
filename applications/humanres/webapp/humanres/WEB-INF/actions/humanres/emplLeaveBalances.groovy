@@ -65,7 +65,7 @@ if(UtilValidate.isNotEmpty(partyId)){
 		encashedDays = emplLeaveBalanceStatus.encashedDays;
 		lapsedDays = emplLeaveBalanceStatus.lapsedDays;
 	}
-	if(UtilValidate.isNotEmpty(leaveBalanceFlag.equals("leaveBalanceStatus"))){
+	if(UtilValidate.isNotEmpty(leaveBalanceFlag) && leaveBalanceFlag.equals("leaveBalanceStatus")){
 		conditionList = []; leaveBalanceFlag
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId));
 		if(UtilValidate.isNotEmpty(customTimePeriodId)){
@@ -121,14 +121,11 @@ if(UtilValidate.isNotEmpty(partyId)){
 	context.put("lapsedDays",lapsedDays);
 }
 
-
-
-
-
-
-
-
-
+condList = [];
+condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "HR_MONTH"));
+typeCondition=EntityCondition.makeCondition(condList, EntityOperator.AND);
+customTimePeriodList = delegator.findList("CustomTimePeriod", typeCondition , null, ["-fromDate"], null, false);
+context.customTimePeriodList = customTimePeriodList;
 
 
 
