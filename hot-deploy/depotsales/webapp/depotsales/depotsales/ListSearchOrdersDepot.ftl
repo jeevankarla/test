@@ -38,6 +38,8 @@ under the License.
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
 <input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
 <input type="hidden" name="paramEstimatedDeliveryThruDate" id="paramEstimatedDeliveryThruDate" value="${paramEstimatedDeliveryThruDate}">
+<input type="hidden" name="paramindentEntryFromDate" id="paramindentEntryFromDate" value="${paramindentEntryFromDate}">
+<input type="hidden" name="paramEstimatedindentEntryThruDate" id="paramEstimatedindentEntryThruDate" value="${paramEstimatedindentEntryThruDate}">
 <input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
 <input type="hidden" name="tallyRefNO" id="tallyRefNO" value="${tallyRefNO}">
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
@@ -45,7 +47,7 @@ under the License.
 <input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
 <input type="hidden" name="scheme" id="scheme" value="${scheme}">
 
-
+  
 
 <script type="text/javascript">
  
@@ -55,6 +57,9 @@ var orderId = $("#paramOrderId").val();
 var paramFacilityId = $("#paramFacilityId").val();
 var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
 var paramEstimatedDeliveryThruDate = $("#paramEstimatedDeliveryThruDate").val();
+var paramindentEntryFromDate = $("#paramindentEntryFromDate").val();
+var paramEstimatedindentEntryThruDate = $("#paramEstimatedindentEntryThruDate").val();
+
 var paramStatusId = $("#paramStatusId").val();
 var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
@@ -164,7 +169,7 @@ $(function(){
            }
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
