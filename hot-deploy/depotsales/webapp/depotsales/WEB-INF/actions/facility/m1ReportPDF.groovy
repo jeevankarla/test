@@ -57,9 +57,8 @@ conditionList = [];
 productIds = [];
 purchaseOrderIds =[];
 productCategoryIds = [];
-
 conditionList.clear();
-if(productCategory != "OTHER"){
+if(productCategory != "OTHER" && productCategory != "ALL"){
 	conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
 	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
@@ -73,6 +72,8 @@ if(productCategory != "OTHER"){
 	conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "NATURAL_FIBERS"));
 	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
+	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
+	ProductCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,productCategoryIds),UtilMisc.toSet("productCategoryId"), null, null, false);
 	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
 }
 conditionList.clear();
@@ -89,12 +90,15 @@ conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_E
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 orderHeaderItemAndRoles = delegator.findList("OrderHeaderItemAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","unitPrice","itemDescription","partyId"), null, null, false);
 finalCSVList=[];
+totalQty=0
+totalValue=0;
+prodCatMap=[:];
+totalsMap=[:];
 for(productCategoryId in productCategoryIds){
-	prodCatMap=[:];
 	tempCSVMap1=[:];
 	prodCatList=[];
 	prodCatName="";
-	productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategory] , false);
+	productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategoryId] , false);
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
@@ -152,6 +156,8 @@ for(productCategoryId in productCategoryIds){
 			tempMap.put("BdlWt", "");
 			tempMap.put("rate", rate);
 			tempMap.put("orderValue", orderValue);
+			totalQty=totalQty+orderQty
+			totalValue=totalValue+orderValue;
 			if(orderValue>0){
 				prodPartiesList.add(tempMap);
 				finalCSVList.add(tempMap)
@@ -176,11 +182,13 @@ for(productCategoryId in productCategoryIds){
 	if(UtilValidate.isNotEmpty(prodCatList)){
 		prodCatMap.put(prodCatName, prodCatList)
 	}
-	context.prodCatMap=prodCatMap;
-	context.finalCSVList=finalCSVList;
-	
-}
 
+}
+totalsMap.put("orderQty", totalQty);
+totalsMap.put("orderValue", totalValue);
+context.totalsMap=totalsMap;
+context.prodCatMap=prodCatMap;
+context.finalCSVList=finalCSVList;
 
 
 
