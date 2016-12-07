@@ -6785,9 +6785,11 @@ Debug.log("acctgTransId========before========="+acctgTransId);
         }catch (GenericEntityException e) {
 			Debug.logError(e, "Failed to create accounting role ", module);
 			return ServiceUtil.returnError("Failed to create accounting role" + e);
-		}       
-        
-	    return ServiceUtil.returnSuccess();	    
+		}  
+		Map<String, Object> resultVal =FastMap.newInstance();
+		resultVal.put("acctgTransId", acctgTransId);
+        return resultVal;
+	  //  return ServiceUtil.returnSuccess();	    
 	}
 	public static Map<String, Object> createAccountingRoleForFinTrans(DispatchContext dctx, Map<String, Object> context) {
 	    Delegator delegator = dctx.getDelegator();

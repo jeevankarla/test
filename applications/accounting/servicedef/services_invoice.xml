@@ -330,7 +330,7 @@ under the License.
     </service>
     <service name="createAccountingRoleForAcctgTrans" engine="java" default-entity-name="InvoiceRole"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForAcctgTrans">
-        <attribute name="acctgTransId" mode="IN" optional="true" type="String"/>
+        <attribute name="acctgTransId" mode="INOUT" optional="true" type="String"/>
     </service>
     <service name="createAccountingRoleForFinTrans" engine="java" default-entity-name="FinAccountTransRole"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createAccountingRoleForFinTrans">

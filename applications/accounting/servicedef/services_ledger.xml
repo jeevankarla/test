@@ -366,6 +366,13 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="verifyOnly" type="String" mode="IN" optional="true"/>
     </service>
+     <service name="populateInternalOrgPartyWise" default-entity-name="GlAccountHistoryPartyWise" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="populateInternalOrgPartyWise" auth="true"
+            transaction-timeout="600">
+        <description> </description>       
+         <attribute name="acctgTransId" mode="IN" type="String" optional="false"/>
+        <attribute name="verifyOnly" type="String" mode="IN" optional="true"/>
+    </service>
 	<service name="postBulkAcctg" default-entity-name="AcctgTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="postBulkAcctg" auth="true"
             transaction-timeout="1800">
@@ -577,6 +584,15 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
     </service>
+     
+     <service name="populateEndingBalGlAccountHistoryPartyWise" engine="simple" auth="true"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="populateEndingBalGlAccountHistoryPartyWise">
+        <description>Create an accounting transaction for a sales invoice</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
+   
+   
 
     <!--An automatic GL posting service for outgoing payments-->
     <service name="createAcctgTransAndEntriesForOutgoingPayment" engine="simple" auth="true"
@@ -639,6 +655,21 @@ under the License.
     </service>
     <service name="findLastClosedDate" engine="java"
         location="org.ofbiz.accounting.period.PeriodServices" invoke="findLastClosedDate" auth="true">
+        <description>Find the last date before findDate whose TimePeriod is marked isClosed="Y" for organizationPartyId and periodTypeId combination.
+            If none are found, ie, no closed CustomTimePeriod exists, then return the earliest date available for any
+            CustomTimePeriod of the organizationPartyId and periodTypeId.
+            If no findDate is given, then use the current moment (nowTimestamp).
+            If onlyFiscalPeriods flag is passed, then periodTypeId is ignored and the latest closed FISCAL period is returned
+        </description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="findDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="onlyFiscalPeriods" mode="IN" type="Boolean" optional="true"/>               
+        <attribute name="lastClosedDate" type="Timestamp" mode="OUT" optional="true"/>
+        <attribute name="lastClosedTimePeriod" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
+    </service>
+    <service name="findLastClosedDateForPartyLedger" engine="java"
+        location="org.ofbiz.accounting.period.PeriodServices" invoke="findLastClosedDateForPartyLedger" auth="true">
         <description>Find the last date before findDate whose TimePeriod is marked isClosed="Y" for organizationPartyId and periodTypeId combination.
             If none are found, ie, no closed CustomTimePeriod exists, then return the earliest date available for any
             CustomTimePeriod of the organizationPartyId and periodTypeId.

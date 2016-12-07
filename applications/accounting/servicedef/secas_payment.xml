@@ -86,4 +86,8 @@ under the License.
         <condition field-name="acctgTransId" operator="is-not-empty"/>
         <action service="createAccountingRoleForAcctgTrans" mode="sync"/>
     </eca>
+     <eca service="createAccountingRoleForAcctgTrans" event="global-commit-post-run">
+        <condition field-name="acctgTransId" operator="is-not-empty"/>
+        <action service="populateInternalOrgPartyWise" mode="sync"/>
+    </eca>
 </service-eca>
