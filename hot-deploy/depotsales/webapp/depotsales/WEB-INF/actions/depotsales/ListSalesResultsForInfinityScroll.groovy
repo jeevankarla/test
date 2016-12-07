@@ -545,6 +545,9 @@ paramOrderId = "";
 paramFacilityId = "";
 paramEstimatedDeliveryDate = "";
 paramEstimatedDeliveryThruDate = "";
+paramindentEntryFromDate = "";
+paramEstimatedindentEntryThruDate = "";
+  
 paramStatusId = "";
 paramBranch = "";
 indentDateSort = "";
@@ -566,7 +569,15 @@ if(parameters.estimatedDeliveryDate)
 if(parameters.estimatedDeliveryThruDate)
    paramEstimatedDeliveryThruDate = parameters.estimatedDeliveryThruDate;
    
-     
+
+ if(parameters.indentEntryFromDate)
+   paramindentEntryFromDate = parameters.indentEntryFromDate;
+ 
+if(parameters.indentEntryThruDate)
+   paramEstimatedindentEntryThruDate = parameters.indentEntryThruDate;
+
+   
+        
 if(parameters.statusId)
    paramStatusId = parameters.statusId;
    
@@ -588,6 +599,8 @@ context.paramOrderId = paramOrderId;
 context.paramFacilityId = paramFacilityId;
 context.paramEstimatedDeliveryDate = paramEstimatedDeliveryDate;
 context.paramEstimatedDeliveryThruDate = paramEstimatedDeliveryThruDate;
+context.paramindentEntryFromDate = paramindentEntryFromDate;
+context.paramEstimatedindentEntryThruDate = paramEstimatedindentEntryThruDate;
 context.paramStatusId = paramStatusId;
 context.paramBranch = paramBranch;
 context.tallyRefNO = tallyRefNO;

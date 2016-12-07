@@ -117,9 +117,13 @@ facilityPartyId = parameters.partyId;
  tallyRefNO = parameters.tallyRefNO;
  scheme = parameters.scheme;
  
-
+ indentEntryFromDate = parameters.indentEntryFromDate;
+ indentEntryThruDate = parameters.indentEntryThruDate;
+   
 facilityDateStart = null;
 facilityDateEnd = null;
+indentEntryFromDateStart = null;
+indentEntryThruDateStart = null;
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	try {
@@ -129,10 +133,27 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	}
 	facilityDateStart = UtilDateTime.getDayStart(transDate);
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
+	
+}
+
+
+if(UtilValidate.isNotEmpty(indentEntryFromDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transDateI = new java.sql.Timestamp(sdf.parse(indentEntryFromDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + indentEntryFromDate, "");
+	}
+	
+	if(transDateI){
+	indentEntryFromDateStart = UtilDateTime.getDayStart(transDateI);
+	indentEntryThruDateStart = UtilDateTime.getDayEnd(transDateI);
+	}
 }
 
   
 transThruDate = null;
+transThruDateI = null;
 if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
 	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	try {
@@ -141,6 +162,17 @@ if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
 		Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
 	}
 	facilityDateEnd = UtilDateTime.getDayEnd(transThruDate);
+}
+
+
+if(UtilValidate.isNotEmpty(indentEntryThruDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transThruDateI = new java.sql.Timestamp(sdf.parse(indentEntryThruDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + indentEntryThruDate, "");
+	}
+	indentEntryThruDateStart = UtilDateTime.getDayEnd(transThruDateI);
 }
 
 
@@ -184,6 +216,13 @@ else{
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
+	
+}
+
+
+if(UtilValidate.isNotEmpty(indentEntryFromDateStart)){
+	condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.GREATER_THAN_EQUAL_TO, indentEntryFromDateStart));
+	condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.LESS_THAN_EQUAL_TO, indentEntryThruDateStart));
 	
 }
 
@@ -261,7 +300,13 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
 		
 	}
+	if(UtilValidate.isNotEmpty(indentEntryFromDateStart)){
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.GREATER_THAN_EQUAL_TO, indentEntryFromDateStart));
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.LESS_THAN_EQUAL_TO, indentEntryThruDateStart));
 		
+	}
+	
+	
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	//orderHeaderbefo = delegator.findList("OrderHeader", cond, null, payOrderBy, null ,false);

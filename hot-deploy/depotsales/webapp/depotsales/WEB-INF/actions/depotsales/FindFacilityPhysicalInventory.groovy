@@ -305,7 +305,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				poRefNum=orderAttributes.attrValue;
 			}
 			
-			conditionList.clear();
+			/*conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_TO_CUSTOMER"));
 			expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -314,21 +314,23 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			OrderRole = EntityUtil.getFirst(OrderRoleList);
 			
 			branchId = OrderRole.partyId;
+			  
 			
-		  
-			row.putAt("productStoreId", branchId);
 			
 			PartyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", branchId), false);
 			
 			branchName = PartyGroup.groupName;
 			
 			row.putAt("branchName", branchName);
+			*/
 			
 			row.putAt("poRefNum", poRefNum);
 			row.putAt("facilityId", inventoryItem.facilityId);
 			if(UtilValidate.isNotEmpty(inventoryProdStore)){
 				row.putAt("branchId", (inventoryProdStore.get(0)).get("productStoreId"));
 			}
+			
+			row.putAt("productStoreId", (inventoryProdStore.get(0)).get("productStoreId"));
 			
 			row.putAt("facilityName", facility.facilityName);
 			row.putAt("partyName", partyName);
