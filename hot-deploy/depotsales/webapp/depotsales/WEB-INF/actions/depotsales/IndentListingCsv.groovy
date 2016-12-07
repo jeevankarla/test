@@ -134,6 +134,50 @@ BranchList=[];
 	int totalIndents = 0
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
+    
+	
+	headerData2=[:];
+	headerData2.put("orderDate", "_");
+	headerData2.put("orderId", "_");
+	headerData2.put("orderNo", "_");
+	headerData2.put("Qty", "_");
+	headerData2.put("unit", "_");
+	headerData2.put("poQty", "_");
+	headerData2.put("salInv", "_");
+	headerData2.put("salDate", "_");
+	headerData2.put("salVal", "_");
+	headerData2.put("transporter", "_");
+	headerData2.put("milInv", "_");
+	headerData2.put("value", "_");
+	headerData2.put("paymentReceipt", "_");
+	headerData2.put("amount", "_");
+	headerData2.put("weaverName", "_");
+	headerData2.put("poNo", "____I N D E N T ");
+	headerData2.put("poDate", "_");
+	headerData2.put("supplierName", "R E G I S T E R");
+	orderList.add(headerData2);
+	
+	headerData=[:];
+	headerData.put("orderDate", "Indent Date");
+	headerData.put("orderId", "Cust Order");
+	headerData.put("orderNo", "Sequence Id");
+	headerData.put("Qty", "Qty");
+	headerData.put("unit", "Unit");
+	headerData.put("poQty", "PO Qty");
+	headerData.put("salInv", "Sal Invoice");
+	headerData.put("salDate", "Sal Date");
+	headerData.put("salVal", "Sal Value");
+	headerData.put("transporter", "Transporter");
+	headerData.put("milInv", "Mil Invoice");
+	headerData.put("value", "Value");
+	headerData.put("paymentReceipt", "Payment Receipt");
+	headerData.put("amount", "Amount");
+	headerData.put("weaverName", "Weaver Name");
+	headerData.put("poNo", "Po No");
+	headerData.put("poDate", "PO Date");
+	headerData.put("supplierName", "Supplier Name");
+	orderList.add(headerData);
+	
 	
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
@@ -161,7 +205,7 @@ BranchList=[];
 		billFromVendor = PartyHelper.getPartyName(delegator, billFromVendorPartyId, false);
 		JSONObject tempData = new JSONObject();
 		tempData.put("partyId", partyId);
-		tempData.put("billFromVendorPartyId", billFromVendor);
+		tempData.put("weaverName", billFromVendor);
 		tempData.put("partyName", partyName);
 		
 		if(eachHeader.tallyRefNo)
@@ -215,7 +259,7 @@ BranchList=[];
 		tempData.put("supplierPartyId", supplierPartyId);
 		tempData.put("totalIndents", totalIndents);
 		tempData.put("storeName", productStoreId);
-		tempData.put("supplierPartyName", supplierPartyName);
+		tempData.put("supplierName", supplierPartyName);
 		tempData.put("orderNo", orderNo);
 		tempData.put("orderId", eachHeader.orderId);
 		tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));

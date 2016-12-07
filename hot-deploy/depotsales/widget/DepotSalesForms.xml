@@ -3365,24 +3365,24 @@
          <field name="depotCharges" title="DEPOT CHARGES AT 2.5%"><display/></field>
      </form> 
        <form name="IndentCSV" type="list" list-name="orderList" view-size="99999">
-        <field name="orderDate" title="Indent Date"><display/></field>
-        <field name="orderId" title="Cust Order" ><display /></field>
-        <field name="orderNo" title="Sequence Id"><display/></field> -->
-        <field name="Qty" title="Qty"><display/></field>
-        <field name="unit" title="Unit"><display/></field>
-        <field name="weaverName" title="Weaver Name"><display description="${partyName} [${partyId}]"/></field>
-        <field name="poNo" title="Po No"><display/></field>
-        <field name="poDate" title="Po Date"><display/></field>
-        <field name="supplierName" title="Supplier Name"><display description="${supplierPartyName} [${supplierPartyId}]"/></field>
-        <field name="poQty" title="PO Qty"><display/></field>
-        <field name="salInv" title="Sal Invoice"><display/></field>
-        <field name="salDate" title="Sal Date"><display/></field>
-        <field name="salVal" title="Sal Value"><display/></field>
-        <field name="transporter" title="Transporter"><display/></field>
-        <field name="milInv" title="Mil Invoice"><display/></field>
-        <field name="value" title="Value"><display/></field>
-        <field name="paymentReceipt" title="Payment Receipt"><display/></field>
-        <field name="amount" title="Amount"><display/></field>
+        <field name="orderDate" title="_"><display/></field>
+        <field name="orderId" title="_" ><display /></field>
+        <field name="orderNo" title="_"><display/></field> -->
+        <field name="Qty" title="_"><display/></field>
+        <field name="unit" title="_"><display/></field>
+        <field name="weaverName" title="MONTHLY INFORMATION ON YARN SUPPLY"><display/></field>
+        <field name="poNo" title="FROM NHDC FOR"><display/></field>
+        <field name="supplierName" title="BASUDEVPUR SILPA BIPANAN TSS LTD"><display/></field>
+        <field name="poDate" title="_"><display/></field>
+        <field name="poQty" title="_"><display/></field>
+        <field name="salInv" title="_"><display/></field>
+        <field name="salDate" title="_"><display/></field>
+        <field name="salVal" title="_"><display/></field>
+        <field name="transporter" title="_"><display/></field>
+        <field name="milInv" title="_"><display/></field>
+        <field name="value" title="_"><display/></field>
+        <field name="paymentReceipt" title="_"><display/></field>
+        <field name="amount" title="_"><display/></field>
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>

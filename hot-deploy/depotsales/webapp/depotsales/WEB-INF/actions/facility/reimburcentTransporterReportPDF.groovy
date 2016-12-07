@@ -313,9 +313,12 @@ finalMap = [:];
  
 partyWiseTotalsMap = [:];
  
+totalsMap=[:];
+totalSalQty=0;
+totalSalAmt=0; 
+totalClaimAmt=0
+totalEligAmt=0;
 
- 
- 
 for (eachPartyId in partyIds) {
 	 
 	 
@@ -405,9 +408,10 @@ for (eachPartyId in partyIds) {
 	 
 	Debug.log("invoiceAMT================="+invoiceAMT);
 	
-	 
+	
+
 	tempMap.put("invoiceAmount", invoiceAMT);
-	 
+	totalSalAmt=totalSalAmt+invoiceAMT;
 	 
 	 
 	condListCat.clear();
@@ -443,9 +447,9 @@ for (eachPartyId in partyIds) {
 	 
 	//Debug.log("eligibleAMT==============="+eligibleAMT);
 	 
-	 
+	
 	tempMap.put("invoiceQTY", invoiceQTY);
-	 
+	totalSalQty=totalSalQty+invoiceQTY
 	 
 	//Debug.log("invoiceAMT================="+invoiceAMT);
 	condList.clear();
@@ -603,6 +607,7 @@ for (eachPartyId in partyIds) {
 		 claimAmt = Double.valueOf(reimbursentAMT);
 		 totClaimAmt=totClaimAmt+claimAmt;
 		 tempMap.put("claim", claimAmt);
+		 totalClaimAmt=totalClaimAmt+claimAmt
 		 } else{
 		 tempMap.put("claim", "");
 		 }
@@ -612,9 +617,12 @@ for (eachPartyId in partyIds) {
 		 if(maxAmt > reimbursentAMT){
 			 totElgibleAmt=totElgibleAmt+reimbursentAMT;
 			 tempMap.put("eligibleAMT", reimbursentAMT);
+			 totalEligAmt=totalEligAmt+reimbursentAMT;
+			 
 		 } else{
 			 totElgibleAmt=totElgibleAmt+maxAmt;
 			 tempMap.put("eligibleAMT", maxAmt);
+			 totalEligAmt=totalEligAmt+maxAmt;
 		 }
  
 		 
@@ -803,8 +811,17 @@ for (eachPartyId in partyIds) {
 	}
 	 
 }
- 
+
+totalsMap.put("invoiceQTY", totalSalQty);
+totalsMap.put("invoiceAmount", totalSalAmt);
+totalsMap.put("claim", totalClaimAmt);
+totalsMap.put("eligibleAMT", totalEligAmt);
+context.totalsMap=totalsMap;
 context.finalMap = finalMap;
  
 context.partyWiseTotalsMap = partyWiseTotalsMap;
  
+
+
+
+

@@ -132,7 +132,7 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 context.daystart=daystart
 context.dayend=dayend
 branchContext=[:];
-branchContext.put("branchId","INT15");
+branchContext.put("branchId",branchId);
 
 BOAddress="";
 BOEmail="";

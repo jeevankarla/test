@@ -128,7 +128,7 @@ under the License.
 		         	<td>Agency <br> <input  type="text" size="25pt"  id="cutomerId"  name="cutomerName"  onblur="javascript:displayName(this,'customer');" />
 		            <input  type="hidden" size="14pt"   name="customer" value="${customerId?if_exists}"/></td>
 				<#else> -->
-					<td>Agency <br> <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onblur="javascript:displayName(this,'customer');" />
+					<td>Agency/Depot <br> <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onblur="javascript:displayName(this,'customer');" />
 					<div id="customerName"><#if customerName?has_content>  ${customerName?if_exists} </#if></div>
 					</td>
 				<#-- </#if> --> 
