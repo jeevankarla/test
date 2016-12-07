@@ -974,6 +974,13 @@
                 <entity-condition entity-name="InsuranceType" list="InsuranceTypeList" use-cache="true">
                 	<condition-expr field-name="insuranceTypeId" operator="not-equals" value="RECCR_DEPOSIT"/>
                 </entity-condition>	
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="MastersReports"/>
@@ -1028,6 +1035,13 @@
                 	<order-by field-name="thruDate"/>
                     <order-by field-name="periodNum"/>
                 </entity-condition> 
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="LeaveReports"/>
@@ -1072,6 +1086,13 @@
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  	
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="AttendanceReports"/>
@@ -1120,6 +1141,15 @@
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  
+                
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
+                
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="PayrollReports"/>
@@ -1169,7 +1199,14 @@
                 	</condition-list>
                 </entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition>  	
+                </entity-condition>  
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>	
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getDefaultTimePeriod.groovy"/>
@@ -1209,7 +1246,13 @@
 					<field-map field-name="partyId" value="Company" />
 					<select-field field-name="groupName"/>
 				</entity-and>
-    		    
+    		    <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
     		</actions>
     		<widgets>
     		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -1257,6 +1300,13 @@
                 </entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  	
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/monthWiseLeaveEncashmentPeriods.groovy"/>
                 <!-- <entity-condition list="SupplyCustomTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-list combine="or">
@@ -1311,6 +1361,13 @@
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="CheckListReports"/>
@@ -1350,6 +1407,13 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>	
+                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
+                	<condition-list combine="and">
+						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+					</condition-list>
+					<order-by field-name="partyId"/>
+				</entity-condition>
     		</actions>
     		<widgets>
     		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
