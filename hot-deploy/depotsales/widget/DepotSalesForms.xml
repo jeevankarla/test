@@ -3042,7 +3042,46 @@
         </field>
 
 	</form>
-
+       <form name="SupplierwiseCountwisePurchaseReportCSV" type="list" list-name="finalCSVList" view-size="99999">
+    	 <field name="partyName" title="Supplier Name"><display/></field>
+    	 <field name="orderQty" title="Qty"><display/></field>
+         <field name="BdlWt" title="Bdl Wt"><display/></field>
+         <field name="rate" title="Rate"><display/></field>
+         <field name="orderValue" title="Value"><display/></field>
+    </form>
+    <form name="MillwisecountwisePurchaseofYarnReportCSV" type="list" list-name="finalCSVList" view-size="99999">
+    	 <field name="partyName" title="Supplier Name"><display/></field>
+    	 <field name="orderQty" title="Qty"><display/></field>
+         <field name="BdlWt" title="Bdl Wt"><display/></field>
+         <field name="rate" title="Rate"><display/></field>
+         <field name="orderValue" title="Value"><display/></field>
+    </form>
+    <form name="purchaseRegisterCSV" type="list" list-name="orderList" view-size="99999">
+        <field name="orderDate" title="_"><display/></field>
+        <field name="orderId" title="_" ><display /></field>
+        <field name="orderNo" title="_"><display/></field> -->
+        <field name="Qty" title="_"><display/></field>
+        <field name="unit" title="_"><display/></field>
+        <field name="weaverName" title="MONTHLY INFORMATION ON YARN SUPPLY"><display/></field>
+        <field name="poNo" title="FROM NHDC FOR"><display/></field>
+        <field name="supplierName" title="BASUDEVPUR SILPA BIPANAN TSS LTD"><display/></field>
+        <field name="poDate" title="_"><display/></field>
+        <field name="poQty" title="_"><display/></field>
+        <field name="salInv" title="_"><display/></field>
+        <field name="salDate" title="_"><display/></field>
+        <field name="salVal" title="_"><display/></field>
+        <field name="transporter" title="_"><display/></field>
+        <field name="milInv" title="_"><display/></field>
+        <field name="value" title="_"><display/></field>
+        <field name="paymentReceipt" title="_"><display/></field>
+        <field name="amount" title="_"><display/></field>
+        <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
+        <field name="storeName" title="Store Name"><display/></field>
+        <field name="poSquenceNo" title="PO Squence No"><display/></field>
+        <field name="statusId" title="Status Id"><display/></field>
+        <field name="orderTotal" title="Order Total"><display/></field> -->
+    </form>
+    
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
 			<field name="invoiceId" title="invoiceId"><display/></field>
 			<field name="invoiceDate" title="invoiceDate"><display/></field>
