@@ -1711,37 +1711,37 @@
       </menu>
 	  <menu name="SubReportsTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="ManagementReports" title="Management Reports">
+        <menu-item name="MANAGEMENT_REPORTS" title="Management Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="MANAGEMENT_REPORTS"/>
         	</link>
         </menu-item>
-         <menu-item name="IndentReports" title="Indent Reports">
+         <menu-item name="INDENT_REPORTS" title="Indent Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="INDENT_REPORTS"/>
         	</link>
         </menu-item>
-         <menu-item name="PurchaseReports" title="Purchase Reports">
+         <menu-item name="PURCHASE_REPORTS" title="Purchase Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="PURCHASE_REPORTS"/>
         	</link>
         </menu-item>
-         <menu-item name="SaleReports" title="Sale Reports">
+         <menu-item name="SALE_REPORTS" title="Sale Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="SALE_REPORTS"/>
         	</link>
         </menu-item>
-         <menu-item name="ReimbursmentReports" title="Reimbursment Reports">
+         <menu-item name="REIMBURSMENT_REPORTS" title="Reimbursment Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="REIMBURSMENT_REPORTS"/>
         	</link>
         </menu-item>
-        <menu-item name="ClusterReports" title="Cluster Reports">
+        <menu-item name="CLUSTER_REPORTS" title="Cluster Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="CLUSTER_REPORTS"/>
         	</link>
         </menu-item>
-        <menu-item name="MasterReports" title="Master Reports">
+        <menu-item name="MASTER_REPORTS" title="Master Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="MASTER_REPORTS"/>
         	</link>
