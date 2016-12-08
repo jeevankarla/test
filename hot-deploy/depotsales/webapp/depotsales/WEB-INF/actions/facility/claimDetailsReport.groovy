@@ -141,6 +141,12 @@ condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, false );
 DecimalFormat df = new DecimalFormat("0.00");
 DistrictWiseMap=[:];
+totalsMap=[:];
+totalQty=0
+totalvalue=0
+totalsubsidyAmt=0
+totalserviceCharg=0;
+totalclaimTotal=0
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	summarySNo=0;
@@ -200,9 +206,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
 			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
+			 totalQty=totalQty+quantity;
 			 amount = eachInvoiceItem.get("amount");
 			 value= quantity*amount;
 			 temMap.put("value", df.format(value.setScale(0, 0)));
+			 totalvalue=totalvalue+value
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
@@ -215,10 +223,13 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
 			 }
 			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
+			 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
 			 serviceCharg= (subsidyAmt*0.05);
 			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
+			 totalserviceCharg=totalserviceCharg+serviceCharg
 			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
 			 temMap.put("claimTotal", claimTotal);
+			 totalclaimTotal=totalclaimTotal+claimTotal
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
 				temMap.put("sNo", sNo);
 				sNo = sNo+1;
@@ -261,6 +272,13 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 		
 	}
 }
+
+totalsMap.put("quantity", totalQty);
+totalsMap.put("value", totalvalue);
+totalsMap.put("subsidyAmt", totalsubsidyAmt);
+totalsMap.put("serviceCharg", totalserviceCharg);
+totalsMap.put("claimTotal", totalclaimTotal);
+context.totalsMap=totalsMap;
 context.DistrictWiseMap=DistrictWiseMap;
 DistrictWiseList=[];
 granTotal=0;

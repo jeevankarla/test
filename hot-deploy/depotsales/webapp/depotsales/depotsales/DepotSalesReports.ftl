@@ -34,6 +34,7 @@ $(document).ready(function(){
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate"); 
 	    makeDatePicker("pendingShipmentsReportFrom","pendingShipmentsReportT0");
+	    makeDatePicker("SupplierwiseCountwiseReportDateFrom","SupplierwiseCountwiseReportDateThru");
 	    makeDatePicker("m1ReportDateFrom","m1ReportDateThru");
 	    makeDatePicker("FCWSReportDateFrom","FCWSReportDateThru");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
@@ -220,6 +221,42 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 			</form>
           </tr>
+		<tr class="alternate-row">
+			<form id="SupplierwiseCountwisePurchaseReport" name="SupplierwiseCountwisePurchaseReport" method="post" action="<@ofbizUrl>SupplierwiseCountwisePurchaseReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Supplier wise Count wise Purchase Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="SupplierwiseCountwiseReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="SupplierwiseCountwiseReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Category
+				    <select name="categoryId" id="categoryId">
+				          <option value="ALL">ALL</option>
+				          <option value='COTTON'>COTTON</option>
+				       	  <option value='SILK'>SILK</option>
+				       	  <option value='OTHER'>OTHERS</option>
+				    </select>  </span>  								
+			  	 </td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('SupplierwiseCountwisePurchaseReport', '<@ofbizUrl>SupplierwiseCountwisePurchaseReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('SupplierwiseCountwisePurchaseReport', '<@ofbizUrl>SupplierwiseCountwisePurchaseReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			</form>
+          </tr>
+ 		<tr class="alternate-row">
+			<form id="MillwisecountwisePurchaseofYarnReport" name="MillwisecountwisePurchaseofYarnReport" method="post" action="<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Mill wise count wise Purchase of Yarn Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="MillwisecountwisePurchaseofYarnReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="MillwisecountwisePurchaseofYarnReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Category
+				    <select name="categoryId" id="categoryId">
+				          <option value="ALL">ALL</option>
+				          <option value='COTTON'>COTTON</option>
+				       	  <option value='SILK'>SILK</option>
+				       	  <option value='OTHER'>OTHERS</option>
+				    </select>  </span>  								
+			  	 </td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			</form>
+          </tr>
            <tr class="alternate-row">
 			<form id="fiberAndCountWiseSalesReport" name="fiberAndCountWiseSalesReport" method="post" action="<@ofbizUrl>fiberAndCountWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Fiber And Count Wise Sales Report</td>
@@ -352,6 +389,24 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					  	 <td width="15%"></td>
 				<td width="10%">
 				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+          </tr>
+          <tr class="alternate-row">
+			<form id="purchaseRegister" name="purchaseRegister" method="post" action="<@ofbizUrl>purchaseRegister.csv</@ofbizUrl>" target="_blank">	
+				<td width="30%">Purchase Register Report</td>
+				<td width="15%"></td>
+			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchaseRegister" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+			    <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
+					  	 <td width="15%"></td>
+				<td width="10%">
+				<input type="submit" value="CSV" onClick="javascript:appendParams('purchaseRegister', '<@ofbizUrl>purchaseRegister.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
           </tr>
       <#--> <tr class="alternate-row">

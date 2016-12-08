@@ -15,7 +15,10 @@
             <widgets>
             	 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">  
+                    <include-menu name="SubReportsTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
    							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/DepotSalesReports.ftl"></html-template></html></platform-specific>
+   							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/ReimbursementReports.ftl"></html-template></html></platform-specific>
                 	</decorator-section>
                 </decorator-screen>
             </widgets>
@@ -87,6 +90,25 @@
 			</widgets>
 		</section>
 	</screen>
+	 <screen name="purchaseRegisterCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="processOrdersBranchSales" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/purchaseRegisterCSV.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<!-- <include-form name="IndentCSVHeading" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+					<!-- <include-form name="IndentCSVDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+						<include-form name="purchaseRegisterCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
     <screen name="DepotSalesBookAbstractReportPDF">
 		<section>
 			<actions>
@@ -133,7 +155,94 @@
 			</widgets>
 		</section>
 	</screen>
-	
+	<screen name="SupplierwiseCountwisePurchaseReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/SupplierwiseCountwisePurchaseReport.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/SupplierwiseCountwisePurchaseReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SupplierwiseCountwisePurchaseReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/SupplierwiseCountwisePurchaseReport.groovy" /> 		</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="SupplierwiseCountwisePurchaseReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" /> 
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MillwisecountwisePurchaseofYarnReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/MillwisecountwisePurchaseofYarnReportPDF.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MillwisecountwisePurchaseofYarnReportPDF.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MillwisecountwisePurchaseofYarnReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/MillwisecountwisePurchaseofYarnReportPDF.groovy" /> 		</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="MillwisecountwisePurchaseofYarnReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" /> 
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="m1ReportPDF">
 		<section>
 			<actions>

@@ -103,7 +103,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentCSV"/>
       </request-map>
-    
+     <request-map uri="purchaseRegister.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="purchaseRegisterCSV"/>
+      </request-map>
     <request-map uri="DepotSalesOrderNew"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNew"/></request-map>
      
     <request-map uri="processDepotSalesOrder">
@@ -753,6 +756,24 @@
     <request-map uri="m1Report.csv">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="m1ReportCSV"/>
+    </request-map>
+     <request-map uri="MillwisecountwisePurchaseofYarnReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MillwisecountwisePurchaseofYarnReportPDF"/>
+    </request-map>
+    
+    <request-map uri="MillwisecountwisePurchaseofYarnReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MillwisecountwisePurchaseofYarnReportCSV"/>
+    </request-map>
+    <request-map uri="SupplierwiseCountwisePurchaseReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="SupplierwiseCountwisePurchaseReportPDF"/>
+    </request-map>
+    
+    <request-map uri="SupplierwiseCountwisePurchaseReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="SupplierwiseCountwisePurchaseReportCSV"/>
     </request-map>
     <request-map uri="fiberAndCountWiseSalesReport.pdf">
      <security https="true" auth="true"/>
@@ -2623,11 +2644,17 @@
     <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>
 	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
     <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
+    <view-map name="purchaseRegisterCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseRegisterCSV" content-type="text/csv"/>
     <view-map name="m1ReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportCSV" content-type="text/csv"/>
     <view-map name="m1ReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportPDF" content-type="application/pdf"/>
      <view-map name="fiberAndCountWiseSalesReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#fiberAndCountWiseSalesReportCSV" content-type="text/csv"/>
     <view-map name="fiberAndCountWiseSalesReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#fiberAndCountWiseSalesReportPDF" content-type="application/pdf"/>
-    
+    <view-map name="SupplierwiseCountwisePurchaseReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierwiseCountwisePurchaseReportCSV" content-type="text/csv"/>
+    <view-map name="SupplierwiseCountwisePurchaseReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierwiseCountwisePurchaseReportPDF" content-type="application/pdf"/>
+     
+     <view-map name="MillwisecountwisePurchaseofYarnReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#MillwisecountwisePurchaseofYarnReportCSV" content-type="text/csv"/>
+    <view-map name="MillwisecountwisePurchaseofYarnReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MillwisecountwisePurchaseofYarnReportPDF" content-type="application/pdf"/>
+     
     <view-map name="FindPaymentDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPaymentNonRoute"/>
     <view-map name="NonRouteFindChequeReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteFindChequeReturns"/>
     <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
