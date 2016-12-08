@@ -96,6 +96,9 @@ public class EmplLeaveService {
             		
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	
+            	GenericValue leaveUpdateDate = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId", employeeId,"leaveTypeId",leaveTypeIdCtx,"customTimePeriodId",latestHRPeriod.get("customTimePeriodId")), false);
+            	
 	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("thruDate"), null, false);
 	            for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
@@ -198,7 +201,13 @@ public class EmplLeaveService {
 				}
 				result.put("leaveBalances", leaveBalancesMap);
 				//this is to return date for json request
-				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+				if(UtilValidate.isNotEmpty(leaveUpdateDate)){
+					result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)leaveUpdateDate.get("lastUpdatedStamp"),"dd-MM-yyyy"));
+				}
+				else{
+					result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+				}
+				
         		
         	}
         } catch (Exception e) {
