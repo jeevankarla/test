@@ -203,7 +203,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 			</form>
           </tr>
-          <tr class="alternate-row">
+          <tr class="alternate-row">   
 			<form id="m1Report" name="m1Report" method="post" action="<@ofbizUrl>m1Report.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">M1 Report</td>
 				<td width="15%">From<input  type="text" size="18pt" id="m1ReportDateFrom" readonly  name="fromDate"/></td>
