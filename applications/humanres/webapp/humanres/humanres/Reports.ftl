@@ -156,9 +156,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
       					<#list PartyGroupList as PartyList>
                 			<option value='Company'>${PartyList.groupName?if_exists}</option>
                 		</#list> 
-                		<#list orgList as org>
+                		<#list orgListMain as org>
                 			<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-                		</#list>             
+                		</#list>
+                			<option value='INT58'>Pochampally</option>           
 					</select>
           		</td> 
           	</tr>      	   	      	                 
