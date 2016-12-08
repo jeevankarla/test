@@ -189,7 +189,7 @@
 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            
 	        </condition>
-	      	<link target="DepotSalesReports"/>
+	      	<link target="DepotSalesReports" />
 	    </menu-item>
 	     <menu-item name="ShippingReimbursement" title="Reimbursement">
 	      	<link target="ShippingReimbursement">
@@ -1709,7 +1709,45 @@
         </menu-item>
         
       </menu>
-	
+	  <menu name="SubReportsTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="ManagementReports" title="Management Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="MANAGEMENT_REPORTS"/>
+        	</link>
+        </menu-item>
+         <menu-item name="IndentReports" title="Indent Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="INDENT_REPORTS"/>
+        	</link>
+        </menu-item>
+         <menu-item name="PurchaseReports" title="Purchase Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="PURCHASE_REPORTS"/>
+        	</link>
+        </menu-item>
+         <menu-item name="SaleReports" title="Sale Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="SALE_REPORTS"/>
+        	</link>
+        </menu-item>
+         <menu-item name="ReimbursmentReports" title="Reimbursment Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="REIMBURSMENT_REPORTS"/>
+        	</link>
+        </menu-item>
+        <menu-item name="ClusterReports" title="Cluster Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="CLUSTER_REPORTS"/>
+        	</link>
+        </menu-item>
+        <menu-item name="MasterReports" title="Master Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="MASTER_REPORTS"/>
+        	</link>
+        </menu-item>
+        
+      </menu>
 	
 	<menu name="FindCfcPortalTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">

@@ -40,9 +40,8 @@ under the License.
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
                 <#-- <fo:block text-align="left"    font-size="10pt" >STATEMENT SHOWING THE AGENCYWISE DETAILS OF COTTON/SILK/JUTE YARN SUPPLIED BY NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED UNDER THE SCHEME FOR SUPPLY OF YARN AT :<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block> -->
-				<fo:block text-align="center" font-size="10pt" font-weight="bold" >STATEMENT FOR CLAIMING REIMBURSEMENT OF THE COST OF TRANSPORTATION AND OVERHEADS TOWARDS </fo:block>
-				<fo:block text-align="center" font-size="10pt" font-weight="bold" >THE QUANTUM OF YARN SUPPLIED UNDER MILL GATE PRICE SCHEME FOR THE PERIOD </fo:block>
-				<fo:block text-align="center" font-size="10pt" font-weight="bold" >TRANSPORTATION AND DEPOT EXPENSES FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
+				<fo:block text-align="center" font-size="10pt" font-weight="bold" >PENDING SHIPMENTS REPORT </fo:block>
+				<fo:block text-align="center" font-size="10pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
         		<fo:block>

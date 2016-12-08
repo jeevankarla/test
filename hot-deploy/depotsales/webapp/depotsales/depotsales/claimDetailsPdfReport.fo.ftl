@@ -134,6 +134,41 @@ under the License.
 						            </fo:table-cell>
 							     </fo:table-row>
 							   </#list>
+	                             <fo:table-row>
+				                    <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-weight="bold" font-size="10pt" white-space-collapse="false">TOTAL</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalsMap.quantity?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalsMap.value?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalsMap.subsidyAmt?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalsMap.serviceCharg?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalsMap.claimTotal?if_exists?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+							     </fo:table-row>
 							 </fo:table-body>
 						</fo:table>
 						</fo:block>
