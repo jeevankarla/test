@@ -52,10 +52,10 @@ under the License.
 		            <fo:table-column column-width="12%"/>
 		            
 		            <fo:table-column column-width="12%"/>
-		            <fo:table-column column-width="5%"/>
-		            <fo:table-column column-width="5%"/>
+		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="7%"/>
 		            
-		            <fo:table-column column-width="5%"/>
+		            <fo:table-column column-width="7%"/>
 		            <fo:table-column column-width="5%"/>
 		            <fo:table-column column-width="5%"/>
 		            <fo:table-column column-width="5%"/>
@@ -130,19 +130,19 @@ under the License.
 				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.partyName}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.partyName}</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.partyType}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">District</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.district}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">Branch</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.branch}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">State</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.state}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">RO</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">${eachInvoice.ro}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
 				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${eachInvoice.qty}</fo:block>
