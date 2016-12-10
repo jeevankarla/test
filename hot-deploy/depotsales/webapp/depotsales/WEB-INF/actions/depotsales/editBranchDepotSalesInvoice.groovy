@@ -123,7 +123,7 @@ if(invoiceId){
 	context.customerGeoId = customerGeoId;
 	context.branchGeoId = branchGeoId;
 	
-	orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+orderAttr = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
 	
 	saleTaxType = null;
 	saleTitleTransferEnumId = null;

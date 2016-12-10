@@ -34,6 +34,9 @@ DateList=[];
 DateMap = [:];
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
+
+partyId = parameters.partyId;
+
 DateMap.put("partyfromDate", partyfromDate);
 DateMap.put("partythruDate", partythruDate);
 
@@ -107,6 +110,8 @@ if(UtilValidate.isNotEmpty(daystart)){
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 if(purposeType)
 condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, purposeType));
