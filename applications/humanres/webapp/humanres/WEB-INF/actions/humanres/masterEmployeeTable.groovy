@@ -30,12 +30,9 @@ try {
 }
 orgId=parameters.partyId;
 
-nowDate=UtilDateTime.nowTimestamp();
-fromDate = UtilDateTime.getMonthStart(nowDate);
-thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 Flag=parameters.reportFlag;
 if(Flag=="daAmount")
-result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
+result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDateStart,thruDate:thruDateStart,userLogin:userLogin]);
 def populateChildren(org, employeeList) {
 		EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId,fromDate:fromDateStart,thruDate:thruDateStart]);
 		employments=EmploymentsMap.get("employementList");
@@ -200,6 +197,7 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.phoneNumber);
 	//employeeJSON.add(employee.address);
 	employeesJSON.add(employeeJSON);
+	Debug.log("employeesJSON=========="+employeesJSON);
 }
 context.employeesJSON = employeesJSON;
 //Debug.logError("employeesJSON="+employeesJSON,"");
