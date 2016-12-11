@@ -462,4 +462,32 @@
             </hyperlink>
         </field>  -->
     </form>
+     
+        <form name="ListDepotSearchOrderPayments" type="list" list-name="orderList" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        <field name="shipmentId"><display></display></field> 
+        <field name="partyId"><display></display></field> 
+        <field name="partyName"><display></display></field> 
+        <field name="salesOrder"><display></display></field> 
+         <field name="orderId"><hidden/></field> 
+         <field name="salesButton"><hidden/></field> 
+        <field name="addContent" title="View" widget-style="buttontext" use-when="true">
+           <hyperlink target-type="plain" description="View" target="javascript:fetchOrderInformation('${orderId}');"></hyperlink>
+        </field>
+        <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice"  use-when="(salesButton.equals(&quot;Y&quot;))">
+            <hyperlink target="DepotMaterialSalesInvoiceInit" description="Invoice">
+                <parameter param-name="shipmentId"/>
+                 <parameter param-name="partyId"/>
+                  <parameter param-name="orderId"/>
+            </hyperlink>
+        </field> 
+         <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(salesButton.equals(&quot;N&quot;))">
+          		 <display description="${salesNo}"></display>   
+          </field>
+    </form>
+         
+    
+    
+    
+    
     </forms>
