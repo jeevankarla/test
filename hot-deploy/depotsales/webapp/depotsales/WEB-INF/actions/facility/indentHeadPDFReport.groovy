@@ -110,6 +110,7 @@ if(UtilValidate.isNotEmpty(daystart)){
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+if(partyId)
 condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));

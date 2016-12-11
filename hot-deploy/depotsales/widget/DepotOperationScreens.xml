@@ -570,14 +570,23 @@
                                             <include-form name="FindSalesIndentPayment" location="component://depotsales/widget/DepotOperationForms.xml"/>
                                         </decorator-section>
                                         <decorator-section name="search-results">
-    								<screenlet title="Depot Orders">
+    								<!-- <screenlet title="Depot Orders">
     									<platform-specific>
     										<html>
     											<html-template
     												location="component://depotsales/webapp/depotsales/depotsales/ListDepotSearchOrderPayments.ftl" />
     										</html>
     									</platform-specific>
-    								</screenlet>
+    								</screenlet> -->
+    								<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/viewOrderDetailsDepot.ftl" />
+    										</html>
+    									</platform-specific>
+    								<screenlet title="Depot Orders">
+                       					<include-form name="ListDepotSearchOrderPayments" location="component://depotsales/widget/DepotOperationForms.xml"/>
+                   					</screenlet>
     								</decorator-section>
     								</decorator-screen>
     							</widgets>
