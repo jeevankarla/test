@@ -37,6 +37,7 @@ def populateChildren(org, employeeList) {
 		EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId,fromDate:fromDateStart,thruDate:thruDateStart]);
 		employments=EmploymentsMap.get("employementList");
 	employments.each { employment ->
+		
 		employee = [:];
 		group=delegator.findByAnd("PartyRelationshipAndDetail", [partyId: employment.partyIdFrom, partyTypeId : "PARTY_GROUP"],["groupName"]);
 		if(UtilValidate.isNotEmpty(group))
@@ -56,6 +57,13 @@ def populateChildren(org, employeeList) {
 			qual=qualifications.get(0).title;
 		 }
 		employee.put("qual",qual);
+		panId="";
+		panIds=delegator.findByAnd("Person",[partyId:employment.partyId],["panId"]);
+		if(UtilValidate.isNotEmpty(panIds)){
+			panId=panIds.get(0).panId;
+		 }
+		employee.put("panId",panId);
+		
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
 			daAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo: employment.partyId,benefitTypeId:"PAYROL_BEN_DA"],["benefitTypeId"]);
@@ -112,6 +120,22 @@ def populateChildren(org, employeeList) {
 		else
 		employee.put("bloodGroup",employment.bloodGroup);
 		}
+		
+		
+		finAccountId="";
+		finAccountName="";
+		finAccountName="";
+		finAccountIds =delegator.findByAnd("FinAccount",[ownerPartyId:employment.partyId]);
+		if(UtilValidate.isNotEmpty(finAccountIds)){
+			finAccountCode=finAccountIds.get(0).finAccountCode;
+			finAccountName=finAccountIds.get(0).finAccountName;
+			ifscCode=finAccountIds.get(0).ifscCode;
+			
+		 }
+		employee.put("finAccountCode",finAccountCode);
+		employee.put("finAccountName",finAccountName);
+		employee.put("ifscCode",ifscCode);
+		
 		
 		address = "";
 		if (employment.birthDate) {

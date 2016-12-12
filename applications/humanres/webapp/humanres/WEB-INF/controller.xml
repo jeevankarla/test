@@ -2081,7 +2081,7 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="Employees"/>
     </request-map>
-    <request-map uri="EmployeesListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EmployeesListCsv"></response></request-map>
+    <request-map uri="EmployeesListCsv.xls"><security https="true" auth="true"/><response name="success" type="view" value="EmployeesListCsv"></response></request-map>
     <request-map uri="EmployeesListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EmployeesListPdf"></response></request-map>
 	<request-map uri="ITAXQuarterlyStatementCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="ITAXQuarterlyStatementCsv"></response></request-map>
     <request-map uri="PayHeadTypes">
