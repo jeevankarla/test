@@ -748,6 +748,14 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DepotSalesBookReportPDF"/>
     </request-map>
+    <request-map uri="agencyWiseInvoiceOutstandingReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportPDF"/>
+    </request-map>
+    <request-map uri="agencyWiseInvoiceOutstandingReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportCSV"/>
+    </request-map>
     <request-map uri="m1Report.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="m1ReportPDF"/>
@@ -2645,6 +2653,8 @@
 	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
     <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
     <view-map name="purchaseRegisterCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseRegisterCSV" content-type="text/csv"/>
+    <view-map name="agencyWiseInvoiceOutstandingReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportCSV" content-type="text/csv"/>
+    <view-map name="agencyWiseInvoiceOutstandingReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportPDF" content-type="application/pdf"/>
     <view-map name="m1ReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportCSV" content-type="text/csv"/>
     <view-map name="m1ReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportPDF" content-type="application/pdf"/>
      <view-map name="fiberAndCountWiseSalesReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#fiberAndCountWiseSalesReportCSV" content-type="text/csv"/>
