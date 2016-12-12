@@ -63,9 +63,6 @@ def populateChildren(org, employeeList) {
 			panId=panIds.get(0).panId;
 		 }
 		employee.put("panId",panId);
-		Debug.log("panId============"+panId);
-		
-		
 		
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
@@ -129,7 +126,6 @@ def populateChildren(org, employeeList) {
 		finAccountName="";
 		finAccountName="";
 		finAccountIds =delegator.findByAnd("FinAccount",[ownerPartyId:employment.partyId]);
-		Debug.log("finAccountIds============"+finAccountIds);
 		if(UtilValidate.isNotEmpty(finAccountIds)){
 			finAccountCode=finAccountIds.get(0).finAccountCode;
 			finAccountName=finAccountIds.get(0).finAccountName;

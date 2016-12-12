@@ -916,7 +916,7 @@
 											<widgets>												
 												<screenlet title="${uiLabelMap.EmployeeList}">
 													<link text="${uiLabelMap.EmployeesExportAsCsv}" style="button"
-													target="EmployeesListCsv.csv">
+													target="EmployeesListCsv.xls">
 													<parameter param-name="partyId" from-field="parameters.partyId"/>													      
 												</link>
 												<link text="${uiLabelMap.EmployeesExportAsPdf}" style="button"

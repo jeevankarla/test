@@ -186,9 +186,9 @@ function setOrgPartyId() {
 			</div>
 			<div class="screenlet-body">
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmployeesListCsv.csv")?exists) && (reportDetailsMap.get("EmployeesListCsv.csv") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmployeesListCsv.csv"))?exists))> 
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmployeesListCsv.xls")?exists) && (reportDetailsMap.get("EmployeesListCsv.xls") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmployeesListCsv.xls"))?exists))> 
 						<tr class="alternate-row"> 
-							<form id="masterEmployees" name="HR-Master" mothed="post" action="<@ofbizUrl>EmployeesListCsv.csv</@ofbizUrl>" target="_blank">
+							<form id="masterEmployees" name="HR-Master" mothed="post" action="<@ofbizUrl>EmployeesListCsv.xls</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="25%"><span class='h3'>HR Master Information</span></td>
