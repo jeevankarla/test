@@ -192,7 +192,6 @@ BranchList=[];
 			custCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 			custOrderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
 		}
-			custBasededOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "partyId", true);
 			partyId = EntityUtil.getFirst(custOrderRoles).get("partyId");
 		
 		billFromOrderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -205,7 +204,7 @@ BranchList=[];
 		billFromVendor = PartyHelper.getPartyName(delegator, billFromVendorPartyId, false);
 		JSONObject tempData = new JSONObject();
 		tempData.put("partyId", partyId);
-		tempData.put("weaverName", billFromVendor);
+		tempData.put("weaverName", partyName);
 		tempData.put("partyName", partyName);
 		
 		if(eachHeader.tallyRefNo)

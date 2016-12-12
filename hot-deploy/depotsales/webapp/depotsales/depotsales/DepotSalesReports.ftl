@@ -35,7 +35,7 @@ $(document).ready(function(){
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate"); 
 	    makeDatePicker("pendingShipmentsReportFrom","pendingShipmentsReportT0");
 	    makeDatePicker("SupplierwiseCountwiseReportDateFrom","SupplierwiseCountwiseReportDateThru");
-	    makeDatePicker("MillwisecountwisePurchaseofYarnReportDateFrom","MillwisecountwisePurchaseofYarnReportDateFrom");
+	    makeDatePicker("MillwisecountwisePurchaseofYarnReportDateFrom","MillwisecountwisePurchaseofYarnReportDateThru");
 	    makeDatePicker("m1ReportDateFrom","m1ReportDateThru");
 	    makeDatePicker("FCWSReportDateFrom","FCWSReportDateThru");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
