@@ -49,6 +49,17 @@
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
+    
+     <service name="changeSaleOrderStatusForDEPOT" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="changeSaleOrderStatusForDEPOT">
+        <description>Approve Depot Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="createCustomPaymentFromPreference" engine="java"
            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createCustomPaymentFromPreference">
        <description>Creates a payment using the order payment preference</description>
@@ -365,6 +376,17 @@
          <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
     </service>
+    
+     <service name="cancelIndentOrderDepot" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelIndentOrderDepot">
+        <description>Cancel Indent Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
      <service name="cancelPartyQuotaBalanceHistory" engine="java" auth="false" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelPartyQuotaBalanceHistory">
         <description>cancel PartyQuota Balance History</description>

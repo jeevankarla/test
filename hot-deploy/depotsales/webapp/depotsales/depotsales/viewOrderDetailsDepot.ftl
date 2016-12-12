@@ -792,11 +792,16 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		
 		
 	}
-    function cancelDepotSaleOrderCaution(orderId,partyId) {
+	
+	
+    function cancelDepotSaleOrderCaution(orderId,partyId,inventoryItemId,facilityId) {
 		var message = "";
 		
 		var orderId = orderId;
 		var partyId = partyId;
+		
+		var inventoryItemId = inventoryItemId;
+		var facilityId = facilityId;
 		
 		message += "<html><head></head><body><form action='cancelDepotSaleOrder' id='cancelDepotSaleOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
 			//message += "<br/><br/>";
@@ -819,8 +824,12 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			
+			
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyId' value='"+partyId+"'/></td></tr>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='inventoryItemId' value='"+inventoryItemId+"'/></td></tr>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='facilityId' value='"+facilityId+"'/></td></tr>";
+			
 			
             message +="<tr class='h3'><td align='center' class='h3'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td>  </tr>";				 		
                 		

@@ -354,6 +354,14 @@
         <response name="success" type="view" value="FindDepotTransPO"/>   
        <response name="failed" type="view" value="FindDepotTransPO"/>  
     </request-map>
+    
+     <request-map uri="approvalLevelOfDepotPoDepot">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="changeSaleOrderStatusForDEPOT"/>
+        <response name="success" type="view" value="FindSalesIndentPayment"/>   
+       <response name="failed" type="view" value="FindSalesIndentPayment"/>  
+    </request-map>
+    
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelIndentOrder"/>
@@ -362,7 +370,7 @@
     </request-map>
     <request-map uri="cancelDepotSaleOrder">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelIndentOrder"/>
+        <event type="service" path="" invoke="cancelIndentOrderDepot"/>
         <response name="success" type="view" value="FindSalesIndentPayment"/>   
        <response name="failed" type="view" value="FindSalesIndentPayment"/>  
     </request-map>
