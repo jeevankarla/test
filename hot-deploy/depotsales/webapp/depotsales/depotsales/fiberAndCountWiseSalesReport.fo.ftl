@@ -59,7 +59,7 @@ under the License.
 			                 <fo:table-row>
 								
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Customer Name</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
