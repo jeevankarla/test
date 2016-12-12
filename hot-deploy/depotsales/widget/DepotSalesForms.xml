@@ -1945,6 +1945,8 @@
         <field name="estimatedShipDate" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="inventoryItemId" > <hidden/></field>
         <field name="branchName" > <hidden/></field>
+         <field name="orderId" > <hidden/></field>
+          <field name="statusId" > <hidden/></field>
        <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
         <field name="productId" widget-style="buttontext" title="Product Name">
         	<display-entity entity-name="Product" description="${description}"></display-entity>
@@ -1956,28 +1958,38 @@
 <!--         <field name="Sale" title="Sale Indent" widget-style="buttontext">
               <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${productName}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}','${balancedQty}');"></hyperlink>
         </field>
+         <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)||(!(statusId.equals(&quot;ORDER_CREATED&quot;)))">
  -->
+        
          <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
-             <hyperlink target="DepotSalesOrderNew" description="Sale Indent">
-		      <parameter param-name="productId"/>
-		       <parameter param-name="productName"/>
-		        <parameter param-name="quantityOnHandTotal"/>
-		         <!-- <parameter param-name="productStoreId"/> -->
-		         <parameter param-name="uom"/>
-		         <parameter param-name="bundleWeight"/>
-		         <parameter param-name="bundleUnitPrice"/>
-		         <parameter param-name="balancedQty"/>
-		         <parameter param-name="unitCost"/>
-		          <parameter param-name="bookedQuantity"/>
-		          <parameter param-name="inventoryItemId"/>
-		           <parameter param-name="productStoreId"/>
-		            <parameter param-name="branchName"/>
-		            <parameter param-name="submitFlag" value="NO"/>
-		            
-		           
-		           
-            </hyperlink>
+		<hyperlink target="DepotSalesOrderNew" description="Sale Indent">
+			<parameter param-name="productId"/>
+			 <parameter param-name="productName"/>
+			  <parameter param-name="quantityOnHandTotal"/>
+			   <!-- <parameter param-name="productStoreId"/> -->
+			<parameter param-name="uom"/>
+			<parameter param-name="bundleWeight"/>
+			<parameter param-name="bundleUnitPrice"/>
+			<parameter param-name="balancedQty"/>
+			<parameter param-name="unitCost"/>
+			 <parameter param-name="bookedQuantity"/>
+			 <parameter param-name="inventoryItemId"/>
+			  <parameter param-name="productStoreId"/>
+			   <parameter param-name="branchName"/>
+			   <parameter param-name="submitFlag" value="NO"/>
+			 </hyperlink>
         </field>
+        
+     <!--     <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_APPROVED" />
+                <parameter param-name="inventoryItemId"/>
+                <parameter param-name="facilityId"/>
+            </hyperlink>
+        </field> 
+         -->
+        
 
         <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>

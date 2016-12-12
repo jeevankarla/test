@@ -8419,6 +8419,243 @@ public class DepotSalesServices{
 	}
 	
 	
+	
+	public static Map<String, Object> cancelIndentOrderDepot(DispatchContext dctx, Map context) {	
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String orderId = (String) context.get("orderId");
+		String partyId = (String) context.get("partyId");
+		String inventoryItemId = (String) context.get("inventoryItemId");
+		String facilityId = (String) context.get("facilityId");
+		
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");	
+		String schemeCategory="MGPS_10Pecent";
+		try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				} 
+				
+				List condsList = FastList.newInstance();
+				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
+				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+				try{
+					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
+					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
+					if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
+						List schemeCategoryIds = FastList.newInstance();
+					  	try{
+					  		List productCategory = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS, "SCHEME_MGPS"), UtilMisc.toSet("productCategoryId"), null, null, false);
+					  		schemeCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+					   	}catch (GenericEntityException e) {
+							Debug.logError(e, "Failed to retrive ProductCategory ", module);
+							return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+						}	 	
+						for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
+
+							condsList.clear();
+							condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+							if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
+								condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
+							}
+						  	BigDecimal quota =BigDecimal.ZERO;
+						  	try {
+								List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
+
+								if(UtilValidate.isNotEmpty(OrderItemDetailList)){
+									for(GenericValue OrderItemDetailValue : OrderItemDetailList){
+										if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
+											quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
+										  	Map partyBalanceHistoryContext = FastMap.newInstance();
+										  	partyId=(String)OrderItemDetailValue.get("partyId");
+										  	String productId=(String)OrderItemDetailValue.get("productId");
+										  	partyBalanceHistoryContext = UtilMisc.toMap("partyId",partyId,"orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",schemeCategory,"quota",quota, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
+										  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
+		
+										}
+									}
+								}
+							  	
+						  	} catch (GenericEntityException e) {
+								Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+								return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+							}
+						}
+					}
+				}catch (GenericEntityException e) {
+					Debug.logError(e, "Failed to retrive ProductCategory ", module);
+					return ServiceUtil.returnError("Failed to retrive ProductCategory " + e);
+				}
+			}
+			  			
+		}catch (GenericServiceException e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling order");
+		}
+		
+		
+		List OrderAssocList = FastList.newInstance();
+			
+			  List conditionList = FastList.newInstance();
+
+			  conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS,orderId));
+			  conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"BackToBackOrder"));
+			  EntityCondition assoc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			  try{
+			  OrderAssocList = delegator.findList("OrderAssoc", assoc, null, null, null,false); 
+			  
+			   if(UtilValidate.isNotEmpty(OrderAssocList)){
+
+			  GenericValue OrderAssoc = EntityUtil.getFirst(OrderAssocList);
+			  String PoOrderId = (String)OrderAssoc.get("orderId");
+			 
+			  
+			  GenericValue	poOrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", PoOrderId), false);
+			  poOrderHeader.set("statusId","ORDER_CANCELLED");
+			  poOrderHeader.store();
+			 }
+			
+		}catch (Exception e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling OrderHeader");
+		}
+		
+			  
+	       //============================increase inventory================================
+			  
+			  
+			  
+			  try {
+					List<GenericValue> orderItems =null;
+					 try {
+						  orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("productId", "quantity"), null, null, false);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, module);
+						}
+					
+					for(GenericValue eachItem :  orderItems){
+						
+						BigDecimal requestedQty = eachItem.getBigDecimal("quantity");
+						String productIdIN = eachItem.getString("productId");
+						Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productIdIN, "facilityId", facilityId);
+						
+						Map<String, Object> resultCtx = null;
+						 try {
+				             resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+				            
+						 } catch (Exception e) {
+								Debug.logError(e, module);
+							}
+				            if (ServiceUtil.isError(resultCtx)) {
+				            	
+				            	/*Debug.logError("Problem getting inventory level of the request for product Id :"+productIdIN, module);
+					        	request.setAttribute("_ERROR_MESSAGE_", "Problem getting inventory level of the request for product Id :"+productIdIN);
+					        	TransactionUtil.rollback();
+					        	return "error";
+					        	*/
+					        	return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productIdIN);
+					        	
+					        	
+				            }
+				            Object qohObj = resultCtx.get("quantityOnHandTotal");
+				            BigDecimal qoh = BigDecimal.ZERO;
+				            if (qohObj != null) {
+				            	qoh = new BigDecimal(qohObj.toString());
+				            }
+				            if (requestedQty.compareTo(qoh) > 0) {
+				            	/*Debug.logError("Available Inventory level for productIdIN : "+productIdIN + " is "+qoh, module);
+					        	request.setAttribute("_ERROR_MESSAGE_", "Available Inventory level for productIdIN : "+productIdIN + " is "+qoh);
+					        	TransactionUtil.rollback();
+					        	return "error";*/
+					        	
+					        	return ServiceUtil.returnError("Available Inventory level for productIdIN : "+productIdIN + " is "+qoh);
+				            }
+				            
+				            conditionList.clear();
+				            conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productIdIN));
+				       	    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				            conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+				            EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				            List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condExpr, null, UtilMisc.toList("datetimeReceived"), null, false);
+				            
+				            Iterator<GenericValue> itr = inventoryItems.iterator();
+				            while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
+				                GenericValue inventoryItem = itr.next();
+				                String inventoryItemId1 = inventoryItem.getString("inventoryItemId");
+				                qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
+				                BigDecimal issueQuantity = null;
+				                if (requestedQty.compareTo(qoh) >= 0) {	
+				                    issueQuantity = qoh;
+				                } else {
+				                    issueQuantity = requestedQty;
+				                }
+				                
+				               /* Map itemIssueCtx = FastMap.newInstance();
+								itemIssueCtx.put("userLogin", userLogin);
+								itemIssueCtx.put("inventoryItemId", inventoryItemId1);
+								itemIssueCtx.put("productId", productIdIN);
+								itemIssueCtx.put("quantity", issueQuantity);
+								itemIssueCtx.put("cancelQuantity", BigDecimal.ZERO);
+								itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+								itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+								itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+								itemIssueCtx.put("issuedDateTime", UtilDateTime.nowTimestamp());
+								resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
+								if (ServiceUtil.isError(resultCtx)) {
+									Debug.logError("Problem creating item issuance for requested item", module);
+				    	        	request.setAttribute("_ERROR_MESSAGE_", "Problem creating item issuance for requested item");
+				    	        	TransactionUtil.rollback();
+				    	        	return "error";
+								}
+								
+								String itemIssuanceId = (String)resultCtx.get("itemIssuanceId");
+								
+								GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
+								itemIssuance.set("shipmentId", shipmentId);
+								itemIssuance.store();
+								*/
+								
+								Map createInvDetail = FastMap.newInstance();
+								createInvDetail.put("userLogin", userLogin);
+								createInvDetail.put("inventoryItemId", inventoryItemId);
+								//createInvDetail.put("shipmentId", shipmentId);
+								//createInvDetail.put("itemIssuanceId", itemIssuanceId);
+								createInvDetail.put("effectiveDate", UtilDateTime.nowTimestamp());
+								//createInvDetail.put("quantityOnHandDiff", issueQuantity.negate());
+								createInvDetail.put("availableToPromiseDiff", issueQuantity);
+								
+								try{
+								resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+				            } catch (Exception e) {
+								Debug.logError(e, module);
+							}
+								if (ServiceUtil.isError(resultCtx)) {
+									/*Debug.logError("Problem decrementing inventory for requested item ", module);
+				    	        	request.setAttribute("_ERROR_MESSAGE_", "Problem decrementing inventory for requested item ");
+				    	        	TransactionUtil.rollback();
+				    	        	return "error";*/
+				    	        	
+				    	        	return ServiceUtil.returnError("Problem decrementing inventory for requested item");
+								}
+				                
+				                requestedQty = requestedQty.subtract(issueQuantity);
+				            }
+					}
+					
+						 } catch (GenericEntityException e) {
+								Debug.logError(e, module);
+							}  
+			  
+		result.put("salesChannelEnumId", salesChannelEnumId);
+		return result;
+	}
+	
+	
 	public static Map<String, Object> cancelPartyQuotaBalanceHistory(DispatchContext dctx, Map context){	
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -16948,7 +17185,7 @@ public class DepotSalesServices{
     }    
     
     
-    public static Map<String, Object> roundingOfAdjustmentSubtraction(DispatchContext ctx, Map context) {
+    public static Map<String, Object> roundingOfAdjustmentAddition(DispatchContext ctx, Map context) {
     	Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -16978,7 +17215,7 @@ public class DepotSalesServices{
 	        	
 	        	
 	        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
-	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"ROUNDING_OFF"));
+	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"ROUNDING_CHARGES"));
 	        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
 	        	 try{
 	        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
@@ -16994,8 +17231,8 @@ public class DepotSalesServices{
 	        	 
 		        	for(GenericValue eachInvoiceItem : InvoiceItem){
 			        	
-			        	eachInvoiceItem.set("amount",amount.negate()); 
-		        		eachInvoiceItem.set("itemValue",amount.negate());
+			        	eachInvoiceItem.set("amount",amount); 
+		        		eachInvoiceItem.set("itemValue",amount);
 		        		
 		        		try{
 		        		eachInvoiceItem.store();
@@ -17013,7 +17250,205 @@ public class DepotSalesServices{
     
     
     
+    public static Map<String, Object> changeSaleOrderStatusForDEPOT(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		
+		String orderId = (String) context.get("orderId");
+		String statusId = (String) context.get("statusId");
+		String inventoryItemId = (String) context.get("inventoryItemId");
+		String facilityId = (String) context.get("facilityId");
+		
+		
+		
+		
+		Map<String, Object> serviceApprResult = null;
+        try {
+        	serviceApprResult = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId", statusId, "userLogin", userLogin));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if (ServiceUtil.isError(serviceApprResult)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceApprResult));
+        }
+        
+        
+        //===============================================Inventory==============
+        
+        
+         List condLIst = FastList.newInstance();
+	        condLIst.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	        condLIst.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER", "BILL_FROM_VENDOR")));
+		EntityCondition condExpr1 = EntityCondition.makeCondition(condLIst, EntityOperator.AND);
+		
+		List<GenericValue> orderRoles =null;
+		 try {
+			  orderRoles = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+	
+		 String partyIdFromOrder =null;
+		 String partyIdToOrder = null;
+		 if(UtilValidate.isNotEmpty(orderRoles)){
+			 for (GenericValue orderRole : orderRoles) {
+				 String  roleTypeIdFromOrder = orderRole.getString("roleTypeId");
+				  if(roleTypeIdFromOrder.equals("BILL_TO_CUSTOMER"))
+					  partyIdFromOrder = orderRole.getString("partyId");
+				  if(roleTypeIdFromOrder.equals("BILL_FROM_VENDOR"))
+					  partyIdToOrder = orderRole.getString("partyId");
+		        }
+		 }
+		 
+/*	
+	      if(UtilValidate.isEmpty(shipmentId)){
+		    
+			GenericValue newDirShip = delegator.makeValue("Shipment");        	 
+			newDirShip.set("estimatedShipDate", orderDate);
+			newDirShip.set("shipmentTypeId", "DEPOT_SHIPMENT");
+			newDirShip.set("statusId", "DISPATCHED");
+			newDirShip.set("partyIdFrom", partyIdToOrder);
+			newDirShip.set("partyIdTo", partyIdFromOrder);
+			newDirShip.set("primaryOrderId", orderId);
+			newDirShip.set("createdDate", UtilDateTime.nowTimestamp());
+			newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));
+			newDirShip.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			delegator.createSetNextSeqId(newDirShip);            
+			shipmentId = (String) newDirShip.get("shipmentId");
+         }
+	
+	
+	Debug.log("shipmentId==============="+shipmentId);*/
+	
+		 try {
+	List<GenericValue> orderItems =null;
+	 try {
+		  orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("productId", "quantity"), null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+	
+	for(GenericValue eachItem :  orderItems){
+		
+		BigDecimal requestedQty = eachItem.getBigDecimal("quantity");
+		String productIdIN = eachItem.getString("productId");
+		Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productIdIN, "facilityId", facilityId);
+		
+		Map<String, Object> resultCtx = null;
+		 try {
+             resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+            
+		 } catch (Exception e) {
+				Debug.logError(e, module);
+			}
+            if (ServiceUtil.isError(resultCtx)) {
+            	
+            	/*Debug.logError("Problem getting inventory level of the request for product Id :"+productIdIN, module);
+	        	request.setAttribute("_ERROR_MESSAGE_", "Problem getting inventory level of the request for product Id :"+productIdIN);
+	        	TransactionUtil.rollback();
+	        	return "error";
+	        	*/
+	        	return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productIdIN);
+	        	
+	        	
+            }
+            Object qohObj = resultCtx.get("quantityOnHandTotal");
+            BigDecimal qoh = BigDecimal.ZERO;
+            if (qohObj != null) {
+            	qoh = new BigDecimal(qohObj.toString());
+            }
+            if (requestedQty.compareTo(qoh) > 0) {
+            	/*Debug.logError("Available Inventory level for productIdIN : "+productIdIN + " is "+qoh, module);
+	        	request.setAttribute("_ERROR_MESSAGE_", "Available Inventory level for productIdIN : "+productIdIN + " is "+qoh);
+	        	TransactionUtil.rollback();
+	        	return "error";*/
+	        	
+	        	return ServiceUtil.returnError("Available Inventory level for productIdIN : "+productIdIN + " is "+qoh);
+            }
+            
+            List conditionList = FastList.newInstance();
+            conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productIdIN));
+       	    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+            conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+            EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condExpr, null, UtilMisc.toList("datetimeReceived"), null, false);
+            
+            Iterator<GenericValue> itr = inventoryItems.iterator();
+            while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
+                GenericValue inventoryItem = itr.next();
+                String inventoryItemId1 = inventoryItem.getString("inventoryItemId");
+                qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
+                BigDecimal issueQuantity = null;
+                if (requestedQty.compareTo(qoh) >= 0) {	
+                    issueQuantity = qoh;
+                } else {
+                    issueQuantity = requestedQty;
+                }
+                
+               /* Map itemIssueCtx = FastMap.newInstance();
+				itemIssueCtx.put("userLogin", userLogin);
+				itemIssueCtx.put("inventoryItemId", inventoryItemId1);
+				itemIssueCtx.put("productId", productIdIN);
+				itemIssueCtx.put("quantity", issueQuantity);
+				itemIssueCtx.put("cancelQuantity", BigDecimal.ZERO);
+				itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+				itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+				itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+				itemIssueCtx.put("issuedDateTime", UtilDateTime.nowTimestamp());
+				resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem creating item issuance for requested item", module);
+    	        	request.setAttribute("_ERROR_MESSAGE_", "Problem creating item issuance for requested item");
+    	        	TransactionUtil.rollback();
+    	        	return "error";
+				}
+				
+				String itemIssuanceId = (String)resultCtx.get("itemIssuanceId");
+				
+				GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
+				itemIssuance.set("shipmentId", shipmentId);
+				itemIssuance.store();
+				*/
+				
+				Map createInvDetail = FastMap.newInstance();
+				createInvDetail.put("userLogin", userLogin);
+				createInvDetail.put("inventoryItemId", inventoryItemId);
+				//createInvDetail.put("shipmentId", shipmentId);
+				//createInvDetail.put("itemIssuanceId", itemIssuanceId);
+				createInvDetail.put("effectiveDate", UtilDateTime.nowTimestamp());
+				//createInvDetail.put("quantityOnHandDiff", issueQuantity.negate());
+				createInvDetail.put("availableToPromiseDiff", issueQuantity.negate());
+				
+				try{
+				resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+            } catch (Exception e) {
+				Debug.logError(e, module);
+			}
+				if (ServiceUtil.isError(resultCtx)) {
+					/*Debug.logError("Problem decrementing inventory for requested item ", module);
+    	        	request.setAttribute("_ERROR_MESSAGE_", "Problem decrementing inventory for requested item ");
+    	        	TransactionUtil.rollback();
+    	        	return "error";*/
+    	        	
+    	        	return ServiceUtil.returnError("Problem decrementing inventory for requested item");
+				}
+                
+                requestedQty = requestedQty.subtract(issueQuantity);
+            }
+	}
+	
+		 } catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}  
+			
+        result.put("orderId",orderId);
+        
+		return result;
     
+    }    
     
     
     

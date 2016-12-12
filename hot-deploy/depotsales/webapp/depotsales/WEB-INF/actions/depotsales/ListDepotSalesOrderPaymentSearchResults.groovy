@@ -211,13 +211,22 @@ orderHeader.each{ eachHeader ->
 	shipmentId = "";
 	if(ShipmentReceipt){
 		shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+		
 	}
 	
+	facilityId = "";
+	if(ShipmentReceipt){
+	 InventoryItem = delegator.findOne("InventoryItem",[inventoryItemId : inventoryItemId] , false);
+	
+	 facilityId = InventoryItem.facilityId;
+	}
 	//=========================================================
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
 	tempData.put("partyId", partyId);
 	tempData.put("shipmentId", shipmentId);
+	tempData.put("inventoryItemId", inventoryItemId);
+	tempData.put("facilityId", facilityId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
 	salesOrder ="";
@@ -229,7 +238,9 @@ orderHeader.each{ eachHeader ->
 	tempData.put("salesOrder",salesOrder);
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
-	tempData.put("statusId", eachHeader.statusId);
+	
+	Debug.log("statusId============"+eachHeader.statusId);
+	tempData.put("orderStatusId", eachHeader.statusId);
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	}
@@ -517,7 +528,7 @@ context.PaymentMethodType = PaymentMethodType;
 context.orderPreferenceMap = orderPreferenceMap;
 context.paymentSatusMap = paymentSatusMap;
 context.paymentPreferenceCancellMap = paymentPreferenceCancellMap;
-
+/*
 sortedOrderMap =  [:]as TreeMap;
 for (eachList in orderList) {
 	sortedOrderMap.put(eachList.orderId, eachList);
@@ -526,7 +537,9 @@ Collection allValues = sortedOrderMap.values();
 List basedList = [];
 basedList.addAll(allValues);
 
-context.orderList = basedList.reverse();
+context.orderList = basedList.reverse();*/
+
+context.orderList = orderList;
 
 context.orderListSize = orderList.size();
 
