@@ -2289,6 +2289,8 @@
 		<field name="origAmount" type="currency-amount"></field>
 		<field name="origCurrencyUomId" type="id"></field>
 		<field name="debitCreditFlag" type="indicator"></field>
+		<field name="costCenterId" type="id"></field>
+		<field name="purposeTypeId" type="id"></field>	
 		<field name="dueDate" type="date"></field>
 		<field name="groupId" type="id"></field>
 		<field name="taxId" type="id"></field>

@@ -77,7 +77,24 @@ under the License.
         	<set field="parameters.organizationPartyId" value="Company"/>
         	<set field="newEntity.organizationPartyId" value="Company"/>
         </if-not-empty>
-        
+        <if-not-empty field="acctgTrans.invoiceId">
+        	<entity-one value-field="invDetails" entity-name="Invoice">
+        		<field-map field-name="invoiceId" value="${acctgTrans.invoiceId}"/>
+        	</entity-one>
+        	<if-not-empty field="invDetails">
+        		<set field="newEntity.costCenterId" value="${invDetails.costCenterId}"/>
+        		<set field="newEntity.purposeTypeId" value="${invDetails.purposeTypeId}"/>
+        	</if-not-empty>
+        </if-not-empty>
+        <if-not-empty field="acctgTrans.paymentId">
+        	<entity-one value-field="paymentDetails" entity-name="Payment">
+        		<field-map field-name="paymentId" value="${acctgTrans.paymentId}"/>
+        	</entity-one>
+        	<if-not-empty field="paymentDetails">
+        		<!-- <set field="newEntity.costCenterId" value="${paymentDetails.costCenterId}"/> -->
+        		<set field="newEntity.purposeTypeId" value="${paymentDetails.paymentPurposeType}"/>
+        	</if-not-empty>
+        </if-not-empty>
         <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
             <add-error><fail-property resource="AccountingUiLabels" property="AccountingTransactionHasBeenAlreadyPosted"/></add-error>
             <check-errors/>
