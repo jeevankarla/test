@@ -17200,7 +17200,18 @@ public class DepotSalesServices{
 		String facilityId = (String) context.get("facilityId");
 		
 		
+		String OrderStatus =null;
+		try{
+		GenericValue OrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		 OrderStatus = OrderHeader.getString("statusId");
+	    } catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
 		
+		
+		
+		if(!OrderStatus.equals("ORDER_APPROVED")){
+			
 		
 		Map<String, Object> serviceApprResult = null;
         try {
@@ -17381,6 +17392,8 @@ public class DepotSalesServices{
 		 } catch (GenericEntityException e) {
 				Debug.logError(e, module);
 			}  
+		 
+		}
 			
         result.put("orderId",orderId);
         
