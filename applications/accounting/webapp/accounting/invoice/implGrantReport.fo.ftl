@@ -46,7 +46,7 @@ under the License.
 				              <fo:table-row>
 				                 <fo:table-cell>
 				                    <fo:block-container >
-                                        <fo:block text-align="left" font-size="13pt"><fo:external-graphic src="http://localhost:22080//vasista/complogos/aavin_logo.png" content-height="scale-to-fit" scaling="uniform" height="45" width="35"/></fo:block>
+                                        <fo:block text-align="left" font-size="13pt"></fo:block>
                                     </fo:block-container>
 				                 </fo:table-cell>
 				                 <fo:table-cell>
@@ -147,12 +147,12 @@ under the License.
 									   </fo:table-cell>
 									   <fo:table-cell>
 									   
-									   <fo:block text-align="right"  font-size="12pt">${finaccountEntry2.get("amount")?if_exists}</fo:block>
+									   <fo:block text-align="right"  font-size="12pt">${finaccountEntry2.get("amount")?if_exists?replace("{"," ")?replace("}"," ")}</fo:block>
 									  
 								    </fo:table-cell>
 								     <fo:table-cell>
 									   
-									   <fo:block text-align="center"  font-size="12pt">${finaccountEntry2.get("description")?if_exists}</fo:block>
+									   <fo:block text-align="center"  font-size="12pt">${finaccountEntry2.get("description")?if_exists?replace("{"," ")?replace("}"," ")}</fo:block>
 									  
 								    </fo:table-cell>
 								    <fo:table-cell>

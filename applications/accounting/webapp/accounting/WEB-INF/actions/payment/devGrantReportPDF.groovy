@@ -115,9 +115,8 @@ import java.text.ParseException;
 				cond2 = EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
 				InvoiceDetails1 = delegator.findList("InvoiceItem", cond2, null, null, null, false);
 				if(UtilValidate.isNotEmpty(InvoiceDetails1)){
-			amount = EntityUtil.getFirst(InvoiceDetails1).amount;
-			
-			invoiceItemTypeId =  EntityUtil.getFirst(InvoiceDetails1).invoiceItemTypeId;
+					amount = EntityUtil.getFieldListFromEntityList(InvoiceDetails1, "amount", true);
+					invoiceItemTypeId =  EntityUtil.getFieldListFromEntityList(InvoiceDetails1, "invoiceItemTypeId", true);
 				}
 				
 			
@@ -130,7 +129,7 @@ import java.text.ParseException;
 			InvoiceItemTypeDetails = delegator.findList("InvoiceItemType", cond, null, null, null, false);
 		 
 			if(UtilValidate.isNotEmpty(InvoiceItemTypeDetails)){
-			description = EntityUtil.getFirst(InvoiceItemTypeDetails).description;
+			description = EntityUtil.getFieldListFromEntityList(InvoiceItemTypeDetails, "description", true);
 			
 			}
 			

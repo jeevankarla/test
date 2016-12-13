@@ -34,6 +34,7 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
 
 
+
 //Grant Utilization for Implementation Grants
 
 List<GenericValue> utilizationfinAccntTypeList = [];
@@ -50,7 +51,7 @@ if(UtilValidate.isNotEmpty(finAccountTypeList1)){
 }
 
 utilizationfinAccntTypeList.each { amt1 ->
-	utilizationamount = utilizationamount + amt1;
+	utilizationamount = (utilizationamount + amt1).setScale(2,BigDecimal.ROUND_HALF_UP);
 
 }
 context.utilizationamount = utilizationamount;
@@ -68,32 +69,49 @@ List<GenericValue> finAccountTypeList2 = delegator.findList("FinAccountTrans", c
 
 if(UtilValidate.isNotEmpty(finAccountTypeList2)){
 	balancefinAccntTypeList = EntityUtil.getFieldListFromEntityList(finAccountTypeList2, "amount", true);
-}
+	
+	}
 
 balancefinAccntTypeList.each { amt2 ->
-	balanceamount = balanceamount + amt2;
+	balanceamount = (balanceamount + amt2).setScale(2,BigDecimal.ROUND_HALF_UP);
 	
+	finalbalanceamount = utilizationamount - balanceamount;
+	context.finalbalanceamount = finalbalanceamount;
 }
+
 finalbalanceamount = utilizationamount - balanceamount;
 context.finalbalanceamount = finalbalanceamount;
 
 //Grant Utilization for Developmental Grants
 
 List<GenericValue> utilizationfinAccntTypeList1 = [];
-List conddList=[];
+
 utilizationDevamount = 0;
 
 conlist = [];
 invoiceIdsList = [];
-conddList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
-EntityCondition condd = EntityCondition.makeCondition(conddList, EntityOperator.AND);
-List<GenericValue> finAccountTypeList3 = delegator.findList("FinAccountTrans", condd, null, null, null, false);
-if(UtilValidate.isNotEmpty(finAccountTypeList3)){
-	utilizationfinAccntTypeList1 = EntityUtil.getFieldListFromEntityList(finAccountTypeList3, "amount", true);
+invoiceIdsList1 = [];
+conlist.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS, finAccountId));
+EntityCondition invcondition = EntityCondition.makeCondition(conlist, EntityOperator.AND);
+List<GenericValue> invoiceIdsList = delegator.findList("Invoice", invcondition, null, null, null, false);
+if(UtilValidate.isNotEmpty(invoiceIdsList)){
+	invoiceIdsList1 = EntityUtil.getFieldListFromEntityList(invoiceIdsList, "invoiceId", true);
 }
+invoiceIdsList1.each { inv ->
+	List conddList=[];
+conddList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, inv));
+EntityCondition condd = EntityCondition.makeCondition(conddList, EntityOperator.AND);
+List<GenericValue> finAccountTypeList3 = delegator.findList("InvoiceItem", condd, null, null, null, false);
 
-utilizationfinAccntTypeList1.each { amt3 ->
-	utilizationDevamount = utilizationDevamount + amt3;
+if(UtilValidate.isNotEmpty(finAccountTypeList3)){
+	finAccountTypeList3.each{finAcct->
+		
+		amt3 = finAcct.amount;
+		utilizationDevamount = (utilizationDevamount + amt3).setScale(2,BigDecimal.ROUND_HALF_UP);
+		
+	}
+	
+	}
 
 }
 context.utilizationDevamount = utilizationDevamount;
@@ -104,7 +122,7 @@ context.utilizationDevamount = utilizationDevamount;
 
 List<GenericValue> balanceDevfinAccntTypeList = [];
 List condd1List=[];
-balanceDevamount = 0;
+BigDecimal balanceDevamount = BigDecimal.ZERO;
 condd1List.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 EntityCondition condd1 = EntityCondition.makeCondition(condd1List, EntityOperator.AND);
 List<GenericValue> finAccountTypeDevList2 = delegator.findList("FinAccount", condd1, null, null, null, false);
@@ -114,12 +132,10 @@ if(UtilValidate.isNotEmpty(finAccountTypeDevList2)){
 }
 
 balanceDevfinAccntTypeList.each { amt4 ->
-	balanceDevamount = balanceDevamount + amt4;
-	
+	balanceDevamount = (balanceDevamount + amt4).setScale(2,BigDecimal.ROUND_HALF_UP);;
 }
+
 context.balanceDevamount = balanceDevamount;
-
-
 
 
 
