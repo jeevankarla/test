@@ -82,7 +82,7 @@ under the License.
         		<field-map field-name="invoiceId" value="${acctgTrans.invoiceId}"/>
         	</entity-one>
         	<if-not-empty field="invDetails">
-        		<set field="newEntity.costCenterId" value="${invDetails.costCenterId}"/>
+        		<!-- <set field="newEntity.costCenterId" value="${invDetails.costCenterId}"/> -->
         		<set field="newEntity.purposeTypeId" value="${invDetails.purposeTypeId}"/>
         	</if-not-empty>
         </if-not-empty>
