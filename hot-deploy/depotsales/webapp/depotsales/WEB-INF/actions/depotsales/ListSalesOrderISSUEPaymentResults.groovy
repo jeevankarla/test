@@ -25,26 +25,62 @@ import org.ofbiz.party.contact.ContactMechWorker;
 dctx = dispatcher.getDispatchContext();
 Map boothsPaymentsDetail = [:];
 
-partyId = userLogin.get("partyId");
 
+branchId = parameters.branchId;
+
+partyId = userLogin.get("partyId");
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
-
 Map formatMap = [:];
 List formatList = [];
+List productStoreList = resultCtx.get("productStoreList");
+context.productStoreList = productStoreList;
 
-	for (eachList in resultCtx.get("productStoreList")) {
-		
-		formatMap = [:];
-		formatMap.put("productStoreName",eachList.get("storeName"));
-		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
-		formatList.addAll(formatMap);
-		
-	}
+for (eachList in productStoreList) {
+	formatMap = [:];
+	formatMap.put("productStoreName",eachList.get("storeName"));
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+}
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+
+for(eachRO in roPartyList){
+	formatMap = [:];
+	formatMap.put("productStoreName",eachRO.get("groupName"));
+	formatMap.put("payToPartyId",eachRO.get("partyId"));
+	formatList.addAll(formatMap);
+}
 context.formatList = formatList;
 
+
 branchId = parameters.branchId;
+
+branchList = [];
+
+if(branchId){
+condListb = [];
+
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchList)
+branchList.add(branchId);
+}else if(!branchId && partyId){
+
+formatList1 = [];
+for (eachList in formatList) {
+	formatList1.add(eachList.payToPartyId);
+}
+branchList = formatList1;
+}
+
 
 salesChannel = parameters.salesChannelEnumId;
 
@@ -130,8 +166,8 @@ orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCond
 custCondList.clear();
 custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 // query based on branch
-if(UtilValidate.isNotEmpty(branchId)){
-	custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId));
+if(UtilValidate.isNotEmpty(branchList)){
+	custCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
 }
 custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
