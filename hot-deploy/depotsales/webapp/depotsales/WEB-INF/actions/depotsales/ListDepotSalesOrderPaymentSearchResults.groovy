@@ -273,7 +273,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	
-	Debug.log("statusId============"+eachHeader.statusId);
+	////////Debug.log("statusId============"+eachHeader.statusId);
 	tempData.put("orderStatusId", eachHeader.statusId);
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
@@ -433,14 +433,14 @@ partyIdsSet.each{partyId->
 	if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
 		arPartyOB=arOpeningBalanceRes.get("openingBalance");
 	}
-	//Debug.log("===============arPartyOB="+arPartyOB);
+	//////////Debug.log("===============arPartyOB="+arPartyOB);
 	if(arPartyOB<0){
 		partyOBMap.put(partyId, arPartyOB *(-1));
 	}else{
 		partyOBMap.put(partyId, BigDecimal.ZERO);
 	}
 }*/
-//Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
+//////////Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
 
 /*	context.orderList = finalFilteredList;
  context.partyOBMap = partyOBMap;

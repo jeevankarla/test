@@ -507,15 +507,15 @@ context.PaymentMethodType = PaymentMethodType;
 context.orderPreferenceMap = orderPreferenceMap;
 context.paymentSatusMap = paymentSatusMap;
 
-sortedOrderMap =  [:]as TreeMap;
+/*sortedOrderMap =  [:]as TreeMap;
 for (eachList in orderList) {
 	sortedOrderMap.put(eachList.orderId, eachList);
 }
 Collection allValues = sortedOrderMap.values();
 List basedList = [];
-basedList.addAll(allValues);
+basedList.addAll(allValues);*/
 
-context.orderList = basedList.reverse();
+context.orderList = orderList;
 
 context.orderListSize = orderList.size();
 
