@@ -1404,6 +1404,35 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+   <screen name="devGrantReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/devGrantReportPDF.groovy"/>
+            </actions>
+           <widgets>
+                <platform-specific>
+                <html><html-template location="component://accounting/webapp/accounting/invoice/devGrantReport.fo.ftl"/></html>
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen>
+     <screen name="implGrantReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/implGrantReportPDF.groovy"/>
+            </actions>
+           <widgets>
+                <platform-specific>
+                <html><html-template location="component://accounting/webapp/accounting/invoice/implGrantReport.fo.ftl"/></html>
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen> 
 </screens>
 
