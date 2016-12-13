@@ -2200,7 +2200,7 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
-		 <menu-item name="FindEmployeeAdv" title="Employee Advance (Old)">
+		 <menu-item name="FindEmployeeAdv" title="Employee Advance">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2210,7 +2210,7 @@
 			</link>
 		 </menu-item>
 		 
-		 <menu-item name="EmployeeAdvance" title="Employee Advance">
+		 <!-- <menu-item name="EmployeeAdvance" title="Employee Advance">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2218,7 +2218,7 @@
             </condition>
 			<link target="EmployeeAdvance">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		 
 		   <!-- <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
