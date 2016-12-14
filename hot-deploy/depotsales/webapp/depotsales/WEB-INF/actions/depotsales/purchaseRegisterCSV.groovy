@@ -152,7 +152,7 @@ BranchList=[];
 	headerData2.put("paymentReceipt", "_");
 	headerData2.put("amount", "_");
 	headerData2.put("weaverName", "_");
-	headerData2.put("poNo", "____I N D E N T ");
+	headerData2.put("poNo", "____PURCHASE ");
 	headerData2.put("poDate", "_");
 	headerData2.put("supplierName", "R E G I S T E R");
 	orderList.add(headerData2);

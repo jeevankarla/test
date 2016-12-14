@@ -3062,9 +3062,9 @@
         <field name="orderNo" title="_"><display/></field> -->
         <field name="Qty" title="_"><display/></field>
         <field name="unit" title="_"><display/></field>
-        <field name="weaverName" title="MONTHLY INFORMATION ON YARN SUPPLY"><display/></field>
-        <field name="poNo" title="FROM NHDC FOR"><display/></field>
-        <field name="supplierName" title="BASUDEVPUR SILPA BIPANAN TSS LTD"><display/></field>
+        <field name="weaverName" title="_"><display/></field>
+        <field name="poNo" title="-"><display/></field>
+        <field name="supplierName" title="-"><display/></field> 
         <field name="poDate" title="_"><display/></field>
         <field name="poQty" title="_"><display/></field>
         <field name="salInv" title="_"><display/></field>
