@@ -3159,6 +3159,7 @@
 				<set field="titleProperty" value="Find Sales Invoices" />
 				<set field="filterByDate" value="true" />
 				<set field="parameters.invoiceDate" value=""/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilter.groovy"/>
 				<service service-name="performFind" result-map="result">
 					<field-map field-name="inputFields" from-field="parameters" />
 					<field-map field-name="entityName" value="InvoiceAndType" />
