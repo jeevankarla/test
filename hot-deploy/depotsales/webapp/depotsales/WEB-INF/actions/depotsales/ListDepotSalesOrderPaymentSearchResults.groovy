@@ -56,6 +56,11 @@ branchId = parameters.branchId;
 
 branchList = [];
 
+isFind = parameters.noConditionFind;
+
+orderList=[];
+if(isFind == "Y"){
+
 if(branchId){
 condListb = [];
 
@@ -136,7 +141,7 @@ if(shipmentId){
 }
 
 
-orderList=[];
+
 condList = [];
 if(UtilValidate.isNotEmpty(searchOrderIdList)){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, searchOrderIdList));
@@ -572,6 +577,8 @@ List basedList = [];
 basedList.addAll(allValues);
 
 context.orderList = basedList.reverse();*/
+
+}
 
 context.orderList = orderList;
 
