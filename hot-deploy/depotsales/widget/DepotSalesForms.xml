@@ -3200,6 +3200,15 @@
         <field name="BalanceWOOLYARN_BELOW10NM" title="_"><display/></field>
     </form>
     
+    <form name="agencyWiseInvoiceOutstandingReportCSV" type="list" list-name="invocieList" view-size="99999">
+    	 <field name="partyName" title="DEBITOR/CREDITOR"><display/></field>
+    	 <field name="fstMntInvTotals" title="INVOICE VALUE BETWEEN 1-30 DAYS"><display/></field>
+         <field name="secMntInvTotals" title="INVOICE VALUE BETWEEN 31-60 DAYS"><display/></field>
+         <field name="thrdMntInvTotals" title="INVOICE VALUE BETWEEN 61-90 DAYS"><display/></field>
+         <field name="frthMntInvTotals" title="INVOICE VALUE BETWEEN 91-180 DAYS"><display/></field>
+         <field name="above180Days" title="INVOICE VALUE ABOVE 180 DAYS"><display/></field>
+         <field name="allMonthsTotal" title="TOTAL INVOICE VALUE"><display/></field>
+    </form>
     <form name="m1ReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="partyName" title="Supplier Name"><display/></field>
     	 <field name="orderQty" title="Qty"><display/></field>

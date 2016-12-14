@@ -72,6 +72,9 @@ if(reportType=="CREDITORS"){
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 invoiceAndItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("invoiceId","partyIdFrom","partyId","amount","unitPrice","invoiceDate"), null, null, false);
+invoiceIds=EntityUtil.getFieldListFromEntityList(invoiceAndItems, "invoiceId", true);
+invoicePaymentsList = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN,invoiceIds),UtilMisc.toSet("invoiceId","paymentId","amount","partyIdFrom","paymentDate","partyIdTo"), null, null, false);
+	
 if(reportType=="CREDITORS"){
 	partyIds=EntityUtil.getFieldListFromEntityList(invoiceAndItems, "partyIdFrom", true);
 }else{
@@ -85,6 +88,13 @@ for(partyId in partyIds){
 	thrdMntInvTotals =0;
 	frthMntInvTotals =0;
 	above180Days=0;
+	
+	fstMntPaidTotals =0;
+	secMntPaidTotals =0;
+	thrdMntPaidTotals =0;
+	frthMntPaidTotals =0;
+	above180DaysPaid=0;
+	
 	allMonthsTotal=0
 	if(reportType=="CREDITORS"){
 		invoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItems, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
@@ -120,6 +130,51 @@ for(partyId in partyIds){
 		total = invoice.amount
 		above180Days= above180Days+total;
 	}
+	invoiceItemsAndPaymentsForParty=[];
+	if(reportType=="CREDITORS"){
+		invoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoicePaymentsList, EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	}else{
+		invoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoicePaymentsList, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+	}
+	
+	firstMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(fStMnthfromDate,fStMnththruDate)));
+	secndMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(sndMnthfromDate,sndMnththruDate)));
+	thirdMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(thrdMnthfromDate,thrdMnththruDate)));
+	fourthMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(frthMnthfromDate,frthMnththruDate)));
+	above180DaysInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(fromDate,frthMnththruDate)));
+
+	
+	for(eachPayment in firstMntInvoiceItemsAndPaymentsForParty){
+		total = eachPayment.amount
+		fstMntPaidTotals=fstMntPaidTotals+total
+	}
+	
+	for(eachPayment in secndMntInvoiceItemsAndPaymentsForParty){
+		total = eachPayment.amount
+		secMntPaidTotals=secMntPaidTotals+total
+	}
+	
+	for(eachPayment in thirdMntInvoiceItemsAndPaymentsForParty){
+		total = eachPayment.amount
+		thrdMntPaidTotals=thrdMntPaidTotals+total
+	}
+	
+	for(eachPayment in fourthMntInvoiceItemsAndPaymentsForParty){
+		total = eachPayment.amount
+		frthMntPaidTotals=frthMntPaidTotals+total
+	}
+	
+	for(eachPayment in above180DaysInvoiceItemsAndPaymentsForParty){
+		total = eachPayment.amount
+		above180DaysPaid=above180DaysPaid+total
+	}
+	
+	fstMntInvTotals =fstMntInvTotals-fstMntPaidTotals;
+	secMntInvTotals =secMntInvTotals-secMntPaidTotals;
+	thrdMntInvTotals =thrdMntInvTotals-thrdMntPaidTotals;
+	frthMntInvTotals =frthMntInvTotals-frthMntPaidTotals;
+	above180Days=above180Days-above180DaysPaid;
+
 	allMonthsTotal=fstMntInvTotals+secMntInvTotals+thrdMntInvTotals+frthMntInvTotals+above180Days;
 	String partyName = PartyHelper.getPartyName(delegator,partyId,false);
 	tempMap.put("partyName", partyName);
