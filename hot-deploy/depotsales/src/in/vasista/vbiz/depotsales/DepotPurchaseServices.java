@@ -11413,6 +11413,211 @@ public class DepotPurchaseServices{
   	    }    
   	    
   	    
+  	    
+  	  public static Map<String, Object> increaseInventoryQuantity(DispatchContext ctx, Map context) {
+	    	Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map result = ServiceUtil.returnSuccess();
+			
+			String orderId = (String) context.get("orderId");
+			String orderItemSeqId = (String) context.get("orderItemSeqId");
+			BigDecimal givenQuantity = (BigDecimal) context.get("quantity");
+			String shipmentId = (String) context.get("shipmentId");
+			
+			
+			
+			List conList1 = FastList.newInstance();
+			
+			List<GenericValue> OrderItem =null;
+			List<GenericValue> OrderItemDetail =null;
+			try {
+			
+			conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+			conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+     		EntityCondition cond1=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+			OrderItem = delegator.findList("OrderItem", cond1, null, null, null, false);
+			
+			}catch(Exception e1){
+            	Debug.log("Problem in sending OrderItem");
+	        }
+			
+			GenericValue OrderItem1 = EntityUtil.getFirst(OrderItem);
+			
+			BigDecimal quantity0 = OrderItem1.getBigDecimal("quantity");
+			
+			if(quantity0.doubleValue() < givenQuantity.doubleValue()){
+			
+			try{
+			conList1.clear();
+			conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+			conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+     		EntityCondition cond2=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+     		OrderItemDetail = delegator.findList("OrderItemDetail", cond2, null, null, null, false);
+			}catch(Exception e1){
+            	Debug.log("Problem in sending OrderItem");
+	        }
+			
+     		GenericValue OrderItemDetail1 = EntityUtil.getFirst(OrderItemDetail);
+			 
+			if(UtilValidate.isNotEmpty(OrderItem1)){
+			
+			 BigDecimal quantity = OrderItem1.getBigDecimal("quantity");	
+				
+			 try {
+			 if(quantity.doubleValue() < givenQuantity.doubleValue()){
+				 OrderItem1.set("quantity", givenQuantity);
+				 OrderItem1.store();
+			 }
+			 }catch(Exception e1){
+	            	Debug.log("Problem in sending OrderItem");
+		        }
+			 
+			 
+			}
+			
+			if(UtilValidate.isNotEmpty(OrderItemDetail1)){
+				
+				 BigDecimal quantity = OrderItemDetail1.getBigDecimal("quantity");	
+			 try{		
+				 if(quantity.doubleValue() < givenQuantity.doubleValue()){
+					 OrderItemDetail1.set("quantity", givenQuantity);
+					 OrderItemDetail1.store();
+				 }
+				 
+			}catch(Exception e1){
+            	Debug.log("Problem in sending OrderItem");
+	        }
+				 
+			}
+			 
+			/*List<GenericValue> Shipment = null;
+			
+			 try{ 
+				    List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+					EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					List<String> orderBy2 = UtilMisc.toList("-shipmentId");
+					 Shipment = delegator.findList("Shipment", condExpr, null, orderBy2, null, false);
+					if(UtilValidate.isEmpty(Shipment)){
+						Debug.logError("GRN not found for the shipment: "+orderId, module);
+						return ServiceUtil.returnError("GRN not found for the shipment: "+orderId);
+					}
+		        }catch(Exception e1){
+	            	Debug.log("Problem in sending email");
+		        }
+			
+			 GenericValue ShipmentFirst = EntityUtil.getFirst(Shipment);
+			 
+			 String shipmentId = ShipmentFirst.getString("shipmentId");
+			 String shipmentItemSeqId = ShipmentFirst.getString("shipmentItemSeqId");*/
+			 
+			
+			 
+			 
+			 if(UtilValidate.isNotEmpty(shipmentId)){
+			 
+				 
+				 try {
+		        	 Map<String, Object> updateShipmentCtx = FastMap.newInstance();
+		        	 updateShipmentCtx.put("userLogin", context.get("userLogin"));
+		        	 updateShipmentCtx.put("shipmentId", shipmentId);
+		        	 updateShipmentCtx.put("shipmentItemSeqId","00001");   
+		        	 updateShipmentCtx.put("quantity",givenQuantity);
+		             dispatcher.runSync("updateShipmentItem", updateShipmentCtx);
+		        }
+		        catch (GenericServiceException e) {
+		    		Debug.logError(e, "Failed to update shipment status " + shipmentId, module);
+		    		return ServiceUtil.returnError("Failed to update shipment status " + shipmentId + ": " + e);          	
+		        }
+				 
+				 
+				 
+				 List<GenericValue> ShipmentReceipt = null;
+				 String inventoryItemId = null;
+			 
+			 try{ 
+				    List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+					conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+					EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					ShipmentReceipt = delegator.findList("ShipmentReceipt", condExpr, null, null, null, false);
+					
+					GenericValue ShipmentReceiptFirst = EntityUtil.getFirst(ShipmentReceipt);
+					
+					 inventoryItemId = ShipmentReceiptFirst.getString("inventoryItemId");
+					
+					if(UtilValidate.isEmpty(ShipmentReceiptFirst)){
+						Debug.logError("GRN not found for the shipment: "+orderId, module);
+						return ServiceUtil.returnError("GRN not found for the shipment: "+orderId);
+					}
+					
+					ShipmentReceiptFirst.set("quantityAccepted", givenQuantity);
+					ShipmentReceiptFirst.set("deliveryChallanQty", givenQuantity);
+					ShipmentReceiptFirst.store();
+					
+		        }catch(Exception e1){
+	            	Debug.log("Problem in sending email");
+		        }
+			 
+			 
+			 
+			 try{
+				 GenericValue InventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+				 
+				 InventoryItem.set("quantityOnHandTotal", givenQuantity);
+				 InventoryItem.store();
+				   
+				}catch(GenericEntityException e){
+					Debug.logError(e, "Error fetching partyId " + inventoryItemId, module);
+				}
+			 
+			/* try{
+				 GenericValue InventoryItemDetail = delegator.findOne("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+				 
+				 InventoryItemDetail.set("quantityOnHandTotal", givenQuantity);
+				 InventoryItemDetail.store();
+				   
+				}catch(GenericEntityException e){
+					Debug.logError(e, "Error fetching partyId " + inventoryItemId, module);
+				}*/
+			    
+			 List<GenericValue> InventoryItemDetail = null;
+			 
+			 try{ 
+				    List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId));
+					EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					InventoryItemDetail = delegator.findList("InventoryItemDetail", condExpr, null, null, null, false);
+					
+					GenericValue InventoryItemDetailFirst = EntityUtil.getFirst(InventoryItemDetail);
+					
+					
+					if(UtilValidate.isEmpty(InventoryItemDetailFirst)){
+						Debug.logError("GRN not found for the shipment: "+orderId, module);
+						return ServiceUtil.returnError("GRN not found for the shipment: "+orderId);
+					}
+					
+					InventoryItemDetailFirst.set("quantityOnHandDiff", givenQuantity);
+					InventoryItemDetailFirst.store();
+					
+		        }catch(Exception e1){
+	            	Debug.log("Problem in sending email");
+		        }
+			 
+			 
+			 }
+			 
+			}
+	        
+			return result;
+	    
+	    }    
+  	    
+  	    
   		
 	    
 }
