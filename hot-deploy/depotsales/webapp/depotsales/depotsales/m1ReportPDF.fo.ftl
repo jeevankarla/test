@@ -107,7 +107,7 @@ under the License.
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${eachEntry.get("BdlWt")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"><#if eachEntry.get("rate")?has_content> ${eachEntry.get("rate")?if_exists?string("##0.00")} </#if> </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("rate")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("orderValue")?if_exists?string("##0.00")}</fo:block>
@@ -131,7 +131,7 @@ under the License.
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
-							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
+							            	<fo:block  text-align="right" font-size="10pt" font-weight="bold"  white-space-collapse="false">${totalsMap.get("rate")?if_exists?string("##0.00")}</fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${totalsMap.get("orderValue")?if_exists?string("##0.00")}</fo:block>
