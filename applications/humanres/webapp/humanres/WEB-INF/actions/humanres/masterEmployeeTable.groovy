@@ -58,9 +58,9 @@ def populateChildren(org, employeeList) {
 		 }
 		employee.put("qual",qual);
 		panId="";
-		panIds=delegator.findByAnd("Person",[partyId:employment.partyId],["panId"]);
+		panIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"PAN_NUMBER"],["idValue"]);
 		if(UtilValidate.isNotEmpty(panIds)){
-			panId=panIds.get(0).panId;
+			panId=panIds.get(0).idValue;
 		 }
 		employee.put("panId",panId);
 		
