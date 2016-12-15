@@ -30,7 +30,7 @@ under the License.
         </fo:layout-master-set>
         
         
-        ${setRequestAttribute("OUTPUT_FILENAME", "IndentReport.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "IndentReport.pdf")}  
         <#if prodCatMap?has_content>
         <fo:page-sequence master-reference="main" font-size="10pt">	
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
@@ -42,7 +42,7 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >Mill wise count wise Purchase of Yarn</fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >Lifting Of Yarn </fo:block>
 				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       

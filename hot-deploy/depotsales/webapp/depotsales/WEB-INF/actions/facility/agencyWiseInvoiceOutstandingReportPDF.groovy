@@ -56,31 +56,43 @@ if(UtilValidate.isNotEmpty(dateStr)){
 	thrdMnththruDate = UtilDateTime.addDaysToTimestamp(sndMnthfromDate,-1);
 	thrdMnthfromDate = UtilDateTime.addDaysToTimestamp(thrdMnththruDate,-30);
 	
-	frthMnththruDate = UtilDateTime.addDaysToTimestamp(thrdMnththruDate,-1);
+	frthMnththruDate = UtilDateTime.addDaysToTimestamp(thrdMnthfromDate,-1);
 	frthMnthfromDate = UtilDateTime.addDaysToTimestamp(frthMnththruDate,-30);
 
 }
 
 conditionList = [];
 
+invoiceTypes = delegator.findList("InvoiceType", EntityCondition.makeCondition(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["PURCHASE_INVOICE","SALES_INVOICE"])),UtilMisc.toSet("invoiceTypeId","parentTypeId"), null, null, false);
+purchaseinvoiceTypesList = EntityUtil.filterByCondition(invoiceTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+salesinvoiceTypesList = EntityUtil.filterByCondition(invoiceTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
+purchaseinvoiceTypes=EntityUtil.getFieldListFromEntityList(purchaseinvoiceTypesList, "invoiceTypeId", true);
+salesinvoiceTypes=EntityUtil.getFieldListFromEntityList(salesinvoiceTypesList, "invoiceTypeId", true);
+
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_READY"));
 if(reportType=="CREDITORS"){
-	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, purchaseinvoiceTypes));
 }else{
-	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, salesinvoiceTypes));
 }
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-invoiceAndItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("invoiceId","partyIdFrom","partyId","amount","unitPrice","invoiceDate"), null, null, false);
+invoiceAndItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("invoiceId","partyIdFrom","partyId","amount","quantity","invoiceDate"), null, null, false);
 invoiceIds=EntityUtil.getFieldListFromEntityList(invoiceAndItems, "invoiceId", true);
 invoicePaymentsList = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN,invoiceIds),UtilMisc.toSet("invoiceId","paymentId","amount","partyIdFrom","paymentDate","partyIdTo"), null, null, false);
-	
 if(reportType=="CREDITORS"){
 	partyIds=EntityUtil.getFieldListFromEntityList(invoiceAndItems, "partyIdFrom", true);
 }else{
 	partyIds=EntityUtil.getFieldListFromEntityList(invoiceAndItems, "partyId", true);
 }
 invocieList=[];
+totalsMap=[:];
+totfstMntInvTotals =0;
+totsecMntInvTotals =0;
+totthrdMntInvTotals =0;
+totfrthMntInvTotals =0;
+totabove180Days=0;
+totallMonthsTotal=0
 for(partyId in partyIds){
 	tempMap=[:];
 	fstMntInvTotals =0;
@@ -101,33 +113,56 @@ for(partyId in partyIds){
 	}else{
 		invoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItems, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 	}
-	firstMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(fStMnthfromDate,fStMnththruDate)));
-	secndMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(sndMnthfromDate,sndMnththruDate)));
-	thirdMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(thrdMnthfromDate,thrdMnththruDate)));
-	fourthMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(frthMnthfromDate,frthMnththruDate)));
-	above180DaysInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(fromDate,frthMnththruDate)));
+   
+	firstMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fStMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,fStMnththruDate)));
+	secndMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, sndMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,sndMnththruDate)));
+	thirdMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, thrdMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,thrdMnththruDate)));
+	fourthMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, frthMnthfromDate) ,EntityOperator.AND,
+																							 EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnththruDate)));
+	above180DaysInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnthfromDate)));
 	
-	for(invoice in firstMntInvoiceAndItemsForParty){
-		total = invoice.amount
+	for(invoice in firstMntInvoiceAndItemsForParty){  
+		if(UtilValidate.isNotEmpty(invoice)&& invoice.quantity && invoice.amount){
+			total = invoice.amount*invoice.quantity
+		}else if(UtilValidate.isNotEmpty(invoice) && UtilValidate.isNotEmpty(invoice.amount)){
+			total = invoice.amount
+		}
 		fstMntInvTotals= fstMntInvTotals+total;
 	}
-	
 	for(invoice in secndMntInvoiceAndItemsForParty){
-		total = invoice.amount
+		if(UtilValidate.isNotEmpty(invoice) && invoice.quantity && invoice.amount){
+			total = invoice.amount*invoice.quantity
+		}else if(UtilValidate.isNotEmpty(invoice) && UtilValidate.isNotEmpty(invoice.amount)){
+			total = invoice.amount
+		}
 		secMntInvTotals= secMntInvTotals+total;
 	}
-	
 	for(invoice in thirdMntInvoiceAndItemsForParty){
-		total = invoice.amount
+		if(UtilValidate.isNotEmpty(invoice) && invoice.quantity && invoice.amount){
+			total = invoice.amount*invoice.quantity
+		}else if(UtilValidate.isNotEmpty(invoice) && UtilValidate.isNotEmpty(invoice.amount)){
+			total = invoice.amount
+		}
 		thrdMntInvTotals= thrdMntInvTotals+total;
 	}
-	
 	for(invoice in fourthMntInvoiceAndItemsForParty){
-		total = invoice.amount
+		if(UtilValidate.isNotEmpty(invoice) && invoice.quantity && invoice.amount){
+			total = invoice.amount*invoice.quantity
+		}else if(UtilValidate.isNotEmpty(invoice) && UtilValidate.isNotEmpty(invoice.amount)){
+			total = invoice.amount
+		}
 		frthMntInvTotals= frthMntInvTotals+total;
 	}
 	for(invoice in above180DaysInvoiceAndItemsForParty){
-		total = invoice.amount
+		if(UtilValidate.isNotEmpty(invoice) && invoice.quantity && invoice.amount){
+			total = invoice.amount*invoice.quantity
+		}else if(UtilValidate.isNotEmpty(invoice) && UtilValidate.isNotEmpty(invoice.amount)){
+			total = invoice.amount
+		}
 		above180Days= above180Days+total;
 	}
 	invoiceItemsAndPaymentsForParty=[];
@@ -137,12 +172,16 @@ for(partyId in partyIds){
 		invoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoicePaymentsList, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
 	}
 	
-	firstMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(fStMnthfromDate,fStMnththruDate)));
-	secndMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(sndMnthfromDate,sndMnththruDate)));
-	thirdMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(thrdMnthfromDate,thrdMnththruDate)));
-	fourthMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(frthMnthfromDate,frthMnththruDate)));
-	above180DaysInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN,UtilMisc.toList(fromDate,frthMnththruDate)));
-
+	firstMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fStMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO,fStMnththruDate)));
+	secndMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, sndMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO,sndMnththruDate)));
+	thirdMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, thrdMnthfromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO,thrdMnththruDate)));
+	fourthMntInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, frthMnthfromDate) ,EntityOperator.AND,
+		 																					EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnththruDate)));
+ 	above180DaysInvoiceItemsAndPaymentsForParty = EntityUtil.filterByCondition(invoiceItemsAndPaymentsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate) ,EntityOperator.AND,
+																							EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnthfromDate)));
 	
 	for(eachPayment in firstMntInvoiceItemsAndPaymentsForParty){
 		total = eachPayment.amount
@@ -177,14 +216,35 @@ for(partyId in partyIds){
 
 	allMonthsTotal=fstMntInvTotals+secMntInvTotals+thrdMntInvTotals+frthMntInvTotals+above180Days;
 	String partyName = PartyHelper.getPartyName(delegator,partyId,false);
-	tempMap.put("partyName", partyName);
+	tempMap.put("partyName", partyName+"["+partyId+"]");
 	tempMap.put("fstMntInvTotals", fstMntInvTotals);
 	tempMap.put("secMntInvTotals", secMntInvTotals);
 	tempMap.put("thrdMntInvTotals", thrdMntInvTotals);
 	tempMap.put("frthMntInvTotals", frthMntInvTotals);
 	tempMap.put("above180Days", above180Days);
 	tempMap.put("allMonthsTotal", allMonthsTotal);
-	invocieList.add(tempMap);
+	if(allMonthsTotal>0){
+		invocieList.add(tempMap);
+		
+		totfstMntInvTotals =totfstMntInvTotals+fstMntInvTotals;
+		totsecMntInvTotals =totsecMntInvTotals+secMntInvTotals;
+		totthrdMntInvTotals =totthrdMntInvTotals+thrdMntInvTotals;
+		totfrthMntInvTotals =totfrthMntInvTotals+frthMntInvTotals;
+		totabove180Days=totabove180Days+above180Days;
+		totallMonthsTotal=totallMonthsTotal+allMonthsTotal;
+	}
+	
+}
+
+totalsMap.put("partyName", "TOTAL");
+totalsMap.put("fstMntInvTotals", totfstMntInvTotals);
+totalsMap.put("secMntInvTotals", totsecMntInvTotals);
+totalsMap.put("thrdMntInvTotals", totthrdMntInvTotals);
+totalsMap.put("frthMntInvTotals", totfrthMntInvTotals);
+totalsMap.put("above180Days", totabove180Days);
+totalsMap.put("allMonthsTotal", totallMonthsTotal);
+if(totallMonthsTotal>0){
+	invocieList.add(totalsMap);
 }
 
 context.invocieList=invocieList;
