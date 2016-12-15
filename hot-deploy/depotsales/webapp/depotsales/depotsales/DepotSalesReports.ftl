@@ -46,8 +46,8 @@ $(document).ready(function(){
 	    makeDatePicker3("subsidyFromDate","subsidyThruDate");
 	    makeDatePicker3("claimFromDate","claimThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
-	    makeDatePicker3("reimburcentTransporterFRO","reimburcentTransporterTHRU");
-	    makeDatePicker3("depotReimburcentReportFRO","depotReimburcentReportTHRU");
+	    makeDatePicker("reimburcentTransporterFRO","reimburcentTransporterTHRU");
+	    makeDatePicker("depotReimburcentReportFRO","depotReimburcentReportTHRU");
 	    makeDatePicker3("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");

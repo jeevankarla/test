@@ -24,13 +24,10 @@ import java.util.Map.Entry;
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
 dayend = null;
 daystart = null;
-
 Timestamp fromDate;
 Timestamp thruDate;
-
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
-
 partyId=parameters.partyId;
 state=parameters.state;
 branchId = parameters.branchId2;
