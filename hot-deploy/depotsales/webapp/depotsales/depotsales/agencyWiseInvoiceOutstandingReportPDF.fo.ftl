@@ -99,22 +99,22 @@ under the License.
 								<#list invocieList as invoice>
 										<fo:table-row>
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("fstMntInvTotals")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("fstMntInvTotals")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${invoice.get("secMntInvTotals")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("secMntInvTotals")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"> ${invoice.get("thrdMntInvTotals")?if_exists?string("##0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("thrdMntInvTotals")?if_exists?string("##0.00")} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frthMntInvTotals")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frthMntInvTotals")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("above180Days")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("above180Days")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("allMonthsTotal")?if_exists?string("##0.00")}</fo:block>
