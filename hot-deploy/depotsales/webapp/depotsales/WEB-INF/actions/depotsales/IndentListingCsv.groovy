@@ -23,6 +23,25 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 
+fromDate = parameters.IndentRegisterFromDate;
+thruDate = parameters.IndentRegisterThruDate;
+
+context.fromDate=fromDate;
+context.thruDate=thruDate;
+
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	if (UtilValidate.isNotEmpty(fromDate)) {
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
+		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
+	}
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + e, "");
+context.errorMessage = "Cannot parse date string: " + e;
+	return;
+}
+dayStart = UtilDateTime.getDayStart(fromDate);
+dayEnd = UtilDateTime.getDayEnd(thruDate);
 BranchList=[];
 	branchMap = [:];
 	branchName="";
@@ -50,9 +69,9 @@ BranchList=[];
 	facilityDateStart = null;
 	facilityDateEnd = null;
 	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
-		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		def sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			transDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryDate+" 00:00:00").getTime());
+			transDate = new java.sql.Timestamp(sdf1.parse(facilityDeliveryDate+" 00:00:00").getTime());
 		} catch (ParseException e) {
 			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryDate, "");
 		}
@@ -61,9 +80,9 @@ BranchList=[];
 	}
 	transThruDate = null;
 	if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
-		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		def sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			transThruDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
+			transThruDate = new java.sql.Timestamp(sdf2.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
 		} catch (ParseException e) {
 			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
 		}
@@ -117,6 +136,8 @@ BranchList=[];
 	}
 	
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 		condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 		condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
@@ -160,9 +181,9 @@ BranchList=[];
 	headerData=[:];
 	headerData.put("orderDate", "Indent Date");
 	headerData.put("orderId", "Cust Order");
-	headerData.put("orderNo", "Sequence Id");
-	headerData.put("Qty", "Qty");
-	headerData.put("unit", "Unit");
+	headerData.put("orderNo", "IndentSeqId");
+	headerData.put("Qty", "Qty(Kgs)");
+	headerData.put("unit", "UnitPrice");
 	headerData.put("poQty", "PO Qty");
 	headerData.put("salInv", "Sal Invoice");
 	headerData.put("salDate", "Sal Date");
@@ -173,7 +194,7 @@ BranchList=[];
 	headerData.put("paymentReceipt", "Payment Receipt");
 	headerData.put("amount", "Amount");
 	headerData.put("weaverName", "Weaver Name");
-	headerData.put("poNo", "Po No");
+	headerData.put("poNo", "PoSequenceId");
 	headerData.put("poDate", "PO Date");
 	headerData.put("supplierName", "Supplier Name");
 	orderList.add(headerData);
@@ -301,7 +322,7 @@ BranchList=[];
 			tempData.put("Qty", ordQty);
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
-				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MMMM/dd/yyyy"));
+				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MM/dd/yyyy"));
 			}
 			shipments = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId",  EntityOperator.EQUALS, poId), null, null, null, false);
 			if(shipments){

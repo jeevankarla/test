@@ -55,7 +55,7 @@ $(document).ready(function(){
 	    makeDatePicker("AWIORDate");
 	    makeDatePicker("CASHFromDateId","");
 	    makeDatePicker3("billWiseSalesReportFrom","billWiseSalesReportThru");
-	    
+	    makeDatePicker("IndentRegisterFromDate","IndentRegisterThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -128,7 +128,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			 <tr class="alternate-row">
 			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentCSV.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Indent Register Report</td>
-				<td width="15%"></td>
+				<td width="15%">From<input  type="text" size="18pt" id="IndentRegisterFromDate" readonly  name="IndentRegisterFromDate"/></td>
+  			<td width="15%">Thru<input  type="text" size="18pt" id="IndentRegisterThruDate" readonly  name="IndentRegisterThruDate"/></td>
 			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentListing" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 			    <td width="15%"><span class='h3'>Branch
 							    <select name="branchId" id="branchId">
@@ -138,7 +139,6 @@ function makeDatePicker3(fromDateId ,thruDateId){
 							        </#list> 
 							    </select>    								
 					  	 </span></td>
-					  	 <td width="15%"></td>
 				<td width="10%">
 				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
