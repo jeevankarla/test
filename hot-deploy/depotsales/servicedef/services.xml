@@ -230,6 +230,7 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="differenceQuantity" mode="IN" type="BigDecimal" optional="false"/>
     </service>
     
     

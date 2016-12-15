@@ -11423,6 +11423,7 @@ public class DepotPurchaseServices{
 			String orderId = (String) context.get("orderId");
 			String orderItemSeqId = (String) context.get("orderItemSeqId");
 			BigDecimal givenQuantity = (BigDecimal) context.get("quantity");
+			BigDecimal differenceQuantity = (BigDecimal) context.get("differenceQuantity");
 			String shipmentId = (String) context.get("shipmentId");
 			
 			
@@ -11564,13 +11565,14 @@ public class DepotPurchaseServices{
 		        }
 			 
 			 
-			 BigDecimal quantityOnHandTotal = BigDecimal.ZERO;
+		/*	 BigDecimal quantityOnHandTotal = BigDecimal.ZERO;
 			 BigDecimal availableToPromiseTotal = BigDecimal.ZERO;
 			 
 			 try{
 				 GenericValue InventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 				 
 				  availableToPromiseTotal = InventoryItem.getBigDecimal("availableToPromiseTotal");
+				  quantityOnHandTotal = InventoryItem.getBigDecimal("quantityOnHandTotal");
 				 
 				 BigDecimal increaseAvailableQuantity = givenQuantity.subtract(quantityOnHandTotal);
 				 
@@ -11584,7 +11586,7 @@ public class DepotPurchaseServices{
 					Debug.logError(e, "Error fetching partyId " + inventoryItemId, module);
 				}
 			 
-			/* try{
+			 try{
 				 GenericValue InventoryItemDetail = delegator.findOne("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 				 
 				 InventoryItemDetail.set("quantityOnHandTotal", givenQuantity);
@@ -11592,7 +11594,7 @@ public class DepotPurchaseServices{
 				   
 				}catch(GenericEntityException e){
 					Debug.logError(e, "Error fetching partyId " + inventoryItemId, module);
-				}*/
+				}
 			    
 			 List<GenericValue> InventoryItemDetail = null;
 			 
@@ -11617,6 +11619,32 @@ public class DepotPurchaseServices{
 		        }catch(Exception e1){
 	            	Debug.log("Problem in sending email");
 		        }
+			 */
+			 
+			 Map<String, Object> resultCtx = null;
+			 
+			 Map createInvDetail = FastMap.newInstance();
+				createInvDetail.put("userLogin", userLogin);
+				createInvDetail.put("inventoryItemId", inventoryItemId);
+				//createInvDetail.put("shipmentId", shipmentId);
+				//createInvDetail.put("itemIssuanceId", itemIssuanceId);
+				createInvDetail.put("effectiveDate", UtilDateTime.nowTimestamp());
+				createInvDetail.put("quantityOnHandDiff", differenceQuantity);
+				createInvDetail.put("availableToPromiseDiff", differenceQuantity);
+				
+				try{
+				resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+         } catch (Exception e) {
+				Debug.logError(e, module);
+			}
+				if (ServiceUtil.isError(resultCtx)) {
+					/*Debug.logError("Problem decrementing inventory for requested item ", module);
+ 	        	request.setAttribute("_ERROR_MESSAGE_", "Problem decrementing inventory for requested item ");
+ 	        	TransactionUtil.rollback();
+ 	        	return "error";*/
+ 	        	
+ 	        	return ServiceUtil.returnError("Problem decrementing inventory for requested item");
+				}
 			 
 			 
 			 }
