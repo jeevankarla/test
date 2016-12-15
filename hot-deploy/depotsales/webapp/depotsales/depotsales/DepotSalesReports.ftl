@@ -126,7 +126,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		</#if>
 		<#if ReportsType?has_content &&  ReportsType=="INDENT_REPORTS">
 			 <tr class="alternate-row">
-			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentCSV.csv</@ofbizUrl>" target="_blank">	
+			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentPDF.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Indent Register Report</td>
 				<td width="15%">From<input  type="text" size="18pt" id="IndentRegisterFromDate" readonly  name="IndentRegisterFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="IndentRegisterThruDate" readonly  name="IndentRegisterThruDate"/></td>
@@ -140,7 +140,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 							    </select>    								
 					  	 </span></td>
 				<td width="10%">
-				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				<input type="submit" value="PDF" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentPDF.pdf</@ofbizUrl>');" class="buttontext"/>         			
+				<input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv?header=required</@ofbizUrl>');" class="buttontext"/>        			
 			</form>
           </tr>
 

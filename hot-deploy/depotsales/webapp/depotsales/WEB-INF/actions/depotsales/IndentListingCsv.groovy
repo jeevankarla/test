@@ -156,7 +156,7 @@ BranchList=[];
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
     
-	
+	if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 	headerData2=[:];
 	headerData2.put("orderDate", "_");
 	headerData2.put("orderId", "_");
@@ -198,7 +198,7 @@ BranchList=[];
 	headerData.put("poDate", "PO Date");
 	headerData.put("supplierName", "Supplier Name");
 	orderList.add(headerData);
-	
+	}
 	
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
@@ -282,7 +282,7 @@ BranchList=[];
 		tempData.put("supplierName", supplierPartyName);
 		tempData.put("orderNo", orderNo);
 		tempData.put("orderId", eachHeader.orderId);
-		tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
+		tempData.put("orderDate", UtilDateTime.toDateString(eachHeader.estimatedDeliveryDate, "MM/dd/yyyy"));
 		tempData.put("statusId", eachHeader.statusId);
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
