@@ -159,12 +159,17 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
 				     <option value='SILK'>SILK</option>
 				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
+			 	<td width="15%"><span class='h3'>Shipment Status
+				 <select name="shipmentstate" id="shipmentstate">
+				     <option value='Pending'>Pending</option>
+				     <option value='Completed'>Completed</option>
+				  </select>    								
+			  </span></td> 
 			  <td width="10%">
 			  	<input type="submit" value="PDF" onClick="javascript:appendParams('pendingShipmentsReport', '<@ofbizUrl>pendingShipmentsReport.pdf</@ofbizUrl>');" class="buttontext"/>
 			  	<input type="submit" value="CSV" onClick="javascript:appendParams('pendingShipmentsReport', '<@ofbizUrl>pendingShipmentsReport.csv</@ofbizUrl>');" class="buttontext"/>

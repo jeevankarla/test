@@ -9,7 +9,7 @@ import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.SortedMap;
- 
+
 import javolution.util.FastMap;
 import javolution.util.FastList;
 import org.ofbiz.entity.util.EntityTypeUtil;
@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.widget.WidgetWorker.Parameter;
 import java.util.Map.Entry;
 
 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
@@ -32,9 +33,10 @@ partythruDate=parameters.partythruDate;
 branchIds=[];
 branchId = parameters.branchId;
 productCategory=parameters.productCategory;
+shipmentstate = parameters.shipmentstate;
 context.partyfromDate=partyfromDate;
 context.partythruDate=partythruDate;
-
+context.shipmentstate=shipmentstate;
 productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategory] , false);
 if(UtilValidate.isNotEmpty(productCategoryDetails)){
 	prodCatName=productCategoryDetails.description
@@ -191,17 +193,25 @@ for(saleOrder in salesOrderDetailsList){
 			tempMap.put("shipQty", shipQty);
 		}
 	}
-
+	
 	if(!orderIdsCheck.contains(saleOrder.orderId)){
-		finalList.add(tempMap);
+		if(UtilValidate.isNotEmpty(indQty) && UtilValidate.isNotEmpty(shipQty)){
+				remaining=indQty-shipQty;
+			}
+		if(parameters.shipmentstate=="Pending"){
+		if(remaining>0){
+			finalList.add(tempMap);
+			}
+		}
+		if(parameters.shipmentstate=="Completed"){
+		if(remaining==0){
+			finalList.add(tempMap);
+			}
+		}
 	}
 	orderIdsCheck.add(saleOrder.orderId)
-	
-}
-
 context.finalList=finalList;
-
-
+}
 
 
 
