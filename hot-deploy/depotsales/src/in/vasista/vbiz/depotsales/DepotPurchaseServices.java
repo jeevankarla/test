@@ -11564,11 +11564,20 @@ public class DepotPurchaseServices{
 		        }
 			 
 			 
+			 BigDecimal quantityOnHandTotal = BigDecimal.ZERO;
+			 BigDecimal availableToPromiseTotal = BigDecimal.ZERO;
 			 
 			 try{
 				 GenericValue InventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 				 
+				  availableToPromiseTotal = InventoryItem.getBigDecimal("availableToPromiseTotal");
+				 
+				 BigDecimal increaseAvailableQuantity = givenQuantity.subtract(quantityOnHandTotal);
+				 
+				 availableToPromiseTotal = availableToPromiseTotal.add(increaseAvailableQuantity);
+				 
 				 InventoryItem.set("quantityOnHandTotal", givenQuantity);
+				 InventoryItem.set("availableToPromiseTotal", availableToPromiseTotal);
 				 InventoryItem.store();
 				   
 				}catch(GenericEntityException e){
@@ -11602,6 +11611,7 @@ public class DepotPurchaseServices{
 					}
 					
 					InventoryItemDetailFirst.set("quantityOnHandDiff", givenQuantity);
+					InventoryItemDetailFirst.set("availableToPromiseTotal", availableToPromiseTotal);
 					InventoryItemDetailFirst.store();
 					
 		        }catch(Exception e1){
