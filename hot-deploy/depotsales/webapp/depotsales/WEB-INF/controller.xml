@@ -98,11 +98,15 @@
     <request-map uri="QuotaAnalyticsInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuotaAnalyticsInternal"/>
-    </request-map>
+    </request-map>   
+    <request-map uri="IndentPDF.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentPDF"/>
+      </request-map>
     <request-map uri="IndentCSV.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentCSV"/>
-      </request-map>
+      </request-map>  
      <request-map uri="purchaseRegister.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseRegisterCSV"/>
@@ -2666,7 +2670,8 @@
     <view-map name="FindSalesReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSalesReturns"/>
     <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>
     <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>
-	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>
+	<view-map name="FindDepotSupplierPurchseShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindByProdDepotSalesShipment"/>    
+    <view-map name="IndentPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentPDF" content-type="application/pdf"/>
     <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
     <view-map name="purchaseRegisterCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseRegisterCSV" content-type="text/csv"/>
     <view-map name="agencyWiseInvoiceOutstandingReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportCSV" content-type="text/csv"/>

@@ -72,7 +72,31 @@
 				</section>
 			</widgets>
 		</section>
+	</screen>	
+	
+	<screen name="IndentPDF">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="processOrdersBranchSales" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/IndentListingCsv.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/IndentListing.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
 	</screen>
+	
     <screen name="IndentCSV">
 		<section>
 			<actions>
