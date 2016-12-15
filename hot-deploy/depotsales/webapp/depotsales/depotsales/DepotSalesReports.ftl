@@ -611,12 +611,12 @@ function makeDatePicker3(fromDateId ,thruDateId){
           </tr>
       	<tr class="alternate-row">
 			<form id="supplierMasters" name="supplierMasters" method="post" action="<@ofbizUrl>SupplierMasters.csv</@ofbizUrl>" target="_blank">	
-				<td width="30%">Supplier Masters</td>
+				<td width="30%">Supplier Masters</td>        
 				<td width="15%"></td>
-			    <td width="15%"></td>
       			<td></td>
       			<td width="15%"></td>
 				<td width="10%">
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('supplierMasters', '<@ofbizUrl>SupplierMasters.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('supplierMasters', '<@ofbizUrl>SupplierMasters.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
           </tr>
