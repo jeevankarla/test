@@ -2298,11 +2298,14 @@
        <response name="success" type="view" value="orderPayment"/>
         <response name="error" type="view" value="orderPayment"/>
      </request-map>
+      <request-map uri="SupplierMasters.pdf">
+     	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="SupplierMastersPDF"/>
+    </request-map>
      <request-map uri="SupplierMasters.csv">
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplierMastersCSV"/>
     </request-map>
-    
     <request-map uri="indentHeadReport.csv">
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="indentHeadReportCSV"/>
@@ -2476,8 +2479,13 @@
         <response name="error" type="view" value="billWiseSalesReport"/>
     </request-map>
      <!-- View Mappings -->
-    
+     
+     
+    <view-map name="SupplierMastersPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersPDF" content-type="application/pdf"/>
     <view-map name="SupplierMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierMastersCSV" content-type="text/csv"/>
+	
+	
+	
 	<view-map name="ProductMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#ProductMastersCSV" content-type="text/csv"/>
 	<view-map name="CustomerMastersCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerMastersCSV" content-type="text/csv"/>
 	
