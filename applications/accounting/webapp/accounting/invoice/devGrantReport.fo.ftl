@@ -77,7 +77,7 @@ under the License.
 					<fo:table-column column-width="150pt"/>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="200pt"/>
+					<fo:table-column column-width="240pt"/>
 					<fo:table-column column-width="80pt"/>
 					     <fo:table-body>
 					         <fo:table-row >
@@ -117,7 +117,7 @@ under the License.
 					<fo:table-column column-width="150pt"/>
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="240pt"/>
+					<fo:table-column column-width="300pt"/>
 					<fo:table-column column-width="240pt"/>
 					          <fo:table-body>
 					          
@@ -144,16 +144,41 @@ under the License.
 									   <fo:block text-align="center"  font-size="12pt">${finaccountEntry2.get("invoiceId")?if_exists}</fo:block>
 									  
 									   </fo:table-cell>
-									   <fo:table-cell>
+								      <fo:table-cell >
+											<fo:block text-align="left" >
+														 <fo:table>
+														  <fo:table-column column-width="80pt"/>
+									                      <fo:table-body>
+									                      <#assign amountList=finaccountEntry2.get("amount")>
+                                 						  <#list amountList as amount>
+														   <fo:table-row>
+													           <fo:table-cell>
+																	 <fo:block text-align="right" font-size="12pt" >${amount?if_exists}</fo:block>  
+															   </fo:table-cell>
+									                       </fo:table-row>
+									                       </#list>
+														</fo:table-body>   
+													</fo:table>	
+									       </fo:block>
+									   </fo:table-cell>
 									   
-									   <fo:block text-align="right"  font-size="12pt">${finaccountEntry2.get("amount")?if_exists?replace("{"," ")?replace("}"," ")}</fo:block>
-									  
-								    </fo:table-cell>
-								     <fo:table-cell>
-									   
-									   <fo:block text-align="center"  font-size="12pt">${finaccountEntry2.get("description")?if_exists?replace("{"," ")?replace("}"," ")}</fo:block>
-									  
-								    </fo:table-cell>
+								     <fo:table-cell >
+											<fo:block text-align="left" >
+														 <fo:table>
+														  <fo:table-column column-width="250pt"/>
+									                      <fo:table-body>
+									                      <#assign descriptionList=finaccountEntry2.get("description")>
+                                 						  <#list descriptionList as desc>
+														   <fo:table-row>
+													           <fo:table-cell>
+																	 <fo:block text-align="right" font-size="12pt" >${desc?if_exists}</fo:block>  
+															   </fo:table-cell>
+									                       </fo:table-row>
+									                       </#list>
+														</fo:table-body>   
+													</fo:table>	
+									       </fo:block>
+									   </fo:table-cell>
 								    <fo:table-cell>
 									   
 									   <fo:block text-align="left"  font-size="12pt">${finaccountEntry2.get("narration")?if_exists}</fo:block>

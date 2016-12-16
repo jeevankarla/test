@@ -122,7 +122,7 @@ import java.text.ParseException;
 			
 			condList = [];
 			if(UtilValidate.isNotEmpty(invoiceItemTypeId)){
-			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceItemTypeId));
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, invoiceItemTypeId));
 			
 			}
 			cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
