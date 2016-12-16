@@ -734,6 +734,7 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> --> 
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
@@ -835,6 +836,7 @@
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
@@ -850,7 +852,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -899,6 +901,7 @@
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
             	</entity-condition>
@@ -913,7 +916,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -962,6 +965,7 @@
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
             	</entity-condition>
@@ -976,7 +980,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -1682,6 +1686,7 @@
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>           
             <widgets>
             <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -1821,6 +1826,7 @@
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>           
             <widgets>
             <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">

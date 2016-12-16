@@ -882,7 +882,7 @@ public class DepotSalesApiServices{
 			}
 			partyDetail.put("contactNumber",contactNumber);
 			partyDetail.put("addressMap",addressMap);
-			partyDetail.put("productCategory","silk");
+			partyDetail.put("productCategory","SILK");
 			suppliersMap.put(eachParty.get("partyId"),partyDetail);
 		}
 		if (partyListIter != null) {
