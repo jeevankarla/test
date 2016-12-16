@@ -894,7 +894,7 @@ function fillPartyQuota(partyId){
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
 	       	  				   
-	       	  				        if(item['schemeId'] != "General")
+	       	  				        //if(item['schemeId'] != "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				
 		       	  				 });
