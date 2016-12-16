@@ -56,6 +56,7 @@ $(document).ready(function(){
 	    makeDatePicker("CASHFromDateId","");
 	    makeDatePicker3("billWiseSalesReportFrom","billWiseSalesReportThru");
 	    makeDatePicker("IndentRegisterFromDate","IndentRegisterThruDate");
+	     makeDatePicker("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -195,6 +196,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			    <tr class="alternate-row">
 			<form id="purchaseRegister" name="purchaseRegister" method="post" action="<@ofbizUrl>purchaseRegister.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Purchase Register Report</td>
+						<td width="15%">From<input  type="text" size="18pt" id="purchaseRegisterReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">Thru<input  type="text" size="18pt" id="purchaseRegisterReportDateThru" readonly  name="thruDate"/></td>
+				<td width="15%"></td>
 			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchaseRegister" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 			    <td width="15%"><span class='h3'>Branch
 							    <select name="branchId" id="branchId">
