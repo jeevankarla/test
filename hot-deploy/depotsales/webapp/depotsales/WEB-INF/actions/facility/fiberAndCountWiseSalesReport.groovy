@@ -94,6 +94,22 @@ totalQty=0
 totalValue=0;
 prodCatMap=[:];
 totalsMap=[:];
+productId=EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
+headerData2=[:];
+headerData2.put("partyName", "______");
+headerData2.put("orderQty", "___");
+headerData2.put("BdlWt", "___Fiberand___");
+headerData2.put("rate", "_ Countwise");
+headerData2.put("orderValue", "____ SalesReport_______");
+finalCSVList.add(headerData2);
+
+headerData=[:];
+headerData.put("partyName", "partyName");
+headerData.put("orderQty", "orderQty");
+headerData.put("BdlWt", "BdlWt");
+headerData.put("rate", "rate");
+headerData.put("orderValue", "orderValue");
+finalCSVList.add(headerData);
 for(productCategoryId in productCategoryIds){
 	tempCSVMap1=[:];
 	prodCatList=[];
