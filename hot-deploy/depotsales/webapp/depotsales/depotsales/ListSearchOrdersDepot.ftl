@@ -46,6 +46,7 @@ under the License.
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
 <input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
 <input type="hidden" name="scheme" id="scheme" value="${scheme}">
+<input type="hidden" name="salesChannel" id="salesChannel" value="${salesChannel}">
 
   
 
@@ -65,6 +66,9 @@ var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 var tallyRefNO = $("#tallyRefNO").val();
 var scheme = $("#scheme").val();
+var salesChannel = $("#salesChannel").val();
+
+
 
 var reload = "";
 
@@ -169,7 +173,7 @@ $(function(){
            }
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"salesChannel":salesChannel, "partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      

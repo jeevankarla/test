@@ -90,7 +90,10 @@ branchList = formatList1;
 
 //branchId = parameters.partyIdFrom;
 
-salesChannel = parameters.salesChannelEnumId;
+salesChannelEnumId = parameters.salesChannel;
+
+
+Debug.log("salesChannelEnumId=========="+salesChannelEnumId);
 
 
 uniqueOrderId = parameters.uniqueOrderId;
@@ -204,6 +207,10 @@ if(UtilValidate.isNotEmpty(uniqueOrderIdsList)){
 if(UtilValidate.isNotEmpty(tallyRefNO)){
 	condList.add(EntityCondition.makeCondition("tallyRefNo" ,EntityOperator.EQUALS, tallyRefNO));
 }
+if(UtilValidate.isNotEmpty(salesChannelEnumId)){
+	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannelEnumId));
+}
+
 
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
