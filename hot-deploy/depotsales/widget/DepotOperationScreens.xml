@@ -616,16 +616,18 @@
                                         </decorator-section>
                                         <decorator-section name="search-results">
     								<screenlet title="Depot Orders">
-    									<platform-specific>
+    									<!-- <platform-specific>
     										<html>
     											<html-template location="component://depotsales/webapp/depotsales/depotsales/ListOrdersForIssuance.ftl" />
     										</html>
+    									</platform-specific> -->
+										<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/viewOrderDetailsDepot.ftl" />
+    										</html>
     									</platform-specific>
-    									<!-- <platform-specific>
-											<html>
-												<html-template location="component://depotsales/webapp/depotsales/depotsales/MakeSaleOrder.ftl" />
-											</html>
-										</platform-specific> -->
+                       					<include-form name="ListOrdersForIssuance" location="component://depotsales/widget/DepotOperationForms.xml"/>
     								</screenlet>
     								</decorator-section>
     								</decorator-screen>

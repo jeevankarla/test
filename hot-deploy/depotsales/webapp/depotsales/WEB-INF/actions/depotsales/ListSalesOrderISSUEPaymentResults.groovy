@@ -82,7 +82,14 @@ branchList = formatList1;
 }
 
 
+noConditionFind = parameters.noConditionFind;
+
+orderList=[];
+
+if(noConditionFind == "Y"){
+
 salesChannel = parameters.salesChannelEnumId;
+
 
 
 searchOrderId = parameters.orderId;
@@ -92,6 +99,36 @@ if(UtilValidate.isNotEmpty(indentOrderIdDetails)){
 	indentOrderIdDetails = EntityUtil.getFirst(indentOrderIdDetails);
 	searchOrderId = indentOrderIdDetails.orderId;
 }
+
+
+searchOrderIdList=[];
+
+shipmentId = parameters.shipmentId;
+
+Debug.log("shipmentId============"+shipmentId);
+
+if(shipmentId){
+
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+	inventoryItemIds = EntityUtil.getFieldListFromEntityList(ShipmentReceipt, "inventoryItemId", true);
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.IN , inventoryItemIds));
+	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+	
+	searchOrderIdList = EntityUtil.getFieldListFromEntityList(OrderItemAttribute, "orderId", true);
+
+}else if(searchOrderId){
+
+   searchOrderIdList.add(searchOrderId);
+
+}
+
+
 facilityOrderId = parameters.orderId;
 facilityDeliveryDate = parameters.estimatedDeliveryDate;
 productId = parameters.productId;
@@ -110,10 +147,10 @@ if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
 }
 
-orderList=[];
+
 condList = [];
-if(UtilValidate.isNotEmpty(searchOrderId)){
-	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.LIKE, "%"+searchOrderId + "%"));
+if(UtilValidate.isNotEmpty(searchOrderIdList)){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, searchOrderIdList));
 }
 if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
@@ -195,11 +232,14 @@ orderHeader.each{ eachHeader ->
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
 	tempData.put("partyId", partyId);
+	tempData.put("orderId", eachHeader.orderId);
 	
 	if(eachHeader.shipmentId)
-	tempData.put("shipmentId", eachHeader.shipmentId);
+	tempData.put("orderShipmentId", "Y");
 	else
-	tempData.put("shipmentId", "");
+	tempData.put("orderShipmentId", "N");
+	
+	
 	
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
@@ -207,9 +247,9 @@ orderHeader.each{ eachHeader ->
 	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 		salesOrder = orderSeqDetails.orderNo;
-		tempData.put("orderNo",salesOrder);
+		tempData.put("salesOrder",salesOrder);
 	}else{
-		tempData.put("orderNo", eachHeader.orderId);
+		tempData.put("salesOrder", eachHeader.orderId);
 	}
 	
 	tempData.put("orderId", eachHeader.orderId);
@@ -218,13 +258,40 @@ orderHeader.each{ eachHeader ->
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	}
-	/*creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
-	creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
-	if(UtilValidate.isNotEmpty(eachHeader.productSubscriptionTypeId)&&("CREDIT"==eachHeader.productSubscriptionTypeId) || creditPartyRole) {
-		tempData.put("isCreditInstution", "Y");
-	}else{
-		tempData.put("isCreditInstution", "N");
-	}*/
+	
+	
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId));
+	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+	
+	inventoryItemId = "";
+	if(OrderItemAttribute){
+		inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
+	}
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+	
+	shipmentId = "";
+	if(ShipmentReceipt){
+		shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+		
+	}
+	
+	facilityId = "";
+	if(ShipmentReceipt){
+	 InventoryItem = delegator.findOne("InventoryItem",[inventoryItemId : inventoryItemId] , false);
+	
+	 facilityId = InventoryItem.facilityId;
+	}
+	
+	tempData.put("shipmentId", shipmentId);
+	
+	
 	partyIdsSet.add(partyId);
 	orderList.add(tempData);
 	
@@ -361,6 +428,8 @@ statesList.each{ eachState ->
 }
 context.stateListJSON = stateListJSON;
 
+}
+
 orderIdsList = [];
 orderPreferenceMap = [:];
 paymentSatusMap = [:];
@@ -371,7 +440,7 @@ JSONObject eachPaymentOrderMap = new JSONObject();
 
 //  eachPaymentOrderMap = [:];
 
-for (eachList in orderList) {
+/*for (eachList in orderList) {
 
 	   condtList = [];
 	   condtList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachList.actualOrderId));
@@ -459,8 +528,8 @@ for (eachList in orderList) {
 		  tempMap.put("amount", 0);
 		  paymentSatusMap.put(eachList.orderId, tempMap);
 		  
-		 /* allOrderPayments = [:];
-		  allOrderPayments.put("NoPreferenceId", "NillAmout");*/
+		  allOrderPayments = [:];
+		  allOrderPayments.put("NoPreferenceId", "NillAmout");
 		  
 		  JSONObject allOrderPayments2 = new JSONObject();
 		  
@@ -471,14 +540,14 @@ for (eachList in orderList) {
 		  eachPaymentOrderMap.put(eachList.orderId, allOrderPayments2);
 	  }
 }
-
+*/
 condtList = [];
 condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
 cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
 PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
 
-
-allOrderIds = eachPaymentOrderMap.keySet();
+context.PaymentMethodType = PaymentMethodType;
+/*allOrderIds = eachPaymentOrderMap.keySet();
 
 statusConfirmMap = [:];
 
@@ -499,14 +568,14 @@ for (eachOrderId in allOrderIds) {
 	else{
 		statusConfirmMap.put(eachOrderId, "NotVisible");
 	}
-}
+}*/
 
-context.statusConfirmMap = statusConfirmMap;
+/*context.statusConfirmMap = statusConfirmMap;
 context.eachPaymentOrderMap = eachPaymentOrderMap;
-context.PaymentMethodType = PaymentMethodType;
+
 context.orderPreferenceMap = orderPreferenceMap;
 context.paymentSatusMap = paymentSatusMap;
-
+*/
 /*sortedOrderMap =  [:]as TreeMap;
 for (eachList in orderList) {
 	sortedOrderMap.put(eachList.orderId, eachList);
