@@ -80,7 +80,7 @@ import java.text.ParseException;
 		
 		DetailssList = [];
 		
-	
+		Map invoiceMap = FastMap.newInstance();
 		for(int a=0; a<InvoiceeeDetails.size();a++){
 			InvoiceeeDetailsList=[];
 			
@@ -92,66 +92,36 @@ import java.text.ParseException;
 			narration = "";
 			fininvoiceId = InvoiceeeDetailsList.get("invoiceId");
 			if(fininvoiceId){
-				
-				
 				conditionList = [];
-				if(fininvoiceId){
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, fininvoiceId));
-				}
-				
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "INVOICE_PAID"),EntityOperator.OR,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"INVOICE_READY")));
 				cond1 = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				InvoiceDetails = delegator.findList("Invoice", cond1, null, null, null, false);
+				InvoiceDetails = delegator.findList("InvoiceAndItem", cond1, null, null, null, false);
 				if(UtilValidate.isNotEmpty(InvoiceDetails)){
-			invoiceDate = EntityUtil.getFirst(InvoiceDetails).invoiceDate;
-			narration = EntityUtil.getFirst(InvoiceDetails).description;
-			invID =  EntityUtil.getFirst(InvoiceDetails).invoiceId;
-			
-				conditionList1 = [];
-				if(invID){
-				conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invID));
-				}
-				invoiceItemTypeId = "";
-				cond2 = EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
-				InvoiceDetails1 = delegator.findList("InvoiceItem", cond2, null, null, null, false);
-				if(UtilValidate.isNotEmpty(InvoiceDetails1)){
-					amount = EntityUtil.getFieldListFromEntityList(InvoiceDetails1, "amount", true);
-					invoiceItemTypeId =  EntityUtil.getFieldListFromEntityList(InvoiceDetails1, "invoiceItemTypeId", true);
-				}
-				
-			
-			condList = [];
-			if(UtilValidate.isNotEmpty(invoiceItemTypeId)){
-			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, invoiceItemTypeId));
-			
-			}
-			cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-			InvoiceItemTypeDetails = delegator.findList("InvoiceItemType", cond, null, null, null, false);
-		 
-			if(UtilValidate.isNotEmpty(InvoiceItemTypeDetails)){
-			description = EntityUtil.getFieldListFromEntityList(InvoiceItemTypeDetails, "description", true);
-			
-			}
-			
-			
-			
-			
-			finAccMap=[:];
-			
-			finAccMap["invoiceDate"]=invoiceDate;
-			finAccMap["narration"]=narration;
-			finAccMap["invoiceId"]=fininvoiceId;
-			finAccMap["amount"]=amount;
-			finAccMap["description"]=description;
-			DetailssList.add(finAccMap);
-			finAccountTransMap.put(finAccountId,DetailssList);
-			
+					Map tempMap =FastMap.newInstance();
+					invoiceDate = EntityUtil.getFirst(InvoiceDetails).invoiceDate;
+					narration = EntityUtil.getFirst(InvoiceDetails).description;
+					tempMap.put("invoiceDate", invoiceDate);
+					tempMap.put("narration", narration);
+					List invItmList = FastList.newInstance();
+					InvoiceDetails.each {invItem->
+						Map itemMap =FastMap.newInstance();
+						itemMap.put("amount", invItem.amount);
+						String invoiceItemTypeId = invItem.invoiceItemTypeId;
+						invoiceItemType = delegator.findOne("InvoiceItemType",["invoiceItemTypeId":invoiceItemTypeId,],false);
+						if(invoiceItemType){
+							itemMap.put("description",invoiceItemType.get("description"));
+						}
+						invItmList.add(itemMap);
+					}
+					tempMap.put("invItmList", invItmList);
+					invoiceMap.put(fininvoiceId, tempMap);
 				}
 			}
-			
-	}
-		
-		context.finAccountTransMap=finAccountTransMap;
+		}
+		context.invoiceMap=invoiceMap;
 		context.finAccountId=finAccountId;
+		
+	
 	
 	

@@ -28,7 +28,7 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-		<#if finAccountTransMap?has_content>
+		<#if invoiceMap?has_content>
    <#assign partyDetails = delegator.findOne("PartyAndGroup", {"partyId" : "Company"}, false)>                    			                                                
 			<fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
@@ -74,11 +74,11 @@ under the License.
 	                <fo:table>
 					
 					
-					<fo:table-column column-width="150pt"/>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="240pt"/>
-					<fo:table-column column-width="80pt"/>
+					<fo:table-column column-width="10pt"/>
+					<fo:table-column column-width="160pt"/>
+					<fo:table-column column-width="180pt"/>
 					     <fo:table-body>
 					         <fo:table-row >
 							   <fo:table-cell >
@@ -93,16 +93,18 @@ under the License.
 								
 								<fo:table-cell >
 									<fo:block text-align="left" font-weight="bold" >Invoice Id</fo:block>
-								</fo:table-cell>									
-								<fo:table-cell >
-									<fo:block text-align="center" keep-together="always" font-weight="bold">Amount</fo:block>
 								</fo:table-cell>
-							<fo:table-cell >
-									<fo:block text-align="center" keep-together="always" font-weight="bold">Invoice Item Description</fo:block>
-								</fo:table-cell>	
+							    <fo:table-cell >
+									<fo:block text-align="left" keep-together="always" font-weight="bold">Narration</fo:block>
+								</fo:table-cell>								
 								<fo:table-cell >
-									<fo:block text-align="center" keep-together="always" font-weight="bold">Narration</fo:block>
-								</fo:table-cell>					
+									<fo:block text-align="right" keep-together="always" font-weight="bold">Amount</fo:block>
+								</fo:table-cell>
+								<fo:table-cell >
+									<fo:block text-align="left" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;Invoice Item Description</fo:block>
+								</fo:table-cell>	
+								
+													
 					    </fo:table-row>
 					    <fo:table-row >
 							<fo:table-cell >
@@ -114,47 +116,40 @@ under the License.
 	               <fo:block font-family="Courier,monospace" font-size="10pt">
 	                   <fo:table>
 					
-					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="300pt"/>
-					<fo:table-column column-width="240pt"/>
+					<fo:table-column column-width="350pt"/>
 					          <fo:table-body>
 					          
-                              <#if finAccountTransMap?has_content>
-					          	
-				              <#assign FinList = finAccountTransMap.entrySet()>  
-				                        					          
-                               <#list FinList as finaccountEntry>
-                               <#assign finaccountId=finaccountEntry.getKey()> 
-                               <#assign FinList2=finaccountEntry.getValue()>
-                                
-                                 <#list FinList2 as finaccountEntry2>
+                              <#if invoiceMap?has_content>
+					          <#assign invoiceList = invoiceMap.entrySet()>  
+				              <#list invoiceList as invoice>
                                  
 				                  <fo:table-row >
-				                   
-					                 
 								      <fo:table-cell >
-								      
-									    <fo:block text-align="left"  font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(finaccountEntry2.get("invoiceDate")?if_exists, "dd-MM-yyyy")}</fo:block>
-									      
-								     </fo:table-cell>	
-								    
-								     <fo:table-cell >
-								   
-									   <fo:block text-align="center"  font-size="12pt">${finaccountEntry2.get("invoiceId")?if_exists}</fo:block>
-									  
-									   </fo:table-cell>
+									    <fo:block text-align="left"  font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoice.getValue().get("invoiceDate")?if_exists, "dd-MM-yyyy")}</fo:block>
+								     </fo:table-cell>
+								       <fo:table-cell >
+									 	 <fo:block text-align="left"  font-size="12pt">${invoice.getKey()?if_exists}</fo:block>
+									   </fo:table-cell>	
+								     	 <fo:table-cell >
+								   		 <fo:block text-align="left"  font-size="12pt">${invoice.getValue().get("narration")?if_exists}</fo:block>
+								     </fo:table-cell>
 								      <fo:table-cell >
-											<fo:block text-align="left" >
-														 <fo:table>
+										<fo:block text-align="left" >
+												<fo:table>
 														  <fo:table-column column-width="80pt"/>
+														  <fo:table-column column-width="300pt"/>
 									                      <fo:table-body>
-									                      <#assign amountList=finaccountEntry2.get("amount")>
-                                 						  <#list amountList as amount>
+									                      <#assign invItmList=invoice.getValue().get("invItmList")>
+                                 						  <#list invItmList as invItm>
 														   <fo:table-row>
 													           <fo:table-cell>
-																	 <fo:block text-align="right" font-size="12pt" >${amount?if_exists}</fo:block>  
+																	 <fo:block text-align="right" font-size="12pt" >${invItm.get("amount")?if_exists?string("##0.00")}</fo:block>  
+															   </fo:table-cell>
+															    <fo:table-cell>
+																	 <fo:block text-align="left" font-size="12pt" >&#160; ${invItm.get("description")?if_exists}</fo:block>  
 															   </fo:table-cell>
 									                       </fo:table-row>
 									                       </#list>
@@ -162,39 +157,10 @@ under the License.
 													</fo:table>	
 									       </fo:block>
 									   </fo:table-cell>
-									   
-								     <fo:table-cell >
-											<fo:block text-align="left" >
-														 <fo:table>
-														  <fo:table-column column-width="250pt"/>
-									                      <fo:table-body>
-									                      <#assign descriptionList=finaccountEntry2.get("description")>
-                                 						  <#list descriptionList as desc>
-														   <fo:table-row>
-													           <fo:table-cell>
-																	 <fo:block text-align="right" font-size="12pt" >${desc?if_exists}</fo:block>  
-															   </fo:table-cell>
-									                       </fo:table-row>
-									                       </#list>
-														</fo:table-body>   
-													</fo:table>	
-									       </fo:block>
-									   </fo:table-cell>
-								    <fo:table-cell>
-									   
-									   <fo:block text-align="left"  font-size="12pt">${finaccountEntry2.get("narration")?if_exists}</fo:block>
-									  
-								    </fo:table-cell>
 								     
 					            </fo:table-row>
 					            </#list> 
-					            </#list>
 					            </#if>   
-					        
-					          
-                              
-                             
-                           
 					      </fo:table-body>  
 					    </fo:table>
 				   <fo:block text-align="left" keep-together="always"  >------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
