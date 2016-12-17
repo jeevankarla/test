@@ -496,6 +496,13 @@ public class UtilAccounting {
         		}
         	}
         	
+    	 GenericValue tenantConfigEnableAccounting = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","ACCOUNTING", "propertyName","enableAccounting"), true);
+    	 if (UtilValidate.isNotEmpty(tenantConfigEnableAccounting) && (tenantConfigEnableAccounting.getString("propertyValue")).equals("Y")) {
+			 conditionReply = Boolean.TRUE ;				
+		 }else{
+			 conditionReply = Boolean.FALSE ;
+		 }
+
         	/*if(UtilValidate.isNotEmpty(paymentId) && UtilValidate.isNotEmpty(invoiceId) && (!(!invConditionReply && !pmConditionReply)) && !conditionReply){
         		Debug.logError("===mismatch invoice and payment accounting configuration==="+result ,module);
         		return ServiceUtil.returnError("mismatch invoice and payment accounting configuration");
