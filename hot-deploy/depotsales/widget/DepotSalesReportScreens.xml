@@ -96,7 +96,6 @@
 			</widgets>
 		</section>
 	</screen>
-	
     <screen name="IndentCSV">
 		<section>
 			<actions>
@@ -674,8 +673,6 @@
 			
 		</section>
 	</screen>
-	
-	
 	<screen name="SupplierMastersCSV">
 		<section>
 			<actions>
@@ -909,6 +906,8 @@
 					<!-- <include-form name="partyAbstractReportName" location="component://depotsales/widget/DepotSalesForms.xml" /> 
 					<include-form name="partyAbstractReportDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> 
 					  <include-form name="partyAbstractDetailHeading" location="component://depotsales/widget/DepotSalesForms.xml" />  -->
+                      <include-form name="stateWiseBranchWiseSaleHeader" location="component://depotsales/widget/DepotSalesForms.xml" /> 
+					 
 						<include-form name="stateWiseBranchWiseSaleReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
@@ -918,6 +917,7 @@
 	
 	
 	
+	  
 	 <screen name="claimReportDetailsCSV">
 		<section>
 			<actions>

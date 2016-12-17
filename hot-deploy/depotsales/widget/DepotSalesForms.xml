@@ -106,7 +106,7 @@
     </form> 
         
     <form name="FindTankerSalesOrder" title="" type="single" target="FindIndents" header-row-style="header-row" default-table-style="basic-table">
-         <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field> 
+        <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
            <drop-down no-current-selected-key="SALES_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
@@ -127,7 +127,6 @@
 	        		<option key="General" description="General Scheme"/>
 	        	</drop-down>
         </field> 
-        
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
@@ -3362,9 +3361,11 @@
      </form> 
      
       <form name="stateWiseBranchWiseSaleReportCSV" type="list" list-name="finalList" view-size="99999">
-         <field name="billno" title="Sale Invo.No"><display/></field>
+         <!--  <field name="billno" title="Sale Invo.No"><display/></field> -->
+          <field name="billno" title="Sale Invo.No"><display/></field>
          <field name="invoiceDate" title="Invoice Date"><display/></field>
-         <field name="invoiceQTY" title="Quantity"><display/></field>
+         <field name="invoiceQTY" title="Quantity(Kg)"><display/></field>
+         <field name="invoicprice" title="RATE"><display/></field>
          <field name="invoiceAmount" title="Amount"><display/></field>
          <field name="supplierName" title="Name Of Supplier"><display/></field>
          <field name="destAddr" title="Destination"><display/></field>
@@ -3372,6 +3373,10 @@
          <field name="lrNumber" title="Lr Number"><display/></field>
          <field name="lrDate" title="LR Date"><display/></field>
      </form>
+     <form name="stateWiseBranchWiseSaleHeader" type="list" view-size="99999999">
+       <field name="stateWiseBranchWiseSaleHeader" title="_____________________________state Wise Branch Wise Sales___________________________________"><display/></field>
+     </form>  
+      
      
      <form name="depotReimburcentReportCSV" type="list" list-name="finalList" view-size="99999">
          <field name="billno" title="Sale Invo.No"><display/></field>
