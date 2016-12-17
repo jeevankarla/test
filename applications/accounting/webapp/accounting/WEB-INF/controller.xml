@@ -4260,6 +4260,16 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ContraAcctgTransDetailReportPdf"/>
     </request-map>
+     <request-map uri="devGrantReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="devGrantReportPDF"/>
+    </request-map>
+     <request-map uri="implGrantReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="implGrantReportPDF"/>
+    </request-map>
+    
+
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
@@ -4852,5 +4862,7 @@ under the License.
    <view-map name="FindApGrantInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApGrantInvoices"/>
    <view-map name="CreateAPGrantInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPGrantInvoice"/>
    <view-map name="ContraAcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#ContraAcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
+   <view-map name="devGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#devGrantReportPDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>
