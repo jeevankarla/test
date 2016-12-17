@@ -509,4 +509,33 @@
     
     
     
+     <form name="ListOrdersForIssuance" type="list" list-name="orderList" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        <field name="shipmentId"><display></display></field> 
+        <field name="partyId"><display></display></field> 
+        <field name="partyName"><display></display></field> 
+        <field name="salesOrder"><display></display></field> 
+         <field name="orderId"><hidden/></field> 
+         <field name="salesButton"><hidden/></field> 
+         <field name="inventoryItemId"><hidden/></field>
+         <field name="isFind"><hidden value="Y"/></field> 
+         <field name="orderTotal"><hidden/></field> 
+         <field name="balance"><hidden/></field> 
+         <field name="orderShipmentId"><hidden/></field> 
+          <field name="addContent" title="View" widget-style="buttontext" use-when="true">
+           <hyperlink target-type="plain" description="View" target="javascript:fetchOrderInformation('${orderId}');"></hyperlink>
+        </field>
+      <!--   
+         <field name="forPayment" title="IndentPayment" widget-style="buttontext" use-when="true">
+           <hyperlink target-type="plain" description="IndentPayment" target="javascript:showPaymentEntryForDepotPayment('${orderId}','${partyId}','${partyName}','${orderTotal}','${balance}');"></hyperlink>
+        </field>
+        
+         <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))">
+           <hyperlink target-type="plain" description="Issue Indent" target="javascript:issueIndentItems('${orderId}','${partyId}');"></hyperlink>
+        </field>
+       -->   
+    
+          
+    </form>
+    
     </forms>

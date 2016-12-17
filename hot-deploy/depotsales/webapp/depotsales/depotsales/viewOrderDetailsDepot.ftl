@@ -894,4 +894,19 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 	};
 	
 	
+	function issueIndentItems(orderId, partyId) {
+		
+		var message = "";
+		message += "<form action='processIndentItemIssuance' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>OrderId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='orderId' name='orderId' value='"+orderId+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Issue to Party:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='partyId' name='partyId' value='"+partyId+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		title = "<center>Issue Indent Items<center><br />";
+		message += "</table></form>";
+		Alert(message, title);
+	};
+	
+	
 </script>
