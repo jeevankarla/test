@@ -62,11 +62,7 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 if(!branchList)
 branchList.add(branchId);
 
-
-
 ////Debug.log("branchList=================="+branchList);
-
-  
 
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
   

@@ -547,6 +547,8 @@ paramEstimatedDeliveryDate = "";
 paramEstimatedDeliveryThruDate = "";
 paramindentEntryFromDate = "";
 paramEstimatedindentEntryThruDate = "";
+
+salesChannel = "";
   
 paramStatusId = "";
 paramBranch = "";
@@ -592,8 +594,11 @@ if(parameters.indentDateSort)
 
 if(parameters.scheme)
 scheme = parameters.scheme;
+
+if(parameters.salesChannel)
+salesChannel = parameters.salesChannel;
   
-  
+  Debug.log("salesChannel==========323======="+salesChannel);
    
 context.paramOrderId = paramOrderId;
 context.paramFacilityId = paramFacilityId;
@@ -606,6 +611,7 @@ context.paramBranch = paramBranch;
 context.tallyRefNO = tallyRefNO;
 context.indentDateSort = indentDateSort;
 context.scheme = scheme;
+context.salesChannel = salesChannel;
 
 BankList = delegator.findList("Bank", null, null, null, null, false);
 JSONArray BankListJSON = new JSONArray();
