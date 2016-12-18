@@ -247,10 +247,9 @@ public class DepotSalesApiServices{
         }
 
         List customerBasedOrderIds = EntityUtil.getFieldListFromEntityList(orderRoles, "orderId", true);
+        EntityListIterator orderHeaderList = null;
         if(UtilValidate.isNotEmpty(customerBasedOrderIds)){
         	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, customerBasedOrderIds));
-        }
-        EntityListIterator orderHeaderList = null;
         try{
         	List orderBy = UtilMisc.toList("-createdStamp");
 	        orderHeaderList = delegator.find("OrderHeader", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, orderBy, null);
@@ -258,6 +257,7 @@ public class DepotSalesApiServices{
 			Debug.logError(e, module);
 		}
         
+        }
         List<GenericValue> statusItemList = null;
 	  	try{
 	  		statusItemList = delegator.findList("StatusItem",EntityCondition.makeCondition("statusTypeId",EntityOperator.IN, UtilMisc.toList("ORDER_STATUS", "ORDER_ITEM_STATUS")), null, null, null, false);
