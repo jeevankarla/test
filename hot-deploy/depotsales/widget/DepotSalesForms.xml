@@ -159,6 +159,7 @@
          <field name="salesChannel" title="Sales Channel" position="3">
 	        	<drop-down allow-empty="true">
 	        		<option key="WALKIN_SALES_CHANNEL" description="Walk-In Sales Channel"/>
+	        		<option key="MOBILE_SALES_CHANNEL" description="e-Dhaga Channel"/>
 	        		<option key="WEB_SALES_CHANNEL" description="Web Channel"/>
 	        		<option key="POS_SALES_CHANNEL" description="POS Channel"/>
 	        		<option key="PHONE_SALES_CHANNEL" description="Phone Channel"/>
@@ -166,7 +167,7 @@
 	        		<option key="EMAIL_SALES_CHANNEL" description="E-Mail Channel"/>
 	        	</drop-down>
         </field>
-       
+        
         <field name="findPoFlag"><hidden value="Y"/></field>  
 		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
