@@ -183,7 +183,7 @@
 		partyName= partyName;
 		purposeTypeId=purposeTypeId1;
 		
-		message += "<html><head></head><body><form action='createInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
+		message += "<html><head></head><body><form action='createBranchInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
 		
 		
@@ -226,6 +226,63 @@
 		var title = "Dues Payment : "+partyName +" [ "+partyIdFrom+" ]";
 		Alert(message, title);
 	}
+	
+	
+	  function showPaymentEntryBranchPurchaseForInvoListing(invoiceId,grandTotal,balance,partyIdFrom,partyIdTo,partyName,purposeTypeId1) {
+		var message = "";
+		invoiceId = invoiceId;
+		
+		//finalBal = grandTotal-balance;
+		//var paymentList = eachAdvancePaymentOrderMap[partyId];
+		
+		grandTotal = grandTotal;
+		partyName= partyName;
+		purposeTypeId=purposeTypeId1;
+		
+		message += "<html><head></head><body><form action='createBranchPurchaseInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
+			//message += "<br/><br/>";
+		
+		
+		/*   if(paymentList[0].paymentId != "NoAdvance"){
+			
+			 message += "<tr class='h3'><td align='left' class='h3' width='50%'>Payment Id</td><td align='left' class='h3' width='50%'>Amount</td><td align='left' class='h3' width='50%'>Balance</td><td align='left' class='h3' width='50%'>Select Balance</td></tr>";          
+	        for (i = 0; i < paymentList.length; i++) {
+		         if(paymentList[i].balance!=0)
+		         {
+		         message += "<tr class='h3'><td align='left' class='h3' width='50%'><pre>" + paymentList[i].paymentId + "</pre></td><td align='left' width='50%'>" + paymentList[i].amount + "</td><td align='left'  width='60%'>" + paymentList[i].balance + "</td><td align='left' width='50%'><input class='h4' type='checkbox' id='allStatus' name='allStatus' value = '"+i+"' /></td></tr></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPaymentIds' value='"+paymentList[i].paymentId+"'/></td></tr>";
+		         message +="<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='advPayments' value='"+paymentList[i].amount+"'/></td></tr>";
+		         }
+		       }
+		  } */
+		  
+		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Weaver Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						<#list PaymentMethodType as payment>
+						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
+	                   </#list> 
+					    "</select><input class='h4' type='input' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Total :</font></td><td align='left' width='60%'>"+grandTotal+"</td><input class='h4' type='hidden' id='balance' name='balance' value='"+balance+"' readonly/></tr>"+
+                       "<tr class='h3'><td align='left' class='h3' width='60%' ><font color='green'>Chq Date:</font></td><td align='left' width='60%'><input class='h4' type='text' id='chequeDate' name='chequeDate'  onmouseover='datepick()' /></td></tr>" +
+                        "<tr class='h3'><td align='left' class='h3' width='60%'><font id='cheqInFavLable'  color='green'>Chq.in favour:</font></td><td align='left' width='60%'><input class='h4' type='text' id='inFavour' name='inFavour' value='NHDC' readonly /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%' id='checkNoLabel' style='color:green'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
+						<#-->"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>"+ -->
+						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Issue Authority/ Bank :</font></td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' onfocus='forBankNames()' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='invoiceId' value='"+invoiceId+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyIdTo' value='"+partyIdTo+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyIdFrom' value='"+partyIdFrom+"'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' id='grandTotal' name='grandTotal' value='"+grandTotal+"'/></td></tr>"+
+   			 		    "<tr class='h3'><td align='center'><span align='right'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Dues Payment : "+partyName +" [ "+partyIdFrom+" ]";
+		Alert(message, title);
+	}
+	
 	
 	
 		
